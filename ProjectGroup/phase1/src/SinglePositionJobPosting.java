@@ -1,0 +1,2 @@
+class SinglePositionJobPosting extends Posting {
+}
