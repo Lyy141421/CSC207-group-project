@@ -1,7 +1,8 @@
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
-class HRCoordinatorAccount extends UserAccount {
+class HRCoordinator extends UserAccount {
     /**
      * An account for an HR Coordinator.
      */
@@ -15,7 +16,7 @@ class HRCoordinatorAccount extends UserAccount {
     /**
      * Create an HR Coordinator account.
      */
-    HRCoordinatorAccount() {
+    HRCoordinator() {
     }
 
     /**
@@ -27,7 +28,7 @@ class HRCoordinatorAccount extends UserAccount {
      * @param company     The company that this HR Coordinator works for.
      * @param dateCreated The date this account was created.
      */
-    HRCoordinatorAccount(String legalName, String username, String password, Company company, LocalDate dateCreated) {
+    HRCoordinator(String legalName, String username, String password, Company company, LocalDate dateCreated) {
         super(legalName, username, password, dateCreated);
         this.company = company;
     }
@@ -63,9 +64,10 @@ class HRCoordinatorAccount extends UserAccount {
      * @param postDate       The date this job posting was posted.
      * @param closeDate      The date this job posting is closed.
      */
-    void addJobPosting(String jobTitle, String jobDescription, ArrayList<Requirement> requirements,
+    void addJobPosting(String jobTitle, String jobField, String jobDescription, ArrayList<String> requirements,
                        LocalDate postDate, LocalDate closeDate) {
-        JobPosting jobPosting = new JobPosting(jobTitle, jobDescription, requirements, postDate, closeDate);
+        JobPosting jobPosting = new SinglePositionJobPosting(jobTitle, jobField, jobDescription, requirements,
+                postDate, closeDate);
         this.company.addJobPosting(jobPosting);
     }
 
@@ -76,7 +78,7 @@ class HRCoordinatorAccount extends UserAccount {
      * @param status     The new status of this posting.
      */
     void updateJobPostingStatus(JobPosting jobPosting, String status) {
-        jobPosting.setStatus(status);
+        jobPosting.setFilled();
     }
 
     /**
@@ -96,8 +98,8 @@ class HRCoordinatorAccount extends UserAccount {
      */
     void setUpInterview(JobApplication jobApplication, int round) {
         String jobField = jobApplication.getJobPosting().getField();
-        InterviewerAccount interviewer = this.company.findInterviewer(jobField);
-        LocalDate interviewTime = interviewer.getAvailableTime();
+        Interviewer interviewer = this.company.getInterviewManager().findInterviewer(jobField);
+        LocalDateTime interviewTime = interviewer.getAvailableTime();
         Interview interview = new Interview(jobApplication, interviewer, this, interviewTime, round);
         this.company.getInterviewManager().addInterview(interview);
     }

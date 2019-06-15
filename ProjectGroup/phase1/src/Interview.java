@@ -1,4 +1,4 @@
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 class Interview {
     /**
@@ -13,11 +13,11 @@ class Interview {
     // The job application associated with this interview
     private JobApplication jobApplication;
     // The interviewer
-    private InterviewerAccount interviewerAccount;
+    private Interviewer interviewerAccount;
     // The HRCoordinator who set up the interview
-    private HRCoordinatorAccount hrCoordinatorAccount;
+    private HRCoordinator hrCoordinatorAccount;
     // The time of the interview
-    private LocalDate time;
+    private LocalDateTime time;
     // The result of the interview (if the applicant passed)
     private boolean pass = false;
     // Interview round
@@ -50,8 +50,8 @@ class Interview {
      * @param time                 The interview time.
      * @param roundNumber          The round number.
      */
-    Interview(JobApplication jobApplication, InterviewerAccount interviewerAccount,
-              HRCoordinatorAccount hrCoordinatorAccount, LocalDate time, int roundNumber) {
+    Interview(JobApplication jobApplication, Interviewer interviewerAccount,
+              HRCoordinator hrCoordinatorAccount, LocalDateTime time, int roundNumber) {
         this.jobApplication = jobApplication;
         this.interviewerAccount = interviewerAccount;
         this.hrCoordinatorAccount = hrCoordinatorAccount;
@@ -86,7 +86,7 @@ class Interview {
      *
      * @return the interviewer.
      */
-    InterviewerAccount getInterviewerAccount() {
+    Interviewer getInterviewerAccount() {
         return this.interviewerAccount;
     }
 
@@ -95,7 +95,7 @@ class Interview {
      *
      * @return the HRCoordinator.
      */
-    HRCoordinatorAccount getHrCoordinatorAccount() {
+    HRCoordinator getHrCoordinatorAccount() {
         return this.hrCoordinatorAccount;
     }
 
@@ -104,7 +104,7 @@ class Interview {
      *
      * @return the interview time.
      */
-    LocalDate getTime() {
+    LocalDateTime getTime() {
         return this.time;
     }
 

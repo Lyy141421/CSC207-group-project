@@ -13,7 +13,7 @@ class JobApplication {
     // Unique identifier for a submitted job application
     private int ID;
     // The applicant for a job
-    private ApplicantAccount applicantAccount;
+    private Applicant applicant;
     // The JobPosting that was applied for
     private JobPosting jobPosting;
     // The CV submitted for this application
@@ -23,9 +23,19 @@ class JobApplication {
     // The list of reference letters submitted for this application
     private ArrayList<ReferenceLetter> referenceLetters;
     // The status of this application
-    private ApplicationStatus status;
+    private int status;
     // The date this application was submitted
     private LocalDate applicationDate;
+
+    // === Representation invariants ===
+    // status:
+    //      -3 : Archived
+    //      -2 : Submitted
+    //      -1 : Under review
+    //       0 : Phone interview
+    //       1 : In-person interview 1
+    //       2 : In-person interview 2
+    //       3 : In-person interview 3
 
     // === Constructors ===
 
@@ -44,14 +54,14 @@ class JobApplication {
     /**
      * Create a new job application.
      *
-     * @param applicantAccount The ApplicantAccount associated with this application.
+     * @param applicant        The Applicant associated with this application.
      * @param jobPosting       The JobPosting associated with this application.
      * @param CV               The CV of the applicant.
      * @param coverletter      The cover letter of the applicant.
      */
-    JobApplication(ApplicantAccount applicantAccount, JobPosting jobPosting, File CV, File coverletter) {
+    JobApplication(Applicant applicant, JobPosting jobPosting, File CV, File coverletter) {
         this.ID = JobApplication.totalNumOfApplications;
-        this.applicantAccount = applicantAccount;
+        this.applicant = applicant;
         this.jobPosting = jobPosting;
         this.CV = CV;
         this.coverLetter = coverletter;
@@ -63,17 +73,17 @@ class JobApplication {
      * Create a new job application.
      *
      * @param ID               The application ID.
-     * @param applicantAccount The ApplicantAccount associated with this application.
+     * @param applicant        The applicant associated with this application.
      * @param jobPosting       The JobPosting associated with this application.
      * @param CV               The CV of the applicant.
      * @param coverletter      The cover letter of the applicant.
      * @param referenceLetters The reference letters for the applicant.
      * @param status           The status of the application.
      */
-    JobApplication(int ID, ApplicantAccount applicantAccount, JobPosting jobPosting, File CV, File coverletter,
-                   ArrayList<ReferenceLetter> referenceLetters, ApplicationStatus status) {
+    JobApplication(int ID, Applicant applicant, JobPosting jobPosting, File CV, File coverletter,
+                   ArrayList<ReferenceLetter> referenceLetters, int status) {
         this.ID = ID;
-        this.applicantAccount = applicantAccount;
+        this.applicant = applicant;
         this.jobPosting = jobPosting;
         this.CV = CV;
         this.coverLetter = coverletter;
@@ -99,8 +109,8 @@ class JobApplication {
      *
      * @return the applicant account.
      */
-    ApplicantAccount getApplicantAccount() {
-        return this.applicantAccount;
+    Applicant getApplicant() {
+        return this.applicant;
     }
 
     /**
@@ -144,7 +154,7 @@ class JobApplication {
      *
      * @return the current status of this application.
      */
-    ApplicationStatus getStatus() {
+    int getStatus() {
         return this.status;
     }
 
@@ -182,7 +192,7 @@ class JobApplication {
      *
      * @param status The status of this application.
      */
-    void setStatus(ApplicationStatus status) {
+    void setStatus(int status) {
         this.status = status;
     }
 

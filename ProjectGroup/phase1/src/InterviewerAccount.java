@@ -1,2 +1,0 @@
-class InterviewerAccount extends UserAccount {
-}

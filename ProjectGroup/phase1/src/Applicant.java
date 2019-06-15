@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import static java.time.temporal.ChronoUnit.DAYS;
 
-class ApplicantAccount extends UserAccount {
+class Applicant extends UserAccount {
     /**
      * An account for a job applicant.
      */
@@ -25,7 +25,7 @@ class ApplicantAccount extends UserAccount {
      * @param password    The password associated with this account.
      * @param dateCreated The date this account was created.
      */
-    ApplicantAccount(String legalName, String username, String password, LocalDate dateCreated) {
+    Applicant(String legalName, String username, String password, LocalDate dateCreated) {
         super(legalName, username, password, dateCreated);
         this.jobApplications = new ArrayList<>();
     }
@@ -39,8 +39,8 @@ class ApplicantAccount extends UserAccount {
      * @param dateCreated     The date this account was created.
      * @param jobApplications The job applications that this applicant has previously submitted.
      */
-    ApplicantAccount(String legalName, String username, String password, LocalDate dateCreated,
-                     ArrayList<JobApplication> jobApplications) {
+    Applicant(String legalName, String username, String password, LocalDate dateCreated,
+              ArrayList<JobApplication> jobApplications) {
         super(legalName, username, password, dateCreated);
         this.jobApplications = jobApplications;
     }
@@ -126,7 +126,7 @@ class ApplicantAccount extends UserAccount {
      * @return true iff this application is successfully submitted (ie before closing date and has not already applied)
      */
     boolean applyForJob(JobPosting jobPosting, File CV, File coverLetter) {
-        if (LocalDate.now().isBefore(jobPosting.getClosingDate()) && !this.hasAppliedTo(jobPosting)) {
+        if (LocalDate.now().isBefore(jobPosting.getCloseDate()) && !this.hasAppliedTo(jobPosting)) {
             JobApplication jobApplication = new JobApplication(this, jobPosting, CV, coverLetter);
             jobPosting.addApplication(jobApplication);
         }
@@ -140,8 +140,8 @@ class ApplicantAccount extends UserAccount {
      * @return true iff this applicant can successfully withdraw their application.
      */
     boolean withdrawApplication(JobPosting jobPosting) {
-        if (this.hasAppliedTo(jobPosting) && jobPosting.isNotFilled()) {
-            jobPosting.removeApplicationFrom(this);
+        if (this.hasAppliedTo(jobPosting) && !jobPosting.isFilled()) {
+            jobPosting.removeApplication(this);
         }
         return true;
     }
@@ -154,7 +154,7 @@ class ApplicantAccount extends UserAccount {
     ArrayList<JobApplication> getPreviousJobApplications() {
         ArrayList<JobApplication> previousJobApps = new ArrayList<>();
         for (JobApplication jobApplication : this.getJobApplications()) {
-            if (jobApplication.getStatus().equals(AppicationStatus.ARCHIVED)) {
+            if (jobApplication.getStatus() == -1) {
                 previousJobApps.add(jobApplication);
             }
         }
@@ -204,7 +204,7 @@ class ApplicantAccount extends UserAccount {
 //     * @return  the user account for the reference.
 //     */
 //    UserAccount addReference(String referenceName, String referenceEmail, LocalDate today) {
-//        UserAccount reference = new ReferenceAccount(referenceName, referenceEmail, referenceName, today);
+//        UserAccount reference = new ProfessionalReference(referenceName, referenceEmail, referenceName, today);
 //        UserAccountManager.addAccount(reference);
 //        return reference;
 //    }
