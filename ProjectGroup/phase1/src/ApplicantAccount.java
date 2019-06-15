@@ -1,0 +1,2 @@
+class ApplicantAccount extends UserAccount {
+}

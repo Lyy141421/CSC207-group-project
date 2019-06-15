@@ -1,0 +1,2 @@
+class HRCoordinatorAccount extends UserAccount {
+}
