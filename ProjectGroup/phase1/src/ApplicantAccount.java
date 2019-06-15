@@ -1,19 +1,19 @@
 import java.io.File;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashMap;
+
+import static java.time.temporal.ChronoUnit.DAYS;
 
 class ApplicantAccount extends UserAccount {
+    /**
+     * An account for a job applicant.
+     */
 
     // === Instance variables ===
-    // List of documents that this applicant has put into their account
-    private ArrayList<File> documents;
-    // List of jobs applied for in the past
-    private ArrayList<JobPosting> previousJobsApplied;
-    // A map of current jobs applying for and their respective statuses TODO
-    private HashMap<JobPosting, ApplicationStatus> currentJobsApplying;
+    // List of job applications submitted
+    private ArrayList<JobApplication> jobApplications;
     // Date that last application closed
-    private LocalDate dateOfLastClosing;
+    private LocalDate dateOfMostRecentClosing;
 
     // === Constructors ===
 
@@ -27,145 +27,163 @@ class ApplicantAccount extends UserAccount {
      */
     ApplicantAccount(String legalName, String username, String password, LocalDate dateCreated) {
         super(legalName, username, password, dateCreated);
-        this.documents = new ArrayList<>();
-        this.previousJobsApplied = new ArrayList<>();
-        this.currentJobsApplying = new HashMap<JobPosting, ApplicationStatus>();
+        this.jobApplications = new ArrayList<>();
     }
 
     /**
      * Creates an applicant account.
      *
-     * @param legalName           The applicant's legal name.
-     * @param username            The username associated with this account.
-     * @param password            The password associated with this account.
-     * @param dateCreated         The date this account was created.
-     * @param documents           The documents that this applicant has stored in their account.
-     * @param previousJobsApplied A list of jobs that this applicant previously applied for.
-     * @param currentJobsApplying A map of jobs that this applicant is currently applying for to their statuses.
+     * @param legalName       The applicant's legal name.
+     * @param username        The username associated with this account.
+     * @param password        The password associated with this account.
+     * @param dateCreated     The date this account was created.
+     * @param jobApplications The job applications that this applicant has previously submitted.
      */
     ApplicantAccount(String legalName, String username, String password, LocalDate dateCreated,
-                     ArrayList<File> documents, ArrayList<JobPosting> previousJobsApplied,
-                     HashMap<JobPosting, ApplicationStatus> currentJobsApplying) {
+                     ArrayList<JobApplication> jobApplications) {
         super(legalName, username, password, dateCreated);
-        this.documents = documents;
-        this.previousJobsApplied = previousJobsApplied;
-        this.currentJobsApplying = currentJobsApplying;
+        this.jobApplications = jobApplications;
     }
 
     // === Getters ===
 
     /**
-     * Get a list of documents that this applicant has submitted.
+     * Get all the job applications submitted.
      *
-     * @return a list of documents that this applicant has submitted.
+     * @return a list of all job applications submitted.
      */
-    ArrayList<File> getDocuments() {
-        return this.documents;
+    ArrayList<JobApplication> getJobApplications() {
+        return this.jobApplications;
     }
 
     /**
-     * Get a list of previous jobs this applicant has applied for.
+     * Get the most recent closing date of all the job applications that this applicant has submitted.
      *
-     * @return a list of previous jobs that this applicant has applied for.
+     * @return the most recent closing date of all the job applications that this applicant has submitted.
      */
-    ArrayList<JobPosting> getPreviousJobsApplied() {
-        return this.previousJobsApplied;
-    }
-
-    /**
-     * Get a map of current jobs this applicant is applying for and their respective statuses.
-     *
-     * @return a map of current jobs this applicant is applying for and their respective statuses.
-     */
-    HashMap<JobPosting, ApplicationStatus> getCurrentJobsApplying() {
-        return this.currentJobsApplying;
+    LocalDate getDateOfMostRecentClosing() {
+        return this.dateOfMostRecentClosing;
     }
 
     // === Setters ===
 
     /**
-     * Set the documents submitted by this applicant.
+     * Set the job applications that this applicant has submitted.
      *
-     * @param documents The documents submitted by this applicant.
+     * @param jobApplications The list of jobs that have been applied for.
      */
-    void setDocuments(ArrayList<File> documents) {
-        this.documents = documents;
+    void setJobApplications(ArrayList<JobApplication> jobApplications) {
+        this.jobApplications = jobApplications;
     }
 
     /**
-     * Set the previous jobs applied for by this applicant.
+     * Set the most recent closing date of all the job applications that this applicant has submitted.
      *
-     * @param previousJobsApplied The list of previous jobs this applicant has applied for.
+     * @param date The most recent closing date of all the job applications that this applicant has submitted.
      */
-    void setPreviousJobsApplied(ArrayList<JobPosting> previousJobsApplied) {
-        this.previousJobsApplied = previousJobsApplied;
-    }
-
-    /**
-     * Set the current jobs that this applicant is applying for.
-     *
-     * @param currentJobsApplying The map of current jobs this applicant is applying for to their respective statuses.
-     */
-    void setCurrentJobsApplying(HashMap<JobPosting, ApplicationStatus> currentJobsApplying) {
-        this.currentJobsApplying = currentJobsApplying;
+    void setDateOfMostRecentClosing(LocalDate date) {
+        this.dateOfMostRecentClosing = date;
     }
 
     // === Other methods ===
+
+    /**
+     * Find the most recent closing date of all the job applications that this applicant has submitted.
+     *
+     * @return the most recent closing date.
+     */
+    LocalDate findDateOfMostRecentClosing() {
+        LocalDate dateOfMostRecentClosing = this.getJobApplications().get(0).getJobPosting().getClosingDate();
+        for (JobApplication jobApp : this.getJobApplications()) {
+            LocalDate closingDate = jobApp.getJobPosting().getClosingDate();
+            if (dateOfMostRecentClosing.isBefore(closingDate)) {
+                dateOfMostRecentClosing = closingDate;
+            }
+        }
+        return dateOfMostRecentClosing;
+    }
+
+    /**
+     * Update the date of most recent closing for this applicant.
+     */
+    void updateDateOfMostRecentClosing() {
+        this.setDateOfMostRecentClosing(this.findDateOfMostRecentClosing());
+    }
 
     /**
      * View job postings.
      *
      * @return a list of job postings in the system.
      */
-    // TODO
     ArrayList<JobPosting> viewJobPosting() {
-        // return JobPostingManager.get...;
-        return null;
+        return JobPostingManager.getJobPostings();
     }
 
     /**
      * Apply for a job.
      *
      * @param jobPosting The job posting that this applicant wants to apply for.
+     * @return true iff this application is successfully submitted (ie before closing date and has not already applied)
      */
-    // TODO
-    void applyForJob(JobPosting jobPosting) {
-        // submit cover letter and CV
-        // add themselves to a list of applicants for this job
+    boolean applyForJob(JobPosting jobPosting, File CV, File coverLetter) {
+        if (LocalDate.now().isBefore(jobPosting.getClosingDate()) && !this.hasAppliedTo(jobPosting)) {
+            JobApplication jobApplication = new JobApplication(this, jobPosting, CV, coverLetter);
+            jobPosting.addApplication(jobApplication);
+        }
+        return false;
     }
 
     /**
      * Remove this applicant's application for this job.
      *
-     * @param jobPosting The job posting that this applicant wants to withdraw from.
+     * @param jobPosting The job that this user wants to withdraw their application from.
      * @return true iff this applicant can successfully withdraw their application.
      */
-    // TODO
     boolean withdrawApplication(JobPosting jobPosting) {
-        // take themselves out of list of applicants
-        // remove cover letter and CV
+        if (this.hasAppliedTo(jobPosting) && jobPosting.isNotFilled()) {
+            jobPosting.removeApplicationFrom(this);
+        }
         return true;
     }
 
     /**
-     * Return the status of this job application for this applicant.
+     * Get the previous job applications for this applicant.
      *
-     * @param jobPosting The job application that is being checked.
-     * @return the status of this job application for this applicant.
+     * @return a list of previous job applications submitted where the posting is now filled.
      */
-    ApplicationStatus checkStatus(JobPosting jobPosting) {
-        return this.currentJobsApplying.get(jobPosting);
+    ArrayList<JobApplication> getPreviousJobApplications() {
+        ArrayList<JobApplication> previousJobApps = new ArrayList<>();
+        for (JobApplication jobApplication : this.getJobApplications()) {
+            if (jobApplication.getStatus().equals(AppicationStatus.ARCHIVED)) {
+                previousJobApps.add(jobApplication);
+            }
+        }
+        return previousJobApps;
     }
 
     /**
-     * Submit this applicant's cover letter and CV for this job.
+     * Get the current job applications for this applicant.
      *
-     * @param coverLetter This applicant's cover letter.
-     * @param CV          This applicant's CV.
+     * @return a list of current job applications submitted (posting is not yet filled).
      */
-    // TODO
-    void submitCoverLetterAndCV(File coverLetter, File CV, JobPosting jobPosting) {
-        // something to do with job posting
+    ArrayList<JobApplication> getCurrentJobApplications() {
+        ArrayList<JobApplication> currentJobApps = new ArrayList<>();
+        for (JobApplication jobApplication : this.getJobApplications()) {
+            if (!this.getPreviousJobApplications().contains(jobApplication)) {
+                currentJobApps.add(jobApplication);
+            }
+        }
+        return currentJobApps;
+    }
+
+    /**
+     * Get the number of days since the most recent job posting close date.
+     *
+     * @param today Today's date.
+     * @return the number of days since the most recent job posting close date.
+     */
+    long getNumDaysSinceMostRecentClosing(LocalDate today) {
+        return DAYS.between(today, this.dateOfMostRecentClosing);
     }
 
     /**
@@ -175,8 +193,20 @@ class ApplicantAccount extends UserAccount {
      * @return true iff today's date is 30 days after the closing date for the last job this applicant applied to.
      */
     boolean isInactive(LocalDate today) {
-        return this.dateOfLastClosing.isEqual(today.minusDays(30));
+        return getNumDaysSinceMostRecentClosing(today) == 30;
     }
 
+//    /**
+//     * Create a reference account.
+//     * @param referenceName   The reference's legal name.
+//     * @param referenceEmail    The reference's email.
+//     * @param today             Today's date.
+//     * @return  the user account for the reference.
+//     */
+//    UserAccount addReference(String referenceName, String referenceEmail, LocalDate today) {
+//        UserAccount reference = new ReferenceAccount(referenceName, referenceEmail, referenceName, today);
+//        UserAccountManager.addAccount(reference);
+//        return reference;
+//    }
 
 }

@@ -6,10 +6,10 @@ abstract class UserAccount {
      */
 
     // === Instance variables ===
+    // The unique account username
+    private String username;
     // The user's legal name
     private String legalName;
-    // The account username
-    private String username;
     // The account password
     private String password;
     // The date the account was created
@@ -21,6 +21,7 @@ abstract class UserAccount {
      * Create a user account.
      */
     UserAccount() {
+        this.dateCreated = LocalDate.now();
     }
 
     ;
@@ -29,11 +30,11 @@ abstract class UserAccount {
      * Create a user account.
      *
      * @param username    The username of this user.
-     * @param dateCreated The date this account was created.
+     * @param dateCreated   The date on which this account was created.
      */
     UserAccount(String username, LocalDate dateCreated) {
         this.username = username;
-        this.dateCreated = dateCreated;
+        this.dateCreated = LocalDate.now();
     }
 
     /**
@@ -42,7 +43,7 @@ abstract class UserAccount {
      * @param legalName   The user's legal name.
      * @param username    The account username.
      * @param password    The account password.
-     * @param dateCreated The date this account was created.
+     * @param dateCreated   The date on which this account was created.
      */
     UserAccount(String legalName, String username, String password, LocalDate dateCreated) {
         this.legalName = legalName;
