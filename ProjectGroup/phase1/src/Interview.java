@@ -46,11 +46,11 @@ class Interview {
     /**
      * Create a new interview.
      *
-     * @param jobApplication     The job application in question.
-     * @param interviewer        The interviewer.
-     * @param hrCoordinator      The HRCoordinator who set-up the interview.
-     * @param time               The interview time.
-     * @param roundNumber        The round number.
+     * @param jobApplication The job application in question.
+     * @param interviewer    The interviewer.
+     * @param hrCoordinator  The HRCoordinator who set-up the interview.
+     * @param time           The interview time.
+     * @param roundNumber    The round number.
      */
     Interview(JobApplication jobApplication, Interviewer interviewer, HRCoordinator hrCoordinator,
               LocalDateTime time, int roundNumber) {

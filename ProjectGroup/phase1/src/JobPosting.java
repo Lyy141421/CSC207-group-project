@@ -79,5 +79,9 @@ abstract class JobPosting {
 
     }
 
+    JobApplication findApplication(Applicant applicant) {
+        return null;
+    }
+
 
 }

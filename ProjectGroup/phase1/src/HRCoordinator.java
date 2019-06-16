@@ -1,3 +1,4 @@
+import java.io.File;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -22,14 +23,15 @@ class HRCoordinator extends UserAccount {
     /**
      * Create an HR Coordinator account.
      *
-     * @param legalName   The HR Coordinator's legal name.
      * @param username    The HR Coordinator's account username.
      * @param password    The HR Coordinator's account password.
+     * @param legalName   The HR Coordinator's legal name.
+     * @param email       The HR Coordinator's email.
      * @param company     The company that this HR Coordinator works for.
      * @param dateCreated The date this account was created.
      */
-    HRCoordinator(String legalName, String username, String password, Company company, LocalDate dateCreated) {
-        super(legalName, username, password, dateCreated);
+    HRCoordinator(String username, String password, String legalName, String email, Company company, LocalDate dateCreated) {
+        super(username, password, legalName, email, dateCreated);
         this.company = company;
     }
 
@@ -89,6 +91,38 @@ class HRCoordinator extends UserAccount {
     ArrayList<JobApplication> viewAllJobApplications(JobPosting jobPosting) {
         return jobPosting.getApplications();
     }
+
+    /**
+     * View the cover letter from this applicant for this job posting.
+     *
+     * @param jobPosting The job posting that is being reviewed.
+     * @param applicant  The applicant that is being reviewed.
+     * @return the cover letter from this applicant for this job posting.
+     */
+    File viewCoverLetter(JobPosting jobPosting, Applicant applicant) {
+        return jobPosting.findApplication(applicant).getCoverLetter();
+    }
+
+    /**
+     * View the CV submitted by this applicant for this job posting.
+     *
+     * @param jobPosting The job posting that is being reviewed.
+     * @param applicant  The applicant that is being reviewed.
+     * @return the applicant's CV for this job posting.
+     */
+    File viewCV(JobPosting jobPosting, Applicant applicant) {
+        return jobPosting.findApplication(applicant).getCV();
+    }
+
+//    /**
+//     * View the applicant's reference letters for this job posting.
+//     * @param jobPosting    The job posting that is being reviewed.
+//     * @param applicant     The applicant that is being reviewed.
+//     * @return  a list of the applicant's reference letters for this job posting.
+//     */
+//    ArrayList<File> viewReferenceLetters(JobPosting jobPosting, Applicant applicant) {
+//        return jobPosting.findApplication(applicant).getReferenceLetters();
+//    }
 
     /**
      * View all the applicants for this job posting.

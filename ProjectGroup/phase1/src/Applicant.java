@@ -20,28 +20,30 @@ class Applicant extends UserAccount {
     /**
      * Create an applicant account.
      *
-     * @param legalName   The applicant's legal name.
      * @param username    The username associated with this account.
      * @param password    The password associated with this account.
+     * @param legalName   The applicant's legal name.
+     * @param email       The applicant's email.
      * @param dateCreated The date this account was created.
      */
-    Applicant(String legalName, String username, String password, LocalDate dateCreated) {
-        super(legalName, username, password, dateCreated);
+    Applicant(String username, String password, String legalName, String email, LocalDate dateCreated) {
+        super(username, password, legalName, email, dateCreated);
         this.jobApplications = new ArrayList<>();
     }
 
     /**
      * Creates an applicant account.
      *
-     * @param legalName       The applicant's legal name.
      * @param username        The username associated with this account.
      * @param password        The password associated with this account.
+     * @param legalName       The applicant's legal name.
+     * @param email           The applicant's email.
      * @param dateCreated     The date this account was created.
      * @param jobApplications The job applications that this applicant has previously submitted.
      */
-    Applicant(String legalName, String username, String password, LocalDate dateCreated,
+    Applicant(String username, String password, String legalName, String email, LocalDate dateCreated,
               ArrayList<JobApplication> jobApplications) {
-        super(legalName, username, password, dateCreated);
+        super(username, password, legalName, email, dateCreated);
         this.jobApplications = jobApplications;
     }
 

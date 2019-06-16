@@ -55,10 +55,10 @@ class JobApplication {
     /**
      * Create a new job application.
      *
-     * @param applicant        The Applicant associated with this application.
-     * @param jobPosting       The JobPosting associated with this application.
-     * @param CV               The CV of the applicant.
-     * @param coverletter      The cover letter of the applicant.
+     * @param applicant   The Applicant associated with this application.
+     * @param jobPosting  The JobPosting associated with this application.
+     * @param CV          The CV of the applicant.
+     * @param coverletter The cover letter of the applicant.
      */
     JobApplication(Applicant applicant, JobPosting jobPosting, File CV, File coverletter) {
         this.ID = JobApplication.totalNumOfApplications;
@@ -73,13 +73,13 @@ class JobApplication {
     /**
      * Create a new job application.
      *
-     * @param ID               The application ID.
-     * @param applicant        The applicant associated with this application.
-     * @param jobPosting       The JobPosting associated with this application.
-     * @param CV               The CV of the applicant.
-     * @param coverletter      The cover letter of the applicant.
-    //     * @param referenceLetters The reference letters for the applicant.
-     * @param status           The status of the application.
+     * @param ID          The application ID.
+     * @param applicant   The applicant associated with this application.
+     * @param jobPosting  The JobPosting associated with this application.
+     * @param CV          The CV of the applicant.
+     * @param coverletter The cover letter of the applicant.
+     *                    //     * @param referenceLetters The reference letters for the applicant.
+     * @param status      The status of the application.
      */
     JobApplication(int ID, Applicant applicant, JobPosting jobPosting, File CV, File coverletter,
                    ArrayList<ReferenceLetter> referenceLetters, int status) {

@@ -23,20 +23,19 @@ abstract class UserAccount {
      * Create a user account.
      */
     UserAccount() {
-        this.dateCreated = LocalDate.now();
     }
-
-    ;
 
     /**
      * Create a user account.
      *
-     * @param username    The username of this user.
+     * @param email       The email of this user.
      * @param dateCreated The date on which this account was created.
      */
-    UserAccount(String username, LocalDate dateCreated) {
-        this.username = username;
-        this.dateCreated = LocalDate.now();
+    UserAccount(String email, LocalDate dateCreated) {
+        this.username = email;
+        this.password = email;
+        this.email = email;
+        this.dateCreated = dateCreated;
     }
 
     /**
