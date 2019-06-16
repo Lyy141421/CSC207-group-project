@@ -6,12 +6,14 @@ abstract class UserAccount {
      */
 
     // === Instance variables ===
-    // The user's legal name
-    private String legalName;
-    // The unique account username (email address)
+    // The unique account username
     private String username;
     // The account password
     private String password;
+    // The user's legal name
+    private String legalName;
+    // The user's email address
+    private String email;
     // The date the account was created
     private LocalDate dateCreated;
 
@@ -40,28 +42,21 @@ abstract class UserAccount {
     /**
      * Create a user account.
      *
-     * @param legalName   The user's legal name.
-     * @param username    The account username.
+     * @param username    The user's unique ID.
      * @param password    The account password.
+     * @param legalName   The user's legal name.
+     * @param email       The user's email address.
      * @param dateCreated The date on which this account was created.
      */
-    UserAccount(String legalName, String username, String password, LocalDate dateCreated) {
-        this.legalName = legalName;
+    UserAccount(String username, String password, String legalName, String email, LocalDate dateCreated) {
         this.username = username;
         this.password = password;
+        this.legalName = legalName;
+        this.email = email;
         this.dateCreated = dateCreated;
     }
 
     // === Getters ===
-
-    /**
-     * Get the legal name of this user.
-     *
-     * @return the legal name of this user.
-     */
-    String getLegalName() {
-        return this.legalName;
-    }
 
     /**
      * Get the username associated with this account.
@@ -82,6 +77,24 @@ abstract class UserAccount {
     }
 
     /**
+     * Get the legal name of this user.
+     *
+     * @return the legal name of this user.
+     */
+    String getLegalName() {
+        return this.legalName;
+    }
+
+    /**
+     * Get the user's email address.
+     *
+     * @return the email address of this user.
+     */
+    String getEmail() {
+        return this.email;
+    }
+
+    /**
      * Get the date this account was created.
      *
      * @return the date this account was created.
@@ -91,15 +104,6 @@ abstract class UserAccount {
     }
 
     // === Setters ===
-
-    /**
-     * Set the legal name of this user.
-     *
-     * @param legalName The legal name of this user.
-     */
-    void setLegalName(String legalName) {
-        this.legalName = legalName;
-    }
 
     /**
      * Set the username associated with this account.
@@ -117,6 +121,24 @@ abstract class UserAccount {
      */
     void setPassword(String password) {
         this.password = password;
+    }
+
+    /**
+     * Set the legal name of this user.
+     *
+     * @param legalName The legal name of this user.
+     */
+    void setLegalName(String legalName) {
+        this.legalName = legalName;
+    }
+
+    /**
+     * Set the email of this user.
+     *
+     * @param email The user's email address.
+     */
+    void setEmail(String email) {
+        this.email = email;
     }
 
     /**
