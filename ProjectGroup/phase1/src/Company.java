@@ -24,4 +24,8 @@ class Company {
 
     }
 
+    boolean equals(Company other) {
+        return false;
+    }
+
 }
