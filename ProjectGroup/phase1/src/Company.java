@@ -1,11 +1,11 @@
-import java.util.HashMap;
+import java.util.ArrayList;
 
 class Company {
 
     // Elaine: I'm adding these so that my code doesn't have red underlines
     // === Instance variables ===
-    // A map of job postings to their respective interview managers.
-    private HashMap<JobPosting, InterviewManager> jobPostingToInterviewManager;
+    // A list of job postings for positions in this company.
+    private ArrayList<JobPosting> jobPostings;
 
 
     Applicant getFinalCandidate(JobPosting jobPosting) {

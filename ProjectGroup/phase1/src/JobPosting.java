@@ -25,6 +25,8 @@ abstract class JobPosting {
     private LocalDate closeDate;
     // The list of job applications
     private ArrayList<JobApplication> applications = new ArrayList<>();
+    // Interview manager for this job posting
+    private InterviewManager interviewManager;
 
     // === Constructors ===
     JobPosting() {
@@ -38,6 +40,7 @@ abstract class JobPosting {
         this.requirements = requirements;
         this.postDate = postDate;
         this.closeDate = closeDate;
+        this.interviewManager = new InterviewManager();
     }
 
     // === Getters ===
