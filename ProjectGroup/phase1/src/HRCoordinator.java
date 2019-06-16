@@ -1,9 +1,8 @@
 import java.io.File;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 
-class HRCoordinator extends UserAccount {
+class HRCoordinator extends User {
     /**
      * An account for an HR Coordinator.
      */

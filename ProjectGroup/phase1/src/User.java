@@ -1,6 +1,6 @@
 import java.time.LocalDate;
 
-abstract class UserAccount {
+abstract class User {
     /**
      * An account in the job application system.
      */
@@ -22,7 +22,7 @@ abstract class UserAccount {
     /**
      * Create a user account.
      */
-    UserAccount() {
+    User() {
     }
 
     /**
@@ -31,7 +31,7 @@ abstract class UserAccount {
      * @param email       The email of this user.
      * @param dateCreated The date on which this account was created.
      */
-    UserAccount(String email, LocalDate dateCreated) {
+    User(String email, LocalDate dateCreated) {
         this.username = email;
         this.password = email;
         this.email = email;
@@ -47,7 +47,7 @@ abstract class UserAccount {
      * @param email       The user's email address.
      * @param dateCreated The date on which this account was created.
      */
-    UserAccount(String username, String password, String legalName, String email, LocalDate dateCreated) {
+    User(String username, String password, String legalName, String email, LocalDate dateCreated) {
         this.username = username;
         this.password = password;
         this.legalName = legalName;
@@ -167,7 +167,7 @@ abstract class UserAccount {
      * @param other The other account being compared to.
      * @return true iff this account has the same username as the other account.
      */
-    boolean equals(UserAccount other) {
+    boolean equals(User other) {
         return this.username.equals(other.username);
     }
 

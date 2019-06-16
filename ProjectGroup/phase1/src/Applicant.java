@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import static java.time.temporal.ChronoUnit.DAYS;
 
-class Applicant extends UserAccount {
+class Applicant extends User {
     /**
      * An account for a job applicant.
      */
@@ -220,9 +220,9 @@ class Applicant extends UserAccount {
 //     * @param today             Today's date.
 //     * @return  the user account for the reference.
 //     */
-//    UserAccount addReference(String referenceName, String referenceEmail, LocalDate today) {
-//        UserAccount reference = new ProfessionalReference(referenceName, referenceEmail, referenceName, today);
-//        UserAccountManager.addAccount(reference);
+//    User addReference(String referenceName, String referenceEmail, LocalDate today) {
+//        User reference = new ProfessionalReference(referenceName, referenceEmail, referenceName, today);
+//        UserManager.addAccount(reference);
 //        return reference;
 //    }
 
