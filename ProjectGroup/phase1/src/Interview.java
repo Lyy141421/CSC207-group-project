@@ -13,11 +13,13 @@ class Interview {
     // The job application associated with this interview
     private JobApplication jobApplication;
     // The interviewer
-    private Interviewer interviewerAccount;
+    private Interviewer interviewer;
     // The HRCoordinator who set up the interview
-    private HRCoordinator hrCoordinatorAccount;
+    private HRCoordinator hrCoordinator;
     // The time of the interview
     private LocalDateTime time;
+    // Interview notes
+    private String interviewNotes = "";
     // The result of the interview (if the applicant passed)
     private boolean pass = false;
     // Interview round
@@ -44,17 +46,17 @@ class Interview {
     /**
      * Create a new interview.
      *
-     * @param jobApplication       The job application in question.
-     * @param interviewerAccount   The interviewer.
-     * @param hrCoordinatorAccount The HRCoordinator who set-up the interview.
-     * @param time                 The interview time.
-     * @param roundNumber          The round number.
+     * @param jobApplication     The job application in question.
+     * @param interviewer        The interviewer.
+     * @param hrCoordinator      The HRCoordinator who set-up the interview.
+     * @param time               The interview time.
+     * @param roundNumber        The round number.
      */
-    Interview(JobApplication jobApplication, Interviewer interviewerAccount,
-              HRCoordinator hrCoordinatorAccount, LocalDateTime time, int roundNumber) {
+    Interview(JobApplication jobApplication, Interviewer interviewer, HRCoordinator hrCoordinator,
+              LocalDateTime time, int roundNumber) {
         this.jobApplication = jobApplication;
-        this.interviewerAccount = interviewerAccount;
-        this.hrCoordinatorAccount = hrCoordinatorAccount;
+        this.interviewer = interviewer;
+        this.hrCoordinator = hrCoordinator;
         this.time = time;
         this.roundNumber = roundNumber;
         this.ID = Interview.total;
@@ -86,8 +88,8 @@ class Interview {
      *
      * @return the interviewer.
      */
-    Interviewer getInterviewerAccount() {
-        return this.interviewerAccount;
+    Interviewer getInterviewer() {
+        return this.interviewer;
     }
 
     /**
@@ -95,8 +97,17 @@ class Interview {
      *
      * @return the HRCoordinator.
      */
-    HRCoordinator getHrCoordinatorAccount() {
-        return this.hrCoordinatorAccount;
+    HRCoordinator getHRCoordinator() {
+        return this.hrCoordinator;
+    }
+
+    /**
+     * Get the interview notes written by the interviewer.
+     *
+     * @return the interview notes.
+     */
+    String getInterviewNotes() {
+        return this.interviewNotes;
     }
 
     /**
@@ -115,5 +126,16 @@ class Interview {
      */
     int getRoundNumber() {
         return this.roundNumber;
+    }
+
+    // === Setters ===
+
+    /**
+     * Set interview notes.
+     *
+     * @param notes The interview notes.
+     */
+    void setInterviewNotes(String notes) {
+        this.interviewNotes = notes;
     }
 }

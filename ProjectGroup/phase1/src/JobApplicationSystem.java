@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -20,5 +21,9 @@ public class JobApplicationSystem {
         };
         Timer timer = new Timer();
         timer.scheduleAtFixedRate(daily_tasks, 0, 86400000);
+    }
+
+    static ArrayList<JobPosting> getAllJobPostings() {
+        return null;
     }
 }

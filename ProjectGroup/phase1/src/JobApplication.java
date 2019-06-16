@@ -21,9 +21,9 @@ class JobApplication {
     // The cover letter submitted for this application
     private File coverLetter;
     // The list of reference letters submitted for this application
-    private ArrayList<ReferenceLetter> referenceLetters;
+//    private ArrayList<ReferenceLetter> referenceLetters;
     // The status of this application
-    private int status;
+    private int status = -2;
     // The date this application was submitted
     private LocalDate applicationDate;
 
@@ -36,6 +36,7 @@ class JobApplication {
     //       1 : In-person interview 1
     //       2 : In-person interview 2
     //       3 : In-person interview 3
+    //       4 : Hired
 
     // === Constructors ===
 
@@ -77,7 +78,7 @@ class JobApplication {
      * @param jobPosting       The JobPosting associated with this application.
      * @param CV               The CV of the applicant.
      * @param coverletter      The cover letter of the applicant.
-     * @param referenceLetters The reference letters for the applicant.
+    //     * @param referenceLetters The reference letters for the applicant.
      * @param status           The status of the application.
      */
     JobApplication(int ID, Applicant applicant, JobPosting jobPosting, File CV, File coverletter,
@@ -87,7 +88,7 @@ class JobApplication {
         this.jobPosting = jobPosting;
         this.CV = CV;
         this.coverLetter = coverletter;
-        this.referenceLetters = referenceLetters;
+//        this.referenceLetters = referenceLetters;
         this.applicationDate = LocalDate.now();
         this.status = status;
         JobApplication.totalNumOfApplications++;
@@ -140,14 +141,14 @@ class JobApplication {
         return this.coverLetter;
     }
 
-    /**
-     * Get the list of reference letters for the applicant.
-     *
-     * @return the list of reference letters for the applicant.
-     */
-    ArrayList<ReferenceLetter> getReferenceLetters() {
-        return this.referenceLetters;
-    }
+//    /**
+//     * Get the list of reference letters for the applicant.
+//     *
+//     * @return the list of reference letters for the applicant.
+//     */
+//    ArrayList<ReferenceLetter> getReferenceLetters() {
+//        return this.referenceLetters;
+//    }
 
     /**
      * Get the current status of this application.
@@ -194,6 +195,11 @@ class JobApplication {
      */
     void setStatus(int status) {
         this.status = status;
+    }
+
+    // === Other methods ===
+    void advanceStatus() {
+        this.status++;
     }
 
 }

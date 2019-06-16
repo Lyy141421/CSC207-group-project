@@ -6,10 +6,10 @@ abstract class UserAccount {
      */
 
     // === Instance variables ===
-    // The unique account username
-    private String username;
     // The user's legal name
     private String legalName;
+    // The unique account username (email address)
+    private String username;
     // The account password
     private String password;
     // The date the account was created
@@ -30,7 +30,7 @@ abstract class UserAccount {
      * Create a user account.
      *
      * @param username    The username of this user.
-     * @param dateCreated   The date on which this account was created.
+     * @param dateCreated The date on which this account was created.
      */
     UserAccount(String username, LocalDate dateCreated) {
         this.username = username;
@@ -43,7 +43,7 @@ abstract class UserAccount {
      * @param legalName   The user's legal name.
      * @param username    The account username.
      * @param password    The account password.
-     * @param dateCreated   The date on which this account was created.
+     * @param dateCreated The date on which this account was created.
      */
     UserAccount(String legalName, String username, String password, LocalDate dateCreated) {
         this.legalName = legalName;
@@ -138,6 +138,16 @@ abstract class UserAccount {
      */
     boolean hasSameUsername(String otherUsername) {
         return this.username.equals(otherUsername);
+    }
+
+    /**
+     * Report whether this account is the same as other.
+     *
+     * @param other The other account being compared to.
+     * @return true iff this account has the same username as the other account.
+     */
+    boolean equals(UserAccount other) {
+        return this.username.equals(other.username);
     }
 
 }

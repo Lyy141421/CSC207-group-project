@@ -13,7 +13,7 @@ class Applicant extends UserAccount {
     // List of job applications submitted
     private ArrayList<JobApplication> jobApplications;
     // Date that last application closed
-    private LocalDate dateOfMostRecentClosing;
+    private LocalDate mostRecentCloseDate;
 
     // === Constructors ===
 
@@ -61,8 +61,8 @@ class Applicant extends UserAccount {
      *
      * @return the most recent closing date of all the job applications that this applicant has submitted.
      */
-    LocalDate getDateOfMostRecentClosing() {
-        return this.dateOfMostRecentClosing;
+    LocalDate getMostRecentCloseDate() {
+        return this.mostRecentCloseDate;
     }
 
     // === Setters ===
@@ -81,8 +81,8 @@ class Applicant extends UserAccount {
      *
      * @param date The most recent closing date of all the job applications that this applicant has submitted.
      */
-    void setDateOfMostRecentClosing(LocalDate date) {
-        this.dateOfMostRecentClosing = date;
+    void setMostRecentCloseDate(LocalDate date) {
+        this.mostRecentCloseDate = date;
     }
 
     // === Other methods ===
@@ -92,22 +92,22 @@ class Applicant extends UserAccount {
      *
      * @return the most recent closing date.
      */
-    LocalDate findDateOfMostRecentClosing() {
-        LocalDate dateOfMostRecentClosing = this.getJobApplications().get(0).getJobPosting().getClosingDate();
+    private LocalDate findMostRecentCloseDate() {
+        LocalDate mostRecentCloseDate = this.getJobApplications().get(0).getJobPosting().getCloseDate();
         for (JobApplication jobApp : this.getJobApplications()) {
-            LocalDate closingDate = jobApp.getJobPosting().getClosingDate();
-            if (dateOfMostRecentClosing.isBefore(closingDate)) {
-                dateOfMostRecentClosing = closingDate;
+            LocalDate closingDate = jobApp.getJobPosting().getCloseDate();
+            if (mostRecentCloseDate.isBefore(closingDate)) {
+                mostRecentCloseDate = closingDate;
             }
         }
-        return dateOfMostRecentClosing;
+        return mostRecentCloseDate;
     }
 
     /**
      * Update the date of most recent closing for this applicant.
      */
-    void updateDateOfMostRecentClosing() {
-        this.setDateOfMostRecentClosing(this.findDateOfMostRecentClosing());
+    void updateMostRecentCloseDate() {
+        this.setMostRecentCloseDate(this.findMostRecentCloseDate());
     }
 
     /**
@@ -115,8 +115,8 @@ class Applicant extends UserAccount {
      *
      * @return a list of job postings in the system.
      */
-    ArrayList<JobPosting> viewJobPosting() {
-        return JobPostingManager.getJobPostings();
+    ArrayList<JobPosting> viewJobPostings() {
+        return JobApplicationSystem.getAllJobPostings();
     }
 
     /**
@@ -147,6 +147,21 @@ class Applicant extends UserAccount {
     }
 
     /**
+     * Report whether this applicant has already applied to this job posting.
+     *
+     * @param jobPosting The job posting in question.
+     * @return true iff this applicant has not applied to this job posting.
+     */
+    private boolean hasAppliedTo(JobPosting jobPosting) {
+        for (JobApplication jobApp : jobPosting.getApplications()) {
+            if (jobApp.getApplicant().equals(this)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * Get the previous job applications for this applicant.
      *
      * @return a list of previous job applications submitted where the posting is now filled.
@@ -154,7 +169,7 @@ class Applicant extends UserAccount {
     ArrayList<JobApplication> getPreviousJobApplications() {
         ArrayList<JobApplication> previousJobApps = new ArrayList<>();
         for (JobApplication jobApplication : this.getJobApplications()) {
-            if (jobApplication.getStatus() == -1) {
+            if (jobApplication.getStatus() == -3) {
                 previousJobApps.add(jobApplication);
             }
         }
@@ -183,7 +198,7 @@ class Applicant extends UserAccount {
      * @return the number of days since the most recent job posting close date.
      */
     long getNumDaysSinceMostRecentClosing(LocalDate today) {
-        return DAYS.between(today, this.dateOfMostRecentClosing);
+        return DAYS.between(today, this.mostRecentCloseDate);
     }
 
     /**

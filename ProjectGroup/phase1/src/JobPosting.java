@@ -24,7 +24,7 @@ abstract class JobPosting {
     // The date on which this job posting is closed
     private LocalDate closeDate;
     // The list of job applications
-    private ArrayList<JobApplication> jobApplications = new ArrayList<>();
+    private ArrayList<JobApplication> applications = new ArrayList<>();
 
     // === Constructors ===
     JobPosting() {
@@ -45,12 +45,16 @@ abstract class JobPosting {
         return this.field;
     }
 
+    Company getCompany() {
+        return this.company;
+    }
+
     LocalDate getCloseDate() {
         return this.closeDate;
     }
 
-    ArrayList<JobApplication> getJobApplications() {
-        return this.jobApplications;
+    ArrayList<JobApplication> getApplications() {
+        return this.applications;
     }
 
     boolean isFilled() {
@@ -64,15 +68,11 @@ abstract class JobPosting {
     }
 
     // === Other methods ===
-    JobApplication findJobApplication(Applicant applicant) {
-        return null;
-    }
-
     void addApplication(JobApplication jobApplication) {
 
     }
 
-    void removeApplication(JobApplication jobApplication) {
+    void removeApplication(Applicant applicant) {
 
     }
 
