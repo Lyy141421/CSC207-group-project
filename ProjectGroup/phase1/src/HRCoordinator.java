@@ -186,8 +186,7 @@ class HRCoordinator extends UserAccount {
         JobPosting jobPosting = jobApplication.getJobPosting();
         String jobField = jobPosting.getField();
         Interviewer interviewer = this.company.findInterviewer(jobField);
-        LocalDateTime interviewTime = interviewer.getAvailableTime();
-        Interview interview = new Interview(jobApplication, interviewer, this, interviewTime, round);
+        Interview interview = new Interview(jobApplication, interviewer, this, round);
         this.company.addInterview(jobPosting, interview);
     }
 

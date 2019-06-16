@@ -49,6 +49,23 @@ class Interview {
      * @param jobApplication The job application in question.
      * @param interviewer    The interviewer.
      * @param hrCoordinator  The HRCoordinator who set-up the interview.
+     * @param roundNumber    The round number.
+     */
+    Interview(JobApplication jobApplication, Interviewer interviewer, HRCoordinator hrCoordinator, int roundNumber) {
+        this.jobApplication = jobApplication;
+        this.interviewer = interviewer;
+        this.hrCoordinator = hrCoordinator;
+        this.roundNumber = roundNumber;
+        this.ID = Interview.total;
+        Interview.total++;
+    }
+
+    /**
+     * Create a new interview.
+     *
+     * @param jobApplication The job application in question.
+     * @param interviewer    The interviewer.
+     * @param hrCoordinator  The HRCoordinator who set-up the interview.
      * @param time           The interview time.
      * @param roundNumber    The round number.
      */
