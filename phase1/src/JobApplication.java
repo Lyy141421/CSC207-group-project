@@ -45,7 +45,6 @@ class JobApplication {
      */
     JobApplication() {
         this.ID = JobApplication.totalNumOfApplications;
-        // this.status = ...;
         JobApplication.totalNumOfApplications++;
         this.applicationDate = LocalDate.now();
     }

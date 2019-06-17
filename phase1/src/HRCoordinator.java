@@ -165,10 +165,10 @@ class HRCoordinator extends User {
     }
 
     /**
-     * Advance this applicant to receive a phone interview / get hired.
+     * Advance this applicant to the next stage of interviews / be hired.
      *
      * @param jobApplication The job application of the applicant to be advanced.
-     * @return the applicant that will advance to the phone interview stage or be hired.
+     * @return the applicant that will advance to the next stage.
      */
     Applicant advanceApplicant(JobApplication jobApplication) {
         jobApplication.advanceStatus();
