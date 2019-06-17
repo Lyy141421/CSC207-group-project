@@ -42,53 +42,66 @@ class JobApplication {
 
     /**
      * Create a new job application.
+     * @param applicationDate   The date this application was created.
      */
-    JobApplication() {
+    JobApplication(LocalDate applicationDate) {
         this.ID = JobApplication.totalNumOfApplications;
+        this.applicationDate = applicationDate;
         JobApplication.totalNumOfApplications++;
-        this.applicationDate = LocalDate.now();
     }
-
-    ;
 
     /**
      * Create a new job application.
      *
-     * @param applicant   The Applicant associated with this application.
-     * @param jobPosting  The JobPosting associated with this application.
-     * @param CV          The CV of the applicant.
-     * @param coverletter The cover letter of the applicant.
+     * @param jobPosting The job posting that is being applied to.
      */
-    JobApplication(Applicant applicant, JobPosting jobPosting, File CV, File coverletter) {
+    JobApplication(JobPosting jobPosting, LocalDate applicationDate) {
+        this.ID = JobApplication.totalNumOfApplications;
+        this.jobPosting = jobPosting;
+        this.applicationDate = applicationDate;
+        JobApplication.totalNumOfApplications++;
+    }
+
+    /**
+     * Create a new job application.
+     *
+     * @param applicant         The Applicant associated with this application.
+     * @param jobPosting        The JobPosting associated with this application.
+     * @param CV                The CV of the applicant.
+     * @param coverletter       The cover letter of the applicant.
+     * @param applicationDate   The date this application was created.
+     */
+    JobApplication(Applicant applicant, JobPosting jobPosting, File CV, File coverletter, LocalDate applicationDate) {
         this.ID = JobApplication.totalNumOfApplications;
         this.applicant = applicant;
         this.jobPosting = jobPosting;
         this.CV = CV;
         this.coverLetter = coverletter;
+        this.applicationDate = applicationDate;
         JobApplication.totalNumOfApplications++;
-        this.applicationDate = LocalDate.now();
     }
 
     /**
      * Create a new job application.
      *
-     * @param ID          The application ID.
-     * @param applicant   The applicant associated with this application.
-     * @param jobPosting  The JobPosting associated with this application.
-     * @param CV          The CV of the applicant.
-     * @param coverletter The cover letter of the applicant.
+     * @param ID            The application ID.
+     * @param applicant     The applicant associated with this application.
+     * @param jobPosting    The JobPosting associated with this application.
+     * @param CV            The CV of the applicant.
+     * @param coverletter       The cover letter of the applicant.
      *                    //     * @param referenceLetters The reference letters for the applicant.
-     * @param status      The status of the application.
+     * @param status            The status of the application.
+     * @param applicationDate   The date this application was created.
      */
     JobApplication(int ID, Applicant applicant, JobPosting jobPosting, File CV, File coverletter,
-                   ArrayList<ReferenceLetter> referenceLetters, int status) {
+                   ArrayList<ReferenceLetter> referenceLetters, int status, LocalDate applicationDate) {
         this.ID = ID;
         this.applicant = applicant;
         this.jobPosting = jobPosting;
         this.CV = CV;
         this.coverLetter = coverletter;
 //        this.referenceLetters = referenceLetters;
-        this.applicationDate = LocalDate.now();
+        this.applicationDate = applicationDate;
         this.status = status;
         JobApplication.totalNumOfApplications++;
     }
@@ -168,6 +181,15 @@ class JobApplication {
     }
 
     // === Setters ===
+
+    /**
+     * Set the applicant for this application.
+     *
+     * @param applicant The applicant who is applying for a job.
+     */
+    void setApplicant(Applicant applicant) {
+        this.applicant = applicant;
+    }
 
     /**
      * Change the CV for this application.

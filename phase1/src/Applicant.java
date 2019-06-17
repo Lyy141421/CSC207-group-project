@@ -2,18 +2,14 @@ import java.io.File;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-import static java.time.temporal.ChronoUnit.DAYS;
-
 class Applicant extends User {
     /**
      * An account for a job applicant.
      */
 
     // === Instance variables ===
-    // List of job applications submitted
-    private ArrayList<JobApplication> jobApplications;
-    // Date that last application closed
-    private LocalDate mostRecentCloseDate;
+    // The applicant's job application manager
+    private JobApplicationManager jobApplicationManager = new JobApplicationManager();
 
     // === Constructors ===
 
@@ -28,7 +24,6 @@ class Applicant extends User {
      */
     Applicant(String username, String password, String legalName, String email, LocalDate dateCreated) {
         super(username, password, legalName, email, dateCreated);
-        this.jobApplications = new ArrayList<>();
     }
 
     /**
@@ -39,78 +34,37 @@ class Applicant extends User {
      * @param legalName       The applicant's legal name.
      * @param email           The applicant's email.
      * @param dateCreated     The date this account was created.
-     * @param jobApplications The job applications that this applicant has previously submitted.
+     * @param jobApplicationManager The job application manager for this applicant.
      */
     Applicant(String username, String password, String legalName, String email, LocalDate dateCreated,
-              ArrayList<JobApplication> jobApplications) {
+              JobApplicationManager jobApplicationManager) {
         super(username, password, legalName, email, dateCreated);
-        this.jobApplications = jobApplications;
+        this.jobApplicationManager = jobApplicationManager;
     }
 
     // === Getters ===
 
     /**
-     * Get all the job applications submitted.
+     * Get the job application manager for this applicant.
      *
-     * @return a list of all job applications submitted.
+     * @return the job application manager for this applicant.
      */
-    ArrayList<JobApplication> getJobApplications() {
-        return this.jobApplications;
-    }
-
-    /**
-     * Get the most recent closing date of all the job applications that this applicant has submitted.
-     *
-     * @return the most recent closing date of all the job applications that this applicant has submitted.
-     */
-    LocalDate getMostRecentCloseDate() {
-        return this.mostRecentCloseDate;
+    JobApplicationManager getJobApplicationManager() {
+        return this.jobApplicationManager;
     }
 
     // === Setters ===
 
     /**
-     * Set the job applications that this applicant has submitted.
+     * Set the job application manager for this applicant.
      *
-     * @param jobApplications The list of jobs that have been applied for.
+     * @param jobApplicationManager The job application manager for this applicant.
      */
-    void setJobApplications(ArrayList<JobApplication> jobApplications) {
-        this.jobApplications = jobApplications;
-    }
-
-    /**
-     * Set the most recent closing date of all the job applications that this applicant has submitted.
-     *
-     * @param date The most recent closing date of all the job applications that this applicant has submitted.
-     */
-    void setMostRecentCloseDate(LocalDate date) {
-        this.mostRecentCloseDate = date;
+    void setJobApplicationManager(JobApplicationManager jobApplicationManager) {
+        this.jobApplicationManager = jobApplicationManager;
     }
 
     // === Other methods ===
-
-    /**
-     * Find the most recent closing date of all the job applications that this applicant has submitted.
-     *
-     * @return the most recent closing date.
-     */
-    private LocalDate findMostRecentCloseDate() {
-        LocalDate mostRecentCloseDate = this.getJobApplications().get(0).getJobPosting().getCloseDate();
-        for (JobApplication jobApp : this.getJobApplications()) {
-            LocalDate closingDate = jobApp.getJobPosting().getCloseDate();
-            if (mostRecentCloseDate.isBefore(closingDate)) {
-                mostRecentCloseDate = closingDate;
-            }
-        }
-        return mostRecentCloseDate;
-    }
-
-    /**
-     * Update the date of most recent closing for this applicant.
-     */
-    void updateMostRecentCloseDate() {
-        this.setMostRecentCloseDate(this.findMostRecentCloseDate());
-    }
 
     /**
      * View job postings.
@@ -125,12 +79,14 @@ class Applicant extends User {
      * Apply for a job.
      *
      * @param jobPosting The job posting that this applicant wants to apply for.
+     * @param CV        The applicant's CV.
+     * @param coverLetter   The applicant's cover letter.
+     * @param applicationDate   The date this application was submitted.
      * @return true iff this application is successfully submitted (ie before closing date and has not already applied)
      */
-    boolean applyForJob(JobPosting jobPosting, File CV, File coverLetter) {
+    boolean applyForJob(JobPosting jobPosting, File CV, File coverLetter, LocalDate applicationDate) {
         if (LocalDate.now().isBefore(jobPosting.getCloseDate()) && !this.hasAppliedTo(jobPosting)) {
-            JobApplication jobApplication = new JobApplication(this, jobPosting, CV, coverLetter);
-            jobPosting.addApplication(jobApplication);
+            this.jobApplicationManager.addJobApplication(this, jobPosting, CV, coverLetter, applicationDate);
         }
         return false;
     }
@@ -169,13 +125,7 @@ class Applicant extends User {
      * @return a list of previous job applications submitted where the posting is now filled.
      */
     ArrayList<JobApplication> getPreviousJobApplications() {
-        ArrayList<JobApplication> previousJobApps = new ArrayList<>();
-        for (JobApplication jobApplication : this.getJobApplications()) {
-            if (jobApplication.getStatus() == -3) {
-                previousJobApps.add(jobApplication);
-            }
-        }
-        return previousJobApps;
+        return this.jobApplicationManager.getPreviousJobApplications();
     }
 
     /**
@@ -184,13 +134,7 @@ class Applicant extends User {
      * @return a list of current job applications submitted (posting is not yet filled).
      */
     ArrayList<JobApplication> getCurrentJobApplications() {
-        ArrayList<JobApplication> currentJobApps = new ArrayList<>();
-        for (JobApplication jobApplication : this.getJobApplications()) {
-            if (!this.getPreviousJobApplications().contains(jobApplication)) {
-                currentJobApps.add(jobApplication);
-            }
-        }
-        return currentJobApps;
+        return this.jobApplicationManager.getCurrentJobApplications();
     }
 
     /**
@@ -200,7 +144,7 @@ class Applicant extends User {
      * @return the number of days since the most recent job posting close date.
      */
     long getNumDaysSinceMostRecentClosing(LocalDate today) {
-        return DAYS.between(today, this.mostRecentCloseDate);
+        return this.jobApplicationManager.getNumDaysSinceMostRecentClosing(today);
     }
 
     /**
@@ -210,7 +154,7 @@ class Applicant extends User {
      * @return true iff today's date is 30 days after the closing date for the last job this applicant applied to.
      */
     boolean isInactive(LocalDate today) {
-        return getNumDaysSinceMostRecentClosing(today) == 30;
+        return this.jobApplicationManager.getNumDaysSinceMostRecentClosing(today) == 30;
     }
 
 //    /**
