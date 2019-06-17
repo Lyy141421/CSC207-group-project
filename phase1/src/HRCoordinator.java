@@ -145,7 +145,7 @@ class HRCoordinator extends User {
      */
     ArrayList<JobApplication> viewPreviousApplicationsToCompany(Applicant applicant) {
         ArrayList<JobApplication> previousApps = new ArrayList<>();
-        for (JobApplication jobApp : applicant.getJobApplications()) {
+        for (JobApplication jobApp : applicant.getAllJobApplications()) {
             if (jobApp.getJobPosting().getCompany().equals(this.company)) {
                 previousApps.add(jobApp);
             }

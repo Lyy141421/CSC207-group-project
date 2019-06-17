@@ -6,9 +6,9 @@ public class JobApplicationSystem {
 
     // === Instance variables ===
     // List of companies registered in the system
-    static ArrayList<Company> companies = new ArrayList<>();
+    private static ArrayList<Company> companies = new ArrayList<>();
     // The user manager for the system
-    static UserManager userManager;
+    private static UserManager userManager;
 
     public static void main(String[] args) {
         cyclicalTask();
@@ -88,6 +88,8 @@ public class JobApplicationSystem {
      * @return the company with this name.
      */
     static Company addCompany(String name) {
-        return new Company(name);
+        Company company = new Company(name);
+        JobApplicationSystem.companies.add(company);
+        return company;
     }
 }

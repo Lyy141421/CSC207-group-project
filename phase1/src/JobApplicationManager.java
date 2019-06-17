@@ -23,7 +23,7 @@ class JobApplicationManager {
     /**
      * Create a job application manager.
      *
-     * @param jobApplications
+     * @param jobApplications List of job applications that this applicant has submitted.
      */
     JobApplicationManager(ArrayList<JobApplication> jobApplications) {
         this.jobApplications = jobApplications;
@@ -72,6 +72,20 @@ class JobApplicationManager {
     // === Other methods ===
 
     /**
+     * Create a job application to this applicant's application list.
+     *
+     * @param applicant       The applicant applying for a job.
+     * @param jobPosting      The job posting to be applied to.
+     * @param CV              The applicant's CV.
+     * @param coverLetter     The applicant's cover letter.
+     * @param applicationDate The date this application is submitted.
+     */
+    JobApplication createJobApplication(Applicant applicant, JobPosting jobPosting, File CV, File coverLetter,
+                                        LocalDate applicationDate) {
+        return new JobApplication(applicant, jobPosting, CV, coverLetter, applicationDate);
+    }
+
+    /**
      * Add a job application to this applicant's application list.
      *
      * @param applicant       The applicant applying for a job.
@@ -82,7 +96,7 @@ class JobApplicationManager {
      */
     void addJobApplication(Applicant applicant, JobPosting jobPosting, File CV, File coverLetter,
                            LocalDate applicationDate) {
-        JobApplication app = new JobApplication(applicant, jobPosting, CV, coverLetter, applicationDate);
+        JobApplication app = this.createJobApplication(applicant, jobPosting, CV, coverLetter, applicationDate);
         this.jobApplications.add(app);
     }
 
@@ -171,8 +185,7 @@ class JobApplicationManager {
      * @return the number of days since the most recent job posting close date.
      */
     long getNumDaysSinceMostRecentClosing(LocalDate today) {
-
-        return DAYS.between(today, this.mostRecentCloseDate);
+        return Math.max(0, DAYS.between(today, this.mostRecentCloseDate));
     }
 
 }

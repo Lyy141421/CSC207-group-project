@@ -38,6 +38,11 @@ class Company {
         return this.jobPostings;
     }
 
+    // === Setters ===
+    void setJobPostings(ArrayList<JobPosting> jobPostings) {
+        this.jobPostings = jobPostings;
+    }
+
     // === Other methods ===
     Applicant getFinalCandidate(JobPosting jobPosting) {
         return null;

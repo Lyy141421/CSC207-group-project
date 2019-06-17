@@ -13,6 +13,11 @@ class Applicant extends User {
 
     // === Constructors ===
 
+    Applicant() {
+    }
+
+    ;
+
     /**
      * Create an applicant account.
      *
@@ -100,6 +105,7 @@ class Applicant extends User {
     boolean withdrawApplication(JobPosting jobPosting) {
         if (this.hasAppliedTo(jobPosting) && !jobPosting.isFilled()) {
             jobPosting.removeApplication(this);
+            this.jobApplicationManager.removeJobApplication(jobPosting);
         }
         return true;
     }
@@ -117,6 +123,15 @@ class Applicant extends User {
             }
         }
         return false;
+    }
+
+    /**
+     * Get all job applications for this applicant.
+     *
+     * @return a list of all job applciations submitted by this applicant.
+     */
+    ArrayList<JobApplication> getAllJobApplications() {
+        return this.jobApplicationManager.getJobApplications();
     }
 
     /**

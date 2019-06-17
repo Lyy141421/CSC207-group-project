@@ -44,6 +44,10 @@ abstract class JobPosting {
     }
 
     // === Getters ===
+    String getTitle() {
+        return this.title;
+    }
+
     String getField() {
         return this.field;
     }
@@ -68,6 +72,10 @@ abstract class JobPosting {
     // == Setters ===
     void setFilled() {
         this.filled = true;
+    }
+
+    void setCloseDate(LocalDate closeDate) {
+        this.closeDate = closeDate;
     }
 
     // === Other methods ===
