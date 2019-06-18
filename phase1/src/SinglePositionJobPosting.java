@@ -7,7 +7,7 @@ class SinglePositionJobPosting extends JobPosting {
     }
 
     SinglePositionJobPosting(String title, String field, String description, ArrayList<String> requirements,
-                             LocalDate postDate, LocalDate closeDate) {
-        super(title, field, description, requirements, postDate, closeDate);
+                             Company company, LocalDate postDate, LocalDate closeDate) {
+        super(title, field, description, requirements, company, postDate, closeDate);
     }
 }

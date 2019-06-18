@@ -29,7 +29,8 @@ class HRCoordinator extends User {
      * @param company     The company that this HR Coordinator works for.
      * @param dateCreated The date this account was created.
      */
-    HRCoordinator(String username, String password, String legalName, String email, Company company, LocalDate dateCreated) {
+    HRCoordinator(String username, String password, String legalName, String email, Company company,
+                  LocalDate dateCreated) {
         super(username, password, legalName, email, dateCreated);
         this.company = company;
     }
@@ -57,6 +58,22 @@ class HRCoordinator extends User {
     // === Other methods ===
 
     /**
+     * Create a new job posting.
+     *
+     * @param jobTitle       The job title.
+     * @param jobDescription The job description.
+     * @param requirements   The list of requirements for this job.
+     * @param postDate       The date this job posting was posted.
+     * @param closeDate      The date this job posting is closed.
+     * @return the job posting created.
+     */
+    private JobPosting createJobPosting(String jobTitle, String jobField, String jobDescription,
+                                        ArrayList<String> requirements, LocalDate postDate, LocalDate closeDate) {
+        return new SinglePositionJobPosting(jobTitle, jobField, jobDescription, requirements,
+                this.company, postDate, closeDate);
+    }
+
+    /**
      * Create and add a job posting to the system.
      *
      * @param jobTitle       The job title.
@@ -67,8 +84,8 @@ class HRCoordinator extends User {
      */
     void addJobPosting(String jobTitle, String jobField, String jobDescription, ArrayList<String> requirements,
                        LocalDate postDate, LocalDate closeDate) {
-        JobPosting jobPosting = new SinglePositionJobPosting(jobTitle, jobField, jobDescription, requirements,
-                postDate, closeDate);
+        JobPosting jobPosting = this.createJobPosting(jobTitle, jobField, jobDescription, requirements, postDate,
+                closeDate);
         this.company.addJobPosting(jobPosting);
     }
 
@@ -87,8 +104,19 @@ class HRCoordinator extends User {
      * @param jobPosting The job posting to be viewed.
      * @return a list of applications for this job posting.
      */
-    ArrayList<JobApplication> viewAllJobApplications(JobPosting jobPosting) {
+    ArrayList<JobApplication> viewAllApplications(JobPosting jobPosting) {
         return jobPosting.getApplications();
+    }
+
+    /**
+     * View the complete application for this applicant.
+     *
+     * @param jobPosting The job posting that is being reviewed.
+     * @param applicant  The applicant that is being reviewed.
+     * @return the application from this applicant for this job posting.
+     */
+    JobApplication viewApplication(JobPosting jobPosting, Applicant applicant) {
+        return jobPosting.findApplication(applicant);
     }
 
     /**
@@ -99,7 +127,7 @@ class HRCoordinator extends User {
      * @return the cover letter from this applicant for this job posting.
      */
     File viewCoverLetter(JobPosting jobPosting, Applicant applicant) {
-        return jobPosting.findApplication(applicant).getCoverLetter();
+        return this.viewApplication(jobPosting, applicant).getCoverLetter();
     }
 
     /**
@@ -110,7 +138,7 @@ class HRCoordinator extends User {
      * @return the applicant's CV for this job posting.
      */
     File viewCV(JobPosting jobPosting, Applicant applicant) {
-        return jobPosting.findApplication(applicant).getCV();
+        return this.viewApplication(jobPosting, applicant).getCV();
     }
 
 //    /**
@@ -131,26 +159,26 @@ class HRCoordinator extends User {
      */
     ArrayList<Applicant> viewAllApplicants(JobPosting jobPosting) {
         ArrayList<Applicant> applicants = new ArrayList<>();
-        for (JobApplication jobApp : this.viewAllJobApplications(jobPosting)) {
+        for (JobApplication jobApp : this.viewAllApplications(jobPosting)) {
             applicants.add(jobApp.getApplicant());
         }
         return applicants;
     }
 
     /**
-     * View all previous applications this applicant has submitted for job postings in this company.
+     * View all applications this applicant has submitted for job postings in this company.
      *
      * @param applicant The applicant in question.
      * @return a list of job applications that this applicant has previously submitted to this company.
      */
-    ArrayList<JobApplication> viewPreviousApplicationsToCompany(Applicant applicant) {
-        ArrayList<JobApplication> previousApps = new ArrayList<>();
+    ArrayList<JobApplication> viewAllApplicationsToCompany(Applicant applicant) {
+        ArrayList<JobApplication> apps = new ArrayList<>();
         for (JobApplication jobApp : applicant.getAllJobApplications()) {
             if (jobApp.getJobPosting().getCompany().equals(this.company)) {
-                previousApps.add(jobApp);
+                apps.add(jobApp);
             }
         }
-        return previousApps;
+        return apps;
     }
 
     /**
@@ -165,14 +193,35 @@ class HRCoordinator extends User {
     }
 
     /**
-     * Advance this applicant to the next stage of interviews / be hired.
+     * Advance this application to the next stage of interviews / be hired.
      *
      * @param jobApplication The job application of the applicant to be advanced.
-     * @return the applicant that will advance to the next stage.
      */
-    Applicant advanceApplicant(JobApplication jobApplication) {
+    void advanceApplication(JobApplication jobApplication) {
         jobApplication.advanceStatus();
-        return jobApplication.getApplicant();
+    }
+
+    /**
+     * Create an interviewer for jobs in this field.
+     *
+     * @param email The interviewer's email.
+     * @param field The job field that the interviewer specializes in.
+     * @param today Today's date.
+     * @return the interviewer created.
+     */
+    Interviewer createInterviewer(String email, String field, LocalDate today) {
+        return new Interviewer(email, this.company, field, today);
+    }
+
+    /**
+     * Add an interviewer for jobs in this field.
+     *
+     * @param email The interviewer's email.
+     * @param field The job field that the interviewer specializes in.
+     * @param today Today's date.
+     */
+    void addInterviewer(String email, String field, LocalDate today) {
+        this.company.addInterviewer(field, this.createInterviewer(email, field, today));
     }
 
     /**

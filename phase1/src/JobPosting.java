@@ -32,12 +32,13 @@ abstract class JobPosting {
     JobPosting() {
     }
 
-    JobPosting(String title, String field, String description, ArrayList<String> requirements, LocalDate postDate,
-               LocalDate closeDate) {
+    JobPosting(String title, String field, String description, ArrayList<String> requirements, Company company,
+               LocalDate postDate, LocalDate closeDate) {
         this.title = title;
         this.field = field;
         this.description = description;
         this.requirements = requirements;
+        this.company = company;
         this.postDate = postDate;
         this.closeDate = closeDate;
         this.interviewManager = new InterviewManager();
@@ -90,6 +91,5 @@ abstract class JobPosting {
     JobApplication findApplication(Applicant applicant) {
         return null;
     }
-
 
 }
