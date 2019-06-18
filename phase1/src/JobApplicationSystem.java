@@ -82,14 +82,21 @@ public class JobApplicationSystem {
     }
 
     /**
-     * Add a company to the system.
+     * Create a company.
      *
      * @param name The name of the company.
      * @return the company with this name.
      */
-    static Company addCompany(String name) {
-        Company company = new Company(name);
-        JobApplicationSystem.companies.add(company);
-        return company;
+    static Company createCompany(String name) {
+        return new Company(name);
+    }
+
+    /**
+     * Add a company to the system.
+     *
+     * @param name The name of the company.
+     */
+    static void addCompany(String name) {
+        JobApplicationSystem.companies.add(JobApplicationSystem.createCompany(name));
     }
 }

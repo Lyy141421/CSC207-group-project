@@ -184,7 +184,7 @@ class JobApplicationManager {
      * @param today Today's date.
      * @return the number of days since the most recent job posting close date.
      */
-    long getNumDaysSinceMostRecentClosing(LocalDate today) {
+    long getNumDaysSinceMostRecentCloseDate(LocalDate today) {
         return Math.max(0, DAYS.between(today, this.mostRecentCloseDate));
     }
 

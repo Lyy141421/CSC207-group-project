@@ -26,7 +26,7 @@ abstract class JobPosting {
     // The list of job applications
     private ArrayList<JobApplication> applications = new ArrayList<>();
     // Interview manager for this job posting
-    private InterviewManager interviewManager;
+    private InterviewManager interviewManager = new InterviewManager();
 
     // === Constructors ===
     JobPosting() {
@@ -41,7 +41,6 @@ abstract class JobPosting {
         this.company = company;
         this.postDate = postDate;
         this.closeDate = closeDate;
-        this.interviewManager = new InterviewManager();
     }
 
     // === Getters ===
@@ -80,15 +79,23 @@ abstract class JobPosting {
     }
 
     // === Other methods ===
-    void addApplication(JobApplication jobApplication) {
+    void addJobApplication(JobApplication jobApplication) {
 
     }
 
-    void removeApplication(Applicant applicant) {
+    void removeJobApplication(Applicant applicant) {
 
     }
 
-    JobApplication findApplication(Applicant applicant) {
+    JobApplication findJobApplication(Applicant applicant) {
+        return null;
+    }
+
+    void addInterview(Interview interview) {
+
+    }
+
+    Applicant getFinalCandidate() {
         return null;
     }
 

@@ -110,12 +110,12 @@ class JobApplicationManagerTest {
     }
 
     @Test
-    void testGetNumDaysSinceMostRecentClosing() {
+    void testGetNumDaysSinceMostRecentCloseDate() {
         JobApplicationManager JAM = this.createJobApplicationManager();
         LocalDate today = LocalDate.of(2019, 7, 9);
-        assertEquals(1, JAM.getNumDaysSinceMostRecentClosing(today));
+        assertEquals(1, JAM.getNumDaysSinceMostRecentCloseDate(today));
 
         LocalDate today1 = LocalDate.of(2019, 6, 30);
-        assertEquals(0, JAM.getNumDaysSinceMostRecentClosing(today1));
+        assertEquals(0, JAM.getNumDaysSinceMostRecentCloseDate(today1));
     }
 }

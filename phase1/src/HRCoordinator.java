@@ -99,16 +99,6 @@ class HRCoordinator extends User {
     }
 
     /**
-     * View all the applications for this job posting.
-     *
-     * @param jobPosting The job posting to be viewed.
-     * @return a list of applications for this job posting.
-     */
-    ArrayList<JobApplication> viewAllApplications(JobPosting jobPosting) {
-        return jobPosting.getApplications();
-    }
-
-    /**
      * View the complete application for this applicant.
      *
      * @param jobPosting The job posting that is being reviewed.
@@ -116,7 +106,7 @@ class HRCoordinator extends User {
      * @return the application from this applicant for this job posting.
      */
     JobApplication viewApplication(JobPosting jobPosting, Applicant applicant) {
-        return jobPosting.findApplication(applicant);
+        return jobPosting.findJobApplication(applicant);
     }
 
     /**
@@ -150,6 +140,16 @@ class HRCoordinator extends User {
 //    ArrayList<File> viewReferenceLetters(JobPosting jobPosting, Applicant applicant) {
 //        return jobPosting.findApplication(applicant).getReferenceLetters();
 //    }
+
+    /**
+     * View all the applications for this job posting.
+     *
+     * @param jobPosting The job posting to be viewed.
+     * @return a list of applications for this job posting.
+     */
+    ArrayList<JobApplication> viewAllApplications(JobPosting jobPosting) {
+        return jobPosting.getApplications();
+    }
 
     /**
      * View all the applicants for this job posting.
@@ -221,7 +221,7 @@ class HRCoordinator extends User {
      * @param today Today's date.
      */
     void addInterviewer(String email, String field, LocalDate today) {
-        this.company.addInterviewer(field, this.createInterviewer(email, field, today));
+        this.company.addInterviewer(this.createInterviewer(email, field, today));
     }
 
     /**
@@ -235,7 +235,7 @@ class HRCoordinator extends User {
         String jobField = jobPosting.getField();
         Interviewer interviewer = this.company.findInterviewer(jobField);
         Interview interview = new Interview(jobApplication, interviewer, this, round);
-        this.company.addInterview(jobPosting, interview);
+        jobPosting.addInterview(interview);
     }
 
     /**
@@ -245,7 +245,7 @@ class HRCoordinator extends User {
      */
     Applicant hireApplicant(JobPosting jobPosting) {
         this.updateJobPostingStatus(jobPosting);
-        return this.company.getFinalCandidate(jobPosting);
+        return jobPosting.getFinalCandidate();
     }
 
 

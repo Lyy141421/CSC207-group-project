@@ -16,8 +16,6 @@ class Applicant extends User {
     Applicant() {
     }
 
-    ;
-
     /**
      * Create an applicant account.
      *
@@ -104,7 +102,7 @@ class Applicant extends User {
      */
     boolean withdrawApplication(JobPosting jobPosting) {
         if (this.hasAppliedTo(jobPosting) && !jobPosting.isFilled()) {
-            jobPosting.removeApplication(this);
+            jobPosting.removeJobApplication(this);
             this.jobApplicationManager.removeJobApplication(jobPosting);
         }
         return true;
@@ -159,7 +157,7 @@ class Applicant extends User {
      * @return the number of days since the most recent job posting close date.
      */
     long getNumDaysSinceMostRecentClosing(LocalDate today) {
-        return this.jobApplicationManager.getNumDaysSinceMostRecentClosing(today);
+        return this.jobApplicationManager.getNumDaysSinceMostRecentCloseDate(today);
     }
 
     /**
@@ -169,7 +167,7 @@ class Applicant extends User {
      * @return true iff today's date is 30 days after the closing date for the last job this applicant applied to.
      */
     boolean isInactive(LocalDate today) {
-        return this.jobApplicationManager.getNumDaysSinceMostRecentClosing(today) == 30;
+        return this.jobApplicationManager.getNumDaysSinceMostRecentCloseDate(today) == 30;
     }
 
 //    /**

@@ -1,4 +1,4 @@
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 class Interview {
     /**
@@ -16,8 +16,10 @@ class Interview {
     private Interviewer interviewer;
     // The HRCoordinator who set up the interview
     private HRCoordinator hrCoordinator;
-    // The time of the interview
-    private LocalDateTime time;
+    // The date of this interview
+    private LocalDate date;
+    // The time slot of the interview
+    private int timeSlot;
     // Interview notes
     private String interviewNotes = "";
     // The result of the interview (if the applicant passed)
@@ -66,15 +68,17 @@ class Interview {
      * @param jobApplication The job application in question.
      * @param interviewer    The interviewer.
      * @param hrCoordinator  The HRCoordinator who set-up the interview.
-     * @param time           The interview time.
+     * @param date           The date of this interview.
+     * @param timeSlot       The interview time slot.
      * @param roundNumber    The round number.
      */
     Interview(JobApplication jobApplication, Interviewer interviewer, HRCoordinator hrCoordinator,
-              LocalDateTime time, int roundNumber) {
+              LocalDate date, int timeSlot, int roundNumber) {
         this.jobApplication = jobApplication;
         this.interviewer = interviewer;
         this.hrCoordinator = hrCoordinator;
-        this.time = time;
+        this.date = date;
+        this.timeSlot = timeSlot;
         this.roundNumber = roundNumber;
         this.ID = Interview.total;
         Interview.total++;
@@ -128,12 +132,20 @@ class Interview {
     }
 
     /**
-     * Get the interview time.
-     *
-     * @return the interview time.
+     * Get the interview date.
+     * @return the interview date.
      */
-    LocalDateTime getTime() {
-        return this.time;
+    LocalDate getDate() {
+        return this.date;
+    }
+
+    /**
+     * Get the interview time slot.
+     *
+     * @return the interview time slot.
+     */
+    int getTimeSlot() {
+        return this.timeSlot;
     }
 
     /**
@@ -154,5 +166,23 @@ class Interview {
      */
     void setInterviewNotes(String notes) {
         this.interviewNotes = notes;
+    }
+
+    /**
+     * Set the date for this interview.
+     *
+     * @param date The interview date.
+     */
+    void setDate(LocalDate date) {
+        this.date = date;
+    }
+
+    /**
+     * Set the time slot for this interview.
+     *
+     * @param timeSlot The time slot of this interview.
+     */
+    void setTimeSlot(int timeSlot) {
+        this.timeSlot = timeSlot;
     }
 }
