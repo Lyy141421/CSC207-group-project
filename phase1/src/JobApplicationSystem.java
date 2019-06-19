@@ -55,7 +55,7 @@ public class JobApplicationSystem {
     }
 
     // === Other methods ===
-    /*
+    /**
     A method which triggers once a day from the time it is started.
      */
     private static void cyclicalTask(){
