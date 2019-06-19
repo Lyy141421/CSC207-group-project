@@ -96,7 +96,7 @@ abstract class JobPosting {
     }
 
     void addInterview(Interview interview) {
-
+        this.interviewManager.addInterview(interview);
     }
 
     Applicant getFinalCandidate() {
