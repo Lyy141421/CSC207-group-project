@@ -41,11 +41,11 @@ class UserManager {
     // === Array operations on allUsers ===
     /**
      * @param username Account being searched for
-     * @return Account with the provided username. >RETURNS A DEFAULT APPLICANT IF NONE FOUND<
+     * @return Account with the provided username. >RETURNS NULL IF NONE FOUND<
      * TODO: Figure out a better way to deal with non-existent accounts
      */
     User findUserByUsername(String username) {
-        User returnUser = new Applicant(); //Returned default account
+        User returnUser = null;
         for(int i=0; i < allUsers.length - 1; i++) {
             if(allUsers[i] == null) {
                 break;
