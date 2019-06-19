@@ -119,6 +119,15 @@ class Interview {
     }
 
     /**
+     * Get the interviewManager.
+     *
+     * @return the interviewManager.
+     */
+    InterviewManager getInterviewManager() {
+        return this.interviewManager;
+    }
+
+    /**
      * Get the interviewer.
      *
      * @return the interviewer.
@@ -198,5 +207,9 @@ class Interview {
      */
     void setTimeSlot(int timeSlot) {
         this.timeSlot = timeSlot;
+    }
+
+    void failInterview () {
+        this.pass = false;
     }
 }

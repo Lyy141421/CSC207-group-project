@@ -42,5 +42,16 @@ class Interviewer extends User {
         return new HashMap<>();
     }
 
+    void advanceApplicant (Interview interview) {
 
+    }
+
+    void rejectApplicant (Interview interview) {
+        //Code smell
+        InterviewManager interviewManager = interview.getInterviewManager();
+        interviewManager.reject(interview.getApplicant());
+        interview.failInterview();
+        //update round number?
+        interviewManager.completeInterview(interview);
+    }
 }
