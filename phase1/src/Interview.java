@@ -146,15 +146,6 @@ class Interview {
     }
 
     /**
-     * Get the interview notes written by the interviewer.
-     *
-     * @return the interview notes.
-     */
-    String getInterviewNotes() {
-        return this.interviewNotes;
-    }
-
-    /**
      * Get the interview date.
      * @return the interview date.
      */
@@ -169,6 +160,24 @@ class Interview {
      */
     int getTimeSlot() {
         return this.timeSlot;
+    }
+
+    /**
+     * Get the interview notes written by the interviewer.
+     *
+     * @return the interview notes.
+     */
+    String getInterviewNotes() {
+        return this.interviewNotes;
+    }
+
+    /**
+     * Get whether this interview has been passed.
+     *
+     * @return true iff the applicant has passed this interview.
+     */
+    Boolean isPassed() {
+        return this.pass;
     }
 
     /**
@@ -209,7 +218,13 @@ class Interview {
         this.timeSlot = timeSlot;
     }
 
-    void failInterview () {
+
+    // === Other methods ===
+
+    /**
+     * Record that this applicant has failed this interview.
+     */
+    void setFail() {
         this.pass = false;
     }
 }

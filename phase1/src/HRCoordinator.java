@@ -235,7 +235,8 @@ class HRCoordinator extends User {
         String jobField = jobPosting.getField();
         Interviewer interviewer = this.company.findInterviewer(jobField);
         // Modified the initializer to include the InterviewManager of the posting
-        Interview interview = new Interview(jobApplication, interviewer, this, jobPosting.getInterviewManager(), round);
+        Interview interview = new Interview(jobApplication, interviewer, this,
+                jobPosting.getInterviewManager(), round);
         jobPosting.addInterview(interview);
     }
 
@@ -247,6 +248,22 @@ class HRCoordinator extends User {
     Applicant hireApplicant(JobPosting jobPosting) {
         this.updateJobPostingStatus(jobPosting);
         return jobPosting.getFinalCandidate();
+    }
+
+    /**
+     * Advance the round of interviews for this job posting.
+     *
+     * @param today      Today's date.
+     * @param jobPosting The job posting in question.
+     */
+    void advanceInterviewRound(LocalDate today, JobPosting jobPosting) {
+        InterviewManager interviewManager = jobPosting.getInterviewManager();
+        if (interviewManager.getCurrentRound() < 3) {
+            Interview lastInterview = interviewManager.getLastInterviewForCurrentRound();
+            if (today.isAfter(lastInterview.getDate())) {
+                interviewManager.advanceRound();
+            }
+        }
     }
 
 
