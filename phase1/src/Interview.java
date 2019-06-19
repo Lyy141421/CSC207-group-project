@@ -26,6 +26,8 @@ class Interview {
     private boolean pass = true;
     // Interview round
     private int roundNumber;
+    // InterviewManager of the job posting this interview is held for
+    InterviewManager interviewManager;
 
     // === Representation invariants ===
     // ID >= 0
@@ -53,10 +55,12 @@ class Interview {
      * @param hrCoordinator  The HRCoordinator who set-up the interview.
      * @param roundNumber    The round number.
      */
-    Interview(JobApplication jobApplication, Interviewer interviewer, HRCoordinator hrCoordinator, int roundNumber) {
+    Interview(JobApplication jobApplication, Interviewer interviewer, HRCoordinator hrCoordinator,
+              InterviewManager interviewManager, int roundNumber) {
         this.jobApplication = jobApplication;
         this.interviewer = interviewer;
         this.hrCoordinator = hrCoordinator;
+        this.interviewManager = interviewManager;
         this.roundNumber = roundNumber;
         this.ID = Interview.total;
         Interview.total++;
@@ -73,10 +77,11 @@ class Interview {
      * @param roundNumber    The round number.
      */
     Interview(JobApplication jobApplication, Interviewer interviewer, HRCoordinator hrCoordinator,
-              LocalDate date, int timeSlot, int roundNumber) {
+              InterviewManager interviewManager, LocalDate date, int timeSlot, int roundNumber) {
         this.jobApplication = jobApplication;
         this.interviewer = interviewer;
         this.hrCoordinator = hrCoordinator;
+        this.interviewManager = interviewManager;
         this.date = date;
         this.timeSlot = timeSlot;
         this.roundNumber = roundNumber;
@@ -102,6 +107,15 @@ class Interview {
      */
     JobApplication getJobApplication() {
         return this.jobApplication;
+    }
+
+    /**
+     * Get the applicant.
+     *
+     * @return the applicant.
+     */
+    Applicant getApplicant() {
+        return this.jobApplication.getApplicant();
     }
 
     /**

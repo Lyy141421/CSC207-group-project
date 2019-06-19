@@ -68,6 +68,10 @@ abstract class JobPosting {
         return this.filled;
     }
 
+    InterviewManager getInterviewManager () {
+        return this.interviewManager;
+    }
+
 
     // == Setters ===
     void setFilled() {

@@ -234,7 +234,8 @@ class HRCoordinator extends User {
         JobPosting jobPosting = jobApplication.getJobPosting();
         String jobField = jobPosting.getField();
         Interviewer interviewer = this.company.findInterviewer(jobField);
-        Interview interview = new Interview(jobApplication, interviewer, this, round);
+        // Modified the initializer to include the InterviewManager of the posting
+        Interview interview = new Interview(jobApplication, interviewer, this, jobPosting.getInterviewManager(), round);
         jobPosting.addInterview(interview);
     }
 
