@@ -1,11 +1,12 @@
 import java.io.BufferedReader;
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 class UserManager {
     // Class that stores, creates and updates children of the User class
 
     // === Instance Variables ===
-    private User[] allUsers = new User[50]; //Array in which all users are stored
+    private ArrayList<User> allUsers = new ArrayList<>(); //Array in which all users are stored
 
     UserManager(BufferedReader appUsers) {
         //TODO: instantiate existing users upon startup by reading appUsers
@@ -42,59 +43,22 @@ class UserManager {
     /**
      * @param username Account being searched for
      * @return Account with the provided username. >RETURNS NULL IF NONE FOUND<
-     * TODO: Figure out a better way to deal with non-existent accounts
      */
     User findUserByUsername(String username) {
-        User returnUser = null;
-        for(int i=0; i < allUsers.length - 1; i++) {
-            if(allUsers[i] == null) {
-                break;
-            } else if(allUsers[i].getUsername().equals(username)) {
-                returnUser = allUsers[i];
-                break;
+        for (User user : this.allUsers) {
+            if (user.getUsername().equals(username)) {
+                return user;
             }
         }
-        return returnUser;
+        return null;    // You can throw a NullPointerException and then handle it in the login-loop in the interface
     }
 
     /**
-     * Adds the passed user to allUsers. Checks and expands allUsers size when required.
+     * Adds the passed user to allUsers.
      *
      * @param newUser The user object being added to allUsers
      */
     private void addToAllUsers(User newUser) {
-        this.allUsersSizeCheck();
-        for(int i=0; i < this.allUsers.length - 1; i++) {
-            if(this.allUsers[i] == null) {
-                this.allUsers[i] = newUser;
-                break;
-            }
-        }
-    }
-
-    /**
-     * Helper function for any method that adds to allUsers.
-     * Checks if allUsers is full with usersIsFull, and expands the size of the array if it is.
-     */
-    private void allUsersSizeCheck() {
-        if(this.usersIsFull()) {
-            int oldArrayLen = this.allUsers.length;
-            User[] newArray = new User[oldArrayLen + 10];
-            System.arraycopy(this.allUsers, 0, newArray, 0, oldArrayLen);
-            this.allUsers = newArray;
-        }
-    }
-
-    /**
-     * Helper function for allUsersSizeCheck
-     * Checks if the array storing users allUsers is full or not.
-     */
-    private boolean usersIsFull() {
-        for(int i=0; i < this.allUsers.length - 1; i++) {
-            if(this.allUsers[i] == null) {
-                return false;
-            }
-        }
-        return true;
+        this.allUsers.add(newUser);
     }
 }

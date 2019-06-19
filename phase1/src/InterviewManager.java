@@ -120,7 +120,7 @@ class InterviewManager {
      *
      * @param jobApplication The application to be rejected.
      */
-    void reject(JobApplication jobApplication) {
+    private void reject(JobApplication jobApplication) {
         ArrayList<Interview> interviews = this.applicationsInConsideration.get(jobApplication);
         this.applicationsInConsideration.remove(jobApplication);
         this.applicationsRejected.put(jobApplication, interviews);
