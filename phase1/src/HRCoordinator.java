@@ -202,6 +202,29 @@ class HRCoordinator extends User {
     }
 
     /**
+     * Get an array of a list of job applications selected and a list of job applications rejected for a phone
+     * interview for this job posting.
+     *
+     * @param jobPosting The job posting in question.
+     * @return an array of lists of job applications selected and rejected for a phone interview.
+     */
+    private ArrayList<JobApplication>[] getApplicationsForPhoneInterview(JobPosting jobPosting) {
+        ArrayList<JobApplication>[] jobApps = new ArrayList[2];
+        ArrayList<JobApplication> jobApplicationsInConsideration = new ArrayList<>();
+        ArrayList<JobApplication> jobApplicationsRejected = new ArrayList<>();
+        jobApps[0] = jobApplicationsInConsideration;
+        jobApps[1] = jobApplicationsRejected;
+        for (JobApplication jobApplication : jobPosting.getApplications()) {
+            if (jobApplication.getStatus() == 0) {
+                jobApplicationsInConsideration.add(jobApplication);
+            } else {
+                jobApplicationsRejected.add(jobApplication);
+            }
+        }
+        return jobApps;
+    }
+
+    /**
      * Create an interviewer for jobs in this field.
      *
      * @param email The interviewer's email.
@@ -225,6 +248,17 @@ class HRCoordinator extends User {
     }
 
     /**
+     * Create an interview manager for this job posting.
+     *
+     * @param jobPosting The job posting in question.
+     */
+    void createInterviewManager(JobPosting jobPosting) {
+        ArrayList<JobApplication>[] jobApps = this.getApplicationsForPhoneInterview(jobPosting);
+        InterviewManager interviewManager = new InterviewManager(jobPosting, jobApps[0], jobApps[1]);
+        jobPosting.setInterviewManager(interviewManager);
+    }
+
+    /**
      * Set up an interview for the applicant with this job application.
      *
      * @param jobApplication The job application of the applicant.
@@ -234,20 +268,9 @@ class HRCoordinator extends User {
         JobPosting jobPosting = jobApplication.getJobPosting();
         String jobField = jobPosting.getField();
         Interviewer interviewer = this.company.findInterviewer(jobField);
-        // Modified the initializer to include the InterviewManager of the posting
         Interview interview = new Interview(jobApplication, interviewer, this,
                 jobPosting.getInterviewManager(), round);
         jobPosting.addInterview(interview);
-    }
-
-    /**
-     * Hire this applicant for this job position.
-     *
-     * @param jobPosting The job posting to be filled.
-     */
-    Applicant hireApplicant(JobPosting jobPosting) {
-        this.updateJobPostingStatus(jobPosting);
-        return jobPosting.getFinalCandidate();
     }
 
     /**
@@ -264,6 +287,16 @@ class HRCoordinator extends User {
                 interviewManager.advanceRound();
             }
         }
+    }
+
+    /**
+     * Hire this applicant for this job position.
+     *
+     * @param jobPosting The job posting to be filled.
+     */
+    Applicant hireApplicant(JobPosting jobPosting) {
+        this.updateJobPostingStatus(jobPosting);
+        return jobPosting.getFinalCandidate();
     }
 
 

@@ -27,7 +27,7 @@ class Interview {
     // Interview round
     private int roundNumber;
     // InterviewManager of the job posting this interview is held for
-    InterviewManager interviewManager;
+    private InterviewManager interviewManager;
 
     // === Representation invariants ===
     // ID >= 0
