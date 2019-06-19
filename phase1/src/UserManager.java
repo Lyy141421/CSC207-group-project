@@ -1,4 +1,7 @@
+import javax.crypto.Cipher;
+import javax.crypto.spec.SecretKeySpec;
 import java.io.BufferedReader;
+import java.security.Key;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -7,36 +10,110 @@ class UserManager {
 
     // === Instance Variables ===
     private ArrayList<User> allUsers = new ArrayList<>(); //Array in which all users are stored
+    private String key = "CSC207Summer2019"; //Key used for password AES Encryption
 
     UserManager(BufferedReader appUsers) {
         //TODO: instantiate existing users upon startup by reading appUsers
+        // note that these stored passwords will ALREADY BE ENCRYPTED
     }
 
     // === Creating User accounts and adding them to allUsers ===
-    private void createInterviewer(String email, Company company, String field, LocalDate dateCreated) {
+    /**
+     * All of the following methods create new instances of the various child classes of User
+     * @param newUser Checks if the user being created is new/whether encryption is required
+     */
+    private void createInterviewer(String email, Company company, String field,
+                                   LocalDate dateCreated, boolean newUser) {
+        if(newUser) {
+            //TODO: Write to storage
+        }
         Interviewer newInterviewer = new Interviewer(email, company, field, dateCreated);
         this.addToAllUsers(newInterviewer);
     }
 
     private void createHRCoordinator(String username, String password, String legalName,
-                                     String email, Company company, LocalDate dateCreated) {
+                                     String email, Company company, LocalDate dateCreated, boolean newUser) {
+        if(newUser) {
+            password = this.encrypt(password);
+            //TODO: Write to storage
+        }
         HRCoordinator newHRBoy = new HRCoordinator(username, password, legalName, email, company, dateCreated);
         this.addToAllUsers(newHRBoy);
     }
 
     private void createApplicant(String username, String password,
-                                 String legalName, String email, LocalDate dateCreated) {
+                                 String legalName, String email, LocalDate dateCreated, boolean newUser) {
+        if(newUser) {
+            password = this.encrypt(password);
+            //TODO: Write to storage
+        }
         Applicant newApplicant = new Applicant(username, password, legalName, email, dateCreated);
         this.addToAllUsers(newApplicant);
     }
 
-    // === User Operations ===
+    // === User Operations and password encryption ===
 
     /**
      * Checks if the password submitted matches the User's password, returns boolean
      */
     boolean login(User checkedUser, String password) {
-        return checkedUser.getPassword().equals(password);
+        return this.decrypt(checkedUser.getPassword()).equals(password);
+    }
+
+    /**
+     * Encrypts user passwords using a predefined Key and AES encryption.
+     *
+     * @param password the password being encrypted
+     * @return the password after encryption
+     */
+    private String encrypt(String password) {
+        try
+        {
+            Key aesKey = new SecretKeySpec(this.key.getBytes(), "AES");
+            Cipher cipher = Cipher.getInstance("AES");
+            cipher.init(Cipher.ENCRYPT_MODE, aesKey);
+
+            byte[] encrypted = cipher.doFinal(password.getBytes());
+            StringBuilder sb = new StringBuilder();
+            for (byte b: encrypted) {
+                sb.append((char)b);
+            }
+
+            return sb.toString();
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+            return "Encryption Error";
+        }
+    }
+
+    /**
+     * Decrypts stored passwords using a predefined Key and AES decryption.
+     *
+     * @param encrypted the password, stored in encrypted form
+     * @return the password decrypted
+     */
+    private String decrypt (String encrypted) {
+        try
+        {
+            Key aesKey = new SecretKeySpec(this.key.getBytes(), "AES");
+            Cipher cipher = Cipher.getInstance("AES");
+
+            byte[] bb = new byte[encrypted.length()];
+            for (int i=0; i<encrypted.length(); i++) {
+                bb[i] = (byte) encrypted.charAt(i);
+            }
+
+            cipher.init(Cipher.DECRYPT_MODE, aesKey);
+            return new String(cipher.doFinal(bb));
+
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+            return "Decryption Error";
+        }
     }
 
     // === Array operations on allUsers ===
@@ -50,7 +127,7 @@ class UserManager {
                 return user;
             }
         }
-        return null;    // You can throw a NullPointerException and then handle it in the login-loop in the interface
+        return null; // You can throw a NullPointerException and then handle it in the login-loop in the interface
     }
 
     /**
