@@ -23,7 +23,7 @@ class Interview {
     // Interview notes
     private String interviewNotes = "";
     // The result of the interview (if the applicant passed)
-    private boolean pass = false;
+    private boolean pass = true;
     // Interview round
     private int roundNumber;
 
