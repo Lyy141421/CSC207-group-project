@@ -1,3 +1,4 @@
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -90,9 +91,24 @@ class InterviewManager {
         return currentInterviews;
     }
 
+    /**
+     * Get the last interview scheduled for this current round.
+     *
+     * @return the last interview scheduled for this current round.
+     */
     Interview getLastInterviewForCurrentRound() {
         ArrayList<Interview> interviews = this.getInterviewsForCurrentRoundSorted();
         return interviews.get(interviews.size() - 1);
+    }
+
+    /**
+     * Report whether the current round of interviews is over.
+     *
+     * @param today Today's date.
+     * @return true iff the current round of interviews is over.
+     */
+    boolean isCurrentRoundOver(LocalDate today) {
+        return today.isAfter(this.getLastInterviewForCurrentRound().getDate());
     }
 
     /**

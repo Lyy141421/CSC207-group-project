@@ -95,6 +95,6 @@ class Interviewer extends User {
      * @param interview The interview that has been conducted.
      */
     void failInterview(Interview interview) {
-        interview.failInterview();
+        interview.setFail();
     }
 }
