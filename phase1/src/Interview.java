@@ -5,9 +5,12 @@ class Interview {
      * An interview.
      */
 
-    // === Instance variables ===
+    // === Class variables ===
+    private static final int MAX_NUM_ROUNDS = 3;
     // The total number of interviews conducted
     private static int total;
+
+    // === Instance variables ===
     // The unique identifier for this interview
     private int ID;
     // The job application associated with this interview
@@ -16,10 +19,8 @@ class Interview {
     private Interviewer interviewer;
     // The HRCoordinator who set up the interview
     private HRCoordinator hrCoordinator;
-    // The date of this interview
-    private LocalDate date;
-    // The time slot of the interview
-    private int timeSlot;
+    // The date and time of this interview
+    private InterviewTime time;
     // Interview notes
     private String interviewNotes = "";
     // The result of the interview (if the applicant passed)
@@ -72,24 +73,31 @@ class Interview {
      * @param jobApplication The job application in question.
      * @param interviewer    The interviewer.
      * @param hrCoordinator  The HRCoordinator who set-up the interview.
-     * @param date           The date of this interview.
-     * @param timeSlot       The interview time slot.
+     * @param time           The interview time.
      * @param roundNumber    The round number.
      */
     Interview(JobApplication jobApplication, Interviewer interviewer, HRCoordinator hrCoordinator,
-              InterviewManager interviewManager, LocalDate date, int timeSlot, int roundNumber) {
+              InterviewManager interviewManager, InterviewTime time, int roundNumber) {
         this.jobApplication = jobApplication;
         this.interviewer = interviewer;
         this.hrCoordinator = hrCoordinator;
         this.interviewManager = interviewManager;
-        this.date = date;
-        this.timeSlot = timeSlot;
+        this.time = time;
         this.roundNumber = roundNumber;
         this.ID = Interview.total;
         Interview.total++;
     }
 
     // === Getters ===
+
+    /**
+     * Get the maximum number of rounds of interviews.
+     *
+     * @return the maximum number of rounds of interviews.
+     */
+    static int getMaxNumRounds() {
+        return Interview.MAX_NUM_ROUNDS;
+    }
 
     /**
      * Get the ID associated with this interview.
@@ -146,20 +154,11 @@ class Interview {
     }
 
     /**
-     * Get the interview date.
-     * @return the interview date.
+     * Get the interview time.
+     * @return the interview time.
      */
-    LocalDate getDate() {
-        return this.date;
-    }
-
-    /**
-     * Get the interview time slot.
-     *
-     * @return the interview time slot.
-     */
-    int getTimeSlot() {
-        return this.timeSlot;
+    InterviewTime getTime() {
+        return this.time;
     }
 
     /**
@@ -201,23 +200,13 @@ class Interview {
     }
 
     /**
-     * Set the date for this interview.
+     * Set the time for this interview.
      *
-     * @param date The interview date.
+     * @param time The interview time
      */
-    void setDate(LocalDate date) {
-        this.date = date;
+    void setTime(InterviewTime time) {
+        this.time = time;
     }
-
-    /**
-     * Set the time slot for this interview.
-     *
-     * @param timeSlot The time slot of this interview.
-     */
-    void setTimeSlot(int timeSlot) {
-        this.timeSlot = timeSlot;
-    }
-
 
     // === Other methods ===
 

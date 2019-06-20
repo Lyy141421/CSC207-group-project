@@ -1,4 +1,3 @@
-import java.io.File;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -58,22 +57,6 @@ class HRCoordinator extends User {
     // === Other methods ===
 
     /**
-     * Create a new job posting.
-     *
-     * @param jobTitle       The job title.
-     * @param jobDescription The job description.
-     * @param requirements   The list of requirements for this job.
-     * @param postDate       The date this job posting was posted.
-     * @param closeDate      The date this job posting is closed.
-     * @return the job posting created.
-     */
-    private JobPosting createJobPosting(String jobTitle, String jobField, String jobDescription,
-                                        ArrayList<String> requirements, LocalDate postDate, LocalDate closeDate) {
-        return new SinglePositionJobPosting(jobTitle, jobField, jobDescription, requirements,
-                this.company, postDate, closeDate);
-    }
-
-    /**
      * Create and add a job posting to the system.
      *
      * @param jobTitle       The job title.
@@ -84,8 +67,8 @@ class HRCoordinator extends User {
      */
     void addJobPosting(String jobTitle, String jobField, String jobDescription, ArrayList<String> requirements,
                        LocalDate postDate, LocalDate closeDate) {
-        JobPosting jobPosting = this.createJobPosting(jobTitle, jobField, jobDescription, requirements, postDate,
-                closeDate);
+        JobPosting jobPosting = new SinglePositionJobPosting(jobTitle, jobField, jobDescription, requirements,
+                this.company, postDate, closeDate);
         this.company.addJobPosting(jobPosting);
     }
 
@@ -108,38 +91,6 @@ class HRCoordinator extends User {
     JobApplication viewApplication(JobPosting jobPosting, Applicant applicant) {
         return jobPosting.findJobApplication(applicant);
     }
-
-    /**
-     * View the cover letter from this applicant for this job posting.
-     *
-     * @param jobPosting The job posting that is being reviewed.
-     * @param applicant  The applicant that is being reviewed.
-     * @return the cover letter from this applicant for this job posting.
-     */
-    File viewCoverLetter(JobPosting jobPosting, Applicant applicant) {
-        return this.viewApplication(jobPosting, applicant).getCoverLetter();
-    }
-
-    /**
-     * View the CV submitted by this applicant for this job posting.
-     *
-     * @param jobPosting The job posting that is being reviewed.
-     * @param applicant  The applicant that is being reviewed.
-     * @return the applicant's CV for this job posting.
-     */
-    File viewCV(JobPosting jobPosting, Applicant applicant) {
-        return this.viewApplication(jobPosting, applicant).getCV();
-    }
-
-//    /**
-//     * View the applicant's reference letters for this job posting.
-//     * @param jobPosting    The job posting that is being reviewed.
-//     * @param applicant     The applicant that is being reviewed.
-//     * @return  a list of the applicant's reference letters for this job posting.
-//     */
-//    ArrayList<File> viewReferenceLetters(JobPosting jobPosting, Applicant applicant) {
-//        return jobPosting.findApplication(applicant).getReferenceLetters();
-//    }
 
     /**
      * View all the applications for this job posting.
@@ -225,26 +176,14 @@ class HRCoordinator extends User {
     }
 
     /**
-     * Create an interviewer for jobs in this field.
-     *
-     * @param email The interviewer's email.
-     * @param field The job field that the interviewer specializes in.
-     * @param today Today's date.
-     * @return the interviewer created.
-     */
-    Interviewer createInterviewer(String email, String field, LocalDate today) {
-        return new Interviewer(email, this.company, field, today);
-    }
-
-    /**
-     * Add an interviewer for jobs in this field.
+     * Create and add an interviewer for jobs in this field.
      *
      * @param email The interviewer's email.
      * @param field The job field that the interviewer specializes in.
      * @param today Today's date.
      */
     void addInterviewer(String email, String field, LocalDate today) {
-        this.company.addInterviewer(this.createInterviewer(email, field, today));
+        this.company.addInterviewer(new Interviewer(email, this.company, field, today));
     }
 
     /**
@@ -270,7 +209,8 @@ class HRCoordinator extends User {
         Interviewer interviewer = this.company.findInterviewer(jobField);
         Interview interview = new Interview(jobApplication, interviewer, this,
                 jobPosting.getInterviewManager(), round);
-        jobPosting.addInterview(interview);
+        jobApplication.addInterview(interview);
+        interviewer.addInterview(interview);
     }
 
     /**
@@ -281,7 +221,7 @@ class HRCoordinator extends User {
      */
     void advanceInterviewRound(LocalDate today, JobPosting jobPosting) {
         InterviewManager interviewManager = jobPosting.getInterviewManager();
-        if (interviewManager.getCurrentRound() < 3) {
+        if (interviewManager.getCurrentRound() < Interview.getMaxNumRounds()) {
             if (interviewManager.isCurrentRoundOver(today)) {
                 interviewManager.advanceRound();
             }

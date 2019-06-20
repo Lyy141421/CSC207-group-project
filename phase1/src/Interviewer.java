@@ -1,14 +1,8 @@
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 
 class Interviewer extends User {
-
-    // === Class variables ===
-    // Time slots
-    ArrayList<String> timeSlots = new ArrayList<>(Arrays.asList("9-10 am", "10-11 am", "1-2 pm", "2-3 pm", "3-4 pm",
-            "4-5 pm"));     // put something reasonable -- the indexes correspond to the Integer part of schedule
 
     // === Instance variables ===
     // The company that this interviewer works for
@@ -19,6 +13,9 @@ class Interviewer extends User {
     private ArrayList<Interview> interviews = new ArrayList<>();
     // The interviewer's schedule as a map of the date to a list of time slots that are filled.
     private HashMap<LocalDate, ArrayList<Integer>> schedule = new HashMap<>();
+
+    // === Representation invariants ===
+    // interviews is sorted in terms of date.
 
     // === Constructors ===
 
@@ -75,23 +72,67 @@ class Interviewer extends User {
 
 
     // === Other methods ===
+
+    /**
+     * Add an interview to this interviewer's list of interviews.
+     *
+     * @param interview The interview to be added.
+     */
+    void addInterview(Interview interview) {
+        this.interviews.add(interview);
+        this.interviews.sort(new InterviewTimeComparator());
+    }
+
+    /**
+     * Remove an interview from this interviewer's list of interviews.
+     *
+     * @param interview The interview to be removed.
+     */
+    void removeInterview(Interview interview) {
+        this.interviews.remove(interview);
+    }
+
     /**
      * Write interview note for a given interview.
      *
      * @param interview   The interview which this interviewer wants to write note of.
      * @param note The interview note.
      */
-    void writeInterviewNote(Interview interview, String note) {
+    void writeInterviewNotes(Interview interview, String note) {
         interview.setInterviewNotes(note);
     }
 
     /**
-     * Add an interview for this interviewer.
+     * Schedule an interview on this date and at this time.
      *
-     * @param date     The date of the interview.
-     * @param timeSlot The timeslot for this interview.
+     * @param interview The interview to be scheduled.
      */
-    void addInterview(LocalDate date, Integer timeSlot) {
+    // TODO: Get date and time slot from interface
+    void scheduleInterview(Interview interview) {
+        if (interview.getTime() == null) {
+            this.setInterviewTime(interview, interviewTime);
+            this.addInterview(interview);
+            this.updateSchedule(interviewTime.getDate(), interviewTime.timeSlot);
+        }
+    }
+
+    /**
+     * Set the date and time slot for the interview.
+     *
+     * @param interview The interview being scheduled.
+     * @param time      The time this interview is scheduled for.
+     */
+    private void setInterviewTime(Interview interview, InterviewTime time) {
+        interview.setTime(time);
+    }
+
+    /**
+     * Add an interview that occurs on this date and time to this interviewer's schedule.
+     *
+     * @param date    The date on which this interview occurs.
+     * @param timeSlot  The time slot at which this interview occurs.
+     */
+    private void updateSchedule(LocalDate date, Integer timeSlot) {
         if (!this.schedule.containsKey(date)) {
             this.schedule.put(date, new ArrayList<>());
         }
@@ -106,10 +147,6 @@ class Interviewer extends User {
     void failInterview(Interview interview) {
         interview.setFail();
         interview.getInterviewManager().reject(interview.getJobApplication());
-        this.interviews.remove(interview);
     }
 
-    void advanceInterview(Interview interview) {
-        this.interviews.remove(interview);
-    }
 }

@@ -99,10 +99,6 @@ abstract class JobPosting {
         return null;
     }
 
-    void addInterview(Interview interview) {
-        this.interviewManager.addInterview(interview);
-    }
-
     Applicant getFinalCandidate() {
         return null;
     }

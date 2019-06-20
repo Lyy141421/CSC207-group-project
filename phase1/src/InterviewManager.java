@@ -1,6 +1,5 @@
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 class InterviewManager {
     /**
@@ -55,29 +54,21 @@ class InterviewManager {
     // === Getters ===
 
     /**
+     * Get the job posting associated with this interview manager.
+     *
+     * @return the job posting associated with this interview manager.
+     */
+    JobPosting getJobPosting() {
+        return this.jobPosting;
+    }
+
+    /**
      * Get the current round of interviews.
      *
      * @return the current round of interviews.
      */
     int getCurrentRound() {
         return this.currentRound;
-    }
-
-    /**
-     * Get the interviews of given round for job applications still in consideration.
-     *
-     * @return the current round of interviews.
-     */
-    private ArrayList<Interview> getInterviewsByRound (int round) {
-        ArrayList<Interview> interviews= new ArrayList<>();
-        for (JobApplication application : this.applicationsInConsideration) {
-            for (Interview interview : application.getInterviews()) {
-                if (interview.getRoundNumber() == round) {
-                    interviews.add(interview);
-                }
-            }
-        }
-        return interviews;
     }
 
     ArrayList<JobApplication> getApplicationsInConsideration () {
@@ -92,29 +83,42 @@ class InterviewManager {
     // === Other methods ===
 
     /**
-     * Gets a list of all interviews for this current round of interviews sorted by date.
+     * Get the interviews of given round for job applications still in consideration.
      *
-     * @return a list of all interviews for this current round.
+     * @return the current round of interviews.
      */
-
-    //Check the method above: getInterviewsByRound. Sorting will be merged into getLastInterviewForCurrentRound().
-    /*private ArrayList<Interview> getInterviewsForCurrentRoundSorted() {
-        ArrayList<Interview> currentInterviews = new ArrayList<>();
-        for (JobApplication jobApplication : this.applicationsInConsideration.keySet()) {
-            for (Interview interview : this.applicationsInConsideration.get(jobApplication)) {
-                if (interview.getRoundNumber() == currentRound) {
-                    currentInterviews.add(interview);
+    private ArrayList<Interview> getInterviewsByRound(int round) {
+        ArrayList<Interview> interviews = new ArrayList<>();
+        for (JobApplication application : this.applicationsInConsideration) {
+            for (Interview interview : application.getInterviews()) {
+                if (interview.getRoundNumber() == round) {
+                    interviews.add(interview);
                 }
             }
         }
-        currentInterviews.sort(new DateComparator());
-        return currentInterviews;
-    }*/
+        return interviews;
+    }
 
-    Interview getLastInterviewOfCurrentRound() {
+    /**
+     * Get the last interview of this current round.
+     *
+     * @return the last interview of this current round.
+     */
+    private Interview getLastInterviewOfCurrentRound() {
         ArrayList<Interview> interviews = this.getInterviewsByRound(this.currentRound);
-        interviews.sort(new DateComparator());
+        interviews.sort(new InterviewTimeComparator());
         return interviews.get(interviews.size() - 1);
+    }
+
+    /**
+     * Reports whether the current round of interviews is over.
+     *
+     * @param today Today's date.
+     * @return true iff the current round of interviews is over.
+     */
+    boolean isCurrentRoundOver(LocalDate today) {
+        Interview lastInterview = this.getLastInterviewOfCurrentRound();
+        return today.isAfter(lastInterview.getTime().getDate());
     }
 
     /**
@@ -122,16 +126,6 @@ class InterviewManager {
      */
     void advanceRound() {
         this.currentRound++;
-    }
-
-    /**
-     * Add an interview.
-     *
-     * @param interview The interview to be added.
-     */
-    void addInterview(Interview interview) {
-        JobApplication jobApplication = interview.getJobApplication();
-        jobApplication.addInterview(interview);
     }
 
     /**
@@ -143,21 +137,4 @@ class InterviewManager {
         this.applicationsInConsideration.remove(jobApplication);
         this.applicationsRejected.add(jobApplication);
     }
-
-    boolean isCurrentRoundOver(LocalDate today) {
-        Interview lastInterview = this.getLastInterviewOfCurrentRound();
-        return today.isAfter(lastInterview.getDate());
-    }
-
-    /**
-     * Update the applications still in consideration for this job.
-     */
-    /*void updateApplicationsInConsideration() {
-        for (Interview interview : this.getInterviewsForCurrentRoundSorted()) {
-            if (!interview.isPassed()) {
-                JobApplication jobApplication = interview.getJobApplication();
-                this.reject(jobApplication);
-            }
-        }
-    }*/
 }
