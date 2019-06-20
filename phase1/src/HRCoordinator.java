@@ -182,8 +182,10 @@ class HRCoordinator extends User {
      * @param field The job field that the interviewer specializes in.
      * @param today Today's date.
      */
+    // TODO : How to resolve?
     void addInterviewer(String email, String field, LocalDate today) {
-        this.company.addInterviewer(new Interviewer(email, this.company, field, today));
+        Interviewer interviewer = UserManager.createInterviewer(email, this.company, field, today, true);
+        this.company.addInterviewer(interviewer);
     }
 
     /**
@@ -235,7 +237,14 @@ class HRCoordinator extends User {
      */
     Applicant hireApplicant(JobPosting jobPosting) {
         this.updateJobPostingStatus(jobPosting);
-        return jobPosting.getFinalCandidate();
+        ArrayList<JobApplication> finalCandidates = jobPosting.getInterviewManager().getApplicationsInConsideration();
+        if (finalCandidates.size() == 1) {
+            return finalCandidates.get(0).getApplicant();
+        } else {
+            // choose an applicant (from user interface)
+            // return applicant;
+            return null;
+        }
     }
 
 
