@@ -84,6 +84,10 @@ class InterviewManager {
         return this.applicationsInConsideration;
     }
 
+    ArrayList<JobApplication> getApplicationsRejected () {
+        return this.applicationsRejected;
+    }
+
 
     // === Other methods ===
 
