@@ -1,3 +1,4 @@
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -137,6 +138,11 @@ class InterviewManager {
     void reject(JobApplication jobApplication) {
         this.applicationsInConsideration.remove(jobApplication);
         this.applicationsRejected.add(jobApplication);
+    }
+
+    boolean isCurrentRoundOver(LocalDate today) {
+        Interview lastInterview = this.getLastInterviewOfCurrentRound();
+        return today.isAfter(lastInterview.getDate());
     }
 
     /**
