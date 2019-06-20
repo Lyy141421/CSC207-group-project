@@ -26,6 +26,8 @@ class JobApplication {
     private int status = -2;
     // The date this application was submitted
     private LocalDate applicationDate;
+    // The interviews conducted for this application
+    private ArrayList<Interview> interviews = new ArrayList<>();
 
     // === Representation invariants ===
     // status:
@@ -180,6 +182,15 @@ class JobApplication {
         return this.applicationDate;
     }
 
+    /**
+     * Get the interviews of this application.
+     *
+     * @return the arraylist of interviews.
+     */
+    ArrayList<Interview> getInterviews() {
+        return this.interviews;
+    }
+
     // === Setters ===
 
     /**
@@ -221,6 +232,10 @@ class JobApplication {
     // === Other methods ===
     void advanceStatus() {
         this.status++;
+    }
+
+    void addInterview(Interview interview) {
+        this.interviews.add(interview);
     }
 
 }
