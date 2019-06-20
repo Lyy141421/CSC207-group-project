@@ -75,6 +75,15 @@ class Interviewer extends User {
 
 
     // === Other methods ===
+    /**
+     * Write interview note for a given interview.
+     *
+     * @param interview   The interview which this interviewer wants to write note of.
+     * @param note The interview note.
+     */
+    void writeInterviewNote(Interview interview, String note) {
+        interview.setInterviewNotes(note);
+    }
 
     /**
      * Add an interview for this interviewer.
