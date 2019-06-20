@@ -62,6 +62,27 @@ class InterviewManager {
         return this.currentRound;
     }
 
+    /**
+     * Get the interviews of given round for job applications still in consideration.
+     *
+     * @return the current round of interviews.
+     */
+    private ArrayList<Interview> getInterviewsByRound (int round) {
+        ArrayList<Interview> interviews= new ArrayList<>();
+        for (JobApplication application : this.applicationsInConsideration) {
+            for (Interview interview : application.getInterviews()) {
+                if (interview.getRoundNumber() == round) {
+                    interviews.add(interview);
+                }
+            }
+        }
+        return interviews;
+    }
+
+    ArrayList<JobApplication> getApplicationsInConsideration () {
+        return this.applicationsInConsideration;
+    }
+
 
     // === Other methods ===
 
@@ -70,7 +91,9 @@ class InterviewManager {
      *
      * @return a list of all interviews for this current round.
      */
-    /*ArrayList<Interview> getInterviewsForCurrentRoundSorted() {
+
+    //Check the method above: getInterviewsByRound. Sorting will be merged into getLastInterviewForCurrentRound().
+    /*private ArrayList<Interview> getInterviewsForCurrentRoundSorted() {
         ArrayList<Interview> currentInterviews = new ArrayList<>();
         for (JobApplication jobApplication : this.applicationsInConsideration.keySet()) {
             for (Interview interview : this.applicationsInConsideration.get(jobApplication)) {
@@ -81,12 +104,13 @@ class InterviewManager {
         }
         currentInterviews.sort(new DateComparator());
         return currentInterviews;
-    }
-
-    Interview getLastInterviewForCurrentRound() {
-        ArrayList<Interview> interviews = this.getInterviewsForCurrentRoundSorted();
-        return interviews.get(interviews.size() - 1);
     }*/
+
+    Interview getLastInterviewOfCurrentRound() {
+        ArrayList<Interview> interviews = this.getInterviewsByRound(this.currentRound);
+        interviews.sort(new DateComparator());
+        return interviews.get(interviews.size() - 1);
+    }
 
     /**
      * Advance the round of interviews.
@@ -114,22 +138,6 @@ class InterviewManager {
         this.applicationsInConsideration.remove(jobApplication);
         this.applicationsRejected.add(jobApplication);
     }
-
-    /**
-     * Get a list of interviews involving this application for this job.
-     *
-     * @param jobApplication The application in question.
-     * @return a list of interviews involving this application for this job.
-     */
-    /*ArrayList<Interview> findInterviewsByApplication(JobApplication jobApplication) {
-        if (this.applicationsInConsideration.containsKey(jobApplication)) {
-            return this.applicationsInConsideration.get(jobApplication);
-        } else if (this.applicationsRejected.containsKey(jobApplication)) {
-            return this.applicationsRejected.get(jobApplication);
-        } else {
-            return new ArrayList<>();
-        }
-    }*/
 
     /**
      * Update the applications still in consideration for this job.

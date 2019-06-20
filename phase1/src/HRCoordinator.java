@@ -282,7 +282,7 @@ class HRCoordinator extends User {
     void advanceInterviewRound(LocalDate today, JobPosting jobPosting) {
         InterviewManager interviewManager = jobPosting.getInterviewManager();
         if (interviewManager.getCurrentRound() < 3) {
-            Interview lastInterview = interviewManager.getLastInterviewForCurrentRound();
+            Interview lastInterview = interviewManager.getLastInterviewOfCurrentRound();
             if (today.isAfter(lastInterview.getDate())) {
                 interviewManager.advanceRound();
             }
