@@ -10,9 +10,9 @@ class InterviewManager {
     // The job posting for this interview manager
     private JobPosting jobPosting;
     // Map of job applications still in consideration for the job to their interviews
-    private HashMap<JobApplication, ArrayList<Interview>> applicationsInConsideration;
+    private ArrayList<JobApplication> applicationsInConsideration;
     // Map of job applications of applicants that are rejected for the job to their interviews
-    private HashMap<JobApplication, ArrayList<Interview>> applicationsRejected;
+    private ArrayList<JobApplication> applicationsRejected;
     // The current round of interviews
     private int currentRound;
 
@@ -31,15 +31,8 @@ class InterviewManager {
     InterviewManager(JobPosting jobPosting, ArrayList<JobApplication> applicationsInConsideration,
                      ArrayList<JobApplication> applicationsRejected) {
         this.jobPosting = jobPosting;
-        this.applicationsInConsideration = new HashMap<>();
-        for (JobApplication jobApp : applicationsInConsideration) {
-            this.applicationsInConsideration.put(jobApp, new ArrayList<>());
-        }
-
-        this.applicationsRejected = new HashMap<>();
-        for (JobApplication jobApp : applicationsRejected) {
-            this.applicationsRejected.put(jobApp, new ArrayList<>());
-        }
+        this.applicationsInConsideration = applicationsInConsideration;
+        this.applicationsRejected = applicationsRejected;
     }
 
     /**
@@ -50,8 +43,8 @@ class InterviewManager {
      * @param applicationsRejected        The applications of applicants who have already been rejected for this job.
      * @param currentRound              The current round of interviews.
      */
-    InterviewManager(JobPosting jobPosting, HashMap<JobApplication, ArrayList<Interview>> applicationsInConsideration,
-                     HashMap<JobApplication, ArrayList<Interview>> applicationsRejected, int currentRound) {
+    InterviewManager(JobPosting jobPosting, ArrayList<JobApplication> applicationsInConsideration,
+                     ArrayList<JobApplication> applicationsRejected, int currentRound) {
         this.jobPosting = jobPosting;
         this.applicationsInConsideration = applicationsInConsideration;
         this.applicationsRejected = applicationsRejected;
@@ -77,7 +70,7 @@ class InterviewManager {
      *
      * @return a list of all interviews for this current round.
      */
-    ArrayList<Interview> getInterviewsForCurrentRoundSorted() {
+    /*ArrayList<Interview> getInterviewsForCurrentRoundSorted() {
         ArrayList<Interview> currentInterviews = new ArrayList<>();
         for (JobApplication jobApplication : this.applicationsInConsideration.keySet()) {
             for (Interview interview : this.applicationsInConsideration.get(jobApplication)) {
@@ -93,7 +86,7 @@ class InterviewManager {
     Interview getLastInterviewForCurrentRound() {
         ArrayList<Interview> interviews = this.getInterviewsForCurrentRoundSorted();
         return interviews.get(interviews.size() - 1);
-    }
+    }*/
 
     /**
      * Advance the round of interviews.
@@ -109,10 +102,7 @@ class InterviewManager {
      */
     void addInterview(Interview interview) {
         JobApplication jobApplication = interview.getJobApplication();
-        if (!this.applicationsInConsideration.containsKey(jobApplication)) {
-            this.applicationsInConsideration.put(jobApplication, new ArrayList<>());
-        }
-        this.applicationsInConsideration.get(jobApplication).add(interview);
+        jobApplication.addInterview(interview);
     }
 
     /**
@@ -120,10 +110,9 @@ class InterviewManager {
      *
      * @param jobApplication The application to be rejected.
      */
-    private void reject(JobApplication jobApplication) {
-        ArrayList<Interview> interviews = this.applicationsInConsideration.get(jobApplication);
+    void reject(JobApplication jobApplication) {
         this.applicationsInConsideration.remove(jobApplication);
-        this.applicationsRejected.put(jobApplication, interviews);
+        this.applicationsRejected.add(jobApplication);
     }
 
     /**
@@ -132,7 +121,7 @@ class InterviewManager {
      * @param jobApplication The application in question.
      * @return a list of interviews involving this application for this job.
      */
-    ArrayList<Interview> findInterviewsByApplication(JobApplication jobApplication) {
+    /*ArrayList<Interview> findInterviewsByApplication(JobApplication jobApplication) {
         if (this.applicationsInConsideration.containsKey(jobApplication)) {
             return this.applicationsInConsideration.get(jobApplication);
         } else if (this.applicationsRejected.containsKey(jobApplication)) {
@@ -140,17 +129,17 @@ class InterviewManager {
         } else {
             return new ArrayList<>();
         }
-    }
+    }*/
 
     /**
      * Update the applications still in consideration for this job.
      */
-    void updateApplicationsInConsideration() {
+    /*void updateApplicationsInConsideration() {
         for (Interview interview : this.getInterviewsForCurrentRoundSorted()) {
             if (!interview.isPassed()) {
                 JobApplication jobApplication = interview.getJobApplication();
                 this.reject(jobApplication);
             }
         }
-    }
+    }*/
 }

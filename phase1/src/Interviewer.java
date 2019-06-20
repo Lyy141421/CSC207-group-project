@@ -95,6 +95,12 @@ class Interviewer extends User {
      * @param interview The interview that has been conducted.
      */
     void failInterview(Interview interview) {
-        interview.failInterview();
+        interview.setFail();
+        interview.getInterviewManager().reject(interview.getJobApplication());
+        this.interviews.remove(interview);
+    }
+
+    void advanceInterview(Interview interview) {
+        this.interviews.remove(interview);
     }
 }
