@@ -131,6 +131,21 @@ class UserManager {
     }
 
     /**
+     * Deletes a user from the system based on the username
+     *
+     * @param username the username of the user being deleted
+     */
+    void deleteByUsername(String username) {
+        for(User user : this.allUsers) {
+            if(user.getUsername().equals(username)) {
+                this.allUsers.remove(user);
+                break;
+            }
+        }
+        //TODO: Delete from file system
+    }
+
+    /**
      * FOR ALL METHODS BELOWT HIS JAVADOC
      * Returns all of the relevant type of users in an arraylist.
      *
