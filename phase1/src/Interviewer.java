@@ -112,7 +112,7 @@ class Interviewer extends User {
         if (interview.getTime() == null) {
             this.setInterviewTime(interview, interviewTime);
             this.addInterview(interview);
-            this.updateSchedule(interviewTime.getDate(), interviewTime.timeSlot);
+            this.updateSchedule(interviewTime.getDate(), interviewTime.getTimeSlot());
         }
     }
 

@@ -1,4 +1,3 @@
-import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -100,7 +99,7 @@ class HRCoordinator extends User {
      * @return a list of applications for this job posting.
      */
     ArrayList<JobApplication> viewAllApplications(JobPosting jobPosting) {
-        return (ArrayList)(jobPosting.getAppsByApplicant().values());
+        return jobPosting.getApplications();
     }
 
     /**
@@ -139,7 +138,7 @@ class HRCoordinator extends User {
      * @param jobPosting The job posting to be reviewed.
      */
     void reviewApplications(JobPosting jobPosting) {
-        for (JobApplication jobApp : jobPosting.getAppsByApplicant().values()) {
+        for (JobApplication jobApp : jobPosting.getApplications()) {
             jobApp.advanceStatus();
         }
     }
@@ -160,13 +159,13 @@ class HRCoordinator extends User {
      * @param jobPosting The job posting in question.
      * @return an array of lists of job applications selected and rejected for a phone interview.
      */
-    private ArrayList[] getApplicationsForPhoneInterview(JobPosting jobPosting) {
-        ArrayList[] jobApps = new ArrayList[2];
+    private ArrayList<JobApplication>[] getApplicationsForPhoneInterview(JobPosting jobPosting) {
+        ArrayList<JobApplication>[] jobApps = new ArrayList[2];
         ArrayList<JobApplication> jobApplicationsInConsideration = new ArrayList<>();
         ArrayList<JobApplication> jobApplicationsRejected = new ArrayList<>();
         jobApps[0] = jobApplicationsInConsideration;
         jobApps[1] = jobApplicationsRejected;
-        for (JobApplication jobApplication : jobPosting.getAppsByApplicant().values()) {
+        for (JobApplication jobApplication : jobPosting.getApplications()) {
             if (jobApplication.getStatus() == 0) {
                 jobApplicationsInConsideration.add(jobApplication);
             } else {
@@ -183,8 +182,10 @@ class HRCoordinator extends User {
      * @param field The job field that the interviewer specializes in.
      * @param today Today's date.
      */
+    // TODO : How to resolve?
     void addInterviewer(String email, String field, LocalDate today) {
-        this.company.addInterviewer(new Interviewer(email, this.company, field, today));
+        Interviewer interviewer = UserManager.createInterviewer(email, this.company, field, today, true);
+        this.company.addInterviewer(interviewer);
     }
 
     /**
@@ -220,43 +221,30 @@ class HRCoordinator extends User {
      * @param today      Today's date.
      * @param jobPosting The job posting in question.
      */
-
     void advanceInterviewRound(LocalDate today, JobPosting jobPosting) {
         InterviewManager interviewManager = jobPosting.getInterviewManager();
-        if (interviewManager.getApplicationsInConsideration().size() == 1)
-            hireApplicant(interviewManager.getApplicationsInConsideration().get(0).getApplicant(), jobPosting);
-        else if (interviewManager.getCurrentRound() == Interview.getMaxNumRounds()) {
-            chooseFromApplications(interviewManager.getApplicationsInConsideration(), jobPosting);
-        }
-        else {
-            if (interviewManager.currentRoundOver(today)) {
+        if (interviewManager.getCurrentRound() < Interview.getMaxNumRounds()) {
+            if (interviewManager.isCurrentRoundOver(today)) {
                 interviewManager.advanceRound();
             }
         }
     }
 
     /**
-     * Choose one applicant to hire based on their applications.
-     *
-     * @param applications The applications in consideration.
-     * @param jobPosting The job posting to be filled.
-     */
-
-    void chooseFromApplications(ArrayList<JobApplication> applications, JobPosting jobPosting) {
-        // TODO
-        hireApplicant(null, jobPosting);
-    }
-
-    /**
      * Hire this applicant for this job position.
      *
-     * @param applicant The applicant to be hired.
      * @param jobPosting The job posting to be filled.
      */
-
-    Applicant hireApplicant(Applicant applicant, JobPosting jobPosting) {
+    Applicant hireApplicant(JobPosting jobPosting) {
         this.updateJobPostingStatus(jobPosting);
-        return applicant;
+        ArrayList<JobApplication> finalCandidates = jobPosting.getInterviewManager().getApplicationsInConsideration();
+        if (finalCandidates.size() == 1) {
+            return finalCandidates.get(0).getApplicant();
+        } else {
+            // choose an applicant (from user interface)
+            // return applicant;
+            return null;
+        }
     }
 
 
