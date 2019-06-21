@@ -13,8 +13,8 @@ class Company {
     private String name;
     // The interviewers in this company
     private HashMap<String, ArrayList<Interviewer>> fieldToInterviewers = new HashMap<>();
-    // A list of job postings for positions in this company.
-    private ArrayList<JobPosting> jobPostings = new ArrayList<>();
+    // The job posting manager for this company
+    private JobPostingManager jobPostingManager = new JobPostingManager(this);
 
 
     // === Constructors ===
@@ -23,6 +23,8 @@ class Company {
      * Create a new company.
      */
     Company() {
+        this.ID = totalNum;
+        Company.totalNum++;
     }
 
     /**
@@ -33,6 +35,19 @@ class Company {
     Company(String name) {
         this.ID = totalNum;
         this.name = name;
+        Company.totalNum++;
+    }
+
+    /**
+     * Create a new company.
+     *
+     * @param name              The company's name.
+     * @param jobPostingManager The company's jobPostingManager
+     */
+    Company(String name, JobPostingManager jobPostingManager) {
+        this.ID = totalNum;
+        this.name = name;
+        this.jobPostingManager = jobPostingManager;
         Company.totalNum++;
     }
 
@@ -79,7 +94,7 @@ class Company {
      * @param jobPosting    The job posting to be added.
      */
     void addJobPosting(JobPosting jobPosting) {
-        this.jobPostings.add(jobPosting);
+        this.jobPostingManager.addJobPosting(jobPosting);
     }
 
     /**
