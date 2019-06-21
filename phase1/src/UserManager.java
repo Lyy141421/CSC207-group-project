@@ -23,7 +23,7 @@ class UserManager {
      * @param newUser Checks if the user being created is new/whether encryption is required
      */
     void createInterviewer(String email, Company company, String field,
-                                   LocalDate dateCreated, boolean newUser) {
+                           LocalDate dateCreated, boolean newUser) {
         if(newUser) {
             //TODO: Write to storage
         }

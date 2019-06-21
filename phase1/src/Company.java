@@ -3,6 +3,7 @@ import java.util.HashMap;
 
 class Company {
 
+    // Elaine: I'm adding these so that my code doesn't have red underlines. This is unfinished.
     // === Instance variables ===
     // The total number of companies registered in this system
     private static int totalNum;
@@ -12,8 +13,8 @@ class Company {
     private String name;
     // The interviewers in this company
     private HashMap<String, ArrayList<Interviewer>> fieldToInterviewers = new HashMap<>();
-    // The job postings manager for this company
-    private JobPostingManager jobPostingManager = new JobPostingManager(this);
+    // A list of job postings for positions in this company.
+    private ArrayList<JobPosting> jobPostings = new ArrayList<>();
 
 
     // === Constructors ===
@@ -78,7 +79,7 @@ class Company {
      * @param jobPosting    The job posting to be added.
      */
     void addJobPosting(JobPosting jobPosting) {
-        this.jobPostingManager.addJobPosting(jobPosting);
+        this.jobPostings.add(jobPosting);
     }
 
     /**
