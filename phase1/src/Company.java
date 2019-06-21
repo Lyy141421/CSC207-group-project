@@ -5,16 +5,12 @@ class Company {
 
     // Elaine: I'm adding these so that my code doesn't have red underlines. This is unfinished.
     // === Instance variables ===
-    // The total number of companies registered in this system
-    private static int totalNum;
-    // The unique identifier for this company
-    private int ID;
-    // The name of this company
+    // The name of this company (unique identifier)
     private String name;
+    // The HR Coordinators for this company
+    private ArrayList<HRCoordinator> hrCoordinators = new ArrayList<>();
     // The interviewers in this company
     private HashMap<String, ArrayList<Interviewer>> fieldToInterviewers = new HashMap<>();
-    // The job posting manager for this company
-    private JobPostingManager jobPostingManager = new JobPostingManager(this);
 
 
     // === Constructors ===
@@ -23,8 +19,6 @@ class Company {
      * Create a new company.
      */
     Company() {
-        this.ID = totalNum;
-        Company.totalNum++;
     }
 
     /**
@@ -33,22 +27,20 @@ class Company {
      * @param name The company's name.
      */
     Company(String name) {
-        this.ID = totalNum;
         this.name = name;
-        Company.totalNum++;
     }
 
     /**
-     * Create a new company.
-     *
-     * @param name              The company's name.
-     * @param jobPostingManager The company's jobPostingManager
+     * Create a company -- from fileLoader.
+     * @param name                  The company name.
+     * @param hrCoordinators        The list of HR Coordinators for this
+     * @param fieldToInterviewers   The map of field to interviewers for this company.
      */
-    Company(String name, JobPostingManager jobPostingManager) {
-        this.ID = totalNum;
+    Company(String name, ArrayList<HRCoordinator> hrCoordinators,
+            HashMap<String, ArrayList<Interviewer>> fieldToInterviewers) {
         this.name = name;
-        this.jobPostingManager = jobPostingManager;
-        Company.totalNum++;
+        this.hrCoordinators = hrCoordinators;
+        this.fieldToInterviewers = fieldToInterviewers;
     }
 
     // === Getters ==
@@ -90,14 +82,6 @@ class Company {
     }
 
     /**
-     * Add a job posting to this company.
-     * @param jobPosting    The job posting to be added.
-     */
-    void addJobPosting(JobPosting jobPosting) {
-        this.jobPostingManager.addJobPosting(jobPosting);
-    }
-
-    /**
      * Add an interviewer to this company.
      *
      * @param interviewer The interviewer to be added.
@@ -116,7 +100,20 @@ class Company {
      * @return true iff this company is the same as other.
      */
     boolean equals(Company other) {
-        return this.ID == other.ID;
+        return this.name.equals(other.getName());
+    }
+
+    /**
+     * Get all the job postings for this company.
+     *
+     * @return the list of all job postings for this company.
+     */
+    ArrayList<JobPosting> getAllJobPostings() {
+        ArrayList<JobPosting> allJobPostings = new ArrayList<>();
+        for (HRCoordinator HRC : this.hrCoordinators) {
+            allJobPostings.addAll(HRC.getJobPostingManager().getJobPostings());
+        }
+        return allJobPostings;
     }
 
 
