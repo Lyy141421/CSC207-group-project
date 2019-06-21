@@ -38,28 +38,14 @@ class Company {
 
     // === Getters ==
 
-    /**
-     * Get the name of this company.
-     *
-     * @return the name of this company.
-     */
     String getName() {
         return this.name;
     }
 
-    /**
-     * Get the map of field to interviewers for this company.
-     * @return the map of field to interviewers for this company.
-     */
     HashMap<String, ArrayList<Interviewer>> getFieldToInterviewers() {
         return this.fieldToInterviewers;
     }
 
-    /**
-     * Get the job postings for positions in this company.
-     *
-     * @return the list of job postings for positions in this company.
-     */
     ArrayList<JobPosting> getJobPostings() {
         return this.jobPostings;
     }
@@ -72,9 +58,9 @@ class Company {
     // === Other methods ===
 
     /**
-     * Find the interviewer with the least amount of interviews in this job field.
+     * Find the interviewer with the lowest number of interviews in this job field.
      * @param jobField  The job field of the interviewer to be found.
-     * @return the interviewer with the least amount of interviews in this field.
+     * @return the interviewer with the lowest number of interviews in this field.
      */
     Interviewer findInterviewer(String jobField) {
         int minNumberOfInterviews = 0;
@@ -90,7 +76,7 @@ class Company {
 
     /**
      * Add a job posting to this company.
-     * @param jobPosting    The job posting to be added.
+     * @param jobPosting The job posting to be added.
      */
     void addJobPosting(JobPosting jobPosting) {
         this.jobPostings.add(jobPosting);

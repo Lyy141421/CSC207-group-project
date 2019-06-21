@@ -116,7 +116,7 @@ class InterviewManager {
      * @param today Today's date.
      * @return true iff the current round of interviews is over.
      */
-    boolean isCurrentRoundOver(LocalDate today) {
+    boolean currentRoundOver(LocalDate today) {
         Interview lastInterview = this.getLastInterviewOfCurrentRound();
         return today.isAfter(lastInterview.getTime().getDate());
     }
