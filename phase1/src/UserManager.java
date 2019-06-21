@@ -22,7 +22,7 @@ class UserManager {
      * All of the following methods create new instances of the various child classes of User
      * @param newUser Checks if the user being created is new/whether encryption is required
      */
-    private void createInterviewer(String email, Company company, String field,
+    void createInterviewer(String email, Company company, String field,
                                    LocalDate dateCreated, boolean newUser) {
         if(newUser) {
             //TODO: Write to storage
