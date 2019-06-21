@@ -100,7 +100,7 @@ class HRCoordinator extends User {
      * @return a list of applications for this job posting.
      */
     ArrayList<JobApplication> viewAllApplications(JobPosting jobPosting) {
-        return jobPosting.getApplications();
+        return (ArrayList)jobPosting.getAppsByApplicant().values();
     }
 
     /**
@@ -139,7 +139,7 @@ class HRCoordinator extends User {
      * @param jobPosting The job posting to be reviewed.
      */
     void reviewApplications(JobPosting jobPosting) {
-        for (JobApplication jobApp : jobPosting.getApplications()) {
+        for (JobApplication jobApp : jobPosting.getAppsByApplicant().values()) {
             jobApp.advanceStatus();
         }
     }
@@ -166,7 +166,7 @@ class HRCoordinator extends User {
         ArrayList<JobApplication> jobApplicationsRejected = new ArrayList<>();
         jobApps[0] = jobApplicationsInConsideration;
         jobApps[1] = jobApplicationsRejected;
-        for (JobApplication jobApplication : jobPosting.getApplications()) {
+        for (JobApplication jobApplication : jobPosting.getAppsByApplicant().values()) {
             if (jobApplication.getStatus() == 0) {
                 jobApplicationsInConsideration.add(jobApplication);
             } else {
@@ -225,7 +225,7 @@ class HRCoordinator extends User {
     void advanceInterviewRound(LocalDate today, JobPosting jobPosting) {
         InterviewManager interviewManager = jobPosting.getInterviewManager();
         if (interviewManager.getCurrentRound() < Interview.getMaxNumRounds()) {
-            if (interviewManager.isCurrentRoundOver(today)) {
+            if (interviewManager.currentRoundOver(today)) {
                 interviewManager.advanceRound();
             }
         }

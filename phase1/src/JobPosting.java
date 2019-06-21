@@ -1,35 +1,22 @@
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 abstract class JobPosting {
 
-    // Elaine: I'm adding this so that my code doesn't have red underlines
-    // === Class variables ===
-    private static int totalNum;
-
     // === Instance variables ===
-    // Unique identifier for this job posting
-    private int ID;
-    // The job title
-    private String title;
-    // The job field
-    private String field;
-    // The job description
-    private String description;
-    // The requirements for this job posting
-    private ArrayList<String> requirements;
-    // The company that listed this job posting
-    private Company company;
-    // Whether the job posting is filled
-    private boolean filled = false;
-    // The date on which this job posting was listed
-    private LocalDate postDate;
-    // The date on which this job posting is closed
-    private LocalDate closeDate;
-    // The list of job applications
-    private ArrayList<JobApplication> applications = new ArrayList<>();
-    // Interview manager for this job posting
-    private InterviewManager interviewManager;
+    private static int postingsCreated; // Total number of postings created
+    protected int id; // Unique identifier for this job posting
+    protected String title; // The job title
+    protected String field; // The job field
+    protected String description; // The job description
+    protected ArrayList<String> requirements; // The requirements for this job posting
+    protected Company company; // The company that listed this job posting
+    protected boolean filled; // Whether the job posting is filled
+    protected LocalDate postDate; // The date on which this job posting was listed
+    protected LocalDate closeDate; // The date on which this job posting is closed
+    protected HashMap<Applicant,JobApplication> appsByApplicant = new HashMap<>(); // Map of applicants to applications
+    protected InterviewManager interviewManager; // Interview manager for this job posting
 
     // === Constructors ===
     JobPosting() {
@@ -37,18 +24,23 @@ abstract class JobPosting {
 
     JobPosting(String title, String field, String description, ArrayList<String> requirements, Company company,
                LocalDate postDate, LocalDate closeDate) {
-        this.ID = JobPosting.totalNum;
+        postingsCreated++;
+        this.id = postingsCreated;
         this.title = title;
         this.field = field;
         this.description = description;
         this.requirements = requirements;
         this.company = company;
+        this.filled = false;
         this.postDate = postDate;
         this.closeDate = closeDate;
-        JobPosting.totalNum++;
     }
 
     // === Getters ===
+    int getId() {
+        return this.id;
+    }
+
     String getTitle() {
         return this.title;
     }
@@ -65,8 +57,8 @@ abstract class JobPosting {
         return this.closeDate;
     }
 
-    ArrayList<JobApplication> getApplications() {
-        return this.applications;
+    HashMap<Applicant, JobApplication> getAppsByApplicant() {
+        return this.appsByApplicant;
     }
 
     boolean isFilled() {
@@ -92,20 +84,26 @@ abstract class JobPosting {
     }
 
     // === Other methods ===
-    void addJobApplication(JobApplication jobApplication) {
-
+    void addJobApplication(Applicant applicant, JobApplication jobApplication) {
     }
 
     void removeJobApplication(Applicant applicant) {
-
     }
 
-    JobApplication findJobApplication(Applicant applicant) {
-        return null;
+    abstract JobApplication findJobApplication(Applicant applicant);
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof JobPosting)) {
+            return false;
+        }
+        else {
+            return this.id == ((JobPosting) obj).getId();
+        }
     }
 
-    Applicant getFinalCandidate() {
-        return null;
+    @Override
+    public int hashCode() {
+        return this.id;
     }
-
 }

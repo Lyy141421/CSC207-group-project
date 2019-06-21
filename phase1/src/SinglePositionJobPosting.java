@@ -10,4 +10,9 @@ class SinglePositionJobPosting extends JobPosting {
                              Company company, LocalDate postDate, LocalDate closeDate) {
         super(title, field, description, requirements, company, postDate, closeDate);
     }
+
+    @Override
+    JobApplication findJobApplication(Applicant applicant) {
+        return appsByApplicant.getOrDefault(applicant, null);
+    }
 }

@@ -115,7 +115,7 @@ class Applicant extends User {
      * @return true iff this applicant has not applied to this job posting.
      */
     private boolean hasAppliedTo(JobPosting jobPosting) {
-        for (JobApplication jobApp : jobPosting.getApplications()) {
+        for (JobApplication jobApp : jobPosting.getAppsByApplicant().values()) {
             if (jobApp.getApplicant().equals(this)) {
                 return true;
             }
