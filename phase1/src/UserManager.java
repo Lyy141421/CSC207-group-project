@@ -28,7 +28,7 @@ class UserManager {
             //TODO: Write to storage
         }
         Interviewer newInterviewer = new Interviewer(email, company, field, dateCreated);
-        this.addToAllUsers(newInterviewer);
+        this.allUsers.add(newInterviewer);
     }
 
     private void createHRCoordinator(String username, String password, String legalName,
@@ -38,7 +38,7 @@ class UserManager {
             //TODO: Write to storage
         }
         HRCoordinator newHRBoy = new HRCoordinator(username, password, legalName, email, company, dateCreated);
-        this.addToAllUsers(newHRBoy);
+        this.allUsers.add(newHRBoy);
     }
 
     private void createApplicant(String username, String password,
@@ -48,7 +48,7 @@ class UserManager {
             //TODO: Write to storage
         }
         Applicant newApplicant = new Applicant(username, password, legalName, email, dateCreated);
-        this.addToAllUsers(newApplicant);
+        this.allUsers.add(newApplicant);
     }
 
     // === User Operations and password encryption ===
@@ -131,11 +131,38 @@ class UserManager {
     }
 
     /**
-     * Adds the passed user to allUsers.
+     * FOR ALL METHODS BELOWT HIS JAVADOC
+     * Returns all of the relevant type of users in an arraylist.
      *
-     * @param newUser The user object being added to allUsers
+     * @return list of all existing (User type)
      */
-    private void addToAllUsers(User newUser) {
-        this.allUsers.add(newUser);
+    ArrayList getAllApplicants() {
+        ArrayList<User> ret = new ArrayList<>();
+        for(User user: this.allUsers) {
+            if(user instanceof Applicant) {
+                ret.add(user);
+            }
+        }
+        return ret;
+    }
+
+    ArrayList getAllHRCoordinator() {
+        ArrayList<User> ret = new ArrayList<>();
+        for(User user: this.allUsers) {
+            if(user instanceof HRCoordinator) {
+                ret.add(user);
+            }
+        }
+        return ret;
+    }
+
+    ArrayList getAllInterviewers() {
+        ArrayList<User> ret = new ArrayList<>();
+        for(User user: this.allUsers) {
+            if(user instanceof Interviewer) {
+                ret.add(user);
+            }
+        }
+        return ret;
     }
 }
