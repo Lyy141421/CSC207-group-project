@@ -146,7 +146,7 @@ class UserManager {
     }
 
     /**
-     * FOR ALL METHODS BELOWT HIS JAVADOC
+     * FOR ALL METHODS BELOW THIS JAVADOC
      * Returns all of the relevant type of users in an arraylist.
      *
      * @return list of all existing (User type)
