@@ -62,11 +62,12 @@ class HRCoordinator extends User {
      * @param jobTitle       The job title.
      * @param jobDescription The job description.
      * @param requirements   The list of requirements for this job.
+     * @param numPositions   The number of positions for this job.
      * @param postDate       The date this job posting was posted.
      * @param closeDate      The date this job posting is closed.
      */
     void addJobPosting(String jobTitle, String jobField, String jobDescription, ArrayList<String> requirements,
-                       LocalDate postDate, LocalDate closeDate) {
+                       int numPositions, LocalDate postDate, LocalDate closeDate) {
         JobPosting jobPosting = new SinglePositionJobPosting(jobTitle, jobField, jobDescription, requirements,
                 this.company, postDate, closeDate);
         this.company.addJobPosting(jobPosting);

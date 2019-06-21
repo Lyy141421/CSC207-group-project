@@ -126,7 +126,7 @@ class Applicant extends User {
     /**
      * Get all job applications for this applicant.
      *
-     * @return a list of all job applciations submitted by this applicant.
+     * @return a list of all job applications submitted by this applicant.
      */
     ArrayList<JobApplication> getAllJobApplications() {
         return this.jobApplicationManager.getJobApplications();

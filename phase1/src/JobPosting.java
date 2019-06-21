@@ -4,6 +4,9 @@ import java.util.ArrayList;
 abstract class JobPosting {
 
     // Elaine: I'm adding this so that my code doesn't have red underlines
+    // === Class variables ===
+    private static int totalNum;
+
     // === Instance variables ===
     // Unique identifier for this job posting
     private int ID;
@@ -34,6 +37,7 @@ abstract class JobPosting {
 
     JobPosting(String title, String field, String description, ArrayList<String> requirements, Company company,
                LocalDate postDate, LocalDate closeDate) {
+        this.ID = JobPosting.totalNum;
         this.title = title;
         this.field = field;
         this.description = description;
@@ -41,6 +45,7 @@ abstract class JobPosting {
         this.company = company;
         this.postDate = postDate;
         this.closeDate = closeDate;
+        JobPosting.totalNum++;
     }
 
     // === Getters ===
