@@ -6,17 +6,17 @@ abstract class JobPosting {
 
     // === Instance variables ===
     private static int postingsCreated; // Total number of postings created
-    protected int id; // Unique identifier for this job posting
-    protected String title; // The job title
-    protected String field; // The job field
-    protected String description; // The job description
-    protected ArrayList<String> requirements; // The requirements for this job posting
-    protected Company company; // The company that listed this job posting
-    protected boolean filled; // Whether the job posting is filled
-    protected LocalDate postDate; // The date on which this job posting was listed
-    protected LocalDate closeDate; // The date on which this job posting is closed
-    protected HashMap<Applicant,JobApplication> appsByApplicant = new HashMap<>(); // Map of applicants to applications
-    protected InterviewManager interviewManager; // Interview manager for this job posting
+    private int id; // Unique identifier for this job posting
+    private String title; // The job title
+    private String field; // The job field
+    private String description; // The job description
+    private ArrayList<String> requirements; // The requirements for this job posting
+    private Company company; // The company that listed this job posting
+    private boolean filled; // Whether the job posting is filled
+    private LocalDate postDate; // The date on which this job posting was listed
+    private LocalDate closeDate; // The date on which this job posting is closed
+    private HashMap<Applicant,JobApplication> appsByApplicant = new HashMap<>(); // Map of applicants to applications
+    private InterviewManager interviewManager; // Interview manager for this job posting
 
     // === Constructors ===
     JobPosting() {
