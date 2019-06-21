@@ -177,19 +177,6 @@ class HRCoordinator extends User {
     }
 
     /**
-     * Create and add an interviewer for jobs in this field.
-     *
-     * @param email The interviewer's email.
-     * @param field The job field that the interviewer specializes in.
-     * @param today Today's date.
-     */
-    // TODO : How to resolve?
-    void addInterviewer(String email, String field, LocalDate today) {
-        Interviewer interviewer = UserManager.createInterviewer(email, this.company, field, today, true);
-        this.company.addInterviewer(interviewer);
-    }
-
-    /**
      * Create an interview manager for this job posting.
      *
      * @param jobPosting The job posting in question.
