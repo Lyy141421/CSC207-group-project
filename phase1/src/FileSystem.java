@@ -8,6 +8,33 @@ import org.json.simple.parser.*;
 import java.util.Iterator;
 
 public class FileSystem {
+
+    /**
+     * Loads an object as a HashMap
+     *
+     * @param filename the name of the json file (Excluding .json)
+     * @param id The unique Id of the Item being loaded
+     * @return returns the Data of this Object as a HashMap
+     */
+    static HashMap read(String filename, String id) {
+        JSONObject jobj = null;
+        try {
+            jobj = FileToJson(filename).getJSONObject(id);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        HashMap map = new HashMap();
+        for (Iterator it = jobj.keys(); it.hasNext(); ) {
+            String x = (String)it.next();
+            try {
+                map.put(x, jobj.get(x));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return map;
+    }
+
     /**
      *Saves the object in a json library
      *
