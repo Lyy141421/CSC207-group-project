@@ -102,11 +102,11 @@ public class FileSystem {
     }
 
     /**
-     *
+     * Returns a boolean on weather or not an Id is in a file
      *
      * @param filename the name of the json file (Excluding .json)
      * @param id The unique Id of the Item being loaded
-     * @return
+     * @return boolean if ID in File
      */
     static boolean IDinMemory(String filename, String id){
         Iterator keys = getAllID(filename);
