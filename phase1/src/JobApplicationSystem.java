@@ -5,6 +5,8 @@ import java.util.TimerTask;
 public class JobApplicationSystem {
 
     // === Instance variables ===
+    // The time in Milliseconds for the cyclicalTask to repeat
+    private static final int CYCLE_PERIOD = 86400000;
     // List of companies registered in the system
     private static ArrayList<Company> companies = new ArrayList<>();
     // The user manager for the system
@@ -66,7 +68,7 @@ public class JobApplicationSystem {
             }
         };
         Timer timer = new Timer();
-        timer.scheduleAtFixedRate(daily_tasks, 0, 86400000);
+        timer.scheduleAtFixedRate(daily_tasks, 0, CYCLE_PERIOD);
     }
 
     /**
