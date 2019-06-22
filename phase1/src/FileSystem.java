@@ -101,4 +101,20 @@ public class FileSystem {
         return FileToJson(filename).keys();
     }
 
+    /**
+     *
+     *
+     * @param filename the name of the json file (Excluding .json)
+     * @param id The unique Id of the Item being loaded
+     * @return
+     */
+    static boolean IDinMemory(String filename, String id){
+        Iterator keys = getAllID(filename);
+        while(keys.hasNext()){
+            if(keys.next().equals(id)){
+                return true;
+            }
+        }
+        return false;
+    }
 }
