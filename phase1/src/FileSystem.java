@@ -8,6 +8,24 @@ import org.json.simple.parser.*;
 import java.util.Iterator;
 
 public class FileSystem {
+    /**
+     *Saves the object in a json library
+     *
+     * @param filename the name of the json file (Excluding .json)
+     * @param id The unique Id of the Item being saved
+     * @param data The HashMap of data to be saved to the Id
+     */
+    static void write(String filename, String id, HashMap data){
+        JSONObject jobj = FileToJson(filename);
+        try {
+            jobj.put(id, data);
+            PrintWriter pw = new PrintWriter(filename + ".json");
+            pw.write(jobj.toString());
+            pw.close();
+        } catch (JSONException | FileNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
      *Used to create or load JSON Objects form a filename
