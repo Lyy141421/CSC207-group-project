@@ -72,4 +72,22 @@ public class FileSystem {
         }
         return jobj;
     }
+
+    /**
+     * Deletes an Id and data from a json file
+     *
+     * @param filename the name of the json file (Excluding .json)
+     * @param id The unique Id of the Item being loaded
+     */
+    static void delete(String filename, String id){
+        JSONObject jobj = FileToJson(filename);
+        jobj.remove(id);
+        try {
+            PrintWriter pw = new PrintWriter(filename + ".json");
+            pw.write(jobj.toString());
+            pw.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
 }
