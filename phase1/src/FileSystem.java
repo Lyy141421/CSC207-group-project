@@ -90,4 +90,15 @@ public class FileSystem {
             e.printStackTrace();
         }
     }
+
+    /**
+     * Gets an iterable for mass loading of Id's of a file
+     *
+     * @param filename the name of the json file (Excluding .json)
+     * @return An Iterator of Id's
+     */
+    static Iterator getAllID(String filename){
+        return FileToJson(filename).keys();
+    }
+
 }
