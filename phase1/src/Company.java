@@ -3,7 +3,6 @@ import java.util.HashMap;
 
 class Company {
 
-    // Elaine: I'm adding these so that my code doesn't have red underlines. This is unfinished.
     // === Instance variables ===
     // The name of this company (unique identifier)
     private String name;
@@ -14,12 +13,6 @@ class Company {
 
 
     // === Constructors ===
-
-    /**
-     * Create a new company.
-     */
-    Company() {
-    }
 
     /**
      * Create a new company.
@@ -52,6 +45,15 @@ class Company {
      */
     String getName() {
         return this.name;
+    }
+
+    /**
+     * Get a list of all HRCoordinators for this company.
+     *
+     * @return a list of all HRCoordinators for this company.
+     */
+    ArrayList<HRCoordinator> getHrCoordinators() {
+        return this.hrCoordinators;
     }
 
     /**
@@ -111,9 +113,43 @@ class Company {
     ArrayList<JobPosting> getAllJobPostings() {
         ArrayList<JobPosting> allJobPostings = new ArrayList<>();
         for (HRCoordinator HRC : this.hrCoordinators) {
-            allJobPostings.addAll(HRC.getJobPostingManager().getJobPostings());
+            allJobPostings.addAll(HRC.getAllJobPostings());
         }
         return allJobPostings;
+    }
+
+    /**
+     * Search the job posting by title within this company.
+     *
+     * @param jobTitle The job title.
+     * @return the job posting with this job title.
+     */
+    JobPosting searchJobPostingByTitle(String jobTitle) {
+        for (HRCoordinator HRC : this.hrCoordinators) {
+            for (JobPosting jobPosting : HRC.getAllJobPostings()) {
+                if (jobPosting.getTitle().equals(jobTitle)) {
+                    return jobPosting;
+                }
+            }
+
+        }
+        return null;
+    }
+
+    /**
+     * View all applications this applicant has submitted for job postings in this company.
+     *
+     * @param applicant The applicant in question.
+     * @return a list of job applications that this applicant has previously submitted to this company.
+     */
+    ArrayList<JobApplication> viewAllApplicationsToCompany(Applicant applicant) {
+        ArrayList<JobApplication> apps = new ArrayList<>();
+        for (JobApplication jobApp : applicant.getJobApplicationManager().getJobApplications()) {
+            if (jobApp.getJobPosting().getCompany().equals(this)) {
+                apps.add(jobApp);
+            }
+        }
+        return apps;
     }
 
 

@@ -10,6 +10,12 @@ class Applicant extends User {
     // === Instance variables ===
     // The applicant's job application manager
     private JobApplicationManager jobApplicationManager = new JobApplicationManager();
+    // List of files uploaded to account
+    private ArrayList<String> filesSubmitted = new ArrayList<>();
+
+    //TODO: Submit CV and cover letter -- work with string as filename -- unique from files arraylist
+    //First time that applicant applies for a job, they submit the files directly -- simultaneously saves to their account
+    //From then on, applicant can submit files from their account to each job app or submit them directly
 
     // === Constructors ===
 
@@ -123,42 +129,56 @@ class Applicant extends User {
         return false;
     }
 
-    /**
+    /*
+     */
+/**
      * Get all job applications for this applicant.
      *
      * @return a list of all job applications submitted by this applicant.
-     */
+ *//*
+
     ArrayList<JobApplication> getAllJobApplications() {
         return this.jobApplicationManager.getJobApplications();
     }
 
-    /**
+    */
+/**
      * Get the previous job applications for this applicant.
      *
      * @return a list of previous job applications submitted where the posting is now filled.
-     */
+ *//*
+
     ArrayList<JobApplication> getPreviousJobApplications() {
         return this.jobApplicationManager.getPreviousJobApplications();
     }
 
-    /**
+    */
+/**
      * Get the current job applications for this applicant.
      *
      * @return a list of current job applications submitted (posting is not yet filled).
-     */
+ *//*
+
     ArrayList<JobApplication> getCurrentJobApplications() {
         return this.jobApplicationManager.getCurrentJobApplications();
     }
 
-    /**
+    JobApplication getJobApplicationForJobPosting(JobPosting jobPosting) {
+        return this.jobApplicationManager.findJobApplication(jobPosting);
+    }
+
+    */
+/**
      * Get the number of days since the most recent job posting close date.
      *
      * @param today Today's date.
      * @return the number of days since the most recent job posting close date.
-     */
+ *//*
+
     long getNumDaysSinceMostRecentClosing(LocalDate today) {
         return this.jobApplicationManager.getNumDaysSinceMostRecentCloseDate(today);
     }
+*/
 
     /**
      * Report whether the date that the last job posting this applicant applied to was 30 days ago from today.

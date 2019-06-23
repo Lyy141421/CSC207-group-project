@@ -72,20 +72,6 @@ class JobApplicationManager {
     // === Other methods ===
 
     /**
-     * Create a job application to this applicant's application list.
-     *
-     * @param applicant       The applicant applying for a job.
-     * @param jobPosting      The job posting to be applied to.
-     * @param CV              The applicant's CV.
-     * @param coverLetter     The applicant's cover letter.
-     * @param applicationDate The date this application is submitted.
-     */
-    JobApplication createJobApplication(Applicant applicant, JobPosting jobPosting, File CV, File coverLetter,
-                                        LocalDate applicationDate) {
-        return new JobApplication(applicant, jobPosting, CV, coverLetter, applicationDate);
-    }
-
-    /**
      * Add a job application to this applicant's application list.
      *
      * @param applicant       The applicant applying for a job.
@@ -96,7 +82,7 @@ class JobApplicationManager {
      */
     void addJobApplication(Applicant applicant, JobPosting jobPosting, File CV, File coverLetter,
                            LocalDate applicationDate) {
-        JobApplication app = this.createJobApplication(applicant, jobPosting, CV, coverLetter, applicationDate);
+        JobApplication app = new JobApplication(applicant, jobPosting, CV, coverLetter, applicationDate);
         this.jobApplications.add(app);
     }
 
@@ -116,7 +102,7 @@ class JobApplicationManager {
      * @param jobPosting The job posting in question.
      * @return the job application associated with this job posting.
      */
-    private JobApplication findJobApplication(JobPosting jobPosting) {
+    JobApplication findJobApplication(JobPosting jobPosting) {
         for (JobApplication app : this.jobApplications) {
             if (app.getJobPosting().equals(jobPosting)) {
                 return app;

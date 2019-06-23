@@ -78,7 +78,7 @@ public class JobApplicationSystem {
     static ArrayList<JobPosting> getAllJobPostings() {
         ArrayList<JobPosting> jobPostings = new ArrayList<>();
         for (Company company : JobApplicationSystem.companies) {
-            jobPostings.addAll(company.getJobPostings());
+            jobPostings.addAll(company.getAllJobPostings());
         }
         return jobPostings;
     }

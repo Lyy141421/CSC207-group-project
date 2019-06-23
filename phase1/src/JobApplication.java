@@ -234,8 +234,25 @@ class JobApplication {
         this.status++;
     }
 
+    /**
+     * Set up an interview for the applicant with this job application.
+     *
+     * @param round The interview round.
+     */
+    void setUpInterview(HRCoordinator hrCoordinator, int round) {
+        JobPosting jobPosting = this.getJobPosting();
+        String jobField = jobPosting.getField();
+        Interviewer interviewer = hrCoordinator.getCompany().findInterviewer(jobField);
+        Interview interview = new Interview(this, interviewer, hrCoordinator,
+                jobPosting.getInterviewManager(), round);
+        this.addInterview(interview);
+        interviewer.addInterview(interview);
+    }
+
+
     void addInterview(Interview interview) {
         this.interviews.add(interview);
     }
+
 
 }
