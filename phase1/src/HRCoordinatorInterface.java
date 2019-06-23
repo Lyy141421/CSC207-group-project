@@ -1,35 +1,65 @@
+import java.util.ArrayList;
+
 class HRCoordinatorInterface extends UserInterface {
     /**
      * The general HR Coordinator interface
      */
 
     // === Instance variables ===
+    // The HR Coordinator who is logged in
     private HRCoordinator HRC;
 
     // === Constructor ===
+
+    /**
+     * Create the interface for this HR Coordinator.
+     *
+     * @param HRC The HR Coordinator who is logged in.
+     */
     HRCoordinatorInterface(HRCoordinator HRC) {
         this.HRC = HRC;
     }
 
+    /**
+     * Interface for getting a job posting by this HR Coordinator's company.
+     * @return the job posting being searched for.
+     */
     JobPosting getJobPosting() {
         /*1. Get the job posting that this HR Coordinator wants to view
         2. Find whether the job posting exists for their company
         Note: HR Coordinators can see any application for any job posting in their company*/
-//        return this.HRC.getCompany().searchJobPostingByTitle(jobTitle);
+        /*
+        ArrayList<JobPosting> jobPostings = this.HRC.getCompany().searchJobPostingByTitle(jobTitle);
+        if (jobPostings.size() > 1) {
+            // choose job posting from list
+        }
+        else {
+            return jobPostings.get(0);
+        }
+        */
         return null; // stub
     }
 
+    /**
+     * Interface for adding a new job posting to the system.
+     */
     void addJobPosting() {
         // 1. Get data for job posting -- Job title, Job field, Description, Requirements, Close date
         // 2. Create job posting
         // this.HRC.addJobPosting(jobTitle, jobField, jobDescription, requirements, numPositions, postDate, closeDate);
     }
 
+    /**
+     * Interface for viewing all job postings.
+     */
     void viewAllJobPostings() {
         // Interface stuff
         // JobApplicationSystem.getAllJobPostings();
     }
 
+    /**
+     * Interface for viewing all applications for a specific job posting.
+     */
     void viewAllApplicationsForJobPosting() {
         /*
         1. Get the job posting that this HR Coordinator wants to view
@@ -45,6 +75,9 @@ class HRCoordinatorInterface extends UserInterface {
         // Interface stuff
     }
 
+    /**
+     * Interface for searching for a specific job application.
+     */
     void searchSpecificJobApplication() {
         /*
         1. Get the job posting title -- Show a drop-down menu of all the job postings for their company
@@ -58,6 +91,9 @@ class HRCoordinatorInterface extends UserInterface {
         */
     }
 
+    /**
+     * Interface for reviewing all job applications after a job posting has closed.
+     */
     void reviewApplicationsForJobPosting() {
         /*
         1. Get the job posting title
@@ -79,6 +115,9 @@ class HRCoordinatorInterface extends UserInterface {
         }*/
     }
 
+    /**
+     * Interface for setting up an interview for a job application.
+     */
     void setUpInterviewForJobApplication() {
         /*
         1. Get the job posting by title.
@@ -94,24 +133,43 @@ class HRCoordinatorInterface extends UserInterface {
         jobApp.setUpInterview(this.HRC, jobApp.getStatus());*/
     }
 
-
+    /**
+     * Interface for hiring an applicant.
+     */
     void hireApplicant() {
         /*
-        1. Get the job posting
-        2. Set the posting as filled
-        3. Get a list of final candidates
-        4. Choose applicant and hire
+        1. Get the job posting or automatically display to HR Coordinator when logging in that the interview process
+        for this job posting has been completed.
+        2. Get a list of final candidates
+        3. Choose applicant and hire
+        4. Set the posting as filled
          */
         /*
         JobPosting jobPosting = this.getJobPosting();
         jobPosting.setFilled();
         ArrayList<JobApplication> finalCandidates = jobPosting.getInterviewManager().getApplicationsInConsideration();
         if (finalCandidates.size() == 1) {
-            // get email of finalCandidates.get(0).getApplicant();
+            JobApplication jobApp = finalCandidates.get(0);
         } else {
-            // choose an applicant from list
-            // get email of applicant
-        }*/
+            JobApplication jobApp = selectApplicantToHire();
+        }
+        jobApp.advanceStatus();*/
+        // do something with email jobApp.getApplicant().getEmail();
+    }
+
+    /**
+     * Interface for selecting the application of the applicant who is to be hired.
+     *
+     * @param finalCandidiates The list of final candidates after all interview rounds have been completed.
+     * @return the job application selected.
+     */
+    JobApplication selectApplicationForHiring(ArrayList<JobApplication> finalCandidiates) {
+        /*
+        1. Show list of applications still in consideration
+        2. Get choice
+        3. Return application
+         */
+        return null;
     }
 
 

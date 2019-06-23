@@ -1,3 +1,4 @@
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -139,18 +140,29 @@ class Company {
     }
 
     /**
-     * Search the job posting by title within this company.
+     * Get all open job postings for this company.
+     *
+     * @param today Today's date.
+     * @return the list of all open job postings for this company.
+     */
+    ArrayList<JobPosting> getAllOpenJobPostings(LocalDate today) {
+        return this.jobPostingManager.getOpenJobPostings(today);
+    }
+
+    /**
+     * Search the job postings by title within this company.
      *
      * @param jobTitle The job title.
-     * @return the job posting with this job title.
+     * @return the list of job postings with this job title.
      */
-    JobPosting searchJobPostingByTitle(String jobTitle) {
+    ArrayList<JobPosting> searchJobPostingByTitle(String jobTitle) {
+        ArrayList<JobPosting> jobPostings = new ArrayList<>();
         for (JobPosting jobPosting : this.getAllJobPostings()) {
             if (jobPosting.getTitle().equals(jobTitle)) {
-                return jobPosting;
+                jobPostings.add(jobPosting);
             }
         }
-        return null;
+        return jobPostings;
     }
 
     /**

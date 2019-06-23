@@ -1,3 +1,4 @@
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -57,8 +58,9 @@ public class JobApplicationSystem {
     }
 
     // === Other methods ===
+
     /**
-    A method which triggers once a day from the time it is started.
+     A method which triggers once a day from the time it is started.
      */
     private static void cyclicalTask(){
         TimerTask daily_tasks = new TimerTask() {
@@ -79,6 +81,19 @@ public class JobApplicationSystem {
         ArrayList<JobPosting> jobPostings = new ArrayList<>();
         for (Company company : JobApplicationSystem.companies) {
             jobPostings.addAll(company.getAllJobPostings());
+        }
+        return jobPostings;
+    }
+
+    /**
+     * Get all the open job postings in this system.
+     *
+     * @return all the job postings in this system.
+     */
+    static ArrayList<JobPosting> getAllOpenJobPostings(LocalDate today) {
+        ArrayList<JobPosting> jobPostings = new ArrayList<>();
+        for (Company company : JobApplicationSystem.companies) {
+            jobPostings.addAll(company.getAllOpenJobPostings(today));
         }
         return jobPostings;
     }
