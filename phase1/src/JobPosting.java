@@ -16,7 +16,7 @@ class JobPosting {
     private LocalDate postDate; // The date on which this job posting was listed
     private LocalDate closeDate; // The date on which this job posting is closed
     private boolean filled; // Whether the job posting is filled
-    private HashMap<Applicant,JobApplication> appsByApplicant = new HashMap<>(); // Map of applicants to applications
+    private ArrayList<JobApplication> jobApplications; // The list of job applications for this job posting
     private InterviewManager interviewManager; // Interview manager for this job posting
 
     // === Constructors ===
@@ -63,8 +63,8 @@ class JobPosting {
         return this.closeDate;
     }
 
-    HashMap<Applicant, JobApplication> getAppsByApplicant() {
-        return this.appsByApplicant;
+    ArrayList<JobApplication> getJobApplications() {
+        return this.jobApplications;
     }
 
     boolean isFilled() {
@@ -94,17 +94,36 @@ class JobPosting {
     }
 
     // === Other methods ===
-    // TODO
-    void addJobApplication(Applicant applicant, JobApplication jobApplication) {
 
+    /**
+     * Add this job application for this job posting.
+     *
+     * @param jobApplication The job application to be added.
+     */
+    void addJobApplication(JobApplication jobApplication) {
+        this.jobApplications.add(jobApplication);
     }
 
-    // TODO
-    void removeJobApplication(Applicant applicant) {
+    /**
+     * Remove this job application for this job posting.
+     *
+     * @param jobApplication The job application to be removed.
+     */
+    void removeJobApplication(JobApplication jobApplication) {
+        this.jobApplications.remove(jobApplication);
     }
 
-    // TODO
+    /**
+     * Find the job application associated with this applicant.
+     * @param applicant The applicant whose application is to be searched for.
+     * @return the application of this applicant or null if not found.
+     */
     JobApplication findJobApplication(Applicant applicant) {
+        for (JobApplication jobApp : this.jobApplications) {
+            if (jobApp.getApplicant().equals(applicant)) {
+                return jobApp;
+            }
+        }
         return null;
     }
 
@@ -112,7 +131,7 @@ class JobPosting {
      * Review the applications submitted for this job posting.
      */
     void reviewApplications() {
-        for (JobApplication jobApp : this.getApplications()) {
+        for (JobApplication jobApp : this.getJobApplications()) {
             jobApp.advanceStatus();
         }
     }
@@ -143,7 +162,7 @@ class JobPosting {
         ArrayList<JobApplication> jobApplicationsRejected = new ArrayList<>();
         jobApps[0] = jobApplicationsInConsideration;
         jobApps[1] = jobApplicationsRejected;
-        for (JobApplication jobApplication : this.getAppsByApplicant().values()) {
+        for (JobApplication jobApplication : this.getJobApplications()) {
             if (jobApplication.getStatus() == 0) {
                 jobApplicationsInConsideration.add(jobApplication);
             } else {

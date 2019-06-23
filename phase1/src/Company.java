@@ -10,6 +10,8 @@ class Company {
     private ArrayList<HRCoordinator> hrCoordinators = new ArrayList<>();
     // The interviewers in this company
     private HashMap<String, ArrayList<Interviewer>> fieldToInterviewers = new HashMap<>();
+    // The job posting manager for this company
+    private JobPostingManager jobPostingManager = new JobPostingManager(this);
 
 
     // === Constructors ===
@@ -30,10 +32,11 @@ class Company {
      * @param fieldToInterviewers   The map of field to interviewers for this company.
      */
     Company(String name, ArrayList<HRCoordinator> hrCoordinators,
-            HashMap<String, ArrayList<Interviewer>> fieldToInterviewers) {
+            HashMap<String, ArrayList<Interviewer>> fieldToInterviewers, JobPostingManager jobPostingManager) {
         this.name = name;
         this.hrCoordinators = hrCoordinators;
         this.fieldToInterviewers = fieldToInterviewers;
+        this.jobPostingManager = jobPostingManager;
     }
 
     // === Getters ==
@@ -62,6 +65,27 @@ class Company {
      */
     HashMap<String, ArrayList<Interviewer>> getFieldToInterviewers() {
         return this.fieldToInterviewers;
+    }
+
+    /**
+     * Get the job posting manager for this company.
+     *
+     * @return the job posting manager for this company.
+     */
+    JobPostingManager getJobPostingManager() {
+        return this.jobPostingManager;
+    }
+
+
+    // === Setters ===
+
+    /**
+     * Set the job posting manager for this company.
+     *
+     * @param jobPostingManager The job posting manager to be set.
+     */
+    void setJobPostingManager(JobPostingManager jobPostingManager) {
+        this.jobPostingManager = jobPostingManager;
     }
 
     // === Other methods ===
@@ -111,11 +135,7 @@ class Company {
      * @return the list of all job postings for this company.
      */
     ArrayList<JobPosting> getAllJobPostings() {
-        ArrayList<JobPosting> allJobPostings = new ArrayList<>();
-        for (HRCoordinator HRC : this.hrCoordinators) {
-            allJobPostings.addAll(HRC.getAllJobPostings());
-        }
-        return allJobPostings;
+        return this.jobPostingManager.getJobPostings();
     }
 
     /**
@@ -125,13 +145,10 @@ class Company {
      * @return the job posting with this job title.
      */
     JobPosting searchJobPostingByTitle(String jobTitle) {
-        for (HRCoordinator HRC : this.hrCoordinators) {
-            for (JobPosting jobPosting : HRC.getAllJobPostings()) {
-                if (jobPosting.getTitle().equals(jobTitle)) {
-                    return jobPosting;
-                }
+        for (JobPosting jobPosting : this.getAllJobPostings()) {
+            if (jobPosting.getTitle().equals(jobTitle)) {
+                return jobPosting;
             }
-
         }
         return null;
     }

@@ -9,8 +9,6 @@ class HRCoordinator extends User {
     // === Instance variables ===
     // The company that this HR Coordinator works for
     private Company company;
-    // The job posting manager for this company
-    private JobPostingManager jobPostingManager;
 
     // === Constructors ===
 
@@ -34,25 +32,6 @@ class HRCoordinator extends User {
                   LocalDate dateCreated) {
         super(username, password, legalName, email, dateCreated);
         this.company = company;
-        this.jobPostingManager = new JobPostingManager(this.company);
-    }
-
-    /**
-     * Create an HR Coordinator account.
-     *
-     * @param username          The HR Coordinator's account username.
-     * @param password          The HR Coordinator's account password.
-     * @param legalName         The HR Coordinator's legal name.
-     * @param email             The HR Coordinator's email.
-     * @param company           The company that this HR Coordinator works for.
-     * @param jobPostingManager The job posting manager for this HR Coordinator.
-     * @param dateCreated       The date this account was created.
-     */
-    HRCoordinator(String username, String password, String legalName, String email, Company company,
-                  JobPostingManager jobPostingManager, LocalDate dateCreated) {
-        super(username, password, legalName, email, dateCreated);
-        this.company = company;
-        this.jobPostingManager = jobPostingManager;
     }
 
     // === Getters ===
@@ -66,15 +45,6 @@ class HRCoordinator extends User {
         return this.company;
     }
 
-    /**
-     * Get the job posting manager for this HR Coordinator.
-     *
-     * @return the job posting manager for this HR Coordinator.
-     */
-    JobPostingManager getJobPostingManager() {
-        return this.jobPostingManager;
-    }
-
     // === Setters ===
 
     /**
@@ -84,25 +54,7 @@ class HRCoordinator extends User {
         this.company = company;
     }
 
-    /**
-     * Set the job posting manager for this HR Coordinator.
-     *
-     * @param jobPostingManager The job posting manager to be set.
-     */
-    void setJobPostingManager(JobPostingManager jobPostingManager) {
-        this.jobPostingManager = jobPostingManager;
-    }
-
     // === Other methods ===
-
-    /**
-     * Get a list of job postings that this HR Coordinator is responsible for.
-     *
-     * @return the list of job postings that this HR Coordinator is responsible for.
-     */
-    ArrayList<JobPosting> getAllJobPostings() {
-        return this.jobPostingManager.getJobPostings();
-    }
 
     /**
      * Create and add a job posting to the system.
@@ -118,7 +70,7 @@ class HRCoordinator extends User {
                        int numPositions, LocalDate postDate, LocalDate closeDate) {
         JobPosting jobPosting = new JobPosting(jobTitle, jobField, jobDescription, requirements,
                 numPositions, this.company, postDate, closeDate);
-        this.jobPostingManager.addJobPosting(jobPosting);
+        this.company.getJobPostingManager().addJobPosting(jobPosting);
     }
 
 

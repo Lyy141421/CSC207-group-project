@@ -74,7 +74,7 @@ class Interviewer extends User {
     // === Other methods ===
 
     /**
-     * Add an interview to this interviewer's list of interviews.
+     * Add an interview to this interviewer's list of interviews in sorted order.
      *
      * @param interview The interview to be added.
      */

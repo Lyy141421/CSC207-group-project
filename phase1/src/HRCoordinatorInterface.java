@@ -1,5 +1,3 @@
-import java.util.ArrayList;
-
 class HRCoordinatorInterface extends UserInterface {
     /**
      * The general HR Coordinator interface
@@ -18,17 +16,18 @@ class HRCoordinatorInterface extends UserInterface {
         2. Find whether the job posting exists for their company
         Note: HR Coordinators can see any application for any job posting in their company*/
 //        return this.HRC.getCompany().searchJobPostingByTitle(jobTitle);
+        return null; // stub
     }
 
     void addJobPosting() {
         // 1. Get data for job posting -- Job title, Job field, Description, Requirements, Close date
         // 2. Create job posting
-        // this.addJobPosting(jobTitle, jobField, jobDescription, requirements, numPositions, postDate, closeDate);
+        // this.HRC.addJobPosting(jobTitle, jobField, jobDescription, requirements, numPositions, postDate, closeDate);
     }
 
     void viewAllJobPostings() {
         // Interface stuff
-        JobApplicationSystem.getAllJobPostings();
+        // JobApplicationSystem.getAllJobPostings();
     }
 
     void viewAllApplicationsForJobPosting() {
@@ -41,7 +40,8 @@ class HRCoordinatorInterface extends UserInterface {
              - Display a menu of stuff that the HR Coordinator can see
                  - Cover letter, CV
          */
-        JobPosting jobPosting = this.getJobPosting();
+
+        // JobPosting jobPosting = this.getJobPosting();
         // Interface stuff
     }
 
@@ -51,8 +51,8 @@ class HRCoordinatorInterface extends UserInterface {
         2. Get the applicant username -- Drop down menu?
         3. Find application, if it exists
          */
-        JobPosting jobPosting = this.getJobPosting();
         /*
+        JobPosting jobPosting = this.getJobPosting();
         Applicant applicant = JobApplicationSystem.getUserManager().findUserByUsername(username);
         jobPosting.findJobApplication(applicant);
         */
@@ -64,19 +64,19 @@ class HRCoordinatorInterface extends UserInterface {
         2. Show all applications for job posting with a button on the side to advance (default is reject)
         */
 
-        JobPosting jobPosting = this.getJobPosting();
+        /*JobPosting jobPosting = this.getJobPosting();
         jobPosting.reviewApplications();     // This advances the jobApp status to "under review"
-        InterviewManager interviewManager = new InterviewManager(jobPosting, jobPosting.getApplications(),
+        InterviewManager interviewManager = new InterviewManager(jobPosting, jobPosting.getJobApplications(),
                 new ArrayList<>());
         jobPosting.setInterviewManager(interviewManager);
-        for (JobApplication jobApp : jobPosting.getApplications()) {
-            /*if (advance) {
+        for (JobApplication jobApp : jobPosting.getJobApplications()) {
+            if (advance) {
                 jobApp.advanceStatus();
             }
             else {
                 jobPosting.getInterviewManager().reject(jobApp);
-            }*/
-        }
+            }
+        }*/
     }
 
     void setUpInterviewForJobApplication() {
@@ -86,10 +86,12 @@ class HRCoordinatorInterface extends UserInterface {
         2. Find the interviewer in the specific job field that has the least number of interviews scheduled
         3. Match interviewer with application
          */
+        /*
         JobPosting jobPosting = this.getJobPosting();
-        /*Applicant applicant = JobApplicationSystem.getUserManager().findUserByUsername(username);
+        Applicant applicant = JobApplicationSystem.getUserManager().findUserByUsername(username);
         JobApplication jobApp = jobPosting.findJobApplication(applicant);
-        jobApp.setUpInterview(this.HRC, jobApp.getJobPosting().getCurrentInterviewRound());*/
+        jobApp.advanceStatus();
+        jobApp.setUpInterview(this.HRC, jobApp.getStatus());*/
     }
 
 
@@ -100,6 +102,7 @@ class HRCoordinatorInterface extends UserInterface {
         3. Get a list of final candidates
         4. Choose applicant and hire
          */
+        /*
         JobPosting jobPosting = this.getJobPosting();
         jobPosting.setFilled();
         ArrayList<JobApplication> finalCandidates = jobPosting.getInterviewManager().getApplicationsInConsideration();
@@ -108,7 +111,7 @@ class HRCoordinatorInterface extends UserInterface {
         } else {
             // choose an applicant from list
             // get email of applicant
-        }
+        }*/
     }
 
 
