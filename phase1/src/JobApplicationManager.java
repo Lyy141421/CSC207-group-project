@@ -1,16 +1,14 @@
-import java.io.File;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import static java.time.temporal.ChronoUnit.DAYS;
 
 class JobApplicationManager {
 
     // === Instance variables ===
-    // List of job applications submitted
+    // List of job applications submitted sorted chronologically by close date
     private ArrayList<JobApplication> jobApplications = new ArrayList<>();
-    // Date that last application closed
-    private LocalDate mostRecentCloseDate;
 
     // === Constructors ===
 
@@ -40,15 +38,6 @@ class JobApplicationManager {
         return this.jobApplications;
     }
 
-    /**
-     * Get the most recent close date for this applicant.
-     *
-     * @return the most recent close date for this applicant.
-     */
-    LocalDate getMostRecentCloseDate() {
-        return this.mostRecentCloseDate;
-    }
-
     // === Setters ===
 
     /**
@@ -60,15 +49,6 @@ class JobApplicationManager {
         this.jobApplications = jobApplications;
     }
 
-    /**
-     * Set the most recent job posting close date for this applicant.
-     *
-     * @param mostRecentCloseDate The most recent job posting close date for this applicant.
-     */
-    void setMostRecentCloseDate(LocalDate mostRecentCloseDate) {
-        this.mostRecentCloseDate = mostRecentCloseDate;
-    }
-
     // === Other methods ===
 
     /**
@@ -76,14 +56,15 @@ class JobApplicationManager {
      *
      * @param applicant       The applicant applying for a job.
      * @param jobPosting      The job posting to be applied to.
-     * @param CV              The applicant's CV.
-     * @param coverLetter     The applicant's cover letter.
+     * @param CV              The filename of the applicant's CV.
+     * @param coverLetter     The filename of the applicant's cover letter.
      * @param applicationDate The date this application is submitted.
      */
-    void addJobApplication(Applicant applicant, JobPosting jobPosting, File CV, File coverLetter,
+    void addJobApplication(Applicant applicant, JobPosting jobPosting, String CV, String coverLetter,
                            LocalDate applicationDate) {
         JobApplication app = new JobApplication(applicant, jobPosting, CV, coverLetter, applicationDate);
         this.jobApplications.add(app);
+        this.jobApplications.sort(new CloseDateComparator());
     }
 
     /**
@@ -109,6 +90,16 @@ class JobApplicationManager {
             }
         }
         return null;
+    }
+
+    /**
+     * Get a list of files submitted for this job application.
+     *
+     * @param jobApplication The job application in question.
+     * @return a list of files submitted for this job application
+     */
+    ArrayList<String> getFilesSubmittedForApplication(JobApplication jobApplication) {
+        return new ArrayList<>(Arrays.asList(jobApplication.getCoverLetter(), jobApplication.getCV()));
     }
 
     /**
@@ -142,26 +133,12 @@ class JobApplicationManager {
     }
 
     /**
-     * Find the most recent closing date of all the job applications that this applicant has submitted.
+     * Find the application with the last closing date of all submitted applications by this applicant.
      *
-     * @return the most recent closing date.
+     * @return the application with the last close date.
      */
-    private LocalDate findMostRecentCloseDate() {
-        LocalDate mostRecentCloseDate = this.getJobApplications().get(0).getJobPosting().getCloseDate();
-        for (JobApplication jobApp : this.getJobApplications()) {
-            LocalDate closingDate = jobApp.getJobPosting().getCloseDate();
-            if (mostRecentCloseDate.isBefore(closingDate)) {
-                mostRecentCloseDate = closingDate;
-            }
-        }
-        return mostRecentCloseDate;
-    }
-
-    /**
-     * Update the date of most recent closing for this applicant.
-     */
-    void updateMostRecentCloseDate() {
-        this.setMostRecentCloseDate(this.findMostRecentCloseDate());
+    JobApplication getLastClosedJobApp() {
+        return this.jobApplications.get(this.jobApplications.size() - 1);
     }
 
     /**
@@ -171,7 +148,7 @@ class JobApplicationManager {
      * @return the number of days since the most recent job posting close date.
      */
     long getNumDaysSinceMostRecentCloseDate(LocalDate today) {
-        return Math.max(0, DAYS.between(today, this.mostRecentCloseDate));
+        return Math.max(0, DAYS.between(today, this.getLastClosedJobApp().getJobPosting().getCloseDate()));
     }
 
 }

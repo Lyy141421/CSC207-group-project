@@ -10,17 +10,10 @@ class Applicant extends User {
     // === Instance variables ===
     // The applicant's job application manager
     private JobApplicationManager jobApplicationManager = new JobApplicationManager();
-    // List of files uploaded to account
+    // List of filenames uploaded to account
     private ArrayList<String> filesSubmitted = new ArrayList<>();
 
-    //TODO: Submit CV and cover letter -- work with string as filename -- unique from files arraylist
-    //First time that applicant applies for a job, they submit the files directly -- simultaneously saves to their account
-    //From then on, applicant can submit files from their account to each job app or submit them directly
-
     // === Constructors ===
-
-    Applicant() {
-    }
 
     /**
      * Create an applicant account.
@@ -76,12 +69,20 @@ class Applicant extends User {
     // === Other methods ===
 
     /**
-     * View job postings.
+     * Add a file to one's account.
      *
-     * @return a list of job postings in the system.
+     * @param fileName The file name of the file to be added.
      */
-    ArrayList<JobPosting> viewJobPostings() {
-        return JobApplicationSystem.getAllJobPostings();
+    void addFile(String fileName) {
+        this.filesSubmitted.add(fileName);
+    }
+
+    /**
+     * Remove a file from one's account.
+     * @param fileName The file name of the file to be removed.
+     */
+    void removeFile(String fileName) {
+        this.filesSubmitted.remove(fileName);
     }
 
     /**
@@ -93,9 +94,13 @@ class Applicant extends User {
      * @param applicationDate   The date this application was submitted.
      * @return true iff this application is successfully submitted (ie before closing date and has not already applied)
      */
+    // TODO Store files submitted
     boolean applyForJob(JobPosting jobPosting, File CV, File coverLetter, LocalDate applicationDate) {
         if (LocalDate.now().isBefore(jobPosting.getCloseDate()) && !this.hasAppliedTo(jobPosting)) {
-            this.jobApplicationManager.addJobApplication(this, jobPosting, CV, coverLetter, applicationDate);
+            this.jobApplicationManager.addJobApplication(this, jobPosting, CV.getName(), coverLetter.getName(),
+                    applicationDate);
+            this.addFile(CV.getName());
+            this.addFile(coverLetter.getName());
         }
         return false;
     }
@@ -108,7 +113,7 @@ class Applicant extends User {
      */
     boolean withdrawApplication(JobPosting jobPosting) {
         if (this.hasAppliedTo(jobPosting) && !jobPosting.isFilled()) {
-            jobPosting.removeJobApplication(this);
+            jobPosting.removeJobApplication(jobPosting.findJobApplication(this));
             this.jobApplicationManager.removeJobApplication(jobPosting);
         }
         return true;
@@ -121,64 +126,13 @@ class Applicant extends User {
      * @return true iff this applicant has not applied to this job posting.
      */
     private boolean hasAppliedTo(JobPosting jobPosting) {
-        for (JobApplication jobApp : jobPosting.getAppsByApplicant().values()) {
+        for (JobApplication jobApp : jobPosting.getJobApplications()) {
             if (jobApp.getApplicant().equals(this)) {
                 return true;
             }
         }
         return false;
     }
-
-    /*
-     */
-/**
-     * Get all job applications for this applicant.
-     *
-     * @return a list of all job applications submitted by this applicant.
- *//*
-
-    ArrayList<JobApplication> getAllJobApplications() {
-        return this.jobApplicationManager.getJobApplications();
-    }
-
-    */
-/**
-     * Get the previous job applications for this applicant.
-     *
-     * @return a list of previous job applications submitted where the posting is now filled.
- *//*
-
-    ArrayList<JobApplication> getPreviousJobApplications() {
-        return this.jobApplicationManager.getPreviousJobApplications();
-    }
-
-    */
-/**
-     * Get the current job applications for this applicant.
-     *
-     * @return a list of current job applications submitted (posting is not yet filled).
- *//*
-
-    ArrayList<JobApplication> getCurrentJobApplications() {
-        return this.jobApplicationManager.getCurrentJobApplications();
-    }
-
-    JobApplication getJobApplicationForJobPosting(JobPosting jobPosting) {
-        return this.jobApplicationManager.findJobApplication(jobPosting);
-    }
-
-    */
-/**
-     * Get the number of days since the most recent job posting close date.
-     *
-     * @param today Today's date.
-     * @return the number of days since the most recent job posting close date.
- *//*
-
-    long getNumDaysSinceMostRecentClosing(LocalDate today) {
-        return this.jobApplicationManager.getNumDaysSinceMostRecentCloseDate(today);
-    }
-*/
 
     /**
      * Report whether the date that the last job posting this applicant applied to was 30 days ago from today.
@@ -190,17 +144,17 @@ class Applicant extends User {
         return this.jobApplicationManager.getNumDaysSinceMostRecentCloseDate(today) == 30;
     }
 
-//    /**
-//     * Create a reference account.
-//     * @param referenceName   The reference's legal name.
-//     * @param referenceEmail    The reference's email.
-//     * @param today             Today's date.
-//     * @return  the user account for the reference.
-//     */
-//    User addReference(String referenceName, String referenceEmail, LocalDate today) {
-//        User reference = new ProfessionalReference(referenceName, referenceEmail, referenceName, today);
-//        UserManager.addAccount(reference);
-//        return reference;
-//    }
+    /**
+     * Remove the files submitted for an application to a job posting that has been closed for 30 days.
+     *
+     * @param today Today's date.
+     */
+    void removeFilesFromAccount(LocalDate today) {
+        if (this.isInactive(today)) {
+            JobApplication lastClosedJobApp = this.jobApplicationManager.getLastClosedJobApp();
+            ArrayList<String> files = this.jobApplicationManager.getFilesSubmittedForApplication(lastClosedJobApp);
+            this.filesSubmitted.removeAll(files);
+        }
+    }
 
 }

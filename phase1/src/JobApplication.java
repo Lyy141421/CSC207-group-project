@@ -1,44 +1,44 @@
-import java.io.File;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 class JobApplication {
     /**
      * A submitted job application.
      */
 
-    // === Instance variables ===
+    // === Class variables ===
     // Total number of applications in the system
     private static int totalNumOfApplications;
+    // Map of status number to description
+    private static HashMap<Integer, String> statuses = new HashMap<Integer, String>() {{
+        put(-3, "Archived");
+        put(-2, "Submitted");
+        put(-1, "Under review");
+        put(0, "Phone interview");
+        put(1, "In-person interview 1");
+        put(2, "In-person interview 2");
+        put(3, "In-person interview 3");
+        put(4, "Hired");
+    }};
+
+    // === Instance variables ===
     // Unique identifier for a submitted job application
     private int ID;
     // The applicant for a job
     private Applicant applicant;
     // The JobPosting that was applied for
     private JobPosting jobPosting;
-    // The CV submitted for this application
-    private File CV;
-    // The cover letter submitted for this application
-    private File coverLetter;
-    // The list of reference letters submitted for this application
-//    private ArrayList<ReferenceLetter> referenceLetters;
+    // The file name of the CV submitted for this application
+    private String CV;
+    // The the file name of the cover letter submitted for this application
+    private String coverLetter;
     // The status of this application
     private int status = -2;
     // The date this application was submitted
     private LocalDate applicationDate;
     // The interviews conducted for this application
     private ArrayList<Interview> interviews = new ArrayList<>();
-
-    // === Representation invariants ===
-    // status:
-    //      -3 : Archived
-    //      -2 : Submitted
-    //      -1 : Under review
-    //       0 : Phone interview
-    //       1 : In-person interview 1
-    //       2 : In-person interview 2
-    //       3 : In-person interview 3
-    //       4 : Hired
 
     // === Constructors ===
 
@@ -69,11 +69,11 @@ class JobApplication {
      *
      * @param applicant         The Applicant associated with this application.
      * @param jobPosting        The JobPosting associated with this application.
-     * @param CV                The CV of the applicant.
-     * @param coverletter       The cover letter of the applicant.
+     * @param CV                The filename of the applicant's CV.
+     * @param coverletter       The filename of the applicant's cover letter.
      * @param applicationDate   The date this application was created.
      */
-    JobApplication(Applicant applicant, JobPosting jobPosting, File CV, File coverletter, LocalDate applicationDate) {
+    JobApplication(Applicant applicant, JobPosting jobPosting, String CV, String coverletter, LocalDate applicationDate) {
         this.ID = JobApplication.totalNumOfApplications;
         this.applicant = applicant;
         this.jobPosting = jobPosting;
@@ -89,20 +89,18 @@ class JobApplication {
      * @param ID            The application ID.
      * @param applicant     The applicant associated with this application.
      * @param jobPosting    The JobPosting associated with this application.
-     * @param CV            The CV of the applicant.
-     * @param coverletter       The cover letter of the applicant.
-     *                    //     * @param referenceLetters The reference letters for the applicant.
+     * @param CV            The filename of the applicant's CV.
+     * @param coverletter   The filename of the applicant's cover letter.
      * @param status            The status of the application.
      * @param applicationDate   The date this application was created.
      */
-    JobApplication(int ID, Applicant applicant, JobPosting jobPosting, File CV, File coverletter,
-                   ArrayList<ReferenceLetter> referenceLetters, int status, LocalDate applicationDate) {
+    JobApplication(int ID, Applicant applicant, JobPosting jobPosting, String CV, String coverletter, int status,
+                   LocalDate applicationDate) {
         this.ID = ID;
         this.applicant = applicant;
         this.jobPosting = jobPosting;
         this.CV = CV;
         this.coverLetter = coverletter;
-//        this.referenceLetters = referenceLetters;
         this.applicationDate = applicationDate;
         this.status = status;
         JobApplication.totalNumOfApplications++;
@@ -138,20 +136,20 @@ class JobApplication {
     }
 
     /**
-     * Get the CV of the applicant.
+     * Get the filename of the applicant's CV.
      *
-     * @return the CV of the applicant.
+     * @return the filename of the applicant's CV.
      */
-    File getCV() {
+    String getCV() {
         return this.CV;
     }
 
     /**
-     * Get the applicant's cover letter.
+     * Get the filename of the applicant's cover letter.
      *
-     * @return the applicant's cover letter.
+     * @return the filename of the applicant's cover letter.
      */
-    File getCoverLetter() {
+    String getCoverLetter() {
         return this.coverLetter;
     }
 
@@ -205,18 +203,18 @@ class JobApplication {
     /**
      * Change the CV for this application.
      *
-     * @param CV The applicant's CV.
+     * @param CV The filename of the applicant's CV.
      */
-    void setCV(File CV) {
+    void setCV(String CV) {
         this.CV = CV;
     }
 
     /**
      * Change the cover letter for this application.
      *
-     * @param coverLetter The applicant's cover letter.
+     * @param coverLetter The filename of the applicant's cover letter.
      */
-    void setCoverLetter(File coverLetter) {
+    void setCoverLetter(String coverLetter) {
         this.coverLetter = coverLetter;
     }
 
@@ -235,6 +233,15 @@ class JobApplication {
     }
 
     /**
+     * Add an interview for this job application.
+     *
+     * @param interview The interview to be added.
+     */
+    void addInterview(Interview interview) {
+        this.interviews.add(interview);
+    }
+
+    /**
      * Set up an interview for the applicant with this job application.
      *
      * @param round The interview round.
@@ -247,11 +254,6 @@ class JobApplication {
                 jobPosting.getInterviewManager(), round);
         this.addInterview(interview);
         interviewer.addInterview(interview);
-    }
-
-
-    void addInterview(Interview interview) {
-        this.interviews.add(interview);
     }
 
 
