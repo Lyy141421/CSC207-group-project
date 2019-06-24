@@ -162,13 +162,31 @@ abstract class User {
     }
 
     /**
-     * Report whether this account is the same as other.
+     * Report whether this user is the same as obj.
      *
-     * @param other The other account being compared to.
-     * @return true iff this account has the same username as the other account.
+     * @param obj The other object being compared to.
+     * @return true iff obj is an user and has the same username as this account.
      */
-    boolean equals(User other) {
-        return this.username.equals(other.username);
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof User)) {
+            return false;
+        }
+        else {
+            return this.username.equals(((User)obj).username);
+        }
     }
 
+    /**
+     * Return a hashcode for this user.
+     * @return an int; the same int should be returned for all users equal to this user.
+     */
+    @Override
+    public int hashCode() {
+        int sum = 0;
+        for (int i = 0; i < username.length(); i++) {
+            sum += username.charAt(i);
+        }
+        return sum;
+    }
 }
