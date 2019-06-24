@@ -135,4 +135,11 @@ public class FileSystem {
         }
         return false;
     }
+
+    static Object mapGet(String filename, String id){
+        if(isLoaded(filename, id)){
+            return load_map.get(filename).get(id);
+        }
+        return null;
+    }
 }
