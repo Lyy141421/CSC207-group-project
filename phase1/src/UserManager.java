@@ -57,7 +57,8 @@ class UserManager {
     /**
      * Checks if the password submitted matches the User's password, returns boolean
      */
-    boolean login(User checkedUser, String password) {
+    boolean passwordCorrect(String checkedUsername, String password) {
+        User checkedUser = findUserByUsername(checkedUsername);
         return this.decrypt(checkedUser.getPassword()).equals(password);
     }
 
@@ -128,7 +129,7 @@ class UserManager {
                 return user;
             }
         }
-        return null; // You can throw a NullPointerException and then handle it in the login-loop in the interface
+        return null; // You can throw a NullPointerException and then handle it in the passwordCorrect-loop in the interface
     }
 
     /**
