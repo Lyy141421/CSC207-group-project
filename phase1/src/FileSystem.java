@@ -136,10 +136,35 @@ public class FileSystem {
         return false;
     }
 
+    /**
+     * gets the object if it is already loaded for placement in another objects loading
+     *
+     * @param filename the name of the json file (Excluding .json)
+     * @param id The unique Id of the Item being loaded
+     * @return The Object or Null
+     */
     static Object mapGet(String filename, String id){
         if(isLoaded(filename, id)){
             return load_map.get(filename).get(id);
         }
         return null;
+    }
+
+    /**
+     * Puts a Object into the loaded HashMap (Used after said object is loaded)
+     *
+     * @param filename the name of the json file (Excluding .json)
+     * @param id The unique Id of the Item being loaded
+     * @param obj the object to put into the HashMap
+     */
+    static void mapPut(String filename, String id, Object obj){
+        if(load_map.containsKey(filename)){
+            load_map.get(filename).put(id, obj);
+        }
+        else{
+            HashMap<String, Object> m = new HashMap<>();
+            m.put(id, obj);
+            load_map.put(filename, m);
+        }
     }
 }
