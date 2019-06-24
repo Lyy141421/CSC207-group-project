@@ -28,19 +28,6 @@ abstract class User {
     /**
      * Create a user account.
      *
-     * @param email       The email of this user.
-     * @param dateCreated The date on which this account was created.
-     */
-    User(String email, LocalDate dateCreated) {
-        this.username = email;
-        this.password = email;
-        this.email = email;
-        this.dateCreated = dateCreated;
-    }
-
-    /**
-     * Create a user account.
-     *
      * @param username    The user's unique ID.
      * @param password    The account password.
      * @param legalName   The user's legal name.

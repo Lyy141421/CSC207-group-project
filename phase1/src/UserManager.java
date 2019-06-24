@@ -22,12 +22,13 @@ class UserManager {
      * All of the following methods create new instances of the various child classes of User
      * @param newUser Checks if the user being created is new/whether encryption is required
      */
-    private void createInterviewer(String email, Company company, String field,
-                                   LocalDate dateCreated, boolean newUser) {
+    private void createInterviewer(String username, String password, String legalName, String email, Company company,
+                                   String field, LocalDate dateCreated, boolean newUser) {
         if(newUser) {
+            password = this.encrypt(password);
             //TODO: Write to storage
         }
-        Interviewer newInterviewer = new Interviewer(email, company, field, dateCreated);
+        Interviewer newInterviewer = new Interviewer(username, password, legalName, email, company, field, dateCreated);
         this.allUsers.add(newInterviewer);
     }
 
@@ -37,8 +38,8 @@ class UserManager {
             password = this.encrypt(password);
             //TODO: Write to storage
         }
-        HRCoordinator newHRBoy = new HRCoordinator(username, password, legalName, email, company, dateCreated);
-        this.allUsers.add(newHRBoy);
+        HRCoordinator newHRC = new HRCoordinator(username, password, legalName, email, company, dateCreated);
+        this.allUsers.add(newHRC);
     }
 
     private void createApplicant(String username, String password,

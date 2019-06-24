@@ -5,6 +5,8 @@ import java.util.HashMap;
 class Interviewer extends User {
 
     // === Instance variables ===
+    // The username belonging to this interviewer
+    private String username;
     // The company that this interviewer works for
     private Company company;
     // The field that this interviewer works in
@@ -22,19 +24,22 @@ class Interviewer extends User {
     /**
      * Create an interviewer.
      *
+     * @param username    The interviewer's username.
+     * @param password    The interviewer's password.
+     * @param legalName   The interviewer's legal name.
      * @param email       The interviewer's email.
      * @param company     The company that this interviewer works for.
      * @param field       The job field that this interviewer is in.
      * @param dateCreated The date this account was created.
      */
-    Interviewer(String email, Company company, String field, LocalDate dateCreated) {
-        super(email, dateCreated);
+    Interviewer(String username, String password, String legalName, String email, Company company, String field,
+                LocalDate dateCreated) {
+        super(username, password, legalName, email, dateCreated);
         this.company = company;
         this.field = field;
     }
 
     // === Getters ===
-
     /**
      * Get the company that this interviewer works for.
      *
@@ -148,5 +153,4 @@ class Interviewer extends User {
         interview.setFail();
         interview.getInterviewManager().reject(interview.getJobApplication());
     }
-
 }
