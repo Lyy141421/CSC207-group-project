@@ -20,15 +20,6 @@ public class JobApplicationSystem {
     // === Getters ===
 
     /**
-     * Get a list of companies registered in this system.
-     *
-     * @return a list of companies registered in this system.
-     */
-    static ArrayList<Company> getCompanies() {
-        return JobApplicationSystem.companies;
-    }
-
-    /**
      * Get the UserManager for this system.
      *
      * @return the UserManager for this system.

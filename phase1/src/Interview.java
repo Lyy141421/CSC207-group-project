@@ -1,4 +1,5 @@
-import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 class Interview {
     /**
@@ -6,7 +7,11 @@ class Interview {
      */
 
     // === Class variables ===
-    private static final int MAX_NUM_ROUNDS = 3;
+    // The list of descriptions for each round number.
+    private static ArrayList<String> roundNumberDescriptions = new ArrayList<>(Arrays.asList("Phone interview, " +
+            "In-person interview 1, " + "In-person interview 2", "In-person interview 3"));
+    // The maximum number of in-person interview rounds
+    private static final int MAX_NUM_ROUNDS = Interview.roundNumberDescriptions.size() - 1;
     // The total number of interviews conducted
     private static int total;
 
@@ -32,11 +37,6 @@ class Interview {
 
     // === Representation invariants ===
     // ID >= 0
-    // 0 <= roundNumber <= 3, where:
-    //      - 0 -- phone interview
-    //      - 1 -- in-person round 1
-    //      - 2 -- in-person round 2
-    //      - 3 -- in-person round 3
 
     // === Constructors ===
 
@@ -97,15 +97,6 @@ class Interview {
      */
     static int getMaxNumRounds() {
         return Interview.MAX_NUM_ROUNDS;
-    }
-
-    /**
-     * Get the ID associated with this interview.
-     *
-     * @return the ID associated with this interview.
-     */
-    int getID() {
-        return this.ID;
     }
 
     /**

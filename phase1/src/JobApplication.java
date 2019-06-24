@@ -244,6 +244,7 @@ class JobApplication {
     /**
      * Set up an interview for the applicant with this job application.
      *
+     * @param hrCoordinator The HR Coordinator who set up this interview
      * @param round The interview round.
      */
     void setUpInterview(HRCoordinator hrCoordinator, int round) {
