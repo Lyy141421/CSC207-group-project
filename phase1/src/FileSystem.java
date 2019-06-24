@@ -9,6 +9,8 @@ import java.util.Iterator;
 
 public class FileSystem {
 
+    static HashMap<String, HashMap<String, Object>> load_map = new HashMap<>();
+
     /**
      * Loads an object as a HashMap
      *
