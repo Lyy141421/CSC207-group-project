@@ -119,4 +119,20 @@ public class FileSystem {
         }
         return false;
     }
+
+    /**
+     * Tests to see weather an object has been loaded
+     *
+     * @param filename the name of the json file (Excluding .json)
+     * @param id The unique Id of the Item being loaded
+     * @return True if in load_map
+     */
+    static boolean isLoaded(String filename, String id){
+        if(load_map.containsKey(filename)){
+            if(load_map.get(filename).containsKey(id)){
+                return true;
+            }
+        }
+        return false;
+    }
 }
