@@ -116,21 +116,32 @@ class HRCoordinatorInterface extends UserInterface {
     }
 
     /**
-     * Interface for setting up an interview for a job application.
+     * Interface for setting up interviews for an entire interview round.
      */
-    void setUpInterviewForJobApplication() {
+    void setUpInterviewsForRound() {
         /*
         1. Get the job posting by title.
-        2. Get the specific application by applicant username.
-        2. Find the interviewer in the specific job field that has the least number of interviews scheduled
-        3. Match interviewer with application
+        2. Show list of applications still in the running
+        3. Set up an interview for each job posting
+         */
+        /*JobPosting jobPosting = this.getJobPosting();
+        for (JobApplication jobApp : jobPosting.getInterviewManager().getApplicationsInConsideration()) {
+            this.setUpInterviewForJobApplication(jobApp);
+        }*/
+    }
+
+    /**
+     * Interface for setting up an interview for a job application.
+     * @param jobApplication    The job application for which an interview is to be set up.
+     */
+    void setUpInterviewForJobApplication(JobApplication jobApplication) {
+        /*
+        1. Find the interviewer in the specific job field that has the least number of interviews scheduled
+        2. Match interviewer with application
          */
         /*
-        JobPosting jobPosting = this.getJobPosting();
-        Applicant applicant = JobApplicationSystem.getUserManager().findUserByUsername(username);
-        JobApplication jobApp = jobPosting.findJobApplication(applicant);
-        jobApp.advanceStatus();
-        jobApp.setUpInterview(this.HRC, jobApp.getStatus());*/
+        jobApplication.advanceStatus();
+        jobApplication.setUpInterview(this.HRC, jobApp.getStatus());*/
     }
 
     /**
@@ -160,10 +171,10 @@ class HRCoordinatorInterface extends UserInterface {
     /**
      * Interface for selecting the application of the applicant who is to be hired.
      *
-     * @param finalCandidiates The list of final candidates after all interview rounds have been completed.
+     * @param finalCandidates The list of final candidates after all interview rounds have been completed.
      * @return the job application selected.
      */
-    JobApplication selectApplicationForHiring(ArrayList<JobApplication> finalCandidiates) {
+    JobApplication selectApplicationForHiring(ArrayList<JobApplication> finalCandidates) {
         /*
         1. Show list of applications still in consideration
         2. Get choice
