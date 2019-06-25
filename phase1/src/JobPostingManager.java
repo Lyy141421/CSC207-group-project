@@ -84,6 +84,22 @@ class JobPostingManager {
     }
 
     /**
+     * Search the job postings by title within this company.
+     *
+     * @param jobTitle The job title.
+     * @return the list of job postings with this job title.
+     */
+    ArrayList<JobPosting> searchJobPostingByTitle(String jobTitle) {
+        ArrayList<JobPosting> jobPostings = new ArrayList<>();
+        for (JobPosting jobPosting : this.getJobPostings()) {
+            if (jobPosting.getTitle().equals(jobTitle)) {
+                jobPostings.add(jobPosting);
+            }
+        }
+        return jobPostings;
+    }
+
+    /**
      * Get a list of open job postings for this company.
      *
      * @param today Today's date.
@@ -92,12 +108,78 @@ class JobPostingManager {
     ArrayList<JobPosting> getOpenJobPostings(LocalDate today) {
         ArrayList<JobPosting> jobPostings = new ArrayList<>();
         for (JobPosting jobPosting : this.getJobPostings()) {
-            if (jobPosting.getCloseDate().isBefore(today)) {
+            if (jobPosting.getCloseDate().isAfter(today)) {
                 jobPostings.add(jobPosting);
             }
         }
         return jobPostings;
     }
 
+    /**
+     * Get a list of closed job postings for this company that have not yet been filled.
+     *
+     * @param today Today's date.
+     * @return a list of closed job postings for this company that have not yet been filled.
+     */
+    ArrayList<JobPosting> getClosedJobPostingsNotFilled(LocalDate today) {
+        ArrayList<JobPosting> jobPostings = new ArrayList<>();
+        for (JobPosting jobPosting : this.getJobPostings()) {
+            if (!jobPosting.isFilled()) {
+                LocalDate closeDate = jobPosting.getCloseDate();
+                if (closeDate.isEqual(today) || closeDate.isBefore(today)) {
+                    jobPostings.add(jobPosting);
+                }
+            }
+        }
+        return jobPostings;
+    }
+
+    /**
+     * Get a list of job postings for this company that have recently closed and have not yet been reviewed for interviews.
+     *
+     * @param today Today's date.
+     * @return a list of closed job postings that have not yet started the interview process.
+     */
+    ArrayList<JobPosting> getClosedJobPostingsNoInterview(LocalDate today) {
+        ArrayList<JobPosting> jobPostings = new ArrayList<>();
+        for (JobPosting jobPosting : this.getClosedJobPostingsNotFilled(today)) {
+            if (jobPosting.getInterviewManager() == null) {
+                jobPostings.add(jobPosting);
+            }
+        }
+        return jobPostings;
+    }
+
+    /**
+     * Get a list of job postings where a current interview round is over.
+     *
+     * @param today
+     * @return
+     */
+    ArrayList<JobPosting> getJobPostingsWithRoundCompleted(LocalDate today) {
+        ArrayList<JobPosting> jobPostings = new ArrayList<>();
+        for (JobPosting jobPosting : this.getClosedJobPostingsNotFilled(today)) {
+            if (jobPosting.getInterviewManager().currentRoundOver(today)) {
+                jobPostings.add(jobPosting);
+            }
+        }
+        return jobPostings;
+    }
+
+    /**
+     * Get a list of job postings that are ready for the final hiring step.
+     *
+     * @param today Today's date.
+     * @return a list of job postings that are ready for the final hiring step.
+     */
+    ArrayList<JobPosting> getJobPostingsForHiring(LocalDate today) {
+        ArrayList<JobPosting> jobPostings = new ArrayList<>();
+        for (JobPosting jobPosting : this.getClosedJobPostingsNotFilled(today)) {
+            if (jobPosting.getInterviewManager().isReadyForHiring(today)) {
+                jobPostings.add(jobPosting);
+            }
+        }
+        return jobPostings;
+    }
 
 }

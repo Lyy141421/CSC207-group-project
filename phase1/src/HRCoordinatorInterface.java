@@ -1,3 +1,4 @@
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 class HRCoordinatorInterface extends UserInterface {
@@ -18,6 +19,17 @@ class HRCoordinatorInterface extends UserInterface {
      */
     HRCoordinatorInterface(HRCoordinator HRC) {
         this.HRC = HRC;
+    }
+
+    void run(LocalDate today) {
+        // View all the high-priority job postings -- it's not essential that the HR Coordinator completes every that
+        // is in high-priority
+        this.viewHighPriorityJobPostings(today);    // What should be displayed on the main HR Coordinator page
+        // Give options to:
+        // - view all job postings on the application: this.viewAllJobPostings();
+        //  - view a job posting: this.viewAllApplicationsForJobPosting();
+        //  - add a job posting: this.addJobPosting();
+        //  - go back to the 'main' page: this.viewHighPriorityJobPostings();
     }
 
     /**
@@ -68,11 +80,24 @@ class HRCoordinatorInterface extends UserInterface {
         3. Display all the applications for that job posting
              - Display a menu of all the applicants' names and the application date for each
              - Display a menu of stuff that the HR Coordinator can see
-                 - Cover letter, CV
+                 - Cover letter, CV, previous job applications to company
          */
 
         // JobPosting jobPosting = this.getJobPosting();
+        // ArrayList<JobApplication> jobApps = jobPosting.getJobApplications();
         // Interface stuff
+    }
+
+    /**
+     * Interface for searching for a specific applicant who has applied to the company.
+     */
+    void searchSpecificApplicant() {
+        /*
+        1. Get the applicant username? legal name?
+        2. Display all previous applications to company
+         */
+        /*Applicant applicant = JobApplicationSystem.getUserManager().findUserByUsername(username);
+        this.HRC.getCompany().getAllApplicationsToCompany(applicant);*/
     }
 
     /**
@@ -81,7 +106,7 @@ class HRCoordinatorInterface extends UserInterface {
     void searchSpecificJobApplication() {
         /*
         1. Get the job posting title -- Show a drop-down menu of all the job postings for their company
-        2. Get the applicant username -- Drop down menu?
+        2. Get the applicant legal name -- Drop down menu?
         3. Find application, if it exists
          */
         /*
@@ -166,6 +191,28 @@ class HRCoordinatorInterface extends UserInterface {
         }
         jobApp.advanceStatus();*/
         // do something with email jobApp.getApplicant().getEmail();
+    }
+
+    /**
+     * Interface for viewing high-priority job postings.
+     *
+     * @param today Today's date.
+     */
+    void viewHighPriorityJobPostings(LocalDate today) {
+        /*
+        1. View list of job postings that have
+            a) Closed, but have not yet started the interview process
+            b) Finished an interview round (not ready for hiring)
+            c) Ready for hiring
+        2. Give option to set up interviews or to hire given the circumstances
+            a) Choose candidates for phone interview and set-up interviews (this can be two separate steps)
+            b) Set-up next round of interviews
+            c) Choose applicant(s) to be hired.
+         */
+        /*JobPostingManager JPM = this.HRC.getCompany().getJobPostingManager();
+        ArrayList<JobPosting> recentlyClosedPostings = JPM.getClosedJobPostingsNoInterview(today);
+        ArrayList<JobPosting> recentlyCompletedInterviewRound = JPM.getJobPostingsWithRoundCompleted(today);
+        ArrayList<JobPosting> jobPostingsForHiring = JPM.getJobPostingsForHiring(today);*/
     }
 
     /**

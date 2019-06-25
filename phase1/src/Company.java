@@ -131,47 +131,12 @@ class Company {
     }
 
     /**
-     * Get all the job postings for this company.
-     *
-     * @return the list of all job postings for this company.
-     */
-    ArrayList<JobPosting> getAllJobPostings() {
-        return this.jobPostingManager.getJobPostings();
-    }
-
-    /**
-     * Get all open job postings for this company.
-     *
-     * @param today Today's date.
-     * @return the list of all open job postings for this company.
-     */
-    ArrayList<JobPosting> getAllOpenJobPostings(LocalDate today) {
-        return this.jobPostingManager.getOpenJobPostings(today);
-    }
-
-    /**
-     * Search the job postings by title within this company.
-     *
-     * @param jobTitle The job title.
-     * @return the list of job postings with this job title.
-     */
-    ArrayList<JobPosting> searchJobPostingByTitle(String jobTitle) {
-        ArrayList<JobPosting> jobPostings = new ArrayList<>();
-        for (JobPosting jobPosting : this.getAllJobPostings()) {
-            if (jobPosting.getTitle().equals(jobTitle)) {
-                jobPostings.add(jobPosting);
-            }
-        }
-        return jobPostings;
-    }
-
-    /**
      * View all applications this applicant has submitted for job postings in this company.
      *
      * @param applicant The applicant in question.
      * @return a list of job applications that this applicant has previously submitted to this company.
      */
-    ArrayList<JobApplication> viewAllApplicationsToCompany(Applicant applicant) {
+    ArrayList<JobApplication> getAllApplicationsToCompany(Applicant applicant) {
         ArrayList<JobApplication> apps = new ArrayList<>();
         for (JobApplication jobApp : applicant.getJobApplicationManager().getJobApplications()) {
             if (jobApp.getJobPosting().getCompany().equals(this)) {
