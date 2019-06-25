@@ -2,6 +2,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
+import javax.swing.*;
 
 public class JobApplicationSystem {
 
@@ -14,6 +15,12 @@ public class JobApplicationSystem {
     private static UserManager userManager;
 
     public static void main(String[] args) {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                new MainFrame();
+            }
+        });
         cyclicalTask();
     }
 
