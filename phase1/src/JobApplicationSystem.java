@@ -107,4 +107,12 @@ public class JobApplicationSystem {
     static void addCompany(String name) {
         JobApplicationSystem.companies.add(JobApplicationSystem.createCompany(name));
     }
+
+    static Company getCompany(String name) {
+        for (Company company : companies) {
+            if (company.getName().equals(name))
+                return company;
+        }
+        return null;
+    }
 }

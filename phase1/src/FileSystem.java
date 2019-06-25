@@ -3,9 +3,11 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import org.json.simple.parser.*;
 import java.util.Iterator;
+import java.util.List;
 
 public class FileSystem {
 
@@ -29,7 +31,14 @@ public class FileSystem {
         for (Iterator it = jobj.keys(); it.hasNext(); ) {
             String x = (String)it.next();
             try {
-                map.put(x, jobj.get(x));
+                if(jobj.get(x) instanceof JSONArray){
+                    List<Object> list = new ArrayList<Object>();
+                    for(int i = 0; i < ((JSONArray)jobj.get(x)).length(); i++){
+                        list.add(((JSONArray)jobj.get(x)).getString(i));
+                    }
+                    map.put(x, list.toArray(new Object[0]));
+                }
+                else{ map.put(x, jobj.get(x)); }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
