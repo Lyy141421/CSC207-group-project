@@ -1,6 +1,7 @@
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 class Interviewer extends User {
 
@@ -9,7 +10,7 @@ class Interviewer extends User {
     private Company company;
     // The field that this interviewer works in
     private String field;
-    // The list of interviews that this interviewer must undergo
+    // The list of interviews that this interviewer must undergo in chronological order
     private ArrayList<Interview> interviews = new ArrayList<>();
     // The interviewer's schedule as a map of the date to a list of time slots that are filled.
     private HashMap<LocalDate, ArrayList<Integer>> schedule = new HashMap<>();
@@ -93,6 +94,39 @@ class Interviewer extends User {
     }
 
     /**
+     * Get the next interview to be conducted by this interviewer.
+     *
+     * @return the next interview to be conducted by this interviewer.
+     */
+    Interview getNextInterview() {
+        return this.interviews.get(0);
+    }
+
+    /**
+     * Get a list of interviews scheduled for this date.
+     *
+     * @param date The date in question.
+     * @return a list of interviews scheduled for this date.
+     */
+    List<Interview> getInterviewsByDate(LocalDate date) {
+        int start = 0;
+        Interview interview = this.interviews.get(start);
+        while (interview.getTime().getDate().isBefore(date)) {
+            start++;
+            interview = this.interviews.get(start);
+        }
+        if (start == this.interviews.size()) {      // All interviews are before this date
+            return this.interviews.subList(0, 0);   // Empty list
+        }
+        int end = start;
+        while (interview.getTime().getDate().isEqual(date)) {
+            end++;
+            interview = this.interviews.get(end);
+        }
+        return this.interviews.subList(start, end);
+    }
+
+    /**
      * Write interview note for a given interview.
      *
      * @param interview   The interview which this interviewer wants to write note of.
@@ -103,27 +137,17 @@ class Interviewer extends User {
     }
 
     /**
-     * Schedule an interview on this date and at this time.
-     *
-     * @param interview The interview to be scheduled.
+     * Get a list of unscheduled interviews for this interviewer.
+     * @return a list of unscheduled interviews for this interviewer.
      */
-    // TODO: Get date and time slot from interface
-    void scheduleInterview(Interview interview) {
-        if (interview.getTime() == null) {
-            this.setInterviewTime(interview, interviewTime);
-            this.addInterview(interview);
-            this.updateSchedule(interviewTime.getDate(), interviewTime.getTimeSlot());
+    ArrayList<Interview> getUnscheduledInterviews() {
+        ArrayList<Interview> unscheduledInterviews = new ArrayList<>();
+        for (Interview interview : this.interviews) {
+            if (interview.getTime() == null) {
+                unscheduledInterviews.add(interview);
+            }
         }
-    }
-
-    /**
-     * Set the date and time slot for the interview.
-     *
-     * @param interview The interview being scheduled.
-     * @param time      The time this interview is scheduled for.
-     */
-    private void setInterviewTime(Interview interview, InterviewTime time) {
-        interview.setTime(time);
+        return unscheduledInterviews;
     }
 
     /**
@@ -137,6 +161,19 @@ class Interviewer extends User {
             this.schedule.put(date, new ArrayList<>());
         }
         this.schedule.get(date).add(timeSlot);
+    }
+
+    /**
+     * Get a list of job applications of this interviewer's interviewees.
+     *
+     * @return a list of job applications of the applicants that are being interviewed by this interviewer.
+     */
+    ArrayList<JobApplication> getListOfIntervieweeJobApplications() {
+        ArrayList<JobApplication> jobApplications = new ArrayList<>();
+        for (Interview interview : this.interviews) {
+            jobApplications.add(interview.getJobApplication());
+        }
+        return jobApplications;
     }
 
     /**
