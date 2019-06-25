@@ -1,9 +1,9 @@
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 class Company {
 
-    // Elaine: I'm adding these so that my code doesn't have red underlines. This is unfinished.
     // === Instance variables ===
     // The name of this company (unique identifier)
     private String name;
@@ -11,15 +11,11 @@ class Company {
     private ArrayList<HRCoordinator> hrCoordinators = new ArrayList<>();
     // The interviewers in this company
     private HashMap<String, ArrayList<Interviewer>> fieldToInterviewers = new HashMap<>();
+    // The job posting manager for this company
+    private JobPostingManager jobPostingManager = new JobPostingManager(this);
 
 
     // === Constructors ===
-
-    /**
-     * Create a new company.
-     */
-    Company() {
-    }
 
     /**
      * Create a new company.
@@ -37,10 +33,11 @@ class Company {
      * @param fieldToInterviewers   The map of field to interviewers for this company.
      */
     Company(String name, ArrayList<HRCoordinator> hrCoordinators,
-            HashMap<String, ArrayList<Interviewer>> fieldToInterviewers) {
+            HashMap<String, ArrayList<Interviewer>> fieldToInterviewers, JobPostingManager jobPostingManager) {
         this.name = name;
         this.hrCoordinators = hrCoordinators;
         this.fieldToInterviewers = fieldToInterviewers;
+        this.jobPostingManager = jobPostingManager;
     }
 
     // === Getters ==
@@ -55,11 +52,41 @@ class Company {
     }
 
     /**
+     * Get a list of all HRCoordinators for this company.
+     *
+     * @return a list of all HRCoordinators for this company.
+     */
+    ArrayList<HRCoordinator> getHrCoordinators() {
+        return this.hrCoordinators;
+    }
+
+    /**
      * Get the map of field to interviewers for this company.
      * @return the map of field to interviewers for this company.
      */
     HashMap<String, ArrayList<Interviewer>> getFieldToInterviewers() {
         return this.fieldToInterviewers;
+    }
+
+    /**
+     * Get the job posting manager for this company.
+     *
+     * @return the job posting manager for this company.
+     */
+    JobPostingManager getJobPostingManager() {
+        return this.jobPostingManager;
+    }
+
+
+    // === Setters ===
+
+    /**
+     * Set the job posting manager for this company.
+     *
+     * @param jobPostingManager The job posting manager to be set.
+     */
+    void setJobPostingManager(JobPostingManager jobPostingManager) {
+        this.jobPostingManager = jobPostingManager;
     }
 
     // === Other methods ===
@@ -109,11 +136,49 @@ class Company {
      * @return the list of all job postings for this company.
      */
     ArrayList<JobPosting> getAllJobPostings() {
-        ArrayList<JobPosting> allJobPostings = new ArrayList<>();
-        for (HRCoordinator HRC : this.hrCoordinators) {
-            allJobPostings.addAll(HRC.getJobPostingManager().getJobPostings());
+        return this.jobPostingManager.getJobPostings();
+    }
+
+    /**
+     * Get all open job postings for this company.
+     *
+     * @param today Today's date.
+     * @return the list of all open job postings for this company.
+     */
+    ArrayList<JobPosting> getAllOpenJobPostings(LocalDate today) {
+        return this.jobPostingManager.getOpenJobPostings(today);
+    }
+
+    /**
+     * Search the job postings by title within this company.
+     *
+     * @param jobTitle The job title.
+     * @return the list of job postings with this job title.
+     */
+    ArrayList<JobPosting> searchJobPostingByTitle(String jobTitle) {
+        ArrayList<JobPosting> jobPostings = new ArrayList<>();
+        for (JobPosting jobPosting : this.getAllJobPostings()) {
+            if (jobPosting.getTitle().equals(jobTitle)) {
+                jobPostings.add(jobPosting);
+            }
         }
-        return allJobPostings;
+        return jobPostings;
+    }
+
+    /**
+     * View all applications this applicant has submitted for job postings in this company.
+     *
+     * @param applicant The applicant in question.
+     * @return a list of job applications that this applicant has previously submitted to this company.
+     */
+    ArrayList<JobApplication> viewAllApplicationsToCompany(Applicant applicant) {
+        ArrayList<JobApplication> apps = new ArrayList<>();
+        for (JobApplication jobApp : applicant.getJobApplicationManager().getJobApplications()) {
+            if (jobApp.getJobPosting().getCompany().equals(this)) {
+                apps.add(jobApp);
+            }
+        }
+        return apps;
     }
 
 

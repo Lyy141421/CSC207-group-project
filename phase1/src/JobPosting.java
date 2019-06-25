@@ -2,7 +2,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-abstract class JobPosting {
+class JobPosting {
 
     // === Instance variables ===
     private static int postingsCreated; // Total number of postings created
@@ -10,19 +10,20 @@ abstract class JobPosting {
     private String title; // The job title
     private String field; // The job field
     private String description; // The job description
-    private ArrayList<String> requirements; // The requirements for this job posting
+    private String requirements; // The requirements for this job posting
+    private int numPositions;
     private Company company; // The company that listed this job posting
-    private boolean filled; // Whether the job posting is filled
     private LocalDate postDate; // The date on which this job posting was listed
     private LocalDate closeDate; // The date on which this job posting is closed
-    private HashMap<Applicant,JobApplication> appsByApplicant = new HashMap<>(); // Map of applicants to applications
+    private boolean filled; // Whether the job posting is filled
+    private ArrayList<JobApplication> jobApplications; // The list of job applications for this job posting
     private InterviewManager interviewManager; // Interview manager for this job posting
 
     // === Constructors ===
     JobPosting() {
     }
 
-    JobPosting(String title, String field, String description, ArrayList<String> requirements, Company company,
+    JobPosting(String title, String field, String description, String requirements, int numPositions, Company company,
                LocalDate postDate, LocalDate closeDate) {
         postingsCreated++;
         this.id = postingsCreated;
@@ -30,6 +31,7 @@ abstract class JobPosting {
         this.field = field;
         this.description = description;
         this.requirements = requirements;
+        this.numPositions = numPositions;
         this.company = company;
         this.filled = false;
         this.postDate = postDate;
@@ -49,6 +51,10 @@ abstract class JobPosting {
         return this.field;
     }
 
+    int getNumPositions() {
+        return this.numPositions;
+    }
+
     Company getCompany() {
         return this.company;
     }
@@ -57,8 +63,8 @@ abstract class JobPosting {
         return this.closeDate;
     }
 
-    HashMap<Applicant, JobApplication> getAppsByApplicant() {
-        return this.appsByApplicant;
+    ArrayList<JobApplication> getJobApplications() {
+        return this.jobApplications;
     }
 
     boolean isFilled() {
@@ -75,6 +81,10 @@ abstract class JobPosting {
         this.filled = true;
     }
 
+    void setNumPositions(int numPositions) {
+        this.numPositions = numPositions;
+    }
+
     void setCloseDate(LocalDate closeDate) {
         this.closeDate = closeDate;
     }
@@ -84,13 +94,101 @@ abstract class JobPosting {
     }
 
     // === Other methods ===
-    void addJobApplication(Applicant applicant, JobApplication jobApplication) {
+
+    /**
+     * Add this job application for this job posting.
+     *
+     * @param jobApplication The job application to be added.
+     */
+    void addJobApplication(JobApplication jobApplication) {
+        this.jobApplications.add(jobApplication);
     }
 
-    void removeJobApplication(Applicant applicant) {
+    /**
+     * Remove this job application for this job posting.
+     *
+     * @param jobApplication The job application to be removed.
+     */
+    void removeJobApplication(JobApplication jobApplication) {
+        this.jobApplications.remove(jobApplication);
     }
 
-    abstract JobApplication findJobApplication(Applicant applicant);
+    /**
+     * Find the job application associated with this applicant.
+     * @param applicant The applicant whose application is to be searched for.
+     * @return the application of this applicant or null if not found.
+     */
+    JobApplication findJobApplication(Applicant applicant) {
+        for (JobApplication jobApp : this.jobApplications) {
+            if (jobApp.getApplicant().equals(applicant)) {
+                return jobApp;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Review the applications submitted for this job posting.
+     */
+    void reviewApplications() {
+        for (JobApplication jobApp : this.getJobApplications()) {
+            jobApp.advanceStatus();
+        }
+    }
+
+    /**
+     * Advance the round of interviews for this job posting.
+     *
+     * @param today Today's date.
+     */
+    void advanceInterviewRound(LocalDate today) {
+        InterviewManager interviewManager = this.getInterviewManager();
+        if (interviewManager.getCurrentRound() < Interview.getMaxNumRounds()) {
+            if (interviewManager.currentRoundOver(today)) {
+                interviewManager.advanceRound();
+            }
+        }
+    }
+
+    /**
+     * Get an array of a list of job applications selected and a list of job applications rejected for a phone
+     * interview for this job posting.
+     *
+     * @return an array of lists of job applications selected and rejected for a phone interview.
+     */
+    private ArrayList<JobApplication>[] getApplicationsForPhoneInterview() {
+        ArrayList<JobApplication>[] jobApps = new ArrayList[2];
+        ArrayList<JobApplication> jobApplicationsInConsideration = new ArrayList<>();
+        ArrayList<JobApplication> jobApplicationsRejected = new ArrayList<>();
+        jobApps[0] = jobApplicationsInConsideration;
+        jobApps[1] = jobApplicationsRejected;
+        for (JobApplication jobApplication : this.getJobApplications()) {
+            if (jobApplication.getStatus() == 0) {
+                jobApplicationsInConsideration.add(jobApplication);
+            } else {
+                jobApplicationsRejected.add(jobApplication);
+            }
+        }
+        return jobApps;
+    }
+
+    /**
+     * Create an interview manager for this job posting.
+     */
+    void createInterviewManager() {
+        ArrayList<JobApplication>[] jobApps = this.getApplicationsForPhoneInterview();
+        InterviewManager interviewManager = new InterviewManager(this, jobApps[0], jobApps[1]);
+        this.setInterviewManager(interviewManager);
+    }
+
+    /**
+     * Get the current round of interviews for this job posting.
+     *
+     * @return the current round of interviews for this job posting.
+     */
+    int getCurrentInterviewRound() {
+        return this.interviewManager.getCurrentRound();
+    }
 
     @Override
     public boolean equals(Object obj) {

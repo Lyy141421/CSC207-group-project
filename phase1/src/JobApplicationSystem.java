@@ -1,29 +1,30 @@
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
+import javax.swing.*;
 
 public class JobApplicationSystem {
 
     // === Instance variables ===
+    // The time in Milliseconds for the cyclicalTask to repeat
+    private static final int CYCLE_PERIOD = 86400000;
     // List of companies registered in the system
     private static ArrayList<Company> companies = new ArrayList<>();
     // The user manager for the system
     private static UserManager userManager;
 
     public static void main(String[] args) {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                new MainFrame();
+            }
+        });
         cyclicalTask();
     }
 
     // === Getters ===
-
-    /**
-     * Get a list of companies registered in this system.
-     *
-     * @return a list of companies registered in this system.
-     */
-    static ArrayList<Company> getCompanies() {
-        return JobApplicationSystem.companies;
-    }
 
     /**
      * Get the UserManager for this system.
@@ -55,8 +56,9 @@ public class JobApplicationSystem {
     }
 
     // === Other methods ===
+
     /**
-    A method which triggers once a day from the time it is started.
+     A method which triggers once a day from the time it is started.
      */
     private static void cyclicalTask(){
         TimerTask daily_tasks = new TimerTask() {
@@ -66,7 +68,7 @@ public class JobApplicationSystem {
             }
         };
         Timer timer = new Timer();
-        timer.scheduleAtFixedRate(daily_tasks, 0, 86400000);
+        timer.scheduleAtFixedRate(daily_tasks, 0, CYCLE_PERIOD);
     }
 
     /**
@@ -76,7 +78,20 @@ public class JobApplicationSystem {
     static ArrayList<JobPosting> getAllJobPostings() {
         ArrayList<JobPosting> jobPostings = new ArrayList<>();
         for (Company company : JobApplicationSystem.companies) {
-            jobPostings.addAll(company.getJobPostings());
+            jobPostings.addAll(company.getAllJobPostings());
+        }
+        return jobPostings;
+    }
+
+    /**
+     * Get all the open job postings in this system.
+     *
+     * @return all the job postings in this system.
+     */
+    static ArrayList<JobPosting> getAllOpenJobPostings(LocalDate today) {
+        ArrayList<JobPosting> jobPostings = new ArrayList<>();
+        for (Company company : JobApplicationSystem.companies) {
+            jobPostings.addAll(company.getAllOpenJobPostings(today));
         }
         return jobPostings;
     }
@@ -98,5 +113,13 @@ public class JobApplicationSystem {
      */
     static void addCompany(String name) {
         JobApplicationSystem.companies.add(JobApplicationSystem.createCompany(name));
+    }
+
+    static Company getCompany(String name) {
+        for (Company company : companies) {
+            if (company.getName().equals(name))
+                return company;
+        }
+        return null;
     }
 }

@@ -1,3 +1,4 @@
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 class JobPostingManager {
@@ -80,6 +81,22 @@ class JobPostingManager {
      */
     void addJobPosting(JobPosting jobPosting) {
         this.jobPostings.add(jobPosting);
+    }
+
+    /**
+     * Get a list of open job postings for this company.
+     *
+     * @param today Today's date.
+     * @return a list of open job postings for this company.
+     */
+    ArrayList<JobPosting> getOpenJobPostings(LocalDate today) {
+        ArrayList<JobPosting> jobPostings = new ArrayList<>();
+        for (JobPosting jobPosting : this.getJobPostings()) {
+            if (jobPosting.getCloseDate().isBefore(today)) {
+                jobPostings.add(jobPosting);
+            }
+        }
+        return jobPostings;
     }
 
 
