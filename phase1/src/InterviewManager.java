@@ -137,4 +137,14 @@ class InterviewManager {
         this.applicationsInConsideration.remove(jobApplication);
         this.applicationsRejected.add(jobApplication);
     }
+
+    /**
+     * Check if number of applicantions in consideration is no more than number of positions available in the job
+     * posting.
+     * @return true iff number of applications in consideration is less than or equal to number of position in this
+     * job posting.
+     */
+    boolean isNumApplicantUnderThreshold () {
+        return this.applicationsInConsideration.size() <= this.jobPosting.getNumPositions();
+    }
 }
