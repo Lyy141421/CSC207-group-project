@@ -8,6 +8,7 @@ class Main {
         1. Log-in / sign-up
         2. Direct user to specific user-type "main" page
             - Create instances of that specific user interface
+            - Call the 'run' method for the specific user interface
         3. Exit
          */
     }
