@@ -6,8 +6,6 @@ import java.util.List;
 class Interviewer extends User {
 
     // === Instance variables ===
-    // The username belonging to this interviewer
-    private String username;
     // The company that this interviewer works for
     private Company company;
     // The field that this interviewer works in
