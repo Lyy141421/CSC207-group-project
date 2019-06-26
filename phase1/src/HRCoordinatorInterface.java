@@ -204,10 +204,12 @@ class HRCoordinatorInterface extends UserInterface {
             a) Closed, but have not yet started the interview process
             b) Finished an interview round (not ready for hiring)
             c) Ready for hiring
+            d) Finished an interview round with <= positions available number of applicants left
         2. Give option to set up interviews or to hire given the circumstances
             a) Choose candidates for phone interview and set-up interviews (this can be two separate steps)
             b) Set-up next round of interviews
             c) Choose applicant(s) to be hired.
+            d) Choose to hire all applicants left or review applications failed in most recent round.
          */
         /*JobPostingManager JPM = this.HRC.getCompany().getJobPostingManager();
         ArrayList<JobPosting> recentlyClosedPostings = JPM.getClosedJobPostingsNoInterview(today);
