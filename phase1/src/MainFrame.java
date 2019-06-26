@@ -10,7 +10,7 @@ public class MainFrame extends JFrame {
 
     private void initUI () {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(600, 450);
+        setSize(1280, 720);
         setLayout(new CardLayout());
         addCards();
         setVisible(true);
