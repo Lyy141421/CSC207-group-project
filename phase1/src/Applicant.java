@@ -206,13 +206,13 @@ class Applicant extends User {
         this.setEmail((String)data.get("email"));
         this.filesSubmitted = ((ArrayList)data.get("filesSubmitted"));
         this.setDateCreated(LocalDate.parse((String)data.get("password")));
-        if(FileSystem.isLoaded((String)((ArrayList)data.get("filesSubmitted")).get(1),
-                (String)((ArrayList)data.get("filesSubmitted")).get(1))){
-            this.jobApplicationManager = (JobApplicationManager)FileSystem.mapGet((String)((ArrayList)data.get("filesSubmitted")).get(1),
-                    (String)((ArrayList)data.get("filesSubmitted")).get(1));
+        if(FileSystem.isLoaded((String)((ArrayList)data.get("jobApplicationManager")).get(1),
+                (String)((ArrayList)data.get("jobApplicationManager")).get(1))){
+            this.jobApplicationManager = (JobApplicationManager)FileSystem.mapGet((String)((ArrayList)data.get("jobApplicationManager")).get(1),
+                    (String)((ArrayList)data.get("jobApplicationManager")).get(1));
         }
         else{
-            this.jobApplicationManager = new JobApplicationManager((String)((ArrayList)data.get("filesSubmitted")).get(1));
+            this.jobApplicationManager = new JobApplicationManager((String)((ArrayList)data.get("jobApplicationManager")).get(1));
         }
     }
 
