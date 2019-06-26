@@ -32,11 +32,11 @@ public class FileSystem {
             String x = (String)it.next();
             try {
                 if(jobj.get(x) instanceof JSONArray){
-                    List<Object> list = new ArrayList<Object>();
+                    ArrayList<Object> list = new ArrayList<Object>();
                     for(int i = 0; i < ((JSONArray)jobj.get(x)).length(); i++){
                         list.add(((JSONArray)jobj.get(x)).getString(i));
                     }
-                    map.put(x, list.toArray(new Object[0]));
+                    map.put(x, list);
                 }
                 else{ map.put(x, jobj.get(x)); }
             } catch (JSONException e) {
