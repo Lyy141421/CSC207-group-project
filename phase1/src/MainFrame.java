@@ -21,6 +21,30 @@ public class MainFrame extends JFrame {
         add(HRInterface());
     }
 
+    // Create interface for login screen
+    private JPanel LoginInterface() {
+        JPanel loginScreen = new JPanel(null);
+        JLabel welcomeLabel = new JLabel("CSC207 Summer 2019 Job Application System", SwingConstants.CENTER);//TODO: Text
+        welcomeLabel.setFont(new Font("Serif", Font.PLAIN, 30));
+        welcomeLabel.setBounds(320, 90, 640, 90);
+        welcomeLabel.setBorder(BorderFactory.createLineBorder(Color.BLUE, 2));
+        JLabel userNameText = new JLabel("Username: ", SwingConstants.CENTER);
+        userNameText.setBounds(540, 280, 100, 30);
+        JTextField userNameEntry = new JTextField();
+        userNameEntry.setBounds(640, 280, 100, 30);
+        JLabel passwordText = new JLabel("Password: ", SwingConstants.CENTER);
+        passwordText.setBounds(540, 310, 100, 30);
+        JPasswordField passwordEntry = new JPasswordField();
+        passwordEntry.setBounds(640, 310, 100, 30);
+        JButton loginButton = new JButton("Login/Register");
+        loginButton.setBounds(580, 360, 120, 20);
+
+        loginScreen.add(welcomeLabel); loginScreen.add(userNameText); loginScreen.add(passwordText);
+        loginScreen.add(userNameEntry); loginScreen.add(passwordEntry); loginScreen.add(loginButton);
+
+        return loginScreen;
+    }
+
     // Create interface for HR
     private JPanel HRInterface () {
         setTitle("HR Coordinator");
