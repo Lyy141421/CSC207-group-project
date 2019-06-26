@@ -6,6 +6,10 @@ class InterviewManager {
      * A class that manages interviews for a job posting.
      */
 
+    // === Class variables ===
+    // The maximum number of in-person interview rounds
+    private static int MAX_NUM_INTERVIEW_ROUNDS = 3;
+
     // === Instance variables ===
     // The job posting for this interview manager
     private JobPosting jobPosting;
@@ -139,12 +143,32 @@ class InterviewManager {
     }
 
     /**
-     * Check if number of applicantions in consideration is no more than number of positions available in the job
+     * Check if number of applications in consideration is no more than number of positions available in the job
      * posting.
      * @return true iff number of applications in consideration is less than or equal to number of position in this
      * job posting.
      */
     boolean isNumApplicantUnderThreshold () {
         return this.applicationsInConsideration.size() <= this.jobPosting.getNumPositions();
+    }
+
+    /**
+     * Check if interview process has finished the last interview round.
+     *
+     * @param today Today's date
+     * @return true iff the maximum number of interview rounds has been completed.
+     */
+    private boolean isInterviewProcessOver(LocalDate today) {
+        return this.currentRoundOver(today) && this.currentRound == InterviewManager.MAX_NUM_INTERVIEW_ROUNDS;
+    }
+
+    /**
+     * Check if this job posting is ready for hiring.
+     *
+     * @param today Today's date.
+     * @return true iff this job posting is ready for hiring.
+     */
+    boolean isReadyForHiring(LocalDate today) {
+        return this.isNumApplicantUnderThreshold() || this.isInterviewProcessOver(today);
     }
 }

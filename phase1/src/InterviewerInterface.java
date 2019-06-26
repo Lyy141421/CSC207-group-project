@@ -23,8 +23,15 @@ class InterviewerInterface extends UserInterface {
         this.interviewer = interviewer;
     }
 
-    void openingScreen() {
+    void run() {
+        // Main page will have unscheduled interviews and interviews for today
         this.scheduleInterviews();
+        this.viewInterviewsForToday();
+        // Options for
+        // - viewing one's schedule: this.viewSchedule()
+        // - viewing job applications: this.viewJobApplications()
+        // - conducting an interview: this.conductInterview()
+
     }
 
     /**
@@ -65,7 +72,7 @@ class InterviewerInterface extends UserInterface {
     /**
      * Interface for viewing the applications of an applicant this interviewer is going to interview.
      */
-    void viewJobApplication() {
+    void viewJobApplications() {
         /*
         1. Display a list of applications that this interviewer has access to (they can only see the applications of those
         they have yet to interview. (Display only name of applicant and job posting?)
