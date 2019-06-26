@@ -1,6 +1,6 @@
 import java.time.LocalDate;
 
-abstract class User {
+abstract class User implements Storable{
     /**
      * An account in the job application system.
      */

@@ -1,6 +1,7 @@
 import java.io.File;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 class Applicant extends User {
     /**
@@ -12,8 +13,20 @@ class Applicant extends User {
     private JobApplicationManager jobApplicationManager = new JobApplicationManager();
     // List of filenames uploaded to account
     private ArrayList<String> filesSubmitted = new ArrayList<>();
+    // The filename under which this will be saved in the FileSystem
+    public final String FILENAME = "Applicants";
 
     // === Constructors ===
+
+    /**
+     * Constructor from memory
+     *
+     * @param id The id of this object which it is saved under
+     */
+    public Applicant(String id){
+        this.setUsername(id);
+        loadSelf();
+    }
 
     /**
      * Create an applicant account.
@@ -154,6 +167,52 @@ class Applicant extends User {
             JobApplication lastClosedJobApp = this.jobApplicationManager.getLastClosedJobApp();
             ArrayList<String> files = this.jobApplicationManager.getFilesSubmittedForApplication(lastClosedJobApp);
             this.filesSubmitted.removeAll(files);
+        }
+    }
+
+    /**
+     * Getter for the ID
+     *
+     * @return the string of the id
+     */
+    public String getId(){
+        return this.getUsername();
+    }
+
+    /**
+     * Saves the Object
+     */
+    public void saveSelf(){
+        FileSystem.mapPut(FILENAME, getId(), this);
+        HashMap<String, Object> data = new HashMap<>();
+        data.put("password", this.getPassword());
+        data.put("legalName", this.getLegalName());
+        data.put("email", this.getEmail());
+        data.put("dateCreated", this.getDateCreated());
+        data.put("jobApplicationManager", new String[] {this.jobApplicationManager.FILENAME,
+                this.jobApplicationManager.getId()});
+        data.put("filesSubmitted", this.filesSubmitted);
+        FileSystem.write(FILENAME, getId(), data);
+    }
+
+    /**
+     * loads the Object
+     */
+    public void loadSelf(){
+        FileSystem.mapPut(FILENAME, getId(), this);
+        HashMap data = FileSystem.read(FILENAME, getId());
+        this.setPassword((String)data.get("password"));
+        this.setLegalName((String)data.get("legalName"));
+        this.setEmail((String)data.get("email"));
+        this.filesSubmitted = ((ArrayList)data.get("filesSubmitted"));
+        this.setDateCreated(LocalDate.parse((String)data.get("password")));
+        if(FileSystem.isLoaded((String)((ArrayList)data.get("filesSubmitted")).get(1),
+                (String)((ArrayList)data.get("filesSubmitted")).get(1))){
+            this.jobApplicationManager = (JobApplicationManager)FileSystem.mapGet((String)((ArrayList)data.get("filesSubmitted")).get(1),
+                    (String)((ArrayList)data.get("filesSubmitted")).get(1));
+        }
+        else{
+            this.jobApplicationManager = new JobApplicationManager((String)((ArrayList)data.get("filesSubmitted")).get(1));
         }
     }
 
