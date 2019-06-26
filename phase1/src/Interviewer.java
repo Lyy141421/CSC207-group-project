@@ -14,11 +14,23 @@ class Interviewer extends User {
     private ArrayList<Interview> interviews = new ArrayList<>();
     // The interviewer's schedule as a map of the date to a list of time slots that are filled.
     private HashMap<LocalDate, ArrayList<Integer>> schedule = new HashMap<>();
+    // The filename under which this will be saved in the FileSystem
+    public final String FILENAME = "HRCoordinators";
 
     // === Representation invariants ===
     // interviews is sorted in terms of date.
 
     // === Constructors ===
+
+    /**
+     * Constructor from memory
+     *
+     * @param id The id of this object which it is saved under
+     */
+    public Interviewer(String id){
+        this.setUsername(id);
+        loadSelf();
+    }
 
     /**
      * Create an interviewer.
@@ -187,5 +199,76 @@ class Interviewer extends User {
     void failInterview(Interview interview) {
         interview.setFail();
         interview.getInterviewManager().reject(interview.getJobApplication());
+    }
+
+    /**
+     * Getter for the ID
+     *
+     * @return the string of the id
+     */
+    public String getId(){
+        return this.getUsername();
+    }
+
+    /**
+     * Saves the Object
+     */
+    public void saveSelf(){
+        FileSystem.mapPut(FILENAME, getId(), this);
+        HashMap<String, Object> data = new HashMap<>();
+        data.put("password", this.getPassword());
+        data.put("legalName", this.getLegalName());
+        data.put("email", this.getEmail());
+        data.put("dateCreated", this.getDateCreated());
+        data.put("field", this.getField());
+        data.put("company", new String[] {this.company.FILENAME,
+                this.company.getId()});
+        ArrayList<ArrayList> interview_list = new ArrayList<>();
+        for(Interview x : this.interviews){
+            interview_list.add(new ArrayList(){{ add(FILENAME); add(x.getId()); }});
+        }
+        data.put("interviews", interview_list);
+        ArrayList<ArrayList> schedule = new ArrayList<>();
+        for(LocalDate x : this.schedule.keySet()){
+            ArrayList dates = this.schedule.get(x);
+            schedule.add(new ArrayList(){{ add(x); add(dates); }});
+        }
+        data.put("schedule", schedule);
+        FileSystem.write(FILENAME, getId(), data);
+    }
+
+    /**
+     * loads the Object
+     */
+    public void loadSelf(){
+        FileSystem.mapPut(FILENAME, getId(), this);
+        HashMap data = FileSystem.read(FILENAME, getId());
+        this.setPassword((String)data.get("password"));
+        this.setLegalName((String)data.get("legalName"));
+        this.setEmail((String)data.get("email"));
+        this.setDateCreated(LocalDate.parse((String)data.get("password")));
+        this.field = (String)data.get("field");
+        if(FileSystem.isLoaded((String)((ArrayList)data.get("company")).get(1),
+                (String)((ArrayList)data.get("company")).get(1))){
+            this.company = (Company) FileSystem.mapGet((String)((ArrayList)data.get("company")).get(1),
+                    (String)((ArrayList)data.get("company")).get(1));
+        }
+        else{
+            this.company = new Company((String)((ArrayList)data.get("company")).get(1));
+        }
+        ArrayList<Interview> intervies = new ArrayList<>();
+        for(Object x : (ArrayList)(data.get("interviews"))){
+            if(FileSystem.isLoaded((String)((ArrayList)x).get(0), (String)((ArrayList)x).get(1))){
+                intervies.add((Interview) FileSystem.mapGet((String)((ArrayList)x).get(0), (String)((ArrayList)x).get(1)));
+            }
+            else{
+                intervies.add(new Interview((String)((ArrayList)x).get(1)));
+            }
+        }
+        HashMap<LocalDate, ArrayList<Integer>> schedule = new HashMap<>();
+        for(Object x : (ArrayList)data.get("schedule")){
+            schedule.put(LocalDate.parse((String)((ArrayList)x).get(0)), (ArrayList<Integer>)((ArrayList)x).get(1));
+        }
+        this.schedule = schedule;
     }
 }
