@@ -14,6 +14,7 @@ public class MainFrame extends JFrame {
         setLayout(new CardLayout());
         addCards();
         setVisible(true);
+        setResizable(false);
     }
 
     // Call methods that create each interface and add to main frame.
@@ -26,18 +27,18 @@ public class MainFrame extends JFrame {
         JPanel loginScreen = new JPanel(null);
         JLabel welcomeLabel = new JLabel("CSC207 Summer 2019 Job Application System", SwingConstants.CENTER);
             welcomeLabel.setFont(new Font("Serif", Font.PLAIN, 30));
-            welcomeLabel.setBounds(320, 90, 640, 90);
+            welcomeLabel.setBounds(320, 140, 640, 90);
             welcomeLabel.setBorder(BorderFactory.createLineBorder(Color.BLUE, 2));
         JLabel userNameText = new JLabel("Username: ", SwingConstants.CENTER);
-            userNameText.setBounds(540, 280, 100, 30);
+            userNameText.setBounds(540, 350, 100, 30);
         JTextField userNameEntry = new JTextField();
-            userNameEntry.setBounds(640, 280, 100, 30);
+            userNameEntry.setBounds(640, 350, 100, 30);
         JLabel passwordText = new JLabel("Password: ", SwingConstants.CENTER);
-            passwordText.setBounds(540, 310, 100, 30);
+            passwordText.setBounds(540, 380, 100, 30);
         JPasswordField passwordEntry = new JPasswordField();
-            passwordEntry.setBounds(640, 310, 100, 30);
+            passwordEntry.setBounds(640, 380, 100, 30);
         JButton loginButton = new JButton("Login/Register");
-            loginButton.setBounds(580, 360, 120, 20);
+            loginButton.setBounds(580, 430, 120, 20);
 
         loginScreen.add(welcomeLabel); loginScreen.add(userNameText); loginScreen.add(passwordText);
         loginScreen.add(userNameEntry); loginScreen.add(passwordEntry); loginScreen.add(loginButton);
