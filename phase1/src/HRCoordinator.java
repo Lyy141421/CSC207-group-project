@@ -1,4 +1,6 @@
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 class HRCoordinator extends User {
     /**
@@ -8,8 +10,20 @@ class HRCoordinator extends User {
     // === Instance variables ===
     // The company that this HR Coordinator works for
     private Company company;
+    // The filename under which this will be saved in the FileSystem
+    public final String FILENAME = "HRCoordinators";
 
     // === Constructors ===
+
+    /**
+     * Constructor from memory
+     *
+     * @param id The id of this object which it is saved under
+     */
+    public HRCoordinator(String id){
+        this.setUsername(id);
+        loadSelf();
+    }
 
     /**
      * Create an HR Coordinator account.
@@ -72,5 +86,48 @@ class HRCoordinator extends User {
         this.company.getJobPostingManager().addJobPosting(jobPosting);
     }
 
+    /**
+     * Getter for the ID
+     *
+     * @return the string of the id
+     */
+    public String getId(){
+        return this.getUsername();
+    }
+
+    /**
+     * Saves the Object
+     */
+    public void saveSelf(){
+        FileSystem.mapPut(FILENAME, getId(), this);
+        HashMap<String, Object> data = new HashMap<>();
+        data.put("password", this.getPassword());
+        data.put("legalName", this.getLegalName());
+        data.put("email", this.getEmail());
+        data.put("dateCreated", this.getDateCreated());
+        data.put("company", new String[] {this.company.FILENAME,
+                this.company.getId()});
+        FileSystem.write(FILENAME, getId(), data);
+    }
+
+    /**
+     * loads the Object
+     */
+    public void loadSelf(){
+        FileSystem.mapPut(FILENAME, getId(), this);
+        HashMap data = FileSystem.read(FILENAME, getId());
+        this.setPassword((String)data.get("password"));
+        this.setLegalName((String)data.get("legalName"));
+        this.setEmail((String)data.get("email"));
+        this.setDateCreated(LocalDate.parse((String)data.get("password")));
+        if(FileSystem.isLoaded((String)((ArrayList)data.get("company")).get(1),
+                (String)((ArrayList)data.get("company")).get(1))){
+            this.company = (Company) FileSystem.mapGet((String)((ArrayList)data.get("company")).get(1),
+                    (String)((ArrayList)data.get("company")).get(1));
+        }
+        else{
+            this.company = new Company((String)((ArrayList)data.get("company")).get(1));
+        }
+    }
 
 }
