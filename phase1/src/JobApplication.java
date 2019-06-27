@@ -255,6 +255,7 @@ class JobApplication {
                 jobPosting.getInterviewManager(), round);
         this.addInterview(interview);
         interviewer.addInterview(interview);
+        this.advanceStatus();
     }
 
 

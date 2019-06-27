@@ -9,6 +9,14 @@ class InterviewManager {
     // === Class variables ===
     // The maximum number of in-person interview rounds
     private static int MAX_NUM_INTERVIEW_ROUNDS = 3;
+    // Integers that represent the task the HR Coordinator needs to accomplish
+    static int SELECT_APPS_FOR_PHONE_INTERVIEW = -1;
+    private static final int DO_NOTHING = 0;
+    private static final int SCHEDULE_INTERVIEWS = 1;
+    private static final int CHOOSE_APPLICANTS_FOR_HIRE = 2;
+    static final int HIRE_APPLICANTS = 3;
+
+
 
     // === Instance variables ===
     // The job posting for this interview manager
@@ -19,6 +27,8 @@ class InterviewManager {
     private ArrayList<JobApplication> applicationsRejected;
     // The current round of interviews
     private int currentRound;
+    // Integer that represents the task the HR Coordinator needs to fulfill
+    private int hrTask;
 
     // === Representation invariants ===
     // The list of interviews for each applicant is sorted by date.
@@ -120,7 +130,7 @@ class InterviewManager {
      * @param today Today's date.
      * @return true iff the current round of interviews is over.
      */
-    boolean currentRoundOver(LocalDate today) {
+    boolean isCurrentRoundOver(LocalDate today) {
         Interview lastInterview = this.getLastInterviewOfCurrentRound();
         return today.isAfter(lastInterview.getTime().getDate());
     }
@@ -159,16 +169,27 @@ class InterviewManager {
      * @return true iff the maximum number of interview rounds has been completed.
      */
     private boolean isInterviewProcessOver(LocalDate today) {
-        return this.currentRoundOver(today) && this.currentRound == InterviewManager.MAX_NUM_INTERVIEW_ROUNDS;
+        return this.isCurrentRoundOver(today) && this.currentRound == InterviewManager.MAX_NUM_INTERVIEW_ROUNDS;
     }
 
     /**
-     * Check if this job posting is ready for hiring.
+     * Get the task required by the HR Coordinator for this job posting at this moment in time.
      *
      * @param today Today's date.
-     * @return true iff this job posting is ready for hiring.
+     * @return the integer representing the task the HR Coordinator must accomplish.
      */
-    boolean isReadyForHiring(LocalDate today) {
-        return this.isNumApplicantUnderThreshold() || this.isInterviewProcessOver(today);
+    int getHrTask(LocalDate today) {
+        if (this.isInterviewProcessOver(today)) {
+            if (this.isNumApplicantUnderThreshold()) {
+                return InterviewManager.HIRE_APPLICANTS;
+            } else {
+                return InterviewManager.CHOOSE_APPLICANTS_FOR_HIRE;
+            }
+        } else if (this.isCurrentRoundOver(today)) {
+            return InterviewManager.SCHEDULE_INTERVIEWS;
+        } else {
+            return InterviewManager.DO_NOTHING;
+        }
     }
+
 }

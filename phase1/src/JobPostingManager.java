@@ -159,7 +159,7 @@ class JobPostingManager {
     ArrayList<JobPosting> getJobPostingsWithRoundCompleted(LocalDate today) {
         ArrayList<JobPosting> jobPostings = new ArrayList<>();
         for (JobPosting jobPosting : this.getClosedJobPostingsNotFilled(today)) {
-            if (jobPosting.getInterviewManager().currentRoundOver(today)) {
+            if (jobPosting.getInterviewManager().isCurrentRoundOver(today)) {
                 jobPostings.add(jobPosting);
             }
         }
@@ -175,7 +175,7 @@ class JobPostingManager {
     ArrayList<JobPosting> getJobPostingsForHiring(LocalDate today) {
         ArrayList<JobPosting> jobPostings = new ArrayList<>();
         for (JobPosting jobPosting : this.getClosedJobPostingsNotFilled(today)) {
-            if (jobPosting.getInterviewManager().isReadyForHiring(today)) {
+            if (jobPosting.getInterviewManager().getHrTask(today) == InterviewManager.HIRE_APPLICANTS) {
                 jobPostings.add(jobPosting);
             }
         }

@@ -87,6 +87,21 @@ class HRCoordinator extends User {
     }
 
     /**
+     * Get the task that the HR Coordinator must accomplish for this job posting.
+     *
+     * @param jobPosting The job posting in question.
+     * @param today      Today's date.
+     * @return an integer that represents the task that the HR Coordinator must accomplish for this job posting.
+     */
+    int getTask(JobPosting jobPosting, LocalDate today) {
+        if (this.company.getJobPostingManager().getClosedJobPostingsNoInterview(today).contains(jobPosting)) {
+            return InterviewManager.SELECT_APPS_FOR_PHONE_INTERVIEW;
+        } else {
+            return jobPosting.getInterviewManager().getHrTask(today);
+        }
+    }
+
+    /**
      * Getter for the ID
      *
      * @return the string of the id

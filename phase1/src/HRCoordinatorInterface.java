@@ -6,6 +6,7 @@ class HRCoordinatorInterface extends UserInterface {
      * The general HR Coordinator interface
      */
 
+
     // === Instance variables ===
     // The HR Coordinator who is logged in
     private HRCoordinator HRC;
@@ -69,8 +70,9 @@ class HRCoordinatorInterface extends UserInterface {
     }
 
     //TODO
-    void getTaskForJobPosting() {
+    void getTaskForJobPosting(LocalDate today) {
         JobPosting jobPosting = this.getJobPosting();
+        jobPosting.getInterviewManager().getHrTask(today);
     }
 
     /**
@@ -164,7 +166,6 @@ class HRCoordinatorInterface extends UserInterface {
         2. Match interviewer with application
          */
         /*
-        jobApplication.advanceStatus();
         jobApplication.setUpInterview(this.HRC, jobApp.getStatus());*/
     }
 
