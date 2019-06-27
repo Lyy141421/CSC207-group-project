@@ -31,7 +31,7 @@ class UserInterface {
                     - userManager.createInterviewer(username, password, legalName, email, company, field,
                         LocalDate.now(), true);
                 }
-            Else:
+            Else: //Job coordinator
                 - Prompt for legal name
                 - Prompt for e-mail
                 - Prompt for company name
