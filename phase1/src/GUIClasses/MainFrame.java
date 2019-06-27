@@ -1,3 +1,5 @@
+package GUIClasses;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ItemEvent;
@@ -12,7 +14,7 @@ public class MainFrame extends JFrame {
 
     private void initUI () {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(1280, 720);
+        setSize(854, 480);
         setLayout(new CardLayout());
         addCards();
         setVisible(true);
