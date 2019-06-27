@@ -148,6 +148,22 @@ class Applicant extends User {
     }
 
     /**
+     * Get a list of open job postings not yet applied to.
+     *
+     * @param today Today's date.
+     * @return a list of open job postings not yet applied to.
+     */
+    ArrayList<JobPosting> getJobPostingsNotClosedNotAppliedTo(LocalDate today) {
+        ArrayList<JobPosting> jobPostingsNotAppliedTo = new ArrayList<>();
+        for (JobPosting jobPosting : JobApplicationSystem.getAllOpenJobPostings(today)) {
+            if (!this.hasAppliedTo(jobPosting)) {
+                jobPostingsNotAppliedTo.add(jobPosting);
+            }
+        }
+        return jobPostingsNotAppliedTo;
+    }
+
+    /**
      * Report whether the date that the last job posting this applicant applied to was 30 days ago from today.
      *
      * @param today Today's date.

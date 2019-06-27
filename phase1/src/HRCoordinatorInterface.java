@@ -62,42 +62,43 @@ class HRCoordinatorInterface extends UserInterface {
     }
 
     /**
-     * Interface for viewing all job postings.
+     * Interface for viewing all job postings within the company.
      */
-    void viewAllJobPostings() {
-        // Interface stuff
-        // JobApplicationSystem.getAllJobPostings();
+    ArrayList<JobPosting> viewAllJobPostingsInCompany() {
+        return this.HRC.getCompany().getJobPostingManager().getJobPostings();
+    }
+
+    //TODO
+    void getTaskForJobPosting() {
+        JobPosting jobPosting = this.getJobPosting();
     }
 
     /**
-     * Interface for viewing all applications for a specific job posting.
+     * Get a list of all applications for a specific job posting.
      */
-    void viewAllApplicationsForJobPosting() {
-        /*
-        1. Get the job posting that this HR Coordinator wants to view
-        2. Find whether the job posting exists for their company
-        Note: HR Coordinators can see any application for any job posting in their company
-        3. Display all the applications for that job posting
-             - Display a menu of all the applicants' names and the application date for each
-             - Display a menu of stuff that the HR Coordinator can see
-                 - Cover letter, CV, previous job applications to company
-         */
-
-        // JobPosting jobPosting = this.getJobPosting();
-        // ArrayList<JobApplication> jobApps = jobPosting.getJobApplications();
-        // Interface stuff
+    ArrayList<JobApplication> viewAllApplicationsForJobPosting() {
+        JobPosting jobPosting = this.getJobPosting();
+        return jobPosting.getJobApplications();
     }
 
     /**
-     * Interface for searching for a specific applicant who has applied to the company.
+     * Get a list of all the job applications in consideration for a job posting.
      */
-    void searchSpecificApplicant() {
+    ArrayList<JobApplication> viewAppsInConsiderationForJobPosting() {
+        JobPosting jobPosting = this.getJobPosting();
+        return jobPosting.getInterviewManager().getApplicationsInConsideration();
+    }
+
+    /**
+     * Searching for a specific applicant who has applied to the company.
+     */
+    ArrayList<JobApplication> searchSpecificApplicant() {
         /*
         1. Get the applicant username? legal name?
         2. Display all previous applications to company
          */
-        /*Applicant applicant = JobApplicationSystem.getUserManager().findUserByUsername(username);
-        this.HRC.getCompany().getAllApplicationsToCompany(applicant);*/
+        Applicant applicant = JobApplicationSystem.getUserManager().findUserByUsername(username);
+        this.HRC.getCompany().getAllApplicationsToCompany(applicant);
     }
 
     /**
@@ -109,11 +110,9 @@ class HRCoordinatorInterface extends UserInterface {
         2. Get the applicant legal name -- Drop down menu?
         3. Find application, if it exists
          */
-        /*
         JobPosting jobPosting = this.getJobPosting();
         Applicant applicant = JobApplicationSystem.getUserManager().findUserByUsername(username);
         jobPosting.findJobApplication(applicant);
-        */
     }
 
     /**
@@ -198,7 +197,7 @@ class HRCoordinatorInterface extends UserInterface {
      *
      * @param today Today's date.
      */
-    void viewHighPriorityJobPostings(LocalDate today) {
+    ArrayList<JobPosting> viewHighPriorityJobPostings(LocalDate today) {
         /*
         1. View list of job postings that have
             a) Closed, but have not yet started the interview process
@@ -211,10 +210,11 @@ class HRCoordinatorInterface extends UserInterface {
             c) Choose applicant(s) to be hired.
             d) Choose to hire all applicants left or review applications failed in most recent round.
          */
-        /*JobPostingManager JPM = this.HRC.getCompany().getJobPostingManager();
-        ArrayList<JobPosting> recentlyClosedPostings = JPM.getClosedJobPostingsNoInterview(today);
-        ArrayList<JobPosting> recentlyCompletedInterviewRound = JPM.getJobPostingsWithRoundCompleted(today);
-        ArrayList<JobPosting> jobPostingsForHiring = JPM.getJobPostingsForHiring(today);*/
+        JobPostingManager JPM = this.HRC.getCompany().getJobPostingManager();
+        ArrayList<JobPosting> highPriorityPostings = JPM.getClosedJobPostingsNoInterview(today);
+        highPriorityPostings.addAll(JPM.getJobPostingsWithRoundCompleted(today));
+        highPriorityPostings.addAll(JPM.getJobPostingsForHiring(today));
+        return highPriorityPostings;
     }
 
     /**

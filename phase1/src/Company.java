@@ -1,4 +1,3 @@
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -13,6 +12,7 @@ class Company {
     private HashMap<String, ArrayList<Interviewer>> fieldToInterviewers = new HashMap<>();
     // The job posting manager for this company
     private JobPostingManager jobPostingManager = new JobPostingManager(this);
+    //
 
 
     // === Constructors ===

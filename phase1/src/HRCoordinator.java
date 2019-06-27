@@ -106,7 +106,7 @@ class HRCoordinator extends User {
         data.put("email", this.getEmail());
         data.put("dateCreated", this.getDateCreated());
         data.put("company", new String[] {this.company.FILENAME,
-                this.company.getId()});
+                this.company.getName()});
         FileSystem.write(FILENAME, getId(), data);
     }
 
