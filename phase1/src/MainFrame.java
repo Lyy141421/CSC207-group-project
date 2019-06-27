@@ -19,6 +19,7 @@ public class MainFrame extends JFrame {
 
     // Call methods that create each interface and add to main frame.
     private void addCards () {
+        add(LoginInterface());
         add(HRInterface());
     }
 
@@ -62,6 +63,7 @@ public class MainFrame extends JFrame {
         JPanel HRPanel = new JPanel();
         HRPanel.setLayout(new CardLayout());
         HRPanel.add(HRHome());
+        HRPanel.add(HRBrowsePosting());
 
         return HRPanel;
     }
@@ -107,7 +109,36 @@ public class MainFrame extends JFrame {
         c.insets = new Insets(20, 100, 0, 0);
         HomePanel.add(logout, c);
 
-
         return HomePanel;
+    }
+
+    // Need to pass in list of job postings (all for browse all or particular for to-do)
+    private JPanel HRBrowsePosting () {
+        JPanel postingPanel = new JPanel();
+        postingPanel.setLayout(new BoxLayout(postingPanel, BoxLayout.PAGE_AXIS));
+        JPanel buttons = new JPanel();
+        buttons.setLayout(new FlowLayout());
+
+        JList<String> jobPostings = new JList();
+        JLabel status = new JLabel("Job posting status here. Changes according to JobPosting selected in JList.");
+        JButton scheduleInterview = new JButton("Schedule");
+        JButton hiring = new JButton("Hiring decision");
+        JButton home = new JButton("Home");
+
+        jobPostings.setAlignmentX(Component.CENTER_ALIGNMENT);
+        status.setAlignmentX(Component.CENTER_ALIGNMENT);
+        scheduleInterview.setAlignmentX(Component.CENTER_ALIGNMENT);
+        hiring.setAlignmentX(Component.CENTER_ALIGNMENT);
+        home.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        buttons.add(scheduleInterview);
+        buttons.add(hiring);
+        buttons.add(home);
+
+        postingPanel.add(jobPostings);
+        postingPanel.add(status);
+        postingPanel.add(buttons);
+
+        return postingPanel;
     }
 }
