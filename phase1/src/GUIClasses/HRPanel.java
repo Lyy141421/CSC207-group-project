@@ -9,8 +9,6 @@ public class HRPanel extends JPanel {
         setLayout(new CardLayout());
         add(HRHome());
         add(HRBrowsePosting());
-
-        return HRPanel;
     }
 
     private JPanel HRHome () {
