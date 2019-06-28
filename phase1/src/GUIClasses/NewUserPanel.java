@@ -45,11 +45,11 @@ class NewUserPanel extends JPanel {
         titleText.setFont(new Font("Serif", Font.PLAIN, 25));
         selectorPanel.add(titleText);
         JLabel typeSelector = new JLabel("What type of account is being created?", SwingConstants.CENTER);
-        typeSelector.setBounds(252, 110, 250, 30);
+        typeSelector.setBounds(252, 105, 250, 30);
         selectorPanel.add(typeSelector);
         String[] userTypes = {"Applicant", "Interviewer", "HR Coordinator"};
         JComboBox selectorBox = new JComboBox(userTypes);
-        selectorBox.setBounds(502, 110, 100, 30);
+        selectorBox.setBounds(502, 105, 100, 30);
         selectorPanel.add(selectorBox);
 
         return selectorPanel;
@@ -182,7 +182,7 @@ class NewUserPanel extends JPanel {
         JPanel buttonPanel = new JPanel(); buttonPanel.setLayout(null);
 
         JButton submitButton = new JButton("Create Account");
-        submitButton.setBounds(352, 10, 150, 30);
+        submitButton.setBounds(352, 15, 150, 30);
         buttonPanel.add(submitButton);
 
         JButton backButton = new JButton("Back to Login");
