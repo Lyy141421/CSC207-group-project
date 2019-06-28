@@ -8,8 +8,8 @@ import java.awt.*;
  * Along with NewUserPanel, LoginPanel is one of the mandatory cards that should be present in MainFrame.
  */
 
-public class LoginPanel extends JPanel {
-    protected LoginPanel() {
+class LoginPanel extends JPanel {
+    LoginPanel() {
         this.setLayout(null);
         this.addTextItems();
         this.addEntryItems();
