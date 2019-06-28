@@ -205,8 +205,15 @@ class Applicant extends User {
         data.put("legalName", this.getLegalName());
         data.put("email", this.getEmail());
         data.put("dateCreated", this.getDateCreated());
-        data.put("jobApplicationManager", new String[] {this.jobApplicationManager.FILENAME,
-                this.jobApplicationManager.getId()});
+        ArrayList jobapps = new ArrayList();
+        for(JobApplication x : this.jobApplicationManager.getJobApplications()){
+            ArrayList temp = new ArrayList();
+            temp.add(x.FILENAME);
+            temp.add(x.getId());
+            jobapps.add(temp);
+
+        }
+        data.put("jobApplicationManager", jobapps);
         data.put("filesSubmitted", this.filesSubmitted);
         FileSystem.write(FILENAME, getId(), data);
     }
@@ -221,15 +228,17 @@ class Applicant extends User {
         this.setLegalName((String)data.get("legalName"));
         this.setEmail((String)data.get("email"));
         this.filesSubmitted = ((ArrayList)data.get("filesSubmitted"));
-        this.setDateCreated(LocalDate.parse((String)data.get("password")));
-        if(FileSystem.isLoaded((String)((ArrayList)data.get("jobApplicationManager")).get(1),
-                (String)((ArrayList)data.get("jobApplicationManager")).get(1))){
-            this.jobApplicationManager = (JobApplicationManager)FileSystem.mapGet((String)((ArrayList)data.get("jobApplicationManager")).get(1),
-                    (String)((ArrayList)data.get("jobApplicationManager")).get(1));
+        this.setDateCreated(LocalDate.parse((String)data.get("dateCreated")));
+        ArrayList temp = new ArrayList();
+        for(ArrayList x : (ArrayList<ArrayList>)data.get("jobApplicationManager")){
+            if(FileSystem.isLoaded((String)((ArrayList)x).get(0), (String)((ArrayList)x).get(1))){
+                temp.add((Interview) FileSystem.mapGet((String)((ArrayList)x).get(0), (String)((ArrayList)x).get(1)));
+            }
+            else{
+                temp.add(new JobApplication((String)((ArrayList)x).get(1)));
+            }
         }
-        else{
-            this.jobApplicationManager = new JobApplicationManager((String)((ArrayList)data.get("jobApplicationManager")).get(1));
-        }
+        this.jobApplicationManager = new JobApplicationManager(temp);
     }
 
 }
