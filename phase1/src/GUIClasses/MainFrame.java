@@ -23,42 +23,7 @@ public class MainFrame extends JFrame {
 
     // Call methods that create each interface and add to main frame.
     private void addCards () {
-        add(LoginInterface());
         add(new HRPanel());
-    }
-
-    // Create interface for login screen
-    private JPanel LoginInterface() {
-        JPanel loginScreen = new JPanel(null);
-        JLabel welcomeLabel = new JLabel("CSC207 Summer 2019 Job Application System", SwingConstants.CENTER);
-            welcomeLabel.setFont(new Font("Serif", Font.PLAIN, 30));
-            welcomeLabel.setBounds(320, 140, 640, 90);
-            //welcomeLabel.setBorder(BorderFactory.createLineBorder(Color.BLUE, 2));
-        JLabel userNameText = new JLabel("Username: ", SwingConstants.CENTER);
-            userNameText.setBounds(540, 340, 100, 30);
-        JTextField userNameEntry = new JTextField();
-            userNameEntry.setBounds(640, 340, 100, 30);
-        JLabel passwordText = new JLabel("Password: ", SwingConstants.CENTER);
-            passwordText.setBounds(540, 375, 100, 30);
-        JPasswordField passwordEntry = new JPasswordField();
-            passwordEntry.setBounds(640, 375, 100, 30);
-        JButton loginButton = new JButton("Login/Register");
-            loginButton.setBounds(580, 420, 120, 20);
-
-        JLabel createNewText = new JLabel("User not found.", SwingConstants.CENTER);
-            createNewText.setBounds(540, 420, 100, 20);
-        JButton createNewButton = new JButton("Create?");
-            createNewButton.setBounds(640, 420, 100, 20);
-
-        JLabel wrongPass = new JLabel("Incorrect password!", SwingConstants.CENTER);
-            wrongPass.setBounds(580, 305, 120, 30);
-
-        loginScreen.add(welcomeLabel); loginScreen.add(userNameText); loginScreen.add(passwordText);
-        loginScreen.add(userNameEntry); loginScreen.add(passwordEntry); loginScreen.add(loginButton);
-        //loginScreen.add(createNewText); loginScreen.add(createNewButton); loginButton.setVisible(false);
-        //loginScreen.add(wrongPass);
-
-        return loginScreen;
     }
 
     // Create interface for new User account
