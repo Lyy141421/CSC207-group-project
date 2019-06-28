@@ -2,7 +2,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-class JobApplication {
+class JobApplication implements Storable{
     /**
      * A submitted job application.
      */
@@ -39,8 +39,21 @@ class JobApplication {
     private LocalDate applicationDate;
     // The interviews conducted for this application
     private ArrayList<Interview> interviews = new ArrayList<>();
+    // The filename under which this will be saved in the FileSystem
+    public final String FILENAME = "JobApplications";
 
     // === Constructors ===
+
+    /**
+     * Constructor from memory
+     *
+     * @param id The id of this object which it is saved under
+     */
+    public JobApplication(String id){
+        this.ID = Integer.parseInt(id);
+        JobApplication.totalNumOfApplications = Integer.max(this.ID, JobApplication.totalNumOfApplications);
+        loadSelf();
+    }
 
     /**
      * Create a new job application.
@@ -258,5 +271,66 @@ class JobApplication {
         this.advanceStatus();
     }
 
+    /**
+     * Getter for the ID
+     *
+     * @return the string of the id
+     */
+    public String getId(){
+        return Integer.toString(this.ID);
+    }
 
+    /**
+     * Saves the Object
+     */
+    public void saveSelf(){
+        FileSystem.mapPut(FILENAME, getId(), this);
+        HashMap<String, Object> data = new HashMap<>();
+        data.put("CV", this.getCV());
+        data.put("CoverLetter", this.getCoverLetter());
+        data.put("Status", this.getStatus());
+        data.put("ApplicationDate", this.getApplicationDate());
+        data.put("Applicant", new ArrayList(){{ add(getApplicant().FILENAME); add(getApplicant().getId()); }});
+        data.put("JobPosting", new ArrayList(){{ add(getJobPosting().FILENAME); add(getJobPosting().getId()); }});
+        ArrayList interviews = new ArrayList();
+        for(Interview x : this.interviews){
+            interviews.add(new ArrayList(){{add(x.FILENAME); add(x.getId());}});
+        }
+        data.put("interviews", interviews);
+        FileSystem.write(FILENAME, getId(), data);
+    }
+
+    /**
+     * loads the Object
+     */
+    public void loadSelf(){
+        FileSystem.mapPut(FILENAME, getId(), this);
+        HashMap data = FileSystem.read(FILENAME, getId());
+        this.setCV((String)data.get("CV"));
+        this.setCoverLetter((String)data.get("CoverLetter"));
+        this.setStatus((int)data.get("Status"));
+        this.applicationDate = (LocalDate.parse((String)data.get("dateCreated")));
+        if(FileSystem.isLoaded((String)((ArrayList)data.get("Applicant")).get(0), (String)((ArrayList)data.get("Applicant")).get(1))){
+            setApplicant((Applicant) FileSystem.mapGet((String)((ArrayList)data.get("Applicant")).get(0), (String)((ArrayList)data.get("Applicant")).get(1)));
+        }
+        else{
+            setApplicant(new Applicant((String)((ArrayList)data.get("Applicant")).get(1)));
+        }
+        if(FileSystem.isLoaded((String)((ArrayList)data.get("JobPosting")).get(0), (String)((ArrayList)data.get("JobPosting")).get(1))){
+            setApplicant((Applicant) FileSystem.mapGet((String)((ArrayList)data.get("JobPosting")).get(0), (String)((ArrayList)data.get("JobPosting")).get(1)));
+        }
+        else{
+            setApplicant(new Applicant((String)((ArrayList)data.get("JobPosting")).get(1)));
+        }
+        ArrayList temp = new ArrayList();
+        for(ArrayList x : (ArrayList<ArrayList>)data.get("interviews")){
+            if(FileSystem.isLoaded((String)(x.get(0)), (String)(x.get(1)))){
+                temp.add((Applicant) FileSystem.mapGet((String)(x.get(0)), (String)(x.get(1))));
+            }
+            else{
+                temp.add(new Applicant((String)(x.get(1))));
+            }
+        }
+        this.interviews = temp;
+    }
 }
