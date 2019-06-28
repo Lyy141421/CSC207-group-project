@@ -322,13 +322,13 @@ class JobApplication implements Storable{
         else{
             setApplicant(new Applicant((String)((ArrayList)data.get("JobPosting")).get(1)));
         }
-        ArrayList temp = new ArrayList();
+        ArrayList<Interview> temp = new ArrayList();
         for(ArrayList x : (ArrayList<ArrayList>)data.get("interviews")){
             if(FileSystem.isLoaded((String)(x.get(0)), (String)(x.get(1)))){
-                temp.add((Applicant) FileSystem.mapGet((String)(x.get(0)), (String)(x.get(1))));
+                temp.add((Interview) FileSystem.mapGet((String)(x.get(0)), (String)(x.get(1))));
             }
             else{
-                temp.add(new Applicant((String)(x.get(1))));
+                temp.add(new Interview((String)(x.get(1))));
             }
         }
         this.interviews = temp;
