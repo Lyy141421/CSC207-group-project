@@ -48,7 +48,7 @@ class NewUserPanel extends JPanel {
         JLabel typeSelector = new JLabel("What type of account is being created?", SwingConstants.CENTER);
         typeSelector.setBounds(252, 105, 250, 30);
         selectorPanel.add(typeSelector);
-        
+
         String[] userTypes = {"Applicant", "Interviewer", "HR Coordinator"};
         JComboBox selectorBox = new JComboBox(userTypes);
         selectorBox.setBounds(502, 105, 100, 30);
