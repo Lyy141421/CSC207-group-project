@@ -232,7 +232,7 @@ class Applicant extends User {
         ArrayList temp = new ArrayList();
         for(ArrayList x : (ArrayList<ArrayList>)data.get("jobApplicationManager")){
             if(FileSystem.isLoaded((String)((ArrayList)x).get(0), (String)((ArrayList)x).get(1))){
-                temp.add((Interview) FileSystem.mapGet((String)((ArrayList)x).get(0), (String)((ArrayList)x).get(1)));
+                temp.add((JobApplication) FileSystem.mapGet((String)((ArrayList)x).get(0), (String)((ArrayList)x).get(1)));
             }
             else{
                 temp.add(new JobApplication((String)((ArrayList)x).get(1)));
