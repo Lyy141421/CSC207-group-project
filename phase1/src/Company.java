@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.util.HashMap;
 
-class Company {
+class Company implements Storable{
 
     // === Instance variables ===
     // The name of this company (unique identifier)
@@ -12,8 +12,8 @@ class Company {
     private HashMap<String, ArrayList<Interviewer>> fieldToInterviewers = new HashMap<>();
     // The job posting manager for this company
     private JobPostingManager jobPostingManager = new JobPostingManager(this);
-    //
-
+    // The filename under which this will be saved in the FileSystem
+    public final String FILENAME = "Applicants";
 
     // === Constructors ===
 
@@ -24,7 +24,7 @@ class Company {
      */
     Company(String name) {
         this.name = name;
-    }
+    } //todo make storable
 
     /**
      * Create a company -- from fileLoader.
@@ -146,5 +146,84 @@ class Company {
         return apps;
     }
 
+    /**
+     * Getter for the ID
+     *
+     * @return the string of the id
+     */
+    public String getId(){
+        return this.getName();
+    }
 
+    /**
+     * Saves the Object
+     */
+    public void saveSelf(){
+        FileSystem.mapPut(FILENAME, getId(), this);
+        HashMap<String, Object> data = new HashMap<>();
+        //A - Hrcords, H<String, A<Interviewrs>>, JobPotMan
+        ArrayList<ArrayList> hrcords = new ArrayList<>();
+        for(HRCoordinator x : this.hrCoordinators){
+            hrcords.add(new ArrayList(){{add(x.FILENAME); add(x.getId());}});
+        }
+        data.put("hrCoordinators", hrcords);
+        HashMap t = new HashMap();
+        for(String x : this.fieldToInterviewers.keySet()){
+            ArrayList<ArrayList<ArrayList>> field = new ArrayList<>();
+            ArrayList<ArrayList> Interviewrs = new ArrayList<>();
+            for(Interviewer y : this.fieldToInterviewers.get(x)){
+                Interviewrs.add(new ArrayList(){{add(y.FILENAME); add(y.getId());}});
+                field.add(Interviewrs);
+            }
+            t.put(x, field);
+        }
+        data.put("fields", t);
+        ArrayList<ArrayList> jobpostings = new ArrayList();
+        for(JobPosting x : this.jobPostingManager.getJobPostings()){
+            jobpostings.add(new ArrayList(){{add(x.FILENAME); add(x.getId());}});
+        }
+        data.put("jobpostings", jobpostings);
+        FileSystem.write(FILENAME, getId(), data);
+    }
+
+    /**
+     * loads the Object
+     */
+    public void loadSelf(){
+        FileSystem.mapPut(FILENAME, getId(), this);
+        HashMap data = FileSystem.read(FILENAME, getId());
+        ArrayList<HRCoordinator> hrcords = new ArrayList();
+        for(Object x : (ArrayList)data.get("hrCoordinators")){
+            if(FileSystem.isLoaded((String)((ArrayList)x).get(0), (String)((ArrayList)x).get(1))){
+                hrcords.add((HRCoordinator) FileSystem.mapGet((String)((ArrayList)x).get(0), (String)((ArrayList)x).get(1)));
+            }
+            else{
+                hrcords.add(new HRCoordinator((String)((ArrayList)x).get(1)));
+            }
+        }
+        this.hrCoordinators = hrcords;
+        HashMap field = new HashMap();
+        for(Object x : ((HashMap)data.get("fields")).keySet()){
+            ArrayList<Interviewer> interviewers = new ArrayList();
+            for(Object y : (ArrayList)((HashMap)data.get("fields")).get(x)){
+                if(FileSystem.isLoaded((String)((ArrayList)y).get(0), (String)((ArrayList)y).get(1))){
+                    interviewers.add((Interviewer) FileSystem.mapGet((String)((ArrayList)y).get(0), (String)((ArrayList)y).get(1)));
+                }
+                else{
+                    interviewers.add(new Interviewer((String)((ArrayList)y).get(1)));
+                }
+            }
+            field.put(x, interviewers);
+        }
+        this.fieldToInterviewers = field;
+        ArrayList<JobPosting> jobpostings = new ArrayList<>();
+        for(Object x : (ArrayList)data.get("jobpostings")){
+            if(FileSystem.isLoaded((String)((ArrayList)x).get(0), (String)((ArrayList)x).get(1))){
+                jobpostings.add((JobPosting) FileSystem.mapGet((String)((ArrayList)x).get(0), (String)((ArrayList)x).get(1)));
+            }
+            else{
+                jobpostings.add(new JobPosting((String)((ArrayList)x).get(1)));
+            }
+        }
+    }
 }
