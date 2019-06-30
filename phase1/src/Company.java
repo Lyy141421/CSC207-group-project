@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 
 class Company implements Storable{
@@ -122,12 +123,33 @@ class Company implements Storable{
     }
 
     /**
-     * Report whether this company is the same as other.
-     * @param other     The company to be compared with.
-     * @return true iff this company is the same as other.
+     * Report whether this company is the same as obj.
+     *
+     * @param obj     The object to be compared with.
+     * @return true iff obj is a company and has the same name as this company.
      */
-    boolean equals(Company other) {
-        return this.name.equals(other.getName());
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Company)) {
+            return false;
+        }
+        else {
+            return this.name.equals(((Company) obj).name);
+        }
+    }
+
+    /**
+     * Return a hashcode for this company.
+     * @return an int; the same int should be returned for all companies equal to this company.
+     */
+    @Override
+    public int hashCode() {
+        int sum = 0;
+        for (int i = 0; i < name.length(); i++) {
+            sum += name.charAt(i);
+        }
+        return sum;
     }
 
     /**
