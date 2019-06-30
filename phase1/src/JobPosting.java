@@ -1,8 +1,7 @@
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashMap;
 
-class JobPosting implements Storable{
+class JobPosting {
 
     // === Instance variables ===
     private static int postingsCreated; // Total number of postings created
@@ -18,23 +17,8 @@ class JobPosting implements Storable{
     private boolean filled; // Whether the job posting is filled
     private ArrayList<JobApplication> jobApplications; // The list of job applications for this job posting
     private InterviewManager interviewManager; // Interview manager for this job posting
-    // The filename under which this will be saved in the FileSystem
-    public final String FILENAME = "JobPostings";
-
 
     // === Constructors ===
-
-    /**
-     * Constructor from memory
-     *
-     * @param id The id of this object which it is saved under
-     */
-    public JobPosting(String id){
-        this.id = Integer.parseInt(id);
-        JobPosting.postingsCreated = Integer.max(this.id, JobPosting.postingsCreated);
-        loadSelf();
-    }
-
     JobPosting() {
     }
 
@@ -54,7 +38,7 @@ class JobPosting implements Storable{
     }
 
     // === Getters ===
-    int getID() {
+    int getId() {
         return this.id;
     }
 
@@ -159,7 +143,7 @@ class JobPosting implements Storable{
     void advanceInterviewRound(LocalDate today) {
         InterviewManager interviewManager = this.getInterviewManager();
         if (interviewManager.getCurrentRound() < Interview.getMaxNumRounds()) {
-            if (interviewManager.currentRoundOver(today)) {
+            if (interviewManager.isCurrentRoundOver(today)) {
                 interviewManager.advanceRound();
             }
         }
@@ -211,100 +195,12 @@ class JobPosting implements Storable{
             return false;
         }
         else {
-            return this.id == ((JobPosting) obj).getID();
+            return this.id == ((JobPosting) obj).getId();
         }
     }
 
     @Override
     public int hashCode() {
         return this.id;
-    }
-
-    /**
-     * Getter for the ID
-     *
-     * @return the string of the id
-     */
-    public String getId(){
-        return Integer.toString(this.id);
-    }
-
-    /**
-     * Saves the Object
-     */
-    public void saveSelf(){
-        FileSystem.mapPut(FILENAME, getId(), this);
-        HashMap<String, Object> data = new HashMap<>();
-        data.put("title", this.getTitle());
-        data.put("field", this.getField());
-        data.put("description", this.description);
-        data.put("requirements", this.requirements);
-        data.put("numPositions", this.getNumPositions());
-        data.put("postDate", this.postDate);
-        data.put("closeDate", this.closeDate);
-        data.put("filled", this.filled);
-        ArrayList jobapplications = new ArrayList();
-        for(JobApplication x : this.jobApplications){
-            jobapplications.add(new ArrayList(){{add(x.FILENAME); add(x.getId());}});
-        }
-        data.put("jobapplications", jobapplications);
-        ArrayList applicationsInConsideration = new ArrayList();
-        for(JobApplication x : this.interviewManager.getApplicationsInConsideration()){
-            applicationsInConsideration.add(new ArrayList(){{add(x.FILENAME); add(x.getId());}});
-        }
-        data.put("applicationsInConsideration", applicationsInConsideration);
-        ArrayList applicationsRejected = new ArrayList();
-        for(JobApplication x : this.interviewManager.getApplicationsRejected()){
-            applicationsRejected.add(new ArrayList(){{add(x.FILENAME); add(x.getId());}});
-        }
-        data.put("applicationsRejected", applicationsRejected);
-        data.put("currentRound", this.interviewManager.getCurrentRound());
-        // todo HRTask???
-        FileSystem.write(FILENAME, getId(), data);
-    }
-
-    /**
-     * loads the Object
-     */
-    public void loadSelf(){
-        FileSystem.mapPut(FILENAME, getId(), this);
-        HashMap data = FileSystem.read(FILENAME, getId());
-        this.title = (String)data.get("title");
-        this.field = (String)data.get("field");
-        this.description = (String)data.get("description");
-        this.requirements = (String)data.get("requirements");
-        this.numPositions = (int)data.get("numPositions");
-        this.postDate = LocalDate.parse((String)data.get("postDate"));
-        this.closeDate = LocalDate.parse((String)data.get("closeDate"));
-        this.filled = (boolean)data.get("filled");
-        ArrayList<JobApplication> jobApplications = new ArrayList<>();
-        for(ArrayList x : (ArrayList<ArrayList>)data.get("jobapplications")){
-            if(FileSystem.isLoaded((String)(x.get(0)), (String)(x.get(1)))){
-                jobApplications.add((JobApplication) FileSystem.mapGet((String)(x.get(0)), (String)(x.get(1))));
-            }
-            else{
-                jobApplications.add(new JobApplication((String)(x.get(1))));
-            }
-        }
-        this.jobApplications = jobApplications;
-        ArrayList<JobApplication> applicationsInConsideration = new ArrayList<>();
-        for(ArrayList x : (ArrayList<ArrayList>)data.get("applicationsInConsideration")){
-            if(FileSystem.isLoaded((String)(x.get(0)), (String)(x.get(1)))){
-                applicationsInConsideration.add((JobApplication) FileSystem.mapGet((String)(x.get(0)), (String)(x.get(1))));
-            }
-            else{
-                applicationsInConsideration.add(new JobApplication((String)(x.get(1))));
-            }
-        }
-        ArrayList<JobApplication> applicationsRejected = new ArrayList<>();
-        for(ArrayList x : (ArrayList<ArrayList>)data.get("applicationsRejected")){
-            if(FileSystem.isLoaded((String)(x.get(0)), (String)(x.get(1)))){
-                applicationsRejected.add((JobApplication) FileSystem.mapGet((String)(x.get(0)), (String)(x.get(1))));
-            }
-            else{
-                applicationsRejected.add(new JobApplication((String)(x.get(1))));
-            }
-        }
-        this.interviewManager = new InterviewManager(this, applicationsInConsideration, applicationsRejected, (int)data.get("currentRound"));
     }
 }
