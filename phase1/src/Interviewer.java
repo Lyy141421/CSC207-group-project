@@ -15,7 +15,7 @@ class Interviewer extends User {
     // The interviewer's schedule as a map of the date to a list of time slots that are filled.
     private HashMap<LocalDate, ArrayList<Integer>> schedule = new HashMap<>();
     // The filename under which this will be saved in the FileSystem
-    public final String FILENAME = "HRCoordinators";
+    public final String FILENAME = "Interviewers";
 
     // === Representation invariants ===
     // interviews is sorted in terms of date.
