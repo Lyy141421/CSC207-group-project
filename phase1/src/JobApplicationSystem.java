@@ -80,7 +80,7 @@ public class JobApplicationSystem {
     static ArrayList<JobPosting> getAllJobPostings() {
         ArrayList<JobPosting> jobPostings = new ArrayList<>();
         for (Company company : JobApplicationSystem.companies) {
-            jobPostings.addAll(company.getAllJobPostings());
+            jobPostings.addAll(company.getJobPostingManager().getJobPostings());
         }
         return jobPostings;
     }
@@ -93,7 +93,7 @@ public class JobApplicationSystem {
     static ArrayList<JobPosting> getAllOpenJobPostings(LocalDate today) {
         ArrayList<JobPosting> jobPostings = new ArrayList<>();
         for (Company company : JobApplicationSystem.companies) {
-            jobPostings.addAll(company.getAllOpenJobPostings(today));
+            jobPostings.addAll(company.getJobPostingManager().getOpenJobPostings(today));
         }
         return jobPostings;
     }
