@@ -7,11 +7,13 @@ public class HRPanel extends JPanel {
     // Create interface for HR
     HRPanel () {
         setLayout(new CardLayout());
-        add(HRHome());
-        add(HRBrowsePosting());
+        add(home());
+        add(browsePosting());
+        add(viewApplication());
+        add(searchApplicant());
     }
 
-    private JPanel HRHome () {
+    private JPanel home () {
         JPanel HomePanel = new JPanel();
         HomePanel.setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
@@ -56,7 +58,7 @@ public class HRPanel extends JPanel {
     }
 
     // Need to pass in list of job postings (all for browse all or particular for to-do)
-    private JPanel HRBrowsePosting () {
+    private JPanel browsePosting () {
         JPanel postingPanel = new JPanel();
         postingPanel.setLayout(new BoxLayout(postingPanel, BoxLayout.PAGE_AXIS));
         JPanel buttons = new JPanel();
@@ -83,5 +85,17 @@ public class HRPanel extends JPanel {
         postingPanel.add(buttons);
 
         return postingPanel;
+    }
+
+    private JPanel viewApplication () {
+        JPanel applicationPanel = new JPanel();
+
+        return applicationPanel;
+    }
+
+    private JPanel searchApplicant () {
+        JPanel applicantPanel = new JPanel();
+
+        return applicantPanel;
     }
 }
