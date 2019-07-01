@@ -34,6 +34,15 @@ class JobPostingManager {
 
     // === Getters ===
 
+    JobPosting getJobPosting(String id) {
+        for (JobPosting posting : jobPostings) {
+            if (posting.getId().equals(id)) {
+                return posting;
+            }
+        }
+        return null;
+    }
+
     /**
      * Get the job postings for positions in this company.
      *

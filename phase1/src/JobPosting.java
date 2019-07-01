@@ -54,10 +54,6 @@ class JobPosting implements Storable{
 
     // === Getters ===
 
-    int getID() {
-        return this.id;
-    }
-
     String getTitle() {
         return this.title;
     }
