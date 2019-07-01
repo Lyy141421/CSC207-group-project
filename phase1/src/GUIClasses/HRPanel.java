@@ -16,6 +16,7 @@ public class HRPanel extends JPanel implements ActionListener {
         this.add(browsePosting(), "POSTING");
         this.add(viewApplication(), "APPLICATION");
         this.add(searchApplicant(), "APPLICANT");
+        this.add(addPosting(), "ADDPOSTING");
     }
 
     private JPanel home () {
@@ -23,6 +24,7 @@ public class HRPanel extends JPanel implements ActionListener {
         GridBagConstraints c = new GridBagConstraints();
 
         JButton toDo = new JButton("To-Do");
+        toDo.addActionListener(this);
 
         c.gridx = 0;
         c.gridy = 0;
@@ -34,8 +36,11 @@ public class HRPanel extends JPanel implements ActionListener {
         manual.setBorder(new EtchedBorder(EtchedBorder.LOWERED));
 
         JButton browsePosting = new JButton("Browse all job postings");
+        browsePosting.addActionListener(this);
         JButton searchApplicant = new JButton("Search applicant");
+        searchApplicant.addActionListener(this);
         JButton addPosting = new JButton("Add job posting");
+        addPosting.addActionListener(this);
 
         browsePosting.setAlignmentX(Component.CENTER_ALIGNMENT);
         searchApplicant.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -69,15 +74,15 @@ public class HRPanel extends JPanel implements ActionListener {
         JComboBox<String> jobPostings = new JComboBox<>();
         JLabel status = new JLabel("Job posting status here. Changes according to JobPosting selected in JList.");
         status.setBorder(new EtchedBorder(EtchedBorder.LOWERED));
-        JButton scheduleInterview = new JButton("Schedule");
-        JButton hiring = new JButton("Hiring decision");
+        JButton viewApplications = new JButton("View applications");
+        viewApplications.addActionListener(this);
         JButton home = new JButton("Home");
+        home.addActionListener(this);
 
         jobPostings.setAlignmentX(Component.CENTER_ALIGNMENT);
         status.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        buttons.add(scheduleInterview);
-        buttons.add(hiring);
+        buttons.add(viewApplications);
         buttons.add(home);
 
         postingPanel.add(jobPostings, BorderLayout.NORTH);
@@ -92,11 +97,15 @@ public class HRPanel extends JPanel implements ActionListener {
         JPanel buttons = new JPanel(new FlowLayout());
 
         JComboBox<String> app = new JComboBox<>();
-        JList<String> viewable = new JList<>();
+        JList<String> viewable = new JList<>(new String[]{"abc", "xa"});
         JLabel info = new JLabel();
         JButton scheduleInterview = new JButton("Schedule");
         JButton hiring = new JButton("Hiring decision");
         JButton home = new JButton("Home");
+        home.addActionListener(this);
+
+        viewable.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+        viewable.setLayoutOrientation(JList.VERTICAL);
 
         buttons.add(scheduleInterview);
         buttons.add(hiring);
@@ -113,7 +122,27 @@ public class HRPanel extends JPanel implements ActionListener {
     private JPanel searchApplicant () {
         JPanel applicantPanel = new JPanel();
 
+        JLabel temporaryLabel = new JLabel("This is the addPosting Panel");
+        JButton home = new JButton("Home");
+        home.addActionListener(this);
+
+        applicantPanel.add(temporaryLabel);
+        applicantPanel.add(home);
+
         return applicantPanel;
+    }
+
+    private JPanel addPosting () {
+        JPanel addPostingPanel = new JPanel();
+
+        JLabel temporaryLabel = new JLabel("This is the addPosting Panel");
+        JButton home = new JButton("Home");
+        home.addActionListener(this);
+
+        addPostingPanel.add(temporaryLabel);
+        addPostingPanel.add(home);
+
+        return addPostingPanel;
     }
 
     @Override
@@ -121,6 +150,16 @@ public class HRPanel extends JPanel implements ActionListener {
         CardLayout c = (CardLayout) this.getLayout();
         JButton button = (JButton) e.getSource();
 
-        //c.show(this, "HOME");
+        if (button.getText().equals("Home")) {
+            c.show(this, "HOME");
+        } else if (button.getText().equals("Browse all job postings") || button.getText().equals("To-Do")) {
+            c.show(this, "POSTING");
+        } else if (button.getText().equals("Search applicant")) {
+            c.show(this, "APPLICANT");
+        } else if (button.getText().equals("Add job posting")) {
+            c.show(this, "ADDPOSTING");
+        } else if (button.getText().equals("View applications")) {
+            c.show(this, "APPLICATION");
+        }
     }
 }
