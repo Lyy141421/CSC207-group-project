@@ -54,6 +54,10 @@ class JobPosting implements Storable{
 
     // === Getters ===
 
+    int getID() {
+        return this.id;
+    }
+
     String getTitle() {
         return this.title;
     }
@@ -62,12 +66,25 @@ class JobPosting implements Storable{
         return this.field;
     }
 
+    String getDescription() {
+        return this.description;
+    }
+
+    String getRequirements() {
+        return this.requirements;
+    }
+
+
     int getNumPositions() {
         return this.numPositions;
     }
 
     Company getCompany() {
         return this.company;
+    }
+
+    LocalDate getPostDate() {
+        return this.postDate;
     }
 
     LocalDate getCloseDate() {

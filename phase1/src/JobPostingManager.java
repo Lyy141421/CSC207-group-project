@@ -92,7 +92,7 @@ class JobPostingManager {
     ArrayList<JobPosting> searchJobPostingByTitle(String jobTitle) {
         ArrayList<JobPosting> jobPostings = new ArrayList<>();
         for (JobPosting jobPosting : this.getJobPostings()) {
-            if (jobPosting.getTitle().equals(jobTitle)) {
+            if (jobPosting.getTitle().equalsIgnoreCase(jobTitle)) {
                 jobPostings.add(jobPosting);
             }
         }
