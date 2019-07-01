@@ -150,16 +150,25 @@ public class HRPanel extends JPanel implements ActionListener {
         CardLayout c = (CardLayout) this.getLayout();
         JButton button = (JButton) e.getSource();
 
-        if (button.getText().equals("Home")) {
-            c.show(this, "HOME");
-        } else if (button.getText().equals("Browse all job postings") || button.getText().equals("To-Do")) {
-            c.show(this, "POSTING");
-        } else if (button.getText().equals("Search applicant")) {
-            c.show(this, "APPLICANT");
-        } else if (button.getText().equals("Add job posting")) {
-            c.show(this, "ADDPOSTING");
-        } else if (button.getText().equals("View applications")) {
-            c.show(this, "APPLICATION");
+        switch (button.getText()) {
+            case "Home":
+                c.show(this, "HOME");
+                break;
+            case "Browse all job postings":
+            case "To-Do":
+                c.show(this, "POSTING");
+                break;
+            case "Search applicant":
+                c.show(this, "APPLICANT");
+                break;
+            case "Add job posting":
+                c.show(this, "ADDPOSTING");
+                break;
+            case "View applications":
+                c.show(this, "APPLICATION");
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + button.getText());
         }
     }
 }
