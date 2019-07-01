@@ -1,21 +1,25 @@
 package GUIClasses;
 
 import javax.swing.*;
+import javax.swing.border.EtchedBorder;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-public class HRPanel extends JPanel {
+
+public class HRPanel extends JPanel implements ActionListener {
+
     // Create interface for HR
     HRPanel () {
-        setLayout(new CardLayout());
-        add(home());
-        add(browsePosting());
-        add(viewApplication());
-        add(searchApplicant());
+        this.setLayout(new CardLayout());
+        this.add(home(), "HOME");
+        this.add(browsePosting(), "POSTING");
+        this.add(viewApplication(), "APPLICATION");
+        this.add(searchApplicant(), "APPLICANT");
     }
 
     private JPanel home () {
-        JPanel HomePanel = new JPanel();
-        HomePanel.setLayout(new GridBagLayout());
+        JPanel HomePanel = new JPanel(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
 
         JButton toDo = new JButton("To-Do");
@@ -27,7 +31,7 @@ public class HRPanel extends JPanel {
 
         JPanel manual = new JPanel();
         manual.setLayout(new BoxLayout(manual, BoxLayout.Y_AXIS));
-        manual.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1, true));
+        manual.setBorder(new EtchedBorder(EtchedBorder.LOWERED));
 
         JButton browsePosting = new JButton("Browse all job postings");
         JButton searchApplicant = new JButton("Search applicant");
@@ -59,36 +63,35 @@ public class HRPanel extends JPanel {
 
     // Need to pass in list of job postings (all for browse all or particular for to-do)
     private JPanel browsePosting () {
-        JPanel postingPanel = new JPanel();
-        postingPanel.setLayout(new BoxLayout(postingPanel, BoxLayout.PAGE_AXIS));
-        JPanel buttons = new JPanel();
-        buttons.setLayout(new FlowLayout());
+        JPanel postingPanel = new JPanel(new BorderLayout());
+        JPanel buttons = new JPanel(new FlowLayout());
 
-        JList<String> jobPostings = new JList();
+        JComboBox<String> jobPostings = new JComboBox<>();
         JLabel status = new JLabel("Job posting status here. Changes according to JobPosting selected in JList.");
+        status.setBorder(new EtchedBorder(EtchedBorder.LOWERED));
         JButton scheduleInterview = new JButton("Schedule");
         JButton hiring = new JButton("Hiring decision");
         JButton home = new JButton("Home");
 
         jobPostings.setAlignmentX(Component.CENTER_ALIGNMENT);
         status.setAlignmentX(Component.CENTER_ALIGNMENT);
-        scheduleInterview.setAlignmentX(Component.CENTER_ALIGNMENT);
-        hiring.setAlignmentX(Component.CENTER_ALIGNMENT);
-        home.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         buttons.add(scheduleInterview);
         buttons.add(hiring);
         buttons.add(home);
 
-        postingPanel.add(jobPostings);
-        postingPanel.add(status);
-        postingPanel.add(buttons);
+        postingPanel.add(jobPostings, BorderLayout.NORTH);
+        postingPanel.add(status, BorderLayout.CENTER);
+        postingPanel.add(buttons, BorderLayout.SOUTH);
 
         return postingPanel;
     }
 
     private JPanel viewApplication () {
-        JPanel applicationPanel = new JPanel();
+        JPanel applicationPanel = new JPanel(new BorderLayout());
+
+        JComboBox<String> app = new JComboBox<>();
+        JList<String> viewable = new JList<>();
 
         return applicationPanel;
     }
@@ -97,5 +100,13 @@ public class HRPanel extends JPanel {
         JPanel applicantPanel = new JPanel();
 
         return applicantPanel;
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        CardLayout c = (CardLayout) this.getLayout();
+        JButton button = (JButton) e.getSource();
+
+        //c.show(this, "HOME");
     }
 }
