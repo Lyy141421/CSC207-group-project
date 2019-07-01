@@ -89,9 +89,23 @@ public class HRPanel extends JPanel implements ActionListener {
 
     private JPanel viewApplication () {
         JPanel applicationPanel = new JPanel(new BorderLayout());
+        JPanel buttons = new JPanel(new FlowLayout());
 
         JComboBox<String> app = new JComboBox<>();
         JList<String> viewable = new JList<>();
+        JLabel info = new JLabel();
+        JButton scheduleInterview = new JButton("Schedule");
+        JButton hiring = new JButton("Hiring decision");
+        JButton home = new JButton("Home");
+
+        buttons.add(scheduleInterview);
+        buttons.add(hiring);
+        buttons.add(home);
+
+        applicationPanel.add(app, BorderLayout.NORTH);
+        applicationPanel.add(viewable, BorderLayout.WEST);
+        applicationPanel.add(info, BorderLayout.CENTER);
+        applicationPanel.add(buttons, BorderLayout.SOUTH);
 
         return applicationPanel;
     }
