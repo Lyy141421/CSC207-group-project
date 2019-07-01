@@ -37,6 +37,10 @@ public class JobApplicationSystem {
         return JobApplicationSystem.userManager;
     }
 
+    static ArrayList<Company> getCompanies() {
+        return companies;
+    }
+
     // === Setters ===
 
     /**
@@ -71,31 +75,6 @@ public class JobApplicationSystem {
         };
         Timer timer = new Timer();
         timer.scheduleAtFixedRate(daily_tasks, 0, CYCLE_PERIOD);
-    }
-
-    /**
-     * Get all the job postings in this system.
-     * @return all the job postings in this system.
-     */
-    static ArrayList<JobPosting> getAllJobPostings() {
-        ArrayList<JobPosting> jobPostings = new ArrayList<>();
-        for (Company company : JobApplicationSystem.companies) {
-            jobPostings.addAll(company.getJobPostingManager().getJobPostings());
-        }
-        return jobPostings;
-    }
-
-    /**
-     * Get all the open job postings in this system.
-     *
-     * @return all the job postings in this system.
-     */
-    static ArrayList<JobPosting> getAllOpenJobPostings(LocalDate today) {
-        ArrayList<JobPosting> jobPostings = new ArrayList<>();
-        for (Company company : JobApplicationSystem.companies) {
-            jobPostings.addAll(company.getJobPostingManager().getOpenJobPostings(today));
-        }
-        return jobPostings;
     }
 
     /**

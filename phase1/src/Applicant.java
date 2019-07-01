@@ -104,14 +104,13 @@ class Applicant extends User {
      * @param jobPosting The job posting that this applicant wants to apply for.
      * @param CV        The applicant's CV.
      * @param coverLetter   The applicant's cover letter.
-     * @param applicationDate   The date this application was submitted.
      * @return true iff this application is successfully submitted (ie before closing date and has not already applied)
      */
     // TODO Store files submitted
-    boolean applyForJob(JobPosting jobPosting, File CV, File coverLetter, LocalDate applicationDate) {
+    boolean applyForJob(JobPosting jobPosting, File CV, File coverLetter) {
         if (LocalDate.now().isBefore(jobPosting.getCloseDate()) && !this.hasAppliedTo(jobPosting)) {
             this.jobApplicationManager.addJobApplication(this, jobPosting, CV.getName(), coverLetter.getName(),
-                    applicationDate);
+                    LocalDate.now());
             this.addFile(CV.getName());
             this.addFile(coverLetter.getName());
         }
@@ -153,11 +152,12 @@ class Applicant extends User {
      * @param today Today's date.
      * @return a list of open job postings not yet applied to.
      */
-    ArrayList<JobPosting> getJobPostingsNotClosedNotAppliedTo(LocalDate today) {
+    ArrayList<JobPosting> getOpenJobPostingsNotAppliedTo(LocalDate today) {
         ArrayList<JobPosting> jobPostingsNotAppliedTo = new ArrayList<>();
-        for (JobPosting jobPosting : JobApplicationSystem.getAllOpenJobPostings(today)) {
-            if (!this.hasAppliedTo(jobPosting)) {
-                jobPostingsNotAppliedTo.add(jobPosting);
+        for (Company company : JobApplicationSystem.getCompanies()) {
+            for (JobPosting posting : company.getJobPostingManager().getJobPostings())
+            if (today.isBefore(posting.getCloseDate()) && !this.hasAppliedTo(posting)) {
+                jobPostingsNotAppliedTo.add(posting);
             }
         }
         return jobPostingsNotAppliedTo;
