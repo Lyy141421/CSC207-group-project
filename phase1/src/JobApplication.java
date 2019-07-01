@@ -333,8 +333,4 @@ class JobApplication implements Storable{
         }
         this.interviews = temp;
     }
-
-    void aaaaaa () {
-        System.out.println("test");
-    }
 }
