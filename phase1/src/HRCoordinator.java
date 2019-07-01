@@ -11,7 +11,7 @@ class HRCoordinator extends User {
     // The company that this HR Coordinator works for
     private Company company;
     // The filename under which this will be saved in the FileSystem
-    public final String FILENAME = "HRCoordinators";
+    final String FILENAME = "HRCoordinators";
 
     // === Constructors ===
 
@@ -20,7 +20,7 @@ class HRCoordinator extends User {
      *
      * @param id The id of this object which it is saved under
      */
-    public HRCoordinator(String id){
+    HRCoordinator(String id){
         this.setUsername(id);
         loadSelf();
     }

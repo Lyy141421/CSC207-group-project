@@ -23,7 +23,7 @@ class Applicant extends User {
      *
      * @param id The id of this object which it is saved under
      */
-    public Applicant(String id){
+    Applicant(String id){
         this.setUsername(id);
         loadSelf();
     }
@@ -205,9 +205,9 @@ class Applicant extends User {
         data.put("legalName", this.getLegalName());
         data.put("email", this.getEmail());
         data.put("dateCreated", this.getDateCreated());
-        ArrayList jobapps = new ArrayList();
+        ArrayList<ArrayList> jobapps = new ArrayList<>();
         for(JobApplication x : this.jobApplicationManager.getJobApplications()){
-            ArrayList temp = new ArrayList();
+            ArrayList<String> temp = new ArrayList<>();
             temp.add(x.FILENAME);
             temp.add(x.getId());
             jobapps.add(temp);
@@ -227,15 +227,15 @@ class Applicant extends User {
         this.setPassword((String)data.get("password"));
         this.setLegalName((String)data.get("legalName"));
         this.setEmail((String)data.get("email"));
-        this.filesSubmitted = ((ArrayList)data.get("filesSubmitted"));
+        this.filesSubmitted = (ArrayList<String>)(data.get("filesSubmitted"));
         this.setDateCreated(LocalDate.parse((String)data.get("dateCreated")));
-        ArrayList temp = new ArrayList();
-        for(ArrayList x : (ArrayList<ArrayList>)data.get("jobApplicationManager")){
-            if(FileSystem.isLoaded((String)((ArrayList)x).get(0), (String)((ArrayList)x).get(1))){
-                temp.add((JobApplication) FileSystem.mapGet((String)((ArrayList)x).get(0), (String)((ArrayList)x).get(1)));
+        ArrayList<JobApplication> temp = new ArrayList<>();
+        for(ArrayList x : (ArrayList<ArrayList>)(data.get("jobApplicationManager"))){
+            if(FileSystem.isLoaded((String)(x.get(0)), (String)(x.get(1)))){
+                temp.add((JobApplication) FileSystem.mapGet((String)(x.get(0)), (String)(x.get(1))));
             }
             else{
-                temp.add(new JobApplication((String)((ArrayList)x).get(1)));
+                temp.add(new JobApplication((String)(x.get(1))));
             }
         }
         this.jobApplicationManager = new JobApplicationManager(temp);
