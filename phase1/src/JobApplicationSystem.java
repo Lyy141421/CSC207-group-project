@@ -98,9 +98,10 @@ public class JobApplicationSystem {
 
     static Company getCompany(String name) {
         for (Company company : companies) {
-            if (company.getName().equals(name))
+            if (company.getName().equalsIgnoreCase(name))
                 return company;
         }
         return null;
     }
+
 }

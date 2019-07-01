@@ -136,7 +136,7 @@ class Company implements Storable{
             return false;
         }
         else {
-            return this.name.equals(((Company) obj).name);
+            return this.name.equalsIgnoreCase(((Company) obj).name);
         }
     }
 
