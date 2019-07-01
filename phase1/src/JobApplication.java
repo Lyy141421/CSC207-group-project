@@ -1,6 +1,6 @@
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.HashMap;//test change
 
 class JobApplication implements Storable{
     /**
