@@ -3,6 +3,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import org.json.simple.parser.*;
@@ -174,6 +175,28 @@ public class FileSystem {
             HashMap<String, Object> m = new HashMap<>();
             m.put(id, obj);
             load_map.put(filename, m);
+        }
+    }
+
+    /**
+     * A method to load subs of class c granted that they are loadable
+     *
+     * @param c - The class of the object to be loaded
+     * @param filename - the Filename of the Object
+     * @param id - The Id of the Object
+     * @return The object being subLoaded or null if not possible
+     */
+    static Object subLoader(Class c, String filename, String id){
+        if(FileSystem.isLoaded(filename, id)){
+            return mapGet(filename, id);
+        }
+        else{
+            try {
+                return c.getConstructor(String.class).newInstance(id);
+            } catch (NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
+                e.printStackTrace();
+                return null;
+            }
         }
     }
 }
