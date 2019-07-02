@@ -238,36 +238,71 @@ class Interviewer extends User {
     }
 
     /**
-     * loads the Object
+     *  Loads the interviewer.
      */
     public void loadSelf(){
         FileSystem.mapPut(FILENAME, getId(), this);
         HashMap data = FileSystem.read(FILENAME, getId());
-        this.setPassword((String)data.get("password"));
-        this.setLegalName((String)data.get("legalName"));
-        this.setEmail((String)data.get("email"));
-        this.setDateCreated(LocalDate.parse((String)data.get("password")));
-        this.field = (String)data.get("field");
-        if(FileSystem.isLoaded((String)((ArrayList)data.get("company")).get(1),
-                (String)((ArrayList)data.get("company")).get(1))){
-            this.company = (Company) FileSystem.mapGet((String)((ArrayList)data.get("company")).get(1),
-                    (String)((ArrayList)data.get("company")).get(1));
+        this.loadPrelimData(data);
+        this.loadCompany(data);
+        this.loadInterviews(data);
+        this.loadSchedule(data);
+    }
+
+    /**
+     * Load the preliminary data for this interviewer.
+     *
+     * @param data The data for this interviewer.
+     */
+    private void loadPrelimData(HashMap data) {
+        this.setPassword((String) data.get("password"));
+        this.setLegalName((String) data.get("legalName"));
+        this.setEmail((String) data.get("email"));
+        this.setDateCreated(LocalDate.parse((String) data.get("password")));
+        this.field = (String) data.get("field");
+    }
+
+    /**
+     * Load the company for this interviewer.
+     *
+     * @param data The data for this interviewer.
+     */
+    private void loadCompany(HashMap data) {
+        if (FileSystem.isLoaded((String) ((ArrayList) data.get("company")).get(1),
+                (String) ((ArrayList) data.get("company")).get(1))) {
+            this.company = (Company) FileSystem.mapGet((String) ((ArrayList) data.get("company")).get(1),
+                    (String) ((ArrayList) data.get("company")).get(1));
+        } else {
+            this.company = new Company((String) ((ArrayList) data.get("company")).get(1));
         }
-        else{
-            this.company = new Company((String)((ArrayList)data.get("company")).get(1));
-        }
+    }
+
+    /**
+     * Load the interviews for this interviewer.
+     *
+     * @param data The data for this interviewer.
+     */
+    private void loadInterviews(HashMap data) {
         ArrayList<Interview> interviews = new ArrayList<>();
-        for(Object x : (ArrayList)(data.get("interviews"))){
-            if(FileSystem.isLoaded((String)((ArrayList)x).get(0), (String)((ArrayList)x).get(1))){
-                interviews.add((Interview) FileSystem.mapGet((String)((ArrayList)x).get(0), (String)((ArrayList)x).get(1)));
-            }
-            else{
-                interviews.add(new Interview((String)((ArrayList)x).get(1)));
+        for (Object x : (ArrayList) (data.get("interviews"))) {
+            if (FileSystem.isLoaded((String) ((ArrayList) x).get(0), (String) ((ArrayList) x).get(1))) {
+                interviews.add((Interview) FileSystem.mapGet((String) ((ArrayList) x).get(0), (String) ((ArrayList) x).get(1)));
+            } else {
+                interviews.add(new Interview((String) ((ArrayList) x).get(1)));
             }
         }
+        this.interviews = interviews;
+    }
+
+    /**
+     * Load the schedule for this interviewer.
+     *
+     * @param data The data for this interviewer.
+     */
+    private void loadSchedule(HashMap data) {
         HashMap<LocalDate, ArrayList<Integer>> schedule = new HashMap<>();
-        for(Object x : (ArrayList)data.get("schedule")){
-            schedule.put(LocalDate.parse((String)((ArrayList)x).get(0)), (ArrayList<Integer>)((ArrayList)x).get(1));
+        for (Object x : (ArrayList) data.get("schedule")) {
+            schedule.put(LocalDate.parse((String) ((ArrayList) x).get(0)), (ArrayList<Integer>) ((ArrayList) x).get(1));
         }
         this.schedule = schedule;
     }

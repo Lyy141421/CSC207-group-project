@@ -273,7 +273,7 @@ class JobPosting implements Storable{
     }
 
     /**
-     * loads the Object
+     * Loads the job posting.
      */
     public void loadSelf(){
         FileSystem.mapPut(FILENAME, getId(), this);
@@ -287,9 +287,9 @@ class JobPosting implements Storable{
     }
 
     /**
-     * Load the preliminary data for this object
+     * Load the preliminary data for this job posting.
      *
-     * @param data The data for this object
+     * @param data The data for this job posting.
      */
     private void loadPrelimData(HashMap data) {
         this.title = (String) data.get("title");
@@ -303,9 +303,9 @@ class JobPosting implements Storable{
     }
 
     /**
-     * Load the job applications for this object.
+     * Load the job applications for this job posting.
      *
-     * @param data The data for this object.
+     * @param data The data for this job posting.
      */
     private void loadJobApps(HashMap data) {
         ArrayList<JobApplication> jobApplications = new ArrayList<>();
@@ -320,9 +320,9 @@ class JobPosting implements Storable{
     }
 
     /**
-     * Load the applications in consideration for this object.
+     * Load the applications in consideration for this job posting.
      *
-     * @param data The data for this object.
+     * @param data The data for this job posting.
      * @return a list of job applications in consideration.
      */
     private ArrayList<JobApplication> loadAppsInConsideration(HashMap data) {
@@ -338,10 +338,10 @@ class JobPosting implements Storable{
     }
 
     /**
-     * Load the applications rejected for this object.
+     * Load the applications rejected for this job posting.
      *
-     * @param data The data for this object.
-     * @return a list of job applications rejected for this object.
+     * @param data The data for this job posting.
+     * @return a list of job applications rejected for this job posting.
      */
     private ArrayList<JobApplication> loadAppsRejected(HashMap data) {
         ArrayList<JobApplication> applicationsRejected = new ArrayList<>();
