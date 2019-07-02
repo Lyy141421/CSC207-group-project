@@ -120,6 +120,39 @@ class ApplicantInterface extends UserInterface {
         */
     }
 
+    void viewApplications() {
+        /*
+        for (JobApplication application : applicant.getJobApplicationManager().getJobApplications()) {
+            - Display application.getJobPosting().getTitle()
+            - Display application.getJobPosting().getCompany().getName()
+            - Display JobApplication.getStatuses().get(application.getStatus())
+            - Give option to withdraw application
+            If applicant chooses to withdraw application:
+                boolean appWithdrawn = applicant.withdrawApplication(application.getJobPosting());
+                if (appWithdrawn) {
+                    - Tell user that their application has successfully been withdrawn
+                }
+                else {
+                    - Tell user that since the job posting has been filled, they can no longer withdraw their
+                    application
+                }
+        }
+        */
+    }
+
+    void viewAccountHistory() {
+        /*
+        - Display applicant.getDateCreated()
+        - Display each application in applicant.getJobApplicationManager().getPreviousJobApplications()
+        - Display each application in applicant.getJobApplicationManager().getCurrentJobApplications()
+        - Display applicant.getJobApplicationManager().getNumDaysSinceMostRecentCloseDate(LocalDate.now())
+        * */
+    }
+
+    void viewDocuments() {
+        // TODO: finish once clarification is obtained
+    }
+
 
 
 }
