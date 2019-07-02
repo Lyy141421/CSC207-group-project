@@ -250,15 +250,8 @@ class Interviewer extends User {
      * @param data The data for this interviewer.
      */
     private void loadCompany(HashMap data) {
-        if (FileSystem.isLoaded((String) ((ArrayList) data.get("company")).get(1),
-                (String) ((ArrayList) data.get("company")).get(1))) {
-            Company company = (Company) FileSystem.mapGet((String) ((ArrayList) data.get("company")).get(1),
-                    (String) ((ArrayList) data.get("company")).get(1));
-            this.setCompany(company);
-        } else {
-            Company company = new Company((String) ((ArrayList) data.get("company")).get(1));
-            this.setCompany(company);
-        }
+        this.setCompany((Company)FileSystem.subLoader(Company.class, (String) ((ArrayList) data.get("company")).get(0),
+                (String) ((ArrayList) data.get("company")).get(1)));
     }
 
     /**
@@ -269,11 +262,7 @@ class Interviewer extends User {
     private void loadInterviews(HashMap data) {
         ArrayList<Interview> interviews = new ArrayList<>();
         for (Object x : (ArrayList) (data.get("interviews"))) {
-            if (FileSystem.isLoaded((String) ((ArrayList) x).get(0), (String) ((ArrayList) x).get(1))) {
-                interviews.add((Interview) FileSystem.mapGet((String) ((ArrayList) x).get(0), (String) ((ArrayList) x).get(1)));
-            } else {
-                interviews.add(new Interview((String) ((ArrayList) x).get(1)));
-            }
+            interviews.add((Interview) FileSystem.subLoader(Interview.class, (String) ((ArrayList)x).get(0),(String) ((ArrayList)x).get(1)));
         }
         this.setInterviews(interviews);
     }
