@@ -18,39 +18,15 @@ class Applicant extends User {
 
     // === Constructors ===
 
-    /**
-     * Constructor from memory
-     *
-     * @param id The id of this object which it is saved under
-     */
     Applicant(String id){
         this.setUsername(id);
         loadSelf();
     }
 
-    /**
-     * Create an applicant account.
-     *
-     * @param username    The username associated with this account.
-     * @param password    The password associated with this account.
-     * @param legalName   The applicant's legal name.
-     * @param email       The applicant's email.
-     * @param dateCreated The date this account was created.
-     */
     Applicant(String username, String password, String legalName, String email, LocalDate dateCreated) {
         super(username, password, legalName, email, dateCreated);
     }
 
-    /**
-     * Creates an applicant account.
-     *
-     * @param username        The username associated with this account.
-     * @param password        The password associated with this account.
-     * @param legalName       The applicant's legal name.
-     * @param email           The applicant's email.
-     * @param dateCreated     The date this account was created.
-     * @param jobApplicationManager The job application manager for this applicant.
-     */
     Applicant(String username, String password, String legalName, String email, LocalDate dateCreated,
               JobApplicationManager jobApplicationManager) {
         super(username, password, legalName, email, dateCreated);
@@ -59,22 +35,12 @@ class Applicant extends User {
 
     // === Getters ===
 
-    /**
-     * Get the job application manager for this applicant.
-     *
-     * @return the job application manager for this applicant.
-     */
     JobApplicationManager getJobApplicationManager() {
         return this.jobApplicationManager;
     }
 
     // === Setters ===
 
-    /**
-     * Set the job application manager for this applicant.
-     *
-     * @param jobApplicationManager The job application manager for this applicant.
-     */
     void setJobApplicationManager(JobApplicationManager jobApplicationManager) {
         this.jobApplicationManager = jobApplicationManager;
     }

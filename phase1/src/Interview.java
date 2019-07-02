@@ -44,33 +44,17 @@ class Interview implements Storable{
 
     // === Constructors ===
 
-    /**
-     * Constructor from memory
-     *
-     * @param id The id of this object which it is saved under
-     */
     public Interview(String id){
         this.ID = Integer.parseInt(id);
         Interview.total = Integer.max(this.ID, Interview.total);
         loadSelf();
     }
 
-    /**
-     * Create a new interview.
-     */
     Interview() {
         this.ID = Interview.total;
         Interview.total++;
     }
 
-    /**
-     * Create a new interview.
-     *
-     * @param jobApplication The job application in question.
-     * @param interviewer    The interviewer.
-     * @param hrCoordinator  The HRCoordinator who set-up the interview.
-     * @param roundNumber    The round number.
-     */
     Interview(JobApplication jobApplication, Interviewer interviewer, HRCoordinator hrCoordinator,
               InterviewManager interviewManager, int roundNumber) {
         this.jobApplication = jobApplication;
@@ -82,15 +66,6 @@ class Interview implements Storable{
         Interview.total++;
     }
 
-    /**
-     * Create a new interview.
-     *
-     * @param jobApplication The job application in question.
-     * @param interviewer    The interviewer.
-     * @param hrCoordinator  The HRCoordinator who set-up the interview.
-     * @param time           The interview time.
-     * @param roundNumber    The round number.
-     */
     Interview(JobApplication jobApplication, Interviewer interviewer, HRCoordinator hrCoordinator,
               InterviewManager interviewManager, InterviewTime time, int roundNumber) {
         this.jobApplication = jobApplication;
@@ -105,111 +80,52 @@ class Interview implements Storable{
 
     // === Getters ===
 
-    /**
-     * Get the maximum number of rounds of interviews.
-     *
-     * @return the maximum number of rounds of interviews.
-     */
     static int getMaxNumRounds() {
         return Interview.MAX_NUM_ROUNDS;
     }
 
-    /**
-     * Get the job application associated with this interview.
-     *
-     * @return the job application associated with this interview.
-     */
     JobApplication getJobApplication() {
         return this.jobApplication;
     }
 
-    /**
-     * Get the applicant.
-     *
-     * @return the applicant.
-     */
     Applicant getApplicant() {
         return this.jobApplication.getApplicant();
     }
 
-    /**
-     * Get the interviewManager.
-     *
-     * @return the interviewManager.
-     */
     InterviewManager getInterviewManager() {
         return this.interviewManager;
     }
 
-    /**
-     * Get the interviewer.
-     *
-     * @return the interviewer.
-     */
     Interviewer getInterviewer() {
         return this.interviewer;
     }
 
-    /**
-     * Get the HRCoordinator.
-     *
-     * @return the HRCoordinator.
-     */
     HRCoordinator getHRCoordinator() {
         return this.hrCoordinator;
     }
 
-    /**
-     * Get the interview time.
-     * @return the interview time.
-     */
     InterviewTime getTime() {
         return this.time;
     }
 
-    /**
-     * Get the interview notes written by the interviewer.
-     *
-     * @return the interview notes.
-     */
     String getInterviewNotes() {
         return this.interviewNotes;
     }
 
-    /**
-     * Get whether this interview has been passed.
-     *
-     * @return true iff the applicant has passed this interview.
-     */
     Boolean isPassed() {
         return this.pass;
     }
 
-    /**
-     * Get the interview round number.
-     *
-     * @return the interview round number.
-     */
     int getRoundNumber() {
         return this.roundNumber;
     }
 
     // === Setters ===
 
-    /**
-     * Set interview notes.
-     *
-     * @param notes The interview notes.
-     */
     void setInterviewNotes(String notes) {
         this.interviewNotes = notes;
     }
 
-    /**
-     * Set the time for this interview.
-     *
-     * @param time The interview time
-     */
     void setTime(InterviewTime time) {
         this.time = time;
     }

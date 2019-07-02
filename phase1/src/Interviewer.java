@@ -22,27 +22,11 @@ class Interviewer extends User {
 
     // === Constructors ===
 
-    /**
-     * Constructor from memory
-     *
-     * @param id The id of this object which it is saved under
-     */
     Interviewer(String id){
         this.setUsername(id);
         loadSelf();
     }
 
-    /**
-     * Create an interviewer.
-     *
-     * @param username    The interviewer's username.
-     * @param password    The interviewer's password.
-     * @param legalName   The interviewer's legal name.
-     * @param email       The interviewer's email.
-     * @param company     The company that this interviewer works for.
-     * @param field       The job field that this interviewer is in.
-     * @param dateCreated The date this account was created.
-     */
     Interviewer(String username, String password, String legalName, String email, Company company, String field,
                 LocalDate dateCreated) {
         super(username, password, legalName, email, dateCreated);
@@ -51,37 +35,18 @@ class Interviewer extends User {
     }
 
     // === Getters ===
-    /**
-     * Get the company that this interviewer works for.
-     *
-     * @return the company that this interviewer works for.
-     */
     Company getCompany() {
         return this.company;
     }
 
-    /**
-     * Get the field this interviewer specializes in.
-     *
-     * @return the field that this interview specializes in.
-     */
     String getField() {
         return this.field;
     }
 
-    /**
-     * Get the list of interviews that this interviewer has conducted in the past and is currently conducting.
-     * @return the list of all interviews involving this interviewer.
-     */
     ArrayList<Interview> getInterviews() {
         return this.interviews;
     }
 
-    /**
-     * Get the schedule for this interviewer.
-     *
-     * @return the schedule for this interviewer.
-     */
     HashMap<LocalDate, ArrayList<Integer>> getSchedule() {
         return this.schedule;
     }

@@ -15,32 +15,11 @@ class HRCoordinator extends User {
 
     // === Constructors ===
 
-    /**
-     * Constructor from memory
-     *
-     * @param id The id of this object which it is saved under
-     */
     HRCoordinator(String id){
         this.setUsername(id);
         loadSelf();
     }
 
-    /**
-     * Create an HR Coordinator account.
-     */
-    HRCoordinator() {
-    }
-
-    /**
-     * Create an HR Coordinator account.
-     *
-     * @param username    The HR Coordinator's account username.
-     * @param password    The HR Coordinator's account password.
-     * @param legalName   The HR Coordinator's legal name.
-     * @param email       The HR Coordinator's email.
-     * @param company     The company that this HR Coordinator works for.
-     * @param dateCreated The date this account was created.
-     */
     HRCoordinator(String username, String password, String legalName, String email, Company company,
                   LocalDate dateCreated) {
         super(username, password, legalName, email, dateCreated);
@@ -49,20 +28,12 @@ class HRCoordinator extends User {
 
     // === Getters ===
 
-    /**
-     * Get the company that this HR Coordinator works for.
-     *
-     * @return the company that this HR Coordinator works for.
-     */
     Company getCompany() {
         return this.company;
     }
 
     // === Setters ===
 
-    /**
-     * Set the company that this HR Coordinator works for.
-     */
     void setCompany(Company company) {
         this.company = company;
     }

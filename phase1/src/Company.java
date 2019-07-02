@@ -18,22 +18,11 @@ class Company implements Storable{
 
     // === Constructors ===
 
-    /**
-     * Create a new company.
-     *
-     * @param name The company's name.
-     */
     Company(String name) {
         this.name = name;
         if(FileSystem.IDinMemory(FILENAME, name)){ loadSelf(); }
     }
 
-    /**
-     * Create a company -- from fileLoader.
-     * @param name                  The company name.
-     * @param hrCoordinators        The list of HR Coordinators for this
-     * @param fieldToInterviewers   The map of field to interviewers for this company.
-     */
     Company(String name, ArrayList<HRCoordinator> hrCoordinators,
             HashMap<String, ArrayList<Interviewer>> fieldToInterviewers, JobPostingManager jobPostingManager) {
         this.name = name;
@@ -44,37 +33,18 @@ class Company implements Storable{
 
     // === Getters ==
 
-    /**
-     * Get the name of this company.
-     *
-     * @return the name of this company.
-     */
     String getName() {
         return this.name;
     }
 
-    /**
-     * Get a list of all HRCoordinators for this company.
-     *
-     * @return a list of all HRCoordinators for this company.
-     */
     ArrayList<HRCoordinator> getHrCoordinators() {
         return this.hrCoordinators;
     }
 
-    /**
-     * Get the map of field to interviewers for this company.
-     * @return the map of field to interviewers for this company.
-     */
     HashMap<String, ArrayList<Interviewer>> getFieldToInterviewers() {
         return this.fieldToInterviewers;
     }
 
-    /**
-     * Get the job posting manager for this company.
-     *
-     * @return the job posting manager for this company.
-     */
     JobPostingManager getJobPostingManager() {
         return this.jobPostingManager;
     }
@@ -82,11 +52,6 @@ class Company implements Storable{
 
     // === Setters ===
 
-    /**
-     * Set the job posting manager for this company.
-     *
-     * @param jobPostingManager The job posting manager to be set.
-     */
     void setJobPostingManager(JobPostingManager jobPostingManager) {
         this.jobPostingManager = jobPostingManager;
     }
@@ -207,8 +172,9 @@ class Company implements Storable{
     }
 
     /**
-     * loads the Object
+     * Load this Company.
      */
+    // TODO
     public void loadSelf(){
         FileSystem.mapPut(FILENAME, getId(), this);
         HashMap data = FileSystem.read(FILENAME, getId());
