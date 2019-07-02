@@ -296,7 +296,6 @@ class JobPosting implements Storable{
         }
         data.put("applicationsRejected", applicationsRejected);
         data.put("currentRound", this.interviewManager.getCurrentRound());
-        // todo HRTask???
         FileSystem.write(FILENAME, getId(), data);
     }
 
@@ -340,11 +339,7 @@ class JobPosting implements Storable{
     private void loadJobApps(HashMap data) {
         ArrayList<JobApplication> jobApplications = new ArrayList<>();
         for (ArrayList x : (ArrayList<ArrayList>) data.get("jobapplications")) {
-            if (FileSystem.isLoaded((String) (x.get(0)), (String) (x.get(1)))) {
-                jobApplications.add((JobApplication) FileSystem.mapGet((String) (x.get(0)), (String) (x.get(1))));
-            } else {
-                jobApplications.add(new JobApplication((String) (x.get(1))));
-            }
+            jobApplications.add((JobApplication) FileSystem.subLoader(JobApplication.class, (String)x.get(0), (String)x.get(1)));
         }
         this.setJobApplications(jobApplications);
     }
@@ -358,11 +353,7 @@ class JobPosting implements Storable{
     private ArrayList<JobApplication> loadAppsInConsideration(HashMap data) {
         ArrayList<JobApplication> applicationsInConsideration = new ArrayList<>();
         for (ArrayList x : (ArrayList<ArrayList>) data.get("applicationsInConsideration")) {
-            if (FileSystem.isLoaded((String) (x.get(0)), (String) (x.get(1)))) {
-                applicationsInConsideration.add((JobApplication) FileSystem.mapGet((String) (x.get(0)), (String) (x.get(1))));
-            } else {
-                applicationsInConsideration.add(new JobApplication((String) (x.get(1))));
-            }
+            applicationsInConsideration.add((JobApplication) FileSystem.subLoader(JobApplication.class, (String)x.get(0), (String)x.get(1)));
         }
         return applicationsInConsideration;
     }
@@ -376,11 +367,7 @@ class JobPosting implements Storable{
     private ArrayList<JobApplication> loadAppsRejected(HashMap data) {
         ArrayList<JobApplication> applicationsRejected = new ArrayList<>();
         for (ArrayList x : (ArrayList<ArrayList>) data.get("applicationsRejected")) {
-            if (FileSystem.isLoaded((String) (x.get(0)), (String) (x.get(1)))) {
-                applicationsRejected.add((JobApplication) FileSystem.mapGet((String) (x.get(0)), (String) (x.get(1))));
-            } else {
-                applicationsRejected.add(new JobApplication((String) (x.get(1))));
-            }
+            applicationsRejected.add((JobApplication) FileSystem.subLoader(JobApplication.class, (String)x.get(0), (String)x.get(1)));
         }
         return applicationsRejected;
     }
