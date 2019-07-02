@@ -131,18 +131,37 @@ class HRCoordinator extends User {
     public void loadSelf(){
         FileSystem.mapPut(FILENAME, getId(), this);
         HashMap data = FileSystem.read(FILENAME, getId());
-        this.setPassword((String)data.get("password"));
-        this.setLegalName((String)data.get("legalName"));
-        this.setEmail((String)data.get("email"));
-        this.setDateCreated(LocalDate.parse((String)data.get("password")));
-        if(FileSystem.isLoaded((String)((ArrayList)data.get("company")).get(1),
-                (String)((ArrayList)data.get("company")).get(1))){
-            this.company = (Company) FileSystem.mapGet((String)((ArrayList)data.get("company")).get(1),
-                    (String)((ArrayList)data.get("company")).get(1));
-        }
-        else{
-            this.company = new Company((String)((ArrayList)data.get("company")).get(1));
-        }
+        this.loadPrelimData(data);
+        this.loadCompany(data);
     }
 
+    /**
+     * Load the preliminary data for this HR Coordinator.
+     *
+     * @param data The data for this HR Coordinator.
+     */
+    private void loadPrelimData(HashMap data) {
+        this.setPassword((String) data.get("password"));
+        this.setLegalName((String) data.get("legalName"));
+        this.setEmail((String) data.get("email"));
+        this.setDateCreated(LocalDate.parse((String) data.get("password")));
+    }
+
+    /**
+     * Load this HR Coordinator's company.
+     *
+     * @param data The data for this HR Coordinator.
+     */
+    private void loadCompany(HashMap data) {
+        if (FileSystem.isLoaded((String) ((ArrayList) data.get("company")).get(1),
+                (String) ((ArrayList) data.get("company")).get(1))) {
+            Company company = (Company) FileSystem.mapGet((String) ((ArrayList) data.get("company")).get(1),
+                    (String) ((ArrayList) data.get("company")).get(1));
+            this.setCompany(company);
+
+        } else {
+            Company company = new Company((String) ((ArrayList) data.get("company")).get(1));
+            this.setCompany(company);
+        }
+    }
 }

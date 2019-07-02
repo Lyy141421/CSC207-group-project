@@ -86,6 +86,23 @@ class Interviewer extends User {
         return this.schedule;
     }
 
+    // === Setters ===
+    void setCompany(Company company) {
+        this.company = company;
+    }
+
+    void setField(String field) {
+        this.field = field;
+    }
+
+    void setInterviews(ArrayList<Interview> interviews) {
+        this.interviews = interviews;
+    }
+
+    void setSchedule(HashMap<LocalDate, ArrayList<Integer>> schedule) {
+        this.schedule = schedule;
+    }
+
 
     // === Other methods ===
 
@@ -259,7 +276,7 @@ class Interviewer extends User {
         this.setLegalName((String) data.get("legalName"));
         this.setEmail((String) data.get("email"));
         this.setDateCreated(LocalDate.parse((String) data.get("password")));
-        this.field = (String) data.get("field");
+        this.setField((String) data.get("field"));
     }
 
     /**
@@ -270,10 +287,12 @@ class Interviewer extends User {
     private void loadCompany(HashMap data) {
         if (FileSystem.isLoaded((String) ((ArrayList) data.get("company")).get(1),
                 (String) ((ArrayList) data.get("company")).get(1))) {
-            this.company = (Company) FileSystem.mapGet((String) ((ArrayList) data.get("company")).get(1),
+            Company company = (Company) FileSystem.mapGet((String) ((ArrayList) data.get("company")).get(1),
                     (String) ((ArrayList) data.get("company")).get(1));
+            this.setCompany(company);
         } else {
-            this.company = new Company((String) ((ArrayList) data.get("company")).get(1));
+            Company company = new Company((String) ((ArrayList) data.get("company")).get(1));
+            this.setCompany(company);
         }
     }
 
@@ -291,7 +310,7 @@ class Interviewer extends User {
                 interviews.add(new Interview((String) ((ArrayList) x).get(1)));
             }
         }
-        this.interviews = interviews;
+        this.setInterviews(interviews);
     }
 
     /**
@@ -304,6 +323,6 @@ class Interviewer extends User {
         for (Object x : (ArrayList) data.get("schedule")) {
             schedule.put(LocalDate.parse((String) ((ArrayList) x).get(0)), (ArrayList<Integer>) ((ArrayList) x).get(1));
         }
-        this.schedule = schedule;
+        this.setSchedule(schedule);
     }
 }
