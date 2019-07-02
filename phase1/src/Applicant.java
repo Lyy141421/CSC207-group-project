@@ -215,11 +215,8 @@ class Applicant extends User {
     private void loadJobAppManager(HashMap data) {
         ArrayList<JobApplication> temp = new ArrayList<>();
         for (ArrayList x : (ArrayList<ArrayList>) (data.get("jobApplicationManager"))) {
-            if (FileSystem.isLoaded((String) (x.get(0)), (String) (x.get(1)))) {
-                temp.add((JobApplication) FileSystem.mapGet((String) (x.get(0)), (String) (x.get(1))));
-            } else {
-                temp.add(new JobApplication((String) (x.get(1))));
-            }
+            temp.add((JobApplication) FileSystem.subLoader(JobApplication.class, (String) x.get(0),
+                    (String) x.get(1)));
         }
         this.setJobApplicationManager(new JobApplicationManager(temp));
     }
