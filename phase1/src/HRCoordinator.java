@@ -124,15 +124,7 @@ class HRCoordinator extends User {
      * @param data The data for this HR Coordinator.
      */
     private void loadCompany(HashMap data) {
-        if (FileSystem.isLoaded((String) ((ArrayList) data.get("company")).get(1),
-                (String) ((ArrayList) data.get("company")).get(1))) {
-            Company company = (Company) FileSystem.mapGet((String) ((ArrayList) data.get("company")).get(1),
-                    (String) ((ArrayList) data.get("company")).get(1));
-            this.setCompany(company);
-
-        } else {
-            Company company = new Company((String) ((ArrayList) data.get("company")).get(1));
-            this.setCompany(company);
-        }
+        this.setCompany((Company)FileSystem.subLoader(Company.class, (String) ((ArrayList) data.get("company")).get(0),
+                (String) ((ArrayList) data.get("company")).get(1)));
     }
 }
