@@ -101,16 +101,44 @@ class JobPosting implements Storable{
 
 
     // == Setters ===
-    void setFilled() {
-        this.filled = true;
+    void setTitle(String title) {
+        this.title = title;
+    }
+
+    void setField(String field) {
+        this.field = field;
+    }
+
+    void setDescription(String description) {
+        this.description = description;
+    }
+
+    void setRequirements(String requirements) {
+        this.requirements = requirements;
     }
 
     void setNumPositions(int numPositions) {
         this.numPositions = numPositions;
     }
 
+    void setCompany(Company company) {
+        this.company = company;
+    }
+
+    void setPostDate(LocalDate postDate) {
+        this.postDate = postDate;
+    }
+
     void setCloseDate(LocalDate closeDate) {
         this.closeDate = closeDate;
+    }
+
+    void setFilled() {
+        this.filled = true;
+    }
+
+    void setJobApplications(ArrayList<JobApplication> jobApps) {
+        this.jobApplications = jobApps;
     }
 
     void setInterviewManager(InterviewManager interviewManager) {
@@ -273,7 +301,7 @@ class JobPosting implements Storable{
     }
 
     /**
-     * loads the Object
+     * Loads the job posting.
      */
     public void loadSelf(){
         FileSystem.mapPut(FILENAME, getId(), this);
@@ -287,25 +315,27 @@ class JobPosting implements Storable{
     }
 
     /**
-     * Load the preliminary data for this object
+     * Load the preliminary data for this job posting.
      *
-     * @param data The data for this object
+     * @param data The data for this job posting.
      */
     private void loadPrelimData(HashMap data) {
-        this.title = (String) data.get("title");
-        this.field = (String) data.get("field");
-        this.description = (String) data.get("description");
-        this.requirements = (String) data.get("requirements");
-        this.numPositions = (int) data.get("numPositions");
-        this.postDate = LocalDate.parse((String) data.get("postDate"));
-        this.closeDate = LocalDate.parse((String) data.get("closeDate"));
-        this.filled = (boolean) data.get("filled");
+        this.setTitle((String) data.get("title"));
+        this.setField((String) data.get("field"));
+        this.setDescription((String) data.get("description"));
+        this.setRequirements((String) data.get("requirements"));
+        this.setNumPositions((int) data.get("numPositions"));
+        this.setPostDate(LocalDate.parse((String) data.get("postDate")));
+        this.setCloseDate(LocalDate.parse((String) data.get("closeDate")));
+        if ((boolean) data.get("filled")) {
+            this.setFilled();
+        }
     }
 
     /**
-     * Load the job applications for this object.
+     * Load the job applications for this job posting.
      *
-     * @param data The data for this object.
+     * @param data The data for this job posting.
      */
     private void loadJobApps(HashMap data) {
         ArrayList<JobApplication> jobApplications = new ArrayList<>();
@@ -316,13 +346,13 @@ class JobPosting implements Storable{
                 jobApplications.add(new JobApplication((String) (x.get(1))));
             }
         }
-        this.jobApplications = jobApplications;
+        this.setJobApplications(jobApplications);
     }
 
     /**
-     * Load the applications in consideration for this object.
+     * Load the applications in consideration for this job posting.
      *
-     * @param data The data for this object.
+     * @param data The data for this job posting.
      * @return a list of job applications in consideration.
      */
     private ArrayList<JobApplication> loadAppsInConsideration(HashMap data) {
@@ -338,10 +368,10 @@ class JobPosting implements Storable{
     }
 
     /**
-     * Load the applications rejected for this object.
+     * Load the applications rejected for this job posting.
      *
-     * @param data The data for this object.
-     * @return a list of job applications rejected for this object.
+     * @param data The data for this job posting.
+     * @return a list of job applications rejected for this job posting.
      */
     private ArrayList<JobApplication> loadAppsRejected(HashMap data) {
         ArrayList<JobApplication> applicationsRejected = new ArrayList<>();

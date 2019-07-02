@@ -224,21 +224,38 @@ class Applicant extends User {
     public void loadSelf(){
         FileSystem.mapPut(FILENAME, getId(), this);
         HashMap data = FileSystem.read(FILENAME, getId());
-        this.setPassword((String)data.get("password"));
-        this.setLegalName((String)data.get("legalName"));
-        this.setEmail((String)data.get("email"));
-        this.filesSubmitted = (ArrayList<String>)(data.get("filesSubmitted"));
-        this.setDateCreated(LocalDate.parse((String)data.get("dateCreated")));
+        this.loadPrelimData(data);
+        this.loadJobAppManager(data);
+    }
+
+    /**
+     * Load the preliminary data for this applicant.
+     *
+     * @param data This applicant's data.
+     */
+    private void loadPrelimData(HashMap data) {
+        this.setPassword((String) data.get("password"));
+        this.setLegalName((String) data.get("legalName"));
+        this.setEmail((String) data.get("email"));
+        this.filesSubmitted = (ArrayList<String>) (data.get("filesSubmitted"));
+        this.setDateCreated(LocalDate.parse((String) data.get("dateCreated")));
+    }
+
+    /**
+     * Load the job application manager for this applicant.
+     *
+     * @param data This applicant's data.
+     */
+    private void loadJobAppManager(HashMap data) {
         ArrayList<JobApplication> temp = new ArrayList<>();
-        for(ArrayList x : (ArrayList<ArrayList>)(data.get("jobApplicationManager"))){
-            if(FileSystem.isLoaded((String)(x.get(0)), (String)(x.get(1)))){
-                temp.add((JobApplication) FileSystem.mapGet((String)(x.get(0)), (String)(x.get(1))));
-            }
-            else{
-                temp.add(new JobApplication((String)(x.get(1))));
+        for (ArrayList x : (ArrayList<ArrayList>) (data.get("jobApplicationManager"))) {
+            if (FileSystem.isLoaded((String) (x.get(0)), (String) (x.get(1)))) {
+                temp.add((JobApplication) FileSystem.mapGet((String) (x.get(0)), (String) (x.get(1))));
+            } else {
+                temp.add(new JobApplication((String) (x.get(1))));
             }
         }
-        this.jobApplicationManager = new JobApplicationManager(temp);
+        this.setJobApplicationManager(new JobApplicationManager(temp));
     }
 
 }
