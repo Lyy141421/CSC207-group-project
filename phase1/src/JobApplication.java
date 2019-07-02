@@ -44,32 +44,18 @@ class JobApplication implements Storable{
 
     // === Constructors ===
 
-    /**
-     * Constructor from memory
-     *
-     * @param id The id of this object which it is saved under
-     */
     public JobApplication(String id){
         this.ID = Integer.parseInt(id);
         JobApplication.totalNumOfApplications = Integer.max(this.ID, JobApplication.totalNumOfApplications);
         loadSelf();
     }
 
-    /**
-     * Create a new job application.
-     * @param applicationDate   The date this application was created.
-     */
     JobApplication(LocalDate applicationDate) {
         this.ID = JobApplication.totalNumOfApplications;
         this.applicationDate = applicationDate;
         JobApplication.totalNumOfApplications++;
     }
 
-    /**
-     * Create a new job application.
-     *
-     * @param jobPosting The job posting that is being applied to.
-     */
     JobApplication(JobPosting jobPosting, LocalDate applicationDate) {
         this.ID = JobApplication.totalNumOfApplications;
         this.jobPosting = jobPosting;
@@ -77,15 +63,6 @@ class JobApplication implements Storable{
         JobApplication.totalNumOfApplications++;
     }
 
-    /**
-     * Create a new job application.
-     *
-     * @param applicant         The Applicant associated with this application.
-     * @param jobPosting        The JobPosting associated with this application.
-     * @param CV                The filename of the applicant's CV.
-     * @param coverletter       The filename of the applicant's cover letter.
-     * @param applicationDate   The date this application was created.
-     */
     JobApplication(Applicant applicant, JobPosting jobPosting, String CV, String coverletter, LocalDate applicationDate) {
         this.ID = JobApplication.totalNumOfApplications;
         this.applicant = applicant;
@@ -96,17 +73,6 @@ class JobApplication implements Storable{
         JobApplication.totalNumOfApplications++;
     }
 
-    /**
-     * Create a new job application.
-     *
-     * @param ID            The application ID.
-     * @param applicant     The applicant associated with this application.
-     * @param jobPosting    The JobPosting associated with this application.
-     * @param CV            The filename of the applicant's CV.
-     * @param coverletter   The filename of the applicant's cover letter.
-     * @param status            The status of the application.
-     * @param applicationDate   The date this application was created.
-     */
     JobApplication(int ID, Applicant applicant, JobPosting jobPosting, String CV, String coverletter, int status,
                    LocalDate applicationDate) {
         this.ID = ID;
@@ -121,123 +87,62 @@ class JobApplication implements Storable{
 
     // === Getters ===
 
-    /**
-     * Get the application ID.
-     *
-     * @return the application ID.
-     */
     int getID() {
         return this.ID;
     }
 
-    /**
-     * Get the applicant account.
-     *
-     * @return the applicant account.
-     */
     Applicant getApplicant() {
         return this.applicant;
     }
 
-    /**
-     * Get the job posting.
-     *
-     * @return the job posting.
-     */
     JobPosting getJobPosting() {
         return this.jobPosting;
     }
 
-    /**
-     * Get the filename of the applicant's CV.
-     *
-     * @return the filename of the applicant's CV.
-     */
     String getCV() {
         return this.CV;
     }
 
-    /**
-     * Get the filename of the applicant's cover letter.
-     *
-     * @return the filename of the applicant's cover letter.
-     */
     String getCoverLetter() {
         return this.coverLetter;
     }
 
-//    /**
-//     * Get the list of reference letters for the applicant.
-//     *
-//     * @return the list of reference letters for the applicant.
-//     */
-//    ArrayList<ReferenceLetter> getReferenceLetters() {
-//        return this.referenceLetters;
-//    }
-
-    /**
-     * Get the current status of this application.
-     *
-     * @return the current status of this application.
-     */
     int getStatus() {
         return this.status;
     }
 
-    /**
-     * Get the date this application was submitted.
-     *
-     * @return the date this application was submitted.
-     */
     LocalDate getApplicationDate() {
         return this.applicationDate;
     }
 
-    /**
-     * Get the interviews of this application.
-     *
-     * @return the arraylist of interviews.
-     */
     ArrayList<Interview> getInterviews() {
         return this.interviews;
     }
 
     // === Setters ===
 
-    /**
-     * Set the applicant for this application.
-     *
-     * @param applicant The applicant who is applying for a job.
-     */
     void setApplicant(Applicant applicant) {
         this.applicant = applicant;
     }
 
-    /**
-     * Change the CV for this application.
-     *
-     * @param CV The filename of the applicant's CV.
-     */
     void setCV(String CV) {
         this.CV = CV;
     }
 
-    /**
-     * Change the cover letter for this application.
-     *
-     * @param coverLetter The filename of the applicant's cover letter.
-     */
     void setCoverLetter(String coverLetter) {
         this.coverLetter = coverLetter;
     }
 
-    /**
-     * Change the status of this application.
-     *
-     * @param status The status of this application.
-     */
     void setStatus(int status) {
         this.status = status;
+    }
+
+    void setApplicationDate(LocalDate applicationDate) {
+        this.applicationDate = applicationDate;
+    }
+
+    void setInterviews(ArrayList<Interview> interviews) {
+        this.interviews = interviews;
     }
 
     // === Other methods ===
@@ -301,36 +206,64 @@ class JobApplication implements Storable{
     }
 
     /**
-     * loads the Object
+     * Load this job application.
      */
     public void loadSelf(){
         FileSystem.mapPut(FILENAME, getId(), this);
         HashMap data = FileSystem.read(FILENAME, getId());
-        this.setCV((String)data.get("CV"));
-        this.setCoverLetter((String)data.get("CoverLetter"));
-        this.setStatus((int)data.get("Status"));
-        this.applicationDate = (LocalDate.parse((String)data.get("dateCreated")));
-        if(FileSystem.isLoaded((String)((ArrayList)data.get("Applicant")).get(0), (String)((ArrayList)data.get("Applicant")).get(1))){
-            setApplicant((Applicant) FileSystem.mapGet((String)((ArrayList)data.get("Applicant")).get(0), (String)((ArrayList)data.get("Applicant")).get(1)));
+        this.loadPrelimData(data);
+        this.loadApplicant(data);
+        this.loadInterviews(data);
+    }
+
+    /**
+     * Load the preliminary data for this job application.
+     *
+     * @param data The data for this job application.
+     */
+    private void loadPrelimData(HashMap data) {
+        this.setCV((String) data.get("CV"));
+        this.setCoverLetter((String) data.get("CoverLetter"));
+        this.setStatus((int) data.get("Status"));
+        this.setApplicationDate((LocalDate.parse((String) data.get("dateCreated"))));
+    }
+
+    /**
+     * Load the application for this job application.
+     *
+     * @param data The data for this job application.
+     */
+    private void loadApplicant(HashMap data) {
+        if (FileSystem.isLoaded((String) ((ArrayList) data.get("Applicant")).get(0), (String) ((ArrayList) data.get
+                ("Applicant")).get(1))) {
+            this.setApplicant((Applicant) FileSystem.mapGet((String) ((ArrayList) data.get("Applicant")).get(0),
+                    (String) ((ArrayList) data.get("Applicant")).get(1)));
+        } else {
+            this.setApplicant(new Applicant((String) ((ArrayList) data.get("Applicant")).get(1)));
         }
-        else{
-            setApplicant(new Applicant((String)((ArrayList)data.get("Applicant")).get(1)));
+        if (FileSystem.isLoaded((String) ((ArrayList) data.get("JobPosting")).get(0), (String) ((ArrayList) data.get
+                ("JobPosting")).get(1))) {
+            this.setApplicant((Applicant) FileSystem.mapGet((String) ((ArrayList) data.get("JobPosting")).get(0),
+                    (String) ((ArrayList) data.get("JobPosting")).get(1)));
+        } else {
+            this.setApplicant(new Applicant((String) ((ArrayList) data.get("JobPosting")).get(1)));
         }
-        if(FileSystem.isLoaded((String)((ArrayList)data.get("JobPosting")).get(0), (String)((ArrayList)data.get("JobPosting")).get(1))){
-            setApplicant((Applicant) FileSystem.mapGet((String)((ArrayList)data.get("JobPosting")).get(0), (String)((ArrayList)data.get("JobPosting")).get(1)));
-        }
-        else{
-            setApplicant(new Applicant((String)((ArrayList)data.get("JobPosting")).get(1)));
-        }
+    }
+
+    /**
+     * Load the interviews for this job application.
+     *
+     * @param data The data for this job application.
+     */
+    private void loadInterviews(HashMap data) {
         ArrayList<Interview> temp = new ArrayList();
-        for(ArrayList x : (ArrayList<ArrayList>)data.get("interviews")){
-            if(FileSystem.isLoaded((String)(x.get(0)), (String)(x.get(1)))){
-                temp.add((Interview) FileSystem.mapGet((String)(x.get(0)), (String)(x.get(1))));
-            }
-            else{
-                temp.add(new Interview((String)(x.get(1))));
+        for (ArrayList x : (ArrayList<ArrayList>) data.get("interviews")) {
+            if (FileSystem.isLoaded((String) (x.get(0)), (String) (x.get(1)))) {
+                temp.add((Interview) FileSystem.mapGet((String) (x.get(0)), (String) (x.get(1))));
+            } else {
+                temp.add(new Interview((String) (x.get(1))));
             }
         }
-        this.interviews = temp;
+        this.setInterviews(temp);
     }
 }
