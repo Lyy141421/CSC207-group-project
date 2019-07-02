@@ -278,42 +278,80 @@ class JobPosting implements Storable{
     public void loadSelf(){
         FileSystem.mapPut(FILENAME, getId(), this);
         HashMap data = FileSystem.read(FILENAME, getId());
-        this.title = (String)data.get("title");
-        this.field = (String)data.get("field");
-        this.description = (String)data.get("description");
-        this.requirements = (String)data.get("requirements");
-        this.numPositions = (int)data.get("numPositions");
-        this.postDate = LocalDate.parse((String)data.get("postDate"));
-        this.closeDate = LocalDate.parse((String)data.get("closeDate"));
-        this.filled = (boolean)data.get("filled");
+        this.loadPrelimData(data);
+        this.loadJobApps(data);
+        ArrayList<JobApplication> appsInConsideration = this.loadAppsInConsideration(data);
+        ArrayList<JobApplication> appsRejected = this.loadAppsRejected(data);
+        this.interviewManager = new InterviewManager(this, appsInConsideration, appsRejected,
+                (int) data.get("currentRound"));
+    }
+
+    /**
+     * Load the preliminary data for this object
+     *
+     * @param data The data for this object
+     */
+    private void loadPrelimData(HashMap data) {
+        this.title = (String) data.get("title");
+        this.field = (String) data.get("field");
+        this.description = (String) data.get("description");
+        this.requirements = (String) data.get("requirements");
+        this.numPositions = (int) data.get("numPositions");
+        this.postDate = LocalDate.parse((String) data.get("postDate"));
+        this.closeDate = LocalDate.parse((String) data.get("closeDate"));
+        this.filled = (boolean) data.get("filled");
+    }
+
+    /**
+     * Load the job applications for this object.
+     *
+     * @param data The data for this object.
+     */
+    private void loadJobApps(HashMap data) {
         ArrayList<JobApplication> jobApplications = new ArrayList<>();
-        for(ArrayList x : (ArrayList<ArrayList>)data.get("jobapplications")){
-            if(FileSystem.isLoaded((String)(x.get(0)), (String)(x.get(1)))){
-                jobApplications.add((JobApplication) FileSystem.mapGet((String)(x.get(0)), (String)(x.get(1))));
-            }
-            else{
-                jobApplications.add(new JobApplication((String)(x.get(1))));
+        for (ArrayList x : (ArrayList<ArrayList>) data.get("jobapplications")) {
+            if (FileSystem.isLoaded((String) (x.get(0)), (String) (x.get(1)))) {
+                jobApplications.add((JobApplication) FileSystem.mapGet((String) (x.get(0)), (String) (x.get(1))));
+            } else {
+                jobApplications.add(new JobApplication((String) (x.get(1))));
             }
         }
         this.jobApplications = jobApplications;
+    }
+
+    /**
+     * Load the applications in consideration for this object.
+     *
+     * @param data The data for this object.
+     * @return a list of job applications in consideration.
+     */
+    private ArrayList<JobApplication> loadAppsInConsideration(HashMap data) {
         ArrayList<JobApplication> applicationsInConsideration = new ArrayList<>();
-        for(ArrayList x : (ArrayList<ArrayList>)data.get("applicationsInConsideration")){
-            if(FileSystem.isLoaded((String)(x.get(0)), (String)(x.get(1)))){
-                applicationsInConsideration.add((JobApplication) FileSystem.mapGet((String)(x.get(0)), (String)(x.get(1))));
-            }
-            else{
-                applicationsInConsideration.add(new JobApplication((String)(x.get(1))));
+        for (ArrayList x : (ArrayList<ArrayList>) data.get("applicationsInConsideration")) {
+            if (FileSystem.isLoaded((String) (x.get(0)), (String) (x.get(1)))) {
+                applicationsInConsideration.add((JobApplication) FileSystem.mapGet((String) (x.get(0)), (String) (x.get(1))));
+            } else {
+                applicationsInConsideration.add(new JobApplication((String) (x.get(1))));
             }
         }
+        return applicationsInConsideration;
+    }
+
+    /**
+     * Load the applications rejected for this object.
+     *
+     * @param data The data for this object.
+     * @return a list of job applications rejected for this object.
+     */
+    private ArrayList<JobApplication> loadAppsRejected(HashMap data) {
         ArrayList<JobApplication> applicationsRejected = new ArrayList<>();
-        for(ArrayList x : (ArrayList<ArrayList>)data.get("applicationsRejected")){
-            if(FileSystem.isLoaded((String)(x.get(0)), (String)(x.get(1)))){
-                applicationsRejected.add((JobApplication) FileSystem.mapGet((String)(x.get(0)), (String)(x.get(1))));
-            }
-            else{
-                applicationsRejected.add(new JobApplication((String)(x.get(1))));
+        for (ArrayList x : (ArrayList<ArrayList>) data.get("applicationsRejected")) {
+            if (FileSystem.isLoaded((String) (x.get(0)), (String) (x.get(1)))) {
+                applicationsRejected.add((JobApplication) FileSystem.mapGet((String) (x.get(0)), (String) (x.get(1))));
+            } else {
+                applicationsRejected.add(new JobApplication((String) (x.get(1))));
             }
         }
-        this.interviewManager = new InterviewManager(this, applicationsInConsideration, applicationsRejected, (int)data.get("currentRound"));
+        return applicationsRejected;
     }
 }
