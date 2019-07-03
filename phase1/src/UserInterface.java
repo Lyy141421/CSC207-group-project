@@ -14,6 +14,12 @@ class UserInterface {
     // The user who logged in
     User user;
 
+    public static void main(String[] args) {
+        UserInterface UI = new UserInterface();
+        User user = UI.login();
+        user.getUserInterface().run(LocalDate.now());
+    }
+
     // === Constructors ===
     UserInterface() {
     }
@@ -22,26 +28,33 @@ class UserInterface {
         this.user = user;
     }
 
-    public static void main (String[] args) {
-        UserInterface UI = new UserInterface();
-        User user = UI.login();
-        user.getUserInterface().run();
+    // === Inherited method ===
+    void run(LocalDate today) {
     }
 
-    void run() {
-    }
+    // === Other methods ===
 
+    /**
+     * Interface for displaying user types.
+     *
+     * @return the number of options in the menu.
+     */
     private int displayUserTypes() {
-        System.out.println("Please select your user type:");
+        System.out.println("Please select your user type");
         System.out.println("1 - Job applicant");
         System.out.println("2 - Interviewer");
         System.out.println("3 - HR coordinator");
         return 3;
     }
 
+    /**
+     * Interface for getting the menu option selected.
+     * @param sc            The scanner for user input.
+     * @param numOptions    The number of options in the menu.
+     * @return the option selected.
+     */
     int getMenuOption(Scanner sc, int numOptions) {
-        System.out.println();
-        System.out.print("Select an option number: ");
+        System.out.print("\nSelect an option number: ");
         int option = sc.nextInt();
         if (option < 1 || option > numOptions) {
             System.out.println("Invalid input.");
@@ -50,7 +63,15 @@ class UserInterface {
         return option;
     }
 
-    User signUp(Scanner sc, String username, String password) {
+    /**
+     * Sign up this user based on the user type selected.
+     *
+     * @param sc       The scanner for user input.
+     * @param username The user's username.
+     * @param password The user's password.
+     * @return the new user instance created.
+     */
+    private User signUp(Scanner sc, String username, String password) {
         int numOptions = this.displayUserTypes();
         int option = this.getMenuOption(sc, numOptions);
         switch (option) {
@@ -73,10 +94,12 @@ class UserInterface {
      * @return the new applicant instance created.
      */
     private User createNewApplicant(Scanner sc, String username, String password) {
+        System.out.println();
         System.out.print("Enter your legal name: ");
         String legalName = sc.nextLine();
-        System.out.println("Enter your email address: ");
-        String email = sc.next();
+        sc.nextLine();
+        System.out.print("Enter your email address: ");
+        String email = sc.nextLine();
         return UserInterface.userManager.createApplicant(username, password, legalName, email, LocalDate.now(),
                 true);
     }
@@ -92,9 +115,9 @@ class UserInterface {
     private User createNewHRC(Scanner sc, String username, String password) {
         System.out.print("Enter your legal name: ");
         String legalName = sc.nextLine();
-        System.out.println("Enter your email address: ");
-        String email = sc.next();
-        System.out.println("Enter your company name: ");
+        System.out.print("Enter your email address: ");
+        String email = sc.nextLine();
+        System.out.print("Enter your company name: ");
         String companyName = sc.nextLine();
         Company company = JobApplicationSystem.getCompany(companyName);
         return UserInterface.userManager.createHRCoordinator(username, password, legalName, email, company,
@@ -112,85 +135,38 @@ class UserInterface {
     private User createNewInterviewer(Scanner sc, String username, String password) {
         System.out.print("Enter your legal name: ");
         String legalName = sc.nextLine();
-        System.out.println("Enter your email address: ");
-        String email = sc.next();
-        System.out.println("Enter your company name: ");
+        System.out.print("Enter your email address: ");
+        String email = sc.nextLine();
+        System.out.print("Enter your company name: ");
         String companyName = sc.nextLine();
         Company company = JobApplicationSystem.getCompany(companyName);
-        System.out.println("Enter your field: ");
+        System.out.print("Enter your field: ");
         String field = sc.nextLine();
         return UserInterface.userManager.createInterviewer(username, password, legalName, email, company, field,
                 LocalDate.now(), true);
     }
 
-    User login() {
+    /**
+     * Login this user into the system. Sign them up if username does not already exist in the system.
+     *
+     * @return the user who logged-in.
+     */
+    private User login() {
         Scanner sc = new Scanner(System.in);
         System.out.print("Enter your username: ");
-        String username = sc.next();
+        String username = sc.nextLine();
         System.out.print("Enter your password: ");
-        String password = sc.next();
-        if (UserInterface.userManager.findUserByUsername(username) == null) {
-            return this.signUp(sc, username, password);
-        } else {
+        String password = sc.nextLine();
+        try {
+            User user = UserInterface.userManager.findUserByUsername(username);
             while (!UserInterface.userManager.passwordCorrect(username, password)) {
                 System.out.println("Incorrect password.");
                 System.out.print("Enter your password: ");
-                password = sc.next();
+                password = sc.nextLine();
             }
-            return UserInterface.userManager.findUserByUsername(username);
-
-//            if (userManager.findUserByUsername(username) instanceof Applicant) {
-//                Applicant applicant = (Applicant)userManager.findUserByUsername(username);
-//            }
-//            else if (userManager.findUserByUsername(username) instanceof Interviewer) {
-//                Interviewer interviewer = (Interviewer)userManager.findUserByUsername(username);
-//            }
-//            else if (userManager.findUserByUsername(username) instanceof HRCoordinator) {
-//                HRCoordinator HRcoordinator = (HRCoordinator) userManager.findUserByUsername(username);
-//            }
+            return user;
+        } catch (NullPointerException npe) {
+            return this.signUp(sc, username, password);
         }
-
-        /*
-        - Prompt user to enter their username
-        - Prompt user to enter their password
-        If username is not in system:
-            - Prompt for user type (job applicant, interviewer, or HR coordinator)
-            If user is an applicant:
-                - Prompt for legal name
-                - Prompt for e-mail
-                - userManager.createApplicant(username, password, legalName, email, LocalDate.now(), true);
-            Else if user is an interviewer:
-                - Prompt for e-mail
-                - Prompt for company name
-                if (JobApplicationSystem.getCompany(companyName) == null) {
-                    - rejecc
-                }
-                else {
-                    - Company company = JobApplicationSystem.getCompany(companyName);
-                    - Prompt for field
-                    - userManager.createInterviewer(username, password, legalName, email, company, field,
-                        LocalDate.now(), true);
-                }
-            Else: //Job coordinator
-                - Prompt for legal name
-                - Prompt for e-mail
-                - Prompt for company name
-                if (JobApplicationSystem.getCompany(companyName) == null) {
-                    - Company company = JobApplicationSystem.createCompany(companyName);
-                }
-                else {
-                    - Company company = JobApplicationSystem.getCompany(companyName);
-                    - userManager.createHRCoordinator(username, password, legalName, email, company, LocalDate.now(),
-                        true);
-                }
-        Else:
-            if (userManager.passwordCorrect(username, password)) {
-                - load user data from system
-            }
-            else {
-                - prompt user to re-enter password
-            }
-
-        */
     }
 }
