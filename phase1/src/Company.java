@@ -152,7 +152,7 @@ class Company implements Storable{
         for(HRCoordinator x : this.hrCoordinators){
             hrcoords.add(new ArrayList<String>() {{
                 add(x.FILENAME);
-                add(x.getId());
+                add(x.getIdString());
             }});
         }
         data.put("hrCoordinators", hrcoords);
@@ -162,7 +162,7 @@ class Company implements Storable{
             for(Interviewer y : this.fieldToInterviewers.get(field)){
                 interviewers.add(new ArrayList<String>() {{
                     add(y.FILENAME);
-                    add(y.getId());
+                    add(y.getIdString());
                 }});
             }
             map.put(field, interviewers);

@@ -96,7 +96,11 @@ class JobApplication implements Storable {
     }
 
     // === Getters ===
-
+    /**
+     * Get the application ID.
+     *
+     * @return the application ID.
+     */
     int getID() {
         return this.ID;
     }
