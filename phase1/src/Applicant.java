@@ -175,7 +175,7 @@ class Applicant extends User {
         for(JobApplication x : this.jobApplicationManager.getJobApplications()){
             ArrayList<String> temp = new ArrayList<>();
             temp.add(x.FILENAME);
-            temp.add(x.getId());
+            temp.add(x.getIdString());
             jobapps.add(temp);
 
         }
