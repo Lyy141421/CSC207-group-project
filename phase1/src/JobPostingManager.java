@@ -176,6 +176,21 @@ class JobPostingManager {
     }
 
     /**
+     * Get a list of all filled job postings at this company.
+     *
+     * @return
+     */
+    ArrayList<JobPosting> getFilledJobPostings() {
+        ArrayList<JobPosting> jobPostings = new ArrayList<>();
+        for (JobPosting jobPosting : this.jobPostings) {
+            if (jobPosting.isFilled()) {
+                jobPostings.add(jobPosting);
+            }
+        }
+        return jobPostings;
+    }
+
+    /**
      * Get a list of job postings where a current interview round is over.
      *
      * @param today Today's date/

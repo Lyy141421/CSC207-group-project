@@ -9,6 +9,12 @@ class UserInterface {
     UserInterface() {
     }
 
+    void run() {
+        // login -- get user type
+        // create specific user interface
+        // run the specific user interface
+    }
+
     void login() {
         /*
         - Prompt user to enter their username

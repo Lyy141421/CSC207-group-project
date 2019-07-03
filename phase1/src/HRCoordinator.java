@@ -77,7 +77,7 @@ class HRCoordinator extends User {
      *
      * @return the string of the id
      */
-    public String getId(){
+    public String getIdString() {
         return this.getUsername();
     }
 
@@ -85,7 +85,7 @@ class HRCoordinator extends User {
      * Saves the Object
      */
     public void saveSelf(){
-        FileSystem.mapPut(FILENAME, getId(), this);
+        FileSystem.mapPut(FILENAME, getIdString(), this);
         HashMap<String, Object> data = new HashMap<>();
         data.put("password", this.getPassword());
         data.put("legalName", this.getLegalName());
@@ -93,15 +93,15 @@ class HRCoordinator extends User {
         data.put("dateCreated", this.getDateCreated());
         data.put("company", new String[] {this.company.FILENAME,
                 this.company.getName()});
-        FileSystem.write(FILENAME, getId(), data);
+        FileSystem.write(FILENAME, getIdString(), data);
     }
 
     /**
      * loads the Object
      */
     public void loadSelf(){
-        FileSystem.mapPut(FILENAME, getId(), this);
-        HashMap data = FileSystem.read(FILENAME, getId());
+        FileSystem.mapPut(FILENAME, getIdString(), this);
+        HashMap data = FileSystem.read(FILENAME, getIdString());
         this.loadPrelimData(data);
         this.loadCompany(data);
     }

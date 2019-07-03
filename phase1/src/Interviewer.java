@@ -188,7 +188,7 @@ class Interviewer extends User {
      *
      * @return the string of the id
      */
-    public String getId(){
+    public String getIdString() {
         return this.getUsername();
     }
 
@@ -196,7 +196,7 @@ class Interviewer extends User {
      * Saves the Object
      */
     public void saveSelf(){
-        FileSystem.mapPut(FILENAME, getId(), this);
+        FileSystem.mapPut(FILENAME, getIdString(), this);
         HashMap<String, Object> data = new HashMap<>();
         data.put("password", this.getPassword());
         data.put("legalName", this.getLegalName());
@@ -204,27 +204,33 @@ class Interviewer extends User {
         data.put("dateCreated", this.getDateCreated());
         data.put("field", this.getField());
         data.put("company", new String[] {this.company.FILENAME,
-                this.company.getId()});
+                this.company.getIdString()});
         ArrayList<ArrayList> interview_list = new ArrayList<>();
         for(Interview x : this.interviews){
-            interview_list.add(new ArrayList<>(){{ add(FILENAME); add(x.getId()); }});
+            interview_list.add(new ArrayList<Object>() {{
+                add(FILENAME);
+                add(x.getIdString());
+            }});
         }
         data.put("interviews", interview_list);
         ArrayList<ArrayList> schedule = new ArrayList<>();
         for(LocalDate x : this.schedule.keySet()){
             ArrayList dates = this.schedule.get(x);
-            schedule.add(new ArrayList<>(){{ add(x); add(dates); }});
+            schedule.add(new ArrayList<Object>() {{
+                add(x);
+                add(dates);
+            }});
         }
         data.put("schedule", schedule);
-        FileSystem.write(FILENAME, getId(), data);
+        FileSystem.write(FILENAME, getIdString(), data);
     }
 
     /**
      *  Loads the interviewer.
      */
     public void loadSelf(){
-        FileSystem.mapPut(FILENAME, getId(), this);
-        HashMap data = FileSystem.read(FILENAME, getId());
+        FileSystem.mapPut(FILENAME, getIdString(), this);
+        HashMap data = FileSystem.read(FILENAME, getIdString());
         this.loadPrelimData(data);
         this.loadCompany(data);
         this.loadInterviews(data);
@@ -262,7 +268,8 @@ class Interviewer extends User {
     private void loadInterviews(HashMap data) {
         ArrayList<Interview> interviews = new ArrayList<>();
         for (Object x : (ArrayList) (data.get("interviews"))) {
-            interviews.add((Interview) FileSystem.subLoader(Interview.class, (String) ((ArrayList)x).get(0),(String) ((ArrayList)x).get(1)));
+            interviews.add((Interview) FileSystem.subLoader(Interview.class, (String) ((ArrayList) x).get(0), (String)
+                    ((ArrayList) x).get(1)));
         }
         this.setInterviews(interviews);
     }

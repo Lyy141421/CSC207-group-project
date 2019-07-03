@@ -103,7 +103,7 @@ class Applicant extends User {
      * @param jobPosting The job posting in question.
      * @return true iff this applicant has not applied to this job posting.
      */
-    private boolean hasAppliedTo(JobPosting jobPosting) {
+    boolean hasAppliedTo(JobPosting jobPosting) {
         for (JobApplication jobApp : jobPosting.getJobApplications()) {
             if (jobApp.getApplicant().equals(this)) {
                 return true;
@@ -157,7 +157,7 @@ class Applicant extends User {
      *
      * @return the string of the id
      */
-    public String getId(){
+    public String getIdString() {
         return this.getUsername();
     }
 
@@ -165,7 +165,7 @@ class Applicant extends User {
      * Saves the Object
      */
     public void saveSelf(){
-        FileSystem.mapPut(FILENAME, getId(), this);
+        FileSystem.mapPut(FILENAME, getIdString(), this);
         HashMap<String, Object> data = new HashMap<>();
         data.put("password", this.getPassword());
         data.put("legalName", this.getLegalName());
@@ -181,15 +181,15 @@ class Applicant extends User {
         }
         data.put("jobApplicationManager", jobapps);
         data.put("filesSubmitted", this.filesSubmitted);
-        FileSystem.write(FILENAME, getId(), data);
+        FileSystem.write(FILENAME, getIdString(), data);
     }
 
     /**
      * loads the Object
      */
     public void loadSelf(){
-        FileSystem.mapPut(FILENAME, getId(), this);
-        HashMap data = FileSystem.read(FILENAME, getId());
+        FileSystem.mapPut(FILENAME, getIdString(), this);
+        HashMap data = FileSystem.read(FILENAME, getIdString());
         this.loadPrelimData(data);
         this.loadJobAppManager(data);
     }

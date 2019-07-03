@@ -186,7 +186,7 @@ class JobApplication implements Storable {
      *
      * @return the string of the id
      */
-    public String getId() {
+    public String getIdString() {
         return Integer.toString(this.ID);
     }
 
@@ -194,7 +194,7 @@ class JobApplication implements Storable {
      * Saves the Object
      */
     public void saveSelf() {
-        FileSystem.mapPut(FILENAME, getId(), this);
+        FileSystem.mapPut(FILENAME, this.getIdString(), this);
         HashMap<String, Object> data = new HashMap<>();
         data.put("CV", this.getCV());
         data.put("CoverLetter", this.getCoverLetter());
@@ -202,29 +202,29 @@ class JobApplication implements Storable {
         data.put("ApplicationDate", this.getApplicationDate());
         data.put("Applicant", new ArrayList() {{
             add(getApplicant().FILENAME);
-            add(getApplicant().getId());
+            add(getApplicant().getIdString());
         }});
         data.put("JobPosting", new ArrayList() {{
             add(getJobPosting().FILENAME);
-            add(getJobPosting().getId());
+            add(getJobPosting().getIdString());
         }});
         ArrayList interviews = new ArrayList();
         for (Interview x : this.interviews) {
             interviews.add(new ArrayList() {{
                 add(x.FILENAME);
-                add(x.getId());
+                add(x.getIdString());
             }});
         }
         data.put("interviews", interviews);
-        FileSystem.write(FILENAME, getId(), data);
+        FileSystem.write(FILENAME, getIdString(), data);
     }
 
     /**
      * Load this job application.
      */
     public void loadSelf() {
-        FileSystem.mapPut(FILENAME, getId(), this);
-        HashMap data = FileSystem.read(FILENAME, getId());
+        FileSystem.mapPut(FILENAME, this.getIdString(), this);
+        HashMap data = FileSystem.read(FILENAME, this.getIdString());
         this.loadPrelimData(data);
         this.loadApplicant(data);
         this.loadInterviews(data);
@@ -248,8 +248,9 @@ class JobApplication implements Storable {
      * @param data The data for this job application.
      */
     private void loadApplicant(HashMap data) {
-        this.setApplicant((Applicant) FileSystem.subLoader(Applicant.class, (String) ((ArrayList) data.get("Applicant")).get(0),
-                    (String) ((ArrayList) data.get("Applicant")).get(1)));
+        this.setApplicant((Applicant) FileSystem.subLoader(Applicant.class, (String)
+                ((ArrayList) data.get("Applicant")).get(0), (String)
+                ((ArrayList) data.get("Applicant")).get(1)));
     }
 
     /**
@@ -258,8 +259,8 @@ class JobApplication implements Storable {
      * @param data The data for this job application.
      */
     private void loadPosting(HashMap data) {
-        this.jobPosting = ((JobPosting) FileSystem.subLoader(JobPosting.class, (String) ((ArrayList) data.get("JobPosting")).get(0),
-                    (String) ((ArrayList) data.get("JobPosting")).get(1)));
+        this.jobPosting = ((JobPosting) FileSystem.subLoader(JobPosting.class, (String) ((ArrayList)
+                data.get("JobPosting")).get(0), (String) ((ArrayList) data.get("JobPosting")).get(1)));
     }
 
 

@@ -109,7 +109,7 @@ class Company implements Storable{
      *
      * @return the string of the id
      */
-    public String getId() {
+    public String getIdString() {
         return this.getName();
     }
 
@@ -146,28 +146,37 @@ class Company implements Storable{
      * Saves the Object
      */
     public void saveSelf(){
-        FileSystem.mapPut(FILENAME, getId(), this);
+        FileSystem.mapPut(FILENAME, getIdString(), this);
         HashMap<String, Object> data = new HashMap<>();
         ArrayList<ArrayList<String>> hrcoords = new ArrayList<>();
         for(HRCoordinator x : this.hrCoordinators){
-            hrcoords.add(new ArrayList<>(){{add(x.FILENAME); add(x.getId());}});
+            hrcoords.add(new ArrayList<String>() {{
+                add(x.FILENAME);
+                add(x.getId());
+            }});
         }
         data.put("hrCoordinators", hrcoords);
         HashMap<String, ArrayList<ArrayList<String>>> map = new HashMap<>();
         for(String field : this.fieldToInterviewers.keySet()){
-            ArrayList<ArrayList<String>> interviewrs = new ArrayList<>();
+            ArrayList<ArrayList<String>> interviewers = new ArrayList<>();
             for(Interviewer y : this.fieldToInterviewers.get(field)){
-                interviewrs.add(new ArrayList<>(){{add(y.FILENAME); add(y.getId());}});
+                interviewers.add(new ArrayList<String>() {{
+                    add(y.FILENAME);
+                    add(y.getId());
+                }});
             }
-            map.put(field, interviewrs);
+            map.put(field, interviewers);
         }
         data.put("fields", map);
         ArrayList<ArrayList<String>> jobpostings = new ArrayList<>();
         for(JobPosting x : this.jobPostingManager.getJobPostings()){
-            jobpostings.add(new ArrayList<>(){{add(x.FILENAME); add(x.getId());}});
+            jobpostings.add(new ArrayList<String>() {{
+                add(x.FILENAME);
+                add(x.getIdString());
+            }});
         }
         data.put("jobpostings", jobpostings);
-        FileSystem.write(FILENAME, getId(), data);
+        FileSystem.write(FILENAME, getIdString(), data);
     }
 
     /**
@@ -226,8 +235,8 @@ class Company implements Storable{
      * Load this Company.
      */
     public void loadSelf(){
-        FileSystem.mapPut(FILENAME, getId(), this);
-        HashMap data = FileSystem.read(FILENAME, getId());
+        FileSystem.mapPut(FILENAME, getIdString(), this);
+        HashMap data = FileSystem.read(FILENAME, getIdString());
         this.loadHRCoordinators(data);
         this.loadFieldMap(data);
         this.loadJobPostingManager(data);
