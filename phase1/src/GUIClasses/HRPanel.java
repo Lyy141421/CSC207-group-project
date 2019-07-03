@@ -79,7 +79,8 @@ public class HRPanel extends JPanel implements ActionListener {
         JPanel buttons = new JPanel(new FlowLayout());
 
         JComboBox<String> jobPostings = new JComboBox<>();
-        JLabel status = new JLabel("Job posting status here. Changes according to JobPosting selected in JList.");
+        JTextArea status = new JTextArea("Job posting status here. Changes according to JobPosting selected in JList.");
+        status.setEditable(false);
         status.setBorder(new EtchedBorder(EtchedBorder.LOWERED));
         JButton viewApplications = new JButton("View applications");
         viewApplications.addActionListener(this);
@@ -105,11 +106,14 @@ public class HRPanel extends JPanel implements ActionListener {
 
         JComboBox<String> app = new JComboBox<>();
         JList<String> viewable = new JList<>(new String[]{"abc", "xa"});
-        JLabel info = new JLabel();
+        JTextArea info = new JTextArea("Information");
+        info.setEditable(false);
         JButton scheduleInterview = new JButton("Schedule");
         JButton hiring = new JButton("Hiring decision");
         JButton home = new JButton("Home");
         home.addActionListener(this);
+
+        JSplitPane display = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, new JScrollPane(viewable), new JScrollPane(info));
 
         viewable.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
         viewable.setLayoutOrientation(JList.VERTICAL);
@@ -119,8 +123,7 @@ public class HRPanel extends JPanel implements ActionListener {
         buttons.add(home);
 
         applicationPanel.add(app, BorderLayout.NORTH);
-        applicationPanel.add(viewable, BorderLayout.WEST);
-        applicationPanel.add(info, BorderLayout.CENTER);
+        applicationPanel.add(display, BorderLayout.CENTER);
         applicationPanel.add(buttons, BorderLayout.SOUTH);
 
         return applicationPanel;
@@ -161,8 +164,8 @@ public class HRPanel extends JPanel implements ActionListener {
 
         JTextField jobTitleInput = new JTextField();
         JTextField jobFieldInput = new JTextField();
-        JTextField jobDescriptionInput = new JTextField();
-        JTextField requirementsInput = new JTextField();
+        JTextArea jobDescriptionInput = new JTextArea();
+        JTextArea requirementsInput = new JTextArea();
         JFormattedTextField numPositionsInput = new JFormattedTextField(formatter);
         // JTextField postDateInput = new JTextField();
         JDatePickerImpl closeDateInput = new JDatePickerImpl(datePanel);
