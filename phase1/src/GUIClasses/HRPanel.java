@@ -143,7 +143,9 @@ public class HRPanel extends JPanel implements ActionListener {
     }
 
     private JPanel addPosting () {
-        JPanel addPostingPanel = new JPanel();
+        JPanel addPostingPanel = new JPanel(new GridBagLayout());
+        GridBagConstraints c = new GridBagConstraints();
+        JPanel buttons = new JPanel(new FlowLayout());
 
         NumberFormatter formatter = new NumberFormatter(NumberFormat.getInstance());
         formatter.setValueClass(Integer.class);
@@ -154,27 +156,57 @@ public class HRPanel extends JPanel implements ActionListener {
         UtilDateModel dateModel = new UtilDateModel();
         JDatePanelImpl datePanel = new JDatePanelImpl(dateModel);
 
+        c.gridx = 0;
+        c.gridy = 0;
+        c.insets = new Insets(1, 0, 1, 0);
         JLabel jobTitle = new JLabel("Job title");
+        addPostingPanel.add(jobTitle, c);
         JLabel jobField = new JLabel("Job field");
+        c.gridy++;
+        addPostingPanel.add(jobField, c);
         JLabel jobDescription = new JLabel("Job description");
+        c.gridy++;
+        addPostingPanel.add(jobDescription, c);
         JLabel requirements = new JLabel("Requirements");
+        c.gridy++;
+        addPostingPanel.add(requirements, c);
         JLabel numPositions = new JLabel("Number of positions");
+        c.gridy++;
+        addPostingPanel.add(numPositions, c);
         // JLabel postDate = new JLabel("Date");
         JLabel closeDate = new JLabel("Close date");
+        c.gridy++;
+        addPostingPanel.add(closeDate, c);
 
-        JTextField jobTitleInput = new JTextField();
-        JTextField jobFieldInput = new JTextField();
-        JTextArea jobDescriptionInput = new JTextArea();
-        JTextArea requirementsInput = new JTextArea();
+        c.gridx = 1;
+        c.gridy = 0;
+        JTextField jobTitleInput = new JTextField(30);
+        addPostingPanel.add(jobTitleInput, c);
+        JTextField jobFieldInput = new JTextField(30);
+        c.gridy++;
+        addPostingPanel.add(jobFieldInput, c);
+        JTextArea jobDescriptionInput = new JTextArea(4, 30);
+        c.gridy++;
+        addPostingPanel.add(jobDescriptionInput, c);
+        JTextArea requirementsInput = new JTextArea(4, 30);
+        c.gridy++;
+        addPostingPanel.add(requirementsInput, c);
         JFormattedTextField numPositionsInput = new JFormattedTextField(formatter);
+        numPositionsInput.setColumns(30);
+        c.gridy++;
+        addPostingPanel.add(numPositionsInput, c);
         // JTextField postDateInput = new JTextField();
         JDatePickerImpl closeDateInput = new JDatePickerImpl(datePanel);
+        c.gridy++;
+        addPostingPanel.add(closeDateInput, c);
 
         JButton submit = new JButton("Submit");
         JButton home = new JButton("Home");
         home.addActionListener(this);
-
-        addPostingPanel.add(home);
+        buttons.add(submit);
+        buttons.add(home);
+        c.gridy++;
+        addPostingPanel.add(buttons, c);
 
         return addPostingPanel;
     }
