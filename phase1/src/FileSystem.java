@@ -198,7 +198,9 @@ public class FileSystem {
         }
         else{
             try {
-                return c.getConstructor(String.class).newInstance(id);
+                Object obj = c.getConstructor(String.class).newInstance(id);
+                ((Storable)obj).loadSelf();
+                return obj;
             } catch (NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
                 e.printStackTrace();
                 return null;
