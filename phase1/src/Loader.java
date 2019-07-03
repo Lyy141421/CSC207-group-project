@@ -108,7 +108,7 @@ class Loader {
      *
      * @return - the list of Objects
      */
-    ArrayList<Storable> getUsers(){
+    ArrayList<Storable> getObj_list(){
         return this.obj_list;
     }
 
