@@ -172,45 +172,66 @@ class Company implements Storable{
     }
 
     /**
-     * Load this Company.
+     * Load the preliminary data for this applicant.
+     *
+     * @param data The Company's Data
      */
-    // TODO
-    public void loadSelf(){
-        FileSystem.mapPut(FILENAME, getId(), this);
-        HashMap data = FileSystem.read(FILENAME, getId());
+    private void loadPrelimData(HashMap data) {
+
+    }
+
+    /**
+     * Loads the HRCoordinators from memory
+     *
+     * @param data The Company's Data
+     */
+    private void loadHRCoordinators(HashMap data){
         ArrayList<HRCoordinator> hrcords = new ArrayList<>();
         for(Object x : (ArrayList)data.get("hrCoordinators")){
-            if(FileSystem.isLoaded((String)((ArrayList)x).get(0), (String)((ArrayList)x).get(1))){
-                hrcords.add((HRCoordinator) FileSystem.mapGet((String)((ArrayList)x).get(0), (String)((ArrayList)x).get(1)));
-            }
-            else{
-                hrcords.add(new HRCoordinator((String)((ArrayList)x).get(1)));
-            }
+            hrcords.add((HRCoordinator) FileSystem.subLoader(HRCoordinator.class, (String)((ArrayList)x).get(0), (String)((ArrayList)x).get(1)));
         }
         this.hrCoordinators = hrcords;
+    }
+
+    /**
+     * Loads the FieldMap from memory
+     *
+     * @param data The Company's Data
+     */
+    private void loadFieldMap(HashMap data){
         HashMap<String, ArrayList<Interviewer>> fieldmap = new HashMap<>();
         for(String fields : ((HashMap<String, ArrayList<ArrayList<String>>>)data.get("fields")).keySet()){
             ArrayList<Interviewer> interviewers = new ArrayList<>();
             for(Object y : (ArrayList)((HashMap)data.get("fields")).get(fields)){
-                if(FileSystem.isLoaded((String)((ArrayList)y).get(0), (String)((ArrayList)y).get(1))){
-                    interviewers.add((Interviewer) FileSystem.mapGet((String)((ArrayList)y).get(0), (String)((ArrayList)y).get(1)));
-                }
-                else{
-                    interviewers.add(new Interviewer((String)((ArrayList)y).get(1)));
-                }
+                interviewers.add((Interviewer) FileSystem.subLoader(Interview.class, (String)((ArrayList)y).get(0), (String)((ArrayList)y).get(1)));
             }
             fieldmap.put(fields, interviewers);
         }
         this.fieldToInterviewers = fieldmap;
+    }
+
+    /**
+     * Loads the FieldMap from memory
+     *
+     * @param data The Company's Data
+     */
+    private void loadJobPostingManager(HashMap data){
         ArrayList<JobPosting> jobpostings = new ArrayList<>();
         for(Object x : (ArrayList)data.get("jobpostings")){
-            if(FileSystem.isLoaded((String)((ArrayList)x).get(0), (String)((ArrayList)x).get(1))){
-                jobpostings.add((JobPosting) FileSystem.mapGet((String)((ArrayList)x).get(0), (String)((ArrayList)x).get(1)));
+                jobpostings.add((JobPosting) FileSystem.subLoader(JobPosting.class, (String)((ArrayList)x).get(0), (String)((ArrayList)x).get(1)));
             }
-            else{
-                jobpostings.add(new JobPosting((String)((ArrayList)x).get(1)));
-            }
-        }
         this.jobPostingManager = new JobPostingManager(jobpostings, this);
+    }
+
+    /**
+     * Load this Company.
+     */
+    public void loadSelf(){
+        FileSystem.mapPut(FILENAME, getId(), this);
+        HashMap data = FileSystem.read(FILENAME, getId());
+        this.loadHRCoordinators(data);
+        this.loadFieldMap(data);
+        this.loadJobPostingManager(data);
+
     }
 }
