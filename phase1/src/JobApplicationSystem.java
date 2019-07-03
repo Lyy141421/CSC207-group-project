@@ -64,6 +64,30 @@ public class JobApplicationSystem {
     // === Other methods ===
 
     /**
+     * To be called at the start of the program
+     * Used to load all objects from json memory
+     */
+    static void mainStart(){
+        Loader applicant = new Loader(Applicant.class, Applicant.FILENAME);
+        Loader interviewr = new Loader(Interviewer.class, Interviewer.FILENAME);
+        Loader hrcoordinator = new Loader(HRCoordinator.class, HRCoordinator.FILENAME);
+        Loader company = new Loader(Company.class, Company.FILENAME);
+        Loader jobposting = new Loader(JobPosting.class, JobPosting.FILENAME);
+        Loader jobapplication = new Loader(JobApplication.class, JobApplication.FILENAME);
+        Loader interview = new Loader(Interview.class, Interview.FILENAME);
+        Loader.startLoad();
+        //TODO Check if all files are loaded to their managers
+    }
+
+    /**
+     * To be called at the end of the Program
+     * Used to Save all Objects to json memory
+     */
+    static void mainEnd(){
+        Loader.endSave();
+    }
+
+    /**
      A method which triggers once a day from the time it is started.
      */
     private static void cyclicalTask(){
