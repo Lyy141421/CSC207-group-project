@@ -132,7 +132,7 @@ class UserManager {
                 return user;
             }
         }
-        throw new NullPointerException();
+        return null;
     }
 
     /**

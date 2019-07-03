@@ -35,6 +35,21 @@ class UserInterface {
     // === Other methods ===
 
     /**
+     * Get the input from the user.
+     *
+     * @param sc The scanner for user input.
+     * @return the input from the user.
+     */
+    String getInput(Scanner sc) {
+        String input = sc.nextLine();
+        if (input == null) {
+            System.out.println("Invalid input. Please input again.");
+            this.getInput(sc);
+        }
+        return input;
+    }
+
+    /**
      * Interface for displaying user types.
      *
      * @return the number of options in the menu.
@@ -85,6 +100,17 @@ class UserInterface {
         return null;    // Won't execute because option number is guaranteed to be within bounds.
     }
 
+    String[] getLegalNameAndEmail(Scanner sc) {
+        String[] legalNameAndEmail = new String[2];
+        System.out.print("Enter your legal name: ");
+        legalNameAndEmail[0] = this.getInput(sc);
+        sc.nextLine();
+        System.out.print("Enter your email address: ");
+        legalNameAndEmail[1] = this.getInput(sc);
+        sc.nextLine();
+        return legalNameAndEmail;
+    }
+
     /**
      * Create a new applicant.
      *
@@ -95,13 +121,9 @@ class UserInterface {
      */
     private User createNewApplicant(Scanner sc, String username, String password) {
         System.out.println();
-        System.out.print("Enter your legal name: ");
-        String legalName = sc.nextLine();
-        sc.nextLine();
-        System.out.print("Enter your email address: ");
-        String email = sc.nextLine();
-        return UserInterface.userManager.createApplicant(username, password, legalName, email, LocalDate.now(),
-                true);
+        String[] legalNameAndEmail = this.getLegalNameAndEmail(sc);
+        return UserInterface.userManager.createApplicant(username, password, legalNameAndEmail[0],
+                legalNameAndEmail[1], LocalDate.now(), true);
     }
 
     /**
@@ -113,15 +135,12 @@ class UserInterface {
      * @return the new HR Coordinator instance created.
      */
     private User createNewHRC(Scanner sc, String username, String password) {
-        System.out.print("Enter your legal name: ");
-        String legalName = sc.nextLine();
-        System.out.print("Enter your email address: ");
-        String email = sc.nextLine();
+        String[] legalNameAndEmail = this.getLegalNameAndEmail(sc);
         System.out.print("Enter your company name: ");
-        String companyName = sc.nextLine();
+        String companyName = this.getInput(sc);
         Company company = JobApplicationSystem.getCompany(companyName);
-        return UserInterface.userManager.createHRCoordinator(username, password, legalName, email, company,
-                LocalDate.now(), true);
+        return UserInterface.userManager.createHRCoordinator(username, password, legalNameAndEmail[0],
+                legalNameAndEmail[1], company, LocalDate.now(), true);
     }
 
     /**
@@ -133,17 +152,14 @@ class UserInterface {
      * @return the new interviewer instance created.
      */
     private User createNewInterviewer(Scanner sc, String username, String password) {
-        System.out.print("Enter your legal name: ");
-        String legalName = sc.nextLine();
-        System.out.print("Enter your email address: ");
-        String email = sc.nextLine();
+        String[] legalNameAndEmail = this.getLegalNameAndEmail(sc);
         System.out.print("Enter your company name: ");
-        String companyName = sc.nextLine();
+        String companyName = this.getInput(sc);
         Company company = JobApplicationSystem.getCompany(companyName);
         System.out.print("Enter your field: ");
-        String field = sc.nextLine();
-        return UserInterface.userManager.createInterviewer(username, password, legalName, email, company, field,
-                LocalDate.now(), true);
+        String field = this.getInput(sc);
+        return UserInterface.userManager.createInterviewer(username, password, legalNameAndEmail[0],
+                legalNameAndEmail[1], company, field, LocalDate.now(), true);
     }
 
     /**
@@ -154,19 +170,19 @@ class UserInterface {
     private User login() {
         Scanner sc = new Scanner(System.in);
         System.out.print("Enter your username: ");
-        String username = sc.nextLine();
+        String username = this.getInput(sc);
         System.out.print("Enter your password: ");
-        String password = sc.nextLine();
-        try {
-            User user = UserInterface.userManager.findUserByUsername(username);
+        String password = this.getInput(sc);
+        User user = UserInterface.userManager.findUserByUsername(username);
+        if (user == null) {
+            return this.signUp(sc, username, password);
+        } else {
             while (!UserInterface.userManager.passwordCorrect(username, password)) {
                 System.out.println("Incorrect password.");
                 System.out.print("Enter your password: ");
-                password = sc.nextLine();
+                password = this.getInput(sc);
             }
             return user;
-        } catch (NullPointerException npe) {
-            return this.signUp(sc, username, password);
         }
     }
 }
