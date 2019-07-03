@@ -24,12 +24,14 @@ class Applicant extends User {
 
     Applicant(String username, String password, String legalName, String email, LocalDate dateCreated) {
         super(username, password, legalName, email, dateCreated);
+        super.setUserInterface(new ApplicantInterface(this));
     }
 
     Applicant(String username, String password, String legalName, String email, LocalDate dateCreated,
               JobApplicationManager jobApplicationManager) {
         super(username, password, legalName, email, dateCreated);
         this.jobApplicationManager = jobApplicationManager;
+        super.setUserInterface(new ApplicantInterface(this));
     }
 
     // === Getters ===
