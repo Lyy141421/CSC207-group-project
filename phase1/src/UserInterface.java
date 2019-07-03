@@ -1,12 +1,19 @@
+import java.util.Scanner;
+
 class UserInterface {
     /**
      * The general user interface
      */
 
     // === Instance variables ===
-    private UserManager userManager; // the UserManager for this JobApplicationSystem
+    private static UserManager userManager = JobApplicationSystem.getUserManager(); // the UserManager for this JobApplicationSystem
 
     UserInterface() {
+    }
+
+    public static void main (String[] args) {
+        UserInterface UI = new UserInterface();
+        UI.login();
     }
 
     void run() {
@@ -15,7 +22,54 @@ class UserInterface {
         // run the specific user interface
     }
 
+    int displayUserTypes() {
+        System.out.println("Please select your user type:");
+        System.out.println("1 - Job applicant");
+        System.out.println("2 - Interviewer");
+        System.out.println("3 - HR coordinator");
+        return 3;
+    }
+
+    int getMenuOption(Scanner sc, int numOptions) {
+        System.out.println();
+        System.out.print("Select an option number: ");
+        int option = sc.nextInt();
+        if (option < 1 || option > numOptions) {
+            System.out.println("Invalid input.");
+            this.getMenuOption(sc, numOptions);
+        }
+        return option;
+    }
     void login() {
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter your username: ");
+        String username = sc.next();
+        System.out.print("Enter your password: ");
+        String password = sc.next();
+        if (userManager.findUserByUsername(username) == null) {
+            int numOptions = this.displayUserTypes();
+            int option = this.getMenuOption(sc, numOptions);
+            //TODO not done
+        }
+        else {
+            while (!userManager.passwordCorrect(username, password)) {
+                System.out.println("Incorrect password.");
+                System.out.print("Enter your password: ");
+                password = sc.next();
+            }
+            if (userManager.findUserByUsername(username) instanceof Applicant) {
+                Applicant applicant = (Applicant)userManager.findUserByUsername(username);
+            }
+            else if (userManager.findUserByUsername(username) instanceof Interviewer) {
+                Interviewer interviewer = (Interviewer)userManager.findUserByUsername(username);
+            }
+            else if (userManager.findUserByUsername(username) instanceof HRCoordinator) {
+                HRCoordinator HRcoordinator = (HRCoordinator) userManager.findUserByUsername(username);
+            }
+            else {
+                System.out.println("Error");
+            }
+        }
         /*
         - Prompt user to enter their username
         - Prompt user to enter their password
