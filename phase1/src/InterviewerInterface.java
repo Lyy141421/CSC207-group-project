@@ -46,6 +46,7 @@ class InterviewerInterface extends UserInterface {
         /*
         ArrayList<Interview> unscheduledInterviews = this.interviewer.getUnscheduledInterviews();
         for (Interview interview : unscheduledInterviews) {
+
             LocalDate date = // choose date;
             int timSlot = // choose timeSlot;
             interview.setTime(new InterviewTime(date, timeSlot));

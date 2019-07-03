@@ -1,4 +1,6 @@
+import javax.swing.text.DateFormatter;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -250,8 +252,7 @@ class JobPosting implements Storable{
     public boolean equals(Object obj) {
         if (!(obj instanceof JobPosting)) {
             return false;
-        }
-        else {
+        } else {
             return Integer.toString(this.id).equals(((JobPosting) obj).getId());
         }
     }
@@ -259,6 +260,27 @@ class JobPosting implements Storable{
     @Override
     public int hashCode() {
         return this.id;
+    }
+
+    /**
+     * Get a string representation of this job posting.
+     *
+     * @return a string representation of this job posting.
+     */
+    @Override
+    public String toString() {
+        String s = "Job ID: " + this.getId() + "\n";
+        s += "Title: " + this.getTitle() + "\n";
+        s += "Field: " + this.getField() + "\n";
+        s += "Description: " + this.getDescription() + "\n";
+        s += "Requirements: " + this.getRequirements() + "\n";
+        s += "Number of positions: " + this.getNumPositions() + "\n";
+        s += "Company: " + this.getCompany().getName() + "\n";
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-mm-dd");
+        s += "Post date: " + this.getPostDate().format(dtf) + "\n";
+        s += "Close date: " + this.getCloseDate().format(dtf) + "\n";
+        s += "Filled: " + this.isFilled() + "\n";
+        return s;
     }
 
     /**

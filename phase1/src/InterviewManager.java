@@ -195,7 +195,7 @@ class InterviewManager {
      */
     void archiveRejected() {
         for (JobApplication jobApp : this.getApplicationsRejected()) {
-            jobApp.archiveJobApp();
+            jobApp.setArchived();
         }
     }
 
