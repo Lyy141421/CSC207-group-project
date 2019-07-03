@@ -54,6 +54,10 @@ class JobPosting implements Storable{
 
     // === Getters ===
 
+    int getId() {
+        return this.id;
+    }
+
     String getTitle() {
         return this.title;
     }
@@ -176,7 +180,7 @@ class JobPosting implements Storable{
                 return jobApp;
             }
         }
-        return null;
+        throw new NullPointerException();
     }
 
     /**
@@ -262,7 +266,7 @@ class JobPosting implements Storable{
      *
      * @return the string of the id
      */
-    public String getId(){
+    public String getIdString() {
         return Integer.toString(this.id);
     }
 
@@ -270,7 +274,7 @@ class JobPosting implements Storable{
      * Saves the Object
      */
     public void saveSelf(){
-        FileSystem.mapPut(FILENAME, getId(), this);
+        FileSystem.mapPut(FILENAME, getIdString(), this);
         HashMap<String, Object> data = new HashMap<>();
         data.put("title", this.getTitle());
         data.put("field", this.getField());
@@ -296,15 +300,15 @@ class JobPosting implements Storable{
         }
         data.put("applicationsRejected", applicationsRejected);
         data.put("currentRound", this.interviewManager.getCurrentRound());
-        FileSystem.write(FILENAME, getId(), data);
+        FileSystem.write(FILENAME, getIdString(), data);
     }
 
     /**
      * Loads the job posting.
      */
     public void loadSelf(){
-        FileSystem.mapPut(FILENAME, getId(), this);
-        HashMap data = FileSystem.read(FILENAME, getId());
+        FileSystem.mapPut(FILENAME, getIdString(), this);
+        HashMap data = FileSystem.read(FILENAME, getIdString());
         this.loadPrelimData(data);
         this.loadJobApps(data);
         ArrayList<JobApplication> appsInConsideration = this.loadAppsInConsideration(data);

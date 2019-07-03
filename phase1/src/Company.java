@@ -89,12 +89,36 @@ class Company implements Storable{
     }
 
     /**
+     * View all applications this applicant has submitted for job postings in this company.
+     *
+     * @param applicant The applicant in question.
+     * @return a list of job applications that this applicant has previously submitted to this company.
+     */
+    ArrayList<JobApplication> getAllApplicationsToCompany(Applicant applicant) {
+        ArrayList<JobApplication> apps = new ArrayList<>();
+        for (JobApplication jobApp : applicant.getJobApplicationManager().getJobApplications()) {
+            if (jobApp.getJobPosting().getCompany().equals(this)) {
+                apps.add(jobApp);
+            }
+        }
+        return apps;
+    }
+
+    /**
+     * Getter for the ID
+     *
+     * @return the string of the id
+     */
+    public String getId() {
+        return this.getName();
+    }
+
+    /**
      * Report whether this company is the same as obj.
      *
      * @param obj     The object to be compared with.
      * @return true iff obj is a company and has the same name as this company.
      */
-
     @Override
     public boolean equals(Object obj) {
         if (!(obj instanceof Company)) {
@@ -116,31 +140,6 @@ class Company implements Storable{
             sum += name.charAt(i);
         }
         return sum;
-    }
-
-    /**
-     * View all applications this applicant has submitted for job postings in this company.
-     *
-     * @param applicant The applicant in question.
-     * @return a list of job applications that this applicant has previously submitted to this company.
-     */
-    ArrayList<JobApplication> getAllApplicationsToCompany(Applicant applicant) {
-        ArrayList<JobApplication> apps = new ArrayList<>();
-        for (JobApplication jobApp : applicant.getJobApplicationManager().getJobApplications()) {
-            if (jobApp.getJobPosting().getCompany().equals(this)) {
-                apps.add(jobApp);
-            }
-        }
-        return apps;
-    }
-
-    /**
-     * Getter for the ID
-     *
-     * @return the string of the id
-     */
-    public String getId(){
-        return this.getName();
     }
 
     /**
