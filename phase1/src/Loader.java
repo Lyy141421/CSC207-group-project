@@ -1,3 +1,4 @@
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -61,7 +62,7 @@ class Loader {
      */
     static void endSave(){
         for(Loader loader : loader_list){
-            loader.saveAll();
+            loader.saveAll(); //TODO use FileSystem Map for this
         }
     }
 
@@ -74,7 +75,8 @@ class Loader {
         Iterator i = FileSystem.getAllID(this.filename);
         while(i.hasNext()){
             try {
-                Object obj = this.clazz.getConstructor(String.class).newInstance((String)i.next());
+                Constructor con = this.clazz.getConstructor(String.class);
+                Object obj = con.newInstance((String)i.next());
                 this.obj_list.add((Storable) obj);
                 ((Storable) obj).loadSelf();
             } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
