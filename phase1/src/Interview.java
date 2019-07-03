@@ -144,7 +144,7 @@ class Interview implements Storable{
      *
      * @return the string of the id
      */
-    public String getId(){
+    public String getIdString(){
         return Integer.toString(this.ID);
     }
 
@@ -152,14 +152,14 @@ class Interview implements Storable{
      * Saves the Object
      */
     public void saveSelf(){
-        FileSystem.mapPut(FILENAME, getId(), this);
+        FileSystem.mapPut(FILENAME, getIdString(), this);
         HashMap<String, Object> data = new HashMap<>();
         data.put("interviewNotes", this.interviewNotes);
         data.put("pass", this.pass);
         data.put("roundNumber", this.roundNumber);
-        data.put("JobApplication", new ArrayList(){{ add(getApplicant().FILENAME); add(getApplicant().getId()); }});
-        data.put("interviewer", new ArrayList(){{ add(getInterviewer().FILENAME); add(getInterviewer().getId()); }});
-        data.put("HRCoordinator", new ArrayList(){{ add(getHRCoordinator().FILENAME); add(getHRCoordinator().getId()); }});
+        data.put("JobApplication", new ArrayList(){{ add(getApplicant().FILENAME); add(getApplicant().getIdString()); }});
+        data.put("interviewer", new ArrayList(){{ add(getInterviewer().FILENAME); add(getInterviewer().getIdString()); }});
+        data.put("HRCoordinator", new ArrayList(){{ add(getHRCoordinator().FILENAME); add(getHRCoordinator().getIdString()); }});
         data.put("InterviewTimeDate", this.time.getDate());
         data.put("InterviewTimeTimeslot", this.time.getTimeSlot());
     }
@@ -181,8 +181,8 @@ class Interview implements Storable{
      * loads the Object
      */
     public void loadSelf() {
-        FileSystem.mapPut(FILENAME, getId(), this);
-        HashMap data = FileSystem.read(FILENAME, getId());
+        FileSystem.mapPut(FILENAME, getIdString(), this);
+        HashMap data = FileSystem.read(FILENAME, getIdString());
         this.loadPrelimData(data);
         this.jobApplication = (JobApplication) FileSystem.subLoader(JobApplication.class, (String) ((ArrayList) data.get("JobApplication")).get(0), (String) ((ArrayList) data.get("JobApplication")).get(0));
         this.interviewer = (Interviewer) FileSystem.subLoader(Interviewer.class, (String) ((ArrayList) data.get("interviewer")).get(0), (String) ((ArrayList) data.get("interviewer")).get(0));
