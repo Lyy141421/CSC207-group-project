@@ -14,7 +14,7 @@ class Company implements Storable{
     // The job posting manager for this company
     private JobPostingManager jobPostingManager = new JobPostingManager(this);
     // The filename under which this will be saved in the FileSystem
-    final String FILENAME = "Companies";
+    static final String FILENAME = "Companies";
 
     // === Constructors ===
 

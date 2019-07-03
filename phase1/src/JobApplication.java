@@ -50,7 +50,7 @@ class JobApplication implements Storable {
     // The interviews conducted for this application
     private ArrayList<Interview> interviews = new ArrayList<>();
     // The filename under which this will be saved in the FileSystem
-    public final String FILENAME = "JobApplications";
+    static final String FILENAME = "JobApplications";
 
     // === Constructors ===
 
