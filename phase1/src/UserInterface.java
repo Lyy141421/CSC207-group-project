@@ -1,3 +1,5 @@
+import java.util.Scanner;
+
 class UserInterface {
     /**
      * The general user interface
@@ -58,5 +60,22 @@ class UserInterface {
             }
 
         */
+    }
+
+    /**
+     * Interface for getting the menu option selected.
+     *
+     * @param sc         The scanner for user input.
+     * @param numOptions The number of options in this menu.
+     * @return the option selected.
+     */
+    int getMenuOption(Scanner sc, int numOptions) {
+        System.out.print("\nSelect an option number: ");
+        int option = sc.nextInt();
+        if (option < 1 || option > numOptions) {
+            System.out.println("Invalid input.");
+            this.getMenuOption(sc, numOptions);
+        }
+        return option;
     }
 }
