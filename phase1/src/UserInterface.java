@@ -14,6 +14,12 @@ class UserInterface {
     // The user who logged in
     User user;
 
+    public static void main(String[] args) {
+        UserInterface UI = new UserInterface();
+        User user = UI.login();
+        user.getUserInterface().run(LocalDate.now());
+    }
+
     // === Constructors ===
     UserInterface() {
     }
@@ -22,15 +28,16 @@ class UserInterface {
         this.user = user;
     }
 
-    public static void main (String[] args) {
-        UserInterface UI = new UserInterface();
-        User user = UI.login();
-        user.getUserInterface().run();
+
+    // === Inherited method ===
+    void run(LocalDate today) {
     }
 
-    void run() {
-    }
-
+    /**
+     * Interface for displaying user types.
+     *
+     * @return the number of options in the menu.
+     */
     private int displayUserTypes() {
         System.out.println("Please select your user type:");
         System.out.println("1 - Job applicant");
@@ -39,6 +46,12 @@ class UserInterface {
         return 3;
     }
 
+    /**
+     * Interface for getting the menu option selected.
+     * @param sc            The scanner for user input.
+     * @param numOptions    The number of options in the menu.
+     * @return the option selected.
+     */
     int getMenuOption(Scanner sc, int numOptions) {
         int option = sc.nextInt();
         if (option < 1 || option > numOptions) {
@@ -48,7 +61,15 @@ class UserInterface {
         return option;
     }
 
-    User signUp(Scanner sc, String username, String password) {
+    /**
+     * Sign up this user based on the user type selected.
+     *
+     * @param sc       The scanner for user input.
+     * @param username The user's username.
+     * @param password The user's password.
+     * @return the new user instance created.
+     */
+    private User signUp(Scanner sc, String username, String password) {
         int numOptions = this.displayUserTypes();
         int option = this.getMenuOption(sc, numOptions);
         switch (option) {
@@ -96,7 +117,7 @@ class UserInterface {
         System.out.println("Enter your company name: ");
         String companyName = sc.nextLine();
         Company company = JobApplicationSystem.getCompany(companyName);
-        return JobApplicationSystem.getUserManager().createHRCoordinator(username, password, legalName, email, company,
+        return userManager.createHRCoordinator(username, password, legalName, email, company,
                 LocalDate.now(), true);
     }
 
@@ -127,7 +148,12 @@ class UserInterface {
                 LocalDate.now(), true);
     }
 
-    User login() {
+    /**
+     * Login this user into the system. Sign them up if username does not already exist in the system.
+     *
+     * @return the user who logged-in.
+     */
+    private User login() {
         Scanner sc = new Scanner(System.in);
         System.out.print("Enter your username: ");
         String username = sc.next();
@@ -142,9 +168,9 @@ class UserInterface {
                 System.out.print("Enter your password: ");
                 password = sc.next();
             }
-            return JobApplicationSystem.getUserManager().findUserByUsername(username);
+            return userManager.findUserByUsername(username);
         }
-    }
+
         /*
         - Prompt user to enter their username
         - Prompt user to enter their password
@@ -187,4 +213,5 @@ class UserInterface {
             }
 
         */
+    }
 }

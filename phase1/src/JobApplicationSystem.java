@@ -1,6 +1,5 @@
 import GUIClasses.MainFrame;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -69,7 +68,7 @@ public class JobApplicationSystem {
      */
     static void mainStart(){
         Loader applicant = new Loader(Applicant.class, Applicant.FILENAME);
-        Loader interviewr = new Loader(Interviewer.class, Interviewer.FILENAME);
+        Loader interviewer = new Loader(Interviewer.class, Interviewer.FILENAME);
         Loader hrcoordinator = new Loader(HRCoordinator.class, HRCoordinator.FILENAME);
         Loader company = new Loader(Company.class, Company.FILENAME);
         Loader jobposting = new Loader(JobPosting.class, JobPosting.FILENAME);

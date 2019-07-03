@@ -136,7 +136,7 @@ class UserManager {
                 return user;
             }
         }
-        return null; // You can throw a NullPointerException and then handle it in the passwordCorrect-loop in the interface
+        return null;
     }
 
     /**
