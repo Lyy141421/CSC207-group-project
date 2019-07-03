@@ -8,7 +8,7 @@ class UserInterface {
 
     // === Class variables ===
     // The UserManager for this JobApplicationSystem
-    private static UserManager userManager = JobApplicationSystem.getUserManager();
+    private static UserManager userManager = new UserManager();
 
     // === Instance variables ===
     // The user who logged in
@@ -40,9 +40,9 @@ class UserInterface {
      * @param sc The scanner for user input.
      * @return the input from the user.
      */
-    String getInput(Scanner sc) {
+    private String getInput(Scanner sc) {
         String input = sc.nextLine();
-        if (input == null) {
+        if (input.isEmpty()) {
             System.out.println("Invalid input. Please input again.");
             this.getInput(sc);
         }
@@ -57,8 +57,8 @@ class UserInterface {
     private int displayUserTypes() {
         System.out.println("Please select your user type");
         System.out.println("1 - Job applicant");
-        System.out.println("2 - Interviewer");
-        System.out.println("3 - HR coordinator");
+        System.out.println("2 - HR Coordinator");
+        System.out.println("3 - Interviewer");
         return 3;
     }
 
@@ -69,13 +69,17 @@ class UserInterface {
      * @return the option selected.
      */
     int getMenuOption(Scanner sc, int numOptions) {
-        System.out.print("\nSelect an option number: ");
-        int option = sc.nextInt();
-        if (option < 1 || option > numOptions) {
+        try {
+            System.out.print("\nSelect an option number: ");
+            int option = Integer.parseInt(this.getInput(sc));
+            if (option < 1 || option > numOptions) {
+                throw new NumberFormatException();
+            }
+            return option;
+        } catch (NumberFormatException nfe) {
             System.out.println("Invalid input.");
-            this.getMenuOption(sc, numOptions);
+            return this.getMenuOption(sc, numOptions);
         }
-        return option;
     }
 
     /**
@@ -100,14 +104,13 @@ class UserInterface {
         return null;    // Won't execute because option number is guaranteed to be within bounds.
     }
 
-    String[] getLegalNameAndEmail(Scanner sc) {
+    private String[] getLegalNameAndEmail(Scanner sc) {
+        System.out.println();
         String[] legalNameAndEmail = new String[2];
         System.out.print("Enter your legal name: ");
         legalNameAndEmail[0] = this.getInput(sc);
-        sc.nextLine();
         System.out.print("Enter your email address: ");
         legalNameAndEmail[1] = this.getInput(sc);
-        sc.nextLine();
         return legalNameAndEmail;
     }
 
@@ -120,8 +123,8 @@ class UserInterface {
      * @return the new applicant instance created.
      */
     private User createNewApplicant(Scanner sc, String username, String password) {
-        System.out.println();
         String[] legalNameAndEmail = this.getLegalNameAndEmail(sc);
+        System.out.println("Sign-up successful!");
         return UserInterface.userManager.createApplicant(username, password, legalNameAndEmail[0],
                 legalNameAndEmail[1], LocalDate.now(), true);
     }
@@ -139,6 +142,7 @@ class UserInterface {
         System.out.print("Enter your company name: ");
         String companyName = this.getInput(sc);
         Company company = JobApplicationSystem.getCompany(companyName);
+        System.out.println("Sign-up successful!");
         return UserInterface.userManager.createHRCoordinator(username, password, legalNameAndEmail[0],
                 legalNameAndEmail[1], company, LocalDate.now(), true);
     }
@@ -158,6 +162,7 @@ class UserInterface {
         Company company = JobApplicationSystem.getCompany(companyName);
         System.out.print("Enter your field: ");
         String field = this.getInput(sc);
+        System.out.println("Sign-up successful!");
         return UserInterface.userManager.createInterviewer(username, password, legalNameAndEmail[0],
                 legalNameAndEmail[1], company, field, LocalDate.now(), true);
     }
@@ -182,6 +187,7 @@ class UserInterface {
                 System.out.print("Enter your password: ");
                 password = this.getInput(sc);
             }
+            System.out.println("Login successful!");
             return user;
         }
     }
