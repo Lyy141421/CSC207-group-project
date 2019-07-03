@@ -87,6 +87,15 @@ class JobApplication implements Storable{
 
     // === Getters ===
 
+    static HashMap<Integer, String> getStatuses() {
+        return statuses;
+    }
+
+    /**
+     * Get the application ID.
+     *
+     * @return the application ID.
+     */
     int getID() {
         return this.ID;
     }

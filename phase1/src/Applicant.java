@@ -121,14 +121,15 @@ class Applicant extends User {
      * Remove this applicant's application for this job.
      *
      * @param jobPosting The job that this user wants to withdraw their application from.
-     * @return true iff this applicant can successfully withdraw their application.
+     * @return true iff this applicant can successfully withdraw their application; else return false
      */
     boolean withdrawApplication(JobPosting jobPosting) {
         if (this.hasAppliedTo(jobPosting) && !jobPosting.isFilled()) {
             jobPosting.removeJobApplication(jobPosting.findJobApplication(this));
             this.jobApplicationManager.removeJobApplication(jobPosting);
+            return true;
         }
-        return true;
+        return false;
     }
 
     /**
