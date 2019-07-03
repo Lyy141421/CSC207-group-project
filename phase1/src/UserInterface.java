@@ -40,11 +40,9 @@ class UserInterface {
     }
 
     int getMenuOption(Scanner sc, int numOptions) {
-        System.out.println();
-        System.out.print("Select an option number: ");
         int option = sc.nextInt();
         if (option < 1 || option > numOptions) {
-            System.out.println("Invalid input.");
+            System.out.println("Invalid input. Please try again.");
             this.getMenuOption(sc, numOptions);
         }
         return option;
@@ -75,9 +73,10 @@ class UserInterface {
     private User createNewApplicant(Scanner sc, String username, String password) {
         System.out.print("Enter your legal name: ");
         String legalName = sc.nextLine();
-        System.out.println("Enter your email address: ");
+        sc.nextLine();
+        System.out.print("Enter your email address: ");
         String email = sc.next();
-        return UserInterface.userManager.createApplicant(username, password, legalName, email, LocalDate.now(),
+        return JobApplicationSystem.getUserManager().createApplicant(username, password, legalName, email, LocalDate.now(),
                 true);
     }
 
@@ -97,7 +96,7 @@ class UserInterface {
         System.out.println("Enter your company name: ");
         String companyName = sc.nextLine();
         Company company = JobApplicationSystem.getCompany(companyName);
-        return UserInterface.userManager.createHRCoordinator(username, password, legalName, email, company,
+        return JobApplicationSystem.getUserManager().createHRCoordinator(username, password, legalName, email, company,
                 LocalDate.now(), true);
     }
 
@@ -116,10 +115,15 @@ class UserInterface {
         String email = sc.next();
         System.out.println("Enter your company name: ");
         String companyName = sc.nextLine();
+        while (JobApplicationSystem.getCompany(companyName) == null) {
+            System.out.println("Company name not found.");
+            System.out.print("Enter your company name: ");
+            companyName = sc.nextLine();
+        }
         Company company = JobApplicationSystem.getCompany(companyName);
         System.out.println("Enter your field: ");
         String field = sc.nextLine();
-        return UserInterface.userManager.createInterviewer(username, password, legalName, email, company, field,
+        return JobApplicationSystem.getUserManager().createInterviewer(username, password, legalName, email, company, field,
                 LocalDate.now(), true);
     }
 
@@ -129,27 +133,18 @@ class UserInterface {
         String username = sc.next();
         System.out.print("Enter your password: ");
         String password = sc.next();
-        if (UserInterface.userManager.findUserByUsername(username) == null) {
-            return this.signUp(sc, username, password);
-        } else {
-            while (!UserInterface.userManager.passwordCorrect(username, password)) {
+        if (userManager.findUserByUsername(username) == null) {
+            return signUp(sc, username, password);
+        }
+        else {
+            while (!JobApplicationSystem.getUserManager().passwordCorrect(username, password)) {
                 System.out.println("Incorrect password.");
                 System.out.print("Enter your password: ");
                 password = sc.next();
             }
-            return UserInterface.userManager.findUserByUsername(username);
-
-//            if (userManager.findUserByUsername(username) instanceof Applicant) {
-//                Applicant applicant = (Applicant)userManager.findUserByUsername(username);
-//            }
-//            else if (userManager.findUserByUsername(username) instanceof Interviewer) {
-//                Interviewer interviewer = (Interviewer)userManager.findUserByUsername(username);
-//            }
-//            else if (userManager.findUserByUsername(username) instanceof HRCoordinator) {
-//                HRCoordinator HRcoordinator = (HRCoordinator) userManager.findUserByUsername(username);
-//            }
+            return JobApplicationSystem.getUserManager().findUserByUsername(username);
         }
-
+    }
         /*
         - Prompt user to enter their username
         - Prompt user to enter their password
@@ -192,5 +187,4 @@ class UserInterface {
             }
 
         */
-    }
 }
