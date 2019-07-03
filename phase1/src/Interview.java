@@ -84,8 +84,16 @@ class Interview implements Storable{
         return Interview.MAX_NUM_ROUNDS;
     }
 
+    int getId() {
+        return this.ID;
+    }
+
     JobApplication getJobApplication() {
         return this.jobApplication;
+    }
+
+    JobPosting getJobPosting() {
+        return this.jobApplication.getJobPosting();
     }
 
     Applicant getApplicant() {
@@ -138,6 +146,21 @@ class Interview implements Storable{
     void setFail() {
         this.pass = false;
     }
+
+    /**
+     * Get a string representation of the preliminary input for this interview.
+     *
+     * @return
+     */
+    String toStringPrelimInfo() {
+        String s = "Interview ID: " + this.getId() + "\n";
+        s += "Job Posting: " + this.getJobPosting().getTitle();
+        s += "Interviewee: " + this.getApplicant().getLegalName() + " (" + this.getApplicant().getUsername() + ")" +
+                "\n";
+        s += "Interview type: " + Interview.roundNumberDescriptions.get(this.getRoundNumber()) + "\n";
+        return s;
+    }
+
 
     /**
      * Getter for the ID

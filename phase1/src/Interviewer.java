@@ -1,4 +1,5 @@
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -12,8 +13,8 @@ class Interviewer extends User {
     private String field;
     // The list of interviews that this interviewer must undergo in chronological order
     private ArrayList<Interview> interviews = new ArrayList<>();
-    // The interviewer's schedule as a map of the date to a list of time slots that are filled.
-    private HashMap<LocalDate, ArrayList<Integer>> schedule = new HashMap<>();
+    //    // The interviewer's schedule as a map of the date to a list of time slots that are filled.
+//    private HashMap<LocalDate, ArrayList<Integer>> schedule = new HashMap<>();
     // The filename under which this will be saved in the FileSystem
     static final String FILENAME = "Interviewers";
 
@@ -47,9 +48,9 @@ class Interviewer extends User {
         return this.interviews;
     }
 
-    HashMap<LocalDate, ArrayList<Integer>> getSchedule() {
-        return this.schedule;
-    }
+//    HashMap<LocalDate, ArrayList<Integer>> getSchedule() {
+//        return this.schedule;
+//    }
 
     // === Setters ===
     void setCompany(Company company) {
@@ -64,12 +65,57 @@ class Interviewer extends User {
         this.interviews = interviews;
     }
 
-    void setSchedule(HashMap<LocalDate, ArrayList<Integer>> schedule) {
-        this.schedule = schedule;
-    }
+//    void setSchedule(HashMap<LocalDate, ArrayList<Integer>> schedule) {
+//        this.schedule = schedule;
+//    }
 
 
     // === Other methods ===
+
+    /**
+     * Find the job application with this id from the list of job applications that this interviewer can view.
+     *
+     * @param id The id in question.
+     * @return the job application associated with this id.
+     */
+    JobApplication findJobAppById(int id) {
+        for (Interview interview : this.interviews) {
+            if (interview.getJobApplication().getID() == id) {
+                return interview.getJobApplication();
+            }
+        }
+        throw new NullPointerException();
+    }
+
+    /**
+     * Find the interview with this id from the interviews that this interviewer has access to.
+     *
+     * @param id The id in question
+     * @return the interview associated with this id.
+     */
+    Interview findInterviewById(int id) {
+        for (Interview interview : this.interviews) {
+            if (interview.getId() == id) {
+                return interview;
+            }
+        }
+        throw new NullPointerException();
+    }
+
+    /**
+     * Check whether this interviewer is available at this specific time.
+     *
+     * @param interviewTime The time in question.
+     * @return true iff this interviewer is available at this time.
+     */
+    boolean isAvailable(InterviewTime interviewTime) {
+        for (Interview interview : this.interviews) {
+            if (interview.getTime().equals(interviewTime)) {
+                return false;
+            }
+        }
+        return true;
+    }
 
     /**
      * Add an interview to this interviewer's list of interviews in sorted order.
@@ -147,18 +193,19 @@ class Interviewer extends User {
         return unscheduledInterviews;
     }
 
-    /**
-     * Add an interview that occurs on this date and time to this interviewer's schedule.
-     *
-     * @param date    The date on which this interview occurs.
-     * @param timeSlot  The time slot at which this interview occurs.
-     */
-    private void updateSchedule(LocalDate date, Integer timeSlot) {
-        if (!this.schedule.containsKey(date)) {
-            this.schedule.put(date, new ArrayList<>());
-        }
-        this.schedule.get(date).add(timeSlot);
-    }
+//    /**
+//     * Add an interview that occurs on this date and time to this interviewer's schedule.
+//     *
+//     * @param interviewTime The time that this interview occurs.
+//     */
+//    void updateSchedule(InterviewTime interviewTime) {
+//        LocalDate date = interviewTime.getDate();
+//        int timeSlot = interviewTime.getTimeSlot();
+//        if (!this.schedule.containsKey(date)) {
+//            this.schedule.put(date, new ArrayList<>());
+//        }
+//        this.schedule.get(date).add(timeSlot);
+//    }
 
     /**
      * Get a list of job applications of this interviewer's interviewees.
@@ -181,6 +228,26 @@ class Interviewer extends User {
     void failInterview(Interview interview) {
         interview.setFail();
         interview.getInterviewManager().reject(interview.getJobApplication());
+    }
+
+    /**
+     * Get a string representation of this interviewer's up-coming schedule.
+     *
+     * @return a string representation of this interviewer's schedule
+     */
+    String getScheduleString() {
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-mm-dd");
+        String s = "";
+        InterviewTime interviewTime = this.interviews.get(0).getTime();
+        s += interviewTime.getDate().format(dtf) + ": ";
+        for (Interview interview : this.interviews) {
+            if (!interview.getTime().isOnSameDate(interviewTime)) {
+                s = s.substring(0, s.length() - 2); // Remove extra comma and space from previous ling
+                s += "\n" + interview.getTime().getDate().format(dtf) + ": ";
+            }
+            s += InterviewTime.getTimeSlotCorrespondingToInt(interview.getTime().getTimeSlot()) + ", ";
+        }
+        return s.substring(0, s.length() - 2); // Remove extra comma and space
     }
 
     /**
@@ -213,15 +280,15 @@ class Interviewer extends User {
             }});
         }
         data.put("interviews", interview_list);
-        ArrayList<ArrayList> schedule = new ArrayList<>();
-        for(LocalDate x : this.schedule.keySet()){
-            ArrayList dates = this.schedule.get(x);
-            schedule.add(new ArrayList<Object>() {{
-                add(x);
-                add(dates);
-            }});
-        }
-        data.put("schedule", schedule);
+//        ArrayList<ArrayList> schedule = new ArrayList<>();
+//        for(LocalDate x : this.schedule.keySet()){
+//            ArrayList dates = this.schedule.get(x);
+//            schedule.add(new ArrayList<Object>() {{
+//                add(x);
+//                add(dates);
+//            }});
+//        }
+//        data.put("schedule", schedule);
         FileSystem.write(FILENAME, getIdString(), data);
     }
 
@@ -234,7 +301,7 @@ class Interviewer extends User {
         this.loadPrelimData(data);
         this.loadCompany(data);
         this.loadInterviews(data);
-        this.loadSchedule(data);
+//        this.loadSchedule(data);
     }
 
     /**
@@ -274,16 +341,16 @@ class Interviewer extends User {
         this.setInterviews(interviews);
     }
 
-    /**
-     * Load the schedule for this interviewer.
-     *
-     * @param data The data for this interviewer.
-     */
-    private void loadSchedule(HashMap data) {
-        HashMap<LocalDate, ArrayList<Integer>> schedule = new HashMap<>();
-        for (Object x : (ArrayList) data.get("schedule")) {
-            schedule.put(LocalDate.parse((String) ((ArrayList) x).get(0)), (ArrayList<Integer>) ((ArrayList) x).get(1));
-        }
-        this.setSchedule(schedule);
-    }
+//    /**
+//     * Load the schedule for this interviewer.
+//     *
+//     * @param data The data for this interviewer.
+//     */
+//    private void loadSchedule(HashMap data) {
+//        HashMap<LocalDate, ArrayList<Integer>> schedule = new HashMap<>();
+//        for (Object x : (ArrayList) data.get("schedule")) {
+//            schedule.put(LocalDate.parse((String) ((ArrayList) x).get(0)), (ArrayList<Integer>) ((ArrayList) x).get(1));
+//        }
+//        this.setSchedule(schedule);
+//    }
 }

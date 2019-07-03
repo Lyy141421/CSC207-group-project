@@ -40,6 +40,7 @@ class UserInterface {
         }
         return option;
     }
+
     void login() {
         Scanner sc = new Scanner(System.in);
         System.out.print("Enter your username: ");
