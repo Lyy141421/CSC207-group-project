@@ -1,10 +1,17 @@
 package GUIClasses;
 
+
+import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
+import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
+import net.sourceforge.jdatepicker.impl.UtilDateModel;
+
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
+import javax.swing.text.NumberFormatter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.NumberFormat;
 
 
 public class HRPanel extends JPanel implements ActionListener {
@@ -135,11 +142,35 @@ public class HRPanel extends JPanel implements ActionListener {
     private JPanel addPosting () {
         JPanel addPostingPanel = new JPanel();
 
-        JLabel temporaryLabel = new JLabel("This is the addPosting Panel");
+        NumberFormatter formatter = new NumberFormatter(NumberFormat.getInstance());
+        formatter.setValueClass(Integer.class);
+        formatter.setMinimum(0);
+        formatter.setMaximum(Integer.MAX_VALUE);
+        formatter.setAllowsInvalid(false);
+
+        UtilDateModel dateModel = new UtilDateModel();
+        JDatePanelImpl datePanel = new JDatePanelImpl(dateModel);
+
+        JLabel jobTitle = new JLabel("Job title");
+        JLabel jobField = new JLabel("Job field");
+        JLabel jobDescription = new JLabel("Job description");
+        JLabel requirements = new JLabel("Requirements");
+        JLabel numPositions = new JLabel("Number of positions");
+        // JLabel postDate = new JLabel("Date");
+        JLabel closeDate = new JLabel("Close date");
+
+        JTextField jobTitleInput = new JTextField();
+        JTextField jobFieldInput = new JTextField();
+        JTextField jobDescriptionInput = new JTextField();
+        JTextField requirementsInput = new JTextField();
+        JFormattedTextField numPositionsInput = new JFormattedTextField(formatter);
+        // JTextField postDateInput = new JTextField();
+        JDatePickerImpl closeDateInput = new JDatePickerImpl(datePanel);
+
+        JButton submit = new JButton("Submit");
         JButton home = new JButton("Home");
         home.addActionListener(this);
 
-        addPostingPanel.add(temporaryLabel);
         addPostingPanel.add(home);
 
         return addPostingPanel;
@@ -170,5 +201,10 @@ public class HRPanel extends JPanel implements ActionListener {
             default:
                 throw new IllegalStateException("Unexpected value: " + button.getText());
         }
+    }
+
+    // ==== Back end methods ====
+    private void createJobPosting() {
+
     }
 }
