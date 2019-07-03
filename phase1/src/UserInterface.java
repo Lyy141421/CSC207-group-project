@@ -55,8 +55,9 @@ class UserInterface {
      * @return the number of options in the menu.
      */
     private int displayUserTypes() {
+        System.out.println();
         System.out.println("Please select your user type");
-        System.out.println("1 - Job applicant");
+        System.out.println("1 - Job Applicant");
         System.out.println("2 - HR Coordinator");
         System.out.println("3 - Interviewer");
         return 3;
@@ -142,6 +143,9 @@ class UserInterface {
         System.out.print("Enter your company name: ");
         String companyName = this.getInput(sc);
         Company company = JobApplicationSystem.getCompany(companyName);
+        if (company == null) {
+            company = JobApplicationSystem.createCompany(companyName);
+        }
         System.out.println("Sign-up successful!");
         return UserInterface.userManager.createHRCoordinator(username, password, legalNameAndEmail[0],
                 legalNameAndEmail[1], company, LocalDate.now(), true);
