@@ -165,34 +165,28 @@ class Interview implements Storable{
     }
 
     /**
-     * loads the Object
+     * Load the preliminary data for this Interviewer.
+     *
+     * @param data The Company's Data
      */
-    public void loadSelf(){
-        FileSystem.mapPut(FILENAME, getId(), this);
-        HashMap data = FileSystem.read(FILENAME, getId());
+    private void loadPrelimData(HashMap data) {
         this.interviewNotes = (String)data.get("interviewNotes");
         this.pass = (boolean)data.get("pass");
         this.roundNumber = (int)data.get("roundNumber");
-        if(FileSystem.isLoaded((String)((ArrayList)data.get("JobApplication")).get(0), (String)((ArrayList)data.get("JobApplication")).get(0))){
-            this.jobApplication = (JobApplication) FileSystem.mapGet((String)((ArrayList)data.get("JobApplication")).get(0), (String)((ArrayList)data.get("JobApplication")).get(0));
-        }
-        else{
-            this.jobApplication = (new JobApplication((String)((ArrayList)data.get("JobApplication")).get(0)));
-        }
-        if(FileSystem.isLoaded((String)((ArrayList)data.get("interviewer")).get(0), (String)((ArrayList)data.get("interviewer")).get(0))){
-            this.interviewer = (Interviewer) FileSystem.mapGet((String)((ArrayList)data.get("interviewer")).get(0), (String)((ArrayList)data.get("interviewer")).get(0));
-        }
-        else{
-            this.interviewer = (new Interviewer((String)((ArrayList)data.get("interviewer")).get(0)));
-        }
-        if(FileSystem.isLoaded((String)((ArrayList)data.get("HRCoordinator")).get(0), (String)((ArrayList)data.get("HRCoordinator")).get(0))){
-            this.hrCoordinator = (HRCoordinator) FileSystem.mapGet((String)((ArrayList)data.get("HRCoordinator")).get(0), (String)((ArrayList)data.get("HRCoordinator")).get(0));
-        }
-        else{
-            this.hrCoordinator = (new HRCoordinator((String)((ArrayList)data.get("interviewer")).get(0)));
-        }
         this.interviewManager = this.jobApplication.getJobPosting().getInterviewManager();
         this.time = new InterviewTime(LocalDate.parse((String)data.get("InterviewTimeDate")), (int)data.get("InterviewTimeTimeslot"));
+    }
+
+    /**
+     * loads the Object
+     */
+    public void loadSelf() {
+        FileSystem.mapPut(FILENAME, getId(), this);
+        HashMap data = FileSystem.read(FILENAME, getId());
+        this.loadPrelimData(data);
+        this.jobApplication = (JobApplication) FileSystem.subLoader(JobApplication.class, (String) ((ArrayList) data.get("JobApplication")).get(0), (String) ((ArrayList) data.get("JobApplication")).get(0));
+        this.interviewer = (Interviewer) FileSystem.subLoader(Interviewer.class, (String) ((ArrayList) data.get("interviewer")).get(0), (String) ((ArrayList) data.get("interviewer")).get(0));
+        this.hrCoordinator = (HRCoordinator) FileSystem.subLoader(HRCoordinator.class, (String) ((ArrayList) data.get("HRCoordinator")).get(0), (String) ((ArrayList) data.get("HRCoordinator")).get(0));
     }
 
 }
