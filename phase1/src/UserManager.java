@@ -13,6 +13,7 @@ class UserManager {
     private String key = "CSC207Summer2019"; //Key used for password AES Encryption
 
     UserManager() {
+        //TODO: delete after testing
     }
 
     UserManager(BufferedReader appUsers) {

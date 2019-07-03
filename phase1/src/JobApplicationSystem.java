@@ -13,7 +13,7 @@ public class JobApplicationSystem {
     // List of companies registered in the system
     private static ArrayList<Company> companies = new ArrayList<>();
     // The user manager for the system
-    private static UserManager userManager;
+    private static UserManager userManager = new UserManager();
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
