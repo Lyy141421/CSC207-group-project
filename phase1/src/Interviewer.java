@@ -33,6 +33,7 @@ class Interviewer extends User {
         super(username, password, legalName, email, dateCreated);
         this.company = company;
         this.field = field;
+        super.setUserInterface(new InterviewerInterface(this));
     }
 
     // === Getters ===

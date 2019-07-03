@@ -24,6 +24,7 @@ class HRCoordinator extends User {
                   LocalDate dateCreated) {
         super(username, password, legalName, email, dateCreated);
         this.company = company;
+        this.setUserInterface(new HRCoordinatorInterface(this));
     }
 
     // === Getters ===

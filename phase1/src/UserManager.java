@@ -22,34 +22,37 @@ class UserManager {
      * All of the following methods create new instances of the various child classes of User
      * @param newUser Checks if the user being created is new/whether encryption is required
      */
-    private void createInterviewer(String username, String password, String legalName, String email, Company company,
-                                   String field, LocalDate dateCreated, boolean newUser) {
+    Interviewer createInterviewer(String username, String password, String legalName, String email, Company company,
+                                  String field, LocalDate dateCreated, boolean newUser) {
         if(newUser) {
             password = this.encrypt(password);
             //TODO: Write to storage
         }
         Interviewer newInterviewer = new Interviewer(username, password, legalName, email, company, field, dateCreated);
         this.allUsers.add(newInterviewer);
+        return newInterviewer;
     }
 
-    private void createHRCoordinator(String username, String password, String legalName,
-                                     String email, Company company, LocalDate dateCreated, boolean newUser) {
+    HRCoordinator createHRCoordinator(String username, String password, String legalName,
+                                      String email, Company company, LocalDate dateCreated, boolean newUser) {
         if(newUser) {
             password = this.encrypt(password);
             //TODO: Write to storage
         }
         HRCoordinator newHRC = new HRCoordinator(username, password, legalName, email, company, dateCreated);
         this.allUsers.add(newHRC);
+        return newHRC;
     }
 
-    private void createApplicant(String username, String password,
-                                 String legalName, String email, LocalDate dateCreated, boolean newUser) {
+    Applicant createApplicant(String username, String password,
+                              String legalName, String email, LocalDate dateCreated, boolean newUser) {
         if(newUser) {
             password = this.encrypt(password);
             //TODO: Write to storage
         }
         Applicant newApplicant = new Applicant(username, password, legalName, email, dateCreated);
         this.allUsers.add(newApplicant);
+        return newApplicant;
     }
 
     // === User Operations and password encryption ===
