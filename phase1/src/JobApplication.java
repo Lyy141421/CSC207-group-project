@@ -10,17 +10,15 @@ class JobApplication implements Storable {
     // === Class variables ===
     // Total number of applications in the system
     private static int totalNumOfApplications;
-    // Map of status number to description
-    private static HashMap<Integer, String> statuses = new HashMap<Integer, String>() {{
-        put(-3, "Archived");
-        put(-2, "Submitted");
-        put(-1, "Under review");
-        put(0, "Phone interview");
-        put(1, "In-person interview 1");
-        put(2, "In-person interview 2");
-        put(3, "In-person interview 3");
-        put(4, "Hired");
-    }};
+    // Statuses and there descriptions
+    private static final int ARCHIVED = -3;
+    private static final int SUBMITTED = -2;
+    private static final int UNDER_REVIEW = -1;
+    private static final int PHONE_INTERVIEW = 0;
+    private static final int IN_PERSON_1 = 1;
+    private static final int IN_PERSON_2 = 2;
+    private static final int IN_PERSON_3 = 3;
+    private static final int HIRED = 4;
 
     // === Instance variables ===
     // Unique identifier for a submitted job application
@@ -174,6 +172,13 @@ class JobApplication implements Storable {
         this.addInterview(interview);
         interviewer.addInterview(interview);
         this.advanceStatus();
+    }
+
+    /**
+     * Archive the job application.
+     */
+    void archiveJobApp() {
+        this.setStatus(JobApplication.ARCHIVED);
     }
 
     /**
