@@ -12,6 +12,9 @@ class UserManager {
     private ArrayList<User> allUsers = new ArrayList<>(); //Array in which all users are stored
     private String key = "CSC207Summer2019"; //Key used for password AES Encryption
 
+    UserManager() {
+    }
+
     UserManager(BufferedReader appUsers) {
         //TODO: instantiate existing users upon startup by reading appUsers
         // note that these stored passwords will ALREADY BE ENCRYPTED
