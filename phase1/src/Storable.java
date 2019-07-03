@@ -4,7 +4,7 @@ public interface Storable {
     /**
      *
      */
-    String getId();
+    String getIdString();
 
     /**
      *

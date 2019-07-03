@@ -22,27 +22,11 @@ class Interviewer extends User {
 
     // === Constructors ===
 
-    /**
-     * Constructor from memory
-     *
-     * @param id The id of this object which it is saved under
-     */
     Interviewer(String id){
         this.setUsername(id);
         loadSelf();
     }
 
-    /**
-     * Create an interviewer.
-     *
-     * @param username    The interviewer's username.
-     * @param password    The interviewer's password.
-     * @param legalName   The interviewer's legal name.
-     * @param email       The interviewer's email.
-     * @param company     The company that this interviewer works for.
-     * @param field       The job field that this interviewer is in.
-     * @param dateCreated The date this account was created.
-     */
     Interviewer(String username, String password, String legalName, String email, Company company, String field,
                 LocalDate dateCreated) {
         super(username, password, legalName, email, dateCreated);
@@ -51,37 +35,18 @@ class Interviewer extends User {
     }
 
     // === Getters ===
-    /**
-     * Get the company that this interviewer works for.
-     *
-     * @return the company that this interviewer works for.
-     */
     Company getCompany() {
         return this.company;
     }
 
-    /**
-     * Get the field this interviewer specializes in.
-     *
-     * @return the field that this interview specializes in.
-     */
     String getField() {
         return this.field;
     }
 
-    /**
-     * Get the list of interviews that this interviewer has conducted in the past and is currently conducting.
-     * @return the list of all interviews involving this interviewer.
-     */
     ArrayList<Interview> getInterviews() {
         return this.interviews;
     }
 
-    /**
-     * Get the schedule for this interviewer.
-     *
-     * @return the schedule for this interviewer.
-     */
     HashMap<LocalDate, ArrayList<Integer>> getSchedule() {
         return this.schedule;
     }
@@ -223,7 +188,7 @@ class Interviewer extends User {
      *
      * @return the string of the id
      */
-    public String getId(){
+    public String getIdString() {
         return this.getUsername();
     }
 
@@ -231,7 +196,7 @@ class Interviewer extends User {
      * Saves the Object
      */
     public void saveSelf(){
-        FileSystem.mapPut(FILENAME, getId(), this);
+        FileSystem.mapPut(FILENAME, getIdString(), this);
         HashMap<String, Object> data = new HashMap<>();
         data.put("password", this.getPassword());
         data.put("legalName", this.getLegalName());
@@ -239,27 +204,33 @@ class Interviewer extends User {
         data.put("dateCreated", this.getDateCreated());
         data.put("field", this.getField());
         data.put("company", new String[] {this.company.FILENAME,
-                this.company.getId()});
+                this.company.getIdString()});
         ArrayList<ArrayList> interview_list = new ArrayList<>();
         for(Interview x : this.interviews){
-            interview_list.add(new ArrayList<>(){{ add(FILENAME); add(x.getId()); }});
+            interview_list.add(new ArrayList<Object>() {{
+                add(FILENAME);
+                add(x.getIdString());
+            }});
         }
         data.put("interviews", interview_list);
         ArrayList<ArrayList> schedule = new ArrayList<>();
         for(LocalDate x : this.schedule.keySet()){
             ArrayList dates = this.schedule.get(x);
-            schedule.add(new ArrayList<>(){{ add(x); add(dates); }});
+            schedule.add(new ArrayList<Object>() {{
+                add(x);
+                add(dates);
+            }});
         }
         data.put("schedule", schedule);
-        FileSystem.write(FILENAME, getId(), data);
+        FileSystem.write(FILENAME, getIdString(), data);
     }
 
     /**
      *  Loads the interviewer.
      */
     public void loadSelf(){
-        FileSystem.mapPut(FILENAME, getId(), this);
-        HashMap data = FileSystem.read(FILENAME, getId());
+        FileSystem.mapPut(FILENAME, getIdString(), this);
+        HashMap data = FileSystem.read(FILENAME, getIdString());
         this.loadPrelimData(data);
         this.loadCompany(data);
         this.loadInterviews(data);
@@ -285,15 +256,8 @@ class Interviewer extends User {
      * @param data The data for this interviewer.
      */
     private void loadCompany(HashMap data) {
-        if (FileSystem.isLoaded((String) ((ArrayList) data.get("company")).get(1),
-                (String) ((ArrayList) data.get("company")).get(1))) {
-            Company company = (Company) FileSystem.mapGet((String) ((ArrayList) data.get("company")).get(1),
-                    (String) ((ArrayList) data.get("company")).get(1));
-            this.setCompany(company);
-        } else {
-            Company company = new Company((String) ((ArrayList) data.get("company")).get(1));
-            this.setCompany(company);
-        }
+        this.setCompany((Company)FileSystem.subLoader(Company.class, (String) ((ArrayList) data.get("company")).get(0),
+                (String) ((ArrayList) data.get("company")).get(1)));
     }
 
     /**
@@ -304,11 +268,8 @@ class Interviewer extends User {
     private void loadInterviews(HashMap data) {
         ArrayList<Interview> interviews = new ArrayList<>();
         for (Object x : (ArrayList) (data.get("interviews"))) {
-            if (FileSystem.isLoaded((String) ((ArrayList) x).get(0), (String) ((ArrayList) x).get(1))) {
-                interviews.add((Interview) FileSystem.mapGet((String) ((ArrayList) x).get(0), (String) ((ArrayList) x).get(1)));
-            } else {
-                interviews.add(new Interview((String) ((ArrayList) x).get(1)));
-            }
+            interviews.add((Interview) FileSystem.subLoader(Interview.class, (String) ((ArrayList) x).get(0), (String)
+                    ((ArrayList) x).get(1)));
         }
         this.setInterviews(interviews);
     }

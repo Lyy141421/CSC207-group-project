@@ -18,22 +18,11 @@ class Company implements Storable{
 
     // === Constructors ===
 
-    /**
-     * Create a new company.
-     *
-     * @param name The company's name.
-     */
     Company(String name) {
         this.name = name;
         if(FileSystem.IDinMemory(FILENAME, name)){ loadSelf(); }
     }
 
-    /**
-     * Create a company -- from fileLoader.
-     * @param name                  The company name.
-     * @param hrCoordinators        The list of HR Coordinators for this
-     * @param fieldToInterviewers   The map of field to interviewers for this company.
-     */
     Company(String name, ArrayList<HRCoordinator> hrCoordinators,
             HashMap<String, ArrayList<Interviewer>> fieldToInterviewers, JobPostingManager jobPostingManager) {
         this.name = name;
@@ -44,37 +33,18 @@ class Company implements Storable{
 
     // === Getters ==
 
-    /**
-     * Get the name of this company.
-     *
-     * @return the name of this company.
-     */
     String getName() {
         return this.name;
     }
 
-    /**
-     * Get a list of all HRCoordinators for this company.
-     *
-     * @return a list of all HRCoordinators for this company.
-     */
     ArrayList<HRCoordinator> getHrCoordinators() {
         return this.hrCoordinators;
     }
 
-    /**
-     * Get the map of field to interviewers for this company.
-     * @return the map of field to interviewers for this company.
-     */
     HashMap<String, ArrayList<Interviewer>> getFieldToInterviewers() {
         return this.fieldToInterviewers;
     }
 
-    /**
-     * Get the job posting manager for this company.
-     *
-     * @return the job posting manager for this company.
-     */
     JobPostingManager getJobPostingManager() {
         return this.jobPostingManager;
     }
@@ -82,11 +52,6 @@ class Company implements Storable{
 
     // === Setters ===
 
-    /**
-     * Set the job posting manager for this company.
-     *
-     * @param jobPostingManager The job posting manager to be set.
-     */
     void setJobPostingManager(JobPostingManager jobPostingManager) {
         this.jobPostingManager = jobPostingManager;
     }
@@ -124,12 +89,36 @@ class Company implements Storable{
     }
 
     /**
+     * View all applications this applicant has submitted for job postings in this company.
+     *
+     * @param applicant The applicant in question.
+     * @return a list of job applications that this applicant has previously submitted to this company.
+     */
+    ArrayList<JobApplication> getAllApplicationsToCompany(Applicant applicant) {
+        ArrayList<JobApplication> apps = new ArrayList<>();
+        for (JobApplication jobApp : applicant.getJobApplicationManager().getJobApplications()) {
+            if (jobApp.getJobPosting().getCompany().equals(this)) {
+                apps.add(jobApp);
+            }
+        }
+        return apps;
+    }
+
+    /**
+     * Getter for the ID
+     *
+     * @return the string of the id
+     */
+    public String getIdString() {
+        return this.getName();
+    }
+
+    /**
      * Report whether this company is the same as obj.
      *
      * @param obj     The object to be compared with.
      * @return true iff obj is a company and has the same name as this company.
      */
-
     @Override
     public boolean equals(Object obj) {
         if (!(obj instanceof Company)) {
@@ -154,97 +143,103 @@ class Company implements Storable{
     }
 
     /**
-     * View all applications this applicant has submitted for job postings in this company.
-     *
-     * @param applicant The applicant in question.
-     * @return a list of job applications that this applicant has previously submitted to this company.
-     */
-    ArrayList<JobApplication> getAllApplicationsToCompany(Applicant applicant) {
-        ArrayList<JobApplication> apps = new ArrayList<>();
-        for (JobApplication jobApp : applicant.getJobApplicationManager().getJobApplications()) {
-            if (jobApp.getJobPosting().getCompany().equals(this)) {
-                apps.add(jobApp);
-            }
-        }
-        return apps;
-    }
-
-    /**
-     * Getter for the ID
-     *
-     * @return the string of the id
-     */
-    public String getId(){
-        return this.getName();
-    }
-
-    /**
      * Saves the Object
      */
     public void saveSelf(){
-        FileSystem.mapPut(FILENAME, getId(), this);
+        FileSystem.mapPut(FILENAME, getIdString(), this);
         HashMap<String, Object> data = new HashMap<>();
         ArrayList<ArrayList<String>> hrcoords = new ArrayList<>();
         for(HRCoordinator x : this.hrCoordinators){
-            hrcoords.add(new ArrayList<>(){{add(x.FILENAME); add(x.getId());}});
+            hrcoords.add(new ArrayList<String>() {{
+                add(x.FILENAME);
+                add(x.getId());
+            }});
         }
         data.put("hrCoordinators", hrcoords);
         HashMap<String, ArrayList<ArrayList<String>>> map = new HashMap<>();
         for(String field : this.fieldToInterviewers.keySet()){
-            ArrayList<ArrayList<String>> interviewrs = new ArrayList<>();
+            ArrayList<ArrayList<String>> interviewers = new ArrayList<>();
             for(Interviewer y : this.fieldToInterviewers.get(field)){
-                interviewrs.add(new ArrayList<>(){{add(y.FILENAME); add(y.getId());}});
+                interviewers.add(new ArrayList<String>() {{
+                    add(y.FILENAME);
+                    add(y.getId());
+                }});
             }
-            map.put(field, interviewrs);
+            map.put(field, interviewers);
         }
         data.put("fields", map);
         ArrayList<ArrayList<String>> jobpostings = new ArrayList<>();
         for(JobPosting x : this.jobPostingManager.getJobPostings()){
-            jobpostings.add(new ArrayList<>(){{add(x.FILENAME); add(x.getId());}});
+            jobpostings.add(new ArrayList<String>() {{
+                add(x.FILENAME);
+                add(x.getIdString());
+            }});
         }
         data.put("jobpostings", jobpostings);
-        FileSystem.write(FILENAME, getId(), data);
+        FileSystem.write(FILENAME, getIdString(), data);
     }
 
     /**
-     * loads the Object
+     * Load the preliminary data for this applicant.
+     *
+     * @param data The Company's Data
      */
-    public void loadSelf(){
-        FileSystem.mapPut(FILENAME, getId(), this);
-        HashMap data = FileSystem.read(FILENAME, getId());
+    private void loadPrelimData(HashMap data) {
+
+    }
+
+    /**
+     * Loads the HRCoordinators from memory
+     *
+     * @param data The Company's Data
+     */
+    private void loadHRCoordinators(HashMap data){
         ArrayList<HRCoordinator> hrcords = new ArrayList<>();
         for(Object x : (ArrayList)data.get("hrCoordinators")){
-            if(FileSystem.isLoaded((String)((ArrayList)x).get(0), (String)((ArrayList)x).get(1))){
-                hrcords.add((HRCoordinator) FileSystem.mapGet((String)((ArrayList)x).get(0), (String)((ArrayList)x).get(1)));
-            }
-            else{
-                hrcords.add(new HRCoordinator((String)((ArrayList)x).get(1)));
-            }
+            hrcords.add((HRCoordinator) FileSystem.subLoader(HRCoordinator.class, (String)((ArrayList)x).get(0), (String)((ArrayList)x).get(1)));
         }
         this.hrCoordinators = hrcords;
+    }
+
+    /**
+     * Loads the FieldMap from memory
+     *
+     * @param data The Company's Data
+     */
+    private void loadFieldMap(HashMap data){
         HashMap<String, ArrayList<Interviewer>> fieldmap = new HashMap<>();
         for(String fields : ((HashMap<String, ArrayList<ArrayList<String>>>)data.get("fields")).keySet()){
             ArrayList<Interviewer> interviewers = new ArrayList<>();
             for(Object y : (ArrayList)((HashMap)data.get("fields")).get(fields)){
-                if(FileSystem.isLoaded((String)((ArrayList)y).get(0), (String)((ArrayList)y).get(1))){
-                    interviewers.add((Interviewer) FileSystem.mapGet((String)((ArrayList)y).get(0), (String)((ArrayList)y).get(1)));
-                }
-                else{
-                    interviewers.add(new Interviewer((String)((ArrayList)y).get(1)));
-                }
+                interviewers.add((Interviewer) FileSystem.subLoader(Interview.class, (String)((ArrayList)y).get(0), (String)((ArrayList)y).get(1)));
             }
             fieldmap.put(fields, interviewers);
         }
         this.fieldToInterviewers = fieldmap;
+    }
+
+    /**
+     * Loads the FieldMap from memory
+     *
+     * @param data The Company's Data
+     */
+    private void loadJobPostingManager(HashMap data){
         ArrayList<JobPosting> jobpostings = new ArrayList<>();
         for(Object x : (ArrayList)data.get("jobpostings")){
-            if(FileSystem.isLoaded((String)((ArrayList)x).get(0), (String)((ArrayList)x).get(1))){
-                jobpostings.add((JobPosting) FileSystem.mapGet((String)((ArrayList)x).get(0), (String)((ArrayList)x).get(1)));
+                jobpostings.add((JobPosting) FileSystem.subLoader(JobPosting.class, (String)((ArrayList)x).get(0), (String)((ArrayList)x).get(1)));
             }
-            else{
-                jobpostings.add(new JobPosting((String)((ArrayList)x).get(1)));
-            }
-        }
         this.jobPostingManager = new JobPostingManager(jobpostings, this);
+    }
+
+    /**
+     * Load this Company.
+     */
+    public void loadSelf(){
+        FileSystem.mapPut(FILENAME, getIdString(), this);
+        HashMap data = FileSystem.read(FILENAME, getIdString());
+        this.loadHRCoordinators(data);
+        this.loadFieldMap(data);
+        this.loadJobPostingManager(data);
+
     }
 }

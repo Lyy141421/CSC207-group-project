@@ -54,6 +54,10 @@ class JobPosting implements Storable{
 
     // === Getters ===
 
+    int getId() {
+        return this.id;
+    }
+
     String getTitle() {
         return this.title;
     }
@@ -176,7 +180,7 @@ class JobPosting implements Storable{
                 return jobApp;
             }
         }
-        return null;
+        throw new NullPointerException();
     }
 
     /**
@@ -262,7 +266,7 @@ class JobPosting implements Storable{
      *
      * @return the string of the id
      */
-    public String getId(){
+    public String getIdString() {
         return Integer.toString(this.id);
     }
 
@@ -270,7 +274,7 @@ class JobPosting implements Storable{
      * Saves the Object
      */
     public void saveSelf(){
-        FileSystem.mapPut(FILENAME, getId(), this);
+        FileSystem.mapPut(FILENAME, getIdString(), this);
         HashMap<String, Object> data = new HashMap<>();
         data.put("title", this.getTitle());
         data.put("field", this.getField());
@@ -282,30 +286,38 @@ class JobPosting implements Storable{
         data.put("filled", this.filled);
         ArrayList jobapplications = new ArrayList();
         for(JobApplication x : this.jobApplications){
-            jobapplications.add(new ArrayList(){{add(x.FILENAME); add(x.getId());}});
+            jobapplications.add(new ArrayList() {{
+                add(x.FILENAME);
+                add(x.getIdString());
+            }});
         }
         data.put("jobapplications", jobapplications);
         ArrayList applicationsInConsideration = new ArrayList();
         for(JobApplication x : this.interviewManager.getApplicationsInConsideration()){
-            applicationsInConsideration.add(new ArrayList(){{add(x.FILENAME); add(x.getId());}});
+            applicationsInConsideration.add(new ArrayList() {{
+                add(x.FILENAME);
+                add(x.getIdString());
+            }});
         }
         data.put("applicationsInConsideration", applicationsInConsideration);
         ArrayList applicationsRejected = new ArrayList();
         for(JobApplication x : this.interviewManager.getApplicationsRejected()){
-            applicationsRejected.add(new ArrayList(){{add(x.FILENAME); add(x.getId());}});
+            applicationsRejected.add(new ArrayList() {{
+                add(x.FILENAME);
+                add(x.getIdString());
+            }});
         }
         data.put("applicationsRejected", applicationsRejected);
         data.put("currentRound", this.interviewManager.getCurrentRound());
-        // todo HRTask???
-        FileSystem.write(FILENAME, getId(), data);
+        FileSystem.write(FILENAME, getIdString(), data);
     }
 
     /**
      * Loads the job posting.
      */
     public void loadSelf(){
-        FileSystem.mapPut(FILENAME, getId(), this);
-        HashMap data = FileSystem.read(FILENAME, getId());
+        FileSystem.mapPut(FILENAME, getIdString(), this);
+        HashMap data = FileSystem.read(FILENAME, getIdString());
         this.loadPrelimData(data);
         this.loadJobApps(data);
         ArrayList<JobApplication> appsInConsideration = this.loadAppsInConsideration(data);
@@ -340,11 +352,8 @@ class JobPosting implements Storable{
     private void loadJobApps(HashMap data) {
         ArrayList<JobApplication> jobApplications = new ArrayList<>();
         for (ArrayList x : (ArrayList<ArrayList>) data.get("jobapplications")) {
-            if (FileSystem.isLoaded((String) (x.get(0)), (String) (x.get(1)))) {
-                jobApplications.add((JobApplication) FileSystem.mapGet((String) (x.get(0)), (String) (x.get(1))));
-            } else {
-                jobApplications.add(new JobApplication((String) (x.get(1))));
-            }
+            jobApplications.add((JobApplication) FileSystem.subLoader(JobApplication.class, (String) x.get(0),
+                    (String) x.get(1)));
         }
         this.setJobApplications(jobApplications);
     }
@@ -358,11 +367,8 @@ class JobPosting implements Storable{
     private ArrayList<JobApplication> loadAppsInConsideration(HashMap data) {
         ArrayList<JobApplication> applicationsInConsideration = new ArrayList<>();
         for (ArrayList x : (ArrayList<ArrayList>) data.get("applicationsInConsideration")) {
-            if (FileSystem.isLoaded((String) (x.get(0)), (String) (x.get(1)))) {
-                applicationsInConsideration.add((JobApplication) FileSystem.mapGet((String) (x.get(0)), (String) (x.get(1))));
-            } else {
-                applicationsInConsideration.add(new JobApplication((String) (x.get(1))));
-            }
+            applicationsInConsideration.add((JobApplication) FileSystem.subLoader(JobApplication.class,
+                    (String) x.get(0), (String) x.get(1)));
         }
         return applicationsInConsideration;
     }
@@ -376,11 +382,8 @@ class JobPosting implements Storable{
     private ArrayList<JobApplication> loadAppsRejected(HashMap data) {
         ArrayList<JobApplication> applicationsRejected = new ArrayList<>();
         for (ArrayList x : (ArrayList<ArrayList>) data.get("applicationsRejected")) {
-            if (FileSystem.isLoaded((String) (x.get(0)), (String) (x.get(1)))) {
-                applicationsRejected.add((JobApplication) FileSystem.mapGet((String) (x.get(0)), (String) (x.get(1))));
-            } else {
-                applicationsRejected.add(new JobApplication((String) (x.get(1))));
-            }
+            applicationsRejected.add((JobApplication) FileSystem.subLoader(JobApplication.class, (String) x.get(0),
+                    (String) x.get(1)));
         }
         return applicationsRejected;
     }

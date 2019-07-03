@@ -15,32 +15,11 @@ class HRCoordinator extends User {
 
     // === Constructors ===
 
-    /**
-     * Constructor from memory
-     *
-     * @param id The id of this object which it is saved under
-     */
     HRCoordinator(String id){
         this.setUsername(id);
         loadSelf();
     }
 
-    /**
-     * Create an HR Coordinator account.
-     */
-    HRCoordinator() {
-    }
-
-    /**
-     * Create an HR Coordinator account.
-     *
-     * @param username    The HR Coordinator's account username.
-     * @param password    The HR Coordinator's account password.
-     * @param legalName   The HR Coordinator's legal name.
-     * @param email       The HR Coordinator's email.
-     * @param company     The company that this HR Coordinator works for.
-     * @param dateCreated The date this account was created.
-     */
     HRCoordinator(String username, String password, String legalName, String email, Company company,
                   LocalDate dateCreated) {
         super(username, password, legalName, email, dateCreated);
@@ -49,20 +28,12 @@ class HRCoordinator extends User {
 
     // === Getters ===
 
-    /**
-     * Get the company that this HR Coordinator works for.
-     *
-     * @return the company that this HR Coordinator works for.
-     */
     Company getCompany() {
         return this.company;
     }
 
     // === Setters ===
 
-    /**
-     * Set the company that this HR Coordinator works for.
-     */
     void setCompany(Company company) {
         this.company = company;
     }
@@ -106,7 +77,7 @@ class HRCoordinator extends User {
      *
      * @return the string of the id
      */
-    public String getId(){
+    public String getIdString() {
         return this.getUsername();
     }
 
@@ -114,7 +85,7 @@ class HRCoordinator extends User {
      * Saves the Object
      */
     public void saveSelf(){
-        FileSystem.mapPut(FILENAME, getId(), this);
+        FileSystem.mapPut(FILENAME, getIdString(), this);
         HashMap<String, Object> data = new HashMap<>();
         data.put("password", this.getPassword());
         data.put("legalName", this.getLegalName());
@@ -122,15 +93,15 @@ class HRCoordinator extends User {
         data.put("dateCreated", this.getDateCreated());
         data.put("company", new String[] {this.company.FILENAME,
                 this.company.getName()});
-        FileSystem.write(FILENAME, getId(), data);
+        FileSystem.write(FILENAME, getIdString(), data);
     }
 
     /**
      * loads the Object
      */
     public void loadSelf(){
-        FileSystem.mapPut(FILENAME, getId(), this);
-        HashMap data = FileSystem.read(FILENAME, getId());
+        FileSystem.mapPut(FILENAME, getIdString(), this);
+        HashMap data = FileSystem.read(FILENAME, getIdString());
         this.loadPrelimData(data);
         this.loadCompany(data);
     }
@@ -153,15 +124,7 @@ class HRCoordinator extends User {
      * @param data The data for this HR Coordinator.
      */
     private void loadCompany(HashMap data) {
-        if (FileSystem.isLoaded((String) ((ArrayList) data.get("company")).get(1),
-                (String) ((ArrayList) data.get("company")).get(1))) {
-            Company company = (Company) FileSystem.mapGet((String) ((ArrayList) data.get("company")).get(1),
-                    (String) ((ArrayList) data.get("company")).get(1));
-            this.setCompany(company);
-
-        } else {
-            Company company = new Company((String) ((ArrayList) data.get("company")).get(1));
-            this.setCompany(company);
-        }
+        this.setCompany((Company)FileSystem.subLoader(Company.class, (String) ((ArrayList) data.get("company")).get(0),
+                (String) ((ArrayList) data.get("company")).get(1)));
     }
 }

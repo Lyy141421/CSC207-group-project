@@ -12,7 +12,7 @@ class InterviewManager {
     // Integers that represent the task the HR Coordinator needs to accomplish
     static int SELECT_APPS_FOR_PHONE_INTERVIEW = -1;
     private static final int DO_NOTHING = 0;
-    private static final int SCHEDULE_INTERVIEWS = 1;
+    static final int SCHEDULE_INTERVIEWS = 1;
     private static final int CHOOSE_APPLICANTS_FOR_HIRE = 2;
     static final int HIRE_APPLICANTS = 3;
 
@@ -179,16 +179,23 @@ class InterviewManager {
      * @return the integer representing the task the HR Coordinator must accomplish.
      */
     int getHrTask(LocalDate today) {
-        if (this.isInterviewProcessOver(today)) {
-            if (this.isNumApplicantUnderThreshold()) {
-                return InterviewManager.HIRE_APPLICANTS;
-            } else {
-                return InterviewManager.CHOOSE_APPLICANTS_FOR_HIRE;
-            }
+        if (this.isNumApplicantUnderThreshold()) {
+            return InterviewManager.HIRE_APPLICANTS;
+        } else if (this.isInterviewProcessOver(today)) {
+            return InterviewManager.CHOOSE_APPLICANTS_FOR_HIRE;
         } else if (this.isCurrentRoundOver(today)) {
             return InterviewManager.SCHEDULE_INTERVIEWS;
         } else {
             return InterviewManager.DO_NOTHING;
+        }
+    }
+
+    /**
+     * Archive all the rejected applications for this job posting.
+     */
+    void archiveRejected() {
+        for (JobApplication jobApp : this.getApplicationsRejected()) {
+            jobApp.archiveJobApp();
         }
     }
 

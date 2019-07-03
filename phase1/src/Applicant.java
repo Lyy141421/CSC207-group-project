@@ -18,39 +18,15 @@ class Applicant extends User {
 
     // === Constructors ===
 
-    /**
-     * Constructor from memory
-     *
-     * @param id The id of this object which it is saved under
-     */
     Applicant(String id){
         this.setUsername(id);
         loadSelf();
     }
 
-    /**
-     * Create an applicant account.
-     *
-     * @param username    The username associated with this account.
-     * @param password    The password associated with this account.
-     * @param legalName   The applicant's legal name.
-     * @param email       The applicant's email.
-     * @param dateCreated The date this account was created.
-     */
     Applicant(String username, String password, String legalName, String email, LocalDate dateCreated) {
         super(username, password, legalName, email, dateCreated);
     }
 
-    /**
-     * Creates an applicant account.
-     *
-     * @param username        The username associated with this account.
-     * @param password        The password associated with this account.
-     * @param legalName       The applicant's legal name.
-     * @param email           The applicant's email.
-     * @param dateCreated     The date this account was created.
-     * @param jobApplicationManager The job application manager for this applicant.
-     */
     Applicant(String username, String password, String legalName, String email, LocalDate dateCreated,
               JobApplicationManager jobApplicationManager) {
         super(username, password, legalName, email, dateCreated);
@@ -59,22 +35,12 @@ class Applicant extends User {
 
     // === Getters ===
 
-    /**
-     * Get the job application manager for this applicant.
-     *
-     * @return the job application manager for this applicant.
-     */
     JobApplicationManager getJobApplicationManager() {
         return this.jobApplicationManager;
     }
 
     // === Setters ===
 
-    /**
-     * Set the job application manager for this applicant.
-     *
-     * @param jobApplicationManager The job application manager for this applicant.
-     */
     void setJobApplicationManager(JobApplicationManager jobApplicationManager) {
         this.jobApplicationManager = jobApplicationManager;
     }
@@ -138,7 +104,7 @@ class Applicant extends User {
      * @param jobPosting The job posting in question.
      * @return true iff this applicant has not applied to this job posting.
      */
-    private boolean hasAppliedTo(JobPosting jobPosting) {
+    boolean hasAppliedTo(JobPosting jobPosting) {
         for (JobApplication jobApp : jobPosting.getJobApplications()) {
             if (jobApp.getApplicant().equals(this)) {
                 return true;
@@ -192,7 +158,7 @@ class Applicant extends User {
      *
      * @return the string of the id
      */
-    public String getId(){
+    public String getIdString() {
         return this.getUsername();
     }
 
@@ -200,7 +166,7 @@ class Applicant extends User {
      * Saves the Object
      */
     public void saveSelf(){
-        FileSystem.mapPut(FILENAME, getId(), this);
+        FileSystem.mapPut(FILENAME, getIdString(), this);
         HashMap<String, Object> data = new HashMap<>();
         data.put("password", this.getPassword());
         data.put("legalName", this.getLegalName());
@@ -210,21 +176,21 @@ class Applicant extends User {
         for(JobApplication x : this.jobApplicationManager.getJobApplications()){
             ArrayList<String> temp = new ArrayList<>();
             temp.add(x.FILENAME);
-            temp.add(x.getId());
+            temp.add(x.getIdString());
             jobapps.add(temp);
 
         }
         data.put("jobApplicationManager", jobapps);
         data.put("filesSubmitted", this.filesSubmitted);
-        FileSystem.write(FILENAME, getId(), data);
+        FileSystem.write(FILENAME, getIdString(), data);
     }
 
     /**
      * loads the Object
      */
     public void loadSelf(){
-        FileSystem.mapPut(FILENAME, getId(), this);
-        HashMap data = FileSystem.read(FILENAME, getId());
+        FileSystem.mapPut(FILENAME, getIdString(), this);
+        HashMap data = FileSystem.read(FILENAME, getIdString());
         this.loadPrelimData(data);
         this.loadJobAppManager(data);
     }
@@ -250,11 +216,8 @@ class Applicant extends User {
     private void loadJobAppManager(HashMap data) {
         ArrayList<JobApplication> temp = new ArrayList<>();
         for (ArrayList x : (ArrayList<ArrayList>) (data.get("jobApplicationManager"))) {
-            if (FileSystem.isLoaded((String) (x.get(0)), (String) (x.get(1)))) {
-                temp.add((JobApplication) FileSystem.mapGet((String) (x.get(0)), (String) (x.get(1))));
-            } else {
-                temp.add(new JobApplication((String) (x.get(1))));
-            }
+            temp.add((JobApplication) FileSystem.subLoader(JobApplication.class, (String) x.get(0),
+                    (String) x.get(1)));
         }
         this.setJobApplicationManager(new JobApplicationManager(temp));
     }

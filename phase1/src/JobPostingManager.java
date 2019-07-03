@@ -34,9 +34,9 @@ class JobPostingManager {
 
     // === Getters ===
 
-    JobPosting getJobPosting(String id) {
+    JobPosting getJobPosting(int id) {
         for (JobPosting posting : jobPostings) {
-            if (posting.getId().equals(id)) {
+            if (posting.getId() == id) {
                 return posting;
             }
         }
@@ -109,6 +109,22 @@ class JobPostingManager {
     }
 
     /**
+     * Get the job posting from this company with this ID. Return null if not found.
+     *
+     * @param ID The id of the job posting in question.
+     * @return the job posting with this ID or null if not found.
+     */
+    JobPosting getJobPostingByID(int ID) {
+        for (JobPosting jobPosting : this.getJobPostings()) {
+            if (jobPosting.getId() == ID) {
+                return jobPosting;
+            }
+        }
+        throw new NullPointerException();
+
+    }
+
+    /**
      * Get a list of open job postings for this company.
      *
      * @param today Today's date.
@@ -160,15 +176,30 @@ class JobPostingManager {
     }
 
     /**
-     * Get a list of job postings where a current interview round is over.
+     * Get a list of all filled job postings at this company.
      *
-     * @param today
      * @return
      */
-    ArrayList<JobPosting> getJobPostingsWithRoundCompleted(LocalDate today) {
+    ArrayList<JobPosting> getFilledJobPostings() {
+        ArrayList<JobPosting> jobPostings = new ArrayList<>();
+        for (JobPosting jobPosting : this.jobPostings) {
+            if (jobPosting.isFilled()) {
+                jobPostings.add(jobPosting);
+            }
+        }
+        return jobPostings;
+    }
+
+    /**
+     * Get a list of job postings where a current interview round is over.
+     *
+     * @param today Today's date/
+     * @return a list of job postings where a current interview round is over.
+     */
+    ArrayList<JobPosting> getJobPostingsWithRoundCompletedNotForHire(LocalDate today) {
         ArrayList<JobPosting> jobPostings = new ArrayList<>();
         for (JobPosting jobPosting : this.getClosedJobPostingsNotFilled(today)) {
-            if (jobPosting.getInterviewManager().isCurrentRoundOver(today)) {
+            if (jobPosting.getInterviewManager().getHrTask(today) == InterviewManager.SCHEDULE_INTERVIEWS) {
                 jobPostings.add(jobPosting);
             }
         }
