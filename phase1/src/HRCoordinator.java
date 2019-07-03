@@ -11,7 +11,7 @@ class HRCoordinator extends User {
     // The company that this HR Coordinator works for
     private Company company;
     // The filename under which this will be saved in the FileSystem
-    final String FILENAME = "HRCoordinators";
+    static final String FILENAME = "HRCoordinators";
 
     // === Constructors ===
 

@@ -21,7 +21,7 @@ class JobPosting implements Storable{
     private ArrayList<JobApplication> jobApplications; // The list of job applications for this job posting
     private InterviewManager interviewManager; // Interview manager for this job posting
     // The filename under which this will be saved in the FileSystem
-    public final String FILENAME = "JobPostings";
+    static final String FILENAME = "JobPostings";
 
     // === Constructors ===
 

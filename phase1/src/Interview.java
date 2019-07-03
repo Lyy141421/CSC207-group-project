@@ -37,7 +37,7 @@ class Interview implements Storable{
     // InterviewManager of the job posting this interview is held for
     private InterviewManager interviewManager;
     // The filename under which this will be saved in the FileSystem
-    public final String FILENAME = "Interviews";
+    static final String FILENAME = "Interviews";
 
     // === Representation invariants ===
     // ID >= 0

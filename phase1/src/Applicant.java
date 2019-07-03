@@ -13,7 +13,7 @@ class Applicant extends User {
     // List of filenames uploaded to account
     private ArrayList<String> filesSubmitted = new ArrayList<>();
     // The filename under which this will be saved in the FileSystem
-    public final String FILENAME = "Applicants";
+    static final String FILENAME = "Applicants";
 
     // === Constructors ===
 
