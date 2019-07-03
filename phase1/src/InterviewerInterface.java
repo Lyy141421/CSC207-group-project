@@ -42,7 +42,7 @@ class InterviewerInterface extends UserInterface {
         }
     }
 
-    int displayMainMenu() {
+    private int displayMainMenu() {
         System.out.println("1 - View schedule");
         System.out.println("2 - View job applications for all interviewees");
         System.out.println("3 - Search specific job application");
@@ -53,7 +53,7 @@ class InterviewerInterface extends UserInterface {
         return 7;
     }
 
-    void runMainMenu(Scanner sc) throws ExitException {
+    private void runMainMenu(Scanner sc) throws ExitException {
         int numOptions = this.displayMainMenu();
         int option = this.getMenuOption(sc, numOptions);
         switch (option) {
@@ -83,7 +83,7 @@ class InterviewerInterface extends UserInterface {
     /**
      * Interface for scheduling interviews set by the HR Coordinator.
      */
-    void scheduleInterviews(Scanner sc) {
+    private void scheduleInterviews(Scanner sc) {
         /*
         1. Display unscheduled interviews upon logging in
         2. For each interview, give prompt to set a date and time for it
@@ -122,11 +122,10 @@ class InterviewerInterface extends UserInterface {
         }
     }
 
-
     /**
      * Interface for viewing one's schedule.
      */
-    void viewSchedule() {
+    private void viewSchedule() {
         System.out.println(this.interviewer.getScheduleString());
     }
 
@@ -134,7 +133,7 @@ class InterviewerInterface extends UserInterface {
      * Interface for viewing the interviews that this interviewer is going to conduct today.
      * @param today Today's date
      */
-    void viewInterviewsForToday(LocalDate today) {
+    private void viewInterviewsForToday(LocalDate today) {
         List<Interview> interviews = this.interviewer.getInterviewsByDate(today);
         for (Interview interview : interviews) {
             System.out.println(interview);
@@ -144,7 +143,7 @@ class InterviewerInterface extends UserInterface {
     /**
      * Interface for viewing all the applications of applicants this interviewer is going to interview.
      */
-    void viewAllJobApplications() {
+    private void viewAllJobApplications() {
         /*
         1. Display a list of applications that this interviewer has access to (they can only see the applications of those
         they have yet to interview. (Display only name of applicant and job posting?)
@@ -163,7 +162,7 @@ class InterviewerInterface extends UserInterface {
      * @param sc The scanner for user input.
      * @return the job application with the id that the user inputs or null if not found.
      */
-    JobApplication getJobApplication(Scanner sc) {
+    private JobApplication getJobApplication(Scanner sc) {
         try {
             System.out.println("Enter the ID of the job application you would wish to view: ");
             int id = sc.nextInt();
@@ -181,11 +180,15 @@ class InterviewerInterface extends UserInterface {
      *
      * @param sc The scanner for user input
      */
-    void viewPreviousInterviewsForJobApp(Scanner sc) {
+    private void viewPreviousInterviewsForJobApp(Scanner sc) {
         JobApplication jobApp = this.getJobApplication(sc);
         System.out.println("Previous interviews:");
-        for (Interview interview : jobApp.getInterviews()) {
-            System.out.println(interview);
+        if (jobApp.getInterviews().isEmpty()) {
+            System.out.println("None");
+        } else {
+            for (Interview interview : jobApp.getInterviews()) {
+                System.out.println(interview);
+            }
         }
     }
 
@@ -194,7 +197,7 @@ class InterviewerInterface extends UserInterface {
      *
      * @param sc The scanner for user input.
      */
-    void viewSpecificInterview(Scanner sc) {
+    private void viewSpecificInterview(Scanner sc) {
         try {
             System.out.println("Enter interview ID: ");
             int id = sc.nextInt();
@@ -208,7 +211,7 @@ class InterviewerInterface extends UserInterface {
     /**
      * Interface for conducting an interview.
      */
-    void conductInterview(Scanner sc) {
+    private void conductInterview(Scanner sc) {
         /*
         1. Display tab to click on for the next interview to be conducted by this interviewer.
         2. Display interface with job application info, a box for typing in interview notes and a button for pass/fail
