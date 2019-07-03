@@ -447,7 +447,7 @@ class HRCoordinatorInterface extends UserInterface {
         } else {
             jobApp = this.selectApplicationForHiring(sc, finalCandidates);
         }
-        jobApp.advanceStatus();
+        jobApp.setHired();
         jobPosting.setFilled();
         jobPosting.getInterviewManager().archiveRejected();
         System.out.println("The new hire's email: " + jobApp.getApplicant().getEmail());

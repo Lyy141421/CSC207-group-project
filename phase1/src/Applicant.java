@@ -1,4 +1,3 @@
-import java.io.File;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -72,13 +71,12 @@ class Applicant extends User {
      * @param coverLetter   The applicant's cover letter.
      * @return true iff this application is successfully submitted (ie before closing date and has not already applied)
      */
-    // TODO Store files submitted
-    boolean applyForJob(JobPosting jobPosting, File CV, File coverLetter) {
+    boolean applyForJob(JobPosting jobPosting, String CV, String coverLetter) {
         if (LocalDate.now().isBefore(jobPosting.getCloseDate()) && !this.hasAppliedTo(jobPosting)) {
-            this.jobApplicationManager.addJobApplication(this, jobPosting, CV.getName(), coverLetter.getName(),
+            this.jobApplicationManager.addJobApplication(this, jobPosting, CV, coverLetter,
                     LocalDate.now());
-            this.addFile(CV.getName());
-            this.addFile(coverLetter.getName());
+            this.addFile(CV);
+            this.addFile(coverLetter);
         }
         return false;
     }
