@@ -17,7 +17,7 @@ class UserInterface {
     public static void main(String[] args) {
         UserInterface UI = new UserInterface();
         User user = UI.login();
-        user.getUserInterface().run(LocalDate.now());
+        //user.getUserInterface().run(LocalDate.now());
     }
 
     // === Constructors ===
@@ -70,35 +70,22 @@ class UserInterface {
      * @return the new user instance created.
      */
     private User signUp(Scanner sc, String username, String password) {
-        int numOptions = this.displayUserTypes();
-        int option = this.getMenuOption(sc, numOptions);
-        switch (option) {
-            case 1:
-                return this.createNewApplicant(sc, username, password);
-            case 2:
-                return this.createNewHRC(sc, username, password);
-            case 3:
-                return this.createNewInterviewer(sc, username, password);
-        }
-        return null;    // Won't execute because option number is guaranteed to be within bounds.
-    }
-
-    /**
-     * Create a new applicant.
-     *
-     * @param sc       The scanner for user input.
-     * @param username The applicant's username.
-     * @param password The applicant's password.
-     * @return the new applicant instance created.
-     */
-    private User createNewApplicant(Scanner sc, String username, String password) {
         System.out.print("Enter your legal name: ");
         String legalName = sc.nextLine();
         sc.nextLine();
         System.out.print("Enter your email address: ");
         String email = sc.next();
-        return JobApplicationSystem.getUserManager().createApplicant(username, password, legalName, email, LocalDate.now(),
-                true);
+        int numOptions = this.displayUserTypes();
+        int option = this.getMenuOption(sc, numOptions);
+        switch (option) {
+            case 1:
+                return userManager.createApplicant(username, password, legalName, email, LocalDate.now(), true);
+            case 2:
+                return this.createNewHRC(sc, username, password, legalName, email);
+            case 3:
+                return this.createNewInterviewer(sc, username, password, legalName, email);
+        }
+        return null;    // Won't execute because option number is guaranteed to be within bounds.
     }
 
     /**
@@ -109,11 +96,7 @@ class UserInterface {
      * @param password The HR Coordinator's password.
      * @return the new HR Coordinator instance created.
      */
-    private User createNewHRC(Scanner sc, String username, String password) {
-        System.out.print("Enter your legal name: ");
-        String legalName = sc.nextLine();
-        System.out.println("Enter your email address: ");
-        String email = sc.next();
+    private User createNewHRC(Scanner sc, String username, String password, String legalName, String email) {
         System.out.println("Enter your company name: ");
         String companyName = sc.nextLine();
         Company company = JobApplicationSystem.getCompany(companyName);
@@ -129,12 +112,8 @@ class UserInterface {
      * @param password The interviewer's password.
      * @return the new interviewer instance created.
      */
-    private User createNewInterviewer(Scanner sc, String username, String password) {
-        System.out.print("Enter your legal name: ");
-        String legalName = sc.nextLine();
-        System.out.println("Enter your email address: ");
-        String email = sc.next();
-        System.out.println("Enter your company name: ");
+    private User createNewInterviewer(Scanner sc, String username, String password, String legalName, String email) {
+        System.out.print("Enter your company name: ");
         String companyName = sc.nextLine();
         while (JobApplicationSystem.getCompany(companyName) == null) {
             System.out.println("Company name not found.");
