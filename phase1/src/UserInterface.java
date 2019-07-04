@@ -1,5 +1,4 @@
 import java.time.LocalDate;
-import java.util.InputMismatchException;
 import java.util.Scanner;
 
 class UserInterface {
@@ -42,13 +41,24 @@ class UserInterface {
      * @param sc The scanner for user input.
      * @return the input from the user.
      */
-    String getInput(Scanner sc, String message) {
+    String getInputLine(Scanner sc, String message) {
         System.out.print(message);
         String input = sc.nextLine();
         if (input.isEmpty()) {
-            System.out.println("Invalid input. Please input again.");
+            System.out.println("Invalid input. Please try again.");
             System.out.println();
-            this.getInput(sc, message);
+            this.getInputLine(sc, message);
+        }
+        return input;
+    }
+
+    String getInputToken(Scanner sc, String message) {
+        System.out.print(message);
+        String input = sc.next();
+        if (input.isEmpty()) {
+            System.out.println("Invalid input. Please try again.");
+            System.out.println();
+            this.getInputToken(sc, message);
         }
         return input;
     }
@@ -69,8 +79,9 @@ class UserInterface {
 
     /**
      * Interface for getting the menu option selected.
-     * @param sc            The scanner for user input.
-     * @param numOptions    The number of options in the menu.
+     *
+     * @param sc         The scanner for user input.
+     * @param numOptions The number of options in the menu.
      * @return the option selected.
      */
     int getMenuOption(Scanner sc, int numOptions) {
@@ -84,8 +95,7 @@ class UserInterface {
                     option = Integer.valueOf(input);
                 }
                 return option;
-            }
-            catch (NumberFormatException e) {
+            } catch (NumberFormatException e) {
                 System.out.println("Invalid input. Please try again.");
                 input = sc.next();
             }
@@ -101,13 +111,15 @@ class UserInterface {
      * @return the new user instance created.
      */
     private User signUp(Scanner sc, String username, String password) {
-        System.out.println();
-        String legalName = this.getInput(sc, "Enter your legal name: ");
-        String email = this.getInput(sc, "Enter your email address: ");
+        String legalName = this.getInputLine(sc, "Enter your legal name: ");
+        String email = this.getInputToken(sc, "Enter your email address: ");
+        sc.nextLine();
         int numOptions = this.displayUserTypes();
         int option = this.getMenuOption(sc, numOptions);
         switch (option) {
             case 1:
+                System.out.println();
+                System.out.println("Sign-up successful!");
                 return userManager.createApplicant(username, password, legalName, email, LocalDate.now(), true);
             case 2:
                 return this.createNewInterviewer(sc, username, password, legalName, email);
@@ -126,7 +138,9 @@ class UserInterface {
      * @return the new HR Coordinator instance created.
      */
     private User createNewHRC(Scanner sc, String username, String password, String legalName, String email) {
-        String companyName = this.getInput(sc, "Enter your company name: ");
+        System.out.println();
+        sc.nextLine();
+        String companyName = this.getInputLine(sc, "Enter your company name: ");
         Company company = JobApplicationSystem.getCompany(companyName);
         if (company == null) {
             company = JobApplicationSystem.createCompany(companyName);
@@ -145,13 +159,15 @@ class UserInterface {
      * @return the new interviewer instance created.
      */
     private User createNewInterviewer(Scanner sc, String username, String password, String legalName, String email) {
-        String companyName = this.getInput(sc, "Enter your company name: ");
+        System.out.println();
+        sc.nextLine();
+        String companyName = this.getInputLine(sc, "Enter your company name: ");
         while (JobApplicationSystem.getCompany(companyName) == null) {
             System.out.println("Company name not found.");
-            companyName = this.getInput(sc, "Enter your company name: ");
+            companyName = this.getInputLine(sc, "Enter your company name: ");
         }
         Company company = JobApplicationSystem.getCompany(companyName);
-        String field = this.getInput(sc, "Enter your field: ");
+        String field = this.getInputLine(sc, "Enter your field: ");
         System.out.println("Sign-up successful!");
         return JobApplicationSystem.getUserManager().createInterviewer(username, password, legalName, email, company,
                 field, LocalDate.now(), true);
@@ -164,61 +180,19 @@ class UserInterface {
      */
     private User login() {
         Scanner sc = new Scanner(System.in);
-        String username = this.getInput(sc, "Enter your username: ");
-        String password = this.getInput(sc, "Enter your password: ");
+        String username = this.getInputToken(sc, "Enter your username: ");
+        sc.nextLine();
+        String password = this.getInputLine(sc, "Enter your password: ");
         if (UserInterface.userManager.findUserByUsername(username) == null) {
             return signUp(sc, username, password);
         }
         else {
             while (!JobApplicationSystem.getUserManager().passwordCorrect(username, password)) {
                 System.out.println("Incorrect password.");
-                password = this.getInput(sc, "Enter your password: ");
+                password = this.getInputLine(sc, "Enter your password: ");
             }
             System.out.println("Login successful!");
             return UserInterface.userManager.findUserByUsername(username);
         }
-
-        /*
-        - Prompt user to enter their username
-        - Prompt user to enter their password
-        If username is not in system:
-            - Prompt for user type (job applicant, interviewer, or HR coordinator)
-            If user is an applicant:
-                - Prompt for legal name
-                - Prompt for e-mail
-                - userManager.createApplicant(username, password, legalName, email, LocalDate.now(), true);
-            Else if user is an interviewer:
-                - Prompt for e-mail
-                - Prompt for company name
-                if (JobApplicationSystem.getCompany(companyName) == null) {
-                    - rejecc
-                }
-                else {
-                    - Company company = JobApplicationSystem.getCompany(companyName);
-                    - Prompt for field
-                    - userManager.createInterviewer(username, password, legalName, email, company, field,
-                        LocalDate.now(), true);
-                }
-            Else: //Job coordinator
-                - Prompt for legal name
-                - Prompt for e-mail
-                - Prompt for company name
-                if (JobApplicationSystem.getCompany(companyName) == null) {
-                    - Company company = JobApplicationSystem.createCompany(companyName);
-                }
-                else {
-                    - Company company = JobApplicationSystem.getCompany(companyName);
-                    - userManager.createHRCoordinator(username, password, legalName, email, company, LocalDate.now(),
-                        true);
-                }
-        Else:
-            if (userManager.passwordCorrect(username, password)) {
-                - load user data from system
-            }
-            else {
-                - prompt user to re-enter password
-            }
-
-        */
     }
 }

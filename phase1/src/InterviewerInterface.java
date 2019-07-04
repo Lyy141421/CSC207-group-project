@@ -108,12 +108,12 @@ class InterviewerInterface extends UserInterface {
      */
     private void scheduleOneInterview(Scanner sc, Interview interview) {
         System.out.println("Schedule the time and date below.");
-        String interviewDateString = this.getInput(sc, "Date (yyyy-mm-dd): ");
+        String interviewDateString = this.getInputToken(sc, "Date (yyyy-mm-dd): ");
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-mm-dd");
         LocalDate interviewDate = LocalDate.parse(interviewDateString, dtf);
         System.out.println("Time slots: " + InterviewTime.timeSlotsString());
         // TODO Exception Handling
-        int timeSlot = Integer.parseInt(this.getInput(sc,
+        int timeSlot = Integer.parseInt(this.getInputToken(sc,
                 "Enter the value that corresponds to the preferred time slot: "));
         InterviewTime interviewTime = new InterviewTime(interviewDate, timeSlot);
         if (interviewer.isAvailable(interviewTime)) {
@@ -166,7 +166,7 @@ class InterviewerInterface extends UserInterface {
      */
     private JobApplication getJobApplication(Scanner sc) {
         try {
-            int id = Integer.parseInt(this.getInput(sc,
+            int id = Integer.parseInt(this.getInputToken(sc,
                     "Enter the ID of the job application you would wish to view: "));
             JobApplication jobApplication = this.interviewer.findJobAppById(id);
             System.out.println(jobApplication);
@@ -201,7 +201,7 @@ class InterviewerInterface extends UserInterface {
      */
     private void viewSpecificInterview(Scanner sc) {
         try {
-            int id = Integer.parseInt(this.getInput(sc,
+            int id = Integer.parseInt(this.getInputToken(sc,
                     "Enter the ID of the interview you wish to view: "));
             System.out.println(this.interviewer.findInterviewById(id));
         } catch (NullPointerException npe) {
@@ -227,10 +227,10 @@ class InterviewerInterface extends UserInterface {
         System.out.println(interview.getJobApplication().getCoverLetter() + "\n");
         System.out.println("Applicant CV:");
         System.out.println(interview.getJobApplication().getCV() + "\n");
-        String notes = this.getInput(sc, "Write interview notes below. Press enter when finished.\n");
+        String notes = this.getInputLine(sc, "Write interview notes below. Press enter when finished.\n");
         interview.setInterviewNotes(notes);
         System.out.println("Would you like to pass this applicant?");
-        if (this.getInput(sc, "Enter 'N' for no or any other key for yes").equals("N")) {
+        if (this.getInputToken(sc, "Enter 'N' for no or any other key for yes").equals("N")) {
             interview.setFail();
         }
         this.interviewer.removeInterview(interview);
