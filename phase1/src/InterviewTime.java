@@ -49,6 +49,16 @@ class InterviewTime {
     // === Other methods ===
 
     /**
+     * Return a string representation of this interview time.
+     *
+     * @return a string representation of this interview time.
+     */
+    @Override
+    public String toString() {
+        return date + " at " + getTimeSlotCorrespondingToInt(timeSlot);
+    }
+
+    /**
      * Check whether these two interview times occur on the same date.
      *
      * @param otherTime The other time in question.
