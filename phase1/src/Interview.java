@@ -47,7 +47,6 @@ class Interview implements Storable{
     public Interview(String id){
         this.ID = Integer.parseInt(id);
         Interview.total = Integer.max(this.ID, Interview.total);
-        loadSelf();
     }
 
     Interview() {

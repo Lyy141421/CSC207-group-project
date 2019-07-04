@@ -17,9 +17,8 @@ class Applicant extends User {
 
     // === Constructors ===
 
-    Applicant(String id){
+    public Applicant(String id){
         this.setUsername(id);
-        loadSelf();
     }
 
     Applicant(String username, String password, String legalName, String email, LocalDate dateCreated) {

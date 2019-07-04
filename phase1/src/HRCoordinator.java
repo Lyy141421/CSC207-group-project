@@ -15,9 +15,8 @@ class HRCoordinator extends User {
 
     // === Constructors ===
 
-    HRCoordinator(String id){
+    public HRCoordinator(String id){
         this.setUsername(id);
-        loadSelf();
     }
 
     HRCoordinator(String username, String password, String legalName, String email, Company company,

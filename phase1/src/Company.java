@@ -18,7 +18,7 @@ class Company implements Storable{
 
     // === Constructors ===
 
-    Company(String name) {
+    public Company(String name) {
         this.name = name;
         if(FileSystem.IDinMemory(FILENAME, name)){ loadSelf(); }
     }

@@ -23,9 +23,8 @@ class Interviewer extends User {
 
     // === Constructors ===
 
-    Interviewer(String id){
+    public Interviewer(String id){
         this.setUsername(id);
-        loadSelf();
     }
 
     Interviewer(String username, String password, String legalName, String email, Company company, String field,
