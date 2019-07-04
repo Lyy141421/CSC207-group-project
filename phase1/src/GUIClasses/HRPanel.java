@@ -130,14 +130,21 @@ public class HRPanel extends JPanel implements ActionListener {
     }
 
     private JPanel searchApplicant () {
-        JPanel applicantPanel = new JPanel();
+        JPanel applicantPanel = new JPanel(new BorderLayout());
+        JPanel row = new JPanel(new FlowLayout(FlowLayout.CENTER));
 
-        JLabel temporaryLabel = new JLabel("This is the addPosting Panel");
+        JLabel applicantName = new JLabel("Applicant name");
+        JTextField nameInput = new JTextField(30);
+        JButton search = new JButton("Search");
+        search.addActionListener(this);
+        row.add(applicantName);
+        row.add(nameInput);
+        row.add(search);
+        applicantPanel.add(row, BorderLayout.CENTER);
+
         JButton home = new JButton("Home");
         home.addActionListener(this);
-
-        applicantPanel.add(temporaryLabel);
-        applicantPanel.add(home);
+        applicantPanel.add(home, BorderLayout.SOUTH);
 
         return applicantPanel;
     }
@@ -231,6 +238,7 @@ public class HRPanel extends JPanel implements ActionListener {
                 c.show(this, "ADDPOSTING");
                 break;
             case "View applications":
+            case "Search":
                 c.show(this, "APPLICATION");
                 break;
             default:
