@@ -1,3 +1,4 @@
+import java.io.File;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -73,7 +74,12 @@ class Loader {
      */
     static void endSave(){
         for(Loader loader : loader_list){
-            loader.saveAll(); //TODO use FileSystem Map for this
+            loader.saveAll();
+        }
+        for(Object x : FileSystem.load_map.keySet()){
+            for(Object y : FileSystem.load_map.get(x).keySet()){
+                ((Storable)FileSystem.load_map.get(x).get(y)).saveSelf();
+            }
         }
     }
 
