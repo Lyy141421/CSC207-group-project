@@ -33,7 +33,6 @@ class JobPosting implements Storable{
     public JobPosting(String id){
         this.id = Integer.parseInt(id);
         JobPosting.postingsCreated = Integer.max(this.id, JobPosting.postingsCreated);
-        loadSelf();
     }
 
     JobPosting() {
@@ -306,6 +305,8 @@ class JobPosting implements Storable{
         data.put("postDate", this.postDate);
         data.put("closeDate", this.closeDate);
         data.put("filled", this.filled);
+        Company c = this.company;
+        data.put("Company", new ArrayList(){{add(Company.FILENAME); add(c.getIdString());}});
         ArrayList jobapplications = new ArrayList();
         for(JobApplication x : this.jobApplications){
             jobapplications.add(new ArrayList() {{
@@ -346,6 +347,7 @@ class JobPosting implements Storable{
         ArrayList<JobApplication> appsRejected = this.loadAppsRejected(data);
         this.interviewManager = new InterviewManager(this, appsInConsideration, appsRejected,
                 (int) data.get("currentRound"));
+        this.company = (Company) FileSystem.subLoader(Company.class, (String)((ArrayList)data.get("Company")).get(0), (String)((ArrayList)data.get("Company")).get(1));
     }
 
     /**

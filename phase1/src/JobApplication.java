@@ -294,7 +294,7 @@ class JobApplication implements Storable {
         this.setCV((String) data.get("CV"));
         this.setCoverLetter((String) data.get("CoverLetter"));
         this.setStatus((int) data.get("Status"));
-        this.setApplicationDate((LocalDate.parse((String) data.get("dateCreated"))));
+        this.setApplicationDate((LocalDate.parse((String) data.get("ApplicationDate"))));
     }
 
     /**
