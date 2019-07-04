@@ -219,13 +219,13 @@ class Interview implements Storable{
     public void loadSelf() {
         FileSystem.mapPut(Interview.FILENAME, getIdString(), this);
         HashMap data = FileSystem.read(Interview.FILENAME, getIdString());
-        this.loadPrelimData(data);
         this.jobApplication = (JobApplication) FileSystem.subLoader(JobApplication.class, (String) ((ArrayList)
-                data.get("JobApplication")).get(0), (String) ((ArrayList) data.get("JobApplication")).get(0));
+                data.get("JobApplication")).get(0), (String) ((ArrayList) data.get("JobApplication")).get(1));
+        this.loadPrelimData(data);
         this.interviewer = (Interviewer) FileSystem.subLoader(Interviewer.class, (String) ((ArrayList)
-                data.get("interviewer")).get(0), (String) ((ArrayList) data.get("interviewer")).get(0));
+                data.get("interviewer")).get(0), (String) ((ArrayList) data.get("interviewer")).get(1));
         this.hrCoordinator = (HRCoordinator) FileSystem.subLoader(HRCoordinator.class, (String)
-                ((ArrayList) data.get("HRCoordinator")).get(0), (String) ((ArrayList) data.get("HRCoordinator")).get(0));
+                ((ArrayList) data.get("HRCoordinator")).get(0), (String) ((ArrayList) data.get("HRCoordinator")).get(1));
     }
 
 }

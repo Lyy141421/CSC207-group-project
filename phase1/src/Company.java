@@ -154,18 +154,18 @@ class Company implements Storable{
             }});
         }
         data.put("hrCoordinators", hrcoords);
-        HashMap<String, ArrayList<ArrayList<String>>> map = new HashMap<>();
+        ArrayList fields = new ArrayList();
         for(String field : this.fieldToInterviewers.keySet()){
-            ArrayList<ArrayList<String>> interviewers = new ArrayList<>();
-            for(Interviewer y : this.fieldToInterviewers.get(field)){
-                interviewers.add(new ArrayList<String>() {{
+            ArrayList temp = new ArrayList();
+            temp.add(field);
+            for(Interviewer interview : this.fieldToInterviewers.get(field)){
+                temp.add(new ArrayList<String>() {{
                     add(Interviewer.FILENAME);
-                    add(y.getIdString());
+                    add(interview.getIdString());
                 }});
             }
-            map.put(field, interviewers);
         }
-        data.put("fields", map);
+        data.put("fields", fields);
         ArrayList<ArrayList<String>> jobpostings = new ArrayList<>();
         for(JobPosting x : this.jobPostingManager.getJobPostings()){
             jobpostings.add(new ArrayList<String>() {{
@@ -197,12 +197,12 @@ class Company implements Storable{
      */
     private void loadFieldMap(HashMap data){
         HashMap<String, ArrayList<Interviewer>> fieldmap = new HashMap<>();
-        for(String fields : ((HashMap<String, ArrayList<ArrayList<String>>>)data.get("fields")).keySet()){
+        for(ArrayList fields : ((ArrayList<ArrayList>)data.get("fields"))){
             ArrayList<Interviewer> interviewers = new ArrayList<>();
-            for(Object y : (ArrayList)((HashMap)data.get("fields")).get(fields)){
-                interviewers.add((Interviewer) FileSystem.subLoader(Interview.class, (String)((ArrayList)y).get(0), (String)((ArrayList)y).get(1)));
+            for(Object y : fields.subList(1, fields.size())){
+                interviewers.add((Interviewer) FileSystem.subLoader(Interviewer.class, (String)((ArrayList)y).get(0), (String)((ArrayList)y).get(1)));
             }
-            fieldmap.put(fields, interviewers);
+            fieldmap.put((String)fields.get(0), interviewers);
         }
         this.fieldToInterviewers = fieldmap;
     }
