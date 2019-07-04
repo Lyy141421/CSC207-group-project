@@ -19,7 +19,6 @@ class Company implements Storable{
 
     public Company(String name) {
         this.name = name;
-        if(FileSystem.IDinMemory(FILENAME, name)){ loadSelf(); }
     }
 
     Company(String name, ArrayList<HRCoordinator> hrCoordinators,

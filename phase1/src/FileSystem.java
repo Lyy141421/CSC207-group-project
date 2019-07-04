@@ -1,5 +1,6 @@
 import org.json.*;
 import java.io.*;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -198,7 +199,9 @@ public class FileSystem {
         }
         else{
             try {
-                Object obj = c.getConstructor(String.class).newInstance(id);
+                Constructor con = c.getConstructor(String.class);
+                System.out.println(filename + " " + id + " " + c);
+                Object obj = con.newInstance(id);
                 ((Storable)obj).loadSelf();
                 return obj;
             } catch (NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
