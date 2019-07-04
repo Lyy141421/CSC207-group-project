@@ -20,8 +20,7 @@ class JobPosting implements Storable{
     private boolean filled; // Whether the job posting is filled
     private ArrayList<JobApplication> jobApplications; // The list of job applications for this job posting
     private InterviewManager interviewManager; // Interview manager for this job posting
-    // The filename under which this will be saved in the FileSystem
-    static final String FILENAME = "JobPostings";
+    static final String FILENAME = "JobPostings";   // The filename under which this will be saved in the FileSystem
 
     // === Constructors ===
 
@@ -74,7 +73,6 @@ class JobPosting implements Storable{
     String getRequirements() {
         return this.requirements;
     }
-
 
     int getNumPositions() {
         return this.numPositions;
@@ -347,7 +345,8 @@ class JobPosting implements Storable{
         ArrayList<JobApplication> appsRejected = this.loadAppsRejected(data);
         this.interviewManager = new InterviewManager(this, appsInConsideration, appsRejected,
                 (int) data.get("currentRound"));
-        this.company = (Company) FileSystem.subLoader(Company.class, (String)((ArrayList)data.get("Company")).get(0), (String)((ArrayList)data.get("Company")).get(1));
+        this.company = (Company) FileSystem.subLoader(Company.class, (String)((ArrayList)data.get("Company")).get(0),
+                (String)((ArrayList)data.get("Company")).get(1));
     }
 
     /**

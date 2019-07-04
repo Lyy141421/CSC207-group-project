@@ -136,7 +136,7 @@ class Applicant extends User {
      * @return true iff today's date is 30 days after the closing date for the last job this applicant applied to.
      */
     boolean isInactive(LocalDate today) {
-        return this.jobApplicationManager.getNumDaysSinceMostRecentCloseDate(today) == 30;
+        return this.jobApplicationManager.getNumDaysSinceMostRecentCloseDate(today) >= 30;
     }
 
     /**
