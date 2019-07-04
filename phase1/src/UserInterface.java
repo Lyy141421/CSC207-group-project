@@ -1,4 +1,5 @@
 import java.time.LocalDate;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 class UserInterface {
@@ -60,9 +61,9 @@ class UserInterface {
     private int displayUserTypes() {
         System.out.println();
         System.out.println("Please select your user type:");
-        System.out.println("1 - Job Applicant");
-        System.out.println("2 - HR Coordinator");
-        System.out.println("3 - Interviewer");
+        System.out.println("1 - Job applicant");
+        System.out.println("2 - Interviewer");
+        System.out.println("3 - HR coordinator");
         return 3;
     }
 
@@ -73,15 +74,21 @@ class UserInterface {
      * @return the option selected.
      */
     int getMenuOption(Scanner sc, int numOptions) {
-        try {
-            int option = Integer.parseInt(this.getInput(sc, "\nSelect an option number: "));
-            if (option < 1 || option > numOptions) {
-                throw new NumberFormatException();
+        String input = sc.next();
+        while (true) {
+            try {
+                int option = Integer.valueOf(input);
+                while (option < 1 || option > numOptions) {
+                    System.out.println("Invalid input. Please try again.");
+                    input = sc.next();
+                    option = Integer.valueOf(input);
+                }
+                return option;
             }
-            return option;
-        } catch (NumberFormatException nfe) {
-            System.out.println("Invalid input.");
-            return this.getMenuOption(sc, numOptions);
+            catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please try again.");
+                input = sc.next();
+            }
         }
     }
 
@@ -101,12 +108,11 @@ class UserInterface {
         int option = this.getMenuOption(sc, numOptions);
         switch (option) {
             case 1:
-                return UserInterface.userManager.createApplicant(username, password, legalName, email,
-                        LocalDate.now(), true);
+                return userManager.createApplicant(username, password, legalName, email, LocalDate.now(), true);
             case 2:
-                return this.createNewHRC(sc, username, password, legalName, email);
-            case 3:
                 return this.createNewInterviewer(sc, username, password, legalName, email);
+            case 3:
+                return this.createNewHRC(sc, username, password, legalName, email);
         }
         return null;    // Won't execute because option number is guaranteed to be within bounds.
     }
