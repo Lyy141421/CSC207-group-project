@@ -1,9 +1,11 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Scanner;
 
 class UserInterface {
@@ -103,20 +105,38 @@ class UserInterface {
     LocalDate getDate(Scanner sc, LocalDate today, String message) {
         System.out.print(message);
         String input = sc.next();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDate date = LocalDate.parse(input, dtf);
         try {
-            sdf.setLenient(false);
-            sdf.parse(input);
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            LocalDate date = LocalDate.parse(input, dtf);
             if (date.isBefore(today)) {
-                throw new Exception();      // Invalid input
+                throw new DateException();  // Invalid input
             }
             return date;
-        } catch (Exception e) {
-            System.out.println("Invalid date.");
+        } catch (DateTimeParseException dtpe) {
+            System.out.println("Cannot read date. Please enter again.");
+            System.out.println();
+            return this.getDate(sc, today, message);
+        } catch (DateException de) {
+            System.out.println("Invalid date. Please enter again.");
+            System.out.println();
             return this.getDate(sc, today, message);
         }
+    }
+
+    /**
+     * Interface for getting the menu option selected.
+     *
+     * @param sc         The scanner for user input.
+     * @param numOptions The number of options in the menu.
+     * @return the option selected.
+     */
+    int getMenuOption(Scanner sc, int numOptions) {
+        int option = this.getInteger(sc, "Enter value: ");
+        while (option < 1 || option > numOptions) {
+            System.out.println("Invalid input. Please try again.");
+            option = this.getInteger(sc, "Enter value: ");
+        }
+        return option;
     }
 
     // === Other methods ===
@@ -133,22 +153,6 @@ class UserInterface {
         System.out.println("2 - Interviewer");
         System.out.println("3 - HR coordinator");
         return 3;
-    }
-
-    /**
-     * Interface for getting the menu option selected.
-     *
-     * @param sc         The scanner for user input.
-     * @param numOptions The number of options in the menu.
-     * @return the option selected.
-     */
-    int getMenuOption(Scanner sc, int numOptions) {
-        int option = this.getInteger(sc, "Enter the value: ");
-        while (option < 1 || option > numOptions) {
-            System.out.println("Invalid input. Please try again.");
-            option = this.getInteger(sc, "Enter the value: ");
-        }
-        return option;
     }
 
     /**

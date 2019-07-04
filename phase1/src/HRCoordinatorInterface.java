@@ -101,7 +101,7 @@ class HRCoordinatorInterface extends UserInterface {
         System.out.println("3 - View all closed job postings not yet filled");
         System.out.println("4 - View all filled job postings");
         System.out.println("5 - View all job postings");
-        System.out.println("6 - Exit");
+        System.out.println("6 - Return to main menu");
         return 6;
     }
 
@@ -130,7 +130,7 @@ class HRCoordinatorInterface extends UserInterface {
             case 5: // View all job postings in company
                 this.viewAllJobPostingsInCompany();
                 break;
-            case 6: // Exit
+            case 6: // Return to main menu
                 break;
         }
     }
@@ -146,7 +146,7 @@ class HRCoordinatorInterface extends UserInterface {
         System.out.println("3 - View all applications rejected");
         System.out.println("4 - View email list of applicants rejected");
         System.out.println("5 - View all applications");
-        System.out.println("6 - Exit");
+        System.out.println("6 - Return to main menu");
         return 6;
     }
 
@@ -154,6 +154,7 @@ class HRCoordinatorInterface extends UserInterface {
      * Run the job application sub menu.
      *
      * @param sc the scanner for user input.
+     *
      */
     private void runJobApplicationSubMenu(Scanner sc) {
         JobPosting jobPosting = this.getJobPosting(sc);
@@ -175,7 +176,7 @@ class HRCoordinatorInterface extends UserInterface {
             case 5: // View all applications
                 this.viewAllApplicationsForJobPosting(jobPosting);
                 break;
-            case 6: // Exit
+            case 6: // Return to main menu
                 break;
         }
     }
@@ -185,7 +186,7 @@ class HRCoordinatorInterface extends UserInterface {
      * @param sc    The scanner for user input.
      * @return the job posting being searched for.
      */
-    JobPosting getJobPosting(Scanner sc) {
+    private JobPosting getJobPosting(Scanner sc) {
         try {
             int id = this.getInteger(sc,
                     "Enter the ID of the job posting you would like to view: ");
@@ -194,7 +195,7 @@ class HRCoordinatorInterface extends UserInterface {
             return jobPosting;
         } catch (NullPointerException npe) {
             System.out.println("This job posting was not found in " + this.HRC.getCompany() + ".");
-            return null;
+            throw new NullPointerException();
         }
     }
 
@@ -203,7 +204,7 @@ class HRCoordinatorInterface extends UserInterface {
      * @param sc The scanner for user input.
      * @param today Today's date.
      */
-    void addJobPosting(Scanner sc, LocalDate today) {
+    private void addJobPosting(Scanner sc, LocalDate today) {
         System.out.println();
         System.out.println("Complete the following categories for adding a job posting as they appear.");
         String title = this.getInputLine(sc, "Job title: ");
@@ -221,6 +222,7 @@ class HRCoordinatorInterface extends UserInterface {
     private void viewAllJobPostingsInCompany() {
         ArrayList<JobPosting> jobPostings = this.HRC.getCompany().getJobPostingManager().getJobPostings();
         for (JobPosting jobPosting : jobPostings) {
+            System.out.println();
             System.out.println(jobPosting);
         }
     }
@@ -233,6 +235,7 @@ class HRCoordinatorInterface extends UserInterface {
     private void viewAllOpenJobPostingsInCompany(LocalDate today) {
         ArrayList<JobPosting> jobPostings = this.HRC.getCompany().getJobPostingManager().getOpenJobPostings(today);
         for (JobPosting jobPosting : jobPostings) {
+            System.out.println();
             System.out.println(jobPosting);
         }
     }
@@ -246,6 +249,7 @@ class HRCoordinatorInterface extends UserInterface {
         ArrayList<JobPosting> jobPostings = this.HRC.getCompany().getJobPostingManager().
                 getClosedJobPostingsNotFilled(today);
         for (JobPosting jobPosting : jobPostings) {
+            System.out.println();
             System.out.println(jobPosting);
         }
     }
@@ -256,6 +260,7 @@ class HRCoordinatorInterface extends UserInterface {
     private void viewAllFilledJobPostingsInCompany() {
         ArrayList<JobPosting> jobPostings = this.HRC.getCompany().getJobPostingManager().getFilledJobPostings();
         for (JobPosting jobPosting : jobPostings) {
+            System.out.println();
             System.out.println(jobPosting);
         }
     }
@@ -276,6 +281,7 @@ class HRCoordinatorInterface extends UserInterface {
      */
     private void viewAllApplicationsForJobPosting(JobPosting jobPosting) {
         for (JobApplication jobApp : jobPosting.getJobApplications()) {
+            System.out.println();
             System.out.println(jobApp);
         }
     }
@@ -287,6 +293,7 @@ class HRCoordinatorInterface extends UserInterface {
     private void viewAppsInConsiderationForJobPosting(JobPosting jobPosting) {
         ArrayList<JobApplication> jobApps = jobPosting.getInterviewManager().getApplicationsInConsideration();
         for (JobApplication jobApp : jobApps) {
+            System.out.println();
             System.out.println(jobApp);
         }
     }
@@ -299,6 +306,7 @@ class HRCoordinatorInterface extends UserInterface {
     private void viewAppsRejectedForJobPosting(JobPosting jobPosting) {
         ArrayList<JobApplication> jobApps = jobPosting.getInterviewManager().getApplicationsRejected();
         for (JobApplication jobApp : jobApps) {
+            System.out.println();
             System.out.println(jobApp);
         }
     }
@@ -310,6 +318,7 @@ class HRCoordinatorInterface extends UserInterface {
      */
     private void viewEmailsOfRejected(JobPosting jobPosting) {
         for (JobApplication jobApp : jobPosting.getInterviewManager().getApplicationsRejected()) {
+            System.out.println();
             System.out.println(jobApp.getApplicant().getEmail());
         }
     }
@@ -340,6 +349,7 @@ class HRCoordinatorInterface extends UserInterface {
      */
     private void viewPreviousJobAppsToCompany(Applicant applicant) {
         for (JobApplication jobApp : this.HRC.getCompany().getAllApplicationsToCompany(applicant)) {
+            System.out.println();
             System.out.println(jobApp);
         }
     }
@@ -398,6 +408,7 @@ class HRCoordinatorInterface extends UserInterface {
     private void setUpInterviewsForRound(JobPosting jobPosting) {
         System.out.println("The following job applications will have interviews set-up automatically.");
         for (JobApplication jobApp : jobPosting.getInterviewManager().getApplicationsInConsideration()) {
+            System.out.println();
             System.out.println(jobApp);
             this.setUpInterviewForJobApplication(jobApp);
         }
