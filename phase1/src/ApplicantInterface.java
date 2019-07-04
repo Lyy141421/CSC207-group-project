@@ -116,13 +116,65 @@ class ApplicantInterface extends UserInterface {
                 }
                 if (noPostingsFound) {
                     System.out.println("No postings were found matching field \"" + field + "\".");
-            }
+                }
             case 2:
-                ;
+                String companyName = getInputLine(sc, "Enter your company name: ");
+                noPostingsFound = true;
+                for (JobPosting posting : openJobPostings) {
+                    if (posting.getCompany().getName().equalsIgnoreCase(companyName)) {
+                        noPostingsFound = false;
+                        System.out.println(posting.getTitle());
+                        System.out.println(posting.getId());
+                        System.out.println(posting.getField());
+                        System.out.println(posting.getDescription());
+                        System.out.println(posting.getRequirements());
+                        System.out.println(posting.getNumPositions());
+                        System.out.println(posting.getPostDate());
+                        System.out.println(posting.getCloseDate());
+                        System.out.println();
+                    }
+                }
+                if (noPostingsFound) {
+                    System.out.println("The system ");
+                }
             case 3:
-                ;
+                field = getInputLine(sc, "Enter your field: ");
+                companyName = getInputLine(sc, "Enter your company name: ");
+                noPostingsFound = true;
+                for (JobPosting posting : openJobPostings) {
+                    if (posting.getField().equalsIgnoreCase(field)
+                            && posting.getCompany().getName().equalsIgnoreCase(companyName)) {
+                        noPostingsFound = false;
+                        System.out.println(posting.getTitle());
+                        System.out.println(posting.getId());
+                        System.out.println(posting.getDescription());
+                        System.out.println(posting.getRequirements());
+                        System.out.println(posting.getNumPositions());
+                        System.out.println(posting.getPostDate());
+                        System.out.println(posting.getCloseDate());
+                        System.out.println();
+                    }
+                }
+                if (noPostingsFound) {
+                    System.out.println("No postings were found matching companyName \"" + companyName + "\".");
+                }
             case 4:
-                ;
+                noPostingsFound = true;
+                for (JobPosting posting : openJobPostings) {
+                    noPostingsFound = false;
+                    System.out.println(posting.getTitle());
+                    System.out.println(posting.getId());
+                    System.out.println(posting.getField());
+                    System.out.println(posting.getDescription());
+                    System.out.println(posting.getRequirements());
+                    System.out.println(posting.getNumPositions());
+                    System.out.println(posting.getPostDate());
+                    System.out.println(posting.getCloseDate());
+                    System.out.println();
+                }
+                if (noPostingsFound) {
+                    System.out.println("The system does not currently contain any postings.");
+                }
         }
 
         /*
