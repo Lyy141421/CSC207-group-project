@@ -57,7 +57,6 @@ class JobApplication implements Storable {
     public JobApplication(String id) {
         this.ID = Integer.parseInt(id);
         JobApplication.totalNumOfApplications = Integer.max(this.ID, JobApplication.totalNumOfApplications);
-        loadSelf();
     }
 
     JobApplication(LocalDate applicationDate) {
