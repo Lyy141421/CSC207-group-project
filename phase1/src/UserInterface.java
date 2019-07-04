@@ -33,12 +33,30 @@ class UserInterface {
     void run(LocalDate today) {
     }
 
+    // === Other methods ===
+
+    /**
+     * Get the input from the user.
+     *
+     * @param sc The scanner for user input.
+     * @return the input from the user.
+     */
+    private String getInput(Scanner sc) {
+        String input = sc.nextLine();
+        if (input.isEmpty()) {
+            System.out.println("Invalid input. Please input again.");
+            this.getInput(sc);
+        }
+        return input;
+    }
+
     /**
      * Interface for displaying user types.
      *
      * @return the number of options in the menu.
      */
     private int displayUserTypes() {
+        System.out.println();
         System.out.println("Please select your user type:");
         System.out.println("1 - Job Applicant");
         System.out.println("2 - HR Coordinator");
@@ -53,12 +71,17 @@ class UserInterface {
      * @return the option selected.
      */
     int getMenuOption(Scanner sc, int numOptions) {
-        int option = sc.nextInt();
-        if (option < 1 || option > numOptions) {
-            System.out.println("Invalid input. Please try again.");
-            this.getMenuOption(sc, numOptions);
+        try {
+            System.out.print("\nSelect an option number: ");
+            int option = Integer.parseInt(this.getInput(sc));
+            if (option < 1 || option > numOptions) {
+                throw new NumberFormatException();
+            }
+            return option;
+        } catch (NumberFormatException nfe) {
+            System.out.println("Invalid input.");
+            return this.getMenuOption(sc, numOptions);
         }
-        return option;
     }
 
     /**
@@ -99,8 +122,12 @@ class UserInterface {
      */
     private User createNewHRC(Scanner sc, String username, String password, String legalName, String email) {
         System.out.println("Enter your company name: ");
-        String companyName = sc.nextLine();
+        String companyName = this.getInput(sc);
         Company company = JobApplicationSystem.getCompany(companyName);
+        if (company == null) {
+            company = JobApplicationSystem.createCompany(companyName);
+        }
+        System.out.println("Sign-up successful!");
         return userManager.createHRCoordinator(username, password, legalName, email, company,
                 LocalDate.now(), true);
     }
@@ -115,15 +142,16 @@ class UserInterface {
      */
     private User createNewInterviewer(Scanner sc, String username, String password, String legalName, String email) {
         System.out.print("Enter your company name: ");
-        String companyName = sc.nextLine();
+        String companyName = this.getInput(sc);
         while (JobApplicationSystem.getCompany(companyName) == null) {
             System.out.println("Company name not found.");
             System.out.print("Enter your company name: ");
-            companyName = sc.nextLine();
+            companyName = this.getInput(sc);
         }
         Company company = JobApplicationSystem.getCompany(companyName);
         System.out.println("Enter your field: ");
-        String field = sc.nextLine();
+        String field = this.getInput(sc);
+        System.out.println("Sign-up successful!");
         return JobApplicationSystem.getUserManager().createInterviewer(username, password, legalName, email, company,
                 field, LocalDate.now(), true);
     }
@@ -136,19 +164,20 @@ class UserInterface {
     private User login() {
         Scanner sc = new Scanner(System.in);
         System.out.print("Enter your username: ");
-        String username = sc.next();
+        String username = this.getInput(sc);
         System.out.print("Enter your password: ");
-        String password = sc.next();
-        if (userManager.findUserByUsername(username) == null) {
+        String password = this.getInput(sc);
+        if (UserInterface.userManager.findUserByUsername(username) == null) {
             return signUp(sc, username, password);
         }
         else {
             while (!JobApplicationSystem.getUserManager().passwordCorrect(username, password)) {
                 System.out.println("Incorrect password.");
                 System.out.print("Enter your password: ");
-                password = sc.next();
+                password = this.getInput(sc);
             }
-            return userManager.findUserByUsername(username);
+            System.out.println("Login successful!");
+            return UserInterface.userManager.findUserByUsername(username);
         }
 
         /*
