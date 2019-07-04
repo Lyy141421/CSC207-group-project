@@ -179,15 +179,6 @@ class Company implements Storable{
     }
 
     /**
-     * Load the preliminary data for this applicant.
-     *
-     * @param data The Company's Data
-     */
-    private void loadPrelimData(HashMap data) {
-
-    }
-
-    /**
      * Loads the HRCoordinators from memory
      *
      * @param data The Company's Data
