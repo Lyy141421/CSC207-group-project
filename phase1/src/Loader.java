@@ -48,6 +48,17 @@ class Loader {
     // === Static Methods ===
 
     /**
+     * A method to save all storable elements in an ArrayList
+     *
+     * @param list - an ArrayList of Storable Elements
+     */
+    static void saveList(ArrayList<Storable> list){
+        for(Storable x : list){
+            x.saveSelf();
+        }
+    }
+
+    /**
      * Loads all objects in the loader at the start of the program
      */
     static void startLoad(){
