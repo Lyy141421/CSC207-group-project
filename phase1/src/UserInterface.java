@@ -1,4 +1,5 @@
 import java.time.LocalDate;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 class UserInterface {
@@ -53,12 +54,22 @@ class UserInterface {
      * @return the option selected.
      */
     int getMenuOption(Scanner sc, int numOptions) {
-        int option = sc.nextInt();
-        if (option < 1 || option > numOptions) {
-            System.out.println("Invalid input. Please try again.");
-            this.getMenuOption(sc, numOptions);
+        String input = sc.next();
+        while (true) {
+            try {
+                int option = Integer.valueOf(input);
+                while (option < 1 || option > numOptions) {
+                    System.out.println("Invalid input. Please try again.");
+                    input = sc.next();
+                    option = Integer.valueOf(input);
+                }
+                return option;
+            }
+            catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please try again.");
+                input = sc.next();
+            }
         }
-        return option;
     }
 
     /**
@@ -71,8 +82,8 @@ class UserInterface {
      */
     private User signUp(Scanner sc, String username, String password) {
         System.out.print("Enter your legal name: ");
-        String legalName = sc.nextLine();
         sc.nextLine();
+        String legalName = sc.nextLine();
         System.out.print("Enter your email address: ");
         String email = sc.next();
         int numOptions = this.displayUserTypes();
@@ -81,9 +92,9 @@ class UserInterface {
             case 1:
                 return userManager.createApplicant(username, password, legalName, email, LocalDate.now(), true);
             case 2:
-                return this.createNewHRC(sc, username, password, legalName, email);
-            case 3:
                 return this.createNewInterviewer(sc, username, password, legalName, email);
+            case 3:
+                return this.createNewHRC(sc, username, password, legalName, email);
         }
         return null;    // Won't execute because option number is guaranteed to be within bounds.
     }
@@ -114,6 +125,7 @@ class UserInterface {
      */
     private User createNewInterviewer(Scanner sc, String username, String password, String legalName, String email) {
         System.out.print("Enter your company name: ");
+        sc.nextLine();
         String companyName = sc.nextLine();
         while (JobApplicationSystem.getCompany(companyName) == null) {
             System.out.println("Company name not found.");
@@ -121,7 +133,7 @@ class UserInterface {
             companyName = sc.nextLine();
         }
         Company company = JobApplicationSystem.getCompany(companyName);
-        System.out.println("Enter your field: ");
+        System.out.print("Enter your field: ");
         String field = sc.nextLine();
         return JobApplicationSystem.getUserManager().createInterviewer(username, password, legalName, email, company, field,
                 LocalDate.now(), true);
