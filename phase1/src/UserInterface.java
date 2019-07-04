@@ -18,7 +18,7 @@ class UserInterface {
     public static void main(String[] args) {
         UserInterface UI = new UserInterface();
         User user = UI.login();
-        //user.getUserInterface().run(LocalDate.now());
+        user.getUserInterface().run(LocalDate.now());
     }
 
     // === Constructors ===
@@ -34,12 +34,32 @@ class UserInterface {
     void run(LocalDate today) {
     }
 
+    // === Other methods ===
+
+    /**
+     * Get the input from the user.
+     *
+     * @param sc The scanner for user input.
+     * @return the input from the user.
+     */
+    String getInput(Scanner sc, String message) {
+        System.out.print(message);
+        String input = sc.nextLine();
+        if (input.isEmpty()) {
+            System.out.println("Invalid input. Please input again.");
+            System.out.println();
+            this.getInput(sc, message);
+        }
+        return input;
+    }
+
     /**
      * Interface for displaying user types.
      *
      * @return the number of options in the menu.
      */
     private int displayUserTypes() {
+        System.out.println();
         System.out.println("Please select your user type:");
         System.out.println("1 - Job applicant");
         System.out.println("2 - Interviewer");
@@ -81,11 +101,9 @@ class UserInterface {
      * @return the new user instance created.
      */
     private User signUp(Scanner sc, String username, String password) {
-        System.out.print("Enter your legal name: ");
-        sc.nextLine();
-        String legalName = sc.nextLine();
-        System.out.print("Enter your email address: ");
-        String email = sc.next();
+        System.out.println();
+        String legalName = this.getInput(sc, "Enter your legal name: ");
+        String email = this.getInput(sc, "Enter your email address: ");
         int numOptions = this.displayUserTypes();
         int option = this.getMenuOption(sc, numOptions);
         switch (option) {
@@ -108,9 +126,12 @@ class UserInterface {
      * @return the new HR Coordinator instance created.
      */
     private User createNewHRC(Scanner sc, String username, String password, String legalName, String email) {
-        System.out.println("Enter your company name: ");
-        String companyName = sc.nextLine();
+        String companyName = this.getInput(sc, "Enter your company name: ");
         Company company = JobApplicationSystem.getCompany(companyName);
+        if (company == null) {
+            company = JobApplicationSystem.createCompany(companyName);
+        }
+        System.out.println("Sign-up successful!");
         return userManager.createHRCoordinator(username, password, legalName, email, company,
                 LocalDate.now(), true);
     }
@@ -124,19 +145,16 @@ class UserInterface {
      * @return the new interviewer instance created.
      */
     private User createNewInterviewer(Scanner sc, String username, String password, String legalName, String email) {
-        System.out.print("Enter your company name: ");
-        sc.nextLine();
-        String companyName = sc.nextLine();
+        String companyName = this.getInput(sc, "Enter your company name: ");
         while (JobApplicationSystem.getCompany(companyName) == null) {
             System.out.println("Company name not found.");
-            System.out.print("Enter your company name: ");
-            companyName = sc.nextLine();
+            companyName = this.getInput(sc, "Enter your company name: ");
         }
         Company company = JobApplicationSystem.getCompany(companyName);
-        System.out.print("Enter your field: ");
-        String field = sc.nextLine();
-        return JobApplicationSystem.getUserManager().createInterviewer(username, password, legalName, email, company, field,
-                LocalDate.now(), true);
+        String field = this.getInput(sc, "Enter your field: ");
+        System.out.println("Sign-up successful!");
+        return JobApplicationSystem.getUserManager().createInterviewer(username, password, legalName, email, company,
+                field, LocalDate.now(), true);
     }
 
     /**
@@ -146,20 +164,18 @@ class UserInterface {
      */
     private User login() {
         Scanner sc = new Scanner(System.in);
-        System.out.print("Enter your username: ");
-        String username = sc.next();
-        System.out.print("Enter your password: ");
-        String password = sc.next();
-        if (userManager.findUserByUsername(username) == null) {
+        String username = this.getInput(sc, "Enter your username: ");
+        String password = this.getInput(sc, "Enter your password: ");
+        if (UserInterface.userManager.findUserByUsername(username) == null) {
             return signUp(sc, username, password);
         }
         else {
             while (!JobApplicationSystem.getUserManager().passwordCorrect(username, password)) {
                 System.out.println("Incorrect password.");
-                System.out.print("Enter your password: ");
-                password = sc.next();
+                password = this.getInput(sc, "Enter your password: ");
             }
-            return userManager.findUserByUsername(username);
+            System.out.println("Login successful!");
+            return UserInterface.userManager.findUserByUsername(username);
         }
 
         /*
