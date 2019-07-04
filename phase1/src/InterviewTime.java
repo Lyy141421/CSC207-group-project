@@ -61,11 +61,27 @@ class InterviewTime {
     /**
      * Check whether these two times are equal.
      *
-     * @param otherTime The other time being compared to.
-     * @return true iff these two times have the same date and timeslot.
+     * @param obj The object being compared to.
+     * @return true iff obj is an interview time and the two times have the same date and timeslot.
      */
-    public boolean equals(InterviewTime otherTime) {
-        return this.date.isEqual(otherTime.getDate()) && this.timeSlot == otherTime.getTimeSlot();
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof InterviewTime)) {
+            return false;
+        }
+        else {
+            InterviewTime otherTime = (InterviewTime)obj;
+            return (date.equals(otherTime.getDate()) && timeSlot == otherTime.getTimeSlot());
+        }
+    }
+
+    /**
+     * Return a hashcode for this interview time.
+     * @return an int; the same int should be returned for all interview times equal to this interview time.
+     */
+    @Override
+    public int hashCode() {
+        return timeSlot;
     }
 
     /**
