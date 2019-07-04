@@ -40,9 +40,9 @@ class UserInterface {
      */
     private int displayUserTypes() {
         System.out.println("Please select your user type:");
-        System.out.println("1 - Job applicant");
-        System.out.println("2 - Interviewer");
-        System.out.println("3 - HR coordinator");
+        System.out.println("1 - Job Applicant");
+        System.out.println("2 - HR Coordinator");
+        System.out.println("3 - Interviewer");
         return 3;
     }
 
@@ -79,11 +79,12 @@ class UserInterface {
         int option = this.getMenuOption(sc, numOptions);
         switch (option) {
             case 1:
-                return this.createNewApplicant(sc, username, password);
+                return UserInterface.userManager.createApplicant(username, password, legalName, email,
+                        LocalDate.now(), true);
             case 2:
-                return this.createNewHRC(sc, username, password);
+                return this.createNewHRC(sc, username, password, legalName, email);
             case 3:
-                return this.createNewInterviewer(sc, username, password);
+                return this.createNewInterviewer(sc, username, password, legalName, email);
         }
         return null;    // Won't execute because option number is guaranteed to be within bounds.
     }
@@ -123,8 +124,8 @@ class UserInterface {
         Company company = JobApplicationSystem.getCompany(companyName);
         System.out.println("Enter your field: ");
         String field = sc.nextLine();
-        return JobApplicationSystem.getUserManager().createInterviewer(username, password, legalName, email, company, field,
-                LocalDate.now(), true);
+        return JobApplicationSystem.getUserManager().createInterviewer(username, password, legalName, email, company,
+                field, LocalDate.now(), true);
     }
 
     /**
