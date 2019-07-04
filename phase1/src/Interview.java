@@ -10,8 +10,8 @@ class Interview implements Storable{
 
     // === Class variables ===
     // The list of descriptions for each round number.
-    private static ArrayList<String> roundNumberDescriptions = new ArrayList<>(Arrays.asList("Phone interview, " +
-            "In-person interview 1, " + "In-person interview 2", "In-person interview 3"));
+    private static ArrayList<String> roundNumberDescriptions = new ArrayList<>(Arrays.asList("Phone interview",
+            "In-person interview 1", "In-person interview 2", "In-person interview 3"));
     // The maximum number of in-person interview rounds
     private static final int MAX_NUM_ROUNDS = Interview.roundNumberDescriptions.size() - 1;
     // The total number of interviews conducted
@@ -125,6 +125,10 @@ class Interview implements Storable{
 
     int getRoundNumber() {
         return this.roundNumber;
+    }
+
+    String getRoundNumberDescription(int number) {
+        return roundNumberDescriptions.get(number);
     }
 
     // === Setters ===
