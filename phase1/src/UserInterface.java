@@ -41,11 +41,13 @@ class UserInterface {
      * @param sc The scanner for user input.
      * @return the input from the user.
      */
-    private String getInput(Scanner sc) {
+    String getInput(Scanner sc, String message) {
+        System.out.print(message);
         String input = sc.nextLine();
         if (input.isEmpty()) {
             System.out.println("Invalid input. Please input again.");
-            this.getInput(sc);
+            System.out.println();
+            this.getInput(sc, message);
         }
         return input;
     }
@@ -72,8 +74,7 @@ class UserInterface {
      */
     int getMenuOption(Scanner sc, int numOptions) {
         try {
-            System.out.print("\nSelect an option number: ");
-            int option = Integer.parseInt(this.getInput(sc));
+            int option = Integer.parseInt(this.getInput(sc, "\nSelect an option number: "));
             if (option < 1 || option > numOptions) {
                 throw new NumberFormatException();
             }
@@ -94,10 +95,8 @@ class UserInterface {
      */
     private User signUp(Scanner sc, String username, String password) {
         System.out.println();
-        System.out.print("Enter your legal name: ");
-        String legalName = this.getInput(sc);
-        System.out.print("Enter your email address: ");
-        String email = this.getInput(sc);
+        String legalName = this.getInput(sc, "Enter your legal name: ");
+        String email = this.getInput(sc, "Enter your email address: ");
         int numOptions = this.displayUserTypes();
         int option = this.getMenuOption(sc, numOptions);
         switch (option) {
@@ -121,8 +120,7 @@ class UserInterface {
      * @return the new HR Coordinator instance created.
      */
     private User createNewHRC(Scanner sc, String username, String password, String legalName, String email) {
-        System.out.println("Enter your company name: ");
-        String companyName = this.getInput(sc);
+        String companyName = this.getInput(sc, "Enter your company name: ");
         Company company = JobApplicationSystem.getCompany(companyName);
         if (company == null) {
             company = JobApplicationSystem.createCompany(companyName);
@@ -141,16 +139,13 @@ class UserInterface {
      * @return the new interviewer instance created.
      */
     private User createNewInterviewer(Scanner sc, String username, String password, String legalName, String email) {
-        System.out.print("Enter your company name: ");
-        String companyName = this.getInput(sc);
+        String companyName = this.getInput(sc, "Enter your company name: ");
         while (JobApplicationSystem.getCompany(companyName) == null) {
             System.out.println("Company name not found.");
-            System.out.print("Enter your company name: ");
-            companyName = this.getInput(sc);
+            companyName = this.getInput(sc, "Enter your company name: ");
         }
         Company company = JobApplicationSystem.getCompany(companyName);
-        System.out.println("Enter your field: ");
-        String field = this.getInput(sc);
+        String field = this.getInput(sc, "Enter your field: ");
         System.out.println("Sign-up successful!");
         return JobApplicationSystem.getUserManager().createInterviewer(username, password, legalName, email, company,
                 field, LocalDate.now(), true);
@@ -163,18 +158,15 @@ class UserInterface {
      */
     private User login() {
         Scanner sc = new Scanner(System.in);
-        System.out.print("Enter your username: ");
-        String username = this.getInput(sc);
-        System.out.print("Enter your password: ");
-        String password = this.getInput(sc);
+        String username = this.getInput(sc, "Enter your username: ");
+        String password = this.getInput(sc, "Enter your password: ");
         if (UserInterface.userManager.findUserByUsername(username) == null) {
             return signUp(sc, username, password);
         }
         else {
             while (!JobApplicationSystem.getUserManager().passwordCorrect(username, password)) {
                 System.out.println("Incorrect password.");
-                System.out.print("Enter your password: ");
-                password = this.getInput(sc);
+                password = this.getInput(sc, "Enter your password: ");
             }
             System.out.println("Login successful!");
             return UserInterface.userManager.findUserByUsername(username);

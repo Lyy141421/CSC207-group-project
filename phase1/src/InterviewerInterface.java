@@ -43,6 +43,8 @@ class InterviewerInterface extends UserInterface {
     }
 
     private int displayMainMenu() {
+        System.out.println();
+        System.out.println("Please select an option below:");
         System.out.println("1 - View schedule");
         System.out.println("2 - View job applications for all interviewees");
         System.out.println("3 - Search specific job application");
@@ -106,17 +108,16 @@ class InterviewerInterface extends UserInterface {
      */
     private void scheduleOneInterview(Scanner sc, Interview interview) {
         System.out.println("Schedule the time and date below.");
-        System.out.print("\nDate (yyyy-mm-dd): ");
-        String interviewDateString = sc.nextLine();
+        String interviewDateString = this.getInput(sc, "Date (yyyy-mm-dd): ");
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-mm-dd");
         LocalDate interviewDate = LocalDate.parse(interviewDateString, dtf);
         System.out.println("Time slots: " + InterviewTime.timeSlotsString());
-        System.out.println("\nEnter the value that corresponds to the preferred time slot: ");
-        int timeSlot = sc.nextInt();
+        // TODO Exception Handling
+        int timeSlot = Integer.parseInt(this.getInput(sc,
+                "Enter the value that corresponds to the preferred time slot: "));
         InterviewTime interviewTime = new InterviewTime(interviewDate, timeSlot);
         if (interviewer.isAvailable(interviewTime)) {
             interview.setTime(interviewTime);
-//            this.interviewer.updateSchedule(interviewTime);
         } else {
             this.scheduleOneInterview(sc, interview);
         }
@@ -165,8 +166,8 @@ class InterviewerInterface extends UserInterface {
      */
     private JobApplication getJobApplication(Scanner sc) {
         try {
-            System.out.println("Enter the ID of the job application you would wish to view: ");
-            int id = sc.nextInt();
+            int id = Integer.parseInt(this.getInput(sc,
+                    "Enter the ID of the job application you would wish to view: "));
             JobApplication jobApplication = this.interviewer.findJobAppById(id);
             System.out.println(jobApplication);
             return jobApplication;
@@ -200,8 +201,8 @@ class InterviewerInterface extends UserInterface {
      */
     private void viewSpecificInterview(Scanner sc) {
         try {
-            System.out.println("Enter interview ID: ");
-            int id = sc.nextInt();
+            int id = Integer.parseInt(this.getInput(sc,
+                    "Enter the ID of the interview you wish to view: "));
             System.out.println(this.interviewer.findInterviewById(id));
         } catch (NullPointerException npe) {
             System.out.println("This interview cannot be found.");
@@ -226,11 +227,10 @@ class InterviewerInterface extends UserInterface {
         System.out.println(interview.getJobApplication().getCoverLetter() + "\n");
         System.out.println("Applicant CV:");
         System.out.println(interview.getJobApplication().getCV() + "\n");
-        System.out.println("Write interview notes below. Press enter when finished.");
-        String notes = sc.nextLine();
+        String notes = this.getInput(sc, "Write interview notes below. Press enter when finished.\n");
         interview.setInterviewNotes(notes);
-        System.out.print("\nWould you like to pass this applicant? ('Y' - yes, 'N' - no)");
-        if (sc.nextLine().equals("N")) {
+        System.out.println("Would you like to pass this applicant?");
+        if (this.getInput(sc, "Enter 'N' for no or any other key for yes").equals("N")) {
             interview.setFail();
         }
         this.interviewer.removeInterview(interview);
