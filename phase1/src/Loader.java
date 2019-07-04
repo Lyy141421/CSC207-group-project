@@ -98,6 +98,7 @@ class Loader {
                     Object obj = con.newInstance((String) s);
                     this.obj_list.add((Storable) obj);
                     ((Storable) obj).loadSelf();
+                    FileSystem.mapPut(this.filename, s, obj);
                 }
             } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
                 e.printStackTrace();
