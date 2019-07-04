@@ -1,4 +1,3 @@
-import java.io.File;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,23 +13,24 @@ class Applicant extends User {
     // List of filenames uploaded to account
     private ArrayList<String> filesSubmitted = new ArrayList<>();
     // The filename under which this will be saved in the FileSystem
-    public final String FILENAME = "Applicants";
+    static final String FILENAME = "Applicants";
 
     // === Constructors ===
 
-    Applicant(String id){
+    public Applicant(String id){
         this.setUsername(id);
-        loadSelf();
     }
 
     Applicant(String username, String password, String legalName, String email, LocalDate dateCreated) {
         super(username, password, legalName, email, dateCreated);
+        super.setUserInterface(new ApplicantInterface(this));
     }
 
     Applicant(String username, String password, String legalName, String email, LocalDate dateCreated,
               JobApplicationManager jobApplicationManager) {
         super(username, password, legalName, email, dateCreated);
         this.jobApplicationManager = jobApplicationManager;
+        super.setUserInterface(new ApplicantInterface(this));
     }
 
     // === Getters ===
@@ -72,13 +72,12 @@ class Applicant extends User {
      * @param coverLetter   The applicant's cover letter.
      * @return true iff this application is successfully submitted (ie before closing date and has not already applied)
      */
-    // TODO Store files submitted
-    boolean applyForJob(JobPosting jobPosting, File CV, File coverLetter) {
+    boolean applyForJob(JobPosting jobPosting, String CV, String coverLetter) {
         if (LocalDate.now().isBefore(jobPosting.getCloseDate()) && !this.hasAppliedTo(jobPosting)) {
-            this.jobApplicationManager.addJobApplication(this, jobPosting, CV.getName(), coverLetter.getName(),
+            this.jobApplicationManager.addJobApplication(this, jobPosting, CV, coverLetter,
                     LocalDate.now());
-            this.addFile(CV.getName());
-            this.addFile(coverLetter.getName());
+            this.addFile(CV);
+            this.addFile(coverLetter);
         }
         return false;
     }
@@ -87,14 +86,15 @@ class Applicant extends User {
      * Remove this applicant's application for this job.
      *
      * @param jobPosting The job that this user wants to withdraw their application from.
-     * @return true iff this applicant can successfully withdraw their application.
+     * @return true iff this applicant can successfully withdraw their application; else return false
      */
     boolean withdrawApplication(JobPosting jobPosting) {
         if (this.hasAppliedTo(jobPosting) && !jobPosting.isFilled()) {
             jobPosting.removeJobApplication(jobPosting.findJobApplication(this));
             this.jobApplicationManager.removeJobApplication(jobPosting);
+            return true;
         }
-        return true;
+        return false;
     }
 
     /**
@@ -103,7 +103,7 @@ class Applicant extends User {
      * @param jobPosting The job posting in question.
      * @return true iff this applicant has not applied to this job posting.
      */
-    private boolean hasAppliedTo(JobPosting jobPosting) {
+    boolean hasAppliedTo(JobPosting jobPosting) {
         for (JobApplication jobApp : jobPosting.getJobApplications()) {
             if (jobApp.getApplicant().equals(this)) {
                 return true;
@@ -157,7 +157,7 @@ class Applicant extends User {
      *
      * @return the string of the id
      */
-    public String getId(){
+    public String getIdString() {
         return this.getUsername();
     }
 
@@ -165,7 +165,7 @@ class Applicant extends User {
      * Saves the Object
      */
     public void saveSelf(){
-        FileSystem.mapPut(FILENAME, getId(), this);
+        FileSystem.mapPut(FILENAME, getIdString(), this);
         HashMap<String, Object> data = new HashMap<>();
         data.put("password", this.getPassword());
         data.put("legalName", this.getLegalName());
@@ -175,21 +175,21 @@ class Applicant extends User {
         for(JobApplication x : this.jobApplicationManager.getJobApplications()){
             ArrayList<String> temp = new ArrayList<>();
             temp.add(x.FILENAME);
-            temp.add(x.getId());
+            temp.add(x.getIdString());
             jobapps.add(temp);
 
         }
         data.put("jobApplicationManager", jobapps);
         data.put("filesSubmitted", this.filesSubmitted);
-        FileSystem.write(FILENAME, getId(), data);
+        FileSystem.write(FILENAME, getIdString(), data);
     }
 
     /**
      * loads the Object
      */
     public void loadSelf(){
-        FileSystem.mapPut(FILENAME, getId(), this);
-        HashMap data = FileSystem.read(FILENAME, getId());
+        FileSystem.mapPut(FILENAME, getIdString(), this);
+        HashMap data = FileSystem.read(FILENAME, getIdString());
         this.loadPrelimData(data);
         this.loadJobAppManager(data);
     }

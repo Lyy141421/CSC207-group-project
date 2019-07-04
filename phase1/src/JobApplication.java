@@ -1,6 +1,7 @@
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.HashMap;//test change
+import java.util.HashMap;
 
 class JobApplication implements Storable {
     /**
@@ -10,7 +11,7 @@ class JobApplication implements Storable {
     // === Class variables ===
     // Total number of applications in the system
     private static int totalNumOfApplications;
-    // Statuses and there descriptions
+    // Job application statuses as constants
     private static final int ARCHIVED = -3;
     private static final int SUBMITTED = -2;
     private static final int UNDER_REVIEW = -1;
@@ -19,6 +20,17 @@ class JobApplication implements Storable {
     private static final int IN_PERSON_2 = 2;
     private static final int IN_PERSON_3 = 3;
     private static final int HIRED = 4;
+    // Map of statuses and their identifying integers
+    private static HashMap<Integer, String> statuses = new HashMap<Integer, String>() {{
+        put(JobApplication.ARCHIVED, "Archived");
+        put(JobApplication.SUBMITTED, "Submitted");
+        put(JobApplication.UNDER_REVIEW, "Under review");
+        put(JobApplication.PHONE_INTERVIEW, "Phone interview");
+        put(JobApplication.IN_PERSON_1, "In-person interview round 1");
+        put(JobApplication.IN_PERSON_2, "In-person interview round 2");
+        put(JobApplication.IN_PERSON_3, "In-person interview round 3");
+        put(JobApplication.HIRED, "Hired");
+    }};
 
     // === Instance variables ===
     // Unique identifier for a submitted job application
@@ -38,14 +50,13 @@ class JobApplication implements Storable {
     // The interviews conducted for this application
     private ArrayList<Interview> interviews = new ArrayList<>();
     // The filename under which this will be saved in the FileSystem
-    public final String FILENAME = "JobApplications";
+    static final String FILENAME = "JobApplications";
 
     // === Constructors ===
 
     public JobApplication(String id) {
         this.ID = Integer.parseInt(id);
         JobApplication.totalNumOfApplications = Integer.max(this.ID, JobApplication.totalNumOfApplications);
-        loadSelf();
     }
 
     JobApplication(LocalDate applicationDate) {
@@ -84,7 +95,11 @@ class JobApplication implements Storable {
     }
 
     // === Getters ===
-
+    /**
+     * Get the application ID.
+     *
+     * @return the application ID.
+     */
     int getID() {
         return this.ID;
     }
@@ -177,8 +192,15 @@ class JobApplication implements Storable {
     /**
      * Archive the job application.
      */
-    void archiveJobApp() {
+    void setArchived() {
         this.setStatus(JobApplication.ARCHIVED);
+    }
+
+    /**
+     * Set this job application status to hired.
+     */
+    void setHired() {
+        this.setStatus((JobApplication.HIRED));
     }
 
     /**
@@ -186,15 +208,47 @@ class JobApplication implements Storable {
      *
      * @return the string of the id
      */
-    public String getId() {
+    public String getIdString() {
         return Integer.toString(this.ID);
+    }
+
+    /**
+     * Get a string representation of this job application.
+     *
+     * @return a string representation of this job application.
+     */
+    @Override
+    public String toString() {
+        String s = "Application ID: " + this.getID() + "\n";
+        s += "Applicant: " + this.getApplicant().getLegalName() + "(" + this.getApplicant().getUsername() + ")" + "\n";
+        s += "Job Posting: " + this.getJobPosting().getTitle() + " -- ID: " + this.getJobPosting().getId();
+        s += "CV: " + "\n" + this.getCV() + "\n";
+        s += "Cover letter: " + this.getCoverLetter() + "\n";
+        s += "Status: " + JobApplication.statuses.get(this.getStatus()) + "\n";
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-mm-dd");
+        s += "Application date: " + this.getApplicationDate().format(dtf) + "\n";
+        s += "Interview IDs: " + this.getInterviewIDs();
+        return s;
+    }
+
+    /**
+     * Get the interview IDs for this job application.
+     *
+     * @return the IDs of the interviews that this job application has undergone.
+     */
+    private String getInterviewIDs() {
+        String s = "";
+        for (Interview interview : this.interviews) {
+            s += interview.getId() + ", ";
+        }
+        return s.substring(0, s.length() - 2); // remove last comma and space
     }
 
     /**
      * Saves the Object
      */
     public void saveSelf() {
-        FileSystem.mapPut(FILENAME, getId(), this);
+        FileSystem.mapPut(FILENAME, this.getIdString(), this);
         HashMap<String, Object> data = new HashMap<>();
         data.put("CV", this.getCV());
         data.put("CoverLetter", this.getCoverLetter());
@@ -202,31 +256,32 @@ class JobApplication implements Storable {
         data.put("ApplicationDate", this.getApplicationDate());
         data.put("Applicant", new ArrayList() {{
             add(getApplicant().FILENAME);
-            add(getApplicant().getId());
+            add(getApplicant().getIdString());
         }});
         data.put("JobPosting", new ArrayList() {{
             add(getJobPosting().FILENAME);
-            add(getJobPosting().getId());
+            add(getJobPosting().getIdString());
         }});
         ArrayList interviews = new ArrayList();
         for (Interview x : this.interviews) {
             interviews.add(new ArrayList() {{
                 add(x.FILENAME);
-                add(x.getId());
+                add(x.getIdString());
             }});
         }
         data.put("interviews", interviews);
-        FileSystem.write(FILENAME, getId(), data);
+        FileSystem.write(FILENAME, getIdString(), data);
     }
 
     /**
      * Load this job application.
      */
     public void loadSelf() {
-        FileSystem.mapPut(FILENAME, getId(), this);
-        HashMap data = FileSystem.read(FILENAME, getId());
+        FileSystem.mapPut(FILENAME, this.getIdString(), this);
+        HashMap data = FileSystem.read(FILENAME, this.getIdString());
         this.loadPrelimData(data);
         this.loadApplicant(data);
+        this.loadPosting(data);
         this.loadInterviews(data);
     }
 
@@ -248,8 +303,9 @@ class JobApplication implements Storable {
      * @param data The data for this job application.
      */
     private void loadApplicant(HashMap data) {
-        this.setApplicant((Applicant) FileSystem.subLoader(Applicant.class, (String) ((ArrayList) data.get("Applicant")).get(0),
-                    (String) ((ArrayList) data.get("Applicant")).get(1)));
+        this.setApplicant((Applicant) FileSystem.subLoader(Applicant.class, (String)
+                ((ArrayList) data.get("Applicant")).get(0), (String)
+                ((ArrayList) data.get("Applicant")).get(1)));
     }
 
     /**
@@ -258,11 +314,9 @@ class JobApplication implements Storable {
      * @param data The data for this job application.
      */
     private void loadPosting(HashMap data) {
-        this.jobPosting = ((JobPosting) FileSystem.subLoader(JobPosting.class, (String) ((ArrayList) data.get("JobPosting")).get(0),
-                    (String) ((ArrayList) data.get("JobPosting")).get(1)));
+        this.jobPosting = ((JobPosting) FileSystem.subLoader(JobPosting.class, (String) ((ArrayList)
+                data.get("JobPosting")).get(0), (String) ((ArrayList) data.get("JobPosting")).get(1)));
     }
-
-
 
     /**
      * Load the interviews for this job application.

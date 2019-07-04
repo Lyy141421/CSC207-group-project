@@ -6,8 +6,8 @@ class InterviewTime {
 
     // === Class variables ===
     // Time slots
-    ArrayList<String> timeSlots = new ArrayList<>(Arrays.asList("9-10 am", "10-11 am", "1-2 pm", "2-3 pm", "3-4 pm",
-            "4-5 pm"));
+    static ArrayList<String> timeSlots = new ArrayList<>(Arrays.asList("9-10 am", "10-11 am", "1-2 pm", "2-3 pm",
+            "3-4 pm", "4-5 pm"));
 
     // === Instance variables ===
     // The date of this interview
@@ -46,5 +46,48 @@ class InterviewTime {
         this.timeSlot = timeSlot;
     }
 
+    // === Other methods ===
 
+    /**
+     * Check whether these two interview times occur on the same date.
+     *
+     * @param otherTime The other time in question.
+     * @return true iff these two times have the same date.
+     */
+    public boolean isOnSameDate(InterviewTime otherTime) {
+        return this.date.isEqual(otherTime.getDate());
+    }
+
+    /**
+     * Check whether these two times are equal.
+     *
+     * @param otherTime The other time being compared to.
+     * @return true iff these two times have the same date and timeslot.
+     */
+    public boolean equals(InterviewTime otherTime) {
+        return this.date.isEqual(otherTime.getDate()) && this.timeSlot == otherTime.getTimeSlot();
+    }
+
+    /**
+     * Get the time slot string corresponding to the int that represents it.
+     *
+     * @param timeSlot The timeslot integer.
+     * @return the string that the integer represents.
+     */
+    static String getTimeSlotCorrespondingToInt(int timeSlot) {
+        return InterviewTime.timeSlots.get(timeSlot);
+    }
+
+    /**
+     * Get a string representation of the time slots for an interview.
+     *
+     * @return a string representation of the time slots for an interview.
+     */
+    static String timeSlotsString() {
+        String s = "";
+        for (int i = 1; i < InterviewTime.timeSlots.size(); i++) {
+            s += i + " - " + InterviewTime.timeSlots.get(i - 1) + "\t";
+        }
+        return s;
+    }
 }

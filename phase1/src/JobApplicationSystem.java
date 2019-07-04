@@ -1,6 +1,5 @@
 import GUIClasses.MainFrame;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -14,7 +13,7 @@ public class JobApplicationSystem {
     // List of companies registered in the system
     private static ArrayList<Company> companies = new ArrayList<>();
     // The user manager for the system
-    private static UserManager userManager;
+    private static UserManager userManager = new UserManager();
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
@@ -64,6 +63,30 @@ public class JobApplicationSystem {
     // === Other methods ===
 
     /**
+     * To be called at the start of the program
+     * Used to load all objects from json memory
+     */
+    static void mainStart(){
+        Loader applicant = new Loader(Applicant.class, Applicant.FILENAME);
+        Loader interviewer = new Loader(Interviewer.class, Interviewer.FILENAME);
+        Loader hrcoordinator = new Loader(HRCoordinator.class, HRCoordinator.FILENAME);
+        Loader company = new Loader(Company.class, Company.FILENAME);
+        Loader jobposting = new Loader(JobPosting.class, JobPosting.FILENAME);
+        Loader jobapplication = new Loader(JobApplication.class, JobApplication.FILENAME);
+        Loader interview = new Loader(Interview.class, Interview.FILENAME);
+        Loader.startLoad();
+        //TODO Check if all files are loaded to their managers
+    }
+
+    /**
+     * To be called at the end of the Program
+     * Used to Save all Objects to json memory
+     */
+    static void mainEnd(){
+        Loader.endSave();
+    }
+
+    /**
      A method which triggers once a day from the time it is started.
      */
     private static void cyclicalTask(){
@@ -78,22 +101,15 @@ public class JobApplicationSystem {
     }
 
     /**
-     * Create a company.
-     *
-     * @param name The name of the company.
-     * @return the company with this name.
-     */
-    static Company createCompany(String name) {
-        return new Company(name);
-    }
-
-    /**
      * Add a company to the system.
      *
      * @param name The name of the company.
+     * @return the company created.
      */
-    static void addCompany(String name) {
-        JobApplicationSystem.companies.add(JobApplicationSystem.createCompany(name));
+    static Company createCompany(String name) {
+        Company company = new Company(name);
+        JobApplicationSystem.companies.add(company);
+        return company;
     }
 
     static Company getCompany(String name) {

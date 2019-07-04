@@ -1,4 +1,6 @@
+import javax.swing.text.DateFormatter;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -19,7 +21,7 @@ class JobPosting implements Storable{
     private ArrayList<JobApplication> jobApplications; // The list of job applications for this job posting
     private InterviewManager interviewManager; // Interview manager for this job posting
     // The filename under which this will be saved in the FileSystem
-    public final String FILENAME = "JobPostings";
+    static final String FILENAME = "JobPostings";
 
     // === Constructors ===
 
@@ -250,8 +252,7 @@ class JobPosting implements Storable{
     public boolean equals(Object obj) {
         if (!(obj instanceof JobPosting)) {
             return false;
-        }
-        else {
+        } else {
             return Integer.toString(this.id).equals(((JobPosting) obj).getId());
         }
     }
@@ -259,6 +260,27 @@ class JobPosting implements Storable{
     @Override
     public int hashCode() {
         return this.id;
+    }
+
+    /**
+     * Get a string representation of this job posting.
+     *
+     * @return a string representation of this job posting.
+     */
+    @Override
+    public String toString() {
+        String s = "Job ID: " + this.getId() + "\n";
+        s += "Title: " + this.getTitle() + "\n";
+        s += "Field: " + this.getField() + "\n";
+        s += "Description: " + this.getDescription() + "\n";
+        s += "Requirements: " + this.getRequirements() + "\n";
+        s += "Number of positions: " + this.getNumPositions() + "\n";
+        s += "Company: " + this.getCompany().getName() + "\n";
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-mm-dd");
+        s += "Post date: " + this.getPostDate().format(dtf) + "\n";
+        s += "Close date: " + this.getCloseDate().format(dtf) + "\n";
+        s += "Filled: " + this.isFilled() + "\n";
+        return s;
     }
 
     /**
@@ -286,17 +308,26 @@ class JobPosting implements Storable{
         data.put("filled", this.filled);
         ArrayList jobapplications = new ArrayList();
         for(JobApplication x : this.jobApplications){
-            jobapplications.add(new ArrayList(){{add(x.FILENAME); add(x.getId());}});
+            jobapplications.add(new ArrayList() {{
+                add(x.FILENAME);
+                add(x.getIdString());
+            }});
         }
         data.put("jobapplications", jobapplications);
         ArrayList applicationsInConsideration = new ArrayList();
         for(JobApplication x : this.interviewManager.getApplicationsInConsideration()){
-            applicationsInConsideration.add(new ArrayList(){{add(x.FILENAME); add(x.getId());}});
+            applicationsInConsideration.add(new ArrayList() {{
+                add(x.FILENAME);
+                add(x.getIdString());
+            }});
         }
         data.put("applicationsInConsideration", applicationsInConsideration);
         ArrayList applicationsRejected = new ArrayList();
         for(JobApplication x : this.interviewManager.getApplicationsRejected()){
-            applicationsRejected.add(new ArrayList(){{add(x.FILENAME); add(x.getId());}});
+            applicationsRejected.add(new ArrayList() {{
+                add(x.FILENAME);
+                add(x.getIdString());
+            }});
         }
         data.put("applicationsRejected", applicationsRejected);
         data.put("currentRound", this.interviewManager.getCurrentRound());
@@ -343,7 +374,8 @@ class JobPosting implements Storable{
     private void loadJobApps(HashMap data) {
         ArrayList<JobApplication> jobApplications = new ArrayList<>();
         for (ArrayList x : (ArrayList<ArrayList>) data.get("jobapplications")) {
-            jobApplications.add((JobApplication) FileSystem.subLoader(JobApplication.class, (String)x.get(0), (String)x.get(1)));
+            jobApplications.add((JobApplication) FileSystem.subLoader(JobApplication.class, (String) x.get(0),
+                    (String) x.get(1)));
         }
         this.setJobApplications(jobApplications);
     }
@@ -357,7 +389,8 @@ class JobPosting implements Storable{
     private ArrayList<JobApplication> loadAppsInConsideration(HashMap data) {
         ArrayList<JobApplication> applicationsInConsideration = new ArrayList<>();
         for (ArrayList x : (ArrayList<ArrayList>) data.get("applicationsInConsideration")) {
-            applicationsInConsideration.add((JobApplication) FileSystem.subLoader(JobApplication.class, (String)x.get(0), (String)x.get(1)));
+            applicationsInConsideration.add((JobApplication) FileSystem.subLoader(JobApplication.class,
+                    (String) x.get(0), (String) x.get(1)));
         }
         return applicationsInConsideration;
     }
@@ -371,7 +404,8 @@ class JobPosting implements Storable{
     private ArrayList<JobApplication> loadAppsRejected(HashMap data) {
         ArrayList<JobApplication> applicationsRejected = new ArrayList<>();
         for (ArrayList x : (ArrayList<ArrayList>) data.get("applicationsRejected")) {
-            applicationsRejected.add((JobApplication) FileSystem.subLoader(JobApplication.class, (String)x.get(0), (String)x.get(1)));
+            applicationsRejected.add((JobApplication) FileSystem.subLoader(JobApplication.class, (String) x.get(0),
+                    (String) x.get(1)));
         }
         return applicationsRejected;
     }

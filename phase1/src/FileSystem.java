@@ -1,8 +1,5 @@
 import org.json.*;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,6 +10,19 @@ import java.util.List;
 public class FileSystem {
 
     static HashMap<String, HashMap<String, Object>> load_map = new HashMap<>();
+
+    static ArrayList JArrayToList(JSONArray jarry) throws JSONException {
+        ArrayList<Object> list = new ArrayList<Object>();
+        for(int i = 0; i < jarry.length(); i++){
+            if(jarry.get(i) instanceof JSONArray){
+                list.add(JArrayToList((JSONArray) jarry.get(i)));
+            }
+            else{
+                list.add(jarry.get(i));
+            }
+        }
+        return list;
+    }
 
     /**
      * Loads an object as a HashMap
@@ -33,11 +43,7 @@ public class FileSystem {
             String x = (String)it.next();
             try {
                 if(jobj.get(x) instanceof JSONArray){
-                    ArrayList<Object> list = new ArrayList<Object>();
-                    for(int i = 0; i < ((JSONArray)jobj.get(x)).length(); i++){
-                        list.add(((JSONArray)jobj.get(x)).getString(i));
-                    }
-                    map.put(x, list);
+                    map.put(x, JArrayToList((JSONArray) jobj.get(x)));
                 }
                 else{ map.put(x, jobj.get(x)); }
             } catch (JSONException e) {
@@ -192,7 +198,9 @@ public class FileSystem {
         }
         else{
             try {
-                return c.getConstructor(String.class).newInstance(id);
+                Object obj = c.getConstructor(String.class).newInstance(id);
+                ((Storable)obj).loadSelf();
+                return obj;
             } catch (NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
                 e.printStackTrace();
                 return null;

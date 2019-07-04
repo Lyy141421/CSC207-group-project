@@ -37,7 +37,7 @@ class Interview implements Storable{
     // InterviewManager of the job posting this interview is held for
     private InterviewManager interviewManager;
     // The filename under which this will be saved in the FileSystem
-    public final String FILENAME = "Interviews";
+    static final String FILENAME = "Interviews";
 
     // === Representation invariants ===
     // ID >= 0
@@ -47,7 +47,6 @@ class Interview implements Storable{
     public Interview(String id){
         this.ID = Integer.parseInt(id);
         Interview.total = Integer.max(this.ID, Interview.total);
-        loadSelf();
     }
 
     Interview() {
@@ -84,8 +83,16 @@ class Interview implements Storable{
         return Interview.MAX_NUM_ROUNDS;
     }
 
+    int getId() {
+        return this.ID;
+    }
+
     JobApplication getJobApplication() {
         return this.jobApplication;
+    }
+
+    JobPosting getJobPosting() {
+        return this.jobApplication.getJobPosting();
     }
 
     Applicant getApplicant() {
@@ -140,11 +147,26 @@ class Interview implements Storable{
     }
 
     /**
+     * Get a string representation of the preliminary input for this interview.
+     *
+     * @return
+     */
+    String toStringPrelimInfo() {
+        String s = "Interview ID: " + this.getId() + "\n";
+        s += "Job Posting: " + this.getJobPosting().getTitle();
+        s += "Interviewee: " + this.getApplicant().getLegalName() + " (" + this.getApplicant().getUsername() + ")" +
+                "\n";
+        s += "Interview type: " + Interview.roundNumberDescriptions.get(this.getRoundNumber()) + "\n";
+        return s;
+    }
+
+
+    /**
      * Getter for the ID
      *
      * @return the string of the id
      */
-    public String getId(){
+    public String getIdString(){
         return Integer.toString(this.ID);
     }
 
@@ -152,14 +174,14 @@ class Interview implements Storable{
      * Saves the Object
      */
     public void saveSelf(){
-        FileSystem.mapPut(FILENAME, getId(), this);
+        FileSystem.mapPut(FILENAME, getIdString(), this);
         HashMap<String, Object> data = new HashMap<>();
         data.put("interviewNotes", this.interviewNotes);
         data.put("pass", this.pass);
         data.put("roundNumber", this.roundNumber);
-        data.put("JobApplication", new ArrayList(){{ add(getApplicant().FILENAME); add(getApplicant().getId()); }});
-        data.put("interviewer", new ArrayList(){{ add(getInterviewer().FILENAME); add(getInterviewer().getId()); }});
-        data.put("HRCoordinator", new ArrayList(){{ add(getHRCoordinator().FILENAME); add(getHRCoordinator().getId()); }});
+        data.put("JobApplication", new ArrayList(){{ add(getApplicant().FILENAME); add(getApplicant().getIdString()); }});
+        data.put("interviewer", new ArrayList(){{ add(getInterviewer().FILENAME); add(getInterviewer().getIdString()); }});
+        data.put("HRCoordinator", new ArrayList(){{ add(getHRCoordinator().FILENAME); add(getHRCoordinator().getIdString()); }});
         data.put("InterviewTimeDate", this.time.getDate());
         data.put("InterviewTimeTimeslot", this.time.getTimeSlot());
     }
@@ -181,8 +203,8 @@ class Interview implements Storable{
      * loads the Object
      */
     public void loadSelf() {
-        FileSystem.mapPut(FILENAME, getId(), this);
-        HashMap data = FileSystem.read(FILENAME, getId());
+        FileSystem.mapPut(FILENAME, getIdString(), this);
+        HashMap data = FileSystem.read(FILENAME, getIdString());
         this.loadPrelimData(data);
         this.jobApplication = (JobApplication) FileSystem.subLoader(JobApplication.class, (String) ((ArrayList) data.get("JobApplication")).get(0), (String) ((ArrayList) data.get("JobApplication")).get(0));
         this.interviewer = (Interviewer) FileSystem.subLoader(Interviewer.class, (String) ((ArrayList) data.get("interviewer")).get(0), (String) ((ArrayList) data.get("interviewer")).get(0));
