@@ -187,7 +187,7 @@ class HRCoordinatorInterface extends UserInterface {
         try {
             int id = this.getInteger(sc,
                     "Enter the ID of the job posting you would like to view: ");
-            JobPosting jobPosting = this.HRC.getCompany().getJobPostingManager().getJobPostingByID(id);
+            JobPosting jobPosting = this.HRC.getCompany().getJobPostingManager().getJobPosting(id);
             System.out.println(jobPosting);
             return jobPosting;
         } catch (NullPointerException npe) {

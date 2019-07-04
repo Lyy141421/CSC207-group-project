@@ -34,15 +34,6 @@ class JobPostingManager {
 
     // === Getters ===
 
-    JobPosting getJobPosting(int id) {
-        for (JobPosting posting : jobPostings) {
-            if (posting.getId() == id) {
-                return posting;
-            }
-        }
-        return null;
-    }
-
     /**
      * Get the job postings for positions in this company.
      *
@@ -114,7 +105,7 @@ class JobPostingManager {
      * @param ID The id of the job posting in question.
      * @return the job posting with this ID or null if not found.
      */
-    JobPosting getJobPostingByID(int ID) {
+    JobPosting getJobPosting(int ID) {
         for (JobPosting jobPosting : this.getJobPostings()) {
             if (jobPosting.getId() == ID) {
                 return jobPosting;
