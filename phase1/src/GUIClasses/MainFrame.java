@@ -23,8 +23,9 @@ public class MainFrame extends JFrame {
 
     // Call methods that create each interface and add to main frame.
     private void addCards () {
-        add(new HRPanel());
-        add(new LoginPanel());
-        add(new NewUserPanel());
+        add(new LoginPanel(), "LOGIN");
+        add(new NewUserPanel(), "NEWUSER");
+        add(new HRPanel(), "HR");
+        add(new InterviewerPanel(), "INTERVIEWER");
     }
 }
