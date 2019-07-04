@@ -93,9 +93,9 @@ class UserInterface {
      * @return the new user instance created.
      */
     private User signUp(Scanner sc, String username, String password) {
+        System.out.println();
         System.out.print("Enter your legal name: ");
         String legalName = this.getInput(sc);
-        sc.nextLine();
         System.out.print("Enter your email address: ");
         String email = this.getInput(sc);
         int numOptions = this.displayUserTypes();
