@@ -1,4 +1,9 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
 class UserInterface {
@@ -32,8 +37,6 @@ class UserInterface {
     // === Inherited method ===
     void run(LocalDate today) {
     }
-
-    // === Other methods ===
 
     /**
      * Get the input from the user (with spaces)
@@ -89,6 +92,34 @@ class UserInterface {
             return this.getInteger(sc, message);
         }
     }
+
+    /**
+     * Get the date inputted by the user.
+     * @param sc        The scanner for user input.
+     * @param today     Today's date.
+     * @param message   The prompt that is displayed.
+     * @return  the date inputted by the user.
+     */
+    LocalDate getDate(Scanner sc, LocalDate today, String message) {
+        System.out.print(message);
+        String input = sc.next();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate date = LocalDate.parse(input, dtf);
+        try {
+            sdf.setLenient(false);
+            sdf.parse(input);
+            if (date.isBefore(today)) {
+                throw new Exception();      // Invalid input
+            }
+            return date;
+        } catch (Exception e) {
+            System.out.println("Invalid date.");
+            return this.getDate(sc, today, message);
+        }
+    }
+
+    // === Other methods ===
 
     /**
      * Interface for displaying user types.
@@ -158,7 +189,6 @@ class UserInterface {
      */
     private User createNewHRC(Scanner sc, String username, String password, String legalName, String email) {
         System.out.println();
-        sc.nextLine();
         String companyName = this.getInputLine(sc, "Enter your company name: ");
         Company company = JobApplicationSystem.getCompany(companyName);
         if (company == null) {
@@ -179,7 +209,6 @@ class UserInterface {
      */
     private User createNewInterviewer(Scanner sc, String username, String password, String legalName, String email) {
         System.out.println();
-        sc.nextLine();
         String companyName = this.getInputLine(sc, "Enter your company name: ");
         while (JobApplicationSystem.getCompany(companyName) == null) {
             System.out.println("Company name not found.");

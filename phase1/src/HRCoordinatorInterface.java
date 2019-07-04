@@ -94,6 +94,8 @@ class HRCoordinatorInterface extends UserInterface {
      * @return the number of options.
      */
     private int displayJobPostingSubMenu() {
+        System.out.println();
+        System.out.println("Please select an option below:");
         System.out.println("1 - Search for job posting");
         System.out.println("2 - View all open job postings");
         System.out.println("3 - View all closed job postings not yet filled");
@@ -208,11 +210,8 @@ class HRCoordinatorInterface extends UserInterface {
         String field = this.getInputLine(sc, "Job field: ");
         String description = this.getInputLine(sc, "Job description: ");
         String requirements = this.getInputLine(sc, "Job requirements: ");
-        int numPositions = this.getInteger(sc, "Number of positions");
-        // TODO Exception handling for dates
-        String closeDateString = this.getInputToken(sc, "Close date (yyyy-mm-dd): ");
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-mm-dd");
-        LocalDate closeDate = LocalDate.parse(closeDateString, dtf);
+        int numPositions = this.getInteger(sc, "Number of positions: ");
+        LocalDate closeDate = this.getDate(sc, today,"Close date (yyyy-mm-dd): ");
         this.HRC.addJobPosting(title, field, description, requirements, numPositions, today, closeDate);
     }
 
