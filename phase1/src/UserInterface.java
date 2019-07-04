@@ -94,10 +94,10 @@ class UserInterface {
      */
     private User signUp(Scanner sc, String username, String password) {
         System.out.print("Enter your legal name: ");
-        String legalName = sc.nextLine();
+        String legalName = this.getInput(sc);
         sc.nextLine();
         System.out.print("Enter your email address: ");
-        String email = sc.next();
+        String email = this.getInput(sc);
         int numOptions = this.displayUserTypes();
         int option = this.getMenuOption(sc, numOptions);
         switch (option) {
