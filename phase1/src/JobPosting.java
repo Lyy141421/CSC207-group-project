@@ -20,8 +20,7 @@ class JobPosting implements Storable{
     private boolean filled; // Whether the job posting is filled
     private ArrayList<JobApplication> jobApplications; // The list of job applications for this job posting
     private InterviewManager interviewManager; // Interview manager for this job posting
-    // The filename under which this will be saved in the FileSystem
-    static final String FILENAME = "JobPostings";
+    static final String FILENAME = "JobPostings";   // The filename under which this will be saved in the FileSystem
 
     // === Constructors ===
 
@@ -33,7 +32,6 @@ class JobPosting implements Storable{
     public JobPosting(String id){
         this.id = Integer.parseInt(id);
         JobPosting.postingsCreated = Integer.max(this.id, JobPosting.postingsCreated);
-        loadSelf();
     }
 
     JobPosting() {
@@ -75,7 +73,6 @@ class JobPosting implements Storable{
     String getRequirements() {
         return this.requirements;
     }
-
 
     int getNumPositions() {
         return this.numPositions;
@@ -306,10 +303,12 @@ class JobPosting implements Storable{
         data.put("postDate", this.postDate);
         data.put("closeDate", this.closeDate);
         data.put("filled", this.filled);
+        Company c = this.company;
+        data.put("Company", new ArrayList(){{add(Company.FILENAME); add(c.getIdString());}});
         ArrayList jobapplications = new ArrayList();
         for(JobApplication x : this.jobApplications){
             jobapplications.add(new ArrayList() {{
-                add(x.FILENAME);
+                add(JobApplication.FILENAME);
                 add(x.getIdString());
             }});
         }
@@ -317,7 +316,7 @@ class JobPosting implements Storable{
         ArrayList applicationsInConsideration = new ArrayList();
         for(JobApplication x : this.interviewManager.getApplicationsInConsideration()){
             applicationsInConsideration.add(new ArrayList() {{
-                add(x.FILENAME);
+                add(JobApplication.FILENAME);
                 add(x.getIdString());
             }});
         }
@@ -325,27 +324,29 @@ class JobPosting implements Storable{
         ArrayList applicationsRejected = new ArrayList();
         for(JobApplication x : this.interviewManager.getApplicationsRejected()){
             applicationsRejected.add(new ArrayList() {{
-                add(x.FILENAME);
+                add(JobApplication.FILENAME);
                 add(x.getIdString());
             }});
         }
         data.put("applicationsRejected", applicationsRejected);
         data.put("currentRound", this.interviewManager.getCurrentRound());
-        FileSystem.write(FILENAME, getIdString(), data);
+        FileSystem.write(JobPosting.FILENAME, getIdString(), data);
     }
 
     /**
      * Loads the job posting.
      */
     public void loadSelf(){
-        FileSystem.mapPut(FILENAME, getIdString(), this);
-        HashMap data = FileSystem.read(FILENAME, getIdString());
+        FileSystem.mapPut(JobPosting.FILENAME, getIdString(), this);
+        HashMap data = FileSystem.read(JobPosting.FILENAME, getIdString());
         this.loadPrelimData(data);
         this.loadJobApps(data);
         ArrayList<JobApplication> appsInConsideration = this.loadAppsInConsideration(data);
         ArrayList<JobApplication> appsRejected = this.loadAppsRejected(data);
         this.interviewManager = new InterviewManager(this, appsInConsideration, appsRejected,
                 (int) data.get("currentRound"));
+        this.company = (Company) FileSystem.subLoader(Company.class, (String)((ArrayList)data.get("Company")).get(0),
+                (String)((ArrayList)data.get("Company")).get(1));
     }
 
     /**

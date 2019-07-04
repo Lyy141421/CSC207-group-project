@@ -9,6 +9,8 @@ class JobApplicationManager {
     // === Instance variables ===
     // List of job applications submitted sorted chronologically by close date
     private ArrayList<JobApplication> jobApplications = new ArrayList<>();
+    // Number of days before an interview when the interview is considered "upcoming"
+    private static final int upcomingDays = 7;
 
     // === Constructors ===
 
@@ -36,6 +38,26 @@ class JobApplicationManager {
      */
     ArrayList<JobApplication> getJobApplications() {
         return this.jobApplications;
+    }
+
+    /**
+     * Get the list of interviews considered "upcoming" for this applicant.
+     *
+     * @return the list of interviews considered "upcoming" for this applicant, based on upcomingDays.
+     */
+
+    ArrayList<Interview> getUpcomingInterviews(LocalDate today) {
+        ArrayList<Interview> upcomingInterviews = new ArrayList<>();
+        for (JobApplication application : jobApplications) {
+            for (Interview interview : application.getInterviews()) {
+                LocalDate interviewDate = interview.getTime().getDate();
+                if (interviewDate.isAfter(today) && today.plusDays(upcomingDays+1).isAfter(interviewDate)) {
+                    upcomingInterviews.add(interview);
+                }
+            }
+        }
+        upcomingInterviews.sort(new InterviewTimeComparator());
+        return upcomingInterviews;
     }
 
     // === Setters ===

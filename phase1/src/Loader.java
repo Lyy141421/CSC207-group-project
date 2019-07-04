@@ -1,3 +1,4 @@
+import java.io.File;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -48,6 +49,17 @@ class Loader {
     // === Static Methods ===
 
     /**
+     * A method to save all storable elements in an ArrayList
+     *
+     * @param list - an ArrayList of Storable Elements
+     */
+    static void saveList(ArrayList<Storable> list){
+        for(Storable x : list){
+            x.saveSelf();
+        }
+    }
+
+    /**
      * Loads all objects in the loader at the start of the program
      */
     static void startLoad(){
@@ -62,7 +74,12 @@ class Loader {
      */
     static void endSave(){
         for(Loader loader : loader_list){
-            loader.saveAll(); //TODO use FileSystem Map for this
+            loader.saveAll();
+        }
+        for(Object x : FileSystem.load_map.keySet()){
+            for(Object y : FileSystem.load_map.get(x).keySet()){
+                ((Storable)FileSystem.load_map.get(x).get(y)).saveSelf();
+            }
         }
     }
 
@@ -75,10 +92,14 @@ class Loader {
         Iterator i = FileSystem.getAllID(this.filename);
         while(i.hasNext()){
             try {
-                Constructor con = this.clazz.getConstructor(String.class);
-                Object obj = con.newInstance((String)i.next());
-                this.obj_list.add((Storable) obj);
-                ((Storable) obj).loadSelf();
+                String s = (String) i.next();
+                if(!FileSystem.isLoaded(this.filename, s)) {
+                    Constructor con = this.clazz.getConstructor(String.class);
+                    Object obj = con.newInstance((String) s);
+                    this.obj_list.add((Storable) obj);
+                    ((Storable) obj).loadSelf();
+                    FileSystem.mapPut(this.filename, s, obj);
+                }
             } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
                 e.printStackTrace();
             }

@@ -248,37 +248,37 @@ class JobApplication implements Storable {
      * Saves the Object
      */
     public void saveSelf() {
-        FileSystem.mapPut(FILENAME, this.getIdString(), this);
+        FileSystem.mapPut(JobApplication.FILENAME, this.getIdString(), this);
         HashMap<String, Object> data = new HashMap<>();
         data.put("CV", this.getCV());
         data.put("CoverLetter", this.getCoverLetter());
         data.put("Status", this.getStatus());
         data.put("ApplicationDate", this.getApplicationDate());
         data.put("Applicant", new ArrayList() {{
-            add(getApplicant().FILENAME);
+            add(Applicant.FILENAME);
             add(getApplicant().getIdString());
         }});
         data.put("JobPosting", new ArrayList() {{
-            add(getJobPosting().FILENAME);
+            add(JobPosting.FILENAME);
             add(getJobPosting().getIdString());
         }});
         ArrayList interviews = new ArrayList();
         for (Interview x : this.interviews) {
             interviews.add(new ArrayList() {{
-                add(x.FILENAME);
+                add(Interview.FILENAME);
                 add(x.getIdString());
             }});
         }
         data.put("interviews", interviews);
-        FileSystem.write(FILENAME, getIdString(), data);
+        FileSystem.write(JobApplication.FILENAME, getIdString(), data);
     }
 
     /**
      * Load this job application.
      */
     public void loadSelf() {
-        FileSystem.mapPut(FILENAME, this.getIdString(), this);
-        HashMap data = FileSystem.read(FILENAME, this.getIdString());
+        FileSystem.mapPut(JobApplication.FILENAME, this.getIdString(), this);
+        HashMap data = FileSystem.read(JobApplication.FILENAME, this.getIdString());
         this.loadPrelimData(data);
         this.loadApplicant(data);
         this.loadPosting(data);
@@ -294,7 +294,7 @@ class JobApplication implements Storable {
         this.setCV((String) data.get("CV"));
         this.setCoverLetter((String) data.get("CoverLetter"));
         this.setStatus((int) data.get("Status"));
-        this.setApplicationDate((LocalDate.parse((String) data.get("dateCreated"))));
+        this.setApplicationDate((LocalDate.parse((String) data.get("ApplicationDate"))));
     }
 
     /**

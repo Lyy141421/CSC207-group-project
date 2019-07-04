@@ -1,5 +1,6 @@
 import org.json.*;
 import java.io.*;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -194,12 +195,16 @@ public class FileSystem {
      */
     static Object subLoader(Class c, String filename, String id){
         if(FileSystem.isLoaded(filename, id)){
+//            System.out.println("Subbed: " + filename + " " + id + " " + c);
             return mapGet(filename, id);
         }
         else{
             try {
-                Object obj = c.getConstructor(String.class).newInstance(id);
+                Constructor con = c.getConstructor(String.class);
+//                System.out.println(filename + " " + id + " " + c);
+                Object obj = con.newInstance(id);
                 ((Storable)obj).loadSelf();
+                mapPut(filename, id, obj);
                 return obj;
             } catch (NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
                 e.printStackTrace();

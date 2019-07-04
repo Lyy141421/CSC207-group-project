@@ -85,23 +85,23 @@ class HRCoordinator extends User {
      * Saves the Object
      */
     public void saveSelf(){
-        FileSystem.mapPut(FILENAME, getIdString(), this);
+        FileSystem.mapPut(HRCoordinator.FILENAME, getIdString(), this);
         HashMap<String, Object> data = new HashMap<>();
         data.put("password", this.getPassword());
         data.put("legalName", this.getLegalName());
         data.put("email", this.getEmail());
         data.put("dateCreated", this.getDateCreated());
-        data.put("company", new String[] {this.company.FILENAME,
+        data.put("Company", new String[]{Company.FILENAME,
                 this.company.getName()});
-        FileSystem.write(FILENAME, getIdString(), data);
+        FileSystem.write(HRCoordinator.FILENAME, getIdString(), data);
     }
 
     /**
      * loads the Object
      */
     public void loadSelf(){
-        FileSystem.mapPut(FILENAME, getIdString(), this);
-        HashMap data = FileSystem.read(FILENAME, getIdString());
+        FileSystem.mapPut(HRCoordinator.FILENAME, getIdString(), this);
+        HashMap data = FileSystem.read(HRCoordinator.FILENAME, getIdString());
         this.loadPrelimData(data);
         this.loadCompany(data);
     }
@@ -115,7 +115,8 @@ class HRCoordinator extends User {
         this.setPassword((String) data.get("password"));
         this.setLegalName((String) data.get("legalName"));
         this.setEmail((String) data.get("email"));
-        this.setDateCreated(LocalDate.parse((String) data.get("password")));
+        this.setPassword((String) data.get("password"));
+        this.setDateCreated(LocalDate.parse((String) data.get("dateCreated")));
     }
 
     /**
@@ -124,7 +125,7 @@ class HRCoordinator extends User {
      * @param data The data for this HR Coordinator.
      */
     private void loadCompany(HashMap data) {
-        this.setCompany((Company)FileSystem.subLoader(Company.class, (String) ((ArrayList) data.get("company")).get(0),
-                (String) ((ArrayList) data.get("company")).get(1)));
+        this.setCompany((Company)FileSystem.subLoader(Company.class, (String) ((ArrayList) data.get("Company")).get(0),
+                (String) ((ArrayList) data.get("Company")).get(1)));
     }
 }

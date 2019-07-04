@@ -10,8 +10,8 @@ class Interview implements Storable{
 
     // === Class variables ===
     // The list of descriptions for each round number.
-    private static ArrayList<String> roundNumberDescriptions = new ArrayList<>(Arrays.asList("Phone interview, " +
-            "In-person interview 1, " + "In-person interview 2", "In-person interview 3"));
+    private static ArrayList<String> roundNumberDescriptions = new ArrayList<>(Arrays.asList("Phone interview",
+            "In-person interview 1", "In-person interview 2", "In-person interview 3"));
     // The maximum number of in-person interview rounds
     private static final int MAX_NUM_ROUNDS = Interview.roundNumberDescriptions.size() - 1;
     // The total number of interviews conducted
@@ -127,6 +127,10 @@ class Interview implements Storable{
         return this.roundNumber;
     }
 
+    String getRoundNumberDescription(int number) {
+        return roundNumberDescriptions.get(number);
+    }
+
     // === Setters ===
 
     void setInterviewNotes(String notes) {
@@ -174,14 +178,23 @@ class Interview implements Storable{
      * Saves the Object
      */
     public void saveSelf(){
-        FileSystem.mapPut(FILENAME, getIdString(), this);
+        FileSystem.mapPut(Interview.FILENAME, getIdString(), this);
         HashMap<String, Object> data = new HashMap<>();
         data.put("interviewNotes", this.interviewNotes);
         data.put("pass", this.pass);
         data.put("roundNumber", this.roundNumber);
-        data.put("JobApplication", new ArrayList(){{ add(getApplicant().FILENAME); add(getApplicant().getIdString()); }});
-        data.put("interviewer", new ArrayList(){{ add(getInterviewer().FILENAME); add(getInterviewer().getIdString()); }});
-        data.put("HRCoordinator", new ArrayList(){{ add(getHRCoordinator().FILENAME); add(getHRCoordinator().getIdString()); }});
+        data.put("JobApplication", new ArrayList() {{
+            add(Applicant.FILENAME);
+            add(getApplicant().getIdString());
+        }});
+        data.put("interviewer", new ArrayList() {{
+            add(Interviewer.FILENAME);
+            add(getInterviewer().getIdString());
+        }});
+        data.put("HRCoordinator", new ArrayList() {{
+            add(HRCoordinator.FILENAME);
+            add(getHRCoordinator().getIdString());
+        }});
         data.put("InterviewTimeDate", this.time.getDate());
         data.put("InterviewTimeTimeslot", this.time.getTimeSlot());
     }
@@ -196,19 +209,23 @@ class Interview implements Storable{
         this.pass = (boolean)data.get("pass");
         this.roundNumber = (int)data.get("roundNumber");
         this.interviewManager = this.jobApplication.getJobPosting().getInterviewManager();
-        this.time = new InterviewTime(LocalDate.parse((String)data.get("InterviewTimeDate")), (int)data.get("InterviewTimeTimeslot"));
+        this.time = new InterviewTime(LocalDate.parse((String) data.get("InterviewTimeDate")),
+                (int) data.get("InterviewTimeTimeslot"));
     }
 
     /**
      * loads the Object
      */
     public void loadSelf() {
-        FileSystem.mapPut(FILENAME, getIdString(), this);
-        HashMap data = FileSystem.read(FILENAME, getIdString());
+        FileSystem.mapPut(Interview.FILENAME, getIdString(), this);
+        HashMap data = FileSystem.read(Interview.FILENAME, getIdString());
+        this.jobApplication = (JobApplication) FileSystem.subLoader(JobApplication.class, (String) ((ArrayList)
+                data.get("JobApplication")).get(0), (String) ((ArrayList) data.get("JobApplication")).get(1));
         this.loadPrelimData(data);
-        this.jobApplication = (JobApplication) FileSystem.subLoader(JobApplication.class, (String) ((ArrayList) data.get("JobApplication")).get(0), (String) ((ArrayList) data.get("JobApplication")).get(0));
-        this.interviewer = (Interviewer) FileSystem.subLoader(Interviewer.class, (String) ((ArrayList) data.get("interviewer")).get(0), (String) ((ArrayList) data.get("interviewer")).get(0));
-        this.hrCoordinator = (HRCoordinator) FileSystem.subLoader(HRCoordinator.class, (String) ((ArrayList) data.get("HRCoordinator")).get(0), (String) ((ArrayList) data.get("HRCoordinator")).get(0));
+        this.interviewer = (Interviewer) FileSystem.subLoader(Interviewer.class, (String) ((ArrayList)
+                data.get("interviewer")).get(0), (String) ((ArrayList) data.get("interviewer")).get(1));
+        this.hrCoordinator = (HRCoordinator) FileSystem.subLoader(HRCoordinator.class, (String)
+                ((ArrayList) data.get("HRCoordinator")).get(0), (String) ((ArrayList) data.get("HRCoordinator")).get(1));
     }
 
 }
