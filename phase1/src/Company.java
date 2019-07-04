@@ -200,7 +200,7 @@ class Company implements Storable{
         for(ArrayList fields : ((ArrayList<ArrayList>)data.get("fields"))){
             ArrayList<Interviewer> interviewers = new ArrayList<>();
             for(Object y : fields.subList(1, fields.size())){
-                interviewers.add((Interviewer) FileSystem.subLoader(Interview.class, (String)((ArrayList)y).get(0), (String)((ArrayList)y).get(1)));
+                interviewers.add((Interviewer) FileSystem.subLoader(Interviewer.class, (String)((ArrayList)y).get(0), (String)((ArrayList)y).get(1)));
             }
             fieldmap.put((String)fields.get(0), interviewers);
         }

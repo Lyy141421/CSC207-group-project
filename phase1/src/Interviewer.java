@@ -279,7 +279,8 @@ class Interviewer extends User {
         this.setPassword((String) data.get("password"));
         this.setLegalName((String) data.get("legalName"));
         this.setEmail((String) data.get("email"));
-        this.setDateCreated(LocalDate.parse((String) data.get("password")));
+        this.setPassword((String)data.get("password"));
+        this.setDateCreated(LocalDate.parse((String) data.get("dateCreated")));
         this.setField((String) data.get("field"));
     }
 
