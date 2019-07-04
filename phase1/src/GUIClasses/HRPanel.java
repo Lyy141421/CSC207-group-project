@@ -114,6 +114,7 @@ public class HRPanel extends JPanel implements ActionListener {
         home.addActionListener(this);
 
         JSplitPane display = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, new JScrollPane(viewable), new JScrollPane(info));
+        display.setDividerLocation(250);
 
         viewable.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
         viewable.setLayoutOrientation(JList.VERTICAL);
