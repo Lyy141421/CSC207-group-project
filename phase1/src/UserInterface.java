@@ -36,9 +36,10 @@ class UserInterface {
     // === Other methods ===
 
     /**
-     * Get the input from the user.
+     * Get the input from the user (with spaces)
      *
      * @param sc The scanner for user input.
+     * @param message   The prompt that is displayed.
      * @return the input from the user.
      */
     String getInputLine(Scanner sc, String message) {
@@ -52,6 +53,13 @@ class UserInterface {
         return input;
     }
 
+    /**
+     * Get the input from the user (no spaces)
+     *
+     * @param sc      The scanner for user input.
+     * @param message The prompt that is displayed.
+     * @return the input from the user.
+     */
     String getInputToken(Scanner sc, String message) {
         System.out.print(message);
         String input = sc.next();
@@ -64,13 +72,32 @@ class UserInterface {
     }
 
     /**
+     * Get the integer inputted by the user.
+     *
+     * @param sc      The scanner for user input.
+     * @param message The prompt that is displayed.
+     * @return the integer inputted by the user.
+     */
+    int getInteger(Scanner sc, String message) {
+        System.out.print(message);
+        String input = sc.nextLine();
+        try {
+            return Integer.parseInt(input);
+        } catch (NumberFormatException nfe) {
+            System.out.println("Invalid input. Please try again.");
+            System.out.println();
+            return this.getInteger(sc, message);
+        }
+    }
+
+    /**
      * Interface for displaying user types.
      *
      * @return the number of options in the menu.
      */
     private int displayUserTypes() {
         System.out.println();
-        System.out.println("Please select your user type:");
+        System.out.println("Select your user type:");
         System.out.println("1 - Job applicant");
         System.out.println("2 - Interviewer");
         System.out.println("3 - HR coordinator");
@@ -85,21 +112,12 @@ class UserInterface {
      * @return the option selected.
      */
     int getMenuOption(Scanner sc, int numOptions) {
-        String input = sc.next();
-        while (true) {
-            try {
-                int option = Integer.valueOf(input);
-                while (option < 1 || option > numOptions) {
-                    System.out.println("Invalid input. Please try again.");
-                    input = sc.next();
-                    option = Integer.valueOf(input);
-                }
-                return option;
-            } catch (NumberFormatException e) {
-                System.out.println("Invalid input. Please try again.");
-                input = sc.next();
-            }
+        int option = this.getInteger(sc, "Enter the value: ");
+        while (option < 1 || option > numOptions) {
+            System.out.println("Invalid input. Please try again.");
+            option = this.getInteger(sc, "Enter the value: ");
         }
+        return option;
     }
 
     /**

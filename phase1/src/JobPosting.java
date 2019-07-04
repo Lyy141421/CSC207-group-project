@@ -309,7 +309,7 @@ class JobPosting implements Storable{
         ArrayList jobapplications = new ArrayList();
         for(JobApplication x : this.jobApplications){
             jobapplications.add(new ArrayList() {{
-                add(x.FILENAME);
+                add(JobApplication.FILENAME);
                 add(x.getIdString());
             }});
         }
@@ -317,7 +317,7 @@ class JobPosting implements Storable{
         ArrayList applicationsInConsideration = new ArrayList();
         for(JobApplication x : this.interviewManager.getApplicationsInConsideration()){
             applicationsInConsideration.add(new ArrayList() {{
-                add(x.FILENAME);
+                add(JobApplication.FILENAME);
                 add(x.getIdString());
             }});
         }
@@ -325,21 +325,21 @@ class JobPosting implements Storable{
         ArrayList applicationsRejected = new ArrayList();
         for(JobApplication x : this.interviewManager.getApplicationsRejected()){
             applicationsRejected.add(new ArrayList() {{
-                add(x.FILENAME);
+                add(JobApplication.FILENAME);
                 add(x.getIdString());
             }});
         }
         data.put("applicationsRejected", applicationsRejected);
         data.put("currentRound", this.interviewManager.getCurrentRound());
-        FileSystem.write(FILENAME, getIdString(), data);
+        FileSystem.write(JobPosting.FILENAME, getIdString(), data);
     }
 
     /**
      * Loads the job posting.
      */
     public void loadSelf(){
-        FileSystem.mapPut(FILENAME, getIdString(), this);
-        HashMap data = FileSystem.read(FILENAME, getIdString());
+        FileSystem.mapPut(JobPosting.FILENAME, getIdString(), this);
+        HashMap data = FileSystem.read(JobPosting.FILENAME, getIdString());
         this.loadPrelimData(data);
         this.loadJobApps(data);
         ArrayList<JobApplication> appsInConsideration = this.loadAppsInConsideration(data);

@@ -185,9 +185,8 @@ class HRCoordinatorInterface extends UserInterface {
      */
     JobPosting getJobPosting(Scanner sc) {
         try {
-            // TODO Exception handling
-            int id = Integer.parseInt(this.getInputToken(sc,
-                    "Enter the ID of the job posting you would like to view: "));
+            int id = this.getInteger(sc,
+                    "Enter the ID of the job posting you would like to view: ");
             JobPosting jobPosting = this.HRC.getCompany().getJobPostingManager().getJobPostingByID(id);
             System.out.println(jobPosting);
             return jobPosting;
@@ -209,7 +208,7 @@ class HRCoordinatorInterface extends UserInterface {
         String field = this.getInputLine(sc, "Job field: ");
         String description = this.getInputLine(sc, "Job description: ");
         String requirements = this.getInputLine(sc, "Job requirements: ");
-        int numPositions = Integer.parseInt(this.getInputToken(sc, "Number of positions"));  // TODO Exception Handling
+        int numPositions = this.getInteger(sc, "Number of positions");
         // TODO Exception handling for dates
         String closeDateString = this.getInputToken(sc, "Close date (yyyy-mm-dd): ");
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-mm-dd");

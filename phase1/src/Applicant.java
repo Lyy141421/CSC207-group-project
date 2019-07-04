@@ -50,18 +50,18 @@ class Applicant extends User {
     /**
      * Add a file to one's account.
      *
-     * @param fileName The file name of the file to be added.
+     * @param file The file contents to be added.
      */
-    void addFile(String fileName) {
-        this.filesSubmitted.add(fileName);
+    void addFile(String file) {
+        this.filesSubmitted.add(file);
     }
 
     /**
      * Remove a file from one's account.
-     * @param fileName The file name of the file to be removed.
+     * @param file The file to be removed.
      */
-    void removeFile(String fileName) {
-        this.filesSubmitted.remove(fileName);
+    void removeFile(String file) {
+        this.filesSubmitted.remove(file);
     }
 
     /**
@@ -165,7 +165,7 @@ class Applicant extends User {
      * Saves the Object
      */
     public void saveSelf(){
-        FileSystem.mapPut(FILENAME, getIdString(), this);
+        FileSystem.mapPut(Applicant.FILENAME, getIdString(), this);
         HashMap<String, Object> data = new HashMap<>();
         data.put("password", this.getPassword());
         data.put("legalName", this.getLegalName());
@@ -174,22 +174,22 @@ class Applicant extends User {
         ArrayList<ArrayList> jobapps = new ArrayList<>();
         for(JobApplication x : this.jobApplicationManager.getJobApplications()){
             ArrayList<String> temp = new ArrayList<>();
-            temp.add(x.FILENAME);
+            temp.add(JobApplication.FILENAME);
             temp.add(x.getIdString());
             jobapps.add(temp);
 
         }
         data.put("jobApplicationManager", jobapps);
         data.put("filesSubmitted", this.filesSubmitted);
-        FileSystem.write(FILENAME, getIdString(), data);
+        FileSystem.write(Applicant.FILENAME, getIdString(), data);
     }
 
     /**
      * loads the Object
      */
     public void loadSelf(){
-        FileSystem.mapPut(FILENAME, getIdString(), this);
-        HashMap data = FileSystem.read(FILENAME, getIdString());
+        FileSystem.mapPut(Applicant.FILENAME, getIdString(), this);
+        HashMap data = FileSystem.read(Applicant.FILENAME, getIdString());
         this.loadPrelimData(data);
         this.loadJobAppManager(data);
     }

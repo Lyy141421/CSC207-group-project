@@ -112,9 +112,8 @@ class InterviewerInterface extends UserInterface {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-mm-dd");
         LocalDate interviewDate = LocalDate.parse(interviewDateString, dtf);
         System.out.println("Time slots: " + InterviewTime.timeSlotsString());
-        // TODO Exception Handling
-        int timeSlot = Integer.parseInt(this.getInputToken(sc,
-                "Enter the value that corresponds to the preferred time slot: "));
+        int timeSlot = this.getInteger(sc,
+                "Enter the value that corresponds to the preferred time slot: ");
         InterviewTime interviewTime = new InterviewTime(interviewDate, timeSlot);
         if (interviewer.isAvailable(interviewTime)) {
             interview.setTime(interviewTime);
@@ -167,13 +166,13 @@ class InterviewerInterface extends UserInterface {
     private JobApplication getJobApplication(Scanner sc) {
         try {
             int id = Integer.parseInt(this.getInputToken(sc,
-                    "Enter the ID of the job application you would wish to view: "));
+                    "Enter the ID of the job application you wish to view: "));
             JobApplication jobApplication = this.interviewer.findJobAppById(id);
             System.out.println(jobApplication);
             return jobApplication;
         } catch (NullPointerException npe) {
             System.out.println("This job application cannot be found.");
-            return null;
+            throw new NullPointerException();
         }
     }
 
@@ -185,12 +184,16 @@ class InterviewerInterface extends UserInterface {
     private void viewPreviousInterviewsForJobApp(Scanner sc) {
         JobApplication jobApp = this.getJobApplication(sc);
         System.out.println("Previous interviews:");
-        if (jobApp.getInterviews().isEmpty()) {
-            System.out.println("None");
-        } else {
-            for (Interview interview : jobApp.getInterviews()) {
-                System.out.println(interview);
+        try {
+            if (jobApp.getInterviews().isEmpty()) {
+                System.out.println("None");
+            } else {
+                for (Interview interview : jobApp.getInterviews()) {
+                    System.out.println(interview);
+                }
             }
+        } catch (NullPointerException npe) {
+            System.out.println("N/A");
         }
     }
 

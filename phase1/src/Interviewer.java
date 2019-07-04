@@ -13,8 +13,6 @@ class Interviewer extends User {
     private String field;
     // The list of interviews that this interviewer must undergo in chronological order
     private ArrayList<Interview> interviews = new ArrayList<>();
-    //    // The interviewer's schedule as a map of the date to a list of time slots that are filled.
-//    private HashMap<LocalDate, ArrayList<Integer>> schedule = new HashMap<>();
     // The filename under which this will be saved in the FileSystem
     static final String FILENAME = "Interviewers";
 
@@ -48,10 +46,6 @@ class Interviewer extends User {
         return this.interviews;
     }
 
-//    HashMap<LocalDate, ArrayList<Integer>> getSchedule() {
-//        return this.schedule;
-//    }
-
     // === Setters ===
     void setCompany(Company company) {
         this.company = company;
@@ -64,10 +58,6 @@ class Interviewer extends User {
     void setInterviews(ArrayList<Interview> interviews) {
         this.interviews = interviews;
     }
-
-//    void setSchedule(HashMap<LocalDate, ArrayList<Integer>> schedule) {
-//        this.schedule = schedule;
-//    }
 
 
     // === Other methods ===
@@ -193,20 +183,6 @@ class Interviewer extends User {
         return unscheduledInterviews;
     }
 
-//    /**
-//     * Add an interview that occurs on this date and time to this interviewer's schedule.
-//     *
-//     * @param interviewTime The time that this interview occurs.
-//     */
-//    void updateSchedule(InterviewTime interviewTime) {
-//        LocalDate date = interviewTime.getDate();
-//        int timeSlot = interviewTime.getTimeSlot();
-//        if (!this.schedule.containsKey(date)) {
-//            this.schedule.put(date, new ArrayList<>());
-//        }
-//        this.schedule.get(date).add(timeSlot);
-//    }
-
     /**
      * Get a list of job applications of this interviewer's interviewees.
      *
@@ -263,45 +239,35 @@ class Interviewer extends User {
      * Saves the Object
      */
     public void saveSelf(){
-        FileSystem.mapPut(FILENAME, getIdString(), this);
+        FileSystem.mapPut(Interviewer.FILENAME, getIdString(), this);
         HashMap<String, Object> data = new HashMap<>();
         data.put("password", this.getPassword());
         data.put("legalName", this.getLegalName());
         data.put("email", this.getEmail());
         data.put("dateCreated", this.getDateCreated());
         data.put("field", this.getField());
-        data.put("company", new String[] {this.company.FILENAME,
+        data.put("company", new String[]{Company.FILENAME,
                 this.company.getIdString()});
         ArrayList<ArrayList> interview_list = new ArrayList<>();
         for(Interview x : this.interviews){
             interview_list.add(new ArrayList<Object>() {{
-                add(FILENAME);
+                add(Interviewer.FILENAME);
                 add(x.getIdString());
             }});
         }
         data.put("interviews", interview_list);
-//        ArrayList<ArrayList> schedule = new ArrayList<>();
-//        for(LocalDate x : this.schedule.keySet()){
-//            ArrayList dates = this.schedule.get(x);
-//            schedule.add(new ArrayList<Object>() {{
-//                add(x);
-//                add(dates);
-//            }});
-//        }
-//        data.put("schedule", schedule);
-        FileSystem.write(FILENAME, getIdString(), data);
+        FileSystem.write(Interviewer.FILENAME, getIdString(), data);
     }
 
     /**
      *  Loads the interviewer.
      */
     public void loadSelf(){
-        FileSystem.mapPut(FILENAME, getIdString(), this);
-        HashMap data = FileSystem.read(FILENAME, getIdString());
+        FileSystem.mapPut(Interviewer.FILENAME, getIdString(), this);
+        HashMap data = FileSystem.read(Interviewer.FILENAME, getIdString());
         this.loadPrelimData(data);
         this.loadCompany(data);
         this.loadInterviews(data);
-//        this.loadSchedule(data);
     }
 
     /**
@@ -340,17 +306,4 @@ class Interviewer extends User {
         }
         this.setInterviews(interviews);
     }
-
-//    /**
-//     * Load the schedule for this interviewer.
-//     *
-//     * @param data The data for this interviewer.
-//     */
-//    private void loadSchedule(HashMap data) {
-//        HashMap<LocalDate, ArrayList<Integer>> schedule = new HashMap<>();
-//        for (Object x : (ArrayList) data.get("schedule")) {
-//            schedule.put(LocalDate.parse((String) ((ArrayList) x).get(0)), (ArrayList<Integer>) ((ArrayList) x).get(1));
-//        }
-//        this.setSchedule(schedule);
-//    }
 }

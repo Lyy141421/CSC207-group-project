@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 
 class Company implements Storable{
@@ -146,12 +145,12 @@ class Company implements Storable{
      * Saves the Object
      */
     public void saveSelf(){
-        FileSystem.mapPut(FILENAME, getIdString(), this);
+        FileSystem.mapPut(Company.FILENAME, getIdString(), this);
         HashMap<String, Object> data = new HashMap<>();
         ArrayList<ArrayList<String>> hrcoords = new ArrayList<>();
         for(HRCoordinator x : this.hrCoordinators){
             hrcoords.add(new ArrayList<String>() {{
-                add(x.FILENAME);
+                add(HRCoordinator.FILENAME);
                 add(x.getIdString());
             }});
         }
@@ -161,7 +160,7 @@ class Company implements Storable{
             ArrayList<ArrayList<String>> interviewers = new ArrayList<>();
             for(Interviewer y : this.fieldToInterviewers.get(field)){
                 interviewers.add(new ArrayList<String>() {{
-                    add(y.FILENAME);
+                    add(Interviewer.FILENAME);
                     add(y.getIdString());
                 }});
             }
@@ -171,12 +170,12 @@ class Company implements Storable{
         ArrayList<ArrayList<String>> jobpostings = new ArrayList<>();
         for(JobPosting x : this.jobPostingManager.getJobPostings()){
             jobpostings.add(new ArrayList<String>() {{
-                add(x.FILENAME);
+                add(JobPosting.FILENAME);
                 add(x.getIdString());
             }});
         }
         data.put("jobpostings", jobpostings);
-        FileSystem.write(FILENAME, getIdString(), data);
+        FileSystem.write(Company.FILENAME, getIdString(), data);
     }
 
     /**

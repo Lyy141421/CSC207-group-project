@@ -85,23 +85,23 @@ class HRCoordinator extends User {
      * Saves the Object
      */
     public void saveSelf(){
-        FileSystem.mapPut(FILENAME, getIdString(), this);
+        FileSystem.mapPut(HRCoordinator.FILENAME, getIdString(), this);
         HashMap<String, Object> data = new HashMap<>();
         data.put("password", this.getPassword());
         data.put("legalName", this.getLegalName());
         data.put("email", this.getEmail());
         data.put("dateCreated", this.getDateCreated());
-        data.put("company", new String[] {this.company.FILENAME,
+        data.put("company", new String[]{Company.FILENAME,
                 this.company.getName()});
-        FileSystem.write(FILENAME, getIdString(), data);
+        FileSystem.write(HRCoordinator.FILENAME, getIdString(), data);
     }
 
     /**
      * loads the Object
      */
     public void loadSelf(){
-        FileSystem.mapPut(FILENAME, getIdString(), this);
-        HashMap data = FileSystem.read(FILENAME, getIdString());
+        FileSystem.mapPut(HRCoordinator.FILENAME, getIdString(), this);
+        HashMap data = FileSystem.read(HRCoordinator.FILENAME, getIdString());
         this.loadPrelimData(data);
         this.loadCompany(data);
     }
