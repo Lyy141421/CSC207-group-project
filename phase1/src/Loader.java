@@ -86,10 +86,13 @@ class Loader {
         Iterator i = FileSystem.getAllID(this.filename);
         while(i.hasNext()){
             try {
-                Constructor con = this.clazz.getConstructor(String.class);
-                Object obj = con.newInstance((String)i.next());
-                this.obj_list.add((Storable) obj);
-                ((Storable) obj).loadSelf();
+                String s = (String) i.next();
+                if(!FileSystem.isLoaded(this.filename, s)) {
+                    Constructor con = this.clazz.getConstructor(String.class);
+                    Object obj = con.newInstance((String) s);
+                    this.obj_list.add((Storable) obj);
+                    ((Storable) obj).loadSelf();
+                }
             } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
                 e.printStackTrace();
             }
