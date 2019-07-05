@@ -38,6 +38,7 @@ public class InterviewerPanel extends JPanel implements ActionListener, ItemList
     private JPanel viewInterviews () {
         JPanel viewPanel = new JPanel(new BorderLayout());
         JPanel select = new JPanel();
+        select.setLayout(new BoxLayout(select, BoxLayout.Y_AXIS));
 
         JComboBox<String> interviews = new JComboBox<>();
 
@@ -86,8 +87,8 @@ public class InterviewerPanel extends JPanel implements ActionListener, ItemList
         JButton home = new JButton("Home");
         home.addActionListener(this);
 
-        setTime.add(timeSlot);
         setTime.add(closeDateInput);
+        setTime.add(timeSlot);
         setTime.add(schedule);
 
         schedulePanel.add(interviews, BorderLayout.WEST);
@@ -143,3 +144,4 @@ public class InterviewerPanel extends JPanel implements ActionListener, ItemList
         }
     }
 }
+
