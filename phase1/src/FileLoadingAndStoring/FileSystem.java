@@ -11,7 +11,7 @@ import java.util.Iterator;
 
 public class FileSystem {
 
-    static HashMap<String, HashMap<String, Object>> load_map = new HashMap<>();
+//    static HashMap<String, HashMap<String, Object>> load_map = new HashMap<>();
 
     static ArrayList JArrayToList(JSONArray jarry) throws JSONException {
         ArrayList<Object> list = new ArrayList<Object>();
@@ -66,7 +66,7 @@ public class FileSystem {
         JSONObject jobj = FileToJson(filename);
         try {
             jobj.put(id, data);
-            PrintWriter pw = new PrintWriter(filename + ".json");
+            PrintWriter pw = new PrintWriter("phase1/json/" + filename + ".json");
             pw.write(jobj.toString());
             pw.close();
         } catch (JSONException | FileNotFoundException e) {
@@ -84,7 +84,7 @@ public class FileSystem {
         Object obj = null;
         JSONObject jobj = null;
         try {
-            obj = new JSONParser().parse(new FileReader(filename + ".json"));
+            obj = new JSONParser().parse(new FileReader("phase1/json/" + filename + ".json"));
             jobj = new JSONObject(obj.toString());
         } catch (IOException | ParseException | JSONException e) {
             jobj = new JSONObject();
@@ -103,7 +103,7 @@ public class FileSystem {
         JSONObject jobj = FileToJson(filename);
         jobj.remove(id);
         try {
-            PrintWriter pw = new PrintWriter(filename + ".json");
+            PrintWriter pw = new PrintWriter("phase1/json/" + filename + ".json");
             pw.write(jobj.toString());
             pw.close();
         } catch (FileNotFoundException e) {
@@ -138,79 +138,79 @@ public class FileSystem {
         return false;
     }
 
-    /**
-     * Tests to see weather an object has been loaded
-     *
-     * @param filename the name of the json file (Excluding .json)
-     * @param id The unique Id of the Item being loaded
-     * @return True if in load_map
-     */
-    static boolean isLoaded(String filename, String id){
-        if(load_map.containsKey(filename)){
-            if(load_map.get(filename).containsKey(id)){
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * gets the object if it is already loaded for placement in another objects loading
-     *
-     * @param filename the name of the json file (Excluding .json)
-     * @param id The unique Id of the Item being loaded
-     * @return The Object or Null
-     */
-    static Object mapGet(String filename, String id){
-        if(isLoaded(filename, id)){
-            return load_map.get(filename).get(id);
-        }
-        return null;
-    }
-
-    /**
-     * Puts a Object into the loaded HashMap (Used after said object is loaded)
-     *
-     * @param filename the name of the json file (Excluding .json)
-     * @param id The unique Id of the Item being loaded
-     * @param obj the object to put into the HashMap
-     */
-    public static void mapPut(String filename, String id, Object obj){
-        if(load_map.containsKey(filename)){
-            load_map.get(filename).put(id, obj);
-        }
-        else{
-            HashMap<String, Object> m = new HashMap<>();
-            m.put(id, obj);
-            load_map.put(filename, m);
-        }
-    }
-
-    /**
-     * A method to load subs of class c granted that they are loadable
-     *
-     * @param c - The class of the object to be loaded
-     * @param filename - the Filename of the Object
-     * @param id - The Id of the Object
-     * @return The object being subLoaded or null if not possible
-     */
-    public static Object subLoader(Class c, String filename, String id){
-        if(FileSystem.isLoaded(filename, id)){
-//            System.out.println("Subbed: " + filename + " " + id + " " + c);
-            return mapGet(filename, id);
-        }
-        else{
-            try {
-                Constructor con = c.getConstructor(String.class);
-//                System.out.println(filename + " " + id + " " + c);
-                Object obj = con.newInstance(id);
-                ((Storable)obj).loadSelf();
-                mapPut(filename, id, obj);
-                return obj;
-            } catch (NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
-                e.printStackTrace();
-                return null;
-            }
-        }
-    }
+//    /**
+//     * Tests to see weather an object has been loaded
+//     *
+//     * @param filename the name of the json file (Excluding .json)
+//     * @param id The unique Id of the Item being loaded
+//     * @return True if in load_map
+//     */
+//    static boolean isLoaded(String filename, String id){
+//        if(load_map.containsKey(filename)){
+//            if(load_map.get(filename).containsKey(id)){
+//                return true;
+//            }
+//        }
+//        return false;
+//    }
+//
+//    /**
+//     * gets the object if it is already loaded for placement in another objects loading
+//     *
+//     * @param filename the name of the json file (Excluding .json)
+//     * @param id The unique Id of the Item being loaded
+//     * @return The Object or Null
+//     */
+//    static Object mapGet(String filename, String id){
+//        if(isLoaded(filename, id)){
+//            return load_map.get(filename).get(id);
+//        }
+//        return null;
+//    }
+//
+//    /**
+//     * Puts a Object into the loaded HashMap (Used after said object is loaded)
+//     *
+//     * @param filename the name of the json file (Excluding .json)
+//     * @param id The unique Id of the Item being loaded
+//     * @param obj the object to put into the HashMap
+//     */
+//    public static void mapPut(String filename, String id, Object obj){
+//        if(load_map.containsKey(filename)){
+//            load_map.get(filename).put(id, obj);
+//        }
+//        else{
+//            HashMap<String, Object> m = new HashMap<>();
+//            m.put(id, obj);
+//            load_map.put(filename, m);
+//        }
+//    }
+//
+//    /**
+//     * A method to load subs of class c granted that they are loadable
+//     *
+//     * @param c - The class of the object to be loaded
+//     * @param filename - the Filename of the Object
+//     * @param id - The Id of the Object
+//     * @return The object being subLoaded or null if not possible
+//     */
+//    public static Object subLoader(Class c, String filename, String id){
+//        if(FileSystem.isLoaded(filename, id)){
+////            System.out.println("Subbed: " + filename + " " + id + " " + c);
+//            return mapGet(filename, id);
+//        }
+//        else{
+//            try {
+//                Constructor con = c.getConstructor(String.class);
+////                System.out.println(filename + " " + id + " " + c);
+//                Object obj = con.newInstance(id);
+//                ((Subable)obj).callLoader();
+//                mapPut(filename, id, obj);
+//                return obj;
+//            } catch (NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
+//                e.printStackTrace();
+//                return null;
+//            }
+//        }
+//    }
 }

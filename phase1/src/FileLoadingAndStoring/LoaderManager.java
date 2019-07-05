@@ -10,19 +10,19 @@ public class LoaderManager {
     //The List of all Loaders
     private static HashMap<Class, GenericLoader> loader_map = new HashMap<>();
     //The Hashmap of objects by Filename and then by ID
-    private static HashMap<String, HashMap<String, Storable>> obj_map = new HashMap<>();
+    private static HashMap<String, HashMap<String, Object>> obj_map = new HashMap<>();
 
     // === Instance Variables ===
     //The Loader for this manager
     private GenericLoader loader;
     //The class of object in this FileLoadingAndStoring.Loader
-    private Class<Storable> clazz;
+    private Class clazz;
     //Filename of objects in this loader
     private String filename;
 
     // === Constructor ===
 
-    public LoaderManager(GenericLoader loader, Class<Storable> clazz, String filename){
+    public LoaderManager(GenericLoader loader, Class clazz, String filename){
         this.loader = loader;
         this.clazz = clazz;
         this.filename = filename;
@@ -31,13 +31,13 @@ public class LoaderManager {
 
     // === Static Methods ===
 
-    static void mapPut(String filename, String id, Storable obj){
+    static void mapPut(String filename, String id, Object obj){
         if(obj_map.containsKey(filename)){
             obj_map.get(filename).put(id, obj);
         }
     }
 
-    static Storable mapGet(String filename, String id){
+    static Object mapGet(String filename, String id){
         if(ObjInMap(filename, id)){
             return obj_map.get(filename).get(id);
         }
@@ -48,7 +48,7 @@ public class LoaderManager {
         return obj_map.containsKey(filename) & obj_map.get(filename).containsKey(id);
     }
 
-    static Object subLoad(Class<Storable> clazz, String filename, String id){
+    static Object subLoad(Class clazz, String filename, String id){
         if(ObjInMap(filename, id)){
             return mapGet(filename, id);
         }
@@ -56,7 +56,7 @@ public class LoaderManager {
             Constructor con = null;
             try {
                 con = clazz.getConstructor(String.class);
-                Storable obj = (Storable)con.newInstance(id);
+                Object obj = con.newInstance(id);
                 mapPut(filename, id, obj);
                 return obj;
             } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
@@ -68,7 +68,7 @@ public class LoaderManager {
 
     // === Instance Methods ===
 
-    private void loadALl(){
+    private void startLoad(){
         this.fillMap();
         this.loadAll();
     }
@@ -80,7 +80,7 @@ public class LoaderManager {
             Constructor con = null;
             try {
                 con = clazz.getConstructor(String.class);
-                Storable obj = (Storable)con.newInstance(id);
+                Object obj = con.newInstance(id);
                 mapPut(filename, id, obj);
             } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
                 e.printStackTrace();
@@ -89,20 +89,20 @@ public class LoaderManager {
     }
 
     void loadAll(){
-        for(Storable obj : this.getArray()){
+        for(Object obj : this.getArray()){
             this.loader.loadOne(obj);
         }
     }
 
-    ArrayList<Storable> getArray(){
-        ArrayList<Storable> out = new ArrayList<>();
+    ArrayList<Object> getArray(){
+        ArrayList<Object> out = new ArrayList<>();
         for(String key : this.getHashMap().keySet()){
             out.add(getHashMap().get(key));
         }
         return out;
     }
 
-    HashMap<String, Storable> getHashMap(){
+    HashMap<String, Object> getHashMap(){
         return obj_map.get(this.filename);
     }
 
