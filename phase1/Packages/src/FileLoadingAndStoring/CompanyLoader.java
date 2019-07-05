@@ -9,7 +9,7 @@ import UsersAndJobObjects.JobPosting;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class LoadCompanies extends LoadObjects<Company> {
+public class CompanyLoader extends GenericLoader<Company> {
 
     /**
      * Load this UsersAndJobObjects.Company.

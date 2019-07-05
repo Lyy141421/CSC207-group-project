@@ -7,7 +7,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class LoadHRCoordinators extends LoadObjects<HRCoordinator> {
+public class HRCoordinatorLoader extends GenericLoader<HRCoordinator> {
 
     /**
      * Loads the HR Coordinator.

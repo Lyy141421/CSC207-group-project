@@ -2,7 +2,7 @@ package FileLoadingAndStoring;
 
 import java.util.ArrayList;
 
-public abstract class LoadObjects<T> {
+public abstract class GenericLoader<T> {
 
     /**
      * Load all objects in this list.
