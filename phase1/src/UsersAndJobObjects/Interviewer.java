@@ -32,10 +32,6 @@ public class Interviewer extends User {
     // === Public methods ===
     // === Constructors ===
 
-    public Interviewer(String id){
-        this.setUsername(id);
-    }
-
     public Interviewer(String username, String password, String legalName, String email, Company company, String field,
                 LocalDate dateCreated) {
         super(username, password, legalName, email, dateCreated);

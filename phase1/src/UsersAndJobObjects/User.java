@@ -110,9 +110,6 @@ public abstract class User {
     // === Package-private methods ===
     // === Constructors ===
 
-    User() {
-    }
-
     User(String username, String password, String legalName, String email, LocalDate dateCreated) {
         this.username = username;
         this.password = password;
