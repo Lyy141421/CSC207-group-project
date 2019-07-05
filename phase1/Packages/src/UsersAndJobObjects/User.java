@@ -1,6 +1,5 @@
 package UsersAndJobObjects;
 
-import FileLoadingAndStoring.Storable;
 import GUIClasses.UserInterface;
 import java.time.LocalDate;
 

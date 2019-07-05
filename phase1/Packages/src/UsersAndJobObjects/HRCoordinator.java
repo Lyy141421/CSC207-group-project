@@ -5,7 +5,6 @@ import GUIClasses.HRCoordinatorInterface;
 import Managers.InterviewManager;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class HRCoordinator extends User {
@@ -38,6 +37,12 @@ public class HRCoordinator extends User {
         return this.company;
     }
 
+    // === Setters ===
+
+    public void setCompany(Company company) {
+        this.company = company;
+    }
+
     // === Other methods ===
     /**
      * Create and add a job posting to the system.
@@ -56,52 +61,12 @@ public class HRCoordinator extends User {
         this.company.getJobPostingManager().addJobPosting(jobPosting);
     }
 
-    /**
-     * Getter for the ID
-     *
-     * @return the string of the id
-     */
-    public String getIdString() {
-        return this.getUsername();
-    }
-
-    /**
-     * Saves the Object
-     */
-    public void saveSelf(){
-        FileSystem.mapPut(HRCoordinator.FILENAME, getIdString(), this);
-        HashMap<String, Object> data = new HashMap<>();
-        data.put("password", this.getPassword());
-        data.put("legalName", this.getLegalName());
-        data.put("email", this.getEmail());
-        data.put("dateCreated", this.getDateCreated());
-        data.put("Company", new String[]{Company.FILENAME,
-                this.company.getName()});
-        FileSystem.write(HRCoordinator.FILENAME, getIdString(), data);
-    }
-
-    /**
-     * loads the Object
-     */
-    public void loadSelf(){
-        FileSystem.mapPut(HRCoordinator.FILENAME, getIdString(), this);
-        HashMap data = FileSystem.read(HRCoordinator.FILENAME, getIdString());
-        this.loadPrelimData(data);
-        this.loadCompany(data);
-    }
-
     // ============================================================================================================== //
     // === Package-private methods ===
     // === Constructors ===
 
     HRCoordinator(String id){
         this.setUsername(id);
-    }
-
-    // === Setters ===
-
-    void setCompany(Company company) {
-        this.company = company;
     }
 
     // === Other methods ===
@@ -119,31 +84,5 @@ public class HRCoordinator extends User {
         } else {
             return jobPosting.getInterviewManager().getHrTask(today);
         }
-    }
-
-    // ============================================================================================================== //
-    // === Private methods ===
-
-    /**
-     * Load the preliminary data for this HR Coordinator.
-     *
-     * @param data The data for this HR Coordinator.
-     */
-    private void loadPrelimData(HashMap data) {
-        this.setPassword((String) data.get("password"));
-        this.setLegalName((String) data.get("legalName"));
-        this.setEmail((String) data.get("email"));
-        this.setPassword((String) data.get("password"));
-        this.setDateCreated(LocalDate.parse((String) data.get("dateCreated")));
-    }
-
-    /**
-     * Load this HR Coordinator's company.
-     *
-     * @param data The data for this HR Coordinator.
-     */
-    private void loadCompany(HashMap data) {
-        this.setCompany((Company) FileSystem.subLoader(Company.class, (String) ((ArrayList) data.get("Company")).get(0),
-                (String) ((ArrayList) data.get("Company")).get(1)));
     }
 }

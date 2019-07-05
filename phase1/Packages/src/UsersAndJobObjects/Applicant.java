@@ -1,13 +1,11 @@
 package UsersAndJobObjects;
 
-import FileLoadingAndStoring.FileSystem;
 import GUIClasses.ApplicantInterface;
 import Main.JobApplicationSystem;
 import Managers.JobApplicationManager;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class Applicant extends User {
     /**
