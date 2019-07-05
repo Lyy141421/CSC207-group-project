@@ -1,5 +1,6 @@
 package GUIClasses;
 
+import Main.JobApplicationSystem;
 import Managers.UserManager;
 import UsersAndJobObjects.Company;
 import UsersAndJobObjects.User;
@@ -15,7 +16,7 @@ public class UserInterface {
      */
 
     // === Class variables ===
-    // The Managers.UserManager for this JobApplicationSystem
+    // The Managers.UserManager for this Main.Main.JobApplicationSystem
     private static UserManager userManager = JobApplicationSystem.getUserManager();
 
     // === Instance variables ===

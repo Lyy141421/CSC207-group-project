@@ -1,3 +1,5 @@
+package Main;
+
 import FileLoadingAndStoring.Loader;
 import GUIClasses.MainFrame;
 import UsersAndJobObjects.Company;
@@ -44,11 +46,11 @@ public class JobApplicationSystem {
      *
      * @return the Managers.UserManager for this system.
      */
-    static UserManager getUserManager() {
+    public static UserManager getUserManager() {
         return JobApplicationSystem.userManager;
     }
 
-    static ArrayList<Company> getCompanies() {
+    public static ArrayList<Company> getCompanies() {
         return companies;
     }
 

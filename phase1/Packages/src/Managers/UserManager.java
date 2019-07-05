@@ -34,7 +34,7 @@ public class UserManager {
      * All of the following methods create new instances of the various child classes of UsersAndJobObjects.User
      * @param newUser Checks if the user being created is new/whether encryption is required
      */
-    Interviewer createInterviewer(String username, String password, String legalName, String email, Company company,
+    public Interviewer createInterviewer(String username, String password, String legalName, String email, Company company,
                                   String field, LocalDate dateCreated, boolean newUser) {
         if(newUser) {
             password = this.encrypt(password);
@@ -72,7 +72,7 @@ public class UserManager {
     /**
      * Checks if the password submitted matches the UsersAndJobObjects.User's password, returns boolean
      */
-    boolean passwordCorrect(String checkedUsername, String password) {
+    public boolean passwordCorrect(String checkedUsername, String password) {
         User checkedUser = findUserByUsername(checkedUsername);
         return this.decrypt(checkedUser.getPassword()).equals(password);
     }
