@@ -83,7 +83,7 @@ public class JobApplicationSystem {
      * Used to Save all Objects to json memory
      */
     static void mainEnd(){
-        Loader.endSave();
+        Loader.endSave(); //todo add methods to save from managers
     }
 
     /**
@@ -92,12 +92,19 @@ public class JobApplicationSystem {
     private static void cyclicalTask(){
         TimerTask daily_tasks = new TimerTask() {
             public void run() {
-                // Insert any daily methods here:
+                applicant30Day();
                 // todo CleanUpfunction() here for example
             }
         };
         Timer timer = new Timer();
         timer.scheduleAtFixedRate(daily_tasks, 0, CYCLE_PERIOD);
+    }
+
+    private static void applicant30Day(){
+        for(Object app : userManager.getAllApplicants()){
+          //((Applicant)app).removeFilesFromAccount();
+            // todo add date);
+        }
     }
 
     /**

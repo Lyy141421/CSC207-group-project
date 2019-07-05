@@ -29,7 +29,7 @@ class InterviewerInterface extends UserInterface {
      */
     void run(LocalDate today) {
         Scanner sc = new Scanner(System.in);
-        this.scheduleInterviews(sc);
+        this.scheduleInterviews(sc, today);
         this.viewInterviewsForToday(today);
         while (true) {
             try {
@@ -84,8 +84,10 @@ class InterviewerInterface extends UserInterface {
 
     /**
      * Interface for scheduling interviews set by the HR Coordinator.
+     * @param sc The scanner for local input
+     * @param today Today's date
      */
-    private void scheduleInterviews(Scanner sc) {
+    private void scheduleInterviews(Scanner sc, LocalDate today) {
         /*
         1. Display unscheduled interviews upon logging in
         2. For each interview, give prompt to set a date and time for it
@@ -96,7 +98,7 @@ class InterviewerInterface extends UserInterface {
         for (Interview interview : unscheduledInterviews) {
             System.out.println(i + ".");
             System.out.println(interview.toStringPrelimInfo());
-            this.scheduleOneInterview(sc, interview);
+            this.scheduleOneInterview(sc, today, interview);
         }
     }
 
@@ -106,11 +108,9 @@ class InterviewerInterface extends UserInterface {
      * @param sc        The scanner for user input.
      * @param interview The interview to be scheduled.
      */
-    private void scheduleOneInterview(Scanner sc, Interview interview) {
+    private void scheduleOneInterview(Scanner sc, LocalDate today, Interview interview) {
         System.out.println("Schedule the time and date below.");
-        String interviewDateString = this.getInputToken(sc, "Date (yyyy-mm-dd): ");
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-mm-dd");
-        LocalDate interviewDate = LocalDate.parse(interviewDateString, dtf);
+        LocalDate interviewDate = this.getDate(sc, today, "Date (yyyy-mm-dd): ");
         System.out.println("Time slots: " + InterviewTime.timeSlotsString());
         int timeSlot = this.getInteger(sc,
                 "Enter the value that corresponds to the preferred time slot: ");
@@ -118,7 +118,7 @@ class InterviewerInterface extends UserInterface {
         if (interviewer.isAvailable(interviewTime)) {
             interview.setTime(interviewTime);
         } else {
-            this.scheduleOneInterview(sc, interview);
+            this.scheduleOneInterview(sc, today, interview);
         }
     }
 

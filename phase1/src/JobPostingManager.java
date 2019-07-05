@@ -169,7 +169,7 @@ class JobPostingManager {
     /**
      * Get a list of all filled job postings at this company.
      *
-     * @return
+     * @return a list of filled job postings at this company.
      */
     ArrayList<JobPosting> getFilledJobPostings() {
         ArrayList<JobPosting> jobPostings = new ArrayList<>();
