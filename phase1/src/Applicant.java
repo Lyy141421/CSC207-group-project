@@ -39,6 +39,10 @@ class Applicant extends User {
         return this.jobApplicationManager;
     }
 
+    ArrayList<String> getFilesSubmitted() {
+        return this.filesSubmitted;
+    }
+
     // === Setters ===
 
     void setJobApplicationManager(JobApplicationManager jobApplicationManager) {
