@@ -35,6 +35,9 @@ public class LoaderManager {
         if(obj_map.containsKey(filename)){
             obj_map.get(filename).put(id, obj);
         }
+        else{
+            obj_map.put(filename, new HashMap<>(){{put(id, obj);}});
+        }
     }
 
     static Object mapGet(String filename, String id){
@@ -45,7 +48,7 @@ public class LoaderManager {
     }
 
     static boolean ObjInMap(String filename, String id){
-        return obj_map.containsKey(filename) & obj_map.get(filename).containsKey(id);
+        return (obj_map.containsKey(filename) && obj_map.get(filename).containsKey(id));
     }
 
     static Object subLoad(Class clazz, String filename, String id){
