@@ -80,7 +80,7 @@ public class Interviewer extends User {
      */
     public JobApplication findJobAppById(int id) {
         for (Interview interview : this.interviews) {
-            if (interview.getJobApplication().getID() == id) {
+            if (interview.getJobApplication().getId() == id) {
                 return interview.getJobApplication();
             }
         }
