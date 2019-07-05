@@ -14,7 +14,7 @@ public class JobPostingStorer extends GenericStorer<JobPosting> {
      * @param jobPosting    The job posting to be stored.
      */
     void storeOne(JobPosting jobPosting){
-        FileSystem.mapPut(JobPosting.FILENAME, String.valueOf(jobPosting.getId()), jobPosting);
+        LoaderManager.mapPut(JobPosting.FILENAME, String.valueOf(jobPosting.getId()), jobPosting);
         HashMap<String, Object> data = new HashMap<>();
         this.storePrelimData(jobPosting, data);
         this.storeCompany(jobPosting, data);

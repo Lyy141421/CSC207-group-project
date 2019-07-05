@@ -14,7 +14,7 @@ public class InterviewerStorer extends GenericStorer<Interviewer> {
      * @param interviewer   The interviewer to be stored.
      */
     void storeOne(Interviewer interviewer){
-        FileSystem.mapPut(Interviewer.FILENAME, interviewer.getUsername(), interviewer);
+        LoaderManager.mapPut(Interviewer.FILENAME, interviewer.getUsername(), interviewer);
         HashMap<String, Object> data = new HashMap<>();
         this.storePrelimInfo(interviewer, data);
         this.storeInterviews(interviewer, data);

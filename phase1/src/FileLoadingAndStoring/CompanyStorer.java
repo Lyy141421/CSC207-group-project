@@ -15,7 +15,7 @@ public class CompanyStorer extends GenericStorer<Company> {
      * @param company   The company to be stored.
      */
     void storeOne(Company company){
-        FileSystem.mapPut(Company.FILENAME, company.getName(), this);
+        LoaderManager.mapPut(Company.FILENAME, company.getName(), this);
         HashMap<String, Object> data = new HashMap<>();
         this.storeHRCoordinators(company, data);
         this.storeFieldToInterviewers(company, data);

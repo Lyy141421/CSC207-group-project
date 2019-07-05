@@ -12,7 +12,7 @@ public class HRCoordinatorStorer extends GenericStorer<HRCoordinator> {
      * @param hrCoordinator     The HR Coordinator to be stored.
      */
     void storeOne(HRCoordinator hrCoordinator){
-        FileSystem.mapPut(HRCoordinator.FILENAME, hrCoordinator.getUsername(), this);
+        LoaderManager.mapPut(HRCoordinator.FILENAME, hrCoordinator.getUsername(), this);
         HashMap<String, Object> data = new HashMap<>();
         data.put("password", hrCoordinator.getPassword());
         data.put("legalName", hrCoordinator.getLegalName());

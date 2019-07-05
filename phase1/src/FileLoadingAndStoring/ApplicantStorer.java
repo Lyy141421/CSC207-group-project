@@ -13,7 +13,7 @@ public class ApplicantStorer extends GenericStorer<Applicant> {
      * @param applicant The applicant to be stored.
      */
     void storeOne(Applicant applicant){
-        FileSystem.mapPut(Applicant.FILENAME, applicant.getUsername(), this);
+        LoaderManager.mapPut(Applicant.FILENAME, applicant.getUsername(), this);
         HashMap<String, Object> data = new HashMap<>();
         this.storePrelimInfo(applicant, data);
         this.storeJobApplications(applicant, data);
