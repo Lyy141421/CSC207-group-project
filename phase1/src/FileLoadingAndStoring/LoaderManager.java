@@ -8,7 +8,7 @@ import java.util.Iterator;
 
 public class LoaderManager {
     //The List of all Loaders
-    private static HashMap<Class, GenericLoader> loader_map = new HashMap<>();
+    private static HashMap<Class, LoaderManager> loader_map = new HashMap<>();
     //The Hashmap of objects by Filename and then by ID
     private static HashMap<String, HashMap<String, Object>> obj_map = new HashMap<>();
 
@@ -26,7 +26,7 @@ public class LoaderManager {
         this.loader = loader;
         this.clazz = clazz;
         this.filename = filename;
-        loader_map.put(clazz, loader);
+        loader_map.put(clazz, this);
     }
 
     // === Static Methods ===
@@ -66,9 +66,15 @@ public class LoaderManager {
         }
     }
 
+    public static void startLoad(){
+        for(Object x : loader_map.keySet()){
+            loader_map.get(x).load();
+        }
+    }
+
     // === Instance Methods ===
 
-    private void startLoad(){
+    private void load(){
         this.fillMap();
         this.loadAll();
     }
