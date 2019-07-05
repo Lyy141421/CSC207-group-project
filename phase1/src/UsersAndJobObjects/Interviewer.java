@@ -1,5 +1,6 @@
 package UsersAndJobObjects;
 
+import FileLoadingAndStoring.InterviewLoader;
 import GUIClasses.InterviewerInterface;
 import Miscellaneous.InterviewTime;
 import Miscellaneous.InterviewTimeComparator;
@@ -91,7 +92,7 @@ public class Interviewer extends User {
      */
     public Interview findInterviewById(int id) {
         for (Interview interview : this.interviews) {
-            if (interview.getId() == id) {
+            if (Integer.valueOf(interview.getId()) == id) {
                 return interview;
             }
         }
@@ -211,6 +212,16 @@ public class Interviewer extends User {
         return s.substring(0, s.length() - 2); // Remove extra comma and space
     }
 
+    /**
+     * Record that this interview has been failed.
+     *
+     * @param interview The interview that has been conducted.
+     */
+    public void failInterview(Interview interview) {
+        interview.setFail();
+        interview.getInterviewManager().reject(interview.getJobApplication());
+    }
+
     // ============================================================================================================== //
     // === Package-private methods ===
     // === Other methods ===
@@ -223,15 +234,5 @@ public class Interviewer extends User {
     void addInterview(Interview interview) {
         this.interviews.add(interview);
         this.interviews.sort(new InterviewTimeComparator());
-    }
-
-    /**
-     * Record that this interview has been failed.
-     *
-     * @param interview The interview that has been conducted.
-     */
-    void failInterview(Interview interview) {
-        interview.setFail();
-        interview.getInterviewManager().reject(interview.getJobApplication());
     }
 }

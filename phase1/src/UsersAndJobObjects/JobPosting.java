@@ -1,12 +1,14 @@
 package UsersAndJobObjects;
 
+import FileLoadingAndStoring.Storable;
+import FileLoadingAndStoring.Subable;
 import Managers.InterviewManager;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
-public class JobPosting {
+public class JobPosting implements Storable {
 
     // === Class variables ===
     // The filename under which this will be saved in the FileLoadingAndStoring.FileSystem
@@ -44,8 +46,8 @@ public class JobPosting {
 
     // === Getters ===
 
-    public int getId() {
-        return this.id;
+    public String getId() {
+        return Integer.toString(this.id);
     }
 
     public String getTitle() {
@@ -175,7 +177,7 @@ public class JobPosting {
         if (!(obj instanceof JobPosting)) {
             return false;
         } else {
-            return Integer.toString(this.id).equals(((JobPosting) obj).getId());
+            return (this.getId()).equals(((JobPosting) obj).getId());
         }
     }
 
