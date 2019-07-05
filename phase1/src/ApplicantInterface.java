@@ -43,7 +43,7 @@ class ApplicantInterface extends UserInterface {
             case 2:
                 ; //TODO: ????
             case 3:
-                applyForJob();
+                applyForJob(sc, today);
             case 4:
                 viewApplications();
             case 5:
@@ -169,6 +169,7 @@ class ApplicantInterface extends UserInterface {
                     System.out.println(posting.getDescription());
                     System.out.println(posting.getRequirements());
                     System.out.println(posting.getNumPositions());
+                    System.out.println(posting.getCompany().getName());
                     System.out.println(posting.getPostDate());
                     System.out.println(posting.getCloseDate());
                     System.out.println();
@@ -179,28 +180,72 @@ class ApplicantInterface extends UserInterface {
         }
     }
 
-    void applyForJob() {
-        /*
-        - Prompt for name of company applicant wishes to apply to
-        if (JobApplicationSystem.getCompany(companyName) == null) {
-            - Tell user that no company "companyName" was found
+    JobApplication createJobApplicationThroughFiles(Scanner sc, LocalDate today, JobPosting posting) {
+        System.out.println("Here are your files: ");
+        int CVFileNumber = 0;
+        for (String file : applicant.getFilesSubmitted()) {
+            CVFileNumber++;
+            System.out.println(CVFileNumber + ". " + file);
         }
-        else {
-            Company company = JobApplicationSystem.getCompany(companyName);
-            - Prompt for id of posting applicant wishes to apply for (keep id in string format)
-            if (company.getJobPostingManager().getJobPosting(id) == null) {
-                - Tell user that no job posting was found with the given id
-            }
-            else {
-                //TODO finish once clarification is obtained
-            }
-
+        System.out.println("Please enter the file number of the CV you would like to submit.");
+        int CVOption = getMenuOption(sc, CVFileNumber);
+        String CV = applicant.getFilesSubmitted().get(CVOption-1);
+        int coverLetterFileNumber = 0;
+        for (String file : applicant.getFilesSubmitted()) {
+            coverLetterFileNumber++;
+            System.out.println(coverLetterFileNumber + ". " + file);
         }
+        System.out.println("Please enter the file number of the cover letter you would like to submit.");
+        int coverLetterOption = getMenuOption(sc, coverLetterFileNumber);
+        String coverLetter = applicant.getFilesSubmitted().get(coverLetterOption-1);
+        return new JobApplication(applicant, posting, CV, coverLetter, today);
+    }
 
-        */
+    JobApplication createJobApplicationThroughTextEntry(Scanner sc, LocalDate today, JobPosting posting) {
+        System.out.println("Enter the contents of your CV as plain text (type DONE and hit space when done): ");
+        String CV = sc.next("DONE");
+        System.out.println("Enter the contents of your cover letter as plain text (type DONE and hit space when done): ");
+        String coverLetter = sc.next("DONE");
+        return new JobApplication(applicant, posting, CV, coverLetter, today);
+    }
+
+    int displaySubmitMenuOptions() {
+        System.out.println();
+        System.out.println("Select an application option:");
+        System.out.println("1 - Apply using a CV and cover letter from your account files");
+        System.out.println("2 - Enter a CV and cover letter manually");
+        return 2;
+    }
+
+    void applyForJob(Scanner sc, LocalDate today) {
+        String companyName = getInputLine(sc, "Enter the name of the company you wish to apply to: ");
+        Company company = JobApplicationSystem.getCompany(companyName);
+        while (company == null) {
+            System.out.println("No company was found matching name \"" + companyName + "\".");
+            companyName = getInputLine(sc, "Enter the name of the company you wish to apply to: ");
+            company = JobApplicationSystem.getCompany(companyName);
+        }
+        int postingId = getInteger(sc, "Enter the id of the posting you wish to apply for: ");
+        JobPosting posting = company.getJobPostingManager().getJobPosting(postingId);
+        while (posting == null) {
+            System.out.println("No posting was found matching id " + postingId + ".");
+            postingId = getInteger(sc, "Enter the id of the posting you wish to apply for: ");
+            posting = company.getJobPostingManager().getJobPosting(postingId);
+        }
+        int numOptions = this.displaySubmitMenuOptions();
+        int option = this.getMenuOption(sc, numOptions);
+        switch (option) {
+            case 1:
+                JobApplication application = this.createJobApplicationThroughFiles(sc, today, posting);
+                posting.addJobApplication(application);
+            case 2:
+                application = this.createJobApplicationThroughTextEntry(sc, today, posting);
+                posting.addJobApplication(application);
+        }
     }
 
     void viewApplications() {
+        //TODO
         /*
         for (JobApplication application : applicant.getJobApplicationManager().getJobApplications()) {
             - Display application.getJobPosting().getTitle()
@@ -221,6 +266,7 @@ class ApplicantInterface extends UserInterface {
     }
 
     void viewAccountHistory() {
+        //TODO
         /*
         - Display applicant.getDateCreated()
         - Display each application in applicant.getJobApplicationManager().getPreviousJobApplications()
