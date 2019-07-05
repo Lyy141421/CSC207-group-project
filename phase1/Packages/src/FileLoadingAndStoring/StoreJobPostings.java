@@ -7,22 +7,12 @@ import UsersAndJobObjects.JobPosting;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class StoreJobPostings {
-
-    /**
-     * Saves all the job postings.
-     * @param jobPostings   The list of job postings to be saved.
-     */
-    public void storeAll(ArrayList<JobPosting> jobPostings) {
-        for (JobPosting jobPosting : jobPostings) {
-            this.storeOne(jobPosting);
-        }
-    }
+public class StoreJobPostings extends StoreObjects<JobPosting> {
 
     /**
      * Saves the job posting.
      */
-    private void storeOne(JobPosting jobPosting){
+    void storeOne(JobPosting jobPosting){
         FileSystem.mapPut(JobPosting.FILENAME, String.valueOf(jobPosting.getId()), jobPosting);
         HashMap<String, Object> data = new HashMap<>();
         this.storePrelimData(jobPosting, data);
@@ -47,7 +37,7 @@ public class StoreJobPostings {
 
     private void storeCompany(JobPosting jobPosting, HashMap<String, Object> data) {
         Company c = jobPosting.getCompany();
-        data.put("UsersAndJobObjects.Company", new ArrayList(){{add(Company.FILENAME); add(c.getIdString());}});
+        data.put("UsersAndJobObjects.Company", new ArrayList(){{add(Company.FILENAME); add(c.getName());}});
     }
 
     private void storeAllApplications(JobPosting jobPosting, HashMap<String, Object> data) {

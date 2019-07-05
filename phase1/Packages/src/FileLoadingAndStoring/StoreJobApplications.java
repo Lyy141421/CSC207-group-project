@@ -8,22 +8,12 @@ import UsersAndJobObjects.JobPosting;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class StoreJobApplications {
-
-    /**
-     * Store all the job applications in this list.
-     * @param jobApplications   The job applications to be stored.
-     */
-    public void storeAll(ArrayList<JobApplication> jobApplications) {
-        for (JobApplication jobApplication : jobApplications) {
-            this.storeOne(jobApplication);
-        }
-    }
+public class StoreJobApplications extends StoreObjects<JobApplication> {
 
     /**
      * Stores the job application.
      */
-    private void storeOne(JobApplication jobApplication) {
+    void storeOne(JobApplication jobApplication) {
         FileSystem.mapPut(JobApplication.FILENAME, String.valueOf(jobApplication.getId()), this);
         HashMap<String, Object> data = new HashMap<>();
         this.storePrelimInfo(jobApplication, data);

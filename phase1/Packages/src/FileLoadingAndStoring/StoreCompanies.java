@@ -8,22 +8,12 @@ import UsersAndJobObjects.JobPosting;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class StoreCompanies {
-
-    /**
-     * Stores all companies in this list.
-     * @param companies The list of companies to be stored.
-     */
-    public void storeAll(ArrayList<Company> companies) {
-        for (Company company : companies) {
-            this.storeOne(company);
-        }
-    }
+public class StoreCompanies extends StoreObjects<Company> {
 
     /**
      * Stores the company.
      */
-    private void storeOne(Company company){
+    void storeOne(Company company){
         FileSystem.mapPut(Company.FILENAME, company.getName(), this);
         HashMap<String, Object> data = new HashMap<>();
         this.storeHRCoordinators(company, data);
@@ -37,7 +27,7 @@ public class StoreCompanies {
         for(HRCoordinator x : company.getHrCoordinators()){
             hrcoords.add(new ArrayList<String>() {{
                 add(HRCoordinator.FILENAME);
-                add(x.getIdString());
+                add(x.getUsername());
             }});
         }
         data.put("hrCoordinators", hrcoords);
@@ -48,10 +38,10 @@ public class StoreCompanies {
         for(String field : company.getFieldToInterviewers().keySet()){
             ArrayList temp = new ArrayList();
             temp.add(field);
-            for(Interviewer interview : company.getFieldToInterviewers().get(field)){
+            for(Interviewer interviewer : company.getFieldToInterviewers().get(field)){
                 temp.add(new ArrayList<String>() {{
                     add(Interviewer.FILENAME);
-                    add(interview.getIdString());
+                    add(interviewer.getUsername());
                 }});
             }
         }

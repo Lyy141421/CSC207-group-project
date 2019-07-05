@@ -10,22 +10,12 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class LoadInterviews {
-
-    /**
-     * Load all interviews in this list.
-     * @param interviews    The interviews to be loaded.
-     */
-    public void loadAll(ArrayList<Interview> interviews) {
-        for (Interview interview : interviews) {
-            this.loadOne(interview);
-        }
-    }
+public class LoadInterviews extends LoadObjects<Interview> {
 
     /**
      * Loads this interview
      */
-    private void loadOne(Interview interview) {
+    void loadOne(Interview interview) {
         FileSystem.mapPut(Interview.FILENAME, String.valueOf(interview.getId()), this);
         HashMap data = FileSystem.read(Interview.FILENAME, String.valueOf(interview.getId()));
         this.loadPrelimData(interview, data);

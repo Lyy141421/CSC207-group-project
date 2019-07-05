@@ -8,22 +8,12 @@ import UsersAndJobObjects.Interviewer;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class StoreInterviews {
-
-    /**
-     * Stores all the interviews in this list.
-     * @param interviews    The interviews to be stored.
-     */
-    public void storeAll(ArrayList<Interview> interviews) {
-        for (Interview interview : interviews) {
-            this.storeOne(interview);
-        }
-    }
+public class StoreInterviews extends StoreObjects<Interview> {
 
     /**
      * Stores the interview.
      */
-    private void storeOne(Interview interview){
+    void storeOne(Interview interview){
         FileSystem.mapPut(Interview.FILENAME, String.valueOf(interview.getId()), this);
         HashMap<String, Object> data = new HashMap<>();
         this.storePrelimInfo(interview, data);
@@ -49,7 +39,7 @@ public class StoreInterviews {
     private void storeInterviewer(Interview interview, HashMap<String, Object> data) {
         data.put("interviewer", new ArrayList() {{
             add(Interviewer.FILENAME);
-            add(interview.getInterviewer().getIdString());
+            add(interview.getInterviewer().getUsername());
         }});
     }
 

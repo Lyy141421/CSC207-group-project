@@ -7,22 +7,12 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class LoadHRCoordinators {
-
-    /**
-     * Load all the HR Coordinators in this list.
-     * @param hrCoordinators    The HR Coordinators to be loaded.
-     */
-    public void loadAll(ArrayList<HRCoordinator> hrCoordinators) {
-        for (HRCoordinator hrCoordinator : hrCoordinators) {
-            this.loadOne(hrCoordinator);
-        }
-    }
+public class LoadHRCoordinators extends LoadObjects<HRCoordinator> {
 
     /**
      * Loads the HR Coordinator.
      */
-    private void loadOne(HRCoordinator hrCoordinator){
+    void loadOne(HRCoordinator hrCoordinator){
         FileSystem.mapPut(HRCoordinator.FILENAME, hrCoordinator.getUsername(), this);
         HashMap data = FileSystem.read(HRCoordinator.FILENAME, hrCoordinator.getUsername());
         this.loadPrelimData(hrCoordinator, data);

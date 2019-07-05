@@ -7,22 +7,12 @@ import UsersAndJobObjects.Interviewer;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class StoreInterviewers {
-
-    /**
-     * Store all the interviewers in this list.
-     * @param interviewers  The list of interviewers to be stored.
-     */
-    public void storeAll(ArrayList<Interviewer> interviewers) {
-        for (Interviewer interviewer : interviewers) {
-            this.storeOne(interviewer);
-        }
-    }
+public class StoreInterviewers extends StoreObjects<Interviewer> {
 
     /**
      * Store the interviewer.
      */
-    private void storeOne(Interviewer interviewer){
+    void storeOne(Interviewer interviewer){
         FileSystem.mapPut(Interviewer.FILENAME, interviewer.getUsername(), interviewer);
         HashMap<String, Object> data = new HashMap<>();
         this.storePrelimInfo(interviewer, data);

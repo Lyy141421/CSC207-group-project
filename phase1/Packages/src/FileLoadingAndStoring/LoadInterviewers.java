@@ -8,22 +8,12 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class LoadInterviewers {
-
-    /**
-     * Load all the interviewers in this list.
-     * @param interviewers  The interviewers to be loaded.
-     */
-    public void loadAll(ArrayList<Interviewer> interviewers) {
-        for (Interviewer interviewer : interviewers) {
-            this.loadOne(interviewer);
-        }
-    }
+public class LoadInterviewers extends LoadObjects<Interviewer> {
 
     /**
      *  Loads the interviewer.
      */
-    private void loadOne(Interviewer interviewer){
+    void loadOne(Interviewer interviewer){
         FileSystem.mapPut(Interviewer.FILENAME, interviewer.getUsername(), this);
         HashMap data = FileSystem.read(Interviewer.FILENAME, interviewer.getUsername());
         this.loadPrelimData(interviewer, data);

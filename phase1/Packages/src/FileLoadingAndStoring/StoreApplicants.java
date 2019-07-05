@@ -6,22 +6,12 @@ import UsersAndJobObjects.JobApplication;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class StoreApplicants {
+public class StoreApplicants extends StoreObjects<Applicant> {
 
     /**
-     * Save all the applicants in this list.
-     * @param applicants    The list of applicants to be saved.
+     * Store the applicant.
      */
-    public void storeAll(ArrayList<Applicant> applicants) {
-        for (Applicant applicant : applicants) {
-            this.storeOne(applicant);
-        }
-    }
-
-    /**
-     * Save the applicant.
-     */
-    private void storeOne(Applicant applicant){
+    void storeOne(Applicant applicant){
         FileSystem.mapPut(Applicant.FILENAME, applicant.getUsername(), this);
         HashMap<String, Object> data = new HashMap<>();
         this.storePrelimInfo(applicant, data);

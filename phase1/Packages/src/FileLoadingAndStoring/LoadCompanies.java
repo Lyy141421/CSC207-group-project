@@ -9,22 +9,12 @@ import UsersAndJobObjects.JobPosting;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class LoadCompanies {
-
-    /**
-     * Load all companies in this list.
-     * @param companies The list of companies to be loaded.
-     */
-    public void loadAll(ArrayList<Company> companies) {
-        for (Company company : companies) {
-            this.loadOne(company);
-        }
-    }
+public class LoadCompanies extends LoadObjects<Company> {
 
     /**
      * Load this UsersAndJobObjects.Company.
      */
-    private void loadOne(Company company){
+    void loadOne(Company company){
         FileSystem.mapPut(Company.FILENAME, company.getName(), this);
         HashMap data = FileSystem.read(Company.FILENAME, company.getName());
         this.loadHRCoordinators(company, data);

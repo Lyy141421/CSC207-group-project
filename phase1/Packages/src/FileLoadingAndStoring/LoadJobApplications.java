@@ -9,7 +9,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class LoadJobApplications {
+public class LoadJobApplications extends LoadObjects<JobApplication> {
 
 
     /**

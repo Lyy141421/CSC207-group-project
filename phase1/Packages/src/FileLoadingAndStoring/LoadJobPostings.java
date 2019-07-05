@@ -9,26 +9,17 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class LoadJobPostings {
+public class LoadJobPostings extends LoadObjects<JobPosting> {
     /**
      * A class that loads all job postings.
      */
 
-    /**
-     * Loads all job postings.
-     * @param jobPostings   The list of job postings to load.
-     */
-    public void loadAll(ArrayList<JobPosting> jobPostings) {
-        for (JobPosting jobPosting : jobPostings) {
-            this.loadOne(jobPosting);
-        }
-    }
 
     /**
      * Loads the job posting.
      * @param jobPosting The job posting to load.
      */
-    private void loadOne(JobPosting jobPosting){
+    void loadOne(JobPosting jobPosting){
         FileSystem.mapPut(JobPosting.FILENAME, String.valueOf(jobPosting.getId()), jobPosting);
         HashMap data = FileSystem.read(JobPosting.FILENAME,  String.valueOf(jobPosting.getId()));
         this.loadPrelimData(data, jobPosting);

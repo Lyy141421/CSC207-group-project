@@ -8,22 +8,12 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class LoadApplicants {
-
-    /**
-     * Load all applicants in this list.
-     * @param applicants    The list of applicants to be loaded.
-     */
-    public void loadAll(ArrayList<Applicant> applicants) {
-        for (Applicant applicant : applicants) {
-            this.loadOne(applicant);
-        }
-    }
+public class LoadApplicants extends LoadObjects<Applicant> {
 
     /**
      * Loads the applicant
      */
-    private void loadOne(Applicant applicant){
+    void loadOne(Applicant applicant){
         FileSystem.mapPut(Applicant.FILENAME, applicant.getUsername(), applicant);
         HashMap data = FileSystem.read(Applicant.FILENAME, applicant.getUsername());
         this.loadPrelimData(applicant, data);
