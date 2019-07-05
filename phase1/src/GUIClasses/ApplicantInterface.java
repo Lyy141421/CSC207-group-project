@@ -207,10 +207,8 @@ public class ApplicantInterface extends UserInterface {
     JobApplication createJobApplicationThroughTextEntry(Scanner sc, LocalDate today, JobPosting posting) {
         System.out.println("Enter the contents of your CV as plain text (type DONE and hit space when done): ");
         String CV = sc.next("DONE");
-        applicant.addFile(CV);
         System.out.println("Enter the contents of your cover letter as plain text (type DONE and hit space when done): ");
         String coverLetter = sc.next("DONE");
-        applicant.addFile(coverLetter);
         return new JobApplication(applicant, posting, CV, coverLetter, today);
     }
 
@@ -243,12 +241,12 @@ public class ApplicantInterface extends UserInterface {
             case 1:
                 JobApplication application = this.createJobApplicationThroughFiles(sc, today, posting);
                 posting.addJobApplication(application);
-                applicant.getJobApplicationManager().addJobApplication(application);
+                applicant.registerJobApplication(application);
 
             case 2:
                 application = this.createJobApplicationThroughTextEntry(sc, today, posting);
                 posting.addJobApplication(application);
-                applicant.getJobApplicationManager().addJobApplication(application);
+                applicant.registerJobApplication(application);
         }
     }
 
@@ -268,7 +266,7 @@ public class ApplicantInterface extends UserInterface {
         if (withdrawal) {
             int applicationOption = getMenuOption(sc, applicationNumber);
             JobApplication applicationToWithdraw = applications.get(applicationOption-1);
-            boolean appWithdrawn = applicant.withdrawApplication(applicationToWithdraw.getJobPosting());
+            boolean appWithdrawn = applicant.withdrawJobApplication(applicationToWithdraw.getJobPosting());
             if (appWithdrawn) {
                 System.out.println("Application successfully withdrawn.");
             }

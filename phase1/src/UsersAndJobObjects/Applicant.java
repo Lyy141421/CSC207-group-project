@@ -58,36 +58,30 @@ public class Applicant extends User {
     }
 
     // === Other methods ===
+
+    public void registerJobApplication(JobApplication application) {
+        if (!filesSubmitted.contains(application.getCV())) {
+            this.addFile(application.getCV());
+        }
+        if (!filesSubmitted.contains(application.getCoverLetter())) {
+            this.addFile(application.getCoverLetter());
+        }
+        jobApplicationManager.addJobApplication(application);
+    }
+
     /**
      * Remove this applicant's application for this job.
      *
      * @param jobPosting The job that this user wants to withdraw their application from.
      * @return true iff this applicant can successfully withdraw their application; else return false
      */
-    public boolean withdrawApplication(JobPosting jobPosting) {
+    public boolean withdrawJobApplication(JobPosting jobPosting) {
         if (this.hasAppliedTo(jobPosting) && !jobPosting.isFilled()) {
             jobPosting.removeJobApplication(jobPosting.findJobApplication(this));
             this.jobApplicationManager.removeJobApplication(jobPosting);
             return true;
         }
         return false;
-    }
-
-    /**
-     * Add a file to one's account.
-     *
-     * @param file The file contents to be added.
-     */
-    public void addFile(String file) {
-        this.filesSubmitted.add(file);
-    }
-
-    /**
-     * Remove a file from one's account.
-     * @param file The file to be removed.
-     */
-    public void removeFile(String file) {
-        this.filesSubmitted.remove(file);
     }
 
     /**
@@ -145,4 +139,23 @@ public class Applicant extends User {
         }
     }
 
+    // ============================================================================================================== //
+    // === Private methods ===
+
+    /**
+     * Add a file to one's account.
+     *
+     * @param file The file contents to be added.
+     */
+    private void addFile(String file) {
+        this.filesSubmitted.add(file);
+    }
+
+    /**
+     * Remove a file from one's account.
+     * @param file The file to be removed.
+     */
+    private void removeFile(String file) {
+        this.filesSubmitted.remove(file);
+    }
 }
