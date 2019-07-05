@@ -24,11 +24,12 @@ public class Applicant extends User {
     // List of filenames uploaded to account
     private ArrayList<String> filesSubmitted = new ArrayList<>();
 
+    // === Public methods ===
     // === Constructors ===
 
     public Applicant(String id){
         this.setUsername(id);
-    }
+    } // TODO -- why??
 
     public Applicant(String username, String password, String legalName, String email, LocalDate dateCreated) {
         super(username, password, legalName, email, dateCreated);
@@ -54,28 +55,15 @@ public class Applicant extends User {
 
     // === Setters ===
 
-    private void setJobApplicationManager(JobApplicationManager jobApplicationManager) {
+    public void setFilesSubmitted(ArrayList<String> filesSubmitted) {
+        this.filesSubmitted = filesSubmitted;
+    }
+
+    public void setJobApplicationManager(JobApplicationManager jobApplicationManager) {
         this.jobApplicationManager = jobApplicationManager;
     }
 
     // === Other methods ===
-
-    /**
-     * Add a file to one's account.
-     *
-     * @param file The file contents to be added.
-     */
-    private void addFile(String file) {
-        this.filesSubmitted.add(file);
-    }
-
-    /**
-     * Remove a file from one's account.
-     * @param file The file to be removed.
-     */
-    private void removeFile(String file) {
-        this.filesSubmitted.remove(file);
-    }
 
     /**
      * Apply for a job.
@@ -135,9 +123,9 @@ public class Applicant extends User {
         ArrayList<JobPosting> jobPostingsNotAppliedTo = new ArrayList<>();
         for (Company company : JobApplicationSystem.getCompanies()) {
             for (JobPosting posting : company.getJobPostingManager().getJobPostings())
-            if (today.isBefore(posting.getCloseDate()) && !this.hasAppliedTo(posting)) {
-                jobPostingsNotAppliedTo.add(posting);
-            }
+                if (today.isBefore(posting.getCloseDate()) && !this.hasAppliedTo(posting)) {
+                    jobPostingsNotAppliedTo.add(posting);
+                }
         }
         return jobPostingsNotAppliedTo;
     }
@@ -165,73 +153,25 @@ public class Applicant extends User {
         }
     }
 
+    // ============================================================================================================== //
+    // === Private methods ===
+    // === Other methods ===
+
     /**
-     * Getter for the ID
+     * Add a file to one's account.
      *
-     * @return the string of the id
+     * @param file The file contents to be added.
      */
-    public String getIdString() {
-        return this.getUsername();
+    private void addFile(String file) {
+        this.filesSubmitted.add(file);
     }
 
     /**
-     * Saves the Object
+     * Remove a file from one's account.
+     * @param file The file to be removed.
      */
-    public void saveSelf(){
-        FileSystem.mapPut(Applicant.FILENAME, getIdString(), this);
-        HashMap<String, Object> data = new HashMap<>();
-        data.put("password", this.getPassword());
-        data.put("legalName", this.getLegalName());
-        data.put("email", this.getEmail());
-        data.put("dateCreated", this.getDateCreated());
-        ArrayList<ArrayList> jobapps = new ArrayList<>();
-        for(JobApplication x : this.jobApplicationManager.getJobApplications()){
-            ArrayList<String> temp = new ArrayList<>();
-            temp.add(JobApplication.FILENAME);
-            temp.add(x.getIdString());
-            jobapps.add(temp);
-
-        }
-        data.put("jobApplicationManager", jobapps);
-        data.put("filesSubmitted", this.filesSubmitted);
-        FileSystem.write(Applicant.FILENAME, getIdString(), data);
-    }
-
-    /**
-     * loads the Object
-     */
-    public void loadSelf(){
-        FileSystem.mapPut(Applicant.FILENAME, getIdString(), this);
-        HashMap data = FileSystem.read(Applicant.FILENAME, getIdString());
-        this.loadPrelimData(data);
-        this.loadJobAppManager(data);
-    }
-
-    /**
-     * Load the preliminary data for this applicant.
-     *
-     * @param data This applicant's data.
-     */
-    private void loadPrelimData(HashMap data) {
-        this.setPassword((String) data.get("password"));
-        this.setLegalName((String) data.get("legalName"));
-        this.setEmail((String) data.get("email"));
-        this.filesSubmitted = (ArrayList<String>) (data.get("filesSubmitted"));
-        this.setDateCreated(LocalDate.parse((String) data.get("dateCreated")));
-    }
-
-    /**
-     * Load the job application manager for this applicant.
-     *
-     * @param data This applicant's data.
-     */
-    private void loadJobAppManager(HashMap data) {
-        ArrayList<JobApplication> temp = new ArrayList<>();
-        for (ArrayList x : (ArrayList<ArrayList>) (data.get("jobApplicationManager"))) {
-            temp.add((JobApplication) FileSystem.subLoader(JobApplication.class, (String) x.get(0),
-                    (String) x.get(1)));
-        }
-        this.setJobApplicationManager(new JobApplicationManager(temp));
+    private void removeFile(String file) {
+        this.filesSubmitted.remove(file);
     }
 
 }

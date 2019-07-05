@@ -49,6 +49,8 @@ public class Interview implements Storable {
     // === Representation invariants ===
     // ID >= 0
 
+
+    // === Public methods ===
     // === Constructors ===
 
     public Interview(String id){
@@ -56,78 +58,13 @@ public class Interview implements Storable {
         Interview.total = Integer.max(this.ID, Interview.total);
     }
 
-    Interview() {
-        this.ID = Interview.total;
-        Interview.total++;
-    }
-
-    Interview(JobApplication jobApplication, Interviewer interviewer, HRCoordinator hrCoordinator,
-              InterviewManager interviewManager, int roundNumber) {
-        this.jobApplication = jobApplication;
-        this.interviewer = interviewer;
-        this.hrCoordinator = hrCoordinator;
-        this.interviewManager = interviewManager;
-        this.roundNumber = roundNumber;
-        this.ID = Interview.total;
-        Interview.total++;
-    }
-
-    Interview(JobApplication jobApplication, Interviewer interviewer, HRCoordinator hrCoordinator,
-              InterviewManager interviewManager, InterviewTime time, int roundNumber) {
-        this.jobApplication = jobApplication;
-        this.interviewer = interviewer;
-        this.hrCoordinator = hrCoordinator;
-        this.interviewManager = interviewManager;
-        this.time = time;
-        this.roundNumber = roundNumber;
-        this.ID = Interview.total;
-        Interview.total++;
-    }
-
     // === Getters ===
-
-    static int getMaxNumRounds() {
-        return Interview.MAX_NUM_ROUNDS;
-    }
-
-    int getId() {
-        return this.ID;
-    }
-
     public JobApplication getJobApplication() {
         return this.jobApplication;
     }
 
-    JobPosting getJobPosting() {
-        return this.jobApplication.getJobPosting();
-    }
-
-    Applicant getApplicant() {
-        return this.jobApplication.getApplicant();
-    }
-
-    InterviewManager getInterviewManager() {
-        return this.interviewManager;
-    }
-
-    Interviewer getInterviewer() {
-        return this.interviewer;
-    }
-
-    HRCoordinator getHRCoordinator() {
-        return this.hrCoordinator;
-    }
-
     public InterviewTime getTime() {
         return this.time;
-    }
-
-    String getInterviewNotes() {
-        return this.interviewNotes;
-    }
-
-    Boolean isPassed() {
-        return this.pass;
     }
 
     public int getRoundNumber() {
@@ -184,7 +121,6 @@ public class Interview implements Storable {
         return s;
     }
 
-
     /**
      * Getter for the ID
      *
@@ -220,20 +156,6 @@ public class Interview implements Storable {
     }
 
     /**
-     * Load the preliminary data for this UsersAndJobObjects.Interviewer.
-     *
-     * @param data The UsersAndJobObjects.Company's Data
-     */
-    private void loadPrelimData(HashMap data) {
-        this.interviewNotes = (String)data.get("interviewNotes");
-        this.pass = (boolean)data.get("pass");
-        this.roundNumber = (int)data.get("roundNumber");
-        this.interviewManager = this.jobApplication.getJobPosting().getInterviewManager();
-        this.time = new InterviewTime(LocalDate.parse((String) data.get("InterviewTimeDate")),
-                (int) data.get("InterviewTimeTimeslot"));
-    }
-
-    /**
      * loads the Object
      */
     public void loadSelf() {
@@ -246,6 +168,94 @@ public class Interview implements Storable {
         this.hrCoordinator = (HRCoordinator) FileSystem.subLoader(HRCoordinator.class, (String)
                 ((ArrayList) data.get("UsersAndJobObjects.HRCoordinator")).get(0), (String) ((ArrayList) data.get("UsersAndJobObjects.HRCoordinator")).get(1));
         this.loadPrelimData(data);
+    }
+
+    // ============================================================================================================== //
+
+
+    // === Package-private methods === //
+    // === Constructors ===
+    Interview() {
+        this.ID = Interview.total;
+        Interview.total++;
+    }
+
+    Interview(JobApplication jobApplication, Interviewer interviewer, HRCoordinator hrCoordinator,
+              InterviewManager interviewManager, int roundNumber) {
+        this.jobApplication = jobApplication;
+        this.interviewer = interviewer;
+        this.hrCoordinator = hrCoordinator;
+        this.interviewManager = interviewManager;
+        this.roundNumber = roundNumber;
+        this.ID = Interview.total;
+        Interview.total++;
+    }
+
+    Interview(JobApplication jobApplication, Interviewer interviewer, HRCoordinator hrCoordinator,
+              InterviewManager interviewManager, InterviewTime time, int roundNumber) {
+        this.jobApplication = jobApplication;
+        this.interviewer = interviewer;
+        this.hrCoordinator = hrCoordinator;
+        this.interviewManager = interviewManager;
+        this.time = time;
+        this.roundNumber = roundNumber;
+        this.ID = Interview.total;
+        Interview.total++;
+    }
+
+    // === Getters ===
+
+    static int getMaxNumRounds() {
+        return Interview.MAX_NUM_ROUNDS;
+    }
+
+    int getId() {
+        return this.ID;
+    }
+
+    JobPosting getJobPosting() {
+        return this.jobApplication.getJobPosting();
+    }
+
+    Applicant getApplicant() {
+        return this.jobApplication.getApplicant();
+    }
+
+    InterviewManager getInterviewManager() {
+        return this.interviewManager;
+    }
+
+    Interviewer getInterviewer() {
+        return this.interviewer;
+    }
+
+    HRCoordinator getHRCoordinator() {
+        return this.hrCoordinator;
+    }
+
+    String getInterviewNotes() {
+        return this.interviewNotes;
+    }
+
+    Boolean isPassed() {
+        return this.pass;
+    }
+
+    // ============================================================================================================== //
+    // === Private methods ===
+
+    /**
+     * Load the preliminary data for this UsersAndJobObjects.Interviewer.
+     *
+     * @param data The UsersAndJobObjects.Company's Data
+     */
+    private void loadPrelimData(HashMap data) {
+        this.interviewNotes = (String)data.get("interviewNotes");
+        this.pass = (boolean)data.get("pass");
+        this.roundNumber = (int)data.get("roundNumber");
+        this.interviewManager = this.jobApplication.getJobPosting().getInterviewManager();
+        this.time = new InterviewTime(LocalDate.parse((String) data.get("InterviewTimeDate")),
+                (int) data.get("InterviewTimeTimeslot"));
     }
 
 }

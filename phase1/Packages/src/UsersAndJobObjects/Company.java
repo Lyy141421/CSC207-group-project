@@ -7,7 +7,7 @@ import Managers.JobPostingManager;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Company implements Storable {
+public class Company {
 
     // === Class variables ===
     // The filename under which this will be saved in the FileLoadingAndStoring.FileSystem
@@ -23,18 +23,12 @@ public class Company implements Storable {
     // The job posting manager for this company
     private JobPostingManager jobPostingManager = new JobPostingManager(this);
 
+
+    // === Public methods ===
     // === Constructors ===
 
     public Company(String name) {
         this.name = name;
-    }
-
-    Company(String name, ArrayList<HRCoordinator> hrCoordinators,
-            HashMap<String, ArrayList<Interviewer>> fieldToInterviewers, JobPostingManager jobPostingManager) {
-        this.name = name;
-        this.hrCoordinators = hrCoordinators;
-        this.fieldToInterviewers = fieldToInterviewers;
-        this.jobPostingManager = jobPostingManager;
     }
 
     // === Getters ==
@@ -43,11 +37,11 @@ public class Company implements Storable {
         return this.name;
     }
 
-    ArrayList<HRCoordinator> getHrCoordinators() {
+    public ArrayList<HRCoordinator> getHrCoordinators() {
         return this.hrCoordinators;
     }
 
-    HashMap<String, ArrayList<Interviewer>> getFieldToInterviewers() {
+    public HashMap<String, ArrayList<Interviewer>> getFieldToInterviewers() {
         return this.fieldToInterviewers;
     }
 
@@ -55,44 +49,21 @@ public class Company implements Storable {
         return this.jobPostingManager;
     }
 
-
     // === Setters ===
 
-    void setJobPostingManager(JobPostingManager jobPostingManager) {
+    public void setHrCoordinators(ArrayList<HRCoordinator> hrCoordinators) {
+        this.hrCoordinators = hrCoordinators;
+    }
+
+    public void setFieldToInterviewers(HashMap<String, ArrayList<Interviewer>> fieldToInterviewers) {
+        this.fieldToInterviewers = fieldToInterviewers;
+    }
+
+    public void setJobPostingManager(JobPostingManager jobPostingManager) {
         this.jobPostingManager = jobPostingManager;
     }
 
     // === Other methods ===
-
-    /**
-     * Find the interviewer with the least amount of interviews in this job field.
-     * @param jobField  The job field of the interviewer to be found.
-     * @return the interviewer with the least amount of interviews in this field.
-     */
-    Interviewer findInterviewer(String jobField) {
-        int minNumberOfInterviews = 0;
-        Interviewer interviewerSoFar = null;
-        for (Interviewer interviewer : this.fieldToInterviewers.get(jobField)) {
-            int numberOfInterviews = interviewer.getInterviews().size();
-            if (numberOfInterviews <= minNumberOfInterviews) {
-                interviewerSoFar = interviewer;
-            }
-        }
-        return interviewerSoFar;
-    }
-
-    /**
-     * Add an interviewer to this company.
-     *
-     * @param interviewer The interviewer to be added.
-     */
-    void addInterviewer(Interviewer interviewer) {
-        String field = interviewer.getField();
-        if (!this.fieldToInterviewers.containsKey(field)) {
-            this.fieldToInterviewers.put(field, new ArrayList<>());
-        }
-        this.fieldToInterviewers.get(field).add(interviewer);
-    }
 
     /**
      * View all applications this applicant has submitted for job postings in this company.
@@ -148,98 +119,47 @@ public class Company implements Storable {
         return sum;
     }
 
+    // ============================================================================================================== //
+    // === Package-private methods ===
+    // === Constructors ===
+    Company(String name, ArrayList<HRCoordinator> hrCoordinators,
+            HashMap<String, ArrayList<Interviewer>> fieldToInterviewers, JobPostingManager jobPostingManager) {
+        this.name = name;
+        this.hrCoordinators = hrCoordinators;
+        this.fieldToInterviewers = fieldToInterviewers;
+        this.jobPostingManager = jobPostingManager;
+    }
+
+    // === Other methods ===
+
     /**
-     * Saves the Object
+     * Find the interviewer with the least amount of interviews in this job field.
+     * @param jobField  The job field of the interviewer to be found.
+     * @return the interviewer with the least amount of interviews in this field.
      */
-    public void saveSelf(){
-        FileSystem.mapPut(Company.FILENAME, getIdString(), this);
-        HashMap<String, Object> data = new HashMap<>();
-        ArrayList<ArrayList<String>> hrcoords = new ArrayList<>();
-        for(HRCoordinator x : this.hrCoordinators){
-            hrcoords.add(new ArrayList<String>() {{
-                add(HRCoordinator.FILENAME);
-                add(x.getIdString());
-            }});
-        }
-        data.put("hrCoordinators", hrcoords);
-        ArrayList fields = new ArrayList();
-        for(String field : this.fieldToInterviewers.keySet()){
-            ArrayList temp = new ArrayList();
-            temp.add(field);
-            for(Interviewer interview : this.fieldToInterviewers.get(field)){
-                temp.add(new ArrayList<String>() {{
-                    add(Interviewer.FILENAME);
-                    add(interview.getIdString());
-                }});
+    Interviewer findInterviewer(String jobField) {
+        int minNumberOfInterviews = 0;
+        Interviewer interviewerSoFar = null;
+        for (Interviewer interviewer : this.fieldToInterviewers.get(jobField)) {
+            int numberOfInterviews = interviewer.getInterviews().size();
+            if (numberOfInterviews <= minNumberOfInterviews) {
+                interviewerSoFar = interviewer;
             }
         }
-        data.put("fields", fields);
-        ArrayList<ArrayList<String>> jobpostings = new ArrayList<>();
-        for(JobPosting x : this.jobPostingManager.getJobPostings()){
-            jobpostings.add(new ArrayList<String>() {{
-                add(JobPosting.FILENAME);
-                add(x.getIdString());
-            }});
-        }
-        data.put("jobpostings", jobpostings);
-        FileSystem.write(Company.FILENAME, getIdString(), data);
+        return interviewerSoFar;
     }
 
     /**
-     * Loads the HRCoordinators from memory
+     * Add an interviewer to this company.
      *
-     * @param data The UsersAndJobObjects.Company's Data
+     * @param interviewer The interviewer to be added.
      */
-    private void loadHRCoordinators(HashMap data){
-        ArrayList<HRCoordinator> hrcords = new ArrayList<>();
-        for(Object x : (ArrayList)data.get("hrCoordinators")){
-            hrcords.add((HRCoordinator) FileSystem.subLoader(HRCoordinator.class, (String)((ArrayList)x).get(0),
-                    (String)((ArrayList)x).get(1)));
+    void addInterviewer(Interviewer interviewer) {
+        String field = interviewer.getField();
+        if (!this.fieldToInterviewers.containsKey(field)) {
+            this.fieldToInterviewers.put(field, new ArrayList<>());
         }
-        this.hrCoordinators = hrcords;
+        this.fieldToInterviewers.get(field).add(interviewer);
     }
 
-    /**
-     * Loads the FieldMap from memory
-     *
-     * @param data The UsersAndJobObjects.Company's Data
-     */
-    private void loadFieldMap(HashMap data){
-        HashMap<String, ArrayList<Interviewer>> fieldmap = new HashMap<>();
-        for(ArrayList fields : ((ArrayList<ArrayList>)data.get("fields"))){
-            ArrayList<Interviewer> interviewers = new ArrayList<>();
-            for(Object y : fields.subList(1, fields.size())){
-                interviewers.add((Interviewer) FileSystem.subLoader(Interviewer.class, (String)((ArrayList)y).get(0),
-                        (String)((ArrayList)y).get(1)));
-            }
-            fieldmap.put((String)fields.get(0), interviewers);
-        }
-        this.fieldToInterviewers = fieldmap;
-    }
-
-    /**
-     * Loads the FieldMap from memory
-     *
-     * @param data The UsersAndJobObjects.Company's Data
-     */
-    private void loadJobPostingManager(HashMap data){
-        ArrayList<JobPosting> jobpostings = new ArrayList<>();
-        for(Object x : (ArrayList)data.get("jobpostings")){
-                jobpostings.add((JobPosting) FileSystem.subLoader(JobPosting.class, (String)((ArrayList)x).get(0),
-                        (String)((ArrayList)x).get(1)));
-            }
-        this.jobPostingManager = new JobPostingManager(jobpostings, this);
-    }
-
-    /**
-     * Load this UsersAndJobObjects.Company.
-     */
-    public void loadSelf(){
-        FileSystem.mapPut(FILENAME, getIdString(), this);
-        HashMap data = FileSystem.read(FILENAME, getIdString());
-        this.loadHRCoordinators(data);
-        this.loadFieldMap(data);
-        this.loadJobPostingManager(data);
-
-    }
 }

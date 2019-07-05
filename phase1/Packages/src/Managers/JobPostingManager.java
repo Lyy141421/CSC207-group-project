@@ -16,21 +16,14 @@ public class JobPostingManager {
     // The company that this job posting manager is for
     private Company company;
 
-    /**
-     * Create a new job posting manager for this company.
-     *
-     * @param company The company that this manager is for.
-     */
+
+    // === Public methods ===
+    // === Constructors ===
+
     public JobPostingManager(Company company) {
         this.company = company;
     }
 
-    /**
-     * Create a new job posting manager for this company;
-     *
-     * @param jobPostings The list of job postings for this company.
-     * @param company     The company that this manager is for.
-     */
     public JobPostingManager(ArrayList<JobPosting> jobPostings, Company company) {
         this.jobPostings = jobPostings;
         this.company = company;
@@ -38,42 +31,8 @@ public class JobPostingManager {
 
     // === Getters ===
 
-    /**
-     * Get the job postings for positions in this company.
-     *
-     * @return the list of job postings for positions in this company.
-     */
     public ArrayList<JobPosting> getJobPostings() {
         return this.jobPostings;
-    }
-
-    /**
-     * Get the company that this job posting manager is for.
-     *
-     * @return the company that this job posting manager is for.
-     */
-    Company getCompany() {
-        return this.company;
-    }
-
-    // === Setters ===
-
-    /**
-     * Set the job postings for this job posting manager.
-     *
-     * @param jobPostings The list of job postings to be set.
-     */
-    void setJobPostings(ArrayList<JobPosting> jobPostings) {
-        this.jobPostings = jobPostings;
-    }
-
-    /**
-     * Set the company for this job posting manager.
-     *
-     * @param company The company to be set.
-     */
-    void setCompany(Company company) {
-        this.company = company;
     }
 
     // === Other methods ===
@@ -85,22 +44,6 @@ public class JobPostingManager {
      */
     public void addJobPosting(JobPosting jobPosting) {
         this.jobPostings.add(jobPosting);
-    }
-
-    /**
-     * Search the job postings by title within this company.
-     *
-     * @param jobTitle The job title.
-     * @return the list of job postings with this job title.
-     */
-    ArrayList<JobPosting> searchJobPostingByTitle(String jobTitle) {
-        ArrayList<JobPosting> jobPostings = new ArrayList<>();
-        for (JobPosting jobPosting : this.getJobPostings()) {
-            if (jobPosting.getTitle().equalsIgnoreCase(jobTitle)) {
-                jobPostings.add(jobPosting);
-            }
-        }
-        return jobPostings;
     }
 
     /**
@@ -211,6 +154,43 @@ public class JobPostingManager {
         ArrayList<JobPosting> jobPostings = new ArrayList<>();
         for (JobPosting jobPosting : this.getClosedJobPostingsNotFilled(today)) {
             if (jobPosting.getInterviewManager().getHrTask(today) == InterviewManager.HIRE_APPLICANTS) {
+                jobPostings.add(jobPosting);
+            }
+        }
+        return jobPostings;
+    }
+
+    // ============================================================================================================== //
+    // === Package-private methods ===
+
+    // === Getters ===
+
+    Company getCompany() {
+        return this.company;
+    }
+
+    // === Setters ===
+
+    void setJobPostings(ArrayList<JobPosting> jobPostings) {
+        this.jobPostings = jobPostings;
+    }
+
+    void setCompany(Company company) {
+        this.company = company;
+    }
+
+    // === Other methods ===
+
+    /**
+     * Search the job postings by title within this company.
+     *
+     * @param jobTitle The job title.
+     * @return the list of job postings with this job title.
+     */
+    ArrayList<JobPosting> searchJobPostingByTitle(String jobTitle) {
+        ArrayList<JobPosting> jobPostings = new ArrayList<>();
+        for (JobPosting jobPosting : this.getJobPostings()) {
+            if (jobPosting.getTitle().equalsIgnoreCase(jobTitle)) {
                 jobPostings.add(jobPosting);
             }
         }

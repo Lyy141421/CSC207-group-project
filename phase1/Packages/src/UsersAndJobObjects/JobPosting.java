@@ -9,7 +9,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class JobPosting implements Storable {
+public class JobPosting {
 
     // === Class variables ===
     // The filename under which this will be saved in the FileLoadingAndStoring.FileSystem
@@ -31,6 +31,8 @@ public class JobPosting implements Storable {
     private ArrayList<JobApplication> jobApplications = new ArrayList<>(); // The list of job applications for this job posting
     private InterviewManager interviewManager; // UsersAndJobObjects.Interview manager for this job posting
 
+
+    // === Public methods ===
     // === Constructors ===
 
     /**
@@ -41,21 +43,6 @@ public class JobPosting implements Storable {
     public JobPosting(String id){
         this.id = Integer.parseInt(id);
         JobPosting.postingsCreated = Integer.max(this.id, JobPosting.postingsCreated);
-    }
-
-    JobPosting(String title, String field, String description, String requirements, int numPositions, Company company,
-               LocalDate postDate, LocalDate closeDate) {
-        postingsCreated++;
-        this.id = postingsCreated;
-        this.title = title;
-        this.field = field;
-        this.description = description;
-        this.requirements = requirements;
-        this.numPositions = numPositions;
-        this.company = company;
-        this.filled = false;
-        this.postDate = postDate;
-        this.closeDate = closeDate;
     }
 
     // === Getters ===
@@ -108,46 +95,45 @@ public class JobPosting implements Storable {
         return this.interviewManager;
     }
 
-
     // == Setters ===
-    void setTitle(String title) {
+    public void setTitle(String title) {
         this.title = title;
     }
 
-    void setField(String field) {
+    public void setField(String field) {
         this.field = field;
     }
 
-    void setDescription(String description) {
+    public void setDescription(String description) {
         this.description = description;
     }
 
-    void setRequirements(String requirements) {
+    public void setRequirements(String requirements) {
         this.requirements = requirements;
     }
 
-    void setNumPositions(int numPositions) {
+    public void setNumPositions(int numPositions) {
         this.numPositions = numPositions;
     }
 
-    void setCompany(Company company) {
+    public void setCompany(Company company) {
         this.company = company;
     }
 
-    void setPostDate(LocalDate postDate) {
+    public void setPostDate(LocalDate postDate) {
         this.postDate = postDate;
     }
 
-    void setCloseDate(LocalDate closeDate) {
+    public void setCloseDate(LocalDate closeDate) {
         this.closeDate = closeDate;
+    }
+
+    public void setJobApplications(ArrayList<JobApplication> jobApps) {
+        this.jobApplications = jobApps;
     }
 
     public void setFilled() {
         this.filled = true;
-    }
-
-    void setJobApplications(ArrayList<JobApplication> jobApps) {
-        this.jobApplications = jobApps;
     }
 
     public void setInterviewManager(InterviewManager interviewManager) {
@@ -155,7 +141,6 @@ public class JobPosting implements Storable {
     }
 
     // === Other methods ===
-
     /**
      * Add this job application for this job posting.
      *
@@ -163,15 +148,6 @@ public class JobPosting implements Storable {
      */
     public void addJobApplication(JobApplication jobApplication) {
         this.jobApplications.add(jobApplication);
-    }
-
-    /**
-     * Remove this job application for this job posting.
-     *
-     * @param jobApplication The job application to be removed.
-     */
-    void removeJobApplication(JobApplication jobApplication) {
-        this.jobApplications.remove(jobApplication);
     }
 
     /**
@@ -195,60 +171,6 @@ public class JobPosting implements Storable {
         for (JobApplication jobApp : this.getJobApplications()) {
             jobApp.advanceStatus();
         }
-    }
-
-    /**
-     * Advance the round of interviews for this job posting.
-     *
-     * @param today Today's date.
-     */
-    void advanceInterviewRound(LocalDate today) {
-        InterviewManager interviewManager = this.getInterviewManager();
-        if (interviewManager.getCurrentRound() < Interview.getMaxNumRounds()) {
-            if (interviewManager.isCurrentRoundOver(today)) {
-                interviewManager.advanceRound();
-            }
-        }
-    }
-
-    /**
-     * Get an array of a list of job applications selected and a list of job applications rejected for a phone
-     * interview for this job posting.
-     *
-     * @return an array of lists of job applications selected and rejected for a phone interview.
-     */
-    private ArrayList<JobApplication>[] getApplicationsForPhoneInterview() {
-        ArrayList<JobApplication>[] jobApps = new ArrayList[2];
-        ArrayList<JobApplication> jobApplicationsInConsideration = new ArrayList<>();
-        ArrayList<JobApplication> jobApplicationsRejected = new ArrayList<>();
-        jobApps[0] = jobApplicationsInConsideration;
-        jobApps[1] = jobApplicationsRejected;
-        for (JobApplication jobApplication : this.getJobApplications()) {
-            if (jobApplication.getStatus() == 0) {
-                jobApplicationsInConsideration.add(jobApplication);
-            } else {
-                jobApplicationsRejected.add(jobApplication);
-            }
-        }
-        return jobApps;
-    }
-
-    /**
-     * Create an interview manager for this job posting.
-     */
-    void createInterviewManager() {
-        ArrayList<JobApplication>[] jobApps = this.getApplicationsForPhoneInterview();
-        InterviewManager interviewManager = new InterviewManager(this, jobApps[0], jobApps[1]);
-        this.setInterviewManager(interviewManager);
-    }
-
-    /**
-     * Get the current round of interviews for this job posting.
-     *
-     * @return the current round of interviews for this job posting.
-     */
-    int getCurrentInterviewRound() {
-        return this.interviewManager.getCurrentRound();
     }
 
     @Override
@@ -286,134 +208,89 @@ public class JobPosting implements Storable {
         return s;
     }
 
+    // ============================================================================================================== //
+    // === Package-private methods ===
+    // === Constructors ===
+    JobPosting(String title, String field, String description, String requirements, int numPositions, Company company,
+               LocalDate postDate, LocalDate closeDate) {
+        postingsCreated++;
+        this.id = postingsCreated;
+        this.title = title;
+        this.field = field;
+        this.description = description;
+        this.requirements = requirements;
+        this.numPositions = numPositions;
+        this.company = company;
+        this.filled = false;
+        this.postDate = postDate;
+        this.closeDate = closeDate;
+    }
+
+    // === Other methods ===
+
     /**
-     * Getter for the ID
+     * Remove this job application for this job posting.
      *
-     * @return the string of the id
+     * @param jobApplication The job application to be removed.
      */
-    public String getIdString() {
-        return Integer.toString(this.id);
+    void removeJobApplication(JobApplication jobApplication) {
+        this.jobApplications.remove(jobApplication);
     }
 
     /**
-     * Saves the Object
-     */
-    public void saveSelf(){
-        FileSystem.mapPut(FILENAME, getIdString(), this);
-        HashMap<String, Object> data = new HashMap<>();
-        data.put("title", this.getTitle());
-        data.put("field", this.getField());
-        data.put("description", this.description);
-        data.put("requirements", this.requirements);
-        data.put("numPositions", this.getNumPositions());
-        data.put("postDate", this.postDate);
-        data.put("closeDate", this.closeDate);
-        data.put("filled", this.filled);
-        Company c = this.company;
-        data.put("UsersAndJobObjects.Company", new ArrayList(){{add(Company.FILENAME); add(c.getIdString());}});
-        ArrayList jobapplications = new ArrayList();
-        for(JobApplication x : this.jobApplications){
-            jobapplications.add(new ArrayList() {{
-                add(JobApplication.FILENAME);
-                add(x.getIdString());
-            }});
-        }
-        data.put("jobapplications", jobapplications);
-        ArrayList applicationsInConsideration = new ArrayList();
-        for(JobApplication x : this.interviewManager.getApplicationsInConsideration()){
-            applicationsInConsideration.add(new ArrayList() {{
-                add(JobApplication.FILENAME);
-                add(x.getIdString());
-            }});
-        }
-        data.put("applicationsInConsideration", applicationsInConsideration);
-        ArrayList applicationsRejected = new ArrayList();
-        for(JobApplication x : this.interviewManager.getApplicationsRejected()){
-            applicationsRejected.add(new ArrayList() {{
-                add(JobApplication.FILENAME);
-                add(x.getIdString());
-            }});
-        }
-        data.put("applicationsRejected", applicationsRejected);
-        data.put("currentRound", this.interviewManager.getCurrentRound());
-        FileSystem.write(JobPosting.FILENAME, getIdString(), data);
-    }
-
-    /**
-     * Loads the job posting.
-     */
-    public void loadSelf(){
-        FileSystem.mapPut(JobPosting.FILENAME, getIdString(), this);
-        HashMap data = FileSystem.read(JobPosting.FILENAME, getIdString());
-        this.loadPrelimData(data);
-        this.loadJobApps(data);
-        ArrayList<JobApplication> appsInConsideration = this.loadAppsInConsideration(data);
-        ArrayList<JobApplication> appsRejected = this.loadAppsRejected(data);
-        this.interviewManager = new InterviewManager(this, appsInConsideration, appsRejected,
-                (int) data.get("currentRound"));
-        this.company = (Company) FileSystem.subLoader(Company.class, (String)((ArrayList)data.get("UsersAndJobObjects.Company")).get(0),
-                (String)((ArrayList)data.get("UsersAndJobObjects.Company")).get(1));
-    }
-
-    /**
-     * Load the preliminary data for this job posting.
+     * Advance the round of interviews for this job posting.
      *
-     * @param data The data for this job posting.
+     * @param today Today's date.
      */
-    private void loadPrelimData(HashMap data) {
-        this.setTitle((String) data.get("title"));
-        this.setField((String) data.get("field"));
-        this.setDescription((String) data.get("description"));
-        this.setRequirements((String) data.get("requirements"));
-        this.setNumPositions((int) data.get("numPositions"));
-        this.setPostDate(LocalDate.parse((String) data.get("postDate")));
-        this.setCloseDate(LocalDate.parse((String) data.get("closeDate")));
-        if ((boolean) data.get("filled")) {
-            this.setFilled();
+    void advanceInterviewRound(LocalDate today) {
+        InterviewManager interviewManager = this.getInterviewManager();
+        if (interviewManager.getCurrentRound() < Interview.getMaxNumRounds()) {
+            if (interviewManager.isCurrentRoundOver(today)) {
+                interviewManager.advanceRound();
+            }
         }
     }
 
     /**
-     * Load the job applications for this job posting.
-     *
-     * @param data The data for this job posting.
+     * Create an interview manager for this job posting.
      */
-    private void loadJobApps(HashMap data) {
-        ArrayList<JobApplication> jobApplications = new ArrayList<>();
-        for (ArrayList x : (ArrayList<ArrayList>) data.get("jobapplications")) {
-            jobApplications.add((JobApplication) FileSystem.subLoader(JobApplication.class, (String) x.get(0),
-                    (String) x.get(1)));
-        }
-        this.setJobApplications(jobApplications);
+    void createInterviewManager() {
+        ArrayList<JobApplication>[] jobApps = this.getApplicationsForPhoneInterview();
+        InterviewManager interviewManager = new InterviewManager(this, jobApps[0], jobApps[1]);
+        this.setInterviewManager(interviewManager);
     }
 
     /**
-     * Load the applications in consideration for this job posting.
+     * Get the current round of interviews for this job posting.
      *
-     * @param data The data for this job posting.
-     * @return a list of job applications in consideration.
+     * @return the current round of interviews for this job posting.
      */
-    private ArrayList<JobApplication> loadAppsInConsideration(HashMap data) {
-        ArrayList<JobApplication> applicationsInConsideration = new ArrayList<>();
-        for (ArrayList x : (ArrayList<ArrayList>) data.get("applicationsInConsideration")) {
-            applicationsInConsideration.add((JobApplication) FileSystem.subLoader(JobApplication.class,
-                    (String) x.get(0), (String) x.get(1)));
-        }
-        return applicationsInConsideration;
+    int getCurrentInterviewRound() {
+        return this.interviewManager.getCurrentRound();
     }
 
+    // ============================================================================================================== //
+    // === Private methods ===
+    // === Other methods ===
     /**
-     * Load the applications rejected for this job posting.
+     * Get an array of a list of job applications selected and a list of job applications rejected for a phone
+     * interview for this job posting.
      *
-     * @param data The data for this job posting.
-     * @return a list of job applications rejected for this job posting.
+     * @return an array of lists of job applications selected and rejected for a phone interview.
      */
-    private ArrayList<JobApplication> loadAppsRejected(HashMap data) {
-        ArrayList<JobApplication> applicationsRejected = new ArrayList<>();
-        for (ArrayList x : (ArrayList<ArrayList>) data.get("applicationsRejected")) {
-            applicationsRejected.add((JobApplication) FileSystem.subLoader(JobApplication.class, (String) x.get(0),
-                    (String) x.get(1)));
+    private ArrayList<JobApplication>[] getApplicationsForPhoneInterview() {
+        ArrayList<JobApplication>[] jobApps = new ArrayList[2];
+        ArrayList<JobApplication> jobApplicationsInConsideration = new ArrayList<>();
+        ArrayList<JobApplication> jobApplicationsRejected = new ArrayList<>();
+        jobApps[0] = jobApplicationsInConsideration;
+        jobApps[1] = jobApplicationsRejected;
+        for (JobApplication jobApplication : this.getJobApplications()) {
+            if (jobApplication.getStatus() == 0) {
+                jobApplicationsInConsideration.add(jobApplication);
+            } else {
+                jobApplicationsRejected.add(jobApplication);
+            }
         }
-        return applicationsRejected;
+        return jobApps;
     }
 }

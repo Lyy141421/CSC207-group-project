@@ -21,11 +21,9 @@ public class HRCoordinator extends User {
     // The company that this HR Coordinator works for
     private Company company;
 
-    // === Constructors ===
 
-    HRCoordinator(String id){
-        this.setUsername(id);
-    }
+    // === Public methods ===
+    // === Constructors ===
 
     public HRCoordinator(String username, String password, String legalName, String email, Company company,
                   LocalDate dateCreated) {
@@ -40,14 +38,7 @@ public class HRCoordinator extends User {
         return this.company;
     }
 
-    // === Setters ===
-
-    void setCompany(Company company) {
-        this.company = company;
-    }
-
     // === Other methods ===
-
     /**
      * Create and add a job posting to the system.
      *
@@ -59,25 +50,10 @@ public class HRCoordinator extends User {
      * @param closeDate      The date this job posting is closed.
      */
     public void addJobPosting(String jobTitle, String jobField, String jobDescription, String requirements,
-                       int numPositions, LocalDate postDate, LocalDate closeDate) {
+                              int numPositions, LocalDate postDate, LocalDate closeDate) {
         JobPosting jobPosting = new JobPosting(jobTitle, jobField, jobDescription, requirements,
                 numPositions, this.company, postDate, closeDate);
         this.company.getJobPostingManager().addJobPosting(jobPosting);
-    }
-
-    /**
-     * Get the task that the HR Coordinator must accomplish for this job posting.
-     *
-     * @param jobPosting The job posting in question.
-     * @param today      Today's date.
-     * @return an integer that represents the task that the HR Coordinator must accomplish for this job posting.
-     */
-    int getTask(JobPosting jobPosting, LocalDate today) {
-        if (this.company.getJobPostingManager().getClosedJobPostingsNoInterview(today).contains(jobPosting)) {
-            return InterviewManager.SELECT_APPS_FOR_PHONE_INTERVIEW;
-        } else {
-            return jobPosting.getInterviewManager().getHrTask(today);
-        }
     }
 
     /**
@@ -113,6 +89,40 @@ public class HRCoordinator extends User {
         this.loadPrelimData(data);
         this.loadCompany(data);
     }
+
+    // ============================================================================================================== //
+    // === Package-private methods ===
+    // === Constructors ===
+
+    HRCoordinator(String id){
+        this.setUsername(id);
+    }
+
+    // === Setters ===
+
+    void setCompany(Company company) {
+        this.company = company;
+    }
+
+    // === Other methods ===
+
+    /**
+     * Get the task that the HR Coordinator must accomplish for this job posting.
+     *
+     * @param jobPosting The job posting in question.
+     * @param today      Today's date.
+     * @return an integer that represents the task that the HR Coordinator must accomplish for this job posting.
+     */
+    int getTask(JobPosting jobPosting, LocalDate today) {
+        if (this.company.getJobPostingManager().getClosedJobPostingsNoInterview(today).contains(jobPosting)) {
+            return InterviewManager.SELECT_APPS_FOR_PHONE_INTERVIEW;
+        } else {
+            return jobPosting.getInterviewManager().getHrTask(today);
+        }
+    }
+
+    // ============================================================================================================== //
+    // === Private methods ===
 
     /**
      * Load the preliminary data for this HR Coordinator.

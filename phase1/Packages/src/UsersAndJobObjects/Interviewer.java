@@ -28,6 +28,8 @@ public class Interviewer extends User {
     // === Representation invariants ===
     // interviews is sorted in terms of date.
 
+
+    // === Public methods ===
     // === Constructors ===
 
     public Interviewer(String id){
@@ -41,33 +43,6 @@ public class Interviewer extends User {
         this.field = field;
         super.setUserInterface(new InterviewerInterface(this));
     }
-
-    // === Getters ===
-    Company getCompany() {
-        return this.company;
-    }
-
-    String getField() {
-        return this.field;
-    }
-
-    ArrayList<Interview> getInterviews() {
-        return this.interviews;
-    }
-
-    // === Setters ===
-    void setCompany(Company company) {
-        this.company = company;
-    }
-
-    void setField(String field) {
-        this.field = field;
-    }
-
-    void setInterviews(ArrayList<Interview> interviews) {
-        this.interviews = interviews;
-    }
-
 
     // === Other methods ===
 
@@ -114,16 +89,6 @@ public class Interviewer extends User {
             }
         }
         return true;
-    }
-
-    /**
-     * Add an interview to this interviewer's list of interviews in sorted order.
-     *
-     * @param interview The interview to be added.
-     */
-    void addInterview(Interview interview) {
-        this.interviews.add(interview);
-        this.interviews.sort(new InterviewTimeComparator());
     }
 
     /**
@@ -175,16 +140,6 @@ public class Interviewer extends User {
     }
 
     /**
-     * Write interview note for a given interview.
-     *
-     * @param interview   The interview which this interviewer wants to write note of.
-     * @param note The interview note.
-     */
-    void writeInterviewNotes(Interview interview, String note) {
-        interview.setInterviewNotes(note);
-    }
-
-    /**
      * Get a list of unscheduled interviews for this interviewer.
      * @return a list of unscheduled interviews for this interviewer.
      */
@@ -209,16 +164,6 @@ public class Interviewer extends User {
             jobApplications.add(interview.getJobApplication());
         }
         return jobApplications;
-    }
-
-    /**
-     * Record that this interview has been failed.
-     *
-     * @param interview The interview that has been conducted.
-     */
-    void failInterview(Interview interview) {
-        interview.setFail();
-        interview.getInterviewManager().reject(interview.getJobApplication());
     }
 
     /**
@@ -287,6 +232,59 @@ public class Interviewer extends User {
         this.loadCompany(data);
         this.loadInterviews(data);
     }
+
+    // ============================================================================================================== //
+    // === Package-private methods ===
+    // === Getters ===
+    Company getCompany() {
+        return this.company;
+    }
+
+    String getField() {
+        return this.field;
+    }
+
+    ArrayList<Interview> getInterviews() {
+        return this.interviews;
+    }
+
+    // === Setters ===
+    void setCompany(Company company) {
+        this.company = company;
+    }
+
+    void setField(String field) {
+        this.field = field;
+    }
+
+    void setInterviews(ArrayList<Interview> interviews) {
+        this.interviews = interviews;
+    }
+
+    // === Other methods ===
+
+    /**
+     * Add an interview to this interviewer's list of interviews in sorted order.
+     *
+     * @param interview The interview to be added.
+     */
+    void addInterview(Interview interview) {
+        this.interviews.add(interview);
+        this.interviews.sort(new InterviewTimeComparator());
+    }
+
+    /**
+     * Record that this interview has been failed.
+     *
+     * @param interview The interview that has been conducted.
+     */
+    void failInterview(Interview interview) {
+        interview.setFail();
+        interview.getInterviewManager().reject(interview.getJobApplication());
+    }
+
+    // ============================================================================================================== //
+    // === Private methods ===
 
     /**
      * Load the preliminary data for this interviewer.

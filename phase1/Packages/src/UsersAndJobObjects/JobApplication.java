@@ -57,24 +57,12 @@ public class JobApplication implements Storable {
     // The interviews conducted for this application
     private ArrayList<Interview> interviews = new ArrayList<>();
 
+    // === Public methods ===
     // === Constructors ===
 
     public JobApplication(String id) {
         this.ID = Integer.parseInt(id);
         JobApplication.totalNumOfApplications = Integer.max(this.ID, JobApplication.totalNumOfApplications);
-    }
-
-    JobApplication(LocalDate applicationDate) {
-        this.ID = JobApplication.totalNumOfApplications;
-        this.applicationDate = applicationDate;
-        JobApplication.totalNumOfApplications++;
-    }
-
-    JobApplication(JobPosting jobPosting, LocalDate applicationDate) {
-        this.ID = JobApplication.totalNumOfApplications;
-        this.jobPosting = jobPosting;
-        this.applicationDate = applicationDate;
-        JobApplication.totalNumOfApplications++;
     }
 
     public JobApplication(Applicant applicant, JobPosting jobPosting, String CV, String coverletter, LocalDate applicationDate) {
@@ -87,27 +75,7 @@ public class JobApplication implements Storable {
         JobApplication.totalNumOfApplications++;
     }
 
-    JobApplication(int ID, Applicant applicant, JobPosting jobPosting, String CV, String coverletter, int status,
-                   LocalDate applicationDate) {
-        this.ID = ID;
-        this.applicant = applicant;
-        this.jobPosting = jobPosting;
-        this.CV = CV;
-        this.coverLetter = coverletter;
-        this.applicationDate = applicationDate;
-        this.status = status;
-        JobApplication.totalNumOfApplications++;
-    }
-
     // === Getters ===
-    /**
-     * Get the application ID.
-     *
-     * @return the application ID.
-     */
-    int getID() {
-        return this.ID;
-    }
 
     public Applicant getApplicant() {
         return this.applicant;
@@ -129,52 +97,17 @@ public class JobApplication implements Storable {
         return this.status;
     }
 
-    LocalDate getApplicationDate() {
-        return this.applicationDate;
-    }
-
     public ArrayList<Interview> getInterviews() {
         return this.interviews;
     }
 
-    // === Setters ===
-
-    void setApplicant(Applicant applicant) {
-        this.applicant = applicant;
-    }
-
-    void setCV(String CV) {
-        this.CV = CV;
-    }
-
-    void setCoverLetter(String coverLetter) {
-        this.coverLetter = coverLetter;
-    }
-
-    void setStatus(int status) {
-        this.status = status;
-    }
-
-    void setApplicationDate(LocalDate applicationDate) {
-        this.applicationDate = applicationDate;
-    }
-
-    void setInterviews(ArrayList<Interview> interviews) {
-        this.interviews = interviews;
-    }
-
     // === Other methods ===
-    public void advanceStatus() {
-        this.status++;
-    }
 
     /**
-     * Add an interview for this job application.
-     *
-     * @param interview The interview to be added.
+     * Advance the status of this application.
      */
-    void addInterview(Interview interview) {
-        this.interviews.add(interview);
+    public void advanceStatus() {
+        this.status++;
     }
 
     /**
@@ -237,19 +170,6 @@ public class JobApplication implements Storable {
     }
 
     /**
-     * Get the interview IDs for this job application.
-     *
-     * @return the IDs of the interviews that this job application has undergone.
-     */
-    private String getInterviewIDs() {
-        String s = "";
-        for (Interview interview : this.interviews) {
-            s += interview.getId() + ", ";
-        }
-        return s.substring(0, s.length() - 2); // remove last comma and space
-    }
-
-    /**
      * Saves the Object
      */
     public void saveSelf() {
@@ -288,6 +208,97 @@ public class JobApplication implements Storable {
         this.loadApplicant(data);
         this.loadPosting(data);
         this.loadInterviews(data);
+    }
+
+    // ============================================================================================================== //
+    // === Package-private methods ===
+    // === Constructors ===
+
+    JobApplication(LocalDate applicationDate) {
+        this.ID = JobApplication.totalNumOfApplications;
+        this.applicationDate = applicationDate;
+        JobApplication.totalNumOfApplications++;
+    }
+
+    JobApplication(JobPosting jobPosting, LocalDate applicationDate) {
+        this.ID = JobApplication.totalNumOfApplications;
+        this.jobPosting = jobPosting;
+        this.applicationDate = applicationDate;
+        JobApplication.totalNumOfApplications++;
+    }
+
+    JobApplication(int ID, Applicant applicant, JobPosting jobPosting, String CV, String coverletter, int status,
+                   LocalDate applicationDate) {
+        this.ID = ID;
+        this.applicant = applicant;
+        this.jobPosting = jobPosting;
+        this.CV = CV;
+        this.coverLetter = coverletter;
+        this.applicationDate = applicationDate;
+        this.status = status;
+        JobApplication.totalNumOfApplications++;
+    }
+
+    // === Getters ===
+
+    int getID() {
+        return this.ID;
+    }
+
+    LocalDate getApplicationDate() {
+        return this.applicationDate;
+    }
+
+    // === Setters ===
+
+    void setApplicant(Applicant applicant) {
+        this.applicant = applicant;
+    }
+
+    void setCV(String CV) {
+        this.CV = CV;
+    }
+
+    void setCoverLetter(String coverLetter) {
+        this.coverLetter = coverLetter;
+    }
+
+    void setStatus(int status) {
+        this.status = status;
+    }
+
+    void setApplicationDate(LocalDate applicationDate) {
+        this.applicationDate = applicationDate;
+    }
+
+    void setInterviews(ArrayList<Interview> interviews) {
+        this.interviews = interviews;
+    }
+
+    // === Other methods ===
+
+    /**
+     * Add an interview for this job application.
+     *
+     * @param interview The interview to be added.
+     */
+    void addInterview(Interview interview) {
+        this.interviews.add(interview);
+    }
+
+    // ============================================================================================================== //
+    // === Private methods ===
+    /**
+     * Get the interview IDs for this job application.
+     *
+     * @return the IDs of the interviews that this job application has undergone.
+     */
+    private String getInterviewIDs() {
+        String s = "";
+        for (Interview interview : this.interviews) {
+            s += interview.getId() + ", ";
+        }
+        return s.substring(0, s.length() - 2); // remove last comma and space
     }
 
     /**

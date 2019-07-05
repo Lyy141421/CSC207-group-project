@@ -29,6 +29,8 @@ public class JobApplicationSystem {
     // The date this program interprets as today (Defaults to today)
     static LocalDate today = LocalDate.now();
 
+    // === Public methods ===
+
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
@@ -41,11 +43,6 @@ public class JobApplicationSystem {
 
     // === Getters ===
 
-    /**
-     * Get the Managers.UserManager for this system.
-     *
-     * @return the Managers.UserManager for this system.
-     */
     public static UserManager getUserManager() {
         return JobApplicationSystem.userManager;
     }
@@ -54,31 +51,18 @@ public class JobApplicationSystem {
         return companies;
     }
 
+    // ============================================================================================================== //
+    // === Package-private methods ===
     // === Setters ===
 
-    /**
-     * Sets the date the program perceives as today
-     *
-     * @param new_date - The date you wish to change to
-     */
     static void setDate(LocalDate new_date){
         today = new_date;
     }
 
-    /**
-     * Set the companies using this system.
-     *
-     * @param companies The companies using this system.
-     */
     static void setCompanies(ArrayList<Company> companies) {
         JobApplicationSystem.companies = companies;
     }
 
-    /**
-     * Set the user manager for this system.
-     *
-     * @param userManager The user manager for this system.
-     */
     static void setUserManager(UserManager userManager) {
         JobApplicationSystem.userManager = userManager;
     }
@@ -109,6 +93,8 @@ public class JobApplicationSystem {
         Loader.endSave(); //todo add methods to save from managers
     }
 
+    // ============================================================================================================== //
+    // === Private methods ===
     /**
      A method which triggers once a day from the time it is started.
      */

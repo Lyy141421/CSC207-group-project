@@ -17,6 +17,7 @@ public class InterviewTime {
     // The time slot for this interview
     private int timeSlot;
 
+    // === Public methods ===
     // === Constructors ===
 
     public InterviewTime(){};
@@ -33,15 +34,6 @@ public class InterviewTime {
 
     public int getTimeSlot() {
         return this.timeSlot;
-    }
-
-    // === Setters ===
-    void setDate(LocalDate date) {
-        this.date = date;
-    }
-
-    void setTimeSlot(int timeSlot) {
-        this.timeSlot = timeSlot;
     }
 
     // === Other methods ===
@@ -113,5 +105,17 @@ public class InterviewTime {
             s += i + " - " + InterviewTime.timeSlots.get(i - 1) + "\t";
         }
         return s;
+    }
+
+    // ============================================================================================================== //
+    // === Package-private ===
+
+    // === Setters ===
+    void setDate(LocalDate date) {
+        this.date = date;
+    }
+
+    void setTimeSlot(int timeSlot) {
+        this.timeSlot = timeSlot;
     }
 }
