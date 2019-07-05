@@ -33,10 +33,6 @@ public class Interviewer extends User {
     // === Public methods ===
     // === Constructors ===
 
-    public Interviewer(String id){
-        this.setUsername(id);
-    }
-
     public Interviewer(String username, String password, String legalName, String email, Company company, String field,
                 LocalDate dateCreated) {
         super(username, password, legalName, email, dateCreated);
@@ -81,7 +77,7 @@ public class Interviewer extends User {
      */
     public JobApplication findJobAppById(int id) {
         for (Interview interview : this.interviews) {
-            if (Integer.parseInt(interview.getJobApplication().getId()) == id) {
+            if (interview.getJobApplication().getId() == id) {
                 return interview.getJobApplication();
             }
         }
@@ -96,7 +92,7 @@ public class Interviewer extends User {
      */
     public Interview findInterviewById(int id) {
         for (Interview interview : this.interviews) {
-            if (interview.getId() == id) {
+            if (Integer.valueOf(interview.getId()) == id) {
                 return interview;
             }
         }
