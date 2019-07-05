@@ -17,7 +17,6 @@ public class InterviewLoader extends GenericLoader<Interview> {
      * @param interview The interview to be loaded.
      */
     void loadOne(Interview interview) {
-        FileSystem.mapPut(Interview.FILENAME, String.valueOf(interview.getId()), this);
         HashMap data = FileSystem.read(Interview.FILENAME, String.valueOf(interview.getId()));
         this.loadPrelimData(interview, data);
         this.loadJobApplication(interview, data);
@@ -40,19 +39,19 @@ public class InterviewLoader extends GenericLoader<Interview> {
     }
 
     private void loadJobApplication(Interview interview, HashMap data) {
-        interview.setJobApplication((JobApplication) FileSystem.subLoader(JobApplication.class, (String) ((ArrayList)
+        interview.setJobApplication((JobApplication) LoaderManager.subLoad(JobApplication.class, (String) ((ArrayList)
                 data.get("UsersAndJobObjects.JobApplication")).get(0), (String)
                 ((ArrayList) data.get("UsersAndJobObjects.JobApplication")).get(1)));
     }
 
     private void loadInterviewer(Interview interview, HashMap data) {
-        interview.setHrCoordinator((HRCoordinator) FileSystem.subLoader(HRCoordinator.class, (String)
+        interview.setHrCoordinator((HRCoordinator) LoaderManager.subLoad(HRCoordinator.class, (String)
                 ((ArrayList) data.get("UsersAndJobObjects.HRCoordinator")).get(0), (String) ((ArrayList)
                 data.get("UsersAndJobObjects.HRCoordinator")).get(1)));
     }
 
     private void loadHRCoordinator(Interview interview, HashMap data) {
-        interview.setInterviewer((Interviewer) FileSystem.subLoader(Interviewer.class, (String) ((ArrayList)
+        interview.setInterviewer((Interviewer) LoaderManager.subLoad(Interviewer.class, (String) ((ArrayList)
                 data.get("interviewer")).get(0), (String) ((ArrayList) data.get("interviewer")).get(1)));
     }
 }

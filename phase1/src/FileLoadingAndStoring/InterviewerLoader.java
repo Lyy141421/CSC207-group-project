@@ -15,7 +15,6 @@ public class InterviewerLoader extends GenericLoader<Interviewer> {
      * @param interviewer   The interviewer to be loaded.
      */
     void loadOne(Interviewer interviewer){
-        FileSystem.mapPut(Interviewer.FILENAME, interviewer.getUsername(), this);
         HashMap data = FileSystem.read(Interviewer.FILENAME, interviewer.getUsername());
         this.loadPrelimData(interviewer, data);
         this.loadCompany(interviewer, data);
@@ -42,7 +41,7 @@ public class InterviewerLoader extends GenericLoader<Interviewer> {
      * @param data The data for this interviewer.
      */
     private void loadCompany(Interviewer interviewer, HashMap data) {
-        interviewer.setCompany((Company) FileSystem.subLoader(Company.class, (String)
+        interviewer.setCompany((Company) LoaderManager.subLoad(Company.class, (String)
                         ((ArrayList) data.get("company")).get(0), (String) ((ArrayList) data.get("company")).get(1)));
     }
 
@@ -54,7 +53,7 @@ public class InterviewerLoader extends GenericLoader<Interviewer> {
     private void loadInterviews(Interviewer interviewer, HashMap data) {
         ArrayList<Interview> interviews = new ArrayList<>();
         for (Object x : (ArrayList) (data.get("interviews"))) {
-            interviews.add((Interview) FileSystem.subLoader(Interview.class, (String) ((ArrayList) x).get(0), (String)
+            interviews.add((Interview) LoaderManager.subLoad(Interview.class, (String) ((ArrayList) x).get(0), (String)
                     ((ArrayList) x).get(1)));
         }
         interviewer.setInterviews(interviews);

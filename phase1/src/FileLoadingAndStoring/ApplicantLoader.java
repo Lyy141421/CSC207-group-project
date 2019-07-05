@@ -14,7 +14,6 @@ public class ApplicantLoader extends GenericLoader<Applicant> {
      * Loads the applicant
      */
     void loadOne(Applicant applicant){
-        FileSystem.mapPut(Applicant.FILENAME, applicant.getUsername(), applicant);
         HashMap data = FileSystem.read(Applicant.FILENAME, applicant.getUsername());
         this.loadPrelimData(applicant, data);
         this.loadJobAppManager(applicant, data);
@@ -41,7 +40,7 @@ public class ApplicantLoader extends GenericLoader<Applicant> {
     private void loadJobAppManager(Applicant applicant, HashMap data) {
         ArrayList<JobApplication> temp = new ArrayList<>();
         for (ArrayList x : (ArrayList<ArrayList>) (data.get("jobApplicationManager"))) {
-            temp.add((JobApplication) FileSystem.subLoader(JobApplication.class, (String) x.get(0),
+            temp.add((JobApplication) LoaderManager.subLoad(JobApplication.class, (String) x.get(0),
                     (String) x.get(1)));
         }
         applicant.setJobApplicationManager(new JobApplicationManager(temp));

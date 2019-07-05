@@ -14,7 +14,6 @@ public class HRCoordinatorLoader extends GenericLoader<HRCoordinator> {
      * @param hrCoordinator The HR Coordinator to be loaded.
      */
     void loadOne(HRCoordinator hrCoordinator){
-        FileSystem.mapPut(HRCoordinator.FILENAME, hrCoordinator.getUsername(), this);
         HashMap data = FileSystem.read(HRCoordinator.FILENAME, hrCoordinator.getUsername());
         this.loadPrelimData(hrCoordinator, data);
         this.loadCompany(hrCoordinator, data);
@@ -39,7 +38,7 @@ public class HRCoordinatorLoader extends GenericLoader<HRCoordinator> {
      * @param data The data for this HR Coordinator.
      */
     private void loadCompany(HRCoordinator hrCoordinator, HashMap data) {
-        hrCoordinator.setCompany((Company) FileSystem.subLoader(Company.class, (String)
+        hrCoordinator.setCompany((Company) LoaderManager.subLoad(Company.class, (String)
                         ((ArrayList) data.get("Company")).get(0), (String) ((ArrayList) data.get("Company")).get(1)));
     }
 }
