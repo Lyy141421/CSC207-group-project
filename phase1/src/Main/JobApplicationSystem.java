@@ -1,6 +1,6 @@
 package Main;
 
-import FileLoadingAndStoring.Loader;
+import FileLoadingAndStoring.*;
 import GUIClasses.MainFrame;
 import UsersAndJobObjects.Company;
 import UsersAndJobObjects.Interview;
@@ -73,25 +73,24 @@ public class JobApplicationSystem {
      * To be called at the start of the program
      * Used to load all objects from json memory
      */
-    static void mainStart(){
-        Loader applicant = new Loader(Applicant.class, Applicant.FILENAME);
-        Loader interviewer = new Loader(Interviewer.class, Interviewer.FILENAME);
-        Loader hrcoordinator = new Loader(HRCoordinator.class, HRCoordinator.FILENAME);
-        Loader company = new Loader(Company.class, Company.FILENAME);
-        Loader jobposting = new Loader(JobPosting.class, JobPosting.FILENAME);
-        Loader jobapplication = new Loader(JobApplication.class, JobApplication.FILENAME);
-        Loader interview = new Loader(Interview.class, Interview.FILENAME);
-        Loader.startLoad();
-        //TODO Check if all files are loaded to their managers
+    static void mainStart() {
+        LoaderManager applicant = new LoaderManager(new ApplicantLoader(), Applicant.class, Applicant.FILENAME);
+        LoaderManager hrcoordinator = new LoaderManager(new HRCoordinatorLoader(), HRCoordinator.class, Applicant.FILENAME);
+        LoaderManager interviewer = new LoaderManager(new InterviewerLoader(), Interviewer.class, Interviewer.FILENAME);
+        LoaderManager company = new LoaderManager(new CompanyLoader(), Company.class, Company.FILENAME);
+        LoaderManager interview = new LoaderManager(new InterviewLoader(), Interview.class, Interview.FILENAME);
+        LoaderManager jobposting = new LoaderManager(new JobPostingLoader(), JobPosting.class, JobPosting.FILENAME);
+        LoaderManager jobapplication = new LoaderManager(new JobApplicationLoader(), JobApplication.class, JobApplication.FILENAME);
+        LoaderManager.startLoad();
     }
 
     /**
      * To be called at the end of the Program
      * Used to Save all Objects to json memory
      */
-    static void mainEnd(){
-        Loader.endSave(); //todo add methods to save from managers
-    }
+//    static void mainEnd(){
+//        Loader.endSave(); //todo add methods to save from managers
+//    }
 
     public static Company getCompany(String name) {
         for (Company company : companies) {
