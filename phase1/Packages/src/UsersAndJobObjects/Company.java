@@ -80,15 +80,6 @@ public class Company {
     }
 
     /**
-     * Getter for the ID
-     *
-     * @return the string of the id
-     */
-    public String getIdString() {
-        return this.getName();
-    }
-
-    /**
      * Report whether this company is the same as obj.
      *
      * @param obj     The object to be compared with.

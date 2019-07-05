@@ -1,16 +1,12 @@
 package UsersAndJobObjects;
 
-import FileLoadingAndStoring.FileSystem;
-import FileLoadingAndStoring.Storable;
 import Managers.InterviewManager;
 import Miscellaneous.InterviewTime;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 
-public class Interview implements Storable {
+public class Interview {
     /**
      * An interview.
      */
@@ -59,6 +55,10 @@ public class Interview implements Storable {
     }
 
     // === Getters ===
+    public int getId() {
+        return this.ID;
+    }
+
     public JobApplication getJobApplication() {
         return this.jobApplication;
     }
@@ -77,12 +77,36 @@ public class Interview implements Storable {
 
     // === Setters ===
 
-    public void setInterviewNotes(String notes) {
-        this.interviewNotes = notes;
+    public void setJobApplication(JobApplication jobApplication) {
+        this.jobApplication = jobApplication;
+    }
+
+    public void setInterviewer(Interviewer interviewer) {
+        this.interviewer = interviewer;
+    }
+
+    public void setHrCoordinator(HRCoordinator hrCoordinator) {
+        this.hrCoordinator = hrCoordinator;
     }
 
     public void setTime(InterviewTime time) {
         this.time = time;
+    }
+
+    public void setInterviewNotes(String notes) {
+        this.interviewNotes = notes;
+    }
+
+    public void setPass(boolean pass) {
+        this.pass = pass;
+    }
+
+    public void setRoundNumber(int roundNumber) {
+        this.roundNumber = roundNumber;
+    }
+
+    public void setInterviewManager(InterviewManager interviewManager) {
+        this.interviewManager = interviewManager;
     }
 
     // === Other methods ===
@@ -119,55 +143,6 @@ public class Interview implements Storable {
         s += "UsersAndJobObjects.Interview notes: \n" + this.getInterviewNotes();
         s += "Passed: " + this.isPassed();
         return s;
-    }
-
-    /**
-     * Getter for the ID
-     *
-     * @return the string of the id
-     */
-    public String getIdString(){
-        return Integer.toString(this.ID);
-    }
-
-    /**
-     * Saves the Object
-     */
-    public void saveSelf(){
-        FileSystem.mapPut(Interview.FILENAME, getIdString(), this);
-        HashMap<String, Object> data = new HashMap<>();
-        data.put("interviewNotes", this.interviewNotes);
-        data.put("pass", this.pass);
-        data.put("roundNumber", this.roundNumber);
-        data.put("UsersAndJobObjects.JobApplication", new ArrayList() {{
-            add(Applicant.FILENAME);
-            add(getApplicant().getIdString());
-        }});
-        data.put("interviewer", new ArrayList() {{
-            add(Interviewer.FILENAME);
-            add(getInterviewer().getIdString());
-        }});
-        data.put("UsersAndJobObjects.HRCoordinator", new ArrayList() {{
-            add(HRCoordinator.FILENAME);
-            add(getHRCoordinator().getIdString());
-        }});
-        data.put("InterviewTimeDate", this.time.getDate());
-        data.put("InterviewTimeTimeslot", this.time.getTimeSlot());
-    }
-
-    /**
-     * loads the Object
-     */
-    public void loadSelf() {
-        FileSystem.mapPut(Interview.FILENAME, getIdString(), this);
-        HashMap data = FileSystem.read(Interview.FILENAME, getIdString());
-        this.jobApplication = (JobApplication) FileSystem.subLoader(JobApplication.class, (String) ((ArrayList)
-                data.get("UsersAndJobObjects.JobApplication")).get(0), (String) ((ArrayList) data.get("UsersAndJobObjects.JobApplication")).get(1));
-        this.interviewer = (Interviewer) FileSystem.subLoader(Interviewer.class, (String) ((ArrayList)
-                data.get("interviewer")).get(0), (String) ((ArrayList) data.get("interviewer")).get(1));
-        this.hrCoordinator = (HRCoordinator) FileSystem.subLoader(HRCoordinator.class, (String)
-                ((ArrayList) data.get("UsersAndJobObjects.HRCoordinator")).get(0), (String) ((ArrayList) data.get("UsersAndJobObjects.HRCoordinator")).get(1));
-        this.loadPrelimData(data);
     }
 
     // ============================================================================================================== //
@@ -209,15 +184,11 @@ public class Interview implements Storable {
         return Interview.MAX_NUM_ROUNDS;
     }
 
-    int getId() {
-        return this.ID;
-    }
-
     JobPosting getJobPosting() {
         return this.jobApplication.getJobPosting();
     }
 
-    Applicant getApplicant() {
+    public Applicant getApplicant() {
         return this.jobApplication.getApplicant();
     }
 
@@ -225,37 +196,20 @@ public class Interview implements Storable {
         return this.interviewManager;
     }
 
-    Interviewer getInterviewer() {
+    public Interviewer getInterviewer() {
         return this.interviewer;
     }
 
-    HRCoordinator getHRCoordinator() {
+    public HRCoordinator getHRCoordinator() {
         return this.hrCoordinator;
     }
 
-    String getInterviewNotes() {
+    public String getInterviewNotes() {
         return this.interviewNotes;
     }
 
-    Boolean isPassed() {
+    public Boolean isPassed() {
         return this.pass;
-    }
-
-    // ============================================================================================================== //
-    // === Private methods ===
-
-    /**
-     * Load the preliminary data for this UsersAndJobObjects.Interviewer.
-     *
-     * @param data The UsersAndJobObjects.Company's Data
-     */
-    private void loadPrelimData(HashMap data) {
-        this.interviewNotes = (String)data.get("interviewNotes");
-        this.pass = (boolean)data.get("pass");
-        this.roundNumber = (int)data.get("roundNumber");
-        this.interviewManager = this.jobApplication.getJobPosting().getInterviewManager();
-        this.time = new InterviewTime(LocalDate.parse((String) data.get("InterviewTimeDate")),
-                (int) data.get("InterviewTimeTimeslot"));
     }
 
 }

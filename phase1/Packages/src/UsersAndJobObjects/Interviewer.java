@@ -44,6 +44,32 @@ public class Interviewer extends User {
         super.setUserInterface(new InterviewerInterface(this));
     }
 
+    // === Getters ===
+    public Company getCompany() {
+        return this.company;
+    }
+
+    public String getField() {
+        return this.field;
+    }
+
+    public ArrayList<Interview> getInterviews() {
+        return this.interviews;
+    }
+
+    // === Setters ===
+    public void setField(String field) {
+        this.field = field;
+    }
+
+    public void setCompany(Company company) {
+        this.company = company;
+    }
+
+    public void setInterviews(ArrayList<Interview> interviews) {
+        this.interviews = interviews;
+    }
+
     // === Other methods ===
 
     /**
@@ -189,78 +215,8 @@ public class Interviewer extends User {
         return s.substring(0, s.length() - 2); // Remove extra comma and space
     }
 
-    /**
-     * Getter for the ID
-     *
-     * @return the string of the id
-     */
-    public String getIdString() {
-        return this.getUsername();
-    }
-
-    /**
-     * Saves the Object
-     */
-    public void saveSelf(){
-        FileSystem.mapPut(Interviewer.FILENAME, getIdString(), this);
-        HashMap<String, Object> data = new HashMap<>();
-        data.put("password", this.getPassword());
-        data.put("legalName", this.getLegalName());
-        data.put("email", this.getEmail());
-        data.put("dateCreated", this.getDateCreated());
-        data.put("field", this.getField());
-        data.put("company", new String[]{Company.FILENAME,
-                this.company.getIdString()});
-        ArrayList<ArrayList> interview_list = new ArrayList<>();
-        for(Interview x : this.interviews){
-            interview_list.add(new ArrayList<Object>() {{
-                add(Interview.FILENAME);
-                add(x.getIdString());
-            }});
-        }
-        data.put("interviews", interview_list);
-        FileSystem.write(Interviewer.FILENAME, getIdString(), data);
-    }
-
-    /**
-     *  Loads the interviewer.
-     */
-    public void loadSelf(){
-        FileSystem.mapPut(Interviewer.FILENAME, getIdString(), this);
-        HashMap data = FileSystem.read(Interviewer.FILENAME, getIdString());
-        this.loadPrelimData(data);
-        this.loadCompany(data);
-        this.loadInterviews(data);
-    }
-
     // ============================================================================================================== //
     // === Package-private methods ===
-    // === Getters ===
-    Company getCompany() {
-        return this.company;
-    }
-
-    String getField() {
-        return this.field;
-    }
-
-    ArrayList<Interview> getInterviews() {
-        return this.interviews;
-    }
-
-    // === Setters ===
-    void setCompany(Company company) {
-        this.company = company;
-    }
-
-    void setField(String field) {
-        this.field = field;
-    }
-
-    void setInterviews(ArrayList<Interview> interviews) {
-        this.interviews = interviews;
-    }
-
     // === Other methods ===
 
     /**
@@ -281,46 +237,5 @@ public class Interviewer extends User {
     void failInterview(Interview interview) {
         interview.setFail();
         interview.getInterviewManager().reject(interview.getJobApplication());
-    }
-
-    // ============================================================================================================== //
-    // === Private methods ===
-
-    /**
-     * Load the preliminary data for this interviewer.
-     *
-     * @param data The data for this interviewer.
-     */
-    private void loadPrelimData(HashMap data) {
-        this.setPassword((String) data.get("password"));
-        this.setLegalName((String) data.get("legalName"));
-        this.setEmail((String) data.get("email"));
-        this.setPassword((String)data.get("password"));
-        this.setDateCreated(LocalDate.parse((String) data.get("dateCreated")));
-        this.setField((String) data.get("field"));
-    }
-
-    /**
-     * Load the company for this interviewer.
-     *
-     * @param data The data for this interviewer.
-     */
-    private void loadCompany(HashMap data) {
-        this.setCompany((Company) FileSystem.subLoader(Company.class, (String) ((ArrayList) data.get("company")).get(0),
-                (String) ((ArrayList) data.get("company")).get(1)));
-    }
-
-    /**
-     * Load the interviews for this interviewer.
-     *
-     * @param data The data for this interviewer.
-     */
-    private void loadInterviews(HashMap data) {
-        ArrayList<Interview> interviews = new ArrayList<>();
-        for (Object x : (ArrayList) (data.get("interviews"))) {
-            interviews.add((Interview) FileSystem.subLoader(Interview.class, (String) ((ArrayList) x).get(0), (String)
-                    ((ArrayList) x).get(1)));
-        }
-        this.setInterviews(interviews);
     }
 }
