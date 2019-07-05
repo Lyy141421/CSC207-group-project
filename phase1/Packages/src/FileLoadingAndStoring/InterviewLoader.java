@@ -10,10 +10,11 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class LoadInterviews extends LoadObjects<Interview> {
+public class InterviewLoader extends GenericLoader<Interview> {
 
     /**
      * Loads this interview
+     * @param interview The interview to be loaded.
      */
     void loadOne(Interview interview) {
         FileSystem.mapPut(Interview.FILENAME, String.valueOf(interview.getId()), this);

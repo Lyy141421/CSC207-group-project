@@ -7,10 +7,11 @@ import UsersAndJobObjects.JobPosting;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class StoreJobPostings extends StoreObjects<JobPosting> {
+public class JobPostingStorer extends GenericStorer<JobPosting> {
 
     /**
-     * Saves the job posting.
+     * Stores the job posting.
+     * @param jobPosting    The job posting to be stored.
      */
     void storeOne(JobPosting jobPosting){
         FileSystem.mapPut(JobPosting.FILENAME, String.valueOf(jobPosting.getId()), jobPosting);

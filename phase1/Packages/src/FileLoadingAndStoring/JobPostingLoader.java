@@ -9,15 +9,12 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class LoadJobPostings extends LoadObjects<JobPosting> {
-    /**
-     * A class that loads all job postings.
-     */
+public class JobPostingLoader extends GenericLoader<JobPosting> {
 
 
     /**
      * Loads the job posting.
-     * @param jobPosting The job posting to load.
+     * @param jobPosting The job posting to be loaded.
      */
     void loadOne(JobPosting jobPosting){
         FileSystem.mapPut(JobPosting.FILENAME, String.valueOf(jobPosting.getId()), jobPosting);

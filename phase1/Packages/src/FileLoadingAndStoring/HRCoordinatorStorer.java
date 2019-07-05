@@ -3,13 +3,13 @@ package FileLoadingAndStoring;
 import UsersAndJobObjects.Company;
 import UsersAndJobObjects.HRCoordinator;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
-public class StoreHRCoordinators extends StoreObjects<HRCoordinator> {
+public class HRCoordinatorStorer extends GenericStorer<HRCoordinator> {
 
     /**
      * Stores the HR Coordinator.
+     * @param hrCoordinator     The HR Coordinator to be stored.
      */
     void storeOne(HRCoordinator hrCoordinator){
         FileSystem.mapPut(HRCoordinator.FILENAME, hrCoordinator.getUsername(), this);

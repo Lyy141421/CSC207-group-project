@@ -9,23 +9,12 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class LoadJobApplications extends LoadObjects<JobApplication> {
-
-
-    /**
-     * Load all the job applications in this list.
-     * @param jobApplications   The job applications to be loaded.
-     */
-    public void loadAll(ArrayList<JobApplication> jobApplications) {
-        for (JobApplication jobApplication : jobApplications) {
-            this.loadOne(jobApplication);
-        }
-    }
+public class JobApplicationLoader extends GenericLoader<JobApplication> {
 
     /**
      * Load this job application.
      */
-    private void loadOne(JobApplication jobApplication) {
+    void loadOne(JobApplication jobApplication) {
         FileSystem.mapPut(JobApplication.FILENAME, String.valueOf(jobApplication.getId()), this);
         HashMap data = FileSystem.read(JobApplication.FILENAME, String.valueOf(jobApplication.getId()));
         this.loadPrelimData(jobApplication, data);

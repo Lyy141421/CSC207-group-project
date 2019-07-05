@@ -2,7 +2,7 @@ package FileLoadingAndStoring;
 
 import java.util.ArrayList;
 
-public abstract class StoreObjects<T> {
+public abstract class GenericStorer<T> {
 
     /**
      * Store all the objects in this list.
@@ -14,5 +14,9 @@ public abstract class StoreObjects<T> {
         }
     }
 
+    /**
+     * Store this object.
+     * @param object    The object to be stored.
+     */
     abstract void storeOne(T object);
 }

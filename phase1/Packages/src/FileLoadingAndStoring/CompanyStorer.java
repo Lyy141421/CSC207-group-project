@@ -8,10 +8,11 @@ import UsersAndJobObjects.JobPosting;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class StoreCompanies extends StoreObjects<Company> {
+public class CompanyStorer extends GenericStorer<Company> {
 
     /**
      * Stores the company.
+     * @param company   The company to be stored.
      */
     void storeOne(Company company){
         FileSystem.mapPut(Company.FILENAME, company.getName(), this);

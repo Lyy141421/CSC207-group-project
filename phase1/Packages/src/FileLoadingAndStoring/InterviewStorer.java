@@ -8,10 +8,11 @@ import UsersAndJobObjects.Interviewer;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class StoreInterviews extends StoreObjects<Interview> {
+public class InterviewStorer extends GenericStorer<Interview> {
 
     /**
      * Stores the interview.
+     * @param interview The interview to be stored.
      */
     void storeOne(Interview interview){
         FileSystem.mapPut(Interview.FILENAME, String.valueOf(interview.getId()), this);

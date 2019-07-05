@@ -8,10 +8,11 @@ import UsersAndJobObjects.JobPosting;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class StoreJobApplications extends StoreObjects<JobApplication> {
+public class JobApplicationStorer extends GenericStorer<JobApplication> {
 
     /**
      * Stores the job application.
+     * @param jobApplication    The job application to be stored.
      */
     void storeOne(JobApplication jobApplication) {
         FileSystem.mapPut(JobApplication.FILENAME, String.valueOf(jobApplication.getId()), this);

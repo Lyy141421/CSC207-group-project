@@ -11,6 +11,7 @@ public class HRCoordinatorLoader extends GenericLoader<HRCoordinator> {
 
     /**
      * Loads the HR Coordinator.
+     * @param hrCoordinator The HR Coordinator to be loaded.
      */
     void loadOne(HRCoordinator hrCoordinator){
         FileSystem.mapPut(HRCoordinator.FILENAME, hrCoordinator.getUsername(), this);

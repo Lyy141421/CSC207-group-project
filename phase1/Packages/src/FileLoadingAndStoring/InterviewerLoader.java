@@ -8,10 +8,11 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class LoadInterviewers extends LoadObjects<Interviewer> {
+public class InterviewerLoader extends GenericLoader<Interviewer> {
 
     /**
      *  Loads the interviewer.
+     * @param interviewer   The interviewer to be loaded.
      */
     void loadOne(Interviewer interviewer){
         FileSystem.mapPut(Interviewer.FILENAME, interviewer.getUsername(), this);
