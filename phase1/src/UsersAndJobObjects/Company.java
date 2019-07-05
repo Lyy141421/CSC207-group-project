@@ -1,11 +1,13 @@
 package UsersAndJobObjects;
 
+import FileLoadingAndStoring.Storable;
+import FileLoadingAndStoring.Subable;
 import Managers.JobPostingManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Company {
+public class Company implements Storable {
 
     // === Class variables ===
     // The filename under which this will be saved in the FileLoadingAndStoring.FileSystem
@@ -30,6 +32,8 @@ public class Company {
     }
 
     // === Getters ==
+
+    public String getId(){ return getName(); }
 
     public String getName() {
         return this.name;

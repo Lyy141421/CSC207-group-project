@@ -1,5 +1,6 @@
 package UsersAndJobObjects;
 
+import FileLoadingAndStoring.InterviewLoader;
 import GUIClasses.InterviewerInterface;
 import Miscellaneous.InterviewTime;
 import Miscellaneous.InterviewTimeComparator;
@@ -31,6 +32,10 @@ public class Interviewer extends User {
 
     // === Public methods ===
     // === Constructors ===
+
+    public Interviewer(String id){
+        this.setUsername(id);
+    }
 
     public Interviewer(String username, String password, String legalName, String email, Company company, String field,
                 LocalDate dateCreated) {
@@ -76,7 +81,7 @@ public class Interviewer extends User {
      */
     public JobApplication findJobAppById(int id) {
         for (Interview interview : this.interviews) {
-            if (interview.getJobApplication().getId() == id) {
+            if (Integer.parseInt(interview.getJobApplication().getId()) == id) {
                 return interview.getJobApplication();
             }
         }
