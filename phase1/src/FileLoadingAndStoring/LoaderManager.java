@@ -61,6 +61,7 @@ public class LoaderManager {
                 con = clazz.getConstructor(String.class);
                 Object obj = con.newInstance(id);
                 mapPut(filename, id, obj);
+                loader_map.get(mapGet(filename, id).getClass()).loader.loadOne(mapGet(filename, id));
                 return obj;
             } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
                 e.printStackTrace();
