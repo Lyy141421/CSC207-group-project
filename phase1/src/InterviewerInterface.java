@@ -34,8 +34,6 @@ class InterviewerInterface extends UserInterface {
         while (true) {
             try {
                 this.runMainMenu(sc);
-            } catch (NullPointerException npe) {
-                continue;
             } catch (ExitException ee) {
                 break;
             }
@@ -164,16 +162,16 @@ class InterviewerInterface extends UserInterface {
      * @return the job application with the id that the user inputs or null if not found.
      */
     private JobApplication getJobApplication(Scanner sc) {
-        try {
-            int id = Integer.parseInt(this.getInputToken(sc,
-                    "Enter the ID of the job application you wish to view: "));
-            JobApplication jobApplication = this.interviewer.findJobAppById(id);
-            System.out.println(jobApplication);
-            return jobApplication;
-        } catch (NullPointerException npe) {
+        System.out.println();
+        int id = Integer.parseInt(this.getInputToken(sc,
+                "Enter the ID of the job application you wish to view: "));
+        JobApplication jobApplication = this.interviewer.findJobAppById(id);
+        if (jobApplication == null) {
             System.out.println("This job application cannot be found.");
-            throw new NullPointerException();
+            return this.getJobApplication(sc);
         }
+        System.out.println(jobApplication);
+        return jobApplication;
     }
 
     /**
@@ -184,16 +182,12 @@ class InterviewerInterface extends UserInterface {
     private void viewPreviousInterviewsForJobApp(Scanner sc) {
         JobApplication jobApp = this.getJobApplication(sc);
         System.out.println("Previous interviews:");
-        try {
-            if (jobApp.getInterviews().isEmpty()) {
-                System.out.println("None");
-            } else {
-                for (Interview interview : jobApp.getInterviews()) {
-                    System.out.println(interview);
-                }
+        if (jobApp.getInterviews().isEmpty()) {
+            System.out.println("None");
+        } else {
+            for (Interview interview : jobApp.getInterviews()) {
+                System.out.println(interview);
             }
-        } catch (NullPointerException npe) {
-            System.out.println("N/A");
         }
     }
 
@@ -203,13 +197,14 @@ class InterviewerInterface extends UserInterface {
      * @param sc The scanner for user input.
      */
     private void viewSpecificInterview(Scanner sc) {
-        try {
-            int id = Integer.parseInt(this.getInputToken(sc,
-                    "Enter the ID of the interview you wish to view: "));
-            System.out.println(this.interviewer.findInterviewById(id));
-        } catch (NullPointerException npe) {
+        int id = Integer.parseInt(this.getInputToken(sc,"Enter the ID of the interview you wish to view: "));
+        Interview interview = this.interviewer.findInterviewById(id);
+        if (interview == null) {
             System.out.println("This interview cannot be found.");
             this.viewSpecificInterview(sc);
+        }
+        else {
+            System.out.println(interview);
         }
     }
 
