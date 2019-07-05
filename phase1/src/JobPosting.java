@@ -1,4 +1,3 @@
-import javax.swing.text.DateFormatter;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -273,7 +272,7 @@ class JobPosting implements Storable{
         s += "Requirements: " + this.getRequirements() + "\n";
         s += "Number of positions: " + this.getNumPositions() + "\n";
         s += "Company: " + this.getCompany().getName() + "\n";
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-mm-dd");
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         s += "Post date: " + this.getPostDate().format(dtf) + "\n";
         s += "Close date: " + this.getCloseDate().format(dtf) + "\n";
         s += "Filled: " + this.isFilled() + "\n";

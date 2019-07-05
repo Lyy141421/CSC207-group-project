@@ -27,7 +27,7 @@ public class HRPanel extends JPanel implements ActionListener {
     }
 
     private JPanel home () {
-        JPanel HomePanel = new JPanel(new GridBagLayout());
+        JPanel homePanel = new JPanel(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
 
         JButton toDo = new JButton("To-Do");
@@ -35,7 +35,7 @@ public class HRPanel extends JPanel implements ActionListener {
 
         c.gridx = 0;
         c.gridy = 0;
-        HomePanel.add(toDo, c);
+        homePanel.add(toDo, c);
 
 
         JPanel manual = new JPanel();
@@ -60,7 +60,7 @@ public class HRPanel extends JPanel implements ActionListener {
         c.gridx = 1;
         c.gridy = 1;
         c.gridwidth = 2;
-        HomePanel.add(manual, c);
+        homePanel.add(manual, c);
 
         JButton logout = new JButton("Logout");
 
@@ -68,9 +68,9 @@ public class HRPanel extends JPanel implements ActionListener {
         c.gridy = 2;
         c.gridwidth = 1;
         c.insets = new Insets(20, 100, 0, 0);
-        HomePanel.add(logout, c);
+        homePanel.add(logout, c);
 
-        return HomePanel;
+        return homePanel;
     }
 
     // Need to pass in list of job postings (all for browse all or particular for to-do)
