@@ -153,7 +153,7 @@ class Interview implements Storable{
     /**
      * Get a string representation of the preliminary input for this interview.
      *
-     * @return
+     * @return a string representation of the preliminary input for this interview.
      */
     String toStringPrelimInfo() {
         String s = "Interview ID: " + this.getId() + "\n";
@@ -161,6 +161,19 @@ class Interview implements Storable{
         s += "Interviewee: " + this.getApplicant().getLegalName() + " (" + this.getApplicant().getUsername() + ")" +
                 "\n";
         s += "Interview type: " + Interview.roundNumberDescriptions.get(this.getRoundNumber()) + "\n";
+        return s;
+    }
+
+    /**
+     * Get a string representation of all the information for this interview.
+     * @return  a string representation of all the information for this interview.
+     */
+    @Override
+    public String toString() {
+        String s = "Interview time: " + this.time.toString() + "\n";
+        s += this.toStringPrelimInfo();
+        s += "Interview notes: \n" + this.getInterviewNotes();
+        s += "Passed: " + this.isPassed();
         return s;
     }
 
@@ -221,11 +234,11 @@ class Interview implements Storable{
         HashMap data = FileSystem.read(Interview.FILENAME, getIdString());
         this.jobApplication = (JobApplication) FileSystem.subLoader(JobApplication.class, (String) ((ArrayList)
                 data.get("JobApplication")).get(0), (String) ((ArrayList) data.get("JobApplication")).get(1));
-        this.loadPrelimData(data);
         this.interviewer = (Interviewer) FileSystem.subLoader(Interviewer.class, (String) ((ArrayList)
                 data.get("interviewer")).get(0), (String) ((ArrayList) data.get("interviewer")).get(1));
         this.hrCoordinator = (HRCoordinator) FileSystem.subLoader(HRCoordinator.class, (String)
                 ((ArrayList) data.get("HRCoordinator")).get(0), (String) ((ArrayList) data.get("HRCoordinator")).get(1));
+        this.loadPrelimData(data);
     }
 
 }

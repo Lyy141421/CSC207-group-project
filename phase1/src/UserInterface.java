@@ -109,15 +109,13 @@ class UserInterface {
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             LocalDate date = LocalDate.parse(input, dtf);
             if (date.isBefore(today)) {
-                throw new DateException();  // Invalid input
+                System.out.println("Invalid date. Please enter again.");
+                System.out.println();
+                return this.getDate(sc, today, message);
             }
             return date;
         } catch (DateTimeParseException dtpe) {
             System.out.println("Cannot read date. Please enter again.");
-            System.out.println();
-            return this.getDate(sc, today, message);
-        } catch (DateException de) {
-            System.out.println("Invalid date. Please enter again.");
             System.out.println();
             return this.getDate(sc, today, message);
         }
