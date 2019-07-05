@@ -1,5 +1,6 @@
 package GUIClasses;
 
+import Main.JobApplicationSystem;
 import Miscellaneous.ExitException;
 import UsersAndJobObjects.*;
 

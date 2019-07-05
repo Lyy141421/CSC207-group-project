@@ -93,6 +93,26 @@ public class JobApplicationSystem {
         Loader.endSave(); //todo add methods to save from managers
     }
 
+    public static Company getCompany(String name) {
+        for (Company company : companies) {
+            if (company.getName().equalsIgnoreCase(name))
+                return company;
+        }
+        return null;
+    }
+
+    /**
+     * Add a company to the system.
+     *
+     * @param name The name of the company.
+     * @return the company created.
+     */
+    public static Company createCompany(String name) {
+        Company company = new Company(name);
+        JobApplicationSystem.companies.add(company);
+        return company;
+    }
+
     // ============================================================================================================== //
     // === Private methods ===
     /**
@@ -112,26 +132,6 @@ public class JobApplicationSystem {
         for(Object app : userManager.getAllApplicants()){
           ((Applicant)app).removeFilesFromAccount(today);
         }
-    }
-
-    /**
-     * Add a company to the system.
-     *
-     * @param name The name of the company.
-     * @return the company created.
-     */
-    static Company createCompany(String name) {
-        Company company = new Company(name);
-        JobApplicationSystem.companies.add(company);
-        return company;
-    }
-
-    static Company getCompany(String name) {
-        for (Company company : companies) {
-            if (company.getName().equalsIgnoreCase(name))
-                return company;
-        }
-        return null;
     }
 
 }

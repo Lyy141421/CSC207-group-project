@@ -1,5 +1,6 @@
 package GUIClasses;
 
+import Main.JobApplicationSystem;
 import Managers.InterviewManager;
 import Managers.JobPostingManager;
 import Miscellaneous.ExitException;
