@@ -75,7 +75,7 @@ public class JobApplicationSystem {
      */
     static void mainStart() {
         LoaderManager applicant = new LoaderManager(new ApplicantLoader(), Applicant.class, Applicant.FILENAME);
-        LoaderManager hrcoordinator = new LoaderManager(new HRCoordinatorLoader(), HRCoordinator.class, Applicant.FILENAME);
+        LoaderManager hrcoordinator = new LoaderManager(new HRCoordinatorLoader(), HRCoordinator.class, HRCoordinator.FILENAME);
         LoaderManager interviewer = new LoaderManager(new InterviewerLoader(), Interviewer.class, Interviewer.FILENAME);
         LoaderManager company = new LoaderManager(new CompanyLoader(), Company.class, Company.FILENAME);
         LoaderManager interview = new LoaderManager(new InterviewLoader(), Interview.class, Interview.FILENAME);

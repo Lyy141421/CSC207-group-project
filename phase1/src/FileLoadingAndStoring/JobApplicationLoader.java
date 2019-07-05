@@ -41,8 +41,8 @@ public class JobApplicationLoader extends GenericLoader<JobApplication> {
      */
     private void loadApplicant(JobApplication jobApplication, HashMap data) {
         jobApplication.setApplicant((Applicant) LoaderManager.subLoad(Applicant.class, (String)
-                ((ArrayList) data.get("UsersAndJobObjects.Applicant")).get(0), (String)
-                ((ArrayList) data.get("UsersAndJobObjects.Applicant")).get(1)));
+                ((ArrayList) data.get("Applicant")).get(0), (String)
+                ((ArrayList) data.get("Applicant")).get(1)));
     }
 
     /**

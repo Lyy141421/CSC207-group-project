@@ -25,8 +25,8 @@ public class JobPostingLoader extends GenericLoader<JobPosting> {
         jobPosting.setInterviewManager(new InterviewManager(jobPosting, appsInConsideration, appsRejected,
                 (int) data.get("currentRound")));
         jobPosting.setCompany((Company) LoaderManager.subLoad(Company.class, (String)((ArrayList)data.
-                        get("UsersAndJobObjects.Company")).get(0),
-                (String)((ArrayList)data.get("UsersAndJobObjects.Company")).get(1)));
+                        get("Company")).get(0),
+                (String)((ArrayList)data.get("Company")).get(1)));
     }
 
     /**
