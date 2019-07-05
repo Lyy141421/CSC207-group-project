@@ -25,10 +25,6 @@ public class Applicant extends User {
     // === Public methods ===
     // === Constructors ===
 
-    public Applicant(String id){
-        this.setUsername(id);
-    } // TODO -- why??
-
     public Applicant(String username, String password, String legalName, String email, LocalDate dateCreated) {
         super(username, password, legalName, email, dateCreated);
         super.setUserInterface(new ApplicantInterface(this));
@@ -63,22 +59,14 @@ public class Applicant extends User {
 
     // === Other methods ===
 
-    /**
-     * Apply for a job.
-     *
-     * @param jobPosting The job posting that this applicant wants to apply for.
-     * @param CV        The applicant's CV.
-     * @param coverLetter   The applicant's cover letter.
-     * @return true iff this application is successfully submitted (ie before closing date and has not already applied)
-     */
-    public boolean applyForJob(JobPosting jobPosting, String CV, String coverLetter) {
-        if (LocalDate.now().isBefore(jobPosting.getCloseDate()) && !this.hasAppliedTo(jobPosting)) {
-            this.jobApplicationManager.addJobApplication(this, jobPosting, CV, coverLetter,
-                    LocalDate.now());
-            this.addFile(CV);
-            this.addFile(coverLetter);
+    public void registerJobApplication(JobApplication application) {
+        if (!filesSubmitted.contains(application.getCV())) {
+            this.addFile(application.getCV());
         }
-        return false;
+        if (!filesSubmitted.contains(application.getCoverLetter())) {
+            this.addFile(application.getCoverLetter());
+        }
+        jobApplicationManager.addJobApplication(application);
     }
 
     /**
@@ -87,7 +75,7 @@ public class Applicant extends User {
      * @param jobPosting The job that this user wants to withdraw their application from.
      * @return true iff this applicant can successfully withdraw their application; else return false
      */
-    public boolean withdrawApplication(JobPosting jobPosting) {
+    public boolean withdrawJobApplication(JobPosting jobPosting) {
         if (this.hasAppliedTo(jobPosting) && !jobPosting.isFilled()) {
             jobPosting.removeJobApplication(jobPosting.findJobApplication(this));
             this.jobApplicationManager.removeJobApplication(jobPosting);
@@ -153,7 +141,6 @@ public class Applicant extends User {
 
     // ============================================================================================================== //
     // === Private methods ===
-    // === Other methods ===
 
     /**
      * Add a file to one's account.
@@ -171,5 +158,4 @@ public class Applicant extends User {
     private void removeFile(String file) {
         this.filesSubmitted.remove(file);
     }
-
 }

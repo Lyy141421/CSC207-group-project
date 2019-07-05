@@ -8,15 +8,16 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 
 
-public class InterviewerPanel extends JPanel implements ActionListener {
+public class InterviewerPanel extends JPanel implements ActionListener, ItemListener {
 
     InterviewerPanel () {
         this.setLayout(new CardLayout());
         this.add(home(), "HOME");
         this.add(viewInterviews(), "VIEW");
-        this.add(reviewInterviews(), "REVIEW");
         this.add(scheduleInterviews(), "SCHEDULE");
     }
 
@@ -35,10 +36,20 @@ public class InterviewerPanel extends JPanel implements ActionListener {
     }
 
     private JPanel viewInterviews () {
-        JPanel viewPanel = new JPanel();
+        JPanel viewPanel = new JPanel(new BorderLayout());
+        JPanel select = new JPanel();
 
         JComboBox<String> interviews = new JComboBox<>();
+
+        JCheckBox incomplete = new JCheckBox("Incomplete", true);
+        incomplete.addItemListener(this);
+        JCheckBox complete = new JCheckBox("Complete", true);
+        complete.addItemListener(this);
         JList<String> viewable = new JList<>(new String[]{"abc", "xa"});
+        select.add(incomplete);
+        select.add(complete);
+        select.add(new JScrollPane(viewable));
+
         JTextArea info = new JTextArea("Information");
         info.setEditable(false);
         // Phase 2?
@@ -46,7 +57,7 @@ public class InterviewerPanel extends JPanel implements ActionListener {
         JButton home = new JButton("Home");
         home.addActionListener(this);
 
-        JSplitPane display = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, new JScrollPane(viewable), new JScrollPane(info));
+        JSplitPane display = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, select, new JScrollPane(info));
         display.setDividerLocation(250);
 
         viewable.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
@@ -57,14 +68,6 @@ public class InterviewerPanel extends JPanel implements ActionListener {
         viewPanel.add(home, BorderLayout.SOUTH);
 
         return viewPanel;
-    }
-
-    private JPanel reviewInterviews () {
-        JPanel reviewPanel = new JPanel();
-
-
-
-        return reviewPanel;
     }
 
     private JPanel scheduleInterviews () {
@@ -94,5 +97,26 @@ public class InterviewerPanel extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
 
+    }
+
+    @Override
+    public void itemStateChanged(ItemEvent e) {
+        JCheckBox source = (JCheckBox) e.getItemSelectable();
+        switch (source.getText()) {
+            case "Incomplete":
+                if (e.getStateChange() == ItemEvent.SELECTED) {
+                    // Show scheduled interviews
+                }else {
+                    // Hide scheduled interviews
+                }
+                break;
+            case "Complete":
+                if (e.getStateChange() == ItemEvent.SELECTED) {
+                    // Show conducted interviews
+                }else {
+                    // Hide conducted interviews
+                }
+                break;
+        }
     }
 }

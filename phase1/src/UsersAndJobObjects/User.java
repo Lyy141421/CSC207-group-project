@@ -83,6 +83,7 @@ public abstract class User implements Storable {
     }
 
     // === Other methods ===
+
     /**
      * Report whether this user is the same as obj.
      *
@@ -93,14 +94,14 @@ public abstract class User implements Storable {
     public boolean equals(Object obj) {
         if (!(obj instanceof User)) {
             return false;
-        }
-        else {
-            return this.username.equals(((User)obj).username);
+        } else {
+            return this.username.equals(((User) obj).username);
         }
     }
 
     /**
      * Return a hashcode for this user.
+     *
      * @return an int; the same int should be returned for all users equal to this user.
      */
     @Override
@@ -116,26 +117,11 @@ public abstract class User implements Storable {
     // === Package-private methods ===
     // === Constructors ===
 
-    User() {
-    }
-
     User(String username, String password, String legalName, String email, LocalDate dateCreated) {
         this.username = username;
         this.password = password;
         this.legalName = legalName;
         this.email = email;
         this.dateCreated = dateCreated;
-    }
-
-    // === Other methods ===
-
-    /**
-     * Report whether this account has the same username as otherUsername.
-     *
-     * @param otherUsername The other username to be compared to.
-     * @return true iff this username and otherUsername are identical.
-     */
-    boolean hasSameUsername(String otherUsername) {
-        return this.username.equals(otherUsername);
     }
 }

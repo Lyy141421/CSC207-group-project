@@ -2,14 +2,13 @@ package UsersAndJobObjects;
 
 import FileLoadingAndStoring.FileSystem;
 import FileLoadingAndStoring.Storable;
-import FileLoadingAndStoring.Subable;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class JobApplication implements Storable {
+public class JobApplication {
     /**
      * A submitted job application.
      */
@@ -78,8 +77,13 @@ public class JobApplication implements Storable {
 
     // === Getters ===
 
-    public String getId() {
-        return Integer.toString(this.ID);
+
+    public static HashMap<Integer, String> getStatuses() {
+        return statuses;
+    }
+
+    public int getId() {
+        return this.ID;
     }
 
     public Applicant getApplicant() {
@@ -177,6 +181,15 @@ public class JobApplication implements Storable {
      */
     public void setHired() {
         this.setStatus((JobApplication.HIRED));
+    }
+
+    /**
+     * Getter for the ID
+     *
+     * @return the string of the id
+     */
+    public String getIdString() {
+        return Integer.toString(this.ID);
     }
 
     /**

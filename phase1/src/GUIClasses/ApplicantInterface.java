@@ -41,17 +41,17 @@ public class ApplicantInterface extends UserInterface {
         int option = getMenuOption(sc, numOptions);
         switch (option) {
             case 1:
-                browseOpenJobPostingsNotAppliedTo(sc, today);
+                this.browseOpenJobPostingsNotAppliedTo(sc, today); // Browse open job postings not applied to
             case 2:
-                ; //TODO: ????
+                this.viewDocuments(); // View uploaded documents
             case 3:
-                applyForJob(sc, today);
+                this.submitApplication(sc, today); // Apply for a job
             case 4:
-                viewApplications();
+                this.viewApplications(sc, false); // View applications
             case 5:
-                viewAccountHistory();
+                this.viewApplications(sc, true); // Withdraw an application
             case 6:
-                throw new ExitException();
+                this.viewAccountHistory(today); // View account history
         }
 
     }
@@ -79,8 +79,8 @@ public class ApplicantInterface extends UserInterface {
         System.out.println("2 - View uploaded documents");
         System.out.println("3 - Apply for a job");
         System.out.println("4 - View applications");
-        System.out.println("5 - View account history");
-        System.out.println("6 - Exit");
+        System.out.println("5 - Withdraw an application");
+        System.out.println("6 - View account history");
         return 6;
     }
 
@@ -188,6 +188,7 @@ public class ApplicantInterface extends UserInterface {
         for (String file : applicant.getFilesSubmitted()) {
             CVFileNumber++;
             System.out.println(CVFileNumber + ". " + file);
+            System.out.println();
         }
         System.out.println("Please enter the file number of the CV you would like to submit.");
         int CVOption = getMenuOption(sc, CVFileNumber);
@@ -219,7 +220,7 @@ public class ApplicantInterface extends UserInterface {
         return 2;
     }
 
-    void applyForJob(Scanner sc, LocalDate today) {
+    void submitApplication(Scanner sc, LocalDate today) {
         String companyName = getInputLine(sc, "Enter the name of the company you wish to apply to: ");
         Company company = JobApplicationSystem.getCompany(companyName);
         while (company == null) {
@@ -229,8 +230,8 @@ public class ApplicantInterface extends UserInterface {
         }
         int postingId = getInteger(sc, "Enter the id of the posting you wish to apply for: ");
         JobPosting posting = company.getJobPostingManager().getJobPosting(postingId);
-        while (posting == null) {
-            System.out.println("No posting was found matching id " + postingId + ".");
+        while (posting == null || posting.getCloseDate().isEqual(today) || posting.getCloseDate().isAfter(today)) {
+            System.out.println("No open posting was found matching id " + postingId + ".");
             postingId = getInteger(sc, "Enter the id of the posting you wish to apply for: ");
             posting = company.getJobPostingManager().getJobPosting(postingId);
         }
@@ -240,47 +241,67 @@ public class ApplicantInterface extends UserInterface {
             case 1:
                 JobApplication application = this.createJobApplicationThroughFiles(sc, today, posting);
                 posting.addJobApplication(application);
+                applicant.registerJobApplication(application);
+
             case 2:
                 application = this.createJobApplicationThroughTextEntry(sc, today, posting);
                 posting.addJobApplication(application);
+                applicant.registerJobApplication(application);
         }
     }
 
-    void viewApplications() {
-        //TODO
-        /*
-        for (JobApplication application : applicant.getJobApplicationManager().getJobApplications()) {
-            - Display application.getJobPosting().getTitle()
-            - Display application.getJobPosting().getCompany().getName()
-            - Display JobApplication.getStatuses().get(application.getStatus())
-            - Give option to withdraw application
-            If applicant chooses to withdraw application:
-                boolean appWithdrawn = applicant.withdrawApplication(application.getJobPosting());
-                if (appWithdrawn) {
-                    - Tell user that their application has successfully been withdrawn
-                }
-                else {
-                    - Tell user that since the job posting has been filled, they can no longer withdraw their
-                    application
-                }
+    void viewApplications(Scanner sc, boolean withdrawal) {
+        ArrayList<JobApplication> applications = applicant.getJobApplicationManager().getJobApplications();
+        int applicationNumber = 0;
+        for (JobApplication application : applications) {
+            applicationNumber++;
+            if (withdrawal) {
+                System.out.print(applicationNumber + ". ");
+            }
+            System.out.println(application.getJobPosting().getTitle());
+            System.out.println(application.getJobPosting().getCompany().getName());
+            System.out.println(JobApplication.getStatuses().get(application.getStatus()));
+            System.out.println();
         }
-        */
+        if (withdrawal) {
+            int applicationOption = getMenuOption(sc, applicationNumber);
+            JobApplication applicationToWithdraw = applications.get(applicationOption-1);
+            boolean appWithdrawn = applicant.withdrawJobApplication(applicationToWithdraw.getJobPosting());
+            if (appWithdrawn) {
+                System.out.println("Application successfully withdrawn.");
+            }
+            else {
+                System.out.println("As the job posting corresponding to this application has already been filled, " +
+                        "it is no longer possible to withdraw the application.");
+            }
+        }
     }
 
-    void viewAccountHistory() {
-        //TODO
-        /*
-        - Display applicant.getDateCreated()
-        - Display each application in applicant.getJobApplicationManager().getPreviousJobApplications()
-        - Display each application in applicant.getJobApplicationManager().getCurrentJobApplications()
-        - Display applicant.getJobApplicationManager().getNumDaysSinceMostRecentCloseDate(LocalDate.now())
-        * */
+    void viewAccountHistory(LocalDate today) {
+        System.out.println("Account created: " + applicant.getDateCreated());
+        System.out.println("Previous job applications:");
+        for (JobApplication application : applicant.getJobApplicationManager().getPreviousJobApplications()) {
+            System.out.println(application.getJobPosting().getTitle());
+            System.out.println(application.getJobPosting().getCompany().getName());
+            System.out.println(JobApplication.getStatuses().get(application.getStatus()));
+            System.out.println();
+        }
+        System.out.println("Current job applications:");
+        for (JobApplication application : applicant.getJobApplicationManager().getCurrentJobApplications()) {
+            System.out.println(application.getJobPosting().getTitle());
+            System.out.println(application.getJobPosting().getCompany().getName());
+            System.out.println(JobApplication.getStatuses().get(application.getStatus()));
+            System.out.println();
+        }
+        System.out.println("It has been " +
+                applicant.getJobApplicationManager().getNumDaysSinceMostRecentCloseDate(today) + " days since your most " +
+                "recent application closed.");
     }
 
     void viewDocuments() {
-        // TODO: finish once clarification is obtained
+        for (String file : applicant.getFilesSubmitted()) {
+            System.out.println(file);
+            System.out.println();
+        }
     }
-
-
-
 }
