@@ -80,6 +80,23 @@ class UserInterface {
     }
 
     /**
+     * Gets a string of letters inputted by the user.
+     * @param sc    The scanner for user input.
+     * @param message   The prompt that is displayed.
+     * @return  the string of letters inputted by the user.
+     */
+    String getOnlyLetters(Scanner sc, String message) {
+        String legalName = this.getInputLine(sc, message);
+        for (int i = 0; i < legalName.length(); i++) {
+            if (!Character.isLetter(legalName.charAt(i))) {
+                System.out.println("Invalid input. Please enter again.");
+                return this.getInputLine(sc, message);
+            }
+        }
+        return legalName;
+    }
+
+    /**
      * Get the integer inputted by the user.
      *
      * @param sc      The scanner for user input.
@@ -140,6 +157,7 @@ class UserInterface {
         return option;
     }
 
+
     // === Other methods ===
 
     /**
@@ -166,7 +184,7 @@ class UserInterface {
      */
     private User signUp(Scanner sc, String username, String password) {
         System.out.println();
-        String legalName = this.getInputLine(sc, "Enter your legal name: ");
+        String legalName = this.getOnlyLetters(sc, "Enter your legal name: ");
         String email = this.getInputToken(sc, "Enter your email address: ");
         sc.nextLine();
         int numOptions = this.displayUserTypes();
@@ -220,7 +238,7 @@ class UserInterface {
             companyName = this.getInputLine(sc, "Enter your company name: ");
         }
         Company company = JobApplicationSystem.getCompany(companyName);
-        String field = this.getInputLine(sc, "Enter your field: ");
+        String field = this.getOnlyLetters(sc, "Enter your field: ");
         System.out.println("Sign-up successful!");
         return JobApplicationSystem.getUserManager().createInterviewer(username, password, legalName, email, company,
                 field, LocalDate.now(), true);

@@ -207,8 +207,8 @@ class HRCoordinatorInterface extends UserInterface {
     private void addJobPosting(Scanner sc, LocalDate today) {
         System.out.println();
         System.out.println("Complete the following categories for adding a job posting as they appear.");
-        String title = this.getInputLine(sc, "Job title: ");
-        String field = this.getInputLine(sc, "Job field: ");
+        String title = this.getOnlyLetters(sc, "Job title: ");
+        String field = this.getOnlyLetters(sc, "Job field: ");
         String description = this.getInputLine(sc, "Job description: ");
         String requirements = this.getInputLine(sc, "Job requirements: ");
         int numPositions = this.getInteger(sc, "Number of positions: ");
@@ -559,7 +559,7 @@ class HRCoordinatorInterface extends UserInterface {
             i++;
         }
         String message = "Enter the value corresponding to the applicant that you would like to hire: ";
-        int appNumber = Integer.parseInt(this.getInputToken(sc, message));
+        int appNumber = this.getInteger(sc, message);
         return finalCandidates.get(appNumber - 1);
     }
 

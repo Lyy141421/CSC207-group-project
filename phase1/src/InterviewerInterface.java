@@ -180,8 +180,7 @@ class InterviewerInterface extends UserInterface {
      */
     private JobApplication getJobApplication(Scanner sc) {
         System.out.println();
-        int id = Integer.parseInt(this.getInputToken(sc,
-                "Enter the ID of the job application you wish to view: "));
+        int id = this.getInteger(sc, "Enter the ID of the job application you wish to view: ");
         JobApplication jobApplication = this.interviewer.findJobAppById(id);
         if (jobApplication == null) {
             System.out.println("This job application cannot be found.");
@@ -215,7 +214,7 @@ class InterviewerInterface extends UserInterface {
      * @param sc The scanner for user input.
      */
     private void viewSpecificInterview(Scanner sc) {
-        int id = Integer.parseInt(this.getInputToken(sc,"Enter the ID of the interview you wish to view: "));
+        int id = this.getInteger(sc,"Enter the ID of the interview you wish to view: ");
         Interview interview = this.interviewer.findInterviewById(id);
         if (interview == null) {
             System.out.println("This interview cannot be found.");
