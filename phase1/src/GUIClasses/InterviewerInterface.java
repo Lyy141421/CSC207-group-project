@@ -252,7 +252,7 @@ public class InterviewerInterface extends UserInterface {
             interview.setInterviewNotes(notes);
             System.out.println("Would you like to pass this applicant?");
             if (this.getInputToken(sc, "Enter 'N' for no or any other key for yes").equals("N")) {
-                interview.setFail();
+                interviewer.failInterview(interview);
             }
             this.interviewer.removeInterview(interview);
         }
