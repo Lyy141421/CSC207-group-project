@@ -54,7 +54,7 @@ public class JobPostingManager {
      */
     public JobPosting getJobPosting(int ID) {
         for (JobPosting jobPosting : this.getJobPostings()) {
-            if (jobPosting.getId() == ID) {
+            if (Integer.valueOf(jobPosting.getId()) == ID) {
                 return jobPosting;
             }
         }
