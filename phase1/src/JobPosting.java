@@ -17,7 +17,7 @@ class JobPosting implements Storable{
     private LocalDate postDate; // The date on which this job posting was listed
     private LocalDate closeDate; // The date on which this job posting is closed
     private boolean filled; // Whether the job posting is filled
-    private ArrayList<JobApplication> jobApplications; // The list of job applications for this job posting
+    private ArrayList<JobApplication> jobApplications = new ArrayList<>(); // The list of job applications for this job posting
     private InterviewManager interviewManager; // Interview manager for this job posting
     static final String FILENAME = "JobPostings";   // The filename under which this will be saved in the FileSystem
 
@@ -31,9 +31,6 @@ class JobPosting implements Storable{
     public JobPosting(String id){
         this.id = Integer.parseInt(id);
         JobPosting.postingsCreated = Integer.max(this.id, JobPosting.postingsCreated);
-    }
-
-    JobPosting() {
     }
 
     JobPosting(String title, String field, String description, String requirements, int numPositions, Company company,
@@ -178,7 +175,7 @@ class JobPosting implements Storable{
                 return jobApp;
             }
         }
-        throw new NullPointerException();
+        return null;
     }
 
     /**

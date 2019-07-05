@@ -125,7 +125,13 @@ class InterviewerInterface extends UserInterface {
      * Interface for viewing one's schedule.
      */
     private void viewSchedule() {
-        System.out.println(this.interviewer.getScheduleString());
+        String schedule = this.interviewer.getScheduleString();
+        System.out.println();
+        if (schedule == null) {
+            System.out.println("Schedule is empty.");
+        } else {
+            System.out.println(schedule);
+        }
     }
 
     /**
@@ -134,8 +140,12 @@ class InterviewerInterface extends UserInterface {
      */
     private void viewInterviewsForToday(LocalDate today) {
         List<Interview> interviews = this.interviewer.getInterviewsByDate(today);
-        for (Interview interview : interviews) {
-            System.out.println(interview);
+        if (!interviews.isEmpty()) {
+            System.out.println("Interviews for today: ");
+            for (Interview interview : interviews) {
+                System.out.println();
+                System.out.println(interview);
+            }
         }
     }
 
@@ -149,9 +159,16 @@ class InterviewerInterface extends UserInterface {
         2. Interviewer selects job application that they want to see in more detail.
          */
         ArrayList<JobApplication> jobApps = this.interviewer.getListOfIntervieweeJobApplications();
-        System.out.println("Your interviewees' job applications");
-        for (JobApplication jobApplication : jobApps) {
-            System.out.println(jobApplication);
+        System.out.println();
+        if (jobApps.isEmpty()) {
+            System.out.println("You have no interviewees.");
+        }
+        else {
+            System.out.println("Your interviewees' job applications:");
+            for (JobApplication jobApplication : jobApps) {
+                System.out.println();
+                System.out.println(jobApplication);
+            }
         }
     }
 
@@ -186,6 +203,7 @@ class InterviewerInterface extends UserInterface {
             System.out.println("None");
         } else {
             for (Interview interview : jobApp.getInterviews()) {
+                System.out.println();
                 System.out.println(interview);
             }
         }
@@ -219,19 +237,24 @@ class InterviewerInterface extends UserInterface {
          write notes and select pass/fail
          */
         Interview interview = this.interviewer.getNextInterview();
-        System.out.println("Interview:");
-        System.out.println(interview.toStringPrelimInfo() + "\n");
-        System.out.println("Applicant cover letter:");
-        System.out.println(interview.getJobApplication().getCoverLetter() + "\n");
-        System.out.println("Applicant CV:");
-        System.out.println(interview.getJobApplication().getCV() + "\n");
-        String notes = this.getInputLine(sc, "Write interview notes below. Press enter when finished.\n");
-        interview.setInterviewNotes(notes);
-        System.out.println("Would you like to pass this applicant?");
-        if (this.getInputToken(sc, "Enter 'N' for no or any other key for yes").equals("N")) {
-            interview.setFail();
+        System.out.println();
+        if (interview == null) {
+            System.out.println("You do not have any interviews scheduled.");
+        } else {
+            System.out.println("Interview:");
+            System.out.println(interview.toStringPrelimInfo() + "\n");
+            System.out.println("Applicant cover letter:");
+            System.out.println(interview.getJobApplication().getCoverLetter() + "\n");
+            System.out.println("Applicant CV:");
+            System.out.println(interview.getJobApplication().getCV() + "\n");
+            String notes = this.getInputLine(sc, "Write interview notes below. Press enter when finished.\n");
+            interview.setInterviewNotes(notes);
+            System.out.println("Would you like to pass this applicant?");
+            if (this.getInputToken(sc, "Enter 'N' for no or any other key for yes").equals("N")) {
+                interview.setFail();
+            }
+            this.interviewer.removeInterview(interview);
         }
-        this.interviewer.removeInterview(interview);
     }
 
 }

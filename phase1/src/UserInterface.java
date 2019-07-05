@@ -23,8 +23,11 @@ class UserInterface {
 
     public static void main(String[] args) {
         UserInterface UI = new UserInterface();
-        User user = UI.login();
-        user.getUserInterface().run(LocalDate.now());
+        while (true) {
+            User user = UI.login();
+            user.getUserInterface().run(LocalDate.now());
+            System.out.println();
+        }
     }
 
     // === Constructors ===

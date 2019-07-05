@@ -139,6 +139,8 @@ class HRCoordinatorInterface extends UserInterface {
      * @return the number of options.
      */
     private int displayJobApplicationSubMenu() {
+        System.out.println();
+        System.out.println("Please select an option below:");
         System.out.println("1 - Search for specific application");
         System.out.println("2 - View all applications in consideration");
         System.out.println("3 - View all applications rejected");
@@ -220,6 +222,7 @@ class HRCoordinatorInterface extends UserInterface {
     private void viewAllJobPostingsInCompany() {
         ArrayList<JobPosting> jobPostings = this.HRC.getCompany().getJobPostingManager().getJobPostings();
         if (jobPostings.isEmpty()) {
+            System.out.println();
             System.out.println("No job postings to view.");
         }
         else {
@@ -238,6 +241,7 @@ class HRCoordinatorInterface extends UserInterface {
     private void viewAllOpenJobPostingsInCompany(LocalDate today) {
         ArrayList<JobPosting> jobPostings = this.HRC.getCompany().getJobPostingManager().getOpenJobPostings(today);
         if (jobPostings.isEmpty()) {
+            System.out.println();
             System.out.println("No job postings to view.");
         }
         else {
@@ -257,6 +261,7 @@ class HRCoordinatorInterface extends UserInterface {
         ArrayList<JobPosting> jobPostings = this.HRC.getCompany().getJobPostingManager().
                 getClosedJobPostingsNotFilled(today);
         if (jobPostings.isEmpty()) {
+            System.out.println();
             System.out.println("No job postings to view.");
         }
         else {
@@ -273,6 +278,7 @@ class HRCoordinatorInterface extends UserInterface {
     private void viewAllFilledJobPostingsInCompany() {
         ArrayList<JobPosting> jobPostings = this.HRC.getCompany().getJobPostingManager().getFilledJobPostings();
         if (jobPostings.isEmpty()) {
+            System.out.println();
             System.out.println("No job postings to view.");
         }
         else {
@@ -300,6 +306,7 @@ class HRCoordinatorInterface extends UserInterface {
     private void viewAllApplicationsForJobPosting(JobPosting jobPosting) {
         ArrayList<JobApplication> jobApps = jobPosting.getJobApplications();
         if (jobApps.isEmpty()) {
+            System.out.println();
             System.out.println("No applications to view.");
         }
         else {
@@ -317,11 +324,13 @@ class HRCoordinatorInterface extends UserInterface {
     private void viewAppsInConsiderationForJobPosting(JobPosting jobPosting) {
         InterviewManager interviewManager = jobPosting.getInterviewManager();
         if (interviewManager == null) {
+            System.out.println();
             System.out.println("Job posting is still open. No applications to view.");
         }
         else {
             ArrayList<JobApplication> jobApps = interviewManager.getApplicationsInConsideration();
             if (jobApps.isEmpty()) {
+                System.out.println();
                 System.out.println("No applications to view.");
             }
             else {
@@ -341,11 +350,13 @@ class HRCoordinatorInterface extends UserInterface {
     private void viewAppsRejectedForJobPosting(JobPosting jobPosting) {
         InterviewManager interviewManager = jobPosting.getInterviewManager();
         if (interviewManager == null) {
+            System.out.println();
             System.out.println("Job posting is still open. No applications to view.");
         }
         else {
             ArrayList<JobApplication> jobApps = jobPosting.getInterviewManager().getApplicationsRejected();
             if (jobApps.isEmpty()) {
+                System.out.println();
                 System.out.println("No applications to view.");
             }
             else {
@@ -365,11 +376,13 @@ class HRCoordinatorInterface extends UserInterface {
     private void viewEmailsOfRejected(JobPosting jobPosting) {
         InterviewManager interviewManager = jobPosting.getInterviewManager();
         if (interviewManager == null) {
+            System.out.println();
             System.out.println("Job posting is still open. No applications to view.");
         }
         else {
             ArrayList<JobApplication> jobApps = jobPosting.getInterviewManager().getApplicationsRejected();
             if (jobApps.isEmpty()) {
+                System.out.println();
                 System.out.println("No applications to view.");
             }
             else {
@@ -408,6 +421,7 @@ class HRCoordinatorInterface extends UserInterface {
     private void viewPreviousJobAppsToCompany(Applicant applicant) {
         ArrayList<JobApplication> jobApps = this.HRC.getCompany().getAllApplicationsToCompany(applicant);
         if (jobApps.isEmpty()) {
+            System.out.println();
             System.out.println("No applications to view.");
         }
         else {

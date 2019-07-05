@@ -66,7 +66,7 @@ class Interviewer extends User {
      * Find the job application with this id from the list of job applications that this interviewer can view.
      *
      * @param id The id in question.
-     * @return the job application associated with this id.
+     * @return the job application associated with this id or null if not found.
      */
     JobApplication findJobAppById(int id) {
         for (Interview interview : this.interviews) {
@@ -74,14 +74,14 @@ class Interviewer extends User {
                 return interview.getJobApplication();
             }
         }
-        throw new NullPointerException();
+        return null;
     }
 
     /**
      * Find the interview with this id from the interviews that this interviewer has access to.
      *
      * @param id The id in question
-     * @return the interview associated with this id.
+     * @return the interview associated with this id or null if not found.
      */
     Interview findInterviewById(int id) {
         for (Interview interview : this.interviews) {
@@ -89,7 +89,7 @@ class Interviewer extends User {
                 return interview;
             }
         }
-        throw new NullPointerException();
+        return null;
     }
 
     /**
@@ -129,9 +129,12 @@ class Interviewer extends User {
     /**
      * Get the next interview to be conducted by this interviewer.
      *
-     * @return the next interview to be conducted by this interviewer.
+     * @return the next interview to be conducted by this interviewer or null if interviews is empty.
      */
     Interview getNextInterview() {
+        if (this.interviews.isEmpty()) {
+            return null;
+        }
         return this.interviews.get(0);
     }
 
@@ -142,6 +145,9 @@ class Interviewer extends User {
      * @return a list of interviews scheduled for this date.
      */
     List<Interview> getInterviewsByDate(LocalDate date) {
+        if(this.interviews.isEmpty()) {
+            return new ArrayList<>();
+        }
         int start = 0;
         Interview interview = this.interviews.get(start);
         while (interview.getTime().getDate().isBefore(date)) {
@@ -149,7 +155,7 @@ class Interviewer extends User {
             interview = this.interviews.get(start);
         }
         if (start == this.interviews.size()) {      // All interviews are before this date
-            return this.interviews.subList(0, 0);   // Empty list
+            return new ArrayList<>();               // Empty list
         }
         int end = start;
         while (interview.getTime().getDate().isEqual(date)) {
@@ -212,7 +218,10 @@ class Interviewer extends User {
      * @return a string representation of this interviewer's schedule
      */
     String getScheduleString() {
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-mm-dd");
+        if (this.interviews.isEmpty()) {
+            return null;
+        }
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         String s = "";
         InterviewTime interviewTime = this.interviews.get(0).getTime();
         s += interviewTime.getDate().format(dtf) + ": ";
