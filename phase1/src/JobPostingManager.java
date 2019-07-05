@@ -111,7 +111,7 @@ class JobPostingManager {
                 return jobPosting;
             }
         }
-        throw new NullPointerException();
+        return null;
 
     }
 
