@@ -3,6 +3,7 @@ package GUIClasses;
 import Main.JobApplicationSystem;
 import Managers.UserManager;
 import UsersAndJobObjects.Company;
+import UsersAndJobObjects.JobApplication;
 import UsersAndJobObjects.User;
 
 import java.time.LocalDate;
@@ -14,10 +15,6 @@ public class UserInterface {
     /**
      * The general user interface
      */
-
-    // === Class variables ===
-    // The Managers.UserManager for this Main.Main.JobApplicationSystem
-    private static UserManager userManager = JobApplicationSystem.getUserManager();
 
     // === Instance variables ===
     // The user who logged in
@@ -195,7 +192,8 @@ public class UserInterface {
             case 1:
                 System.out.println();
                 System.out.println("Sign-up successful!");
-                return userManager.createApplicant(username, password, legalName, email, LocalDate.now(), true);
+                return JobApplicationSystem.getUserManager().createApplicant
+                        (username, password, legalName, email, LocalDate.now(), true);
             case 2:
                 return this.createNewInterviewer(sc, username, password, legalName, email);
             case 3:
@@ -220,7 +218,7 @@ public class UserInterface {
             company = JobApplicationSystem.createCompany(companyName);
         }
         System.out.println("Sign-up successful!");
-        return userManager.createHRCoordinator(username, password, legalName, email, company,
+        return JobApplicationSystem.getUserManager().createHRCoordinator(username, password, legalName, email, company,
                 LocalDate.now(), true);
     }
 
@@ -256,7 +254,7 @@ public class UserInterface {
         String username = this.getInputToken(sc, "Enter your username: ");
         sc.nextLine();
         String password = this.getInputLine(sc, "Enter your password: ");
-        if (UserInterface.userManager.findUserByUsername(username) == null) {
+        if (JobApplicationSystem.getUserManager().findUserByUsername(username) == null) {
             return signUp(sc, username, password);
         }
         else {
@@ -265,7 +263,7 @@ public class UserInterface {
                 password = this.getInputLine(sc, "Enter your password: ");
             }
             System.out.println("Login successful!");
-            return UserInterface.userManager.findUserByUsername(username);
+            return JobApplicationSystem.getUserManager().findUserByUsername(username);
         }
     }
 }
