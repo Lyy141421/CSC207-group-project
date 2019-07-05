@@ -1,9 +1,17 @@
+package GUIClasses;
+
+import Miscellaneous.ExitException;
+import Miscellaneous.InterviewTime;
+import UsersAndJobObjects.Interview;
+import UsersAndJobObjects.Interviewer;
+import UsersAndJobObjects.JobApplication;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-class InterviewerInterface extends UserInterface {
+public class InterviewerInterface extends UserInterface {
     /**
      * The general interviewer interface.
      */
@@ -14,17 +22,12 @@ class InterviewerInterface extends UserInterface {
 
     // === Constructor ===
 
-    /**
-     * Create the interface for this interviewer.
-     *
-     * @param interviewer The interviewer who is logged in.
-     */
-    InterviewerInterface(Interviewer interviewer) {
+    public InterviewerInterface(Interviewer interviewer) {
         this.interviewer = interviewer;
     }
 
     /**
-     * Run the Interviewer interface.
+     * Run the UsersAndJobObjects.Interviewer interface.
      */
     void run(LocalDate today) {
         Scanner sc = new Scanner(System.in);
@@ -108,7 +111,7 @@ class InterviewerInterface extends UserInterface {
     private void scheduleOneInterview(Scanner sc, LocalDate today, Interview interview) {
         System.out.println("Schedule the time and date below.");
         LocalDate interviewDate = this.getDate(sc, today, "Date (yyyy-mm-dd): ");
-        System.out.println("Time slots: " + InterviewTime.timeSlotsString());
+        System.out.println("Time slots: " + new InterviewTime().getTimeSlotsString());
         int timeSlot = this.getInteger(sc,
                 "Enter the value that corresponds to the preferred time slot: ");
         InterviewTime interviewTime = new InterviewTime(interviewDate, timeSlot);
@@ -155,7 +158,7 @@ class InterviewerInterface extends UserInterface {
         /*
         1. Display a list of applications that this interviewer has access to (they can only see the applications of those
         they have yet to interview. (Display only name of applicant and job posting?)
-        2. Interviewer selects job application that they want to see in more detail.
+        2. UsersAndJobObjects.Interviewer selects job application that they want to see in more detail.
          */
         ArrayList<JobApplication> jobApps = this.interviewer.getListOfIntervieweeJobApplications();
         System.out.println();
@@ -241,9 +244,9 @@ class InterviewerInterface extends UserInterface {
         } else {
             System.out.println("Interview:");
             System.out.println(interview.toStringPrelimInfo() + "\n");
-            System.out.println("Applicant cover letter:");
+            System.out.println("UsersAndJobObjects.Applicant cover letter:");
             System.out.println(interview.getJobApplication().getCoverLetter() + "\n");
-            System.out.println("Applicant CV:");
+            System.out.println("UsersAndJobObjects.Applicant CV:");
             System.out.println(interview.getJobApplication().getCV() + "\n");
             String notes = this.getInputLine(sc, "Write interview notes below. Press enter when finished.\n");
             interview.setInterviewNotes(notes);

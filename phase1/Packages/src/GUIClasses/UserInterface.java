@@ -1,20 +1,21 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+package GUIClasses;
+
+import Managers.UserManager;
+import UsersAndJobObjects.Company;
+import UsersAndJobObjects.User;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Scanner;
 
-class UserInterface {
+public class UserInterface {
     /**
      * The general user interface
      */
 
     // === Class variables ===
-    // The UserManager for this JobApplicationSystem
+    // The Managers.UserManager for this JobApplicationSystem
     private static UserManager userManager = JobApplicationSystem.getUserManager();
 
     // === Instance variables ===
@@ -34,7 +35,7 @@ class UserInterface {
     UserInterface() {
     }
 
-    UserInterface(User user) {
+    public UserInterface(User user) {
         this.user = user;
     }
 
@@ -169,7 +170,7 @@ class UserInterface {
         System.out.println();
         System.out.println("Select your user type:");
         System.out.println("1 - Job applicant");
-        System.out.println("2 - Interviewer");
+        System.out.println("2 - UsersAndJobObjects.Interviewer");
         System.out.println("3 - HR coordinator");
         return 3;
     }
