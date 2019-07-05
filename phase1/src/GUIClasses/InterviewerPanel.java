@@ -8,37 +8,49 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 
 
-public class InterviewerPanel extends JPanel implements ActionListener {
+public class InterviewerPanel extends JPanel implements ActionListener, ItemListener {
 
     InterviewerPanel () {
         this.setLayout(new CardLayout());
         this.add(home(), "HOME");
         this.add(viewInterviews(), "VIEW");
-        this.add(reviewInterviews(), "REVIEW");
         this.add(scheduleInterviews(), "SCHEDULE");
     }
 
     private JPanel home () {
         JPanel homePanel = new JPanel();
 
-        JButton view = new JButton("View scheduled interviews");
-        JButton review = new JButton("Update interview result");
+        JButton view = new JButton("View interviews");
+        view.addActionListener(this);
         JButton schedule = new JButton("Schedule interview");
+        schedule.addActionListener(this);
 
         homePanel.add(view);
-        homePanel.add(review);
         homePanel.add(schedule);
 
         return homePanel;
     }
 
     private JPanel viewInterviews () {
-        JPanel viewPanel = new JPanel();
+        JPanel viewPanel = new JPanel(new BorderLayout());
+        JPanel select = new JPanel();
+        select.setLayout(new BoxLayout(select, BoxLayout.Y_AXIS));
 
         JComboBox<String> interviews = new JComboBox<>();
+
+        JCheckBox incomplete = new JCheckBox("Incomplete", true);
+        incomplete.addItemListener(this);
+        JCheckBox complete = new JCheckBox("Complete", true);
+        complete.addItemListener(this);
         JList<String> viewable = new JList<>(new String[]{"abc", "xa"});
+        select.add(incomplete);
+        select.add(complete);
+        select.add(new JScrollPane(viewable));
+
         JTextArea info = new JTextArea("Information");
         info.setEditable(false);
         // Phase 2?
@@ -46,7 +58,7 @@ public class InterviewerPanel extends JPanel implements ActionListener {
         JButton home = new JButton("Home");
         home.addActionListener(this);
 
-        JSplitPane display = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, new JScrollPane(viewable), new JScrollPane(info));
+        JSplitPane display = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, select, new JScrollPane(info));
         display.setDividerLocation(250);
 
         viewable.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
@@ -57,14 +69,6 @@ public class InterviewerPanel extends JPanel implements ActionListener {
         viewPanel.add(home, BorderLayout.SOUTH);
 
         return viewPanel;
-    }
-
-    private JPanel reviewInterviews () {
-        JPanel reviewPanel = new JPanel();
-
-
-
-        return reviewPanel;
     }
 
     private JPanel scheduleInterviews () {
@@ -80,19 +84,64 @@ public class InterviewerPanel extends JPanel implements ActionListener {
         JDatePanelImpl datePanel = new JDatePanelImpl(dateModel);
         JDatePickerImpl closeDateInput = new JDatePickerImpl(datePanel);
         JButton schedule = new JButton("Confirm");
+        JButton home = new JButton("Home");
+        home.addActionListener(this);
 
-        setTime.add(timeSlot);
         setTime.add(closeDateInput);
+        setTime.add(timeSlot);
         setTime.add(schedule);
 
-        schedulePanel.add(interviews);
-        schedulePanel.add(setTime);
+        schedulePanel.add(interviews, BorderLayout.WEST);
+        schedulePanel.add(setTime, BorderLayout.CENTER);
+        schedulePanel.add(home, BorderLayout.SOUTH);
 
         return schedulePanel;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        CardLayout c = (CardLayout) this.getLayout();
+        JButton source = (JButton) e.getSource();
+
+        switch (source.getText()) {
+            case "Home":
+                c.show(this, "HOME");
+                break;
+            case "View interviews":
+                c.show(this, "VIEW");
+                break;
+            case "Schedule interview":
+                c.show(this, "SCHEDULE");
+                break;
+            case "Confirm":
+
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + source.getText());
+        }
 
     }
+
+    @Override
+    public void itemStateChanged(ItemEvent e) {
+        JCheckBox source = (JCheckBox) e.getItemSelectable();
+
+        switch (source.getText()) {
+            case "Incomplete":
+                if (e.getStateChange() == ItemEvent.SELECTED) {
+                    // Show scheduled interviews
+                }else {
+                    // Hide scheduled interviews
+                }
+                break;
+            case "Complete":
+                if (e.getStateChange() == ItemEvent.SELECTED) {
+                    // Show conducted interviews
+                }else {
+                    // Hide conducted interviews
+                }
+                break;
+        }
+    }
 }
+

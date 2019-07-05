@@ -24,6 +24,10 @@ public class HRCoordinator extends User {
     // === Public methods ===
     // === Constructors ===
 
+    public HRCoordinator(String id) {
+        this.setUsername(id);
+    }
+
     public HRCoordinator(String username, String password, String legalName, String email, Company company,
                   LocalDate dateCreated) {
         super(username, password, legalName, email, dateCreated);
@@ -63,13 +67,6 @@ public class HRCoordinator extends User {
 
     // ============================================================================================================== //
     // === Package-private methods ===
-    // === Constructors ===
-
-    HRCoordinator(String id){
-        this.setUsername(id);
-    }
-
-    // === Other methods ===
 
     /**
      * Get the task that the HR Coordinator must accomplish for this job posting.

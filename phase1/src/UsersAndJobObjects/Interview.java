@@ -1,12 +1,14 @@
 package UsersAndJobObjects;
 
+import FileLoadingAndStoring.Storable;
+import FileLoadingAndStoring.Subable;
 import Managers.InterviewManager;
 import Miscellaneous.InterviewTime;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class Interview {
+public class Interview implements Storable {
     /**
      * An interview.
      */
@@ -55,8 +57,8 @@ public class Interview {
     }
 
     // === Getters ===
-    public int getId() {
-        return this.ID;
+    public String getId() {
+        return Integer.toString(this.ID);
     }
 
     public JobApplication getJobApplication() {
