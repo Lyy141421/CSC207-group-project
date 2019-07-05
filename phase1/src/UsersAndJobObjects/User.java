@@ -1,9 +1,11 @@
 package UsersAndJobObjects;
 
+import FileLoadingAndStoring.Storable;
+import FileLoadingAndStoring.Subable;
 import GUIClasses.UserInterface;
 import java.time.LocalDate;
 
-public abstract class User {
+public abstract class User implements Storable {
     /**
      * An account in the job application system.
      */
@@ -25,6 +27,10 @@ public abstract class User {
 
     // === Public methods ===
     // === Getters ===
+
+    public String getId() {
+        return getUsername();
+    }
 
     public String getUsername() {
         return this.username;

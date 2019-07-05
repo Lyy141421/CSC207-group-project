@@ -1,5 +1,6 @@
 package UsersAndJobObjects;
 
+import FileLoadingAndStoring.InterviewLoader;
 import GUIClasses.InterviewerInterface;
 import Miscellaneous.InterviewTime;
 import Miscellaneous.InterviewTimeComparator;
@@ -80,7 +81,7 @@ public class Interviewer extends User {
      */
     public JobApplication findJobAppById(int id) {
         for (Interview interview : this.interviews) {
-            if (interview.getJobApplication().getID() == id) {
+            if (Integer.parseInt(interview.getJobApplication().getId()) == id) {
                 return interview.getJobApplication();
             }
         }
