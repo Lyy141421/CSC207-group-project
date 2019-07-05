@@ -58,25 +58,6 @@ public class Applicant extends User {
     }
 
     // === Other methods ===
-
-    /**
-     * Apply for a job.
-     *
-     * @param jobPosting The job posting that this applicant wants to apply for.
-     * @param CV        The applicant's CV.
-     * @param coverLetter   The applicant's cover letter.
-     * @return true iff this application is successfully submitted (ie before closing date and has not already applied)
-     */
-    public boolean applyForJob(JobPosting jobPosting, String CV, String coverLetter) {
-        if (LocalDate.now().isBefore(jobPosting.getCloseDate()) && !this.hasAppliedTo(jobPosting)) {
-            this.jobApplicationManager.addJobApplication(this, jobPosting, CV, coverLetter,
-                    LocalDate.now());
-            this.addFile(CV);
-            this.addFile(coverLetter);
-        }
-        return false;
-    }
-
     /**
      * Remove this applicant's application for this job.
      *
@@ -90,6 +71,23 @@ public class Applicant extends User {
             return true;
         }
         return false;
+    }
+
+    /**
+     * Add a file to one's account.
+     *
+     * @param file The file contents to be added.
+     */
+    public void addFile(String file) {
+        this.filesSubmitted.add(file);
+    }
+
+    /**
+     * Remove a file from one's account.
+     * @param file The file to be removed.
+     */
+    public void removeFile(String file) {
+        this.filesSubmitted.remove(file);
     }
 
     /**
@@ -145,27 +143,6 @@ public class Applicant extends User {
             ArrayList<String> files = this.jobApplicationManager.getFilesSubmittedForApplication(lastClosedJobApp);
             this.filesSubmitted.removeAll(files);
         }
-    }
-
-    // ============================================================================================================== //
-    // === Private methods ===
-    // === Other methods ===
-
-    /**
-     * Add a file to one's account.
-     *
-     * @param file The file contents to be added.
-     */
-    private void addFile(String file) {
-        this.filesSubmitted.add(file);
-    }
-
-    /**
-     * Remove a file from one's account.
-     * @param file The file to be removed.
-     */
-    private void removeFile(String file) {
-        this.filesSubmitted.remove(file);
     }
 
 }

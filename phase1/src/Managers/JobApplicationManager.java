@@ -43,16 +43,10 @@ public class JobApplicationManager {
     /**
      * Add a job application to this applicant's application list.
      *
-     * @param applicant       The applicant applying for a job.
-     * @param jobPosting      The job posting to be applied to.
-     * @param CV              The filename of the applicant's CV.
-     * @param coverLetter     The filename of the applicant's cover letter.
-     * @param applicationDate The date this application is submitted.
+     * @param application      The application being added.
      */
-    public void addJobApplication(Applicant applicant, JobPosting jobPosting, String CV, String coverLetter,
-                           LocalDate applicationDate) {
-        JobApplication app = new JobApplication(applicant, jobPosting, CV, coverLetter, applicationDate);
-        this.jobApplications.add(app);
+    public void addJobApplication(JobApplication application) {
+        this.jobApplications.add(application);
         this.jobApplications.sort(new CloseDateComparator());
     }
 

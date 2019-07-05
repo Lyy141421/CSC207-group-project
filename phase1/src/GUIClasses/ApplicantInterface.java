@@ -4,7 +4,6 @@ import Main.JobApplicationSystem;
 import Miscellaneous.ExitException;
 import UsersAndJobObjects.*;
 
-import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -46,7 +45,7 @@ public class ApplicantInterface extends UserInterface {
             case 2:
                 this.viewDocuments(); // View uploaded documents
             case 3:
-                this.applyForJob(sc, today); // Apply for a job
+                this.submitApplication(sc, today); // Apply for a job
             case 4:
                 this.viewApplications(sc, false); // View applications
             case 5:
@@ -208,8 +207,10 @@ public class ApplicantInterface extends UserInterface {
     JobApplication createJobApplicationThroughTextEntry(Scanner sc, LocalDate today, JobPosting posting) {
         System.out.println("Enter the contents of your CV as plain text (type DONE and hit space when done): ");
         String CV = sc.next("DONE");
+        applicant.addFile(CV);
         System.out.println("Enter the contents of your cover letter as plain text (type DONE and hit space when done): ");
         String coverLetter = sc.next("DONE");
+        applicant.addFile(coverLetter);
         return new JobApplication(applicant, posting, CV, coverLetter, today);
     }
 
@@ -221,7 +222,7 @@ public class ApplicantInterface extends UserInterface {
         return 2;
     }
 
-    void applyForJob(Scanner sc, LocalDate today) {
+    void submitApplication(Scanner sc, LocalDate today) {
         String companyName = getInputLine(sc, "Enter the name of the company you wish to apply to: ");
         Company company = JobApplicationSystem.getCompany(companyName);
         while (company == null) {
@@ -231,8 +232,8 @@ public class ApplicantInterface extends UserInterface {
         }
         int postingId = getInteger(sc, "Enter the id of the posting you wish to apply for: ");
         JobPosting posting = company.getJobPostingManager().getJobPosting(postingId);
-        while (posting == null) {
-            System.out.println("No posting was found matching id " + postingId + ".");
+        while (posting == null || posting.getCloseDate().isEqual(today) || posting.getCloseDate().isAfter(today)) {
+            System.out.println("No open posting was found matching id " + postingId + ".");
             postingId = getInteger(sc, "Enter the id of the posting you wish to apply for: ");
             posting = company.getJobPostingManager().getJobPosting(postingId);
         }
@@ -242,9 +243,12 @@ public class ApplicantInterface extends UserInterface {
             case 1:
                 JobApplication application = this.createJobApplicationThroughFiles(sc, today, posting);
                 posting.addJobApplication(application);
+                applicant.getJobApplicationManager().addJobApplication(application);
+
             case 2:
                 application = this.createJobApplicationThroughTextEntry(sc, today, posting);
                 posting.addJobApplication(application);
+                applicant.getJobApplicationManager().addJobApplication(application);
         }
     }
 
