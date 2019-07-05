@@ -1,5 +1,6 @@
 import GUIClasses.MainFrame;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -14,6 +15,8 @@ public class JobApplicationSystem {
     private static ArrayList<Company> companies = new ArrayList<>();
     // The user manager for the system
     private static UserManager userManager = new UserManager();
+    // The date this program interprets as today (Defaults to today)
+    static LocalDate today = LocalDate.now();
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
@@ -41,6 +44,15 @@ public class JobApplicationSystem {
     }
 
     // === Setters ===
+
+    /**
+     * Sets the date the program perceives as today
+     *
+     * @param new_date - The date you wish to change to
+     */
+    static void setDate(LocalDate new_date){
+        today = new_date;
+    }
 
     /**
      * Set the companies using this system.
@@ -93,7 +105,6 @@ public class JobApplicationSystem {
         TimerTask daily_tasks = new TimerTask() {
             public void run() {
                 applicant30Day();
-                // todo CleanUpfunction() here for example
             }
         };
         Timer timer = new Timer();
@@ -102,8 +113,7 @@ public class JobApplicationSystem {
 
     private static void applicant30Day(){
         for(Object app : userManager.getAllApplicants()){
-          //((Applicant)app).removeFilesFromAccount();
-            // todo add date);
+          ((Applicant)app).removeFilesFromAccount(today);
         }
     }
 
