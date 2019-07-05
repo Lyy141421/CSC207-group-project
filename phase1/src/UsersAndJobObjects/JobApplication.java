@@ -77,6 +77,11 @@ public class JobApplication {
 
     // === Getters ===
 
+
+    public static HashMap<Integer, String> getStatuses() {
+        return statuses;
+    }
+
     public int getId() {
         return this.ID;
     }

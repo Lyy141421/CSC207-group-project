@@ -114,6 +114,36 @@ public class JobApplicationManager {
         return Math.max(0, DAYS.between(today, this.getLastClosedJobApp().getJobPosting().getCloseDate()));
     }
 
+    /**
+     * Get the previous job applications for this applicant.
+     *
+     * @return a list of previous job applications submitted where the posting is now filled.
+     */
+    public ArrayList<JobApplication> getPreviousJobApplications() {
+        ArrayList<JobApplication> previousJobApps = new ArrayList<>();
+        for (JobApplication jobApplication : this.getJobApplications()) {
+            if (jobApplication.getStatus() == -3) {
+                previousJobApps.add(jobApplication);
+            }
+        }
+        return previousJobApps;
+    }
+
+    /**
+     * Get the current job applications for this applicant.
+     *
+     * @return a list of current job applications submitted (posting is not yet filled).
+     */
+    public ArrayList<JobApplication> getCurrentJobApplications() {
+        ArrayList<JobApplication> currentJobApps = new ArrayList<>();
+        for (JobApplication jobApplication : this.getJobApplications()) {
+            if (!this.getPreviousJobApplications().contains(jobApplication)) {
+                currentJobApps.add(jobApplication);
+            }
+        }
+        return currentJobApps;
+    }
+
     // ============================================================================================================== //
     // === Package-private methods ===
 
@@ -134,35 +164,5 @@ public class JobApplicationManager {
             }
         }
         return null;
-    }
-
-    /**
-     * Get the previous job applications for this applicant.
-     *
-     * @return a list of previous job applications submitted where the posting is now filled.
-     */
-    ArrayList<JobApplication> getPreviousJobApplications() {
-        ArrayList<JobApplication> previousJobApps = new ArrayList<>();
-        for (JobApplication jobApplication : this.getJobApplications()) {
-            if (jobApplication.getStatus() == -3) {
-                previousJobApps.add(jobApplication);
-            }
-        }
-        return previousJobApps;
-    }
-
-    /**
-     * Get the current job applications for this applicant.
-     *
-     * @return a list of current job applications submitted (posting is not yet filled).
-     */
-    ArrayList<JobApplication> getCurrentJobApplications() {
-        ArrayList<JobApplication> currentJobApps = new ArrayList<>();
-        for (JobApplication jobApplication : this.getJobApplications()) {
-            if (!this.getPreviousJobApplications().contains(jobApplication)) {
-                currentJobApps.add(jobApplication);
-            }
-        }
-        return currentJobApps;
     }
 }
