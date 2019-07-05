@@ -8,7 +8,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class JobApplication {
+public class JobApplication implements Storable{
     /**
      * A submitted job application.
      */
@@ -82,8 +82,8 @@ public class JobApplication {
         return statuses;
     }
 
-    public int getId() {
-        return this.ID;
+    public String getId() {
+        return Integer.toString(this.ID);
     }
 
     public Applicant getApplicant() {
