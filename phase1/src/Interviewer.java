@@ -251,7 +251,7 @@ class Interviewer extends User {
         ArrayList<ArrayList> interview_list = new ArrayList<>();
         for(Interview x : this.interviews){
             interview_list.add(new ArrayList<Object>() {{
-                add(Interviewer.FILENAME);
+                add(Interview.FILENAME);
                 add(x.getIdString());
             }});
         }
