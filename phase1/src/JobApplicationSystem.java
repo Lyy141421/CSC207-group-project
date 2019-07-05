@@ -102,7 +102,8 @@ public class JobApplicationSystem {
 
     private static void applicant30Day(){
         for(Object app : userManager.getAllApplicants()){
-            ((Applicant)app).removeFilesFromAccount(//todo add date);
+          //((Applicant)app).removeFilesFromAccount();
+            // todo add date);
         }
     }
 
