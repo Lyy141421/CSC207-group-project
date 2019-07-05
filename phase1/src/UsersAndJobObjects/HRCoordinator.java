@@ -63,13 +63,6 @@ public class HRCoordinator extends User {
 
     // ============================================================================================================== //
     // === Package-private methods ===
-    // === Constructors ===
-
-    HRCoordinator(String id){
-        this.setUsername(id);
-    }
-
-    // === Other methods ===
 
     /**
      * Get the task that the HR Coordinator must accomplish for this job posting.
