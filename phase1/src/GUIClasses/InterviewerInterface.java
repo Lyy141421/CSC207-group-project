@@ -234,31 +234,28 @@ public class InterviewerInterface extends UserInterface {
      * Interface for conducting an interview.
      */
     private void conductInterview(Scanner sc) {
-        Interview interview = this.interviewer.getInterviewsBeforeOnAndAfterDate(LocalDate.now()).get(1).get(0);
-        System.out.println();
-        if (interview == null) {
+        if (this.interviewer.getInterviews().isEmpty()) {
             System.out.println("You do not have any interviews scheduled.");
-        } else {
+        }
+        else {
+            Interview interview = this.interviewer.getInterviewsBeforeOnAndAfterDate(LocalDate.now()).get(1).get(0);
+            System.out.println();
             System.out.println("Interview:");
             System.out.println(interview.toStringPrelimInfo() + "\n");
             System.out.println("Applicant cover letter:");
             System.out.println(interview.getJobApplication().getCoverLetter() + "\n");
             System.out.println("Applicant CV:");
             System.out.println(interview.getJobApplication().getCV() + "\n");
-            String notes = this.getInputLine(sc, "Write interview notes below. Press enter when finished.\n");
+            String notes = this.getInputLinesUntilDone
+                    (sc, "Write interview notes below. Press enter when finished.\n");
             interview.setInterviewNotes(notes);
             System.out.println("Would you like to pass this applicant?");
             String input = this.getInputToken(sc, "Enter 'N' for no or any other key for yes");
-            switch (input) {
-                case "Y":
-                    this.interviewer.passInterview(interview);
-                    break;
-                case "N":
-                    this.interviewer.failInterview(interview);
-                    break;
-            }
+            if (input.equalsIgnoreCase("N"))
+                this.interviewer.failInterview(interview);
+            else
+                this.interviewer.passInterview(interview);
             this.interviewer.removeInterview(interview);
         }
     }
-
 }
