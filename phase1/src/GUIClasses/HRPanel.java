@@ -18,22 +18,27 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.text.NumberFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 // 3 rounds
 public class HRPanel extends JPanel implements ActionListener {
 
+    private HRCoordinatorInterface HRInterface;
     private ArrayList<JobPosting> prePhoneJP;
     private ArrayList<JobPosting> scheduleJP;
     private ArrayList<JobPosting> hiringJP;
     private ArrayList<JobPosting> allJP;
 
     // Create interface for HR
-    HRPanel (ArrayList<ArrayList<JobPosting>> HRInfoList) {
+    HRPanel (HRCoordinatorInterface HRInterface, LocalDate today) {
+        this.HRInterface = HRInterface;
+        ArrayList<ArrayList<JobPosting>> HRInfoList = HRInterface.getHighPriorityAndAllJobPostings(today);
         this.prePhoneJP = HRInfoList.get(0);
         this.scheduleJP = HRInfoList.get(1);
         this.hiringJP = HRInfoList.get(2);
         this.allJP = HRInfoList.get(3);
+
         this.setLayout(new CardLayout());
         this.add(home(), "HOME");
         this.add(browsePosting(null), "POSTING");
@@ -321,6 +326,12 @@ public class HRPanel extends JPanel implements ActionListener {
 
         JButton submit = new JButton("Submit");
         JButton home = new JButton("Home");
+        submit.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
         home.addActionListener(this);
         buttons.add(submit);
         buttons.add(home);
@@ -329,6 +340,9 @@ public class HRPanel extends JPanel implements ActionListener {
 
         return addPostingPanel;
     }
+
+
+
 
     @Override
     public void actionPerformed(ActionEvent e) {
