@@ -231,7 +231,7 @@ public class JobApplication implements Storable{
         s += "\n\nCV: \n" + this.getCV() + "\n\n";
         s += "Cover letter: \n" + this.getCoverLetter() + "\n\n";
         s += "Status: " + JobApplication.statuses.get(this.getStatus()) + "\n";
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-mm-dd");
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         s += "Application date: " + this.getApplicationDate().format(dtf);
         return s;
     }

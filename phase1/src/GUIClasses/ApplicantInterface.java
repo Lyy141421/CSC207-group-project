@@ -279,18 +279,21 @@ public class ApplicantInterface extends UserInterface {
             case 1:
                 if (applicant.getFilesSubmitted().isEmpty()) {
                     System.out.println("You have not yet uploaded any files.");
+                    this.submitApplication(sc, today);
                     return;
                 }
                 else {
                     JobApplication application = this.createJobApplicationThroughFiles(sc, today, posting);
                     posting.addJobApplication(application);
                     applicant.registerJobApplication(application);
+                    System.out.println("Application successfully submitted.");
                     return;
                 }
             case 2:
                 JobApplication application = this.createJobApplicationThroughTextEntry(sc, today, posting);
                 posting.addJobApplication(application);
                 applicant.registerJobApplication(application);
+                System.out.println("Application successfully submitted.");
         }
     }
 
@@ -313,9 +316,9 @@ public class ApplicantInterface extends UserInterface {
                 if (withdrawal) {
                     System.out.print(applicationNumber + ". ");
                 }
-                System.out.println(application.getJobPosting().getTitle());
-                System.out.println(application.getJobPosting().getCompany().getName());
-                System.out.println(JobApplication.getStatuses().get(application.getStatus()));
+                System.out.println("Title: " + application.getJobPosting().getTitle());
+                System.out.println("Company: " + application.getJobPosting().getCompany().getName());
+                System.out.println("Status: " + JobApplication.getStatuses().get(application.getStatus()));
                 System.out.println();
             }
             if (withdrawal) {
