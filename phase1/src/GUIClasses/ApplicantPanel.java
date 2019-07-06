@@ -7,7 +7,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 
-public class ApplicantPanel {
+class ApplicantPanel extends JPanel{
     ApplicantPanel() {
         JPanel applicantPanel = new JPanel(new CardLayout());
 
@@ -16,6 +16,10 @@ public class ApplicantPanel {
         JPanel viewJobs = this.buildViewJobs(new JobPosting[0]);
 
         JPanel viewApps = new JPanel(new GridLayout(1, 3)); //TODO: Implement construction
+
+        applicantPanel.add(applicantStart, "applicantStart");
+        applicantPanel.add(viewJobs, "viewJobs");
+        applicantPanel.add(viewApps, "viewApps");
     }
 
     /**
