@@ -1,11 +1,9 @@
 package UsersAndJobObjects;
 
 import FileLoadingAndStoring.FileSystem;
-import GUIClasses.HRCoordinatorInterface;
 import Managers.InterviewManager;
 
 import java.time.LocalDate;
-import java.util.HashMap;
 
 public class HRCoordinator extends User {
     /**
