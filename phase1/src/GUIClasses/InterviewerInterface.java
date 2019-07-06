@@ -42,7 +42,7 @@ public class InterviewerInterface extends UserInterface {
         }
     }
 
-    private int displayMainMenu() {
+    private int displayMainMenuOptions() {
         System.out.println();
         System.out.println("Please select an option below:");
         System.out.println("1 - View schedule");
@@ -56,7 +56,7 @@ public class InterviewerInterface extends UserInterface {
     }
 
     private void runMainMenu(Scanner sc) throws ExitException {
-        int numOptions = this.displayMainMenu();
+        int numOptions = this.displayMainMenuOptions();
         int option = this.getMenuOption(sc, numOptions);
         switch (option) {
             case 1: // View schedule
