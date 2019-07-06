@@ -126,11 +126,11 @@ public class Interview implements Storable {
      * @return a string representation of the preliminary input for this interview.
      */
     public String toStringPrelimInfo() {
-        String s = "UsersAndJobObjects.Interview ID: " + this.getId() + "\n";
+        String s = "Interview ID: " + this.getId() + "\n";
         s += "Job Posting: " + this.getJobPosting().getTitle();
         s += "Interviewee: " + this.getApplicant().getLegalName() + " (" + this.getApplicant().getUsername() + ")" +
                 "\n";
-        s += "UsersAndJobObjects.Interview type: " + Interview.roundNumberDescriptions.get(this.getRoundNumber()) + "\n";
+        s += "Interview type: " + Interview.roundNumberDescriptions.get(this.getRoundNumber()) + "\n";
         return s;
     }
 
@@ -140,9 +140,9 @@ public class Interview implements Storable {
      */
     @Override
     public String toString() {
-        String s = "UsersAndJobObjects.Interview time: " + this.time.toString() + "\n";
+        String s = "Interview time: " + this.time.toString() + "\n";
         s += this.toStringPrelimInfo();
-        s += "UsersAndJobObjects.Interview notes: \n" + this.getInterviewNotes();
+        s += "Interview notes: \n" + this.getInterviewNotes();
         s += "Passed: " + this.isPassed();
         return s;
     }
