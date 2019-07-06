@@ -26,8 +26,8 @@ public class MainFrame extends JFrame {
         // We need to be careful with when these cards get constructed, in case it's missing arguments to run methods
         add(new LoginPanel(), "LOGIN");
         add(new NewUserPanel(), "NEWUSER");
-        add(new HRPanel(), "HR");
-        add(new InterviewerPanel(), "INTERVIEWER");
-        add(new ApplicantPanel(), "APPLICANT");
+//        add(new HRPanel(), "HR");
+//        add(new InterviewerPanel(), "INTERVIEWER");
+//        add(new ApplicantPanel(), "APPLICANT");
     }
 }
