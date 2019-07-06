@@ -32,13 +32,14 @@ public class JobApplicationSystem {
     // === Public methods ===
 
     public static void main(String[] args) {
+        mainStart();
+        cyclicalTask();
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
                 new MainFrame();
             }
         });
-        cyclicalTask();
     }
 
     // === Getters ===
@@ -82,6 +83,13 @@ public class JobApplicationSystem {
         LoaderManager jobposting = new LoaderManager(new JobPostingLoader(), JobPosting.class, JobPosting.FILENAME);
         LoaderManager jobapplication = new LoaderManager(new JobApplicationLoader(), JobApplication.class, JobApplication.FILENAME);
         LoaderManager.startLoad();
+        //todo Assign = applicant.getArray()
+        //todo Assign = hrcoordinator.getArray()
+        //todo Assign = interviewer.getArray()
+        //todo Assign = company.getArray()
+        //todo Assign = interview.getArray()
+        //todo Assign = jobposting.getArray()
+        //todo Assign = jobapplication.getArray()
     }
 
     /**
