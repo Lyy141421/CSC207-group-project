@@ -92,10 +92,15 @@ public class JobApplicationManager {
     /**
      * Find the application with the last closing date of all submitted applications by this applicant.
      *
-     * @return the application with the last close date.
+     * @return the application with the last close date, or null if no applications exist.
      */
     public JobApplication getLastClosedJobApp() {
-        return this.jobApplications.get(this.jobApplications.size() - 1);
+        if (this.jobApplications.isEmpty()) {
+            return null;
+        }
+        else {
+            return this.jobApplications.get(this.jobApplications.size() - 1);
+        }
     }
 
     /**

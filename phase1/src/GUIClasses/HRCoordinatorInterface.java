@@ -443,6 +443,11 @@ public class HRCoordinatorInterface extends UserInterface {
      * @param applicant The applicant in question.
      */
     private void viewPreviousJobAppsToCompany(Applicant applicant) {
+        if (applicant == null) {
+            System.out.println();
+            System.out.println("No applications to view.");
+            return;
+        }
         ArrayList<JobApplication> jobApps = this.HRC.getCompany().getAllApplicationsToCompany(applicant);
         if (jobApps.isEmpty()) {
             System.out.println();
