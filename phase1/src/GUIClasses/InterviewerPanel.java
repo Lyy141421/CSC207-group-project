@@ -47,6 +47,7 @@ public class InterviewerPanel extends JPanel implements ActionListener, ItemList
         JCheckBox complete = new JCheckBox("Complete", true);
         complete.addItemListener(this);
         JList<String> viewable = new JList<>(new String[]{"abc", "xa"});
+
         select.add(incomplete);
         select.add(complete);
         select.add(new JScrollPane(viewable));
