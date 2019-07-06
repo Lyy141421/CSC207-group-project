@@ -38,7 +38,7 @@ public class JobPostingStorer extends GenericStorer<JobPosting> {
 
     private void storeCompany(JobPosting jobPosting, HashMap<String, Object> data) {
         Company c = jobPosting.getCompany();
-        data.put("UsersAndJobObjects.Company", new ArrayList(){{add(Company.FILENAME); add(c.getName());}});
+        data.put("Company", new ArrayList(){{add(Company.FILENAME); add(c.getName());}});
         StorerManager.subStore(c);
     }
 
