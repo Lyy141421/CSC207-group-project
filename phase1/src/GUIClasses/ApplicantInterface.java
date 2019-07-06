@@ -30,6 +30,7 @@ public class ApplicantInterface extends UserInterface {
      */
     void run(LocalDate today) {
         Scanner sc = new Scanner(System.in);
+        System.out.println("Welcome, " + applicant.getLegalName() + ".");
         this.displayUpcomingInterviews(today);
         while (true) {
             try {
@@ -86,8 +87,8 @@ public class ApplicantInterface extends UserInterface {
         else {
             System.out.println("Here are your upcoming interviews:");
             for (Interview interview : upcomingInterviews) {
-                System.out.println(interview.getJobApplication().getJobPosting().getTitle());
-                System.out.println(interview.getJobApplication().getJobPosting().getCompany().getName());
+                System.out.println("Title: " + interview.getJobApplication().getJobPosting().getTitle());
+                System.out.println("Company: " + interview.getJobApplication().getJobPosting().getCompany().getName());
                 System.out.println(interview.getRoundNumberDescription(interview.getRoundNumber()));
                 System.out.println(interview.getTime());
                 System.out.println();
@@ -181,15 +182,15 @@ public class ApplicantInterface extends UserInterface {
             if (filterField.equalsIgnoreCase(posting.getField())
                     && filterCompanyName.equalsIgnoreCase(posting.getCompany().getName())) {
                 noPostingsFound = false;
-                System.out.println(posting.getTitle());
-                System.out.println(posting.getId());
-                System.out.println(posting.getField());
-                System.out.println(posting.getDescription());
-                System.out.println(posting.getRequirements());
-                System.out.println(posting.getNumPositions());
-                System.out.println(posting.getCompany().getName());
-                System.out.println(posting.getPostDate());
-                System.out.println(posting.getCloseDate());
+                System.out.println("Job ID: " + posting.getId());
+                System.out.println("Title: " + posting.getTitle());
+                System.out.println("Field: " + posting.getField());
+                System.out.println("Description: " + posting.getDescription());
+                System.out.println("Requirements: " + posting.getRequirements());
+                System.out.println("Number of positions: " + posting.getNumPositions());
+                System.out.println("Company: " + posting.getCompany().getName());
+                System.out.println("Post date: " + posting.getPostDate());
+                System.out.println("Close date: " + posting.getCloseDate());
                 System.out.println();
             }
         }
@@ -292,27 +293,31 @@ public class ApplicantInterface extends UserInterface {
     private void displayApplications(Scanner sc, boolean withdrawal) {
         System.out.println();
         ArrayList<JobApplication> applications = applicant.getJobApplicationManager().getJobApplications();
-        int applicationNumber = 0;
-        for (JobApplication application : applications) {
-            applicationNumber++;
-            if (withdrawal) {
-                System.out.print(applicationNumber + ". ");
-            }
-            System.out.println(application.getJobPosting().getTitle());
-            System.out.println(application.getJobPosting().getCompany().getName());
-            System.out.println(JobApplication.getStatuses().get(application.getStatus()));
-            System.out.println();
+        if (applications.isEmpty()) {
+            System.out.println("You have not yet submitted any applications.");
         }
-        if (withdrawal) {
-            int applicationOption = getMenuOption(sc, applicationNumber);
-            JobApplication applicationToWithdraw = applications.get(applicationOption-1);
-            boolean appWithdrawn = applicant.withdrawJobApplication(applicationToWithdraw.getJobPosting());
-            if (appWithdrawn) {
-                System.out.println("Application successfully withdrawn.");
+        else {
+            int applicationNumber = 0;
+            for (JobApplication application : applications) {
+                applicationNumber++;
+                if (withdrawal) {
+                    System.out.print(applicationNumber + ". ");
+                }
+                System.out.println(application.getJobPosting().getTitle());
+                System.out.println(application.getJobPosting().getCompany().getName());
+                System.out.println(JobApplication.getStatuses().get(application.getStatus()));
+                System.out.println();
             }
-            else {
-                System.out.println("As the job posting corresponding to this application has already been filled, " +
-                        "it is no longer possible to withdraw the application.");
+            if (withdrawal) {
+                int applicationOption = getMenuOption(sc, applicationNumber);
+                JobApplication applicationToWithdraw = applications.get(applicationOption-1);
+                boolean appWithdrawn = applicant.withdrawJobApplication(applicationToWithdraw.getJobPosting());
+                if (appWithdrawn)
+                    System.out.println("Application successfully withdrawn.");
+                else {
+                    System.out.println("As the job posting corresponding to this application has already been filled, " +
+                            "it is no longer possible to withdraw the application.");
+                }
             }
         }
     }
@@ -327,21 +332,32 @@ public class ApplicantInterface extends UserInterface {
         System.out.println("Account created: " + applicant.getDateCreated());
         System.out.println("Previous job applications:");
         for (JobApplication application : applicant.getJobApplicationManager().getPreviousJobApplications()) {
-            System.out.println(application.getJobPosting().getTitle());
-            System.out.println(application.getJobPosting().getCompany().getName());
-            System.out.println(JobApplication.getStatuses().get(application.getStatus()));
+            JobPosting posting = application.getJobPosting();
+            System.out.println("Title: " + posting.getTitle());
+            System.out.println("Field: " + posting.getField());
+            System.out.println("Description: " + posting.getDescription());
+            System.out.println("Company: " + posting.getCompany().getName());
+            System.out.println("Close date: " + posting.getCloseDate());
+            System.out.println("Status: " + JobApplication.getStatuses().get(application.getStatus()));
             System.out.println();
         }
         System.out.println("Current job applications:");
         for (JobApplication application : applicant.getJobApplicationManager().getCurrentJobApplications()) {
-            System.out.println(application.getJobPosting().getTitle());
-            System.out.println(application.getJobPosting().getCompany().getName());
-            System.out.println(JobApplication.getStatuses().get(application.getStatus()));
+            JobPosting posting = application.getJobPosting();
+            System.out.println("Title: " + posting.getTitle());
+            System.out.println("Field: " + posting.getField());
+            System.out.println("Description: " + posting.getDescription());
+            System.out.println("Company: " + posting.getCompany().getName());
+            System.out.println("Close date: " + posting.getCloseDate());
+            System.out.println("Status: " + JobApplication.getStatuses().get(application.getStatus()));
             System.out.println();
         }
-        System.out.println("It has been " +
-                applicant.getJobApplicationManager().getNumDaysSinceMostRecentCloseDate(today) + " days since your most " +
-                "recent application closed.");
+        if (applicant.getJobApplicationManager().getJobApplications().isEmpty())
+            System.out.println("You have not yet submitted any job applications.");
+        else
+            System.out.println("It has been " +
+                    applicant.getJobApplicationManager().getNumDaysSinceMostRecentCloseDate(today) +
+                    " days since your most recent application closed.");
     }
 
     /**

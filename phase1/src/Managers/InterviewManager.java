@@ -1,11 +1,8 @@
 package Managers;
 
-import Miscellaneous.InterviewTimeComparator;
-import UsersAndJobObjects.Interview;
 import UsersAndJobObjects.JobApplication;
 import UsersAndJobObjects.JobPosting;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class InterviewManager {
@@ -75,15 +72,13 @@ public class InterviewManager {
 
     // === Other methods ===
 
-    /**
-     * Reports whether the current round of interviews is over.
-     *
-     * @param today Today's date.
-     * @return true iff the current round of interviews is over.
-     */
-    public boolean isCurrentRoundOver(LocalDate today) {
-        Interview lastInterview = this.getLastInterviewOfCurrentRound();
-        return today.isAfter(lastInterview.getTime().getDate());
+    public boolean isCurrentRoundOver() {
+        for (JobApplication jobApp : this.getApplicationsInConsideration()) {
+            if (!jobApp.getLastInterview().isComplete()) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
@@ -106,15 +101,14 @@ public class InterviewManager {
     /**
      * Get the task required by the HR Coordinator for this job posting at this moment in time.
      *
-     * @param today Today's date.
      * @return the integer representing the task the HR Coordinator must accomplish.
      */
-    public int getHrTask(LocalDate today) {
+    public int getHrTask() {
         if (this.isNumApplicantUnderThreshold()) {
             return InterviewManager.HIRE_APPLICANTS;
-        } else if (this.isInterviewProcessOver(today)) {
+        } else if (this.isInterviewProcessOver()) {
             return InterviewManager.CHOOSE_APPLICANTS_FOR_HIRE;
-        } else if (this.isCurrentRoundOver(today)) {
+        } else if (this.isCurrentRoundOver()) {
             return InterviewManager.SCHEDULE_INTERVIEWS;
         } else {
             return InterviewManager.DO_NOTHING;
@@ -137,56 +131,27 @@ public class InterviewManager {
         return this.jobPosting;
     }
 
+    // ============================================================================================================== //
+    // === Private methods ===
+    // === Other methods ===
+
     /**
      * Check if number of applications in consideration is no more than number of positions available in the job
      * posting.
      * @return true iff number of applications in consideration is less than or equal to number of position in this
      * job posting.
      */
-    boolean isNumApplicantUnderThreshold () {
+    private boolean isNumApplicantUnderThreshold () {
         return this.applicationsInConsideration.size() <= this.jobPosting.getNumPositions();
-    }
-
-    // ============================================================================================================== //
-    // === Private methods ===
-    // === Other methods ===
-
-    /**
-     * Get the interviews of given round for job applications still in consideration.
-     *
-     * @return the current round of interviews.
-     */
-    private ArrayList<Interview> getInterviewsByRound(int round) {
-        ArrayList<Interview> interviews = new ArrayList<>();
-        for (JobApplication application : this.applicationsInConsideration) {
-            for (Interview interview : application.getInterviews()) {
-                if (interview.getRoundNumber() == round) {
-                    interviews.add(interview);
-                }
-            }
-        }
-        return interviews;
-    }
-
-    /**
-     * Get the last interview of this current round.
-     *
-     * @return the last interview of this current round.
-     */
-    private Interview getLastInterviewOfCurrentRound() {
-        ArrayList<Interview> interviews = this.getInterviewsByRound(this.currentRound);
-        interviews.sort(new InterviewTimeComparator());
-        return interviews.get(interviews.size() - 1);
     }
 
     /**
      * Check if interview process has finished the last interview round.
      *
-     * @param today Today's date
      * @return true iff the maximum number of interview rounds has been completed.
      */
-    private boolean isInterviewProcessOver(LocalDate today) {
-        return this.isCurrentRoundOver(today) && this.currentRound == InterviewManager.MAX_NUM_INTERVIEW_ROUNDS;
+    private boolean isInterviewProcessOver() {
+        return this.isCurrentRoundOver() && this.currentRound == InterviewManager.MAX_NUM_INTERVIEW_ROUNDS;
     }
 
 }

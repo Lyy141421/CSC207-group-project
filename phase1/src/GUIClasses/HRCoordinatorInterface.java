@@ -24,6 +24,27 @@ public class HRCoordinatorInterface extends UserInterface {
         super(user);
     }
 
+    // === Methods that GUI will call ===
+
+    /**
+     * Gets a list of lists of job postings that include high priority and all postings for the company.
+     * @param today Today's date.
+     * @return  the list of lists of job postings required.
+     */
+    ArrayList<ArrayList<JobPosting>> getHighPriorityAndAllJobPostings(LocalDate today) {
+        JobPostingManager JPM = this.HRC.getCompany().getJobPostingManager();
+        ArrayList<ArrayList<JobPosting>> jobPostingsList = new ArrayList<>();
+        jobPostingsList.add(JPM.getClosedJobPostingsNoInterview(today));
+        jobPostingsList.add(JPM.getJobPostingsWithRoundCompletedNotForHire(today));
+        jobPostingsList.add(JPM.getJobPostingsForHiring(today));
+        jobPostingsList.add(JPM.getJobPostings());
+        return jobPostingsList;
+    }
+
+
+
+    // ============================================================================================================== //
+    // === Methods for standard input === (BACK-UP)!!!
     /**
      * Run the main HR Coordinator interface.
      *
@@ -40,6 +61,7 @@ public class HRCoordinatorInterface extends UserInterface {
             }
         }
     }
+
 
     /**
      * Interface for displaying main menu options.
@@ -295,11 +317,10 @@ public class HRCoordinatorInterface extends UserInterface {
     /**
      * Get the task that the HR Coordinator or interviewer must accomplish at this moment for this job posting.
      * @param sc The scanner for user input.
-     * @param today Today's date.
      */
-    void getTaskForJobPosting(Scanner sc, LocalDate today) {
+    void getTaskForJobPosting(Scanner sc) {
         JobPosting jobPosting = this.getJobPosting(sc);
-        jobPosting.getInterviewManager().getHrTask(today);
+        jobPosting.getInterviewManager().getHrTask();
     }
 
     /**
