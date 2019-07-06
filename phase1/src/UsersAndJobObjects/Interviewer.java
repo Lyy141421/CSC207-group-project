@@ -33,6 +33,8 @@ public class Interviewer extends User {
     // === Public methods ===
     // === Constructors ===
 
+    public Interviewer(){}
+
     public Interviewer(String id){
         this.setUsername(id);
     }
@@ -42,7 +44,6 @@ public class Interviewer extends User {
         super(username, password, legalName, email, dateCreated);
         this.company = company;
         this.field = field;
-        super.setUserInterface(new InterviewerInterface(this));
     }
 
     // === Getters ===

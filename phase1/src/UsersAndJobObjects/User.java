@@ -21,9 +21,6 @@ public abstract class User implements Storable {
     private String email;
     // The date the account was created
     private LocalDate dateCreated;
-    // The interface for this user
-    private UserInterface userInterface = new UserInterface(this);
-
 
     // === Public methods ===
     // === Getters ===
@@ -78,10 +75,6 @@ public abstract class User implements Storable {
         this.dateCreated = dateCreated;
     }
 
-    public void setUserInterface(UserInterface userInterface) {
-        this.userInterface = userInterface;
-    }
-
     // === Other methods ===
 
     /**
@@ -117,9 +110,7 @@ public abstract class User implements Storable {
     // === Package-private methods ===
     // === Constructors ===
 
-    User() {
-
-    }
+    User() {}
 
     User(String username, String password, String legalName, String email, LocalDate dateCreated) {
         this.username = username;

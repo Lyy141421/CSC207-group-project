@@ -1,9 +1,7 @@
 package GUIClasses;
 
 import Main.JobApplicationSystem;
-import Managers.UserManager;
 import UsersAndJobObjects.Company;
-import UsersAndJobObjects.JobApplication;
 import UsersAndJobObjects.User;
 
 import java.time.LocalDate;
@@ -24,13 +22,14 @@ public class UserInterface {
         UserInterface UI = new UserInterface();
         while (true) {
             User user = UI.login();
-            user.getUserInterface().run(LocalDate.now());
+            UserInterface userInterface = new InterfaceFactory().create(user);
+            userInterface.run(LocalDate.now());
             System.out.println();
         }
     }
 
     // === Constructors ===
-    UserInterface() {
+    private UserInterface() {
     }
 
     public UserInterface(User user) {
@@ -38,7 +37,7 @@ public class UserInterface {
     }
 
 
-    // === Inherited method ===
+    // === Inherited methods ===
     void run(LocalDate today) {
     }
 
@@ -168,7 +167,7 @@ public class UserInterface {
         System.out.println();
         System.out.println("Select your user type:");
         System.out.println("1 - Job applicant");
-        System.out.println("2 - UsersAndJobObjects.Interviewer");
+        System.out.println("2 - Interviewer");
         System.out.println("3 - HR coordinator");
         return 3;
     }

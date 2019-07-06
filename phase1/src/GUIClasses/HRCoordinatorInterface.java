@@ -4,10 +4,7 @@ import Main.JobApplicationSystem;
 import Managers.InterviewManager;
 import Managers.JobPostingManager;
 import Miscellaneous.ExitException;
-import UsersAndJobObjects.Applicant;
-import UsersAndJobObjects.HRCoordinator;
-import UsersAndJobObjects.JobApplication;
-import UsersAndJobObjects.JobPosting;
+import UsersAndJobObjects.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -18,20 +15,13 @@ public class HRCoordinatorInterface extends UserInterface {
      * The general HR Coordinator interface
      */
 
-
     // === Instance variables ===
     // The HR Coordinator who is logged in
-    private HRCoordinator HRC;
+    private HRCoordinator HRC = (HRCoordinator) this.user;
 
     // === Constructor ===
-
-    /**
-     * Create the interface for this HR Coordinator.
-     *
-     * @param HRC The HR Coordinator who is logged in.
-     */
-    public HRCoordinatorInterface(HRCoordinator HRC) {
-        this.HRC = HRC;
+    HRCoordinatorInterface(User user) {
+        super(user);
     }
 
     /**
@@ -223,7 +213,10 @@ public class HRCoordinatorInterface extends UserInterface {
         String requirements = this.getInputLine(sc, "Job requirements: ");
         int numPositions = this.getInteger(sc, "Number of positions: ");
         LocalDate closeDate = this.getDate(sc, today,"Close date (yyyy-mm-dd): ");
+        sc.nextLine();
         this.HRC.addJobPosting(title, field, description, requirements, numPositions, today, closeDate);
+        System.out.println();
+        System.out.println("You have successfully added " + title + " to the system.");
     }
 
     /**

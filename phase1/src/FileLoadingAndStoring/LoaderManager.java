@@ -36,7 +36,7 @@ public class LoaderManager {
             obj_map.get(filename).put(id, obj);
         }
         else{
-            obj_map.put(filename, new HashMap<>(){{put(id, obj);}});
+            obj_map.put(filename, new HashMap<String, Object>(){{put(id, obj);}});
         }
     }
 

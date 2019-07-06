@@ -24,6 +24,8 @@ public class HRCoordinator extends User {
     // === Public methods ===
     // === Constructors ===
 
+    public HRCoordinator(){}
+
     public HRCoordinator(String id) {
         this.setUsername(id);
     }
@@ -32,7 +34,6 @@ public class HRCoordinator extends User {
                   LocalDate dateCreated) {
         super(username, password, legalName, email, dateCreated);
         this.company = company;
-        this.setUserInterface(new HRCoordinatorInterface(this));
     }
 
     // === Getters ===
