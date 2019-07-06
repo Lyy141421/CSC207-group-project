@@ -161,18 +161,19 @@ public class ApplicantInterface extends UserInterface {
             case 1:
                 String field = getInputLine(sc, "Enter your field: ");
                 this.displayOpenJobPostingsNotYetAppliedTo(today, field, null);
-                return;
+                break;
             case 2:
                 String companyName = getInputLine(sc, "Enter your company name: ");
                 this.displayOpenJobPostingsNotYetAppliedTo(today, null, companyName);
-                return;
+                break;
             case 3:
                 field = getInputLine(sc, "Enter your field: ");
                 companyName = getInputLine(sc, "Enter your company name: ");
                 this.displayOpenJobPostingsNotYetAppliedTo(today, field, companyName);
-                return;
+                break;
             case 4:
                 this.displayOpenJobPostingsNotYetAppliedTo(today, null, null);
+                break;
         }
     }
 
@@ -280,13 +281,13 @@ public class ApplicantInterface extends UserInterface {
                 JobApplication application = this.createJobApplicationThroughFiles(sc, today, posting);
                 posting.addJobApplication(application);
                 applicant.registerJobApplication(application);
-                return;
+                break;
 
             case 2:
                 application = this.createJobApplicationThroughTextEntry(sc, today, posting);
                 posting.addJobApplication(application);
                 applicant.registerJobApplication(application);
-                return;
+                break;
         }
     }
 
