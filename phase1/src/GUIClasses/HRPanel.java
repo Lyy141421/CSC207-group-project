@@ -1,6 +1,7 @@
 package GUIClasses;
 
 
+import UsersAndJobObjects.JobApplication;
 import UsersAndJobObjects.JobPosting;
 import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
 import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
@@ -12,6 +13,8 @@ import javax.swing.text.NumberFormatter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 
@@ -32,7 +35,7 @@ public class HRPanel extends JPanel implements ActionListener {
         this.setLayout(new CardLayout());
         this.add(home(), "HOME");
         this.add(browsePosting(null), "POSTING");
-        this.add(viewApplication(), "APPLICATION");
+        this.add(viewApplication(null), "APPLICATION");
         this.add(searchApplicant(), "APPLICANT");
         this.add(addPosting(), "ADDPOSTING");
     }
@@ -95,23 +98,34 @@ public class HRPanel extends JPanel implements ActionListener {
 
         // could change
         JComboBox<String> jobPostings = new JComboBox<>(this.getTitles(JPToShow));
+        JTextArea info = new JTextArea("Job posting status here. Changes according to JobPosting selected in JComboBox");
+        info.setEditable(false);
+        info.setBorder(new EtchedBorder(EtchedBorder.LOWERED));
 
-        JTextArea status = new JTextArea("Job posting status here. Changes according to JobPosting selected in JList.");
-        status.setEditable(false);
-        status.setBorder(new EtchedBorder(EtchedBorder.LOWERED));
+        jobPostings.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if (e.getStateChange() == ItemEvent.SELECTED) {
+                    int selectedIndex = jobPostings.getSelectedIndex();
+                    JobPosting selectedJP = JPToShow.get(selectedIndex);
+                    info.setText(getStatus(selectedJP) + selectedJP.toString());
+                }
+            }
+        });
+
         JButton viewApplications = new JButton("View applications");
         viewApplications.addActionListener(this);
         JButton home = new JButton("Home");
         home.addActionListener(this);
 
         jobPostings.setAlignmentX(Component.CENTER_ALIGNMENT);
-        status.setAlignmentX(Component.CENTER_ALIGNMENT);
+        info.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         buttons.add(viewApplications);
         buttons.add(home);
 
         postingPanel.add(jobPostings, BorderLayout.NORTH);
-        postingPanel.add(status, BorderLayout.CENTER);
+        postingPanel.add(info, BorderLayout.CENTER);
         postingPanel.add(buttons, BorderLayout.SOUTH);
 
         return postingPanel;
@@ -125,7 +139,25 @@ public class HRPanel extends JPanel implements ActionListener {
         return (String[]) titles.toArray();
     }
 
-    private JPanel viewApplication () {
+    private String getStatus (JobPosting selectedJP) {
+        String status;
+        if (prePhoneJP.contains(selectedJP)) {
+            status = "Important: Select applicants for phone interview.\n\n";
+        } else if (scheduleJP.contains(selectedJP)) {
+            status = "Important: Schedule interviews for the next round.\n\n";
+        } else if (hiringJP.contains(selectedJP)) {
+            status = "Important: Make hiring decisions for final candidates.\n\n";
+        } else {
+            status = "Low priority.\n\n";
+        }
+
+        return status;
+    }
+
+
+    // ====Application panel methods====
+
+    private JPanel viewApplication (ArrayList<JobApplication> appsToShow) {
         JPanel applicationPanel = new JPanel(new BorderLayout());
         JPanel buttons = new JPanel(new FlowLayout());
 
@@ -226,6 +258,7 @@ public class HRPanel extends JPanel implements ActionListener {
         addPostingPanel.add(requirementsInput, c);
         JFormattedTextField numPositionsInput = new JFormattedTextField(formatter);
         numPositionsInput.setValue(1);
+        // Not changable in Phase1. Will remove this in Phase2.
         numPositionsInput.setEditable(false);
         numPositionsInput.setColumns(30);
         c.gridy++;
