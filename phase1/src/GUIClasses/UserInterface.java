@@ -2,6 +2,7 @@ package GUIClasses;
 
 import Main.JobApplicationSystem;
 import UsersAndJobObjects.Company;
+import UsersAndJobObjects.Interviewer;
 import UsersAndJobObjects.User;
 
 import java.time.LocalDate;
@@ -271,8 +272,10 @@ public class UserInterface {
         Company company = JobApplicationSystem.getCompany(companyName);
         String field = this.getOnlyLetters(sc, "Enter your field: ");
         System.out.println("Sign-up successful!");
-        return JobApplicationSystem.getUserManager().createInterviewer(username, password, legalName, email, company,
-                field, LocalDate.now(), true);
+        Interviewer interviewer = JobApplicationSystem.getUserManager().createInterviewer(username, password,
+                legalName, email, company, field, LocalDate.now(), true);
+        company.addInterviewer(interviewer);
+        return interviewer;
     }
 
     /**
@@ -294,6 +297,7 @@ public class UserInterface {
                 password = this.getInputLine(sc, "Enter your password: ");
             }
             System.out.println("Login successful!");
+            System.out.println();
             return JobApplicationSystem.getUserManager().findUserByUsername(username);
         }
     }

@@ -1,6 +1,7 @@
 package UsersAndJobObjects;
 
 import FileLoadingAndStoring.Storable;
+
 import java.time.LocalDate;
 
 public abstract class User implements Storable {

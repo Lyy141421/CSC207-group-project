@@ -27,24 +27,45 @@ public class StorerManager {
 
     // === Static Methods ===
 
+    /**
+     * Saves all Storer classes in the storer maps
+     */
     public static void endSave(){
         for(Object x : storer_map.keySet()){
             storer_map.get(x).store();
         }
     }
 
+    /**
+     * Adds and object to stored
+     *
+     * @param obj the object to be added
+     */
     private static void addStored(Object obj){
         stored.add(obj);
     }
 
+    /**
+     * Checks if the object has been stored
+     *
+     * @param obj - the object being checked against
+     * @return boolean on weather or not it has been stored
+     */
     private static boolean isStored(Object obj){
         return stored.contains(obj);
     }
 
+    /**
+     * Clears the stored map
+     */
     public static void flushStored(){
         stored = new ArrayList<>();
     }
 
+    /**
+     * Substores any items which have been called in the containing object being stored
+     * @param obj the object to be substored
+     */
     public static void subStore(Object obj){
         if(!isStored(obj)){
             addStored(obj);
@@ -55,6 +76,9 @@ public class StorerManager {
 
     // === Instance Methods ===
 
+    /**
+     * Stores all Objects in obj_list
+     */
     void store(){
         for(Object x : obj_list){
             storer.storeOne(x);

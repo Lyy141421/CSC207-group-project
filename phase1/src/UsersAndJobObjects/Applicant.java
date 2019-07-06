@@ -61,6 +61,10 @@ public class Applicant extends User {
 
     // === Other methods ===
 
+    /**
+     * Register this job application for this applicant.
+     * @param application   The job application registered.
+     */
     public void registerJobApplication(JobApplication application) {
         if (!filesSubmitted.contains(application.getCV())) {
             this.addFile(application.getCV());
@@ -119,16 +123,6 @@ public class Applicant extends User {
     }
 
     /**
-     * Report whether the date that the last job posting this applicant applied to was 30 days ago from today.
-     *
-     * @param today Today's date.
-     * @return true iff today's date is 30 days after the closing date for the last job this applicant applied to.
-     */
-    public boolean isInactive(LocalDate today) {
-        return this.jobApplicationManager.getNumDaysSinceMostRecentCloseDate(today) >= 30;
-    }
-
-    /**
      * Remove the files submitted for an application to a job posting that has been closed for 30 days.
      *
      * @param today Today's date.
@@ -154,10 +148,12 @@ public class Applicant extends User {
     }
 
     /**
-     * Remove a file from one's account.
-     * @param file The file to be removed.
+     * Report whether the date that the last job posting this applicant applied to was 30 days ago from today.
+     *
+     * @param today Today's date.
+     * @return true iff today's date is 30 days after the closing date for the last job this applicant applied to.
      */
-    private void removeFile(String file) {
-        this.filesSubmitted.remove(file);
+    private boolean isInactive(LocalDate today) {
+        return this.jobApplicationManager.getNumDaysSinceMostRecentCloseDate(today) >= 30;
     }
 }

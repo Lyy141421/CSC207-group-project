@@ -70,6 +70,10 @@ public class ApplicantInterface extends UserInterface {
                 return;
             case 6:
                 this.displayAccountHistory(today); // View account history
+                return;
+            case 7:
+                throw new ExitException(); // Exit
+
         }
 
     }
@@ -110,7 +114,8 @@ public class ApplicantInterface extends UserInterface {
         System.out.println("4 - View applications");
         System.out.println("5 - Withdraw an application");
         System.out.println("6 - View account history");
-        return 6;
+        System.out.println("7 - Exit");
+        return 7;
     }
 
 
@@ -262,8 +267,9 @@ public class ApplicantInterface extends UserInterface {
         }
         int postingId = getInteger(sc, "Enter the id of the posting you wish to apply for: ");
         JobPosting posting = company.getJobPostingManager().getJobPosting(postingId);
-        while (posting == null || posting.getCloseDate().isEqual(today) || posting.getCloseDate().isAfter(today)) {
+        while (posting == null || posting.getCloseDate().isEqual(today) || posting.getCloseDate().isBefore(today)) {
             System.out.println("No open posting was found matching id " + postingId + ".");
+            System.out.println();
             postingId = getInteger(sc, "Enter the id of the posting you wish to apply for: ");
             posting = company.getJobPostingManager().getJobPosting(postingId);
         }
@@ -271,16 +277,20 @@ public class ApplicantInterface extends UserInterface {
         int option = this.getMenuOption(sc, numOptions);
         switch (option) {
             case 1:
-                JobApplication application = this.createJobApplicationThroughFiles(sc, today, posting);
-                posting.addJobApplication(application);
-                applicant.registerJobApplication(application);
-                return;
-
+                if (applicant.getFilesSubmitted().isEmpty()) {
+                    System.out.println("You have not yet uploaded any files.");
+                    return;
+                }
+                else {
+                    JobApplication application = this.createJobApplicationThroughFiles(sc, today, posting);
+                    posting.addJobApplication(application);
+                    applicant.registerJobApplication(application);
+                    return;
+                }
             case 2:
-                application = this.createJobApplicationThroughTextEntry(sc, today, posting);
+                JobApplication application = this.createJobApplicationThroughTextEntry(sc, today, posting);
                 posting.addJobApplication(application);
                 applicant.registerJobApplication(application);
-                return;
         }
     }
 
