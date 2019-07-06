@@ -209,8 +209,18 @@ public class Interviewer extends User {
      *
      * @param interview The interview that has been conducted.
      */
+    public void passInterview(Interview interview) {
+        interview.setPass(true);
+        interview.getInterviewManager().reject(interview.getJobApplication());
+    }
+
+    /**
+     * Record that this interview has been failed.
+     *
+     * @param interview The interview that has been conducted.
+     */
     public void failInterview(Interview interview) {
-        interview.setFail();
+        interview.setPass(false);
         interview.getInterviewManager().reject(interview.getJobApplication());
     }
 

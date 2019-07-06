@@ -115,13 +115,6 @@ public class Interview implements Storable {
     // === Other methods ===
 
     /**
-     * Record that this applicant has failed this interview.
-     */
-    public void setFail() {
-        this.pass = false;
-    }
-
-    /**
      * Get a string representation of the preliminary input for this interview.
      *
      * @return a string representation of the preliminary input for this interview.
