@@ -127,42 +127,31 @@ public class Interviewer extends User {
     }
 
     /**
-     * Get the next interview to be conducted by this interviewer.
-     *
-     * @return the next interview to be conducted by this interviewer or null if interviews is empty.
-     */
-    public Interview getNextInterview() {
-        if (this.interviews.isEmpty()) {
-            return null;
-        }
-        return this.interviews.get(0);
-    }
-
-    /**
      * Get a list of interviews scheduled for this date.
      *
      * @param date The date in question.
      * @return a list of interviews scheduled for this date.
      */
-    public List<Interview> getInterviewsByDate(LocalDate date) {
-        if(this.interviews.isEmpty()) {
-            return new ArrayList<>();
+    public ArrayList<ArrayList<Interview>> getInterviewsBeforeOnAndAfterDate(LocalDate date) {
+        ArrayList<ArrayList<Interview>> interviews = new ArrayList<>();
+        ArrayList<Interview> interviewsBefore = new ArrayList<>();
+        ArrayList<Interview> interviewsToday = new ArrayList<>();
+        ArrayList<Interview> interviewsAfter = new ArrayList<>();
+        for (Interview interview : this.interviews) {
+            if (interview.isBeforeDate(date)) {
+                interviewsBefore.add(interview);
+            }
+            else if (interview.isOnDate(date)) {
+                interviewsToday.add(interview);
+            }
+            else {
+                interviewsAfter.add(interview);
+            }
         }
-        int start = 0;
-        Interview interview = this.interviews.get(start);
-        while (interview.getTime().getDate().isBefore(date)) {
-            start++;
-            interview = this.interviews.get(start);
-        }
-        if (start == this.interviews.size()) {      // All interviews are before this date
-            return new ArrayList<>();               // Empty list
-        }
-        int end = start;
-        while (interview.getTime().getDate().isEqual(date)) {
-            end++;
-            interview = this.interviews.get(end);
-        }
-        return this.interviews.subList(start, end);
+        interviews.add(interviewsBefore);
+        interviews.add(interviewsToday);
+        interviews.add(interviewsAfter);
+        return interviews;
     }
 
     /**

@@ -5,6 +5,7 @@ import FileLoadingAndStoring.Subable;
 import Managers.InterviewManager;
 import Miscellaneous.InterviewTime;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -38,7 +39,7 @@ public class Interview implements Storable {
     // UsersAndJobObjects.Interview notes
     private String interviewNotes = "";
     // The result of the interview (if the applicant passed)
-    private boolean pass = true;
+    private Boolean pass = null;
     // UsersAndJobObjects.Interview round
     private int roundNumber;
     // Managers.InterviewManager of the job posting this interview is held for
@@ -210,8 +211,38 @@ public class Interview implements Storable {
         return this.interviewNotes;
     }
 
-    public Boolean isPassed() {
+    /**
+     * Check whether the interview has passed
+     * @return  whether the applicant has passed this interview.
+     */
+    public boolean isPassed() {
         return this.pass;
+    }
+
+    /**
+     * Check whether interview is completed.
+     * @return  true iff the interview is completed.
+     */
+    public boolean isComplete() {
+        return this.pass != null;
+    }
+
+    /**
+     * Check whether this interview is scheduled before this date.
+     * @param date  The date in question.
+     * @return  true iff this interview is scheduled before this date.
+     */
+    boolean isBeforeDate(LocalDate date) {
+        return this.getTime().getDate().isBefore(date);
+    }
+
+    /**
+     * Check whether this interview is scheduled on this date.
+     * @param date  The date in question.
+     * @return  true iff this interview is scheduled on this date.
+     */
+    boolean isOnDate(LocalDate date) {
+        return this.getTime().getDate().isEqual(date);
     }
 
 }

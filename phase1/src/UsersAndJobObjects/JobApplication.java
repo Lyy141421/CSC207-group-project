@@ -57,6 +57,9 @@ public class JobApplication implements Storable{
     // The interviews conducted for this application
     private ArrayList<Interview> interviews = new ArrayList<>();
 
+    // === Representation invariants ===
+    // - interviews are ordered in terms of round number
+
     // === Public methods ===
     // === Constructors ===
 
@@ -76,7 +79,6 @@ public class JobApplication implements Storable{
     }
 
     // === Getters ===
-
 
     public static HashMap<Integer, String> getStatuses() {
         return statuses;
@@ -167,6 +169,14 @@ public class JobApplication implements Storable{
         this.addInterview(interview);
         interviewer.addInterview(interview);
         this.advanceStatus();
+    }
+
+    /**
+     * Gets the last interview conducted/scheduled for this job application
+     * @return  the last interview conducted/scheduled for this job application.
+     */
+    public Interview getLastInterview() {
+        return this.interviews.get(this.interviews.size() - 1);
     }
 
     /**

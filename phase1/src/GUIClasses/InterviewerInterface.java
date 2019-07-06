@@ -26,6 +26,19 @@ public class InterviewerInterface extends UserInterface {
         super(user);
     }
 
+    // === Methods for GUI to call ===
+
+    /**
+     * Get a list of list of interviews for this interviewer by date.
+     * @param today Today's date.
+     * @return  a list of lists of interviews for this interviewer by date.
+     */
+    ArrayList<ArrayList<Interview>> getInterviewsBeforeOnAndAfterToday(LocalDate today) {
+        return this.getInterviewsBeforeOnAndAfterToday(today);
+    }
+
+    // ============================================================================================================== //
+
     /**
      * Run the UsersAndJobObjects.Interviewer interface.
      */
@@ -88,11 +101,6 @@ public class InterviewerInterface extends UserInterface {
      * @param today Today's date
      */
     private void scheduleInterviews(Scanner sc, LocalDate today) {
-        /*
-        1. Display unscheduled interviews upon logging in
-        2. For each interview, give prompt to set a date and time for it
-                - Only display the timeslots that are available ??
-         */
         ArrayList<Interview> unscheduledInterviews = this.interviewer.getUnscheduledInterviews();
         int i = 1;
         for (Interview interview : unscheduledInterviews) {
@@ -141,7 +149,7 @@ public class InterviewerInterface extends UserInterface {
      * @param today Today's date
      */
     private void viewInterviewsForToday(LocalDate today) {
-        List<Interview> interviews = this.interviewer.getInterviewsByDate(today);
+        List<Interview> interviews = this.interviewer.getInterviewsBeforeOnAndAfterDate(today).get(1);
         if (!interviews.isEmpty()) {
             System.out.println("Interviews for today: ");
             for (Interview interview : interviews) {
@@ -155,11 +163,6 @@ public class InterviewerInterface extends UserInterface {
      * Interface for viewing all the applications of applicants this interviewer is going to interview.
      */
     private void viewAllJobApplications() {
-        /*
-        1. Display a list of applications that this interviewer has access to (they can only see the applications of those
-        they have yet to interview. (Display only name of applicant and job posting?)
-        2. UsersAndJobObjects.Interviewer selects job application that they want to see in more detail.
-         */
         ArrayList<JobApplication> jobApps = this.interviewer.getListOfIntervieweeJobApplications();
         System.out.println();
         if (jobApps.isEmpty()) {
@@ -231,22 +234,16 @@ public class InterviewerInterface extends UserInterface {
      * Interface for conducting an interview.
      */
     private void conductInterview(Scanner sc) {
-        /*
-        1. Display tab to click on for the next interview to be conducted by this interviewer.
-        2. Display interface with job application info, a box for typing in interview notes and a button for pass/fail
-        3. The interviewer should be able to look at any part of the job application (CV, cover letter, etc),
-         write notes and select pass/fail
-         */
-        Interview interview = this.interviewer.getNextInterview();
+        Interview interview = this.getInterviewsBeforeOnAndAfterToday(LocalDate.now()).get(1).get(0);
         System.out.println();
         if (interview == null) {
             System.out.println("You do not have any interviews scheduled.");
         } else {
             System.out.println("Interview:");
             System.out.println(interview.toStringPrelimInfo() + "\n");
-            System.out.println("UsersAndJobObjects.Applicant cover letter:");
+            System.out.println("Applicant cover letter:");
             System.out.println(interview.getJobApplication().getCoverLetter() + "\n");
-            System.out.println("UsersAndJobObjects.Applicant CV:");
+            System.out.println("Applicant CV:");
             System.out.println(interview.getJobApplication().getCV() + "\n");
             String notes = this.getInputLine(sc, "Write interview notes below. Press enter when finished.\n");
             interview.setInterviewNotes(notes);
