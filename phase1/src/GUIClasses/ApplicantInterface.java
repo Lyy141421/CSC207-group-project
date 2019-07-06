@@ -55,21 +55,25 @@ public class ApplicantInterface extends UserInterface {
         switch (option) {
             case 1:
                 this.setJobPostingSearchFilters(sc, today); // Browse open job postings not applied to
-                return;
+                break;
             case 2:
                 this.displayDocuments(); // View uploaded documents
-                return;
+                break;
             case 3:
                 this.submitApplication(sc, today); // Apply for a job
-                return;
+                break;
             case 4:
                 this.displayApplications(sc, false); // View applications
-                return;
+                break;
             case 5:
                 this.displayApplications(sc, true); // Withdraw an application
-                return;
+                break;
             case 6:
                 this.displayAccountHistory(today); // View account history
+                break;
+            case 7:
+                throw new ExitException(); // Exit
+
         }
 
     }
@@ -110,7 +114,8 @@ public class ApplicantInterface extends UserInterface {
         System.out.println("4 - View applications");
         System.out.println("5 - Withdraw an application");
         System.out.println("6 - View account history");
-        return 6;
+        System.out.println("7 - Exit");
+        return 7;
     }
 
 

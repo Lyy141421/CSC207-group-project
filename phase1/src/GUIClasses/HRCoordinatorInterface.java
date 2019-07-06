@@ -434,6 +434,7 @@ public class HRCoordinatorInterface extends UserInterface {
                 return applicant;
             }
         }
+        System.out.println();
         System.out.println("This applicant has not applied to this company.");
         return null;
     }
@@ -444,8 +445,6 @@ public class HRCoordinatorInterface extends UserInterface {
      */
     private void viewPreviousJobAppsToCompany(Applicant applicant) {
         if (applicant == null) {
-            System.out.println();
-            System.out.println("No applications to view.");
             return;
         }
         ArrayList<JobApplication> jobApps = this.HRC.getCompany().getAllApplicationsToCompany(applicant);
