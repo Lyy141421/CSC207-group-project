@@ -248,8 +248,14 @@ public class InterviewerInterface extends UserInterface {
             String notes = this.getInputLine(sc, "Write interview notes below. Press enter when finished.\n");
             interview.setInterviewNotes(notes);
             System.out.println("Would you like to pass this applicant?");
-            if (this.getInputToken(sc, "Enter 'N' for no or any other key for yes").equals("N")) {
-                interviewer.failInterview(interview);
+            String input = this.getInputToken(sc, "Enter 'N' for no or any other key for yes");
+            switch (input) {
+                case "Y":
+                    this.interviewer.passInterview(interview);
+                    break;
+                case "N":
+                    this.interviewer.failInterview(interview);
+                    break;
             }
             this.interviewer.removeInterview(interview);
         }
