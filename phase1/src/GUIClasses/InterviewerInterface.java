@@ -5,6 +5,7 @@ import Miscellaneous.InterviewTime;
 import UsersAndJobObjects.Interview;
 import UsersAndJobObjects.Interviewer;
 import UsersAndJobObjects.JobApplication;
+import UsersAndJobObjects.User;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -18,12 +19,11 @@ public class InterviewerInterface extends UserInterface {
 
     // === Instance variables ===
     // The interviewer who is logged in
-    private Interviewer interviewer;
+    private Interviewer interviewer = (Interviewer) this.user;
 
     // === Constructor ===
-
-    public InterviewerInterface(Interviewer interviewer) {
-        this.interviewer = interviewer;
+    InterviewerInterface(User user) {
+        super(user);
     }
 
     /**

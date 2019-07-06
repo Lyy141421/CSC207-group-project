@@ -14,11 +14,11 @@ public class ApplicantInterface extends UserInterface {
      */
 
     // === Instance variables ===
-    private Applicant applicant; // The applicant currently logged in
+    private Applicant applicant = (Applicant) this.user; // The applicant currently logged in
 
     // === Constructor ===
-    public ApplicantInterface(Applicant applicant) {
-        this.applicant = applicant;
+    ApplicantInterface(User user) {
+        super(user);
     }
 
     // === Other methods ===
