@@ -23,9 +23,14 @@ public class ApplicantInterface extends UserInterface {
 
     // === Other methods ===
 
+    /**
+     * Run the applicant interface.
+     *
+     * @param today Today's date.
+     */
     void run(LocalDate today) {
         Scanner sc = new Scanner(System.in);
-        this.viewUpcomingInterviews(today);
+        this.displayUpcomingInterviews(today);
         while (true) {
             try {
                 this.runMainMenu(sc, today);
@@ -36,27 +41,38 @@ public class ApplicantInterface extends UserInterface {
         }
     }
 
+    /**
+     * Run the main menu of the applicant interface.
+     *
+     * @param sc The Scanner for user input.
+     * @param today Today's date.
+     */
     private void runMainMenu(Scanner sc, LocalDate today) throws ExitException{
         int numOptions = displayMainMenuOptions();
         int option = getMenuOption(sc, numOptions);
         switch (option) {
             case 1:
-                this.browseOpenJobPostingsNotAppliedTo(sc, today); // Browse open job postings not applied to
+                this.displayOpenJobPostingsNotAppliedTo(sc, today); // Browse open job postings not applied to
             case 2:
-                this.viewDocuments(); // View uploaded documents
+                this.displayDocuments(); // View uploaded documents
             case 3:
                 this.submitApplication(sc, today); // Apply for a job
             case 4:
-                this.viewApplications(sc, false); // View applications
+                this.displayApplications(sc, false); // View applications
             case 5:
-                this.viewApplications(sc, true); // Withdraw an application
+                this.displayApplications(sc, true); // Withdraw an application
             case 6:
-                this.viewAccountHistory(today); // View account history
+                this.displayAccountHistory(today); // View account history
         }
 
     }
 
-    private void viewUpcomingInterviews(LocalDate today) {
+    /**
+     * Display the upcoming interviews for this applicant.
+     *
+     * @param today Today's date.
+     */
+    private void displayUpcomingInterviews(LocalDate today) {
         ArrayList<Interview> upcomingInterviews = applicant.getJobApplicationManager().getUpcomingInterviews(today);
         if (upcomingInterviews.size() == 0) {
             System.out.println("You have no upcoming interviews.");
@@ -72,6 +88,12 @@ public class ApplicantInterface extends UserInterface {
             }
         }
     }
+
+    /**
+     * Display the applicant interface main menu options.
+     *
+     * @return the number of options in the menu.
+     */
     private int displayMainMenuOptions() {
         System.out.println();
         System.out.println("Please select an option below:");
@@ -84,6 +106,12 @@ public class ApplicantInterface extends UserInterface {
         return 6;
     }
 
+
+    /**
+     * Display the types of filters that the applicant can select from when browsing job postings.
+     *
+     * @return the number of options in the menu.
+     */
     private int displayFilterOptions() {
         System.out.println();
         System.out.println("Select the search filter you would like to use:");
@@ -94,7 +122,13 @@ public class ApplicantInterface extends UserInterface {
         return 4;
     }
 
-    private void browseOpenJobPostingsNotAppliedTo(Scanner sc, LocalDate today) {
+    /**
+     * Display the open job postings that this applicant has not applied to.
+     *
+     * @param sc The Scanner for user input.
+     * @param today Today's date.
+     */
+    private void displayOpenJobPostingsNotAppliedTo(Scanner sc, LocalDate today) {
         ArrayList<JobPosting> openJobPostings = applicant.getOpenJobPostingsNotAppliedTo(today);
         int numOptions = displayFilterOptions();
         int option = this.getMenuOption(sc, numOptions);
@@ -182,6 +216,14 @@ public class ApplicantInterface extends UserInterface {
         }
     }
 
+    /**
+     * Allow the applicant to select files from their account, and use these files to assemble a JobApplication.
+     *
+     * @param sc The Scanner for user input.
+     * @param today Today's date.
+     * @param posting The job posting that this applicant wishes to apply to.
+     * @return a job application containing this applicant's chosen files.
+     */
     JobApplication createJobApplicationThroughFiles(Scanner sc, LocalDate today, JobPosting posting) {
         System.out.println("Here are your files: ");
         int CVFileNumber = 0;
@@ -204,6 +246,14 @@ public class ApplicantInterface extends UserInterface {
         return new JobApplication(applicant, posting, CV, coverLetter, today);
     }
 
+    /**
+     * Allow the applicant to enter files as plaintext, and use these files to assemble a JobApplication.
+     *
+     * @param sc The Scanner for user input.
+     * @param today Today's date.
+     * @param posting The job posting that this applicant wishes to apply to.
+     * @return a job application containing this applicant's entered files.
+     */
     JobApplication createJobApplicationThroughTextEntry(Scanner sc, LocalDate today, JobPosting posting) {
         System.out.println("Enter the contents of your CV as plain text (type DONE and hit space when done): ");
         String CV = sc.next("DONE");
@@ -212,6 +262,11 @@ public class ApplicantInterface extends UserInterface {
         return new JobApplication(applicant, posting, CV, coverLetter, today);
     }
 
+    /**
+     * Display the options for job application creation.
+     *
+     * @return the number of options in the menu.
+     */
     int displaySubmitMenuOptions() {
         System.out.println();
         System.out.println("Select an application option:");
@@ -220,6 +275,12 @@ public class ApplicantInterface extends UserInterface {
         return 2;
     }
 
+    /**
+     * Submit a job application on behalf of the applicant.
+     *
+     * @param sc The Scanner for user input.
+     * @param today Today's date.
+     */
     void submitApplication(Scanner sc, LocalDate today) {
         String companyName = getInputLine(sc, "Enter the name of the company you wish to apply to: ");
         Company company = JobApplicationSystem.getCompany(companyName);
@@ -250,7 +311,13 @@ public class ApplicantInterface extends UserInterface {
         }
     }
 
-    void viewApplications(Scanner sc, boolean withdrawal) {
+    /**
+     * Display all of the applications that the applicant has submitted.
+     *
+     * @param sc The Scanner for user input.
+     * @param withdrawal Whether or not the applicant wishes to withdraw an application.
+     */
+    void displayApplications(Scanner sc, boolean withdrawal) {
         ArrayList<JobApplication> applications = applicant.getJobApplicationManager().getJobApplications();
         int applicationNumber = 0;
         for (JobApplication application : applications) {
@@ -277,7 +344,12 @@ public class ApplicantInterface extends UserInterface {
         }
     }
 
-    void viewAccountHistory(LocalDate today) {
+    /**
+     * Display the applicant's account history.
+     *
+     * @param today Today's date.
+     */
+    void displayAccountHistory(LocalDate today) {
         System.out.println("Account created: " + applicant.getDateCreated());
         System.out.println("Previous job applications:");
         for (JobApplication application : applicant.getJobApplicationManager().getPreviousJobApplications()) {
@@ -298,7 +370,10 @@ public class ApplicantInterface extends UserInterface {
                 "recent application closed.");
     }
 
-    void viewDocuments() {
+    /**
+     * Display the applicant's submitted documents.
+     */
+    void displayDocuments() {
         for (String file : applicant.getFilesSubmitted()) {
             System.out.println(file);
             System.out.println();
