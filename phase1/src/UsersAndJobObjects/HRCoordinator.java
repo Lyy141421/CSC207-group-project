@@ -1,6 +1,5 @@
 package UsersAndJobObjects;
 
-import FileLoadingAndStoring.FileSystem;
 import Managers.InterviewManager;
 
 import java.time.LocalDate;
@@ -78,7 +77,7 @@ public class HRCoordinator extends User {
         if (this.company.getJobPostingManager().getClosedJobPostingsNoInterview(today).contains(jobPosting)) {
             return InterviewManager.SELECT_APPS_FOR_PHONE_INTERVIEW;
         } else {
-            return jobPosting.getInterviewManager().getHrTask(today);
+            return jobPosting.getInterviewManager().getHrTask();
         }
     }
 }

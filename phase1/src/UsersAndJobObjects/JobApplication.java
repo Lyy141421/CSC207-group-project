@@ -1,6 +1,5 @@
 package UsersAndJobObjects;
 
-import FileLoadingAndStoring.FileSystem;
 import FileLoadingAndStoring.Storable;
 
 import java.time.LocalDate;
@@ -250,19 +249,17 @@ public class JobApplication implements Storable{
         JobApplication.totalNumOfApplications++;
     }
 
-    // === Other methods ===
+    // === Private methods ===
 
     /**
      * Add an interview for this job application.
      *
      * @param interview The interview to be added.
      */
-    void addInterview(Interview interview) {
+    private void addInterview(Interview interview) {
         this.interviews.add(interview);
     }
 
-    // ============================================================================================================== //
-    // === Private methods ===
     /**
      * Get the interview IDs for this job application.
      *

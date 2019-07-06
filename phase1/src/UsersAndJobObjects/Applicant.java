@@ -1,6 +1,5 @@
 package UsersAndJobObjects;
 
-import GUIClasses.ApplicantInterface;
 import Main.JobApplicationSystem;
 import Managers.JobApplicationManager;
 

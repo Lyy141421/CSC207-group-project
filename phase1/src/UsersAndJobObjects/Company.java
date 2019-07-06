@@ -1,7 +1,6 @@
 package UsersAndJobObjects;
 
 import FileLoadingAndStoring.Storable;
-import FileLoadingAndStoring.Subable;
 import Managers.JobPostingManager;
 
 import java.util.ArrayList;
