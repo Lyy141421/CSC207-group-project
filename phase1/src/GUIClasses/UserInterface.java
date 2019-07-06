@@ -162,7 +162,34 @@ public class UserInterface {
     }
 
 
-    // === Other methods ===
+    // === Private methods ===
+
+    /**
+     * Get an e-mail address as input from the user. E-mail address must be in valid format.
+     *
+     * @param sc The scanner for user input.
+     * @param message   The prompt that is displayed.
+     * @return the e-mail address inputted by the user.
+     */
+
+    private String getValidEmail(Scanner sc, String message) {
+        String input = this.getInputLine(sc, message);
+        boolean validEmail = true;
+        if (!input.contains("@") || input.charAt(0) == '@')
+            validEmail = false;
+        else {
+            String[] splitInput = input.split("@", 2);
+            if (!splitInput[1].contains(".") || splitInput[1].charAt(0) == '.'
+                    || splitInput[1].charAt(splitInput[1].length()-1) == '.')
+                validEmail = false;
+        }
+        if (validEmail)
+            return input;
+        else {
+            System.out.println("Invalid input. Please enter again.");
+            return this.getValidEmail(sc, message);
+        }
+    }
 
     /**
      * Interface for displaying user types.
@@ -189,7 +216,7 @@ public class UserInterface {
     private User signUp(Scanner sc, String username, String password) {
         System.out.println();
         String legalName = this.getOnlyLetters(sc, "Enter your legal name: ");
-        String email = this.getInputToken(sc, "Enter your email address: ");
+        String email = this.getValidEmail(sc, "Enter your email address: ");
         sc.nextLine();
         int numOptions = this.displayUserTypes();
         int option = this.getMenuOption(sc, numOptions);
