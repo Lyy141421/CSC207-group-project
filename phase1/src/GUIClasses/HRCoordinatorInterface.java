@@ -427,7 +427,7 @@ public class HRCoordinatorInterface extends UserInterface {
         Applicant applicant = (Applicant) JobApplicationSystem.getUserManager().findUserByUsername(username);
         if (applicant == null) {
             System.out.println("This applicant cannot be found.");
-            return this.searchSpecificApplicant(sc);
+            return null;
         }
         for (JobPosting jobPosting : this.HRC.getCompany().getJobPostingManager().getJobPostings()) {
             if (applicant.hasAppliedTo(jobPosting)) {
