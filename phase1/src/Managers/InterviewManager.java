@@ -72,6 +72,10 @@ public class InterviewManager {
 
     // === Other methods ===
 
+    /**
+     * Checks whether the current round of interviews is over.
+     * @return  true iff all interviews in this round have been completed.
+     */
     public boolean isCurrentRoundOver() {
         for (JobApplication jobApp : this.getApplicationsInConsideration()) {
             if (!jobApp.getLastInterview().isComplete()) {
@@ -123,14 +127,7 @@ public class InterviewManager {
             jobApp.setArchived();
         }
     }
-
-    // ============================================================================================================== //
-    // === Package private methods ===
-
-    JobPosting getJobPosting() {
-        return this.jobPosting;
-    }
-
+    
     // ============================================================================================================== //
     // === Private methods ===
     // === Other methods ===

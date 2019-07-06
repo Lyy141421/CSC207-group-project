@@ -6,6 +6,7 @@ import Managers.InterviewManager;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class JobPosting implements Storable {
 
@@ -267,8 +268,8 @@ public class JobPosting implements Storable {
      * Create an interview manager for this job posting.
      */
     void createInterviewManager() {
-        ArrayList<JobApplication>[] jobApps = this.getApplicationsForPhoneInterview();
-        InterviewManager interviewManager = new InterviewManager(this, jobApps[0], jobApps[1]);
+        ArrayList<ArrayList<JobApplication>> jobApps = this.getApplicationsForPhoneInterview();
+        InterviewManager interviewManager = new InterviewManager(this, jobApps.get(0), jobApps.get(1));
         this.setInterviewManager(interviewManager);
     }
 
@@ -290,12 +291,9 @@ public class JobPosting implements Storable {
      *
      * @return an array of lists of job applications selected and rejected for a phone interview.
      */
-    private ArrayList<JobApplication>[] getApplicationsForPhoneInterview() {
-        ArrayList<JobApplication>[] jobApps = new ArrayList[2];
+    private ArrayList<ArrayList<JobApplication>> getApplicationsForPhoneInterview() {
         ArrayList<JobApplication> jobApplicationsInConsideration = new ArrayList<>();
         ArrayList<JobApplication> jobApplicationsRejected = new ArrayList<>();
-        jobApps[0] = jobApplicationsInConsideration;
-        jobApps[1] = jobApplicationsRejected;
         for (JobApplication jobApplication : this.getJobApplications()) {
             if (jobApplication.getStatus() == 0) {
                 jobApplicationsInConsideration.add(jobApplication);
@@ -303,6 +301,6 @@ public class JobPosting implements Storable {
                 jobApplicationsRejected.add(jobApplication);
             }
         }
-        return jobApps;
+        return new ArrayList<>(Arrays.asList(jobApplicationsInConsideration, jobApplicationsRejected));
     }
 }

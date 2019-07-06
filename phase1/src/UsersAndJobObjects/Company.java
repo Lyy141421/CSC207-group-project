@@ -114,6 +114,7 @@ public class Company implements Storable {
     // ============================================================================================================== //
     // === Package-private methods ===
     // === Constructors ===
+
     Company(String name, ArrayList<HRCoordinator> hrCoordinators,
             HashMap<String, ArrayList<Interviewer>> fieldToInterviewers, JobPostingManager jobPostingManager) {
         this.name = name;
@@ -146,7 +147,7 @@ public class Company implements Storable {
      *
      * @param interviewer The interviewer to be added.
      */
-    void addInterviewer(Interviewer interviewer) {
+    public void addInterviewer(Interviewer interviewer) {
         String field = interviewer.getField();
         if (!this.fieldToInterviewers.containsKey(field)) {
             this.fieldToInterviewers.put(field, new ArrayList<>());

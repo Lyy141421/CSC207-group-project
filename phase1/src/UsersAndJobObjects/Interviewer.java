@@ -6,6 +6,7 @@ import Miscellaneous.InterviewTimeComparator;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Interviewer extends User {
 
@@ -130,7 +131,6 @@ public class Interviewer extends User {
      * @return a list of interviews scheduled for this date.
      */
     public ArrayList<ArrayList<Interview>> getInterviewsBeforeOnAndAfterDate(LocalDate date) {
-        ArrayList<ArrayList<Interview>> interviews = new ArrayList<>();
         ArrayList<Interview> interviewsBefore = new ArrayList<>();
         ArrayList<Interview> interviewsToday = new ArrayList<>();
         ArrayList<Interview> interviewsAfter = new ArrayList<>();
@@ -145,10 +145,7 @@ public class Interviewer extends User {
                 interviewsAfter.add(interview);
             }
         }
-        interviews.add(interviewsBefore);
-        interviews.add(interviewsToday);
-        interviews.add(interviewsAfter);
-        return interviews;
+        return new ArrayList<>(Arrays.asList(interviewsBefore, interviewsToday, interviewsAfter));
     }
 
     /**
