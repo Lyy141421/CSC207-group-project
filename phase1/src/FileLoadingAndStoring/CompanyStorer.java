@@ -29,6 +29,7 @@ public class CompanyStorer extends GenericStorer<Company> {
             hrcoords.add(new ArrayList<String>() {{
                 add(HRCoordinator.FILENAME);
                 add(x.getUsername());
+                StorerManager.subStore(x);
             }});
         }
         data.put("hrCoordinators", hrcoords);
@@ -43,6 +44,7 @@ public class CompanyStorer extends GenericStorer<Company> {
                 temp.add(new ArrayList<String>() {{
                     add(Interviewer.FILENAME);
                     add(interviewer.getUsername());
+                    StorerManager.subStore(interviewer);
                 }});
             }
         }
@@ -55,6 +57,7 @@ public class CompanyStorer extends GenericStorer<Company> {
             jobpostings.add(new ArrayList<String>() {{
                 add(JobPosting.FILENAME);
                 add(String.valueOf(x.getId()));
+                StorerManager.subStore(x);
             }});
         }
         data.put("jobpostings", jobpostings);
