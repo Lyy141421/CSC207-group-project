@@ -95,9 +95,9 @@ public class JobApplicationSystem {
      * To be called at the end of the Program
      * Used to Save all Objects to json memory
      */
-//    static void mainEnd(){
-//        Loader.endSave(); //todo add methods to save from managers
-//    }
+    static void mainEnd(){
+        //todo PlaceHolder
+    }
 
     public static Company getCompany(String name) {
         for (Company company : companies) {
