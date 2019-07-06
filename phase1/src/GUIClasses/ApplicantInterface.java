@@ -244,9 +244,9 @@ public class ApplicantInterface extends UserInterface {
      */
     private JobApplication createJobApplicationThroughTextEntry(Scanner sc, LocalDate today, JobPosting posting) {
         String CV = getInputLinesUntilDone(sc, "Enter the contents of your CV as a series of plain text lines " +
-                "(program will stop reading after the first empty line");
+                "(program will stop reading after the first empty line): ");
         String coverLetter = getInputLinesUntilDone(sc, "Enter the contents of your cover letter as a series of" +
-                " plain text lines (program will stop reading after the first empty line");
+                " plain text lines (program will stop reading after the first empty line): ");
         return new JobApplication(applicant, posting, CV, coverLetter, today);
     }
 
