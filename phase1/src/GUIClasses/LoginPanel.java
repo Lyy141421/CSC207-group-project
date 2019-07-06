@@ -2,6 +2,8 @@ package GUIClasses;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  * REMEMBER:
@@ -9,10 +11,13 @@ import java.awt.*;
  */
 
 class LoginPanel extends JPanel {
+    private UserInterfaceTest BackEnd;
+
     LoginPanel() {
         this.setLayout(null);
         this.addTextItems();
         this.addEntryItems();
+        this.BackEnd = new UserInterfaceTest();
     }
 
     /**
@@ -54,7 +59,12 @@ class LoginPanel extends JPanel {
         passwordEntry.setBounds(427, 255, 100, 30);
 
         JButton loginButton = new JButton("Login/Register");
-        loginButton.setBounds(367, 300, 120, 20);
+        loginButton.setBounds(367, 300, 120, 22);
+        loginButton.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                login(userNameEntry, passwordEntry);
+            }
+        });
 
         JButton createNewButton = new JButton("Create?");
         createNewButton.setBounds(427, 330, 100, 20);
@@ -103,11 +113,11 @@ class LoginPanel extends JPanel {
     /**
      * Shows "Incorrect Password" warning
      */
-    private void showWrongPass() {
+    private void showInputError() {
         Component[] components = this.getComponents();
         for(Component c : components) {
             if(c instanceof JLabel) {
-                if(((JLabel) c).getText().equals("Incorrect password!")) {
+                if(((JLabel) c).getText().equals("Something's wrong - please check your inputs")) {
                     c.setVisible(true);
                     break;
                 }
@@ -118,15 +128,35 @@ class LoginPanel extends JPanel {
     /**
      * Hides "Incorrect Password" warning
      */
-    private void hideWrongPass() {
+    private void hideInputError() {
         Component[] components = this.getComponents();
         for(Component c : components) {
             if(c instanceof JLabel) {
-                if(((JLabel) c).getText().equals("Incorrect password!")) {
+                if(((JLabel) c).getText().equals("Something's wrong - please check your inputs")) {
                     c.setVisible(false);
                     break;
                 }
             }
         }
+    }
+
+    private void login(JTextField userNameEntry, JPasswordField passwordEntry) {
+        int result = BackEnd.login(userNameEntry.getText(), passwordEntry.getPassword().toString());
+        switch(result) {
+            case 1: this.showCreateNew();
+                    break;
+            case 2: break; //TODO: handle login
+            case 3: this.showInputError();
+                    break;
+        }
+    }
+
+    public static void main(String[] args) {
+        JFrame test = new JFrame();
+
+        LoginPanel test2 = new LoginPanel(); test2.setVisible(true);
+        test.add(test2);
+
+        test.setVisible(true); test.setSize(854, 480); test.setResizable(false);
     }
 }
