@@ -61,6 +61,25 @@ public class UserInterface {
     }
 
     /**
+     * Get input from the user (with spaces) until an empty line is entered.
+     *
+     * @param sc The scanner for user input.
+     * @param message   The prompt that is displayed.
+     * @return the input from the user (minus the last empty line).
+     */
+    String getInputLinesUntilDone(Scanner sc, String message) {
+        System.out.print(message);
+        String input = "";
+        String inputLine = sc.nextLine();
+        while (inputLine.length() > 0) {
+            input += inputLine;
+            input += '\n';
+            inputLine = sc.nextLine();
+        }
+        return input.stripTrailing();
+    }
+
+    /**
      * Get the input from the user (no spaces)
      *
      * @param sc      The scanner for user input.
