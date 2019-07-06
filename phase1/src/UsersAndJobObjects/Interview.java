@@ -77,6 +77,26 @@ public class Interview implements Storable {
         return roundNumberDescriptions.get(number);
     }
 
+    public Applicant getApplicant() {
+        return this.jobApplication.getApplicant();
+    }
+
+    public Interviewer getInterviewer() {
+        return this.interviewer;
+    }
+
+    public HRCoordinator getHRCoordinator() {
+        return this.hrCoordinator;
+    }
+
+    public String getInterviewNotes() {
+        return this.interviewNotes;
+    }
+
+    public boolean isPassed() {
+        return this.pass;
+    }
+
     // === Setters ===
 
     public void setJobApplication(JobApplication jobApplication) {
@@ -112,6 +132,14 @@ public class Interview implements Storable {
     }
 
     // === Other methods ===
+
+    /**
+     * Check whether interview is completed.
+     * @return  true iff the interview is completed.
+     */
+    public boolean isComplete() {
+        return this.pass != null;
+    }
 
     /**
      * Get a string representation of the preliminary input for this interview.
@@ -179,44 +207,12 @@ public class Interview implements Storable {
         return Interview.MAX_NUM_ROUNDS;
     }
 
-    JobPosting getJobPosting() {
-        return this.jobApplication.getJobPosting();
-    }
-
-    public Applicant getApplicant() {
-        return this.jobApplication.getApplicant();
-    }
-
     InterviewManager getInterviewManager() {
         return this.interviewManager;
     }
 
-    public Interviewer getInterviewer() {
-        return this.interviewer;
-    }
-
-    public HRCoordinator getHRCoordinator() {
-        return this.hrCoordinator;
-    }
-
-    public String getInterviewNotes() {
-        return this.interviewNotes;
-    }
-
-    /**
-     * Check whether the interview has passed
-     * @return  whether the applicant has passed this interview.
-     */
-    public boolean isPassed() {
-        return this.pass;
-    }
-
-    /**
-     * Check whether interview is completed.
-     * @return  true iff the interview is completed.
-     */
-    public boolean isComplete() {
-        return this.pass != null;
+    private JobPosting getJobPosting() {
+        return this.jobApplication.getJobPosting();
     }
 
     /**
