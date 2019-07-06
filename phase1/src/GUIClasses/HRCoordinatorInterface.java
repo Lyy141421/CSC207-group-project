@@ -3,6 +3,7 @@ package GUIClasses;
 import Main.JobApplicationSystem;
 import Managers.InterviewManager;
 import Managers.JobPostingManager;
+import Managers.UserManager;
 import Miscellaneous.ExitException;
 import UsersAndJobObjects.*;
 
@@ -54,6 +55,19 @@ public class HRCoordinatorInterface extends UserInterface {
         int numPositions = (Integer) jobPostingFields[4];
         LocalDate closeDate = (LocalDate) jobPostingFields[5];
         this.HRC.addJobPosting(title, field, description, requirements, numPositions, today, closeDate);
+    }
+
+    /**
+     * Get all job applications submitted by this applicant with this username.
+     * @param applicantUsername The applicant username inputted.
+     * @return  a list of job applications submitted by this applicant with this username.
+     */
+    ArrayList<JobApplication> getAllJobApplicationsToCompany(String applicantUsername) {
+        Applicant applicant = (Applicant) JobApplicationSystem.getUserManager().findUserByUsername(applicantUsername);
+        if (applicant == null) {
+            return new ArrayList<>();
+        }
+        return this.HRC.getCompany().getAllApplicationsToCompany(applicant);
     }
 
 
@@ -114,7 +128,7 @@ public class HRCoordinatorInterface extends UserInterface {
                 break;
             case 4: // View previous job apps to company
                 Applicant applicant = this.searchSpecificApplicant(sc);
-                this.viewPreviousJobAppsToCompany(applicant);
+                this.viewAllJobAppsToCompany(applicant);
                 break;
             case 5: // Exit
                 throw new ExitException();
@@ -456,7 +470,7 @@ public class HRCoordinatorInterface extends UserInterface {
      * Interface for viewing all the previous job applications this applicant has submitted to this company.
      * @param applicant The applicant in question.
      */
-    private void viewPreviousJobAppsToCompany(Applicant applicant) {
+    private void viewAllJobAppsToCompany(Applicant applicant) {
         if (applicant == null) {
             return;
         }
