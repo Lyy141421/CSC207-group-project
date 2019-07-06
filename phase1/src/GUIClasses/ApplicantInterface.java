@@ -243,10 +243,10 @@ public class ApplicantInterface extends UserInterface {
      * @return a job application containing this applicant's entered files.
      */
     private JobApplication createJobApplicationThroughTextEntry(Scanner sc, LocalDate today, JobPosting posting) {
-        System.out.println("Enter the contents of your CV as plain text (type DONE and hit space when done): ");
-        String CV = sc.next("DONE");
-        System.out.println("Enter the contents of your cover letter as plain text (type DONE and hit space when done): ");
-        String coverLetter = sc.next("DONE");
+        String CV = getInputLinesUntilDone(sc, "Enter the contents of your CV as a series of plain text lines " +
+                "(program will stop reading after the first empty line");
+        String coverLetter = getInputLinesUntilDone(sc, "Enter the contents of your cover letter as a series of" +
+                " plain text lines (program will stop reading after the first empty line");
         return new JobApplication(applicant, posting, CV, coverLetter, today);
     }
 
