@@ -81,7 +81,7 @@ public class UserInterface {
             input += '\n';
             inputLine = sc.nextLine();
         }
-        return input.stripTrailing();
+        return input.trim();
     }
 
     /**
