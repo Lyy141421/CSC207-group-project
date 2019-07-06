@@ -29,6 +29,7 @@ public class InterviewerStorer extends GenericStorer<Interviewer> {
         data.put("field", interviewer.getField());
         data.put("company", new String[]{Company.FILENAME,
                 interviewer.getCompany().getName()});
+        StorerManager.subStore(interviewer.getCompany());
     }
 
     private void storeInterviews(Interviewer interviewer, HashMap<String, Object> data) {
@@ -37,6 +38,7 @@ public class InterviewerStorer extends GenericStorer<Interviewer> {
             interview_list.add(new ArrayList<Object>() {{
                 add(Interview.FILENAME);
                 add(String.valueOf(x.getId()));
+                StorerManager.subStore(x);
             }});
         }
         data.put("interviews", interview_list);
