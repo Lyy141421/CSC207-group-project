@@ -39,6 +39,11 @@ public class UserInterface {
 
 
     // === Inherited methods ===
+
+    /**
+     * Run this user interface.
+     * @param today Today's date.
+     */
     void run(LocalDate today) {
     }
 
