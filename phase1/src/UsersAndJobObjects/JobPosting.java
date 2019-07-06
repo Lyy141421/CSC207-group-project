@@ -207,17 +207,17 @@ public class JobPosting implements Storable {
      */
     @Override
     public String toString() {
-        String s = "Job ID: " + this.getId() + "\n";
+        /*String s = "Job ID: " + this.getId() + "\n";
         s += "Title: " + this.getTitle() + "\n";
-        s += "Field: " + this.getField() + "\n";
-        s += "Description: " + this.getDescription() + "\n";
-        s += "Requirements: " + this.getRequirements() + "\n";
-        s += "Number of positions: " + this.getNumPositions() + "\n";
-        s += "Company: " + this.getCompany().getName() + "\n";
+        s += "Field: " + this.getField() + "\n";*/
+        String s = "Number of positions: " + this.getNumPositions() + "\n";
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         s += "Post date: " + this.getPostDate().format(dtf) + "\n";
         s += "Close date: " + this.getCloseDate().format(dtf) + "\n";
-        s += "Filled: " + this.booleanToString(this.isFilled()) + "\n";
+        s += "Description: " + this.getDescription() + "\n";
+        s += "Requirements: " + this.getRequirements() + "\n";
+        // s += "Company: " + this.getCompany().getName() + "\n";
+        // s += "Filled: " + this.booleanToString(this.isFilled()) + "\n";
         return s;
     }
 
