@@ -434,6 +434,7 @@ public class HRCoordinatorInterface extends UserInterface {
                 return applicant;
             }
         }
+        System.out.println();
         System.out.println("This applicant has not applied to this company.");
         return null;
     }

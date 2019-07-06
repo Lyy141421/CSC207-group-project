@@ -70,6 +70,10 @@ public class ApplicantInterface extends UserInterface {
                 return;
             case 6:
                 this.displayAccountHistory(today); // View account history
+                return;
+            case 7:
+                throw new ExitException(); // Exit
+
         }
 
     }
@@ -110,7 +114,8 @@ public class ApplicantInterface extends UserInterface {
         System.out.println("4 - View applications");
         System.out.println("5 - Withdraw an application");
         System.out.println("6 - View account history");
-        return 6;
+        System.out.println("7 - Exit");
+        return 7;
     }
 
 
