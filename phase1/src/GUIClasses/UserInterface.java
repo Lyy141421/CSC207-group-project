@@ -84,14 +84,20 @@ public class UserInterface {
      * @return  the string of letters inputted by the user.
      */
     String getOnlyLetters(Scanner sc, String message) {
-        String legalName = this.getInputLine(sc, message);
-        for (int i = 0; i < legalName.length(); i++) {
-            if (!Character.isLetter(legalName.charAt(i))) {
-                System.out.println("Invalid input. Please enter again.");
-                return this.getInputLine(sc, message);
+        String input = this.getInputLine(sc, message);
+        boolean onlyLetters = true;
+        for (int i = 0; i < input.length(); i++) {
+            if (!Character.isLetter(input.charAt(i)) && !Character.isSpaceChar(input.charAt(i))) {
+                onlyLetters = false;
             }
         }
-        return legalName;
+        if (onlyLetters) {
+            return input;
+        }
+        else {
+            System.out.println("Invalid input. Please enter again.");
+            return this.getOnlyLetters(sc, message);
+        }
     }
 
     /**
