@@ -9,6 +9,8 @@ import net.sourceforge.jdatepicker.impl.UtilDateModel;
 
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.text.NumberFormatter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -16,22 +18,27 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.text.NumberFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 // 3 rounds
 public class HRPanel extends JPanel implements ActionListener {
 
+    private HRCoordinatorInterface HRInterface;
     private ArrayList<JobPosting> prePhoneJP;
     private ArrayList<JobPosting> scheduleJP;
     private ArrayList<JobPosting> hiringJP;
     private ArrayList<JobPosting> allJP;
 
     // Create interface for HR
-    HRPanel (ArrayList<ArrayList<JobPosting>> HRInfoList) {
+    HRPanel (HRCoordinatorInterface HRInterface, LocalDate today) {
+        this.HRInterface = HRInterface;
+        ArrayList<ArrayList<JobPosting>> HRInfoList = HRInterface.getHighPriorityAndAllJobPostings(today);
         this.prePhoneJP = HRInfoList.get(0);
         this.scheduleJP = HRInfoList.get(1);
         this.hiringJP = HRInfoList.get(2);
         this.allJP = HRInfoList.get(3);
+
         this.setLayout(new CardLayout());
         this.add(home(), "HOME");
         this.add(browsePosting(null), "POSTING");
@@ -97,7 +104,7 @@ public class HRPanel extends JPanel implements ActionListener {
         JPanel buttons = new JPanel(new FlowLayout());
 
         // could change
-        JComboBox<String> jobPostings = new JComboBox<>(this.getTitles(JPToShow));
+        JComboBox<String> jobPostings = new JComboBox<>(this.getJPTitles(JPToShow));
         JTextArea info = new JTextArea("Job posting status here. Changes according to JobPosting selected in JComboBox");
         info.setEditable(false);
         info.setBorder(new EtchedBorder(EtchedBorder.LOWERED));
@@ -131,7 +138,7 @@ public class HRPanel extends JPanel implements ActionListener {
         return postingPanel;
     }
 
-    private String[] getTitles (ArrayList<JobPosting> JPToShow) {
+    private String[] getJPTitles (ArrayList<JobPosting> JPToShow) {
         ArrayList<String> titles = new ArrayList<>();
         for (JobPosting JP : JPToShow) {
             titles.add(JP.getId() + "-" + JP.getTitle());
@@ -161,10 +168,28 @@ public class HRPanel extends JPanel implements ActionListener {
         JPanel applicationPanel = new JPanel(new BorderLayout());
         JPanel buttons = new JPanel(new FlowLayout());
 
-        JComboBox<String> app = new JComboBox<>();
-        JList<String> viewable = new JList<>(new String[]{"abc", "xa"});
-        JTextArea info = new JTextArea("Information");
+        JComboBox<String> app = new JComboBox<>(this.getAppTitles(appsToShow));
+        String[] attributes = new String[]{"Overview", "CV", "Cover letter"};
+        JList<String> viewable = new JList<>(attributes);
+        JTextArea info = new JTextArea(appsToShow.get(0).getOverview());
         info.setEditable(false);
+
+        app.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if (e.getStateChange() == ItemEvent.SELECTED) {
+                    info.setText(getInfo(appsToShow.get(app.getSelectedIndex()), viewable.getSelectedIndex()));
+                }
+            }
+        });
+
+        viewable.addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                info.setText(getInfo(appsToShow.get(app.getSelectedIndex()), e.getFirstIndex()));
+            }
+        });
+
         JButton scheduleInterview = new JButton("Schedule");
         JButton hiring = new JButton("Hiring decision");
         JButton home = new JButton("Home");
@@ -186,6 +211,37 @@ public class HRPanel extends JPanel implements ActionListener {
 
         return applicationPanel;
     }
+
+    private String[] getAppTitles (ArrayList<JobApplication> appsToShow) {
+        ArrayList<String> titles = new ArrayList<>();
+        for (JobApplication app : appsToShow) {
+            titles.add(app.getId() + "-" + app.getApplicant().getLegalName());
+        }
+        return (String[]) titles.toArray();
+    }
+
+    private String getInfo (JobApplication app, int attributeIndex) {
+        String info;
+
+        switch (attributeIndex) {
+            case 0:
+                info = app.getOverview();
+                break;
+            case 1:
+                info = app.getCV();
+                break;
+            case 2:
+                info = app.getCoverLetter();
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + attributeIndex);
+        }
+
+        return info;
+    }
+
+
+    // ====Search panel====
 
     private JPanel searchApplicant () {
         JPanel applicantPanel = new JPanel(new BorderLayout());
@@ -270,6 +326,12 @@ public class HRPanel extends JPanel implements ActionListener {
 
         JButton submit = new JButton("Submit");
         JButton home = new JButton("Home");
+        submit.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
         home.addActionListener(this);
         buttons.add(submit);
         buttons.add(home);
@@ -278,6 +340,9 @@ public class HRPanel extends JPanel implements ActionListener {
 
         return addPostingPanel;
     }
+
+
+
 
     @Override
     public void actionPerformed(ActionEvent e) {

@@ -39,6 +39,11 @@ public class UserInterface {
 
 
     // === Inherited methods ===
+
+    /**
+     * Run this user interface.
+     * @param today Today's date.
+     */
     void run(LocalDate today) {
     }
 
@@ -76,7 +81,7 @@ public class UserInterface {
             input += '\n';
             inputLine = sc.nextLine();
         }
-        return input.stripTrailing();
+        return input.trim();
     }
 
     /**
@@ -284,11 +289,12 @@ public class UserInterface {
     private User createNewInterviewer(Scanner sc, String username, String password, String legalName, String email) {
         System.out.println();
         String companyName = this.getInputLine(sc, "Enter your company name: ");
-        while (JobApplicationSystem.getCompany(companyName) == null) {
+        Company company = JobApplicationSystem.getCompany(companyName);
+        while (company == null) {
             System.out.println("Company name not found.");
             companyName = this.getInputLine(sc, "Enter your company name: ");
+            company = JobApplicationSystem.getCompany(companyName);
         }
-        Company company = JobApplicationSystem.getCompany(companyName);
         String field = this.getOnlyLetters(sc, "Enter your field: ");
         System.out.println("Sign-up successful!");
         Interviewer interviewer = JobApplicationSystem.getUserManager().createInterviewer(username, password,

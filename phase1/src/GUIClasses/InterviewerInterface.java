@@ -34,7 +34,7 @@ public class InterviewerInterface extends UserInterface {
      * @return  a list of lists of interviews for this interviewer by date.
      */
     ArrayList<ArrayList<Interview>> getInterviewsBeforeOnAndAfterToday(LocalDate today) {
-        return this.getInterviewsBeforeOnAndAfterToday(today);
+        return this.interviewer.getInterviewsBeforeOnAndAfterDate(today);
     }
 
     // ============================================================================================================== //
@@ -234,7 +234,7 @@ public class InterviewerInterface extends UserInterface {
      * Interface for conducting an interview.
      */
     private void conductInterview(Scanner sc) {
-        Interview interview = this.getInterviewsBeforeOnAndAfterToday(LocalDate.now()).get(1).get(0);
+        Interview interview = this.interviewer.getInterviewsBeforeOnAndAfterDate(LocalDate.now()).get(1).get(0);
         System.out.println();
         if (interview == null) {
             System.out.println("You do not have any interviews scheduled.");
