@@ -86,7 +86,9 @@ public class JobApplicationSystem {
         userManager.addUserList(applicant.getArray());
         userManager.addUserList(hrcoordinator.getArray());
         userManager.addUserList(interviewer.getArray());
-        companies = company.getArray();
+        for(Object comp : company.getArray()){
+            companies.add((Company)comp);
+        }
     }
 
     /**
