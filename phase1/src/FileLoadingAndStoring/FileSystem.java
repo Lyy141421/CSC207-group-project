@@ -9,6 +9,13 @@ import java.util.Iterator;
 
 public class FileSystem {
 
+    /**
+     * Converts a JsonArray to a list
+     *
+     * @param jarry - the JSONArray to be converted
+     * @return Returns the list of the JsonArray
+     * @throws JSONException
+     */
     static ArrayList JArrayToList(JSONArray jarry) throws JSONException {
         ArrayList<Object> list = new ArrayList<Object>();
         for(int i = 0; i < jarry.length(); i++){
