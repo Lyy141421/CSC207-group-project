@@ -41,6 +41,7 @@ public class ApplicantInterface extends UserInterface {
         }
     }
 
+    // === Private methods ===
     /**
      * Run the main menu of the applicant interface.
      *
@@ -120,6 +121,19 @@ public class ApplicantInterface extends UserInterface {
         System.out.println("3 - Filter by field and company");
         System.out.println("4 - No filter");
         return 4;
+    }
+
+    /**
+     * Display the options for job application creation.
+     *
+     * @return the number of options in the menu.
+     */
+    private int displaySubmitMenuOptions() {
+        System.out.println();
+        System.out.println("Select an application option:");
+        System.out.println("1 - Apply using a CV and cover letter from your account files");
+        System.out.println("2 - Enter a CV and cover letter manually");
+        return 2;
     }
 
     /**
@@ -224,7 +238,7 @@ public class ApplicantInterface extends UserInterface {
      * @param posting The job posting that this applicant wishes to apply to.
      * @return a job application containing this applicant's chosen files.
      */
-    JobApplication createJobApplicationThroughFiles(Scanner sc, LocalDate today, JobPosting posting) {
+    private JobApplication createJobApplicationThroughFiles(Scanner sc, LocalDate today, JobPosting posting) {
         System.out.println("Here are your files: ");
         int CVFileNumber = 0;
         for (String file : applicant.getFilesSubmitted()) {
@@ -254,7 +268,7 @@ public class ApplicantInterface extends UserInterface {
      * @param posting The job posting that this applicant wishes to apply to.
      * @return a job application containing this applicant's entered files.
      */
-    JobApplication createJobApplicationThroughTextEntry(Scanner sc, LocalDate today, JobPosting posting) {
+    private JobApplication createJobApplicationThroughTextEntry(Scanner sc, LocalDate today, JobPosting posting) {
         System.out.println("Enter the contents of your CV as plain text (type DONE and hit space when done): ");
         String CV = sc.next("DONE");
         System.out.println("Enter the contents of your cover letter as plain text (type DONE and hit space when done): ");
@@ -263,25 +277,12 @@ public class ApplicantInterface extends UserInterface {
     }
 
     /**
-     * Display the options for job application creation.
-     *
-     * @return the number of options in the menu.
-     */
-    int displaySubmitMenuOptions() {
-        System.out.println();
-        System.out.println("Select an application option:");
-        System.out.println("1 - Apply using a CV and cover letter from your account files");
-        System.out.println("2 - Enter a CV and cover letter manually");
-        return 2;
-    }
-
-    /**
      * Submit a job application on behalf of the applicant.
      *
      * @param sc The Scanner for user input.
      * @param today Today's date.
      */
-    void submitApplication(Scanner sc, LocalDate today) {
+    private void submitApplication(Scanner sc, LocalDate today) {
         String companyName = getInputLine(sc, "Enter the name of the company you wish to apply to: ");
         Company company = JobApplicationSystem.getCompany(companyName);
         while (company == null) {
@@ -317,7 +318,7 @@ public class ApplicantInterface extends UserInterface {
      * @param sc The Scanner for user input.
      * @param withdrawal Whether or not the applicant wishes to withdraw an application.
      */
-    void displayApplications(Scanner sc, boolean withdrawal) {
+    private void displayApplications(Scanner sc, boolean withdrawal) {
         ArrayList<JobApplication> applications = applicant.getJobApplicationManager().getJobApplications();
         int applicationNumber = 0;
         for (JobApplication application : applications) {
@@ -349,7 +350,7 @@ public class ApplicantInterface extends UserInterface {
      *
      * @param today Today's date.
      */
-    void displayAccountHistory(LocalDate today) {
+    private void displayAccountHistory(LocalDate today) {
         System.out.println("Account created: " + applicant.getDateCreated());
         System.out.println("Previous job applications:");
         for (JobApplication application : applicant.getJobApplicationManager().getPreviousJobApplications()) {
@@ -373,7 +374,7 @@ public class ApplicantInterface extends UserInterface {
     /**
      * Display the applicant's submitted documents.
      */
-    void displayDocuments() {
+    private void displayDocuments() {
         for (String file : applicant.getFilesSubmitted()) {
             System.out.println(file);
             System.out.println();
