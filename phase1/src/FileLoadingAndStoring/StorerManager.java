@@ -1,6 +1,5 @@
 package FileLoadingAndStoring;
 
-import javax.management.AttributeList;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -34,6 +33,7 @@ public class StorerManager {
         for(Object x : storer_map.keySet()){
             storer_map.get(x).store();
         }
+        new PreviousLoginDateLoaderAndStorer().storePreviousLoginDate();
     }
 
     /**

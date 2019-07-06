@@ -34,9 +34,8 @@ public class JobApplicationSystem {
 
     // === Public methods ===
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         mainStart();
-        new PreviousLoginDateLoaderAndStorer().loadPreviousLoginDate();
         cyclicalTask();
         SwingUtilities.invokeLater(new Runnable() {
             @Override
@@ -44,7 +43,6 @@ public class JobApplicationSystem {
                 new MainFrame(today);
             }
         });
-        new PreviousLoginDateLoaderAndStorer().storePreviousLoginDate();
     }
 
     // === Getters ===
@@ -59,6 +57,10 @@ public class JobApplicationSystem {
 
     public static LocalDate getToday() {
         return JobApplicationSystem.today;
+    }
+
+    public static LocalDate getPreviousLoginDate() {
+        return JobApplicationSystem.previousLoginDate;
     }
 
     // === Setters ===

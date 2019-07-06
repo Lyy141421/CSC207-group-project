@@ -15,16 +15,29 @@ public class UserInterface {
      * The general user interface
      */
 
+
     // === Instance variables ===
     // The user who logged in
     User user;
 
+
+    // === Methods FOR GUI to call ===
+    /**
+     * Check whether the date inputted by the user as today is valid.
+     * @param today     Today's date that is selected by the user.
+     * @return  true iff the date selected by the user is on or after the previous login date.
+     */
+    boolean getValidTodayDate(LocalDate today) {
+        return !today.isBefore(JobApplicationSystem.getPreviousLoginDate());
+    }
+
     public static void main(String[] args) {
         UserInterface UI = new UserInterface();
         while (true) {
+            LocalDate today = UI.getTodaysDateValid();
             User user = UI.login();
             UserInterface userInterface = new InterfaceFactory().create(user);
-            userInterface.run(LocalDate.now());
+            userInterface.run(today);
             System.out.println();
         }
     }
@@ -39,7 +52,6 @@ public class UserInterface {
 
 
     // === Inherited methods ===
-
     /**
      * Run this user interface.
      * @param today Today's date.
@@ -186,8 +198,18 @@ public class UserInterface {
         return option;
     }
 
-
+    // ============================================================================================================== //
     // === Private methods ===
+
+    /**
+     * Get today's date as inputted by the user.
+     * @return  today's date
+     */
+    private LocalDate getTodaysDateValid() {
+        Scanner sc = new Scanner(System.in);
+        return this.getDate(sc, JobApplicationSystem.getPreviousLoginDate(),
+                "Please enter today's date (yyyy-MM-dd): ");
+    }
 
     /**
      * Get an e-mail address as input from the user. E-mail address must be in valid format.

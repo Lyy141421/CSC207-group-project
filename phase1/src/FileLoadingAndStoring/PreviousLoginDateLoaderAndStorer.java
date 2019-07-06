@@ -6,32 +6,39 @@ import java.io.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-public class PreviousLoginDateLoaderAndStorer {
+class PreviousLoginDateLoaderAndStorer {
 
     /**
      * Loads the previous login date saved in "PreviousLoginDate.txt' in memory.
-     * @throws IOException
      */
-    public void loadPreviousLoginDate() throws IOException {
+    void loadPreviousLoginDate() {
         try (BufferedReader fileReader = new BufferedReader(new FileReader("PreviousLoginDate.txt"))) {
             String dateString = fileReader.readLine().trim();
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             LocalDate date = LocalDate.parse(dateString, dtf);
             JobApplicationSystem.setPreviousLoginDate(date);
         } catch (FileNotFoundException fnfe) {
-            new FileWriter("PreviousLoginDate.txt");
+            try {
+                new FileWriter("PreviousLoginDate.txt");
+            } catch (IOException ioe) {
+                ioe.printStackTrace();
+            }
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
         }
     }
 
     /**
      * Stores the previous login date in 'PreviousLoginDate.txt'.
-     * @throws IOException
      */
-    public void storePreviousLoginDate() throws IOException {
+    void storePreviousLoginDate() {
         try (PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("PreviousLoginDate.txt")))) {
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             String dateString = JobApplicationSystem.getToday().format(dtf);
             out.println(dateString);
+        }
+        catch (IOException ioe) {
+            ioe.printStackTrace();
         }
     }
 }
