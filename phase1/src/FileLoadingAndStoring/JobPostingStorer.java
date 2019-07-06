@@ -38,7 +38,8 @@ public class JobPostingStorer extends GenericStorer<JobPosting> {
 
     private void storeCompany(JobPosting jobPosting, HashMap<String, Object> data) {
         Company c = jobPosting.getCompany();
-        data.put("UsersAndJobObjects.Company", new ArrayList(){{add(Company.FILENAME); add(c.getName());}});
+        data.put("Company", new ArrayList(){{add(Company.FILENAME); add(c.getName());}});
+        StorerManager.subStore(c);
     }
 
     private void storeAllApplications(JobPosting jobPosting, HashMap<String, Object> data) {
@@ -47,6 +48,7 @@ public class JobPostingStorer extends GenericStorer<JobPosting> {
             jobapplications.add(new ArrayList() {{
                 add(JobApplication.FILENAME);
                 add(x.getIdString());
+                StorerManager.subStore(x);
             }});
         }
         data.put("jobapplications", jobapplications);
@@ -58,6 +60,7 @@ public class JobPostingStorer extends GenericStorer<JobPosting> {
             applicationsInConsideration.add(new ArrayList() {{
                 add(JobApplication.FILENAME);
                 add(x.getIdString());
+                StorerManager.subStore(x);
             }});
         }
         data.put("applicationsInConsideration", applicationsInConsideration);
@@ -69,6 +72,7 @@ public class JobPostingStorer extends GenericStorer<JobPosting> {
             applicationsRejected.add(new ArrayList() {{
                 add(JobApplication.FILENAME);
                 add(x.getIdString());
+                StorerManager.subStore(x);
             }});
         }
         data.put("applicationsRejected", applicationsRejected);

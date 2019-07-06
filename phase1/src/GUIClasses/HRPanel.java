@@ -1,6 +1,7 @@
 package GUIClasses;
 
 
+import UsersAndJobObjects.JobPosting;
 import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
 import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
 import net.sourceforge.jdatepicker.impl.UtilDateModel;
@@ -12,20 +13,31 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.NumberFormat;
+import java.util.ArrayList;
 
-
+// 3 rounds
 public class HRPanel extends JPanel implements ActionListener {
 
+    private ArrayList<JobPosting> prePhoneJP;
+    private ArrayList<JobPosting> scheduleJP;
+    private ArrayList<JobPosting> hiringJP;
+    private ArrayList<JobPosting> allJP;
+
     // Create interface for HR
-    HRPanel () {
+    HRPanel (ArrayList<ArrayList<JobPosting>> HRInfoList) {
+        this.prePhoneJP = HRInfoList.get(0);
+        this.scheduleJP = HRInfoList.get(1);
+        this.hiringJP = HRInfoList.get(2);
+        this.allJP = HRInfoList.get(3);
         this.setLayout(new CardLayout());
         this.add(home(), "HOME");
-        this.add(browsePosting(), "POSTING");
+        this.add(browsePosting(null), "POSTING");
         this.add(viewApplication(), "APPLICATION");
         this.add(searchApplicant(), "APPLICANT");
         this.add(addPosting(), "ADDPOSTING");
     }
 
+    // Construct HomePanel. Static besides number of things in To-Do
     private JPanel home () {
         JPanel homePanel = new JPanel(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
@@ -73,12 +85,17 @@ public class HRPanel extends JPanel implements ActionListener {
         return homePanel;
     }
 
+
+    // ====browsePosting methods====
+
     // Need to pass in list of job postings (all for browse all or particular for to-do)
-    private JPanel browsePosting () {
+    private JPanel browsePosting (ArrayList<JobPosting> JPToShow) {
         JPanel postingPanel = new JPanel(new BorderLayout());
         JPanel buttons = new JPanel(new FlowLayout());
 
-        JComboBox<String> jobPostings = new JComboBox<>();
+        // could change
+        JComboBox<String> jobPostings = new JComboBox<>(this.getTitles(JPToShow));
+
         JTextArea status = new JTextArea("Job posting status here. Changes according to JobPosting selected in JList.");
         status.setEditable(false);
         status.setBorder(new EtchedBorder(EtchedBorder.LOWERED));
@@ -98,6 +115,14 @@ public class HRPanel extends JPanel implements ActionListener {
         postingPanel.add(buttons, BorderLayout.SOUTH);
 
         return postingPanel;
+    }
+
+    private String[] getTitles (ArrayList<JobPosting> JPToShow) {
+        ArrayList<String> titles = new ArrayList<>();
+        for (JobPosting JP : JPToShow) {
+            titles.add(JP.getId() + "-" + JP.getTitle());
+        }
+        return (String[]) titles.toArray();
     }
 
     private JPanel viewApplication () {
@@ -200,6 +225,8 @@ public class HRPanel extends JPanel implements ActionListener {
         c.gridy++;
         addPostingPanel.add(requirementsInput, c);
         JFormattedTextField numPositionsInput = new JFormattedTextField(formatter);
+        numPositionsInput.setValue(1);
+        numPositionsInput.setEditable(false);
         numPositionsInput.setColumns(30);
         c.gridy++;
         addPostingPanel.add(numPositionsInput, c);

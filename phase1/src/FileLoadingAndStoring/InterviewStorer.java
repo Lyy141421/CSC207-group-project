@@ -34,6 +34,7 @@ public class InterviewStorer extends GenericStorer<Interview> {
         data.put("UsersAndJobObjects.JobApplication", new ArrayList() {{
             add(Applicant.FILENAME);
             add(interview.getApplicant().getUsername());
+            StorerManager.subStore(interview.getApplicant());
         }});
     }
 
@@ -41,6 +42,7 @@ public class InterviewStorer extends GenericStorer<Interview> {
         data.put("interviewer", new ArrayList() {{
             add(Interviewer.FILENAME);
             add(interview.getInterviewer().getUsername());
+            StorerManager.subStore(interview.getInterviewer());
         }});
     }
 
@@ -48,6 +50,7 @@ public class InterviewStorer extends GenericStorer<Interview> {
         data.put("UsersAndJobObjects.HRCoordinator", new ArrayList() {{
             add(HRCoordinator.FILENAME);
             add(interview.getHRCoordinator().getUsername());
+            StorerManager.subStore(interview.getHRCoordinator());
         }});
     }
 

@@ -53,15 +53,20 @@ public class ApplicantInterface extends UserInterface {
         int option = getMenuOption(sc, numOptions);
         switch (option) {
             case 1:
-                this.displayOpenJobPostingsNotAppliedTo(sc, today); // Browse open job postings not applied to
+                this.setJobPostingSearchFilters(sc, today); // Browse open job postings not applied to
+                return;
             case 2:
                 this.displayDocuments(); // View uploaded documents
+                return;
             case 3:
                 this.submitApplication(sc, today); // Apply for a job
+                return;
             case 4:
                 this.displayApplications(sc, false); // View applications
+                return;
             case 5:
                 this.displayApplications(sc, true); // Withdraw an application
+                return;
             case 6:
                 this.displayAccountHistory(today); // View account history
         }
@@ -142,91 +147,54 @@ public class ApplicantInterface extends UserInterface {
      * @param sc The Scanner for user input.
      * @param today Today's date.
      */
-    private void displayOpenJobPostingsNotAppliedTo(Scanner sc, LocalDate today) {
-        ArrayList<JobPosting> openJobPostings = applicant.getOpenJobPostingsNotAppliedTo(today);
-        int numOptions = displayFilterOptions();
+    private void setJobPostingSearchFilters(Scanner sc, LocalDate today) {
+        System.out.println();
+        int numOptions = this.displayFilterOptions();
         int option = this.getMenuOption(sc, numOptions);
         switch (option) {
             case 1:
                 String field = getInputLine(sc, "Enter your field: ");
-                boolean noPostingsFound = true;
-                for (JobPosting posting : openJobPostings) {
-                    if (posting.getField().equalsIgnoreCase(field)) {
-                        noPostingsFound = false;
-                        System.out.println(posting.getTitle());
-                        System.out.println(posting.getId());
-                        System.out.println(posting.getDescription());
-                        System.out.println(posting.getRequirements());
-                        System.out.println(posting.getNumPositions());
-                        System.out.println(posting.getCompany().getName());
-                        System.out.println(posting.getPostDate());
-                        System.out.println(posting.getCloseDate());
-                        System.out.println();
-                    }
-                }
-                if (noPostingsFound) {
-                    System.out.println("No postings were found matching field \"" + field + "\".");
-                }
+                this.displayOpenJobPostingsNotYetAppliedTo(today, field, null);
+                return;
             case 2:
                 String companyName = getInputLine(sc, "Enter your company name: ");
-                noPostingsFound = true;
-                for (JobPosting posting : openJobPostings) {
-                    if (posting.getCompany().getName().equalsIgnoreCase(companyName)) {
-                        noPostingsFound = false;
-                        System.out.println(posting.getTitle());
-                        System.out.println(posting.getId());
-                        System.out.println(posting.getField());
-                        System.out.println(posting.getDescription());
-                        System.out.println(posting.getRequirements());
-                        System.out.println(posting.getNumPositions());
-                        System.out.println(posting.getPostDate());
-                        System.out.println(posting.getCloseDate());
-                        System.out.println();
-                    }
-                }
-                if (noPostingsFound) {
-                    System.out.println("No postings were found matching company name \"" + companyName + "\".");
-                }
+                this.displayOpenJobPostingsNotYetAppliedTo(today, null, companyName);
+                return;
             case 3:
                 field = getInputLine(sc, "Enter your field: ");
                 companyName = getInputLine(sc, "Enter your company name: ");
-                noPostingsFound = true;
-                for (JobPosting posting : openJobPostings) {
-                    if (posting.getField().equalsIgnoreCase(field)
-                            && posting.getCompany().getName().equalsIgnoreCase(companyName)) {
-                        noPostingsFound = false;
-                        System.out.println(posting.getTitle());
-                        System.out.println(posting.getId());
-                        System.out.println(posting.getDescription());
-                        System.out.println(posting.getRequirements());
-                        System.out.println(posting.getNumPositions());
-                        System.out.println(posting.getPostDate());
-                        System.out.println(posting.getCloseDate());
-                        System.out.println();
-                    }
-                }
-                if (noPostingsFound) {
-                    System.out.println("No postings were found matching field \"" + field +
-                            "\" and company name \"" + companyName + "\".");
-                }
+                this.displayOpenJobPostingsNotYetAppliedTo(today, field, companyName);
+                return;
             case 4:
-                noPostingsFound = true;
-                for (JobPosting posting : openJobPostings) {
-                    noPostingsFound = false;
-                    System.out.println(posting.getTitle());
-                    System.out.println(posting.getId());
-                    System.out.println(posting.getField());
-                    System.out.println(posting.getDescription());
-                    System.out.println(posting.getRequirements());
-                    System.out.println(posting.getNumPositions());
-                    System.out.println(posting.getCompany().getName());
-                    System.out.println(posting.getPostDate());
-                    System.out.println(posting.getCloseDate());
-                    System.out.println();
-                }
-                if (noPostingsFound) {
-                    System.out.println("The system does not currently contain any postings.");
-                }
+                this.displayOpenJobPostingsNotYetAppliedTo(today, null, null);
+        }
+    }
+
+    private void displayOpenJobPostingsNotYetAppliedTo(LocalDate today, String field, String companyName) {
+        ArrayList<JobPosting> openJobPostings = applicant.getOpenJobPostingsNotAppliedTo(today);
+        boolean noPostingsFound = true;
+        for (JobPosting posting : openJobPostings) {
+            // if field is null, assign value of posting.getField() to filterField so that all postings pass the filter;
+            // otherwise, assign value of field to filterField
+            String filterField = (field == null)? posting.getField() : field;
+            String filterCompanyName = (companyName == null)? posting.getCompany().getName() : companyName;
+            if (filterField.equalsIgnoreCase(posting.getField())
+                    && filterCompanyName.equalsIgnoreCase(posting.getCompany().getName())) {
+                noPostingsFound = false;
+                System.out.println(posting.getTitle());
+                System.out.println(posting.getId());
+                System.out.println(posting.getField());
+                System.out.println(posting.getDescription());
+                System.out.println(posting.getRequirements());
+                System.out.println(posting.getNumPositions());
+                System.out.println(posting.getCompany().getName());
+                System.out.println(posting.getPostDate());
+                System.out.println(posting.getCloseDate());
+                System.out.println();
+            }
+        }
+        if (noPostingsFound) {
+            System.out.println("No postings were found matching the specified criteria.");
         }
     }
 
@@ -283,6 +251,7 @@ public class ApplicantInterface extends UserInterface {
      * @param today Today's date.
      */
     private void submitApplication(Scanner sc, LocalDate today) {
+        System.out.println();
         String companyName = getInputLine(sc, "Enter the name of the company you wish to apply to: ");
         Company company = JobApplicationSystem.getCompany(companyName);
         while (company == null) {
@@ -304,11 +273,13 @@ public class ApplicantInterface extends UserInterface {
                 JobApplication application = this.createJobApplicationThroughFiles(sc, today, posting);
                 posting.addJobApplication(application);
                 applicant.registerJobApplication(application);
+                return;
 
             case 2:
                 application = this.createJobApplicationThroughTextEntry(sc, today, posting);
                 posting.addJobApplication(application);
                 applicant.registerJobApplication(application);
+                return;
         }
     }
 
@@ -319,6 +290,7 @@ public class ApplicantInterface extends UserInterface {
      * @param withdrawal Whether or not the applicant wishes to withdraw an application.
      */
     private void displayApplications(Scanner sc, boolean withdrawal) {
+        System.out.println();
         ArrayList<JobApplication> applications = applicant.getJobApplicationManager().getJobApplications();
         int applicationNumber = 0;
         for (JobApplication application : applications) {
@@ -351,6 +323,7 @@ public class ApplicantInterface extends UserInterface {
      * @param today Today's date.
      */
     private void displayAccountHistory(LocalDate today) {
+        System.out.println();
         System.out.println("Account created: " + applicant.getDateCreated());
         System.out.println("Previous job applications:");
         for (JobApplication application : applicant.getJobApplicationManager().getPreviousJobApplications()) {
@@ -375,9 +348,15 @@ public class ApplicantInterface extends UserInterface {
      * Display the applicant's submitted documents.
      */
     private void displayDocuments() {
-        for (String file : applicant.getFilesSubmitted()) {
-            System.out.println(file);
-            System.out.println();
+        System.out.println();
+        if (applicant.getFilesSubmitted().isEmpty()) {
+            System.out.println("You have not yet uploaded any documents.");
+        }
+        else {
+            for (String file : applicant.getFilesSubmitted()) {
+                System.out.println(file);
+                System.out.println();
+            }
         }
     }
 }

@@ -20,6 +20,7 @@ public class HRCoordinatorStorer extends GenericStorer<HRCoordinator> {
         data.put("dateCreated", hrCoordinator.getDateCreated());
         data.put("Company", new String[]{Company.FILENAME,
                 hrCoordinator.getCompany().getName()});
+        StorerManager.subStore(hrCoordinator.getCompany());
         FileSystem.write(HRCoordinator.FILENAME, hrCoordinator.getUsername(), data);
     }
 }

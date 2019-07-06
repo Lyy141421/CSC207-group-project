@@ -178,7 +178,7 @@ public class UserManager {
         return ret;
     }
 
-    ArrayList getAllHRCoordinator() {
+    public ArrayList getAllHRCoordinator() {
         ArrayList<User> ret = new ArrayList<>();
         for(User user: this.allUsers) {
             if(user instanceof HRCoordinator) {
@@ -188,7 +188,7 @@ public class UserManager {
         return ret;
     }
 
-    ArrayList getAllInterviewers() {
+    public ArrayList getAllInterviewers() {
         ArrayList<User> ret = new ArrayList<>();
         for(User user: this.allUsers) {
             if(user instanceof Interviewer) {

@@ -40,6 +40,7 @@ public class ApplicantStorer extends GenericStorer<Applicant> {
             temp.add(JobApplication.FILENAME);
             temp.add(x.getIdString());
             jobapps.add(temp);
+            StorerManager.subStore(x);
 
         }
         data.put("jobApplicationManager", jobapps);
