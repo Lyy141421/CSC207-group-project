@@ -49,10 +49,6 @@ public abstract class User implements Storable {
         return this.dateCreated;
     }
 
-    public UserInterface getUserInterface() {
-        return this.userInterface;
-    }
-
     // === Setters ===
 
     public void setUsername(String username) {
