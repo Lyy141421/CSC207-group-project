@@ -28,5 +28,6 @@ public class MainFrame extends JFrame {
         add(new NewUserPanel(), "NEWUSER");
         add(new HRPanel(), "HR");
         add(new InterviewerPanel(), "INTERVIEWER");
+        add(new ApplicantPanel(), "APPLICANT");
     }
 }
