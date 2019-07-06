@@ -7,6 +7,10 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 
+/**
+ * JPanel containing all of the GUI needed for Applicant users functionality
+ */
+
 class ApplicantPanel extends JPanel{
     ApplicantPanel() {
         JPanel applicantPanel = new JPanel(new CardLayout());
@@ -140,68 +144,80 @@ class ApplicantPanel extends JPanel{
     private JPanel buildViewJobs1(JobPosting[] jobPostings) {
         JPanel viewJobs1 = new JPanel(new CardLayout());
 
-        //TODO: Loop instantiations, set card keys
-        JPanel viewJobsAdded = new JPanel(null);
+        for(JobPosting j : jobPostings) {
+            JPanel viewJobsAdded = new JPanel(null);
 
-        JLabel viewJobTitle = new JLabel("Job Title");
-        viewJobTitle.setFont(new Font("Serif", Font.PLAIN, 20));
-        viewJobTitle.setBounds(17, 70, 150, 40);
-        viewJobsAdded.add(viewJobTitle);
+            JLabel viewJobTitle = new JLabel(j.getTitle());
+            viewJobTitle.setFont(new Font("Serif", Font.PLAIN, 20));
+            viewJobTitle.setBounds(17, 70, 150, 40);
+            viewJobsAdded.add(viewJobTitle);
 
-        JLabel viewJobCompany = new JLabel("Company Name");
-        viewJobCompany.setFont(new Font("Serif", Font.BOLD, 15));
-        viewJobCompany.setBounds(17, 100, 150, 30);
-        viewJobsAdded.add(viewJobCompany);
+            JLabel viewJobCompany = new JLabel(j.getCompany().getName());
+            viewJobCompany.setFont(new Font("Serif", Font.BOLD, 15));
+            viewJobCompany.setBounds(17, 100, 150, 30);
+            viewJobsAdded.add(viewJobCompany);
 
-        JLabel viewJobDesc = new JLabel("description");
-        viewJobDesc.setBounds(17, 150, 250, 200);
-        viewJobDesc.setVerticalAlignment(JLabel.TOP);
-        viewJobsAdded.add(viewJobDesc);
+            JLabel viewJobDesc = new JLabel(j.getDescription());
+            viewJobDesc.setBounds(17, 150, 250, 200);
+            viewJobDesc.setVerticalAlignment(JLabel.TOP);
+            viewJobsAdded.add(viewJobDesc);
 
-        viewJobs1.add(viewJobsAdded, "keyword");
+            viewJobs1.add(viewJobsAdded, j.getId());
+        }
 
         return viewJobs1;
     }
 
+    /**
+     * Returns the panel containing the remainder of the details for each job posting
+     */
     private JPanel buildViewJobs2(JobPosting[] jobpostings) {
         JPanel viewJobs2 = new JPanel(new CardLayout());
 
-        //TODO: Loop instantiations, set card keys
-        JPanel viewJobsAdded2 = new JPanel(null);
+        for(JobPosting j : jobpostings) {
+            JPanel viewJobsAdded2 = new JPanel(null);
 
-        JLabel viewJobReqs = new JLabel("Requirements: Git fukn good");
-        viewJobReqs.setBounds(17, 150, 250, 20);
-        viewJobsAdded2.add(viewJobReqs);
+            JLabel viewJobReqs = new JLabel("Requirements: " + j.getRequirements());
+            viewJobReqs.setBounds(17, 150, 250, 20);
+            viewJobsAdded2.add(viewJobReqs);
 
-        JLabel viewJobPos = new JLabel("# Of Positions: 3");
-        viewJobPos.setBounds(17, 170, 250, 20);
-        viewJobsAdded2.add(viewJobPos);
+            JLabel viewJobPos = new JLabel("# Of Positions: " + j.getNumPositions());
+            viewJobPos.setBounds(17, 170, 250, 20);
+            viewJobsAdded2.add(viewJobPos);
 
-        JLabel viewJobDatePosted = new JLabel("Date Posted: 06/15/19");
-        viewJobDatePosted.setBounds(17, 190, 250, 20);
-        viewJobsAdded2.add(viewJobDatePosted);
+            JLabel viewJobDatePosted = new JLabel("Date Posted: " + j.getPostDate().toString());
+            viewJobDatePosted.setBounds(17, 190, 250, 20);
+            viewJobsAdded2.add(viewJobDatePosted);
 
-        JLabel viewJobDeadline = new JLabel("Deadline to Apply: 08/21/19");
-        viewJobDeadline.setBounds(17, 210, 250, 20);
-        viewJobsAdded2.add(viewJobDeadline);
+            JLabel viewJobDeadline = new JLabel("Deadline to Apply: " + j.getCloseDate().toString());
+            viewJobDeadline.setBounds(17, 210, 250, 20);
+            viewJobsAdded2.add(viewJobDeadline);
 
-        JLabel viewJobIDNum = new JLabel("Posting ID: 3141592");
-        viewJobIDNum.setBounds(17, 230, 250, 20);
-        viewJobsAdded2.add(viewJobIDNum);
+            JLabel viewJobIDNum = new JLabel("Posting ID: " + j.getId());
+            viewJobIDNum.setBounds(17, 230, 250, 20);
+            viewJobsAdded2.add(viewJobIDNum);
 
-        JButton applyForJob = new JButton("Apply now");
-        applyForJob.setBounds(45, 300, 100, 20);
-        viewJobsAdded2.add(applyForJob);
-        viewJobs2.add(viewJobsAdded2);
+            JButton applyForJob = new JButton("Apply now");
+            applyForJob.setBounds(45, 300, 100, 20);
+            viewJobsAdded2.add(applyForJob);
+            viewJobs2.add(viewJobsAdded2);
+        }
 
         return viewJobs2;
     }
 
     /**
      * Takes a list of postings and converts them to Name - ID form for card/navigation purposes
-     * @param jobPostings the postings in question TODO: finish this method
+     * @param jobPostings the postings in question
      */
     private String[] getListNames(JobPosting[] jobPostings) {
-        return new String[0];
+        int len = jobPostings.length;
+        String[] ret = new String[len];
+
+        for(int i=0; i < len - 1; i++) {
+            ret[i] = jobPostings[i].getTitle() + " - " + jobPostings[i].getId();
+        }
+
+        return ret;
     }
 }
