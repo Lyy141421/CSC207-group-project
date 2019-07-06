@@ -27,7 +27,7 @@ public class JobApplicationSystem {
     // The user manager for the system
     private static UserManager userManager = new UserManager();
     // The date this program interprets as today (Defaults to today)
-    private static LocalDate today = LocalDate.now();
+    public static LocalDate today = LocalDate.now();
 
     // === Public methods ===
 
