@@ -41,6 +41,20 @@ public class HRCoordinatorInterface extends UserInterface {
         return jobPostingsList;
     }
 
+    /**
+     * Add a job posting for this company.
+     * @param today  Today's date.
+     * @param jobPostingFields  The fields that the user inputs.
+     */
+    void addJobPosting(LocalDate today, Object[] jobPostingFields) {
+        String title = (String) jobPostingFields[0];
+        String field = (String) jobPostingFields[1];
+        String description = (String) jobPostingFields[2];
+        String requirements = (String) jobPostingFields[3];
+        int numPositions = (Integer) jobPostingFields[4];
+        LocalDate closeDate = (LocalDate) jobPostingFields[5];
+        this.HRC.addJobPosting(title, field, description, requirements, numPositions, today, closeDate);
+    }
 
 
     // ============================================================================================================== //
@@ -61,7 +75,6 @@ public class HRCoordinatorInterface extends UserInterface {
             }
         }
     }
-
 
     /**
      * Interface for displaying main menu options.
