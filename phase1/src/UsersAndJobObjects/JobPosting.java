@@ -199,7 +199,7 @@ public class JobPosting implements Storable {
         s += "Description: " + this.getDescription() + "\n";
         s += "Requirements: " + this.getRequirements() + "\n";
         s += "Number of positions: " + this.getNumPositions() + "\n";
-        s += "UsersAndJobObjects.Company: " + this.getCompany().getName() + "\n";
+        s += "Company: " + this.getCompany().getName() + "\n";
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         s += "Post date: " + this.getPostDate().format(dtf) + "\n";
         s += "Close date: " + this.getCloseDate().format(dtf) + "\n";
