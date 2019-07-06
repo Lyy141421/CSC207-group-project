@@ -105,6 +105,9 @@ public class JobApplicationManager {
      * @return the number of days since the most recent job posting close date.
      */
     public long getNumDaysSinceMostRecentCloseDate(LocalDate today) {
+        if (this.getLastClosedJobApp() == null) {
+            return 0;
+        }
         return Math.max(0, DAYS.between(today, this.getLastClosedJobApp().getJobPosting().getCloseDate()));
     }
 
