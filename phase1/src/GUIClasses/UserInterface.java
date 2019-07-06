@@ -217,7 +217,6 @@ public class UserInterface {
         System.out.println();
         String legalName = this.getOnlyLetters(sc, "Enter your legal name: ");
         String email = this.getValidEmail(sc, "Enter your email address: ");
-        sc.nextLine();
         int numOptions = this.displayUserTypes();
         int option = this.getMenuOption(sc, numOptions);
         switch (option) {

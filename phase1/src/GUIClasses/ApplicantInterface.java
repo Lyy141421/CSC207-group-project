@@ -54,14 +54,19 @@ public class ApplicantInterface extends UserInterface {
         switch (option) {
             case 1:
                 this.displayOpenJobPostingsNotAppliedTo(sc, today); // Browse open job postings not applied to
+                return;
             case 2:
                 this.displayDocuments(); // View uploaded documents
+                return;
             case 3:
                 this.submitApplication(sc, today); // Apply for a job
+                return;
             case 4:
                 this.displayApplications(sc, false); // View applications
+                return;
             case 5:
                 this.displayApplications(sc, true); // Withdraw an application
+                return;
             case 6:
                 this.displayAccountHistory(today); // View account history
         }
@@ -167,6 +172,7 @@ public class ApplicantInterface extends UserInterface {
                 if (noPostingsFound) {
                     System.out.println("No postings were found matching field \"" + field + "\".");
                 }
+                return;
             case 2:
                 String companyName = getInputLine(sc, "Enter your company name: ");
                 noPostingsFound = true;
@@ -187,6 +193,7 @@ public class ApplicantInterface extends UserInterface {
                 if (noPostingsFound) {
                     System.out.println("No postings were found matching company name \"" + companyName + "\".");
                 }
+                return;
             case 3:
                 field = getInputLine(sc, "Enter your field: ");
                 companyName = getInputLine(sc, "Enter your company name: ");
@@ -209,6 +216,7 @@ public class ApplicantInterface extends UserInterface {
                     System.out.println("No postings were found matching field \"" + field +
                             "\" and company name \"" + companyName + "\".");
                 }
+                return;
             case 4:
                 noPostingsFound = true;
                 for (JobPosting posting : openJobPostings) {
@@ -304,11 +312,13 @@ public class ApplicantInterface extends UserInterface {
                 JobApplication application = this.createJobApplicationThroughFiles(sc, today, posting);
                 posting.addJobApplication(application);
                 applicant.registerJobApplication(application);
+                return;
 
             case 2:
                 application = this.createJobApplicationThroughTextEntry(sc, today, posting);
                 posting.addJobApplication(application);
                 applicant.registerJobApplication(application);
+                return;
         }
     }
 
@@ -375,9 +385,14 @@ public class ApplicantInterface extends UserInterface {
      * Display the applicant's submitted documents.
      */
     private void displayDocuments() {
-        for (String file : applicant.getFilesSubmitted()) {
-            System.out.println(file);
-            System.out.println();
+        if (applicant.getFilesSubmitted().isEmpty()) {
+            System.out.println("You have not yet uploaded any documents.");
+        }
+        else {
+            for (String file : applicant.getFilesSubmitted()) {
+                System.out.println(file);
+                System.out.println();
+            }
         }
     }
 }
