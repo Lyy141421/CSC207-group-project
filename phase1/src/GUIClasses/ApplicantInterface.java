@@ -272,16 +272,20 @@ public class ApplicantInterface extends UserInterface {
         int option = this.getMenuOption(sc, numOptions);
         switch (option) {
             case 1:
-                JobApplication application = this.createJobApplicationThroughFiles(sc, today, posting);
-                posting.addJobApplication(application);
-                applicant.registerJobApplication(application);
-                return;
-
+                if (applicant.getFilesSubmitted().isEmpty()) {
+                    System.out.println("You have not yet uploaded any files.");
+                    return;
+                }
+                else {
+                    JobApplication application = this.createJobApplicationThroughFiles(sc, today, posting);
+                    posting.addJobApplication(application);
+                    applicant.registerJobApplication(application);
+                    return;
+                }
             case 2:
-                application = this.createJobApplicationThroughTextEntry(sc, today, posting);
+                JobApplication application = this.createJobApplicationThroughTextEntry(sc, today, posting);
                 posting.addJobApplication(application);
                 applicant.registerJobApplication(application);
-                return;
         }
     }
 
