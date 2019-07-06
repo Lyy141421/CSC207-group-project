@@ -202,6 +202,23 @@ public class JobApplication implements Storable{
     }
 
     /**
+     * Get a string of the overview of this job application, including id, applicant name, job posting, status,
+     * and application date.
+     *
+     * @return a string of the overview of this job application.
+     */
+    public String getOverview() {
+        String s = "Application ID: " + this.getId() + "\n";
+        s += "Applicant: " + this.getApplicant().getLegalName() + "(" + this.getApplicant().getUsername() + ")" + "\n";
+        s += "Job Posting: " + this.getJobPosting().getTitle() + " -- ID: " + this.getJobPosting().getId();
+        s += "Status: " + JobApplication.statuses.get(this.getStatus()) + "\n";
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-mm-dd");
+        s += "Application date: " + this.getApplicationDate().format(dtf);
+
+        return s;
+    }
+
+    /**
      * Get a string representation of this job application.
      *
      * @return a string representation of this job application.
@@ -211,12 +228,11 @@ public class JobApplication implements Storable{
         String s = "Application ID: " + this.getId() + "\n";
         s += "Applicant: " + this.getApplicant().getLegalName() + "(" + this.getApplicant().getUsername() + ")" + "\n";
         s += "Job Posting: " + this.getJobPosting().getTitle() + " -- ID: " + this.getJobPosting().getId();
-        s += "CV: " + "\n" + this.getCV() + "\n";
-        s += "Cover letter: " + this.getCoverLetter() + "\n";
+        s += "\n\nCV: \n" + this.getCV() + "\n\n";
+        s += "Cover letter: \n" + this.getCoverLetter() + "\n\n";
         s += "Status: " + JobApplication.statuses.get(this.getStatus()) + "\n";
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-mm-dd");
-        s += "Application date: " + this.getApplicationDate().format(dtf) + "\n";
-        s += "Interview IDs: " + this.getInterviewIDs();
+        s += "Application date: " + this.getApplicationDate().format(dtf);
         return s;
     }
 

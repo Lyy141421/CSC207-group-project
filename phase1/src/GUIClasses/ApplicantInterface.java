@@ -55,22 +55,22 @@ public class ApplicantInterface extends UserInterface {
         switch (option) {
             case 1:
                 this.setJobPostingSearchFilters(sc, today); // Browse open job postings not applied to
-                break;
+                return;
             case 2:
                 this.displayDocuments(); // View uploaded documents
-                break;
+                return;
             case 3:
                 this.submitApplication(sc, today); // Apply for a job
-                break;
+                return;
             case 4:
                 this.displayApplications(sc, false); // View applications
-                break;
+                return;
             case 5:
                 this.displayApplications(sc, true); // Withdraw an application
-                break;
+                return;
             case 6:
                 this.displayAccountHistory(today); // View account history
-                break;
+                return;
             case 7:
                 throw new ExitException(); // Exit
 
@@ -161,19 +161,18 @@ public class ApplicantInterface extends UserInterface {
             case 1:
                 String field = getInputLine(sc, "Enter your field: ");
                 this.displayOpenJobPostingsNotYetAppliedTo(today, field, null);
-                break;
+                return;
             case 2:
                 String companyName = getInputLine(sc, "Enter your company name: ");
                 this.displayOpenJobPostingsNotYetAppliedTo(today, null, companyName);
-                break;
+                return;
             case 3:
                 field = getInputLine(sc, "Enter your field: ");
                 companyName = getInputLine(sc, "Enter your company name: ");
                 this.displayOpenJobPostingsNotYetAppliedTo(today, field, companyName);
-                break;
+                return;
             case 4:
                 this.displayOpenJobPostingsNotYetAppliedTo(today, null, null);
-                break;
         }
     }
 
@@ -278,16 +277,20 @@ public class ApplicantInterface extends UserInterface {
         int option = this.getMenuOption(sc, numOptions);
         switch (option) {
             case 1:
-                JobApplication application = this.createJobApplicationThroughFiles(sc, today, posting);
-                posting.addJobApplication(application);
-                applicant.registerJobApplication(application);
-                break;
-
+                if (applicant.getFilesSubmitted().isEmpty()) {
+                    System.out.println("You have not yet uploaded any files.");
+                    return;
+                }
+                else {
+                    JobApplication application = this.createJobApplicationThroughFiles(sc, today, posting);
+                    posting.addJobApplication(application);
+                    applicant.registerJobApplication(application);
+                    return;
+                }
             case 2:
-                application = this.createJobApplicationThroughTextEntry(sc, today, posting);
+                JobApplication application = this.createJobApplicationThroughTextEntry(sc, today, posting);
                 posting.addJobApplication(application);
                 applicant.registerJobApplication(application);
-                break;
         }
     }
 
