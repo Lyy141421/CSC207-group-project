@@ -104,7 +104,7 @@ public class LoaderManager {
         }
     }
 
-    ArrayList<Object> getArray(){
+    public ArrayList<Object> getArray(){
         ArrayList<Object> out = new ArrayList<>();
         for(String key : this.getHashMap().keySet()){
             out.add(getHashMap().get(key));

@@ -83,13 +83,10 @@ public class JobApplicationSystem {
         LoaderManager jobposting = new LoaderManager(new JobPostingLoader(), JobPosting.class, JobPosting.FILENAME);
         LoaderManager jobapplication = new LoaderManager(new JobApplicationLoader(), JobApplication.class, JobApplication.FILENAME);
         LoaderManager.startLoad();
-        //todo Assign = applicant.getArray()
-        //todo Assign = hrcoordinator.getArray()
-        //todo Assign = interviewer.getArray()
-        //todo Assign = company.getArray()
-        //todo Assign = interview.getArray()
-        //todo Assign = jobposting.getArray()
-        //todo Assign = jobapplication.getArray()
+        userManager.addUserList(applicant.getArray());
+        userManager.addUserList(hrcoordinator.getArray());
+        userManager.addUserList(interviewer.getArray());
+        companies = company.getArray();
     }
 
     /**
