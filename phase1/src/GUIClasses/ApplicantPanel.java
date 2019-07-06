@@ -17,7 +17,7 @@ class ApplicantPanel extends JPanel{
 
         JPanel applicantStart = this.buildStartPanel();
 
-        JPanel viewJobs = this.buildViewJobs(new JobPosting[0]);
+        JPanel viewJobs = this.buildViewJobs(new JobPosting[0]); //TODO: Pass proper list
 
         JPanel viewApps = new JPanel(new GridLayout(1, 3)); //TODO: Implement construction
 
