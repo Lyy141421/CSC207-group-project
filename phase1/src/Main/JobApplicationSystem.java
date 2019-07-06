@@ -89,6 +89,7 @@ public class JobApplicationSystem {
         for(Object comp : company.getArray()){
             companies.add((Company)comp);
         }
+        System.out.println(companies.get(0).getName());
     }
 
     /**
