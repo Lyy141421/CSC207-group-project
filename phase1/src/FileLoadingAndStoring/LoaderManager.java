@@ -31,6 +31,13 @@ public class LoaderManager {
 
     // === Static Methods ===
 
+    /**
+     * Adds a object to the obj_map
+     *
+     * @param filename - The filename of the object
+     * @param id - the Id of the object
+     * @param obj - the object to be stored
+     */
     static void mapPut(String filename, String id, Object obj){
         if(obj_map.containsKey(filename)){
             obj_map.get(filename).put(id, obj);
@@ -40,6 +47,13 @@ public class LoaderManager {
         }
     }
 
+    /**
+     * Retrieves an object from the obj_map
+     *
+     * @param filename - The filename of the object
+     * @param id - the Id of the object
+     * @return returns the object which was retrieved
+     */
     static Object mapGet(String filename, String id){
         if(ObjInMap(filename, id)){
             return obj_map.get(filename).get(id);
@@ -47,10 +61,25 @@ public class LoaderManager {
         return null;
     }
 
+    /**
+     * Checks to see if the object is in the obj_map
+     *
+     * @param filename - The filename of the object
+     * @param id - the Id of the object
+     * @return boolean weather or not it is in the obj_map
+     */
     static boolean ObjInMap(String filename, String id){
         return (obj_map.containsKey(filename) && obj_map.get(filename).containsKey(id));
     }
 
+    /**
+     * Loads an object from within another object to be assigned by that object
+     *
+     * @param clazz - the class of the Object
+     * @param filename - The filename of the object
+     * @param id - the Id of the object
+     * @return the subloaded object
+     */
     static Object subLoad(Class clazz, String filename, String id){
         if(ObjInMap(filename, id)){
             return mapGet(filename, id);
@@ -70,6 +99,9 @@ public class LoaderManager {
         }
     }
 
+    /**
+     * Loads all Loaders in loader_map
+     */
     public static void startLoad(){
         for(Object x : loader_map.keySet()){
             loader_map.get(x).load();
@@ -78,11 +110,19 @@ public class LoaderManager {
 
     // === Instance Methods ===
 
+    /**
+     * Loads all objects in this LoaderManager
+     */
     private void load(){
         this.fillMap();
-        this.loadAll();
+        for(Object obj : this.getArray()){
+            this.loader.loadOne(obj);
+        }
     }
 
+    /**
+     * Fills the obj_map with objects from json Id's
+     */
     private void fillMap(){
         Iterator i = FileSystem.getAllID(this.filename);
         while(i.hasNext()){
@@ -98,12 +138,11 @@ public class LoaderManager {
         }
     }
 
-    void loadAll(){
-        for(Object obj : this.getArray()){
-            this.loader.loadOne(obj);
-        }
-    }
-
+    /**
+     * Gets an array of the Objects in the map
+     *
+     * @return array of the Objects
+     */
     public ArrayList<Object> getArray(){
         ArrayList<Object> out = new ArrayList<>();
         for(String key : this.getHashMap().keySet()){
@@ -112,6 +151,11 @@ public class LoaderManager {
         return out;
     }
 
+    /**
+     * Gets an HashMap of the Id's to Objects in the map
+     *
+     * @return The HashMap
+     */
     HashMap<String, Object> getHashMap(){
         return obj_map.get(this.filename);
     }

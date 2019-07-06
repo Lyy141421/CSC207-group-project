@@ -297,6 +297,7 @@ public class UserInterface {
                 password = this.getInputLine(sc, "Enter your password: ");
             }
             System.out.println("Login successful!");
+            System.out.println();
             return JobApplicationSystem.getUserManager().findUserByUsername(username);
         }
     }

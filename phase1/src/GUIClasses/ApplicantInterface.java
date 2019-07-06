@@ -269,6 +269,7 @@ public class ApplicantInterface extends UserInterface {
         JobPosting posting = company.getJobPostingManager().getJobPosting(postingId);
         while (posting == null || posting.getCloseDate().isEqual(today) || posting.getCloseDate().isAfter(today)) {
             System.out.println("No open posting was found matching id " + postingId + ".");
+            System.out.println();
             postingId = getInteger(sc, "Enter the id of the posting you wish to apply for: ");
             posting = company.getJobPostingManager().getJobPosting(postingId);
         }
