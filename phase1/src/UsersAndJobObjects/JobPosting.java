@@ -187,6 +187,20 @@ public class JobPosting implements Storable {
     }
 
     /**
+     * Returns 'yes' or 'no' based on if bool is True/False
+     * @param bool The boolean being converted to a user-friendly string.
+     * @return  'yes' or 'no' based on value of bool.
+     */
+    private String booleanToString(boolean bool) {
+        if (bool) {
+            return "Yes";
+        }
+        else {
+            return "No";
+        }
+    }
+
+    /**
      * Get a string representation of this job posting.
      *
      * @return a string representation of this job posting.
@@ -199,11 +213,11 @@ public class JobPosting implements Storable {
         s += "Description: " + this.getDescription() + "\n";
         s += "Requirements: " + this.getRequirements() + "\n";
         s += "Number of positions: " + this.getNumPositions() + "\n";
-        s += "UsersAndJobObjects.Company: " + this.getCompany().getName() + "\n";
+        s += "Company: " + this.getCompany().getName() + "\n";
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         s += "Post date: " + this.getPostDate().format(dtf) + "\n";
         s += "Close date: " + this.getCloseDate().format(dtf) + "\n";
-        s += "Filled: " + this.isFilled() + "\n";
+        s += "Filled: " + this.booleanToString(this.isFilled()) + "\n";
         return s;
     }
 

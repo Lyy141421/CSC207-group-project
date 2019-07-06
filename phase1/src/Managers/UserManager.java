@@ -197,4 +197,8 @@ public class UserManager {
         }
         return ret;
     }
+
+    public void addUserList(ArrayList list){
+        allUsers.addAll(list);
+    }
 }

@@ -17,7 +17,6 @@ public class InterviewLoader extends GenericLoader<Interview> {
      * @param interview The interview to be loaded.
      */
     void loadOne(Interview interview) {
-        System.out.println("Here");
         HashMap data = FileSystem.read(Interview.FILENAME, String.valueOf(interview.getId()));
         this.loadJobApplication(interview, data);
         this.loadInterviewer(interview, data);
@@ -40,7 +39,6 @@ public class InterviewLoader extends GenericLoader<Interview> {
     }
 
     private void loadJobApplication(Interview interview, HashMap data) {
-        System.out.println("Check");
         interview.setJobApplication((JobApplication) LoaderManager.subLoad(JobApplication.class, (String) ((ArrayList)
                 data.get("JobApplication")).get(0), (String)
                 ((ArrayList) data.get("JobApplication")).get(1)));

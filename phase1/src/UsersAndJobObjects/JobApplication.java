@@ -200,14 +200,14 @@ public class JobApplication implements Storable{
     @Override
     public String toString() {
         String s = "Application ID: " + this.getId() + "\n";
-        s += "UsersAndJobObjects.Applicant: " + this.getApplicant().getLegalName() + "(" + this.getApplicant().getUsername() + ")" + "\n";
+        s += "Applicant: " + this.getApplicant().getLegalName() + "(" + this.getApplicant().getUsername() + ")" + "\n";
         s += "Job Posting: " + this.getJobPosting().getTitle() + " -- ID: " + this.getJobPosting().getId();
         s += "CV: " + "\n" + this.getCV() + "\n";
         s += "Cover letter: " + this.getCoverLetter() + "\n";
         s += "Status: " + JobApplication.statuses.get(this.getStatus()) + "\n";
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-mm-dd");
         s += "Application date: " + this.getApplicationDate().format(dtf) + "\n";
-        s += "UsersAndJobObjects.Interview IDs: " + this.getInterviewIDs();
+        s += "Interview IDs: " + this.getInterviewIDs();
         return s;
     }
 
