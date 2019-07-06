@@ -96,7 +96,15 @@ public class JobApplicationSystem {
      * Used to Save all Objects to json memory
      */
     static void mainEnd(){
-        //todo PlaceHolder
+        StorerManager.flushStored();
+        StorerManager applicant = new StorerManager(new ApplicantStorer(), Applicant.class, userManager.getAllApplicants());
+        StorerManager hrcoordinator = new StorerManager(new HRCoordinatorStorer(), HRCoordinator.class, userManager.getAllHRCoordinator());
+        StorerManager interviewer = new StorerManager(new InterviewerStorer(), Interviewer.class, userManager.getAllInterviewers());
+        StorerManager company = new StorerManager(new CompanyStorer(), Company.class, companies);
+        StorerManager interview = new StorerManager(new InterviewStorer(), Interview.class, new ArrayList());
+        StorerManager jobposting = new StorerManager(new JobPostingStorer(), JobPosting.class, new ArrayList());
+        StorerManager jobapplication = new StorerManager(new JobApplicationStorer(), JobApplication.class, new ArrayList());
+        StorerManager.endSave();
     }
 
     public static Company getCompany(String name) {
