@@ -19,12 +19,15 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.text.NumberFormat;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 
 // 3 rounds
 public class HRPanel extends JPanel implements ActionListener {
 
     private HRCoordinatorInterface HRInterface;
+    private LocalDate today;
     private ArrayList<JobPosting> prePhoneJP;
     private ArrayList<JobPosting> scheduleJP;
     private ArrayList<JobPosting> hiringJP;
@@ -33,6 +36,7 @@ public class HRPanel extends JPanel implements ActionListener {
     // Create interface for HR
     HRPanel (HRCoordinatorInterface HRInterface, LocalDate today) {
         this.HRInterface = HRInterface;
+        this.today = today;
         ArrayList<ArrayList<JobPosting>> HRInfoList = HRInterface.getHighPriorityAndAllJobPostings(today);
         this.prePhoneJP = HRInfoList.get(0);
         this.scheduleJP = HRInfoList.get(1);
@@ -247,10 +251,20 @@ public class HRPanel extends JPanel implements ActionListener {
         JPanel applicantPanel = new JPanel(new BorderLayout());
         JPanel row = new JPanel(new FlowLayout(FlowLayout.CENTER));
 
-        JLabel applicantName = new JLabel("Applicant name");
+        JLabel applicantName = new JLabel("Applicant username");
         JTextField nameInput = new JTextField(30);
         JButton search = new JButton("Search");
-        search.addActionListener(this);
+        search.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ArrayList<JobApplication> apps = HRInterface.getAllJobApplicationsToCompany(nameInput.getText());
+                if (apps.isEmpty()) {
+                    JOptionPane.showMessageDialog(applicantPanel, "One or more fields have illegal input.");
+                } else {
+                    // Update jobs in panel combobox and switch.
+                }
+            }
+        });
         row.add(applicantName);
         row.add(nameInput);
         row.add(search);
@@ -262,6 +276,9 @@ public class HRPanel extends JPanel implements ActionListener {
 
         return applicantPanel;
     }
+
+
+    // ====Add posting panel methods====
 
     private JPanel addPosting () {
         JPanel addPostingPanel = new JPanel(new GridBagLayout());
@@ -275,6 +292,8 @@ public class HRPanel extends JPanel implements ActionListener {
         formatter.setAllowsInvalid(false);
 
         UtilDateModel dateModel = new UtilDateModel();
+        dateModel.setDate(today.getYear(), today.getMonthValue()-1, today.getDayOfMonth());
+        dateModel.setSelected(true);
         JDatePanelImpl datePanel = new JDatePanelImpl(dateModel);
 
         c.gridx = 0;
@@ -294,7 +313,6 @@ public class HRPanel extends JPanel implements ActionListener {
         JLabel numPositions = new JLabel("Number of positions");
         c.gridy++;
         addPostingPanel.add(numPositions, c);
-        // JLabel postDate = new JLabel("Date");
         JLabel closeDate = new JLabel("Close date");
         c.gridy++;
         addPostingPanel.add(closeDate, c);
@@ -319,7 +337,6 @@ public class HRPanel extends JPanel implements ActionListener {
         numPositionsInput.setColumns(30);
         c.gridy++;
         addPostingPanel.add(numPositionsInput, c);
-        // JTextField postDateInput = new JTextField();
         JDatePickerImpl closeDateInput = new JDatePickerImpl(datePanel);
         c.gridy++;
         addPostingPanel.add(closeDateInput, c);
@@ -329,7 +346,14 @@ public class HRPanel extends JPanel implements ActionListener {
         submit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                Object[] postingFields = new Object[] {jobTitleInput.getText(), jobFieldInput.getText(),
+                        jobDescriptionInput.getText(), requirementsInput.getText(), numPositionsInput.getValue(),
+                        ((Date) closeDateInput.getModel().getValue()).toInstant().atZone(ZoneId.systemDefault()).toLocalDate()};
+                if (isValidInput(postingFields)) {
+                    HRInterface.addJobPosting(today, postingFields);
+                } else {
+                    JOptionPane.showMessageDialog(addPostingPanel, "One or more fields have illegal input.");
+                }
             }
         });
         home.addActionListener(this);
@@ -342,7 +366,7 @@ public class HRPanel extends JPanel implements ActionListener {
     }
 
 
-
+    // ====Switch panel button ActionListener methods====
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -364,7 +388,7 @@ public class HRPanel extends JPanel implements ActionListener {
                 c.show(this, "ADDPOSTING");
                 break;
             case "View applications":
-            case "Search":
+            //case "Search":
                 c.show(this, "APPLICATION");
                 break;
             default:
@@ -373,7 +397,21 @@ public class HRPanel extends JPanel implements ActionListener {
     }
 
     // ==== Back end methods ====
-    private void createJobPosting() {
+    private boolean isValidInput (Object[] fields) {
+        boolean valid = true;
 
+        int i = 0;
+        while (valid && i<4) {
+            if (fields[i].equals("")) {
+                valid = false;
+            }
+            i++;
+        }
+
+        if (((LocalDate) fields[5]).isBefore(today)) {
+            valid = false;
+        }
+
+        return valid;
     }
 }
