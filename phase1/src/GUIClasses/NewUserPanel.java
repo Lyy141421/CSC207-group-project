@@ -11,27 +11,31 @@ import java.awt.event.ActionListener;
  */
 
 class NewUserPanel extends JPanel {
+    private UserInterfaceTest BackEnd;
+    private JComboBox mainSelector;
+    private JPanel[] formPanels = new JPanel[3];
+
     NewUserPanel() {
         this.setLayout(new GridLayout(3, 1));
+
         JPanel selector = this.buildSelector();
+
         JPanel forms = this.buildForms();
 
-        for(Component c : selector.getComponents()) {
-            if(c instanceof JComboBox) {
-                ((JComboBox)c).addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        JComboBox actor = (JComboBox)e.getSource();
-                        CardLayout cl = (CardLayout)forms.getLayout();
-                        cl.show(forms, actor.getSelectedItem().toString());
-                    }
-                });
+        this.mainSelector.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JComboBox actor = (JComboBox)e.getSource();
+                CardLayout cl = (CardLayout)forms.getLayout();
+                cl.show(forms, actor.getSelectedItem().toString());
             }
-        }
+        });
 
         JPanel buttons = this.buildButtons();
 
         this.add(selector); this.add(forms); this.add(buttons);
+
+        this.BackEnd = new UserInterfaceTest();
     }
 
     /**
@@ -46,12 +50,13 @@ class NewUserPanel extends JPanel {
         selectorPanel.add(titleText);
 
         JLabel typeSelector = new JLabel("What type of account is being created?", SwingConstants.CENTER);
-        typeSelector.setBounds(252, 105, 250, 30);
+        typeSelector.setBounds(247, 105, 250, 30);
         selectorPanel.add(typeSelector);
 
         String[] userTypes = {"Applicant", "Interviewer", "HR Coordinator"};
         JComboBox selectorBox = new JComboBox(userTypes);
-        selectorBox.setBounds(502, 105, 100, 30);
+        selectorBox.setBounds(497, 105, 120, 30);
+        this.mainSelector = selectorBox;
         selectorPanel.add(selectorBox);
 
         return selectorPanel;
@@ -100,6 +105,7 @@ class NewUserPanel extends JPanel {
         appEmailEntry.setBounds(437, 110, 150, 30);
         applicantCard.add(appEmailEntry);
 
+        this.formPanels[0] = applicantCard;
         formPanel.add(applicantCard, "Applicant");
     }
 
@@ -133,6 +139,7 @@ class NewUserPanel extends JPanel {
         intCompanyEntry.setBounds(437, 110, 150, 30);
         interviewerCard.add(intCompanyEntry);
 
+        this.formPanels[1] = interviewerCard;
         formPanel.add(interviewerCard, "Interviewer");
     }
 
@@ -174,6 +181,7 @@ class NewUserPanel extends JPanel {
         hrcCompanyEntry.setBounds(437, 112, 150, 30);
         HRCCard.add(hrcCompanyEntry);
 
+        this.formPanels[2] = HRCCard;
         formPanel.add(HRCCard, "HR Coordinator");
     }
 
@@ -185,12 +193,65 @@ class NewUserPanel extends JPanel {
 
         JButton submitButton = new JButton("Create Account");
         submitButton.setBounds(352, 15, 150, 30);
+        submitButton.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                createUser();
+            }
+        });
         buttonPanel.add(submitButton);
 
         JButton backButton = new JButton("Back to Login");
         backButton.setBounds(352, 80, 150, 30);
+        backButton.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                MainFrame parent = (MainFrame)(getParent());
+                parent.setUser(null);
+                parent.getCardLayout().show(parent, "LOGIN");
+            }
+        });
         buttonPanel.add(backButton);
 
         return buttonPanel;
+    }
+
+    /**
+     * Attempts to create the selected user type with the given inputs
+     */
+    private void createUser() {
+        switch(this.mainSelector.getSelectedItem().toString()) {
+            case "Applicant":
+                this.createApplicant();
+                break;
+            case "Interviewer":
+                this.createInterviewer();
+                break;
+            case "HR Coordinator":
+                this.createHRC();
+                break;
+        }
+    }
+
+    /**
+     * The below functions simply attempt to instantiate their corresponding user types
+     */
+    private void createApplicant() {
+
+    }
+
+    private void createInterviewer() {
+
+    }
+
+    private void createHRC() {
+
+    }
+
+    public static void main(String[] args) {
+        JFrame test = new JFrame();
+
+        NewUserPanel test2 = new NewUserPanel(); test2.setVisible(true);
+        test.add(test2);
+
+        test.setVisible(true); test.setSize(854, 480); test.setResizable(false);
     }
 }

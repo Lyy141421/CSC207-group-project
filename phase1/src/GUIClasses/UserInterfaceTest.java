@@ -98,13 +98,11 @@ public class UserInterfaceTest {
      * @return the new HR Coordinator instance created.
      */
     private User createNewHRC(Scanner sc, String username, String password, String legalName, String email) {
-        System.out.println();
-        String companyName = this.getInputLine(sc, "Enter your company name: ");
+        String companyName = "TODO"; //TODO
         Company company = JobApplicationSystem.getCompany(companyName);
         if (company == null) {
             company = JobApplicationSystem.createCompany(companyName);
         }
-        System.out.println("Sign-up successful!");
         return JobApplicationSystem.getUserManager().createHRCoordinator(username, password, legalName, email, company,
                 LocalDate.now(), true);
     }
@@ -118,15 +116,12 @@ public class UserInterfaceTest {
      * @return the new interviewer instance created.
      */
     private User createNewInterviewer(Scanner sc, String username, String password, String legalName, String email) {
-        System.out.println();
-        String companyName = this.getInputLine(sc, "Enter your company name: ");
-        while (JobApplicationSystem.getCompany(companyName) == null) {
-            System.out.println("Company name not found.");
-            companyName = this.getInputLine(sc, "Enter your company name: ");
+        String companyName = ""; //TODO
+        if (JobApplicationSystem.getCompany(companyName) == null) {
+            System.out.println("fuck");
         }
         Company company = JobApplicationSystem.getCompany(companyName);
-        String field = this.getOnlyLetters(sc, "Enter your field: ");
-        System.out.println("Sign-up successful!");
+        String field = "asd"; //TODO
         Interviewer interviewer = JobApplicationSystem.getUserManager().createInterviewer(username, password,
                 legalName, email, company, field, LocalDate.now(), true);
         company.addInterviewer(interviewer);
