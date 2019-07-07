@@ -1,9 +1,6 @@
 package FileLoadingAndStoring;
 
-import UsersAndJobObjects.Applicant;
-import UsersAndJobObjects.Interview;
-import UsersAndJobObjects.JobApplication;
-import UsersAndJobObjects.JobPosting;
+import UsersAndJobObjects.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -30,7 +27,7 @@ public class JobApplicationLoader extends GenericLoader<JobApplication> {
     private void loadPrelimData(JobApplication jobApplication, HashMap data) {
         jobApplication.setCV((String) data.get("CV"));
         jobApplication.setCoverLetter((String) data.get("CoverLetter"));
-        jobApplication.setStatus((int) data.get("Status"));
+        jobApplication.setStatus(new Status((int) data.get("Status")));
         jobApplication.setApplicationDate((LocalDate.parse((String) data.get("ApplicationDate"))));
     }
 
