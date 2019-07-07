@@ -46,12 +46,16 @@ class LoginPanel extends JPanel {
         createNewText.setBounds(327, 335, 100, 20);
         createNewText.setVisible(false);
 
-        JLabel wrongPass = new JLabel("Something's wrong - try again", SwingConstants.CENTER);
+        JLabel wrongPass = new JLabel("Wrong password!", SwingConstants.CENTER);
         wrongPass.setBounds(337, 185, 180, 30);
         wrongPass.setVisible(false);
 
+        JLabel blankEntry = new JLabel("Please fill in both fields", SwingConstants.CENTER);
+        blankEntry.setBounds(337, 185, 180, 30);
+        blankEntry.setVisible(false);
+
         this.add(welcomeLabel); this.add(userNameText); this.add(passwordText);
-        this.add(createNewText); this.add(wrongPass);
+        this.add(createNewText); this.add(wrongPass); this.add(blankEntry);
     }
 
     /**
@@ -77,7 +81,7 @@ class LoginPanel extends JPanel {
         createNewButton.setBounds(427, 335, 100, 20);
         createNewButton.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
-                hideInputError();
+                hidePassError();
                 createUser(userNameEntry.getText());
             }
         });
@@ -124,13 +128,13 @@ class LoginPanel extends JPanel {
     }
 
     /**
-     * Shows "Incorrect Password" warning
+     * Shows wrong pass warning
      */
-    private void showInputError() {
+    private void showPassError() {
         Component[] components = this.getComponents();
         for(Component c : components) {
             if(c instanceof JLabel) {
-                if(((JLabel) c).getText().equals("Something's wrong - try again")) {
+                if(((JLabel) c).getText().equals("Wrong password!")) {
                     c.setVisible(true);
                     break;
                 }
@@ -139,13 +143,43 @@ class LoginPanel extends JPanel {
     }
 
     /**
-     * Hides "Incorrect Password" warning
+     * Hides wrong pass warning
      */
-    private void hideInputError() {
+    private void hidePassError() {
         Component[] components = this.getComponents();
         for(Component c : components) {
             if(c instanceof JLabel) {
-                if(((JLabel) c).getText().equals("Something's wrong - try again")) {
+                if(((JLabel) c).getText().equals("Wrong password!")) {
+                    c.setVisible(false);
+                    break;
+                }
+            }
+        }
+    }
+
+    /**
+     * Shows blank field warning
+     */
+    private void showBlankField() {
+        Component[] components = this.getComponents();
+        for(Component c : components) {
+            if(c instanceof JLabel) {
+                if(((JLabel) c).getText().equals("Please fill in both fields")) {
+                    c.setVisible(true);
+                    break;
+                }
+            }
+        }
+    }
+
+    /**
+     * Hides blank field warning
+     */
+    private void hideBlankField() {
+        Component[] components = this.getComponents();
+        for(Component c : components) {
+            if(c instanceof JLabel) {
+                if(((JLabel) c).getText().equals("Please fill in both fields")) {
                     c.setVisible(false);
                     break;
                 }
@@ -155,19 +189,27 @@ class LoginPanel extends JPanel {
 
     /**
      * attempts login with the provided information
+     * Cases: 0 - blank field, 1 - no user exists, 2 - successful login, 3 - wrong pass
      */
     private void login(JTextField userNameEntry, JPasswordField passwordEntry) {
-        int result = BackEnd.login(userNameEntry.getText(), passwordEntry.getPassword().toString());
+        int result = BackEnd.login(userNameEntry.getText(), new String(passwordEntry.getPassword()));
         switch(result) {
             case 1: this.showCreateNew();
-                    this.hideInputError();
+                    this.hidePassError();
+                    this.hideBlankField();
+                    break;
+            case 0: this.showBlankField();
+                    this.hideCreateNew();
+                    this.hidePassError();
                     break;
             case 2: this.hideCreateNew();
-                    this.hideInputError();
+                    this.hidePassError();
+                    this.hideBlankField();
                     this.mainframe.newUserRef.setNewUsername(null);
                     break; //TODO: handle login
-            case 3: this.showInputError();
+            case 3: this.showPassError();
                     this.hideCreateNew();
+                    this.hideBlankField();
                     break;
         }
     }
@@ -177,7 +219,7 @@ class LoginPanel extends JPanel {
      */
     private void createUser(String username) {
         this.hideCreateNew();
-        this.hideInputError();
+        this.hidePassError();
         this.mainframe.newUserRef.setNewUsername(username);
         this.masterLayout.show(parent, "NEWUSER");
     }

@@ -144,14 +144,13 @@ class UserInterfaceTest {
 
     /**
      * Determine status of the login
-     * @return 1 - no user exists, 2 - successful login, 3 - wrong pass
+     * @return 0 - blank field, 1 - no user exists, 2 - successful login, 3 - wrong pass
      */
     int login(String username, String password) {
-        if (username.equals("")) {
-            return 3;
-        }
         if (JobApplicationSystem.getUserManager().findUserByUsername(username) == null) {
             return 1;
+        } else if (username.equals("") || password.equals("")) {
+            return 0;
         }
         else {
             if(JobApplicationSystem.getUserManager().passwordCorrect(username, password)) {
