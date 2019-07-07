@@ -1,7 +1,5 @@
 package GUIClasses;
 
-import UsersAndJobObjects.User;
-
 import javax.swing.*;
 import java.awt.*;
 import java.time.LocalDate;
