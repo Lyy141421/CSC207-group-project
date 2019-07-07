@@ -251,10 +251,20 @@ public class HRPanel extends JPanel implements ActionListener {
         JPanel applicantPanel = new JPanel(new BorderLayout());
         JPanel row = new JPanel(new FlowLayout(FlowLayout.CENTER));
 
-        JLabel applicantName = new JLabel("Applicant name");
+        JLabel applicantName = new JLabel("Applicant username");
         JTextField nameInput = new JTextField(30);
         JButton search = new JButton("Search");
-        search.addActionListener(this);
+        search.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ArrayList<JobApplication> apps = HRInterface.getAllJobApplicationsToCompany(nameInput.getText());
+                if (apps.isEmpty()) {
+                    JOptionPane.showMessageDialog(applicantPanel, "One or more fields have illegal input.");
+                } else {
+                    // Update jobs in panel combobox and switch.
+                }
+            }
+        });
         row.add(applicantName);
         row.add(nameInput);
         row.add(search);
@@ -266,6 +276,9 @@ public class HRPanel extends JPanel implements ActionListener {
 
         return applicantPanel;
     }
+
+
+    // ====Add posting panel methods====
 
     private JPanel addPosting () {
         JPanel addPostingPanel = new JPanel(new GridBagLayout());
@@ -375,7 +388,7 @@ public class HRPanel extends JPanel implements ActionListener {
                 c.show(this, "ADDPOSTING");
                 break;
             case "View applications":
-            case "Search":
+            //case "Search":
                 c.show(this, "APPLICATION");
                 break;
             default:
