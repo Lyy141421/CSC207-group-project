@@ -38,7 +38,7 @@ public class Status {
         return this.value;
     }
 
-    String getDescription() {
+    public String getDescription() {
         return Status.descriptions.get(this.value);
     }
 
@@ -60,21 +60,21 @@ public class Status {
     /**
      * Advance this status.
      */
-    void advanceStatus() {
+    public void advanceStatus() {
         this.value ++;
     }
 
     /**
      * Set this status as "Archived".
      */
-    void setArchived() {
+    public void setArchived() {
         this.value = Status.ARCHIVED;
     }
 
     /**
      * Set this status as "Hired".
      */
-    void setHired() {
+    public void setHired() {
         this.value = Status.HIRED;
     }
 }

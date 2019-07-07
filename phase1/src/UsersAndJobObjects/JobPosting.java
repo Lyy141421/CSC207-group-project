@@ -253,9 +253,8 @@ public class JobPosting implements Storable {
     /**
      * Advance the round of interviews for this job posting.
      *
-     * @param today Today's date.
      */
-    void advanceInterviewRound(LocalDate today) {
+    void advanceInterviewRound() {
         InterviewManager interviewManager = this.getInterviewManager();
         if (interviewManager.getCurrentRound() < Interview.getMaxNumRounds()) {
             if (interviewManager.isCurrentRoundOver()) {

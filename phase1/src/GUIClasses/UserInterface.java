@@ -202,13 +202,43 @@ public class UserInterface {
     // === Private methods ===
 
     /**
+     * Get the date without comparing to previous date.
+     * @param sc        The scanner for user input.
+     * @param message   The prompt displayed.
+     * @return  the date the user inputs.
+     */
+    private LocalDate getDate(Scanner sc, String message) {
+        System.out.print(message);
+        String input = sc.next();
+        try {
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            return LocalDate.parse(input, dtf);
+        } catch (DateTimeParseException dtpe) {
+            System.out.println("Cannot read date. Please enter again.");
+            System.out.println();
+            return this.getDate(sc, message);
+        }
+    }
+
+    /**
      * Get today's date as inputted by the user.
      * @return  today's date
      */
     private LocalDate getTodaysDateValid() {
         Scanner sc = new Scanner(System.in);
-        return this.getDate(sc, JobApplicationSystem.getPreviousLoginDate(),
-                "Please enter today's date (yyyy-MM-dd): ");
+        LocalDate previousLoginDate = JobApplicationSystem.getPreviousLoginDate();
+        System.out.println();
+        LocalDate date = null;
+        if (previousLoginDate == null) {
+            date = this.getDate(sc, "Please enter today's date (yyyy-mm-dd): ");
+        }
+        else {
+            date = this.getDate(sc, JobApplicationSystem.getPreviousLoginDate(),
+                    "Please enter today's date (yyyy-mm-dd): ");
+        }
+        JobApplicationSystem.setPreviousLoginDate(date);
+        return date;
+
     }
 
     /**

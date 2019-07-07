@@ -3,7 +3,6 @@ package GUIClasses;
 import Main.JobApplicationSystem;
 import Managers.InterviewManager;
 import Managers.JobPostingManager;
-import Managers.UserManager;
 import Miscellaneous.ExitException;
 import UsersAndJobObjects.*;
 
@@ -530,7 +529,7 @@ public class HRCoordinatorInterface extends UserInterface {
             System.out.println("Would you like to advance this applicant for phone interviews?");
             String response = this.getInputToken(sc, "Enter 'Y' for yes or any other key for no: ");
             if (response.equals("Y")) {
-                jobApp.advanceStatus();
+                jobApp.getStatus().advanceStatus();
             } else {
                 jobPosting.getInterviewManager().reject(jobApp);
             }
@@ -555,7 +554,7 @@ public class HRCoordinatorInterface extends UserInterface {
      * @param jobApplication    The job application for which an interview is to be set up.
      */
     private void setUpInterviewForJobApplication(JobApplication jobApplication) {
-        jobApplication.setUpInterview(this.HRC, jobApplication.getStatus());
+        jobApplication.setUpInterview(this.HRC, jobApplication.getStatus().getValue());
     }
 
     /**
@@ -566,12 +565,12 @@ public class HRCoordinatorInterface extends UserInterface {
     private void hireApplicant(Scanner sc, JobPosting jobPosting) {
         ArrayList<JobApplication> finalCandidates = jobPosting.getInterviewManager().getApplicationsInConsideration();
         JobApplication jobApp;
-        if (finalCandidates.size() == 1) {
+        if (finalCandidates.size() == jobPosting.getNumPositions()) {
             jobApp = finalCandidates.get(0);
         } else {
             jobApp = this.selectApplicationForHiring(sc, finalCandidates);
         }
-        jobApp.setHired();
+        jobApp.getStatus().setHired();
         jobPosting.setFilled();
         jobPosting.getInterviewManager().archiveRejected();
         System.out.println("The new hire's email: " + jobApp.getApplicant().getEmail());
