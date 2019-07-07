@@ -12,8 +12,12 @@ import java.awt.event.ActionListener;
 
 class LoginPanel extends JPanel {
     private UserInterfaceTest BackEnd;
+    private CardLayout masterLayout;
+    private JPanel parent;
 
-    LoginPanel() {
+    LoginPanel(JPanel parent, CardLayout masterLayout) {
+        this.parent = parent;
+        this.masterLayout = masterLayout;
         this.setLayout(null);
         this.addTextItems();
         this.addEntryItems();
@@ -165,18 +169,7 @@ class LoginPanel extends JPanel {
     /**
      * passes user to the existing create user class, and requests card change
      */
-    private void createUser(String username) {
-        MainFrame parent = (MainFrame)this.getParent();
-        parent.setUser(username);
-        parent.getCardLayout().show(parent, "NEWUSER");
-    }
-
-    public static void main(String[] args) {
-        JFrame test = new JFrame();
-
-        LoginPanel test2 = new LoginPanel(); test2.setVisible(true);
-        test.add(test2);
-
-        test.setVisible(true); test.setSize(854, 480); test.setResizable(false);
+    private void createUser(String username) { //TODO: Pass user somewhere
+        this.masterLayout.show(parent, "NEWUSER");
     }
 }

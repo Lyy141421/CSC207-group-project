@@ -14,12 +14,15 @@ class NewUserPanel extends JPanel {
     private UserInterfaceTest BackEnd;
     private JComboBox mainSelector;
     private JPanel[] formPanels = new JPanel[3];
+    private CardLayout masterLayout;
+    private JPanel parent;
 
-    NewUserPanel() {
+    NewUserPanel(JPanel parent, CardLayout masterLayout) {
+        this.parent = parent;
+        this.masterLayout = masterLayout;
         this.setLayout(new GridLayout(3, 1));
 
         JPanel selector = this.buildSelector();
-
         JPanel forms = this.buildForms();
 
         this.mainSelector.addActionListener(new ActionListener() {
@@ -34,7 +37,6 @@ class NewUserPanel extends JPanel {
         JPanel buttons = this.buildButtons();
 
         this.add(selector); this.add(forms); this.add(buttons);
-
         this.BackEnd = new UserInterfaceTest();
     }
 
@@ -204,9 +206,7 @@ class NewUserPanel extends JPanel {
         backButton.setBounds(352, 80, 150, 30);
         backButton.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
-                MainFrame parent = (MainFrame)(getParent());
-                parent.setUser(null);
-                parent.getCardLayout().show(parent, "LOGIN");
+                masterLayout.show(parent, "LOGIN");
             }
         });
         buttonPanel.add(backButton);
@@ -244,14 +244,5 @@ class NewUserPanel extends JPanel {
 
     private void createHRC() {
 
-    }
-
-    public static void main(String[] args) {
-        JFrame test = new JFrame();
-
-        NewUserPanel test2 = new NewUserPanel(); test2.setVisible(true);
-        test.add(test2);
-
-        test.setVisible(true); test.setSize(854, 480); test.setResizable(false);
     }
 }
