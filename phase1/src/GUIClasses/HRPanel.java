@@ -232,10 +232,10 @@ public class HRPanel extends JPanel implements ActionListener {
                 info = app.getOverview();
                 break;
             case 1:
-                info = app.getCV();
+                info = app.getCV().getContents();
                 break;
             case 2:
-                info = app.getCoverLetter();
+                info = app.getCoverLetter().getContents();
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + attributeIndex);

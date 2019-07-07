@@ -17,7 +17,7 @@ public class DocumentManager {
 
     // === Getters ===
 
-    ArrayList<JobApplicationDocument> getDocuments() {
+    public ArrayList<JobApplicationDocument> getDocuments() {
         return this.documents;
     }
 

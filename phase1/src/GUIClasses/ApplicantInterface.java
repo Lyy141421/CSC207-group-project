@@ -215,22 +215,22 @@ public class ApplicantInterface extends UserInterface {
     private JobApplication createJobApplicationThroughFiles(Scanner sc, LocalDate today, JobPosting posting) {
         System.out.println("Here are your files: ");
         int CVFileNumber = 0;
-        for (String file : applicant.getFilesSubmitted()) {
+        for (JobApplicationDocument document : applicant.getDocumentManager().getDocuments()) {
             CVFileNumber++;
-            System.out.println(CVFileNumber + ". " + file);
+            System.out.println(CVFileNumber + ". " + document.getContents());
             System.out.println();
         }
         System.out.println("Please enter the file number of the CV you would like to submit.");
         int CVOption = getMenuOption(sc, CVFileNumber);
-        String CV = applicant.getFilesSubmitted().get(CVOption-1);
+        JobApplicationDocument CV = applicant.getDocumentManager().getDocuments().get(CVOption-1);
         int coverLetterFileNumber = 0;
-        for (String file : applicant.getFilesSubmitted()) {
+        for (JobApplicationDocument document : applicant.getDocumentManager().getDocuments()) {
             coverLetterFileNumber++;
-            System.out.println(coverLetterFileNumber + ". " + file);
+            System.out.println(coverLetterFileNumber + ". " + document.getContents());
         }
         System.out.println("Please enter the file number of the cover letter you would like to submit.");
         int coverLetterOption = getMenuOption(sc, coverLetterFileNumber);
-        String coverLetter = applicant.getFilesSubmitted().get(coverLetterOption-1);
+        JobApplicationDocument coverLetter = applicant.getDocumentManager().getDocuments().get(coverLetterOption-1);
         return new JobApplication(applicant, posting, CV, coverLetter, today);
     }
 
@@ -243,10 +243,12 @@ public class ApplicantInterface extends UserInterface {
      * @return a job application containing this applicant's entered files.
      */
     private JobApplication createJobApplicationThroughTextEntry(Scanner sc, LocalDate today, JobPosting posting) {
-        String CV = getInputLinesUntilDone(sc, "Enter the contents of your CV as a series of plain text lines " +
+        String CVContents = getInputLinesUntilDone(sc, "Enter the contents of your CV as a series of plain text lines " +
                 "(program will stop reading after the first empty line): ");
-        String coverLetter = getInputLinesUntilDone(sc, "Enter the contents of your cover letter as a series of" +
+        String coverLetterContents = getInputLinesUntilDone(sc, "Enter the contents of your cover letter as a series of" +
                 " plain text lines (program will stop reading after the first empty line): ");
+        JobApplicationDocument CV = new JobApplicationDocument(CVContents);
+        JobApplicationDocument coverLetter = new JobApplicationDocument(coverLetterContents);
         return new JobApplication(applicant, posting, CV, coverLetter, today);
     }
 
@@ -277,7 +279,7 @@ public class ApplicantInterface extends UserInterface {
         int option = this.getMenuOption(sc, numOptions);
         switch (option) {
             case 1:
-                if (applicant.getFilesSubmitted().isEmpty()) {
+                if (applicant.getDocumentManager().getDocuments().isEmpty()) {
                     System.out.println("You have not yet uploaded any files.");
                     this.submitApplication(sc, today);
                     return;
@@ -318,7 +320,7 @@ public class ApplicantInterface extends UserInterface {
                 }
                 System.out.println("Title: " + application.getJobPosting().getTitle());
                 System.out.println("Company: " + application.getJobPosting().getCompany().getName());
-                System.out.println("Status: " + JobApplication.getStatuses().get(application.getStatus()));
+                System.out.println("Status: " + application.getStatus().getDescription());
                 System.out.println();
             }
             if (withdrawal) {
@@ -351,7 +353,7 @@ public class ApplicantInterface extends UserInterface {
             System.out.println("Description: " + posting.getDescription());
             System.out.println("Company: " + posting.getCompany().getName());
             System.out.println("Close date: " + posting.getCloseDate());
-            System.out.println("Status: " + JobApplication.getStatuses().get(application.getStatus()));
+            System.out.println("Status: " + application.getStatus().getDescription());
             System.out.println();
         }
         System.out.println("Current job applications:");
@@ -362,7 +364,7 @@ public class ApplicantInterface extends UserInterface {
             System.out.println("Description: " + posting.getDescription());
             System.out.println("Company: " + posting.getCompany().getName());
             System.out.println("Close date: " + posting.getCloseDate());
-            System.out.println("Status: " + JobApplication.getStatuses().get(application.getStatus()));
+            System.out.println("Status: " + application.getStatus().getDescription());
             System.out.println();
         }
         if (applicant.getJobApplicationManager().getJobApplications().isEmpty())
@@ -378,12 +380,13 @@ public class ApplicantInterface extends UserInterface {
      */
     private void displayDocuments() {
         System.out.println();
-        if (applicant.getFilesSubmitted().isEmpty()) {
+        ArrayList<JobApplicationDocument> documents = applicant.getDocumentManager().getDocuments();
+        if (documents.isEmpty()) {
             System.out.println("You have not yet uploaded any documents.");
         }
         else {
-            for (String file : applicant.getFilesSubmitted()) {
-                System.out.println(file);
+            for (JobApplicationDocument document : documents) {
+                System.out.println(document);
                 System.out.println();
             }
         }

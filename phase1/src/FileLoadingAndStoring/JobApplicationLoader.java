@@ -25,8 +25,8 @@ public class JobApplicationLoader extends GenericLoader<JobApplication> {
      * @param data The data for this job application.
      */
     private void loadPrelimData(JobApplication jobApplication, HashMap data) {
-        jobApplication.setCV((String) data.get("CV"));
-        jobApplication.setCoverLetter((String) data.get("CoverLetter"));
+        jobApplication.setCV((JobApplicationDocument) data.get("CV"));
+        jobApplication.setCoverLetter((JobApplicationDocument) data.get("CoverLetter"));
         jobApplication.setStatus((Status) data.get("Status"));
         jobApplication.setApplicationDate((LocalDate.parse((String) data.get("ApplicationDate"))));
     }

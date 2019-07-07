@@ -47,6 +47,10 @@ public class Applicant extends User {
         return this.jobApplicationManager;
     }
 
+    public DocumentManager getDocumentManager() {
+        return this.documentManager;
+    }
+
     // === Setters ===
 
     public void setJobApplicationManager(JobApplicationManager jobApplicationManager) {
