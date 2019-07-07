@@ -45,7 +45,7 @@ class UserInterfaceTest {
 
     /**
      * Create a new Applicant.
-     * @return 1 - bad email, 2 - bad company, 3 - success
+     * @return 0 - blank entry, 1 - bad email, 2 - bad company, 3 - success
      */
     int createNewApplicant(HashMap<String, String> inputs) {
         String username = inputs.get("username");
@@ -54,6 +54,8 @@ class UserInterfaceTest {
         String email = inputs.get("email");
         if(!this.checkValidEmail(email)) {
             return 1;
+        } else if (name.equals("") || password.equals("")) { //todo why passwords are being cunts
+            return 0;
         } else {
             JobApplicationSystem.getUserManager().createApplicant(
                     username, password, name, email, LocalDate.now(), true);
@@ -63,7 +65,7 @@ class UserInterfaceTest {
 
     /**
      * Create a new HR Coordinator.
-     * @return 1 - bad email, 2 - bad company, 3 - success
+     * @return 0 - blank entry, 1 - bad email, 2 - bad company, 3 - success
      */
     int createNewHRC(HashMap<String, String> inputs) {
         String username = inputs.get("username");
@@ -75,6 +77,8 @@ class UserInterfaceTest {
             return 1;
         } else if(company == null) {
             return 2;
+        } else if(name.equals("") || password.equals("")) {
+            return 0;
         } else {
             JobApplicationSystem.getUserManager().createHRCoordinator(
                     username, password, name, email, company, LocalDate.now(), true);
@@ -84,7 +88,7 @@ class UserInterfaceTest {
 
     /**
      * Create a new interviewer.
-     * @return 1 - bad email, 2 - bad company, 3 - success
+     * @return 0 - blank entry, 1 - bad email, 2 - bad company, 3 - success
      */
     int createNewInterviewer(HashMap<String, String> inputs) {
         String username = inputs.get("username");
@@ -95,6 +99,8 @@ class UserInterfaceTest {
         String field = "what the fuck"; //TODO: figure out what to do here
         if(!this.checkValidEmail(email)) {
             return 1;
+        } else if(name.equals("") || password.equals("")) {
+            return 0;
         } else if(company == null) {
             return 2;
         } else {

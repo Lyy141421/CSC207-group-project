@@ -205,7 +205,8 @@ class NewUserPanel extends JPanel {
         submitButton.setBounds(352, 15, 150, 30);
         submitButton.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
-                createUser();
+                int status = createUser();
+                postCreation(status);
             }
         });
         buttonPanel.add(submitButton);
@@ -224,40 +225,40 @@ class NewUserPanel extends JPanel {
 
     /**
      * Attempts to create the selected user type with the given inputs
+     * @return 0 - blank entry, 1 - bad email, 2 - bad company, 3 - success
      */
-    private void createUser() {
+    private int createUser() {
         switch(this.mainSelector.getSelectedItem().toString()) {
             case "Applicant":
-                this.createApplicant();
-                break;
+                return this.createApplicant();
             case "Interviewer":
-                this.createInterviewer();
-                break;
+                return this.createInterviewer();
             case "HR Coordinator":
-                this.createHRC();
-                break;
+                return this.createHRC();
         }
+        return 0;
     }
 
     /**
      * The below functions simply attempt to instantiate their corresponding user types
+     * @return 0 - blank entry, 1 - bad email, 2 - bad company, 3 - success
      */
-    private void createApplicant() { //TODO: Interviewer field, deal with returns
+    private int createApplicant() {
         JPanel forms = this.getPanelByName(this, "formPanel");
         Component[] items = this.getPanelByName(forms, "applicantCard").getComponents();
-        BackEnd.createNewApplicant(this.getInputs(items));
+        return BackEnd.createNewApplicant(this.getInputs(items));
     }
 
-    private void createInterviewer() {
+    private int createInterviewer() {
         JPanel forms = this.getPanelByName(this, "formPanel");
         Component[] items = this.getPanelByName(forms, "interviewerCard").getComponents();
-        BackEnd.createNewInterviewer(this.getInputs(items));
+        return BackEnd.createNewInterviewer(this.getInputs(items));
     }
 
-    private void createHRC() {
+    private int createHRC() {
         JPanel forms = this.getPanelByName(this, "formPanel");
         Component[] items = this.getPanelByName(forms, "HRCCard").getComponents();
-        BackEnd.createNewHRC(this.getInputs(items));
+        return BackEnd.createNewHRC(this.getInputs(items));
     }
 
     /**
@@ -280,20 +281,50 @@ class NewUserPanel extends JPanel {
         HashMap<String, String> ret = new HashMap<>();
         ret.put("username", this.newUsername);
         for(Component c : items) {
-            switch (c.getName()) {
-                case "password":
-                    ret.put("password", ((JPasswordField)c).getPassword().toString());
-                case "name":
-                    ret.put("name", ((JTextField)c).getText());
-                case "email":
-                    ret.put("email", ((JTextField)c).getText());
-                case "company":
-                    ret.put("company", ((JTextField)c).getText());
-                case "field":
-                    ret.put("field", ((JTextField)c).getText());
+            if(c.getName() != null) {
+                switch (c.getName()) {
+                    case "password":
+                        ret.put("password", new String(((JPasswordField)c).getPassword()));
+                        break;
+                    case "name":
+                        ret.put("name", ((JTextField)c).getText());
+                        break;
+                    case "email":
+                        ret.put("email", ((JTextField)c).getText());
+                        break;
+                    case "company":
+                        ret.put("company", ((JTextField)c).getText());
+                        break;
+                    case "field":
+                        ret.put("field", ((JTextField)c).getText());
+                        break;
+                }
             }
         }
         return ret;
+    }
+
+    /**
+     * Updates the GUI's visuals based on the result of an account creation
+     * @param status 0 - blank entry, 1 - bad email, 2 - bad company, 3 - success
+     */
+    private void postCreation(int status) { //TODO: Finish this function
+        switch(status) {
+            case 0:
+                System.out.println("Blank entry");
+                break;
+            case 1:
+                System.out.println("Bad email");
+                break;
+            case 2:
+                System.out.println("Bad company");
+                break;
+            case 3:
+                System.out.println("Successful");
+                this.setNewUsername(null);
+                this.masterLayout.show(this.parent, "LOGIN");
+                break;
+        }
     }
 
     void setNewUsername(String username) {
