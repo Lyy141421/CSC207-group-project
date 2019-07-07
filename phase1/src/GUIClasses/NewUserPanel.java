@@ -4,7 +4,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.HashMap;
 
 /**
  * REMEMBER:
@@ -17,6 +16,7 @@ class NewUserPanel extends JPanel {
     private JPanel parent;
     private JComboBox mainSelector;
     private String newUsername;
+    private JDialog success;
 
     NewUserPanel(JPanel parent, CardLayout masterLayout) {
         this.parent = parent;
@@ -31,7 +31,7 @@ class NewUserPanel extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 JComboBox actor = (JComboBox)e.getSource();
                 CardLayout cl = (CardLayout)forms.getLayout();
-                cl.show(forms, actor.getSelectedItem().toString());
+                cl.show(forms, (String)(actor.getSelectedItem()));
             }
         });
 
@@ -39,6 +39,7 @@ class NewUserPanel extends JPanel {
 
         this.add(selector); this.add(forms); this.add(buttons);
         this.BackEnd = new UserInterfaceTest();
+        this.success = this.buildDialog();
     }
 
     /**
@@ -121,31 +122,40 @@ class NewUserPanel extends JPanel {
         JPanel interviewerCard = new JPanel(null); interviewerCard.setName("interviewerCard");
 
         JLabel intPassText = new JLabel("Password: ", SwingConstants.CENTER);
-        intPassText.setBounds(267, 10, 150, 30);
+        intPassText.setBounds(267, 8, 150, 30);
         interviewerCard.add(intPassText);
 
         JPasswordField intPassEntry = new JPasswordField();
         intPassEntry.setName("password");
-        intPassEntry.setBounds(437, 10, 150, 30);
+        intPassEntry.setBounds(437, 8, 150, 30);
         interviewerCard.add(intPassEntry);
 
         JLabel intEmailText = new JLabel("Email Address: ", SwingConstants.CENTER);
-        intEmailText.setBounds(267, 60, 150, 30);
+        intEmailText.setBounds(267, 43, 150, 30);
         interviewerCard.add(intEmailText);
 
         JTextField intEmailEntry = new JTextField();
         intEmailEntry.setName("email");
-        intEmailEntry.setBounds(437, 60, 150, 30);
+        intEmailEntry.setBounds(437, 43, 150, 30);
         interviewerCard.add(intEmailEntry);
 
         JLabel intCompanyText = new JLabel("Company: ", SwingConstants.CENTER);
-        intCompanyText.setBounds(267, 110, 150, 30);
+        intCompanyText.setBounds(267, 77, 150, 30);
         interviewerCard.add(intCompanyText);
 
         JTextField intCompanyEntry = new JTextField();
         intCompanyEntry.setName("company");
-        intCompanyEntry.setBounds(437, 110, 150, 30);
+        intCompanyEntry.setBounds(437, 77, 150, 30);
         interviewerCard.add(intCompanyEntry);
+
+        JLabel intNameText = new JLabel("Legal Name: ", SwingConstants.CENTER);
+        intNameText.setBounds(267, 112, 150, 30);
+        interviewerCard.add(intNameText);
+
+        JTextField intNameEntry = new JTextField();
+        intNameEntry.setName("name");
+        intNameEntry.setBounds(437, 112, 150, 30);
+        interviewerCard.add(intNameEntry);
 
         formPanel.add(interviewerCard, "Interviewer");
     }
@@ -215,10 +225,26 @@ class NewUserPanel extends JPanel {
         backButton.setBounds(352, 80, 150, 30);
         backButton.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
+                clearEntries();
                 masterLayout.show(parent, "LOGIN");
             }
         });
         buttonPanel.add(backButton);
+
+        JLabel blankError = new JLabel("Error - Blank Entry");
+        blankError.setBounds(522, 15, 200, 20);
+        blankError.setVisible(false);
+        buttonPanel.add(blankError);
+
+        JLabel emailError = new JLabel("Error - Invalid Email");
+        emailError.setBounds(522, 15, 200, 20);
+        emailError.setVisible(false);
+        buttonPanel.add(emailError);
+
+        JLabel companyError = new JLabel("Error - Company not Found");
+        companyError.setBounds(522, 15, 200, 20);
+        companyError.setVisible(false);
+        buttonPanel.add(companyError);
 
         return buttonPanel;
     }
@@ -246,19 +272,19 @@ class NewUserPanel extends JPanel {
     private int createApplicant() {
         JPanel forms = this.getPanelByName(this, "formPanel");
         Component[] items = this.getPanelByName(forms, "applicantCard").getComponents();
-        return BackEnd.createNewApplicant(this.getInputs(items));
+        return BackEnd.createNewApplicant(this.BackEnd.getInputs(items, this.newUsername));
     }
 
     private int createInterviewer() {
         JPanel forms = this.getPanelByName(this, "formPanel");
         Component[] items = this.getPanelByName(forms, "interviewerCard").getComponents();
-        return BackEnd.createNewInterviewer(this.getInputs(items));
+        return BackEnd.createNewInterviewer(this.BackEnd.getInputs(items, this.newUsername));
     }
 
     private int createHRC() {
         JPanel forms = this.getPanelByName(this, "formPanel");
         Component[] items = this.getPanelByName(forms, "HRCCard").getComponents();
-        return BackEnd.createNewHRC(this.getInputs(items));
+        return BackEnd.createNewHRC(this.BackEnd.getInputs(items, this.newUsername));
     }
 
     /**
@@ -275,56 +301,76 @@ class NewUserPanel extends JPanel {
     }
 
     /**
-     * Collects user input data from the different forms, so that a new account may be created
-     */
-    private HashMap<String, String> getInputs(Component[] items) {
-        HashMap<String, String> ret = new HashMap<>();
-        ret.put("username", this.newUsername);
-        for(Component c : items) {
-            if(c.getName() != null) {
-                switch (c.getName()) {
-                    case "password":
-                        ret.put("password", new String(((JPasswordField)c).getPassword()));
-                        break;
-                    case "name":
-                        ret.put("name", ((JTextField)c).getText());
-                        break;
-                    case "email":
-                        ret.put("email", ((JTextField)c).getText());
-                        break;
-                    case "company":
-                        ret.put("company", ((JTextField)c).getText());
-                        break;
-                    case "field":
-                        ret.put("field", ((JTextField)c).getText());
-                        break;
-                }
-            }
-        }
-        return ret;
-    }
-
-    /**
      * Updates the GUI's visuals based on the result of an account creation
      * @param status 0 - blank entry, 1 - bad email, 2 - bad company, 3 - success
      */
-    private void postCreation(int status) { //TODO: Finish this function
+    private void postCreation(int status) {
         switch(status) {
             case 0:
-                System.out.println("Blank entry");
+                this.postUpdater("Error - Blank Entry");
                 break;
             case 1:
-                System.out.println("Bad email");
+                this.postUpdater("Error - Invalid Email");
                 break;
             case 2:
-                System.out.println("Bad company");
+                this.postUpdater("Error - Company not Found");
                 break;
             case 3:
-                System.out.println("Successful");
-                this.setNewUsername(null);
+                this.success.setVisible(true);
+                this.clearEntries();
                 this.masterLayout.show(this.parent, "LOGIN");
                 break;
         }
+    }
+
+    /**
+     *
+     * @param text content of the jlabel which is to be shown
+     */
+    private void postUpdater(String text) {
+        JPanel buttons = this.getPanelByName(this, "buttonPanel");
+        for(Component c : buttons.getComponents()) {
+            if(c instanceof JLabel) {
+                if (((JLabel)c).getText().equals(text)) {
+                    c.setVisible(true);
+                } else {
+                    c.setVisible(false);
+                }
+            }
+        }
+    }
+
+    private void clearEntries() {
+        JPanel forms = this.getPanelByName(this, "formPanel");
+        for(Component c : forms.getComponents()) {
+            for(Component c2 : ((JPanel)c).getComponents()) {
+                if(c2 instanceof JTextField) {
+                    ((JTextField) c2).setText("");
+                } else if(c2 instanceof JPasswordField) { //Intellij error is incorrect - this works
+                    ((JPasswordField) c2).setText("");
+                }
+            }
+        }
+        this.setNewUsername(null);
+        this.postUpdater("");
+    }
+
+    private JDialog buildDialog() {
+        JDialog d = new JDialog(new JFrame() , "Account Created", true);
+        d.setLayout( new FlowLayout() );
+        JButton b = new JButton ("OK");
+        b.addActionListener ( new ActionListener() {
+            public void actionPerformed( ActionEvent e )
+            {
+                d.setVisible(false);
+            }
+        });
+        d.add( new JLabel ("Account creation successful"), SwingConstants.CENTER);
+        d.add(b);
+        d.setSize(300,80);
+        d.setVisible(false);
+
+        return d;
     }
 
     void setNewUsername(String username) {

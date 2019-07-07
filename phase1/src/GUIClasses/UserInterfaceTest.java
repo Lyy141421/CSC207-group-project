@@ -6,6 +6,8 @@ import UsersAndJobObjects.Interviewer;
 import UsersAndJobObjects.JobApplication;
 import UsersAndJobObjects.User;
 
+import javax.swing.*;
+import java.awt.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -54,7 +56,7 @@ class UserInterfaceTest {
         String email = inputs.get("email");
         if(!this.checkValidEmail(email)) {
             return 1;
-        } else if (name.equals("") || password.equals("")) { //todo why passwords are being cunts
+        } else if (name.equals("") || password.equals("")) {
             return 0;
         } else {
             JobApplicationSystem.getUserManager().createApplicant(
@@ -92,7 +94,7 @@ class UserInterfaceTest {
      */
     int createNewInterviewer(HashMap<String, String> inputs) {
         String username = inputs.get("username");
-        String password = inputs.get("passwords");
+        String password = inputs.get("password");
         String name = inputs.get("name");
         String email = inputs.get("email");
         Company company = JobApplicationSystem.getCompany(inputs.get("company"));
@@ -108,6 +110,36 @@ class UserInterfaceTest {
                     username, password, name, email, company, field, LocalDate.now(), true);
             return 3;
         }
+    }
+
+    /**
+     * Collects user input data from the different forms, so that a new account may be created
+     */
+    HashMap<String, String> getInputs(Component[] items, String newUsername) {
+        HashMap<String, String> ret = new HashMap<>();
+        ret.put("username", newUsername);
+        for(Component c : items) {
+            if(c.getName() != null) {
+                switch (c.getName()) {
+                    case "password":
+                        ret.put("password", new String(((JPasswordField)c).getPassword()));
+                        break;
+                    case "name":
+                        ret.put("name", ((JTextField)c).getText());
+                        break;
+                    case "email":
+                        ret.put("email", ((JTextField)c).getText());
+                        break;
+                    case "company":
+                        ret.put("company", ((JTextField)c).getText());
+                        break;
+                    case "field":
+                        ret.put("field", ((JTextField)c).getText());
+                        break;
+                }
+            }
+        }
+        return ret;
     }
 
     /**
