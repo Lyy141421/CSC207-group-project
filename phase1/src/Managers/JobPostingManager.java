@@ -90,7 +90,7 @@ public class JobPostingManager {
         for (JobPosting jobPosting : this.getJobPostings()) {
             if (!jobPosting.isFilled()) {
                 LocalDate closeDate = jobPosting.getCloseDate();
-                if (closeDate.isEqual(today) || closeDate.isBefore(today)) {
+                if (closeDate.isBefore(today)) {
                     jobPostings.add(jobPosting);
                 }
             }
@@ -107,13 +107,7 @@ public class JobPostingManager {
     public ArrayList<JobPosting> getClosedJobPostingsNoInterview(LocalDate today) {
         ArrayList<JobPosting> jobPostings = new ArrayList<>();
         for (JobPosting jobPosting : this.getClosedJobPostingsNotFilled(today)) {
-            boolean hasInterviews = false;
-            for (JobApplication jobApp : jobPosting.getJobApplications()) {
-                if (!jobApp.getInterviews().isEmpty()) {
-                    hasInterviews = true;
-                }
-            }
-            if (!hasInterviews) {
+            if (!jobPosting.hasInterviews()) {
                 jobPostings.add(jobPosting);
             }
         }

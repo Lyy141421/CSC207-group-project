@@ -108,11 +108,11 @@ public class InterviewManager {
      * @return the integer representing the task the HR Coordinator must accomplish.
      */
     public int getHrTask() {
-        if (this.isNumApplicantUnderThreshold()) {
+        if (this.isNumApplicantUnderThreshold() && this.currentRound != 0) {
             return InterviewManager.HIRE_APPLICANTS;
         } else if (this.isInterviewProcessOver()) {
             return InterviewManager.CHOOSE_APPLICANTS_FOR_HIRE;
-        } else if (this.isCurrentRoundOver()) {
+        } else if (!this.jobPosting.hasInterviews() || this.isCurrentRoundOver()) {
             return InterviewManager.SCHEDULE_INTERVIEWS;
         } else {
             return InterviewManager.DO_NOTHING;

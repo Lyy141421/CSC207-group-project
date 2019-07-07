@@ -523,6 +523,7 @@ public class HRCoordinatorInterface extends UserInterface {
      * @param jobPosting The job posting in question.
      */
     private void selectJobAppsForPhoneInterview(Scanner sc, JobPosting jobPosting) {
+        System.out.println("Job applications submitted for this job posting: ");
         for (JobApplication jobApp : jobPosting.getJobApplications()) {
             System.out.println(jobApp);
             System.out.println();
@@ -541,6 +542,7 @@ public class HRCoordinatorInterface extends UserInterface {
      * @param jobPosting    The job posting in question.
      */
     private void setUpInterviewsForRound(JobPosting jobPosting) {
+        System.out.println();
         Company company = jobPosting.getCompany();
         String field = jobPosting.getField();
         if (!company.hasInterviewerForField(field)) {
@@ -591,6 +593,7 @@ public class HRCoordinatorInterface extends UserInterface {
     private void viewHighPriorityJobPostings(Scanner sc, LocalDate today) {
         JobPostingManager JPM = this.HRC.getCompany().getJobPostingManager();
         ArrayList<JobPosting> recentlyClosed = JPM.getClosedJobPostingsNoInterview(today);
+        System.out.println("Job postings that have recently closed: ");
         for (JobPosting jobPosting : recentlyClosed) {
             System.out.println(jobPosting);
             this.reviewApplicationsForJobPosting(sc, jobPosting);

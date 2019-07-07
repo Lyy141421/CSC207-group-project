@@ -52,7 +52,7 @@ public class ApplicantStorer extends GenericStorer<Applicant> {
         DocumentManager docman = applicant.getDocumentManager();
         ArrayList documents = new ArrayList();
         for(JobApplicationDocument x : docman.getDocuments()){
-            documents.add(new ArrayList<>() {{add(x.getId()); add(x.getContents());}});
+            documents.add(new ArrayList<String>() {{add(x.getId()); add(x.getContents());}});
         }
         data.put("Documents", documents);
     }

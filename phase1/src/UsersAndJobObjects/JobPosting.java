@@ -172,6 +172,19 @@ public class JobPosting implements Storable {
         }
     }
 
+    /**
+     * Check whether this job posting has had any interviews.
+     * @return  true iff this job posting has had an interview.
+     */
+    public boolean hasInterviews() {
+        for (JobApplication jobApp : this.getJobApplications()) {
+            if (!jobApp.getInterviews().isEmpty()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (!(obj instanceof JobPosting)) {
