@@ -1,5 +1,6 @@
 package GUIClasses;
 
+import UsersAndJobObjects.Interview;
 import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
 import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
 import net.sourceforge.jdatepicker.impl.UtilDateModel;
@@ -10,14 +11,28 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.time.LocalDate;
+import java.util.ArrayList;
 
 
 public class InterviewerPanel extends JPanel implements ActionListener, ItemListener {
 
-    InterviewerPanel () {
+    InterviewerInterface interviewerInterface;
+    LocalDate today;
+    ArrayList<Interview> pastInterviews;
+    ArrayList<Interview> futureInterviews;
+
+    InterviewerPanel (InterviewerInterface interviewerInterface, LocalDate today) {
+        this.interviewerInterface = interviewerInterface;
+        this.today = today;
+        ArrayList<ArrayList<Interview>> interviews = interviewerInterface.getInterviewsBeforeOnAndAfterToday(today);
+        this.pastInterviews = interviews.get(0);
+        this.futureInterviews = interviews.get(1);
+        this.futureInterviews.addAll(interviews.get(2));
+
         this.setLayout(new CardLayout());
         this.add(home(), "HOME");
-        this.add(viewInterviews(), "VIEW");
+        this.add(viewInterviews(this.futureInterviews, this.pastInterviews), "VIEW");
         this.add(scheduleInterviews(), "SCHEDULE");
     }
 
@@ -35,7 +50,7 @@ public class InterviewerPanel extends JPanel implements ActionListener, ItemList
         return homePanel;
     }
 
-    private JPanel viewInterviews () {
+    private JPanel viewInterviews (ArrayList<Interview> incompleteInterviews, ArrayList<Interview> completeInterviews) {
         JPanel viewPanel = new JPanel(new BorderLayout());
         JPanel select = new JPanel();
         select.setLayout(new BoxLayout(select, BoxLayout.Y_AXIS));
