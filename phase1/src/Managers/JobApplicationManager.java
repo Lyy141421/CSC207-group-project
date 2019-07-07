@@ -113,7 +113,13 @@ public class JobApplicationManager {
         if (this.getLastClosedJobApp() == null) {
             return 0;
         }
-        return Math.max(0, DAYS.between(today, this.getLastClosedJobApp().getJobPosting().getCloseDate()));
+        else {
+            LocalDate closeDate = this.getLastClosedJobApp().getJobPosting().getCloseDate();
+            if (closeDate.isAfter(today)) {
+                DAYS.between(today, closeDate);
+            }
+            return 0;
+        }
     }
 
     /**

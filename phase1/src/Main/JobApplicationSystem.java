@@ -11,6 +11,7 @@ import UsersAndJobObjects.Applicant;
 import UsersAndJobObjects.HRCoordinator;
 import UsersAndJobObjects.Interviewer;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Timer;
@@ -28,6 +29,8 @@ public class JobApplicationSystem {
     private static UserManager userManager = new UserManager();
     // The date this program interprets as today (Defaults to today)
     public static LocalDate today = LocalDate.now();
+    // The previous login date for this application
+    public static LocalDate previousLoginDate;
 
     // === Public methods ===
 
@@ -49,14 +52,27 @@ public class JobApplicationSystem {
     }
 
     public static ArrayList<Company> getCompanies() {
-        return companies;
+        return JobApplicationSystem.companies;
+    }
+
+    public static LocalDate getToday() {
+        return JobApplicationSystem.today;
+    }
+
+    public static LocalDate getPreviousLoginDate() {
+        return JobApplicationSystem.previousLoginDate;
+    }
+
+    // === Setters ===
+    public static void setPreviousLoginDate(LocalDate date) {
+        JobApplicationSystem.previousLoginDate = date;
     }
 
     // ============================================================================================================== //
     // === Package-private methods ===
     // === Setters ===
 
-    static void setDate(LocalDate new_date){
+    static void setToday(LocalDate new_date){
         today = new_date;
     }
 
