@@ -3,58 +3,26 @@ package GUIClasses;
 import Main.JobApplicationSystem;
 import UsersAndJobObjects.Company;
 import UsersAndJobObjects.Interviewer;
+import UsersAndJobObjects.JobApplication;
 import UsersAndJobObjects.User;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.HashMap;
 import java.util.Scanner;
 
-public class UserInterfaceTest {
+class UserInterfaceTest {
     /**
      * The general user interface
      */
-
-    // === Instance variables ===
-    // The user who logged in
-    User user;
 
     // === Constructors ===
     UserInterfaceTest() {
     }
 
-    public UserInterfaceTest(User user) {
-        this.user = user;
-    }
-
     // === Inherited methods ===
     void run(LocalDate today) {
-    }
-
-    /**
-     * Get the date inputted by the user.
-     * @param sc        The scanner for user input.
-     * @param today     Today's date.
-     * @param message   The prompt that is displayed.
-     * @return  the date inputted by the user.
-     */
-    LocalDate getDate(Scanner sc, LocalDate today, String message) {
-        System.out.print(message);
-        String input = sc.next();
-        try {
-            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            LocalDate date = LocalDate.parse(input, dtf);
-            if (date.isBefore(today)) {
-                System.out.println("Invalid date. Please enter again.");
-                System.out.println();
-                return this.getDate(sc, today, message);
-            }
-            return date;
-        } catch (DateTimeParseException dtpe) {
-            System.out.println("Cannot read date. Please enter again.");
-            System.out.println();
-            return this.getDate(sc, today, message);
-        }
     }
 
     // === Private methods ===
@@ -76,56 +44,64 @@ public class UserInterfaceTest {
     }
 
     /**
-     * Interface for displaying user types.
-     *
-     * @return the number of options in the menu.
+     * Create a new Applicant.
+     * @return 1 - bad email, 2 - bad company, 3 - success
      */
-    private int displayUserTypes() {
-        System.out.println();
-        System.out.println("Select your user type:");
-        System.out.println("1 - Job applicant");
-        System.out.println("2 - Interviewer");
-        System.out.println("3 - HR coordinator");
-        return 3;
+    int createNewApplicant(HashMap<String, String> inputs) {
+        String username = inputs.get("username");
+        String password = inputs.get("password");
+        String name = inputs.get("name");
+        String email = inputs.get("email");
+        if(!this.checkValidEmail(email)) {
+            return 1;
+        } else {
+            JobApplicationSystem.getUserManager().createApplicant(
+                    username, password, name, email, LocalDate.now(), true);
+            return 3;
+        }
     }
 
     /**
      * Create a new HR Coordinator.
-     *
-     * @param sc       The scanner for user input.
-     * @param username The HR Coordinator's username.
-     * @param password The HR Coordinator's password.
-     * @return the new HR Coordinator instance created.
+     * @return 1 - bad email, 2 - bad company, 3 - success
      */
-    private User createNewHRC(Scanner sc, String username, String password, String legalName, String email) {
-        String companyName = "TODO"; //TODO
-        Company company = JobApplicationSystem.getCompany(companyName);
-        if (company == null) {
-            company = JobApplicationSystem.createCompany(companyName);
+    int createNewHRC(HashMap<String, String> inputs) {
+        String username = inputs.get("username");
+        String password = inputs.get("password");
+        String name = inputs.get("name");
+        String email = inputs.get("email");
+        Company company = JobApplicationSystem.getCompany(inputs.get("company"));
+        if(!this.checkValidEmail(email)) {
+            return 1;
+        } else if(company == null) {
+            return 2;
+        } else {
+            JobApplicationSystem.getUserManager().createHRCoordinator(
+                    username, password, name, email, company, LocalDate.now(), true);
+            return 3;
         }
-        return JobApplicationSystem.getUserManager().createHRCoordinator(username, password, legalName, email, company,
-                LocalDate.now(), true);
     }
 
     /**
      * Create a new interviewer.
-     *
-     * @param sc       The scanner for user input.
-     * @param username The interviewer's username.
-     * @param password The interviewer's password.
-     * @return the new interviewer instance created.
+     * @return 1 - bad email, 2 - bad company, 3 - success
      */
-    private User createNewInterviewer(Scanner sc, String username, String password, String legalName, String email) {
-        String companyName = ""; //TODO
-        if (JobApplicationSystem.getCompany(companyName) == null) {
-            System.out.println("fuck");
+    int createNewInterviewer(HashMap<String, String> inputs) {
+        String username = inputs.get("username");
+        String password = inputs.get("passwords");
+        String name = inputs.get("name");
+        String email = inputs.get("email");
+        Company company = JobApplicationSystem.getCompany(inputs.get("company"));
+        String field = "what the fuck"; //TODO: figure out what to do here
+        if(!this.checkValidEmail(email)) {
+            return 1;
+        } else if(company == null) {
+            return 2;
+        } else {
+            JobApplicationSystem.getUserManager().createInterviewer(
+                    username, password, name, email, company, field, LocalDate.now(), true);
+            return 3;
         }
-        Company company = JobApplicationSystem.getCompany(companyName);
-        String field = "asd"; //TODO
-        Interviewer interviewer = JobApplicationSystem.getUserManager().createInterviewer(username, password,
-                legalName, email, company, field, LocalDate.now(), true);
-        company.addInterviewer(interviewer);
-        return interviewer;
     }
 
     /**

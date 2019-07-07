@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.HashMap;
 
 /**
  * REMEMBER:
@@ -44,7 +45,7 @@ class NewUserPanel extends JPanel {
      * Adds the drop down menu which allows a user to pick the account type being created
      */
     private JPanel buildSelector() {
-        JPanel selectorPanel = new JPanel(); selectorPanel.setLayout(null);
+        JPanel selectorPanel = new JPanel(null); selectorPanel.setName("selectorPanel");
 
         JLabel titleText = new JLabel("Create New Account", SwingConstants.CENTER);
         titleText.setBounds(227, 20, 400, 70);
@@ -68,7 +69,7 @@ class NewUserPanel extends JPanel {
      * Adds the different registration forms in card form to the master panel
      */
     private JPanel buildForms() {
-        JPanel formPanel = new JPanel(); formPanel.setLayout(new CardLayout());
+        JPanel formPanel = new JPanel(new CardLayout()); formPanel.setName("formPanel");
 
         this.addAppForm(formPanel);
         this.addIntForm(formPanel);
@@ -81,13 +82,14 @@ class NewUserPanel extends JPanel {
      * Applicant form
      */
     private void addAppForm(JPanel formPanel) {
-        JPanel applicantCard = new JPanel(); applicantCard.setLayout(null);
+        JPanel applicantCard = new JPanel(null); applicantCard.setName("applicantCard");
 
         JLabel appPassText = new JLabel("Password: ", SwingConstants.CENTER);
         appPassText.setBounds(267, 10, 150, 30);
         applicantCard.add(appPassText);
 
         JPasswordField appPassEntry = new JPasswordField();
+        appPassEntry.setName("password");
         appPassEntry.setBounds(437, 10, 150, 30);
         applicantCard.add(appPassEntry);
 
@@ -96,6 +98,7 @@ class NewUserPanel extends JPanel {
         applicantCard.add(appNameText);
 
         JTextField appNameEntry = new JTextField();
+        appNameEntry.setName("name");
         appNameEntry.setBounds(437, 60, 150, 30);
         applicantCard.add(appNameEntry);
 
@@ -104,6 +107,7 @@ class NewUserPanel extends JPanel {
         applicantCard.add(appEmailText);
 
         JTextField appEmailEntry = new JTextField();
+        appEmailEntry.setName("email");
         appEmailEntry.setBounds(437, 110, 150, 30);
         applicantCard.add(appEmailEntry);
 
@@ -114,13 +118,14 @@ class NewUserPanel extends JPanel {
      * Interviewer form
      */
     private void addIntForm(JPanel formPanel) {
-        JPanel interviewerCard = new JPanel(); interviewerCard.setLayout(null);
+        JPanel interviewerCard = new JPanel(null); interviewerCard.setName("interviewerCard");
 
         JLabel intPassText = new JLabel("Password: ", SwingConstants.CENTER);
         intPassText.setBounds(267, 10, 150, 30);
         interviewerCard.add(intPassText);
 
         JPasswordField intPassEntry = new JPasswordField();
+        intPassEntry.setName("password");
         intPassEntry.setBounds(437, 10, 150, 30);
         interviewerCard.add(intPassEntry);
 
@@ -129,6 +134,7 @@ class NewUserPanel extends JPanel {
         interviewerCard.add(intEmailText);
 
         JTextField intEmailEntry = new JTextField();
+        intEmailEntry.setName("email");
         intEmailEntry.setBounds(437, 60, 150, 30);
         interviewerCard.add(intEmailEntry);
 
@@ -137,6 +143,7 @@ class NewUserPanel extends JPanel {
         interviewerCard.add(intCompanyText);
 
         JTextField intCompanyEntry = new JTextField();
+        intCompanyEntry.setName("company");
         intCompanyEntry.setBounds(437, 110, 150, 30);
         interviewerCard.add(intCompanyEntry);
 
@@ -147,13 +154,14 @@ class NewUserPanel extends JPanel {
      * HR Coordinator Form
      */
     private void addHRCForm(JPanel formPanel) {
-        JPanel HRCCard = new JPanel(); HRCCard.setLayout(null);
+        JPanel HRCCard = new JPanel(null); HRCCard.setName("HRCCard");
 
         JLabel hrcPassText = new JLabel("Password: ", SwingConstants.CENTER);
         hrcPassText.setBounds(267, 8, 150, 30);
         HRCCard.add(hrcPassText);
 
         JPasswordField hrcPassEntry = new JPasswordField();
+        hrcPassEntry.setName("password");
         hrcPassEntry.setBounds(437, 8, 150, 30);
         HRCCard.add(hrcPassEntry);
 
@@ -162,6 +170,7 @@ class NewUserPanel extends JPanel {
         HRCCard.add(hrcNameText);
 
         JTextField hrcNameEntry = new JTextField();
+        hrcNameEntry.setName("name");
         hrcNameEntry.setBounds(437, 43, 150, 30);
         HRCCard.add(hrcNameEntry);
 
@@ -170,6 +179,7 @@ class NewUserPanel extends JPanel {
         HRCCard.add(hrcEmailText);
 
         JTextField hrcEmailEntry = new JTextField();
+        hrcEmailEntry.setName("email");
         hrcEmailEntry.setBounds(437, 77, 150, 30);
         HRCCard.add(hrcEmailEntry);
 
@@ -178,6 +188,7 @@ class NewUserPanel extends JPanel {
         HRCCard.add(hrcCompanyText);
 
         JTextField hrcCompanyEntry = new JTextField();
+        hrcCompanyEntry.setName("company");
         hrcCompanyEntry.setBounds(437, 112, 150, 30);
         HRCCard.add(hrcCompanyEntry);
 
@@ -188,7 +199,7 @@ class NewUserPanel extends JPanel {
      * Adds buttons to create account as well as return to login
      */
     private JPanel buildButtons() {
-        JPanel buttonPanel = new JPanel(); buttonPanel.setLayout(null);
+        JPanel buttonPanel = new JPanel(null); buttonPanel.setName("buttonPanel");
 
         JButton submitButton = new JButton("Create Account");
         submitButton.setBounds(352, 15, 150, 30);
@@ -231,16 +242,58 @@ class NewUserPanel extends JPanel {
     /**
      * The below functions simply attempt to instantiate their corresponding user types
      */
-    private void createApplicant() {
-        //TODO: connect backend here
+    private void createApplicant() { //TODO: Interviewer field, deal with returns
+        JPanel forms = this.getPanelByName(this, "formPanel");
+        Component[] items = this.getPanelByName(forms, "applicantCard").getComponents();
+        BackEnd.createNewApplicant(this.getInputs(items));
     }
 
     private void createInterviewer() {
-
+        JPanel forms = this.getPanelByName(this, "formPanel");
+        Component[] items = this.getPanelByName(forms, "interviewerCard").getComponents();
+        BackEnd.createNewInterviewer(this.getInputs(items));
     }
 
     private void createHRC() {
+        JPanel forms = this.getPanelByName(this, "formPanel");
+        Component[] items = this.getPanelByName(forms, "HRCCard").getComponents();
+        BackEnd.createNewHRC(this.getInputs(items));
+    }
 
+    /**
+     * Finds a panel within another panel by its name as set by .setName()
+     */
+    private JPanel getPanelByName(JPanel panel, String name) {
+        JPanel ret = new JPanel();
+        for(Component c : panel.getComponents()) {
+            if(c instanceof JPanel && c.getName().equals(name)) {
+                ret = (JPanel)c;
+            }
+        }
+        return ret;
+    }
+
+    /**
+     * Collects user input data from the different forms, so that a new account may be created
+     */
+    private HashMap<String, String> getInputs(Component[] items) {
+        HashMap<String, String> ret = new HashMap<>();
+        ret.put("username", this.newUsername);
+        for(Component c : items) {
+            switch (c.getName()) {
+                case "password":
+                    ret.put("password", ((JPasswordField)c).getPassword().toString());
+                case "name":
+                    ret.put("name", ((JTextField)c).getText());
+                case "email":
+                    ret.put("email", ((JTextField)c).getText());
+                case "company":
+                    ret.put("company", ((JTextField)c).getText());
+                case "field":
+                    ret.put("field", ((JTextField)c).getText());
+            }
+        }
+        return ret;
     }
 
     void setNewUsername(String username) {
