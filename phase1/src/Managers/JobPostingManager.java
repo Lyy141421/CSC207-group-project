@@ -1,5 +1,6 @@
 package Managers;
 
+import UsersAndJobObjects.JobApplication;
 import UsersAndJobObjects.JobPosting;
 import UsersAndJobObjects.Company;
 import java.time.LocalDate;
@@ -106,7 +107,13 @@ public class JobPostingManager {
     public ArrayList<JobPosting> getClosedJobPostingsNoInterview(LocalDate today) {
         ArrayList<JobPosting> jobPostings = new ArrayList<>();
         for (JobPosting jobPosting : this.getClosedJobPostingsNotFilled(today)) {
-            if (jobPosting.getInterviewManager() == null) {
+            boolean hasInterviews = false;
+            for (JobApplication jobApp : jobPosting.getJobApplications()) {
+                if (!jobApp.getInterviews().isEmpty()) {
+                    hasInterviews = true;
+                }
+            }
+            if (!hasInterviews) {
                 jobPostings.add(jobPosting);
             }
         }

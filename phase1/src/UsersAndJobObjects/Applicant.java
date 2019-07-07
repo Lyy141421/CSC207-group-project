@@ -36,9 +36,10 @@ public class Applicant extends User {
     }
 
     public Applicant(String username, String password, String legalName, String email, LocalDate dateCreated,
-              JobApplicationManager jobApplicationManager) {
+              JobApplicationManager jobApplicationManager, DocumentManager documentManager) {
         super(username, password, legalName, email, dateCreated);
         this.jobApplicationManager = jobApplicationManager;
+        this.documentManager = documentManager;
     }
 
     // === Getters ===

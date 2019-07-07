@@ -189,7 +189,6 @@ public class InterviewerInterface extends UserInterface {
         JobApplication jobApplication = this.interviewer.findJobAppById(id);
         if (jobApplication == null) {
             System.out.println("This job application cannot be found.");
-            return this.getJobApplication(sc);
         }
         System.out.println(jobApplication);
         return jobApplication;

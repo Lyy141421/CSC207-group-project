@@ -228,7 +228,7 @@ public class UserInterface {
         Scanner sc = new Scanner(System.in);
         LocalDate previousLoginDate = JobApplicationSystem.getPreviousLoginDate();
         System.out.println();
-        LocalDate date = null;
+        LocalDate date;
         if (previousLoginDate == null) {
             date = this.getDate(sc, "Please enter today's date (yyyy-mm-dd): ");
         }

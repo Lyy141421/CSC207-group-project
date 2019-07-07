@@ -29,6 +29,8 @@ public class Status {
     private int value = Status.SUBMITTED;
 
     // === Constructor ===
+    public Status() {}
+
     public Status(int value) {
         this.value = value;
     }

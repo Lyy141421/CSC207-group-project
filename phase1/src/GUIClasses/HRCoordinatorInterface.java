@@ -451,6 +451,7 @@ public class HRCoordinatorInterface extends UserInterface {
     private Applicant searchSpecificApplicant(Scanner sc) {
         String username = this.getInputToken(sc, "Enter the applicant username you would like to view: ");
         Applicant applicant = (Applicant) JobApplicationSystem.getUserManager().findUserByUsername(username);
+        sc.nextLine();
         if (applicant == null) {
             System.out.println("This applicant cannot be found.");
             return null;
@@ -507,8 +508,7 @@ public class HRCoordinatorInterface extends UserInterface {
      * Interface for reviewing all job applications after a job posting has closed.
      * @param sc The scanner for user input.
      */
-    private void reviewApplicationsForJobPosting(Scanner sc) {
-        JobPosting jobPosting = this.getJobPosting(sc);
+    private void reviewApplicationsForJobPosting(Scanner sc, JobPosting jobPosting) {
         jobPosting.reviewApplications();     // This advances the jobApp status to "under review"
         InterviewManager interviewManager = new InterviewManager(jobPosting, jobPosting.getJobApplications(),
                 new ArrayList<>());
@@ -541,11 +541,18 @@ public class HRCoordinatorInterface extends UserInterface {
      * @param jobPosting    The job posting in question.
      */
     private void setUpInterviewsForRound(JobPosting jobPosting) {
-        System.out.println("The following job applications will have interviews set-up automatically.");
-        for (JobApplication jobApp : jobPosting.getInterviewManager().getApplicationsInConsideration()) {
-            System.out.println();
-            System.out.println(jobApp);
-            this.setUpInterviewForJobApplication(jobApp);
+        Company company = jobPosting.getCompany();
+        String field = jobPosting.getField();
+        if (!company.hasInterviewerForField(field)) {
+            System.out.println("Interviews cannot be set-up for this job posting as there are no interviewers for this field.");
+        }
+        else {
+            System.out.println("The following job applications will have interviews set-up automatically.");
+            for (JobApplication jobApp : jobPosting.getInterviewManager().getApplicationsInConsideration()) {
+                System.out.println();
+                System.out.println(jobApp);
+                this.setUpInterviewForJobApplication(jobApp);
+            }
         }
     }
 
@@ -585,15 +592,18 @@ public class HRCoordinatorInterface extends UserInterface {
         JobPostingManager JPM = this.HRC.getCompany().getJobPostingManager();
         ArrayList<JobPosting> recentlyClosed = JPM.getClosedJobPostingsNoInterview(today);
         for (JobPosting jobPosting : recentlyClosed) {
-            this.reviewApplicationsForJobPosting(sc);
+            System.out.println(jobPosting);
+            this.reviewApplicationsForJobPosting(sc, jobPosting);
             this.setUpInterviewsForRound(jobPosting);
         }
         ArrayList<JobPosting> recentlyCompletedRound = JPM.getJobPostingsWithRoundCompletedNotForHire(today);
         for (JobPosting jobPosting : recentlyCompletedRound) {
+            System.out.println(jobPosting);
             this.setUpInterviewsForRound(jobPosting);
         }
         ArrayList<JobPosting> readyForHiring = JPM.getJobPostingsForHiring(today);
         for (JobPosting jobPosting : readyForHiring) {
+            System.out.println(jobPosting);
             this.hireApplicant(sc, jobPosting);
         }
     }

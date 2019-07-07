@@ -67,6 +67,15 @@ public class Company implements Storable {
     // === Other methods ===
 
     /**
+     * Check whether this job field has interviewers.
+     * @param field The field in question.
+     * @return  true iff this company has an interviewer or this job field.
+     */
+    public boolean hasInterviewerForField(String field) {
+        return this.getFieldToInterviewers().keySet().contains(field);
+    }
+
+    /**
      * View all applications this applicant has submitted for job postings in this company.
      *
      * @param applicant The applicant in question.
@@ -137,6 +146,7 @@ public class Company implements Storable {
             int numberOfInterviews = interviewer.getInterviews().size();
             if (numberOfInterviews <= minNumberOfInterviews) {
                 interviewerSoFar = interviewer;
+                minNumberOfInterviews = numberOfInterviews;
             }
         }
         return interviewerSoFar;
