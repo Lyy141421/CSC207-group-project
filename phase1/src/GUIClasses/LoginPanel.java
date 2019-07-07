@@ -14,10 +14,13 @@ class LoginPanel extends JPanel {
     private UserInterfaceTest BackEnd;
     private CardLayout masterLayout;
     private JPanel parent;
+    private MainFrame mainframe;
 
     LoginPanel(JPanel parent, CardLayout masterLayout) {
         this.parent = parent;
         this.masterLayout = masterLayout;
+        this.mainframe = (MainFrame)this.parent.getParent().
+                getParent().getParent().getParent();
         this.setLayout(null);
         this.addTextItems();
         this.addEntryItems();
@@ -40,7 +43,7 @@ class LoginPanel extends JPanel {
         passwordText.setBounds(327, 255, 100, 30);
 
         JLabel createNewText = new JLabel("User not found.", SwingConstants.CENTER);
-        createNewText.setBounds(327, 330, 100, 20);
+        createNewText.setBounds(327, 335, 100, 20);
         createNewText.setVisible(false);
 
         JLabel wrongPass = new JLabel("Something's wrong - try again", SwingConstants.CENTER);
@@ -71,7 +74,7 @@ class LoginPanel extends JPanel {
         });
 
         JButton createNewButton = new JButton("Create?");
-        createNewButton.setBounds(427, 330, 100, 20);
+        createNewButton.setBounds(427, 335, 100, 20);
         createNewButton.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
                 hideInputError();
@@ -157,11 +160,14 @@ class LoginPanel extends JPanel {
         int result = BackEnd.login(userNameEntry.getText(), passwordEntry.getPassword().toString());
         switch(result) {
             case 1: this.showCreateNew();
+                    this.hideInputError();
                     break;
             case 2: this.hideCreateNew();
                     this.hideInputError();
+                    this.mainframe.newUserRef.setNewUsername(null);
                     break; //TODO: handle login
             case 3: this.showInputError();
+                    this.hideCreateNew();
                     break;
         }
     }
@@ -169,7 +175,10 @@ class LoginPanel extends JPanel {
     /**
      * passes user to the existing create user class, and requests card change
      */
-    private void createUser(String username) { //TODO: Pass user somewhere
+    private void createUser(String username) {
+        this.hideCreateNew();
+        this.hideInputError();
+        this.mainframe.newUserRef.setNewUsername(username);
         this.masterLayout.show(parent, "NEWUSER");
     }
 }

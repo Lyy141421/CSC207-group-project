@@ -12,10 +12,10 @@ import java.awt.event.ActionListener;
 
 class NewUserPanel extends JPanel {
     private UserInterfaceTest BackEnd;
-    private JComboBox mainSelector;
-    private JPanel[] formPanels = new JPanel[3];
     private CardLayout masterLayout;
     private JPanel parent;
+    private JComboBox mainSelector;
+    private String newUsername;
 
     NewUserPanel(JPanel parent, CardLayout masterLayout) {
         this.parent = parent;
@@ -107,7 +107,6 @@ class NewUserPanel extends JPanel {
         appEmailEntry.setBounds(437, 110, 150, 30);
         applicantCard.add(appEmailEntry);
 
-        this.formPanels[0] = applicantCard;
         formPanel.add(applicantCard, "Applicant");
     }
 
@@ -141,7 +140,6 @@ class NewUserPanel extends JPanel {
         intCompanyEntry.setBounds(437, 110, 150, 30);
         interviewerCard.add(intCompanyEntry);
 
-        this.formPanels[1] = interviewerCard;
         formPanel.add(interviewerCard, "Interviewer");
     }
 
@@ -183,7 +181,6 @@ class NewUserPanel extends JPanel {
         hrcCompanyEntry.setBounds(437, 112, 150, 30);
         HRCCard.add(hrcCompanyEntry);
 
-        this.formPanels[2] = HRCCard;
         formPanel.add(HRCCard, "HR Coordinator");
     }
 
@@ -235,7 +232,7 @@ class NewUserPanel extends JPanel {
      * The below functions simply attempt to instantiate their corresponding user types
      */
     private void createApplicant() {
-
+        //TODO: connect backend here
     }
 
     private void createInterviewer() {
@@ -244,5 +241,9 @@ class NewUserPanel extends JPanel {
 
     private void createHRC() {
 
+    }
+
+    void setNewUsername(String username) {
+        this.newUsername = username;
     }
 }
