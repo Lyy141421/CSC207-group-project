@@ -17,6 +17,8 @@ public class JobApplicationLoader extends GenericLoader<JobApplication> {
         this.loadApplicant(jobApplication, data);
         this.loadPosting(jobApplication, data);
         this.loadInterviews(jobApplication, data);
+        jobApplication.setCV(jobApplication.getApplicant().getDocumentManager().getDocumentById((String) data.get("CV")));
+        jobApplication.setCoverLetter(jobApplication.getApplicant().getDocumentManager().getDocumentById((String) data.get("CoverLetter")));
     }
 
     /**
@@ -25,9 +27,7 @@ public class JobApplicationLoader extends GenericLoader<JobApplication> {
      * @param data The data for this job application.
      */
     private void loadPrelimData(JobApplication jobApplication, HashMap data) {
-        jobApplication.setCV((JobApplicationDocument) data.get("CV"));
-        jobApplication.setCoverLetter((JobApplicationDocument) data.get("CoverLetter"));
-        jobApplication.setStatus((Status) data.get("Status"));
+        jobApplication.setStatus(new Status((int)data.get("Status")));
         jobApplication.setApplicationDate((LocalDate.parse((String) data.get("ApplicationDate"))));
     }
 

@@ -21,6 +21,15 @@ public class DocumentManager {
         return this.documents;
     }
 
+    public JobApplicationDocument getDocumentById(String Id){
+        for(JobApplicationDocument x : getDocuments()){
+            if(x.getId().equals(Id)){
+                return x;
+            }
+        }
+        return null;
+    }
+
     // === Setters ===
 
     void setDocuments(ArrayList<JobApplicationDocument> documents) {
