@@ -39,8 +39,8 @@ class LoginPanel extends JPanel {
         createNewText.setBounds(327, 330, 100, 20);
         createNewText.setVisible(false);
 
-        JLabel wrongPass = new JLabel("Incorrect password!", SwingConstants.CENTER);
-        wrongPass.setBounds(367, 185, 120, 30);
+        JLabel wrongPass = new JLabel("Something's wrong - try again", SwingConstants.CENTER);
+        wrongPass.setBounds(337, 185, 180, 30);
         wrongPass.setVisible(false);
 
         this.add(welcomeLabel); this.add(userNameText); this.add(passwordText);
@@ -68,6 +68,12 @@ class LoginPanel extends JPanel {
 
         JButton createNewButton = new JButton("Create?");
         createNewButton.setBounds(427, 330, 100, 20);
+        createNewButton.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                hideInputError();
+                createUser(userNameEntry.getText());
+            }
+        });
         createNewButton.setVisible(false);
 
         this.add(userNameEntry); this.add(passwordEntry); this.add(loginButton);
@@ -117,7 +123,7 @@ class LoginPanel extends JPanel {
         Component[] components = this.getComponents();
         for(Component c : components) {
             if(c instanceof JLabel) {
-                if(((JLabel) c).getText().equals("Something's wrong - please check your inputs")) {
+                if(((JLabel) c).getText().equals("Something's wrong - try again")) {
                     c.setVisible(true);
                     break;
                 }
@@ -132,7 +138,7 @@ class LoginPanel extends JPanel {
         Component[] components = this.getComponents();
         for(Component c : components) {
             if(c instanceof JLabel) {
-                if(((JLabel) c).getText().equals("Something's wrong - please check your inputs")) {
+                if(((JLabel) c).getText().equals("Something's wrong - try again")) {
                     c.setVisible(false);
                     break;
                 }
@@ -140,15 +146,29 @@ class LoginPanel extends JPanel {
         }
     }
 
+    /**
+     * attempts login with the provided information
+     */
     private void login(JTextField userNameEntry, JPasswordField passwordEntry) {
         int result = BackEnd.login(userNameEntry.getText(), passwordEntry.getPassword().toString());
         switch(result) {
             case 1: this.showCreateNew();
                     break;
-            case 2: break; //TODO: handle login
+            case 2: this.hideCreateNew();
+                    this.hideInputError();
+                    break; //TODO: handle login
             case 3: this.showInputError();
                     break;
         }
+    }
+
+    /**
+     * passes user to the existing create user class, and requests card change
+     */
+    private void createUser(String username) {
+        MainFrame parent = (MainFrame)this.getParent();
+        parent.setUser(username);
+        parent.getCardLayout().show(parent, "NEWUSER");
     }
 
     public static void main(String[] args) {

@@ -27,87 +27,8 @@ public class UserInterfaceTest {
         this.user = user;
     }
 
-
     // === Inherited methods ===
     void run(LocalDate today) {
-    }
-
-    /**
-     * Get the input from the user (with spaces)
-     *
-     * @param sc The scanner for user input.
-     * @param message   The prompt that is displayed.
-     * @return the input from the user.
-     */
-    String getInputLine(Scanner sc, String message) {
-        System.out.print(message);
-        String input = sc.nextLine();
-        if (input.isEmpty()) {
-            System.out.println("Invalid input. Please try again.");
-            System.out.println();
-            this.getInputLine(sc, message);
-        }
-        return input;
-    }
-
-    /**
-     * Get the input from the user (no spaces)
-     *
-     * @param sc      The scanner for user input.
-     * @param message The prompt that is displayed.
-     * @return the input from the user.
-     */
-    String getInputToken(Scanner sc, String message) {
-        System.out.print(message);
-        String input = sc.next();
-        if (input.isEmpty()) {
-            System.out.println("Invalid input. Please try again.");
-            System.out.println();
-            this.getInputToken(sc, message);
-        }
-        return input;
-    }
-
-    /**
-     * Gets a string of letters inputted by the user.
-     * @param sc    The scanner for user input.
-     * @param message   The prompt that is displayed.
-     * @return  the string of letters inputted by the user.
-     */
-    String getOnlyLetters(Scanner sc, String message) {
-        String input = this.getInputLine(sc, message);
-        boolean onlyLetters = true;
-        for (int i = 0; i < input.length(); i++) {
-            if (!Character.isLetter(input.charAt(i)) && !Character.isSpaceChar(input.charAt(i))) {
-                onlyLetters = false;
-            }
-        }
-        if (onlyLetters) {
-            return input;
-        }
-        else {
-            System.out.println("Invalid input. Please enter again.");
-            return this.getOnlyLetters(sc, message);
-        }
-    }
-
-    /**
-     * Get the integer inputted by the user.
-     *
-     * @param sc      The scanner for user input.
-     * @param message The prompt that is displayed.
-     * @return the integer inputted by the user.
-     */
-    int getInteger(Scanner sc, String message) {
-        System.out.print(message);
-        String input = sc.nextLine();
-        try {
-            return Integer.parseInt(input);
-        } catch (NumberFormatException nfe) {
-            System.out.println("Invalid input. Please try again.");
-            System.out.println();
-            return this.getInteger(sc, message);
-        }
     }
 
     /**
@@ -136,49 +57,21 @@ public class UserInterfaceTest {
         }
     }
 
-    /**
-     * Interface for getting the menu option selected.
-     *
-     * @param sc         The scanner for user input.
-     * @param numOptions The number of options in the menu.
-     * @return the option selected.
-     */
-    int getMenuOption(Scanner sc, int numOptions) {
-        int option = this.getInteger(sc, "Enter value: ");
-        while (option < 1 || option > numOptions) {
-            System.out.println("Invalid input. Please try again.");
-            option = this.getInteger(sc, "Enter value: ");
-        }
-        return option;
-    }
-
-
     // === Private methods ===
 
     /**
      * Get an e-mail address as input from the user. E-mail address must be in valid format.
      *
-     * @param sc The scanner for user input.
-     * @param message   The prompt that is displayed.
      * @return the e-mail address inputted by the user.
      */
 
-    private String getValidEmail(Scanner sc, String message) {
-        String input = this.getInputLine(sc, message);
-        boolean validEmail = true;
-        if (!input.contains("@") || input.charAt(0) == '@')
-            validEmail = false;
+    private boolean checkValidEmail(String email) {
+        if (!email.contains("@") || email.charAt(0) == '@')
+            return false;
         else {
-            String[] splitInput = input.split("@", 2);
-            if (!splitInput[1].contains(".") || splitInput[1].charAt(0) == '.'
-                    || splitInput[1].charAt(splitInput[1].length()-1) == '.')
-                validEmail = false;
-        }
-        if (validEmail)
-            return input;
-        else {
-            System.out.println("Invalid input. Please enter again.");
-            return this.getValidEmail(sc, message);
+            String[] splitInput = email.split("@", 2);
+            return !(!splitInput[1].contains(".") || splitInput[1].charAt(0) == '.'
+                    || splitInput[1].charAt(splitInput[1].length()-1) == '.');
         }
     }
 
@@ -194,35 +87,6 @@ public class UserInterfaceTest {
         System.out.println("2 - Interviewer");
         System.out.println("3 - HR coordinator");
         return 3;
-    }
-
-    /**
-     * Sign up this user based on the user type selected.
-     *
-     * @param sc       The scanner for user input.
-     * @param username The user's username.
-     * @param password The user's password.
-     * @return the new user instance created.
-     */
-    private User signUp(Scanner sc, String username, String password) {
-        System.out.println();
-        String legalName = this.getOnlyLetters(sc, "Enter your legal name: ");
-        String email = this.getValidEmail(sc, "Enter your email address: ");
-        sc.nextLine();
-        int numOptions = this.displayUserTypes();
-        int option = this.getMenuOption(sc, numOptions);
-        switch (option) {
-            case 1:
-                System.out.println();
-                System.out.println("Sign-up successful!");
-                return JobApplicationSystem.getUserManager().createApplicant
-                        (username, password, legalName, email, LocalDate.now(), true);
-            case 2:
-                return this.createNewInterviewer(sc, username, password, legalName, email);
-            case 3:
-                return this.createNewHRC(sc, username, password, legalName, email);
-        }
-        return null;    // Won't execute because option number is guaranteed to be within bounds.
     }
 
     /**
@@ -271,7 +135,7 @@ public class UserInterfaceTest {
 
     /**
      * Determine status of the login
-     * @return 0 - no user input, 1 - no user exists, 2 - successful login, 3 - wrong pass
+     * @return 1 - no user exists, 2 - successful login, 3 - wrong pass
      */
     int login(String username, String password) {
         if (username.equals("")) {
