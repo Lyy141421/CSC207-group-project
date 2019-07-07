@@ -17,7 +17,7 @@ public class ApplicantStorer extends GenericStorer<Applicant> {
         HashMap<String, Object> data = new HashMap<>();
         this.storePrelimInfo(applicant, data);
         this.storeJobApplications(applicant, data);
-        this.storeFilesSubmitted(applicant, data);
+        this.storeDocuments(applicant, data);
         FileSystem.write(Applicant.FILENAME, applicant.getUsername(), data);
     }
 
@@ -46,7 +46,7 @@ public class ApplicantStorer extends GenericStorer<Applicant> {
         data.put("jobApplicationManager", jobapps);
     }
 
-    private void storeFilesSubmitted(Applicant applicant, HashMap<String, Object> data) {
-        data.put("filesSubmitted", applicant.getFilesSubmitted());
+    // TODO
+    private void storeDocuments(Applicant applicant, HashMap<String, Object> data) {
     }
 }

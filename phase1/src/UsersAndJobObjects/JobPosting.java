@@ -32,7 +32,7 @@ public class JobPosting implements Storable {
 
 
     // === Public methods ===
-    // === Constructors ===
+    // === Constructor ===
 
     /**
      * Constructor from memory
@@ -168,7 +168,7 @@ public class JobPosting implements Storable {
      */
     public void reviewApplications() {
         for (JobApplication jobApp : this.getJobApplications()) {
-            jobApp.advanceStatus();
+            jobApp.getStatus().advanceStatus();
         }
     }
 
@@ -295,7 +295,7 @@ public class JobPosting implements Storable {
         ArrayList<JobApplication> jobApplicationsInConsideration = new ArrayList<>();
         ArrayList<JobApplication> jobApplicationsRejected = new ArrayList<>();
         for (JobApplication jobApplication : this.getJobApplications()) {
-            if (jobApplication.getStatus() == 0) {
+            if (jobApplication.isOnPhoneInterview()) {
                 jobApplicationsInConsideration.add(jobApplication);
             } else {
                 jobApplicationsRejected.add(jobApplication);

@@ -1,8 +1,10 @@
 package FileLoadingAndStoring;
 
+import Managers.DocumentManager;
 import Managers.JobApplicationManager;
 import UsersAndJobObjects.Applicant;
 import UsersAndJobObjects.JobApplication;
+import UsersAndJobObjects.JobApplicationDocument;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -28,7 +30,6 @@ public class ApplicantLoader extends GenericLoader<Applicant> {
         applicant.setPassword((String) data.get("password"));
         applicant.setLegalName((String) data.get("legalName"));
         applicant.setEmail((String) data.get("email"));
-        applicant.setFilesSubmitted((ArrayList<String>) (data.get("filesSubmitted")));
         applicant.setDateCreated(LocalDate.parse((String) data.get("dateCreated")));
     }
 
@@ -44,6 +45,11 @@ public class ApplicantLoader extends GenericLoader<Applicant> {
                     (String) x.get(1)));
         }
         applicant.setJobApplicationManager(new JobApplicationManager(temp));
+    }
+
+    // TODO
+    private void loadDocumentManager(Applicant applicant, HashMap data) {
+
     }
 
 }

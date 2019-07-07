@@ -2,10 +2,7 @@ package Managers;
 
 import Miscellaneous.InterviewTimeComparator;
 import Miscellaneous.CloseDateComparator;
-import UsersAndJobObjects.JobApplication;
-import UsersAndJobObjects.JobPosting;
-import UsersAndJobObjects.Interview;
-import UsersAndJobObjects.Applicant;
+import UsersAndJobObjects.*;
 
 
 import java.time.LocalDate;
@@ -61,16 +58,6 @@ public class JobApplicationManager {
     }
 
     /**
-     * Get a list of files submitted for this job application.
-     *
-     * @param jobApplication The job application in question.
-     * @return a list of files submitted for this job application
-     */
-    public ArrayList<String> getFilesSubmittedForApplication(JobApplication jobApplication) {
-        return new ArrayList<>(Arrays.asList(jobApplication.getCoverLetter(), jobApplication.getCV()));
-    }
-
-    /**
      * Get the list of interviews considered "upcoming" for this applicant.
      *
      * @return the list of interviews considered "upcoming" for this applicant, based on upcomingDays.
@@ -87,20 +74,6 @@ public class JobApplicationManager {
         }
         upcomingInterviews.sort(new InterviewTimeComparator());
         return upcomingInterviews;
-    }
-
-    /**
-     * Find the application with the last closing date of all submitted applications by this applicant.
-     *
-     * @return the application with the last close date, or null if no applications exist.
-     */
-    public JobApplication getLastClosedJobApp() {
-        if (this.jobApplications.isEmpty()) {
-            return null;
-        }
-        else {
-            return this.jobApplications.get(this.jobApplications.size() - 1);
-        }
     }
 
     /**
@@ -130,7 +103,7 @@ public class JobApplicationManager {
     public ArrayList<JobApplication> getPreviousJobApplications() {
         ArrayList<JobApplication> previousJobApps = new ArrayList<>();
         for (JobApplication jobApplication : this.getJobApplications()) {
-            if (jobApplication.getStatus() == -3) {
+            if (jobApplication.isArchived()) {
                 previousJobApps.add(jobApplication);
             }
         }
@@ -160,12 +133,39 @@ public class JobApplicationManager {
     }
 
     /**
+     * Get a list of files submitted for this job application.
+     *
+     * @param jobApplication The job application in question.
+     * @return a list of files submitted for this job application
+     */
+    public ArrayList<JobApplicationDocument> getFilesSubmittedForApplication(JobApplication jobApplication) {
+        return new ArrayList<>(Arrays.asList(jobApplication.getCoverLetter(), jobApplication.getCV()));
+    }
+
+    /**
+     * Find the application with the last closing date of all submitted applications by this applicant.
+     *
+     * @return the application with the last close date, or null if no applications exist.
+     */
+    public JobApplication getLastClosedJobApp() {
+        if (this.jobApplications.isEmpty()) {
+            return null;
+        }
+        else {
+            return this.jobApplications.get(this.jobApplications.size() - 1);
+        }
+    }
+
+    // ============================================================================================================== //
+    // === Private methods ===
+
+    /**
      * Find the job application associated with this job posting.
      *
      * @param jobPosting The job posting in question.
      * @return the job application associated with this job posting.
      */
-    JobApplication findJobApplication(JobPosting jobPosting) {
+    private JobApplication findJobApplication(JobPosting jobPosting) {
         for (JobApplication app : this.jobApplications) {
             if (app.getJobPosting().equals(jobPosting)) {
                 return app;

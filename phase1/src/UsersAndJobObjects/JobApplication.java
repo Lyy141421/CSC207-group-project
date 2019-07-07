@@ -25,9 +25,9 @@ public class JobApplication implements Storable{
     // The JobPosting that was applied for
     private JobPosting jobPosting;
     // The file name of the CV submitted for this application
-    private String CV;
+    private JobApplicationDocument CV;
     // The the file name of the cover letter submitted for this application
-    private String coverLetter;
+    private JobApplicationDocument coverLetter;
     // The status of this application
     private Status status;
     // The date this application was submitted
@@ -46,8 +46,8 @@ public class JobApplication implements Storable{
         JobApplication.totalNumOfApplications = Integer.max(this.ID, JobApplication.totalNumOfApplications);
     }
 
-    public JobApplication(Applicant applicant, JobPosting jobPosting, String CV, String coverletter,
-                          LocalDate applicationDate) {
+    public JobApplication(Applicant applicant, JobPosting jobPosting, JobApplicationDocument CV,
+                          JobApplicationDocument coverletter, LocalDate applicationDate) {
         this.ID = JobApplication.totalNumOfApplications;
         this.applicant = applicant;
         this.jobPosting = jobPosting;
@@ -57,8 +57,8 @@ public class JobApplication implements Storable{
         JobApplication.totalNumOfApplications++;
     }
 
-    public JobApplication(Applicant applicant, JobPosting jobPosting, String CV, String coverletter, Status status,
-                          LocalDate applicationDate) {
+    public JobApplication(Applicant applicant, JobPosting jobPosting, JobApplicationDocument CV,
+                          JobApplicationDocument coverletter, Status status, LocalDate applicationDate) {
         this.ID = JobApplication.totalNumOfApplications;
         this.applicant = applicant;
         this.jobPosting = jobPosting;
@@ -83,11 +83,11 @@ public class JobApplication implements Storable{
         return this.jobPosting;
     }
 
-    public String getCV() {
+    public JobApplicationDocument getCV() {
         return this.CV;
     }
 
-    public String getCoverLetter() {
+    public JobApplicationDocument getCoverLetter() {
         return this.coverLetter;
     }
 
@@ -112,20 +112,16 @@ public class JobApplication implements Storable{
         this.jobPosting = jobPosting;
     }
 
-    public void setCV(String CV) {
+    public void setCV(JobApplicationDocument CV) {
         this.CV = CV;
     }
 
-    public void setCoverLetter(String coverLetter) {
+    public void setCoverLetter(JobApplicationDocument coverLetter) {
         this.coverLetter = coverLetter;
     }
 
     public void setStatus(Status status) {
         this.status = status;
-    }
-
-    public void setStatusByNum(int statusNum) {
-        this.status = new Status(statusNum);
     }
 
     public void setApplicationDate(LocalDate applicationDate) {
@@ -137,6 +133,14 @@ public class JobApplication implements Storable{
     }
 
     // === Other methods ===
+
+    public boolean isArchived() {
+        return this.status.isArchived();
+    }
+
+    boolean isOnPhoneInterview() {
+        return this.status.isOnPhoneInterview();
+    }
 
     /**
      * Set up an interview for the applicant with this job application.
@@ -199,8 +203,8 @@ public class JobApplication implements Storable{
         String s = "Application ID: " + this.getId() + "\n";
         s += "Applicant: " + this.getApplicant().getLegalName() + "(" + this.getApplicant().getUsername() + ")" + "\n";
         s += "Job Posting: " + this.getJobPosting().getTitle() + " -- ID: " + this.getJobPosting().getId();
-        s += "\n\nCV: \n" + this.getCV() + "\n\n";
-        s += "Cover letter: \n" + this.getCoverLetter() + "\n\n";
+        s += "\n\nCV: \n" + this.getCV().getContents() + "\n\n";
+        s += "Cover letter: \n" + this.getCoverLetter().getContents() + "\n\n";
         s += "Status: " + this.status.getDescription() + "\n";
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         s += "Application date: " + this.getApplicationDate().format(dtf);

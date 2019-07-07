@@ -5,7 +5,7 @@ import java.util.HashMap;
 public class Status {
     // === Class variables ===
     // Job application statuses as constants
-    private static final int ARCHIVED = -3;
+    static final int ARCHIVED = -3;
     private static final int SUBMITTED = -2;
     private static final int UNDER_REVIEW = -1;
     private static final int PHONE_INTERVIEW = 0;
@@ -48,6 +48,14 @@ public class Status {
     }
 
     // === Other methods ===
+
+    boolean isArchived() {
+        return this.value == Status.ARCHIVED;
+    }
+
+    boolean isOnPhoneInterview() {
+        return this.value == Status.PHONE_INTERVIEW;
+    }
 
     /**
      * Advance this status.

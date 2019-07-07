@@ -1,10 +1,12 @@
 package UsersAndJobObjects;
 
 import Main.JobApplicationSystem;
+import Managers.DocumentManager;
 import Managers.JobApplicationManager;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Applicant extends User {
     /**
@@ -18,8 +20,8 @@ public class Applicant extends User {
     // === Instance variables ===
     // The applicant's job application manager
     private JobApplicationManager jobApplicationManager = new JobApplicationManager();
-    // List of filenames uploaded to account
-    private ArrayList<String> filesSubmitted = new ArrayList<>();
+    // The applicant's document manager
+    private DocumentManager documentManager = new DocumentManager();
 
     // === Public methods ===
     // === Constructors ===
@@ -45,18 +47,14 @@ public class Applicant extends User {
         return this.jobApplicationManager;
     }
 
-    public ArrayList<String> getFilesSubmitted() {
-        return this.filesSubmitted;
-    }
-
     // === Setters ===
-
-    public void setFilesSubmitted(ArrayList<String> filesSubmitted) {
-        this.filesSubmitted = filesSubmitted;
-    }
 
     public void setJobApplicationManager(JobApplicationManager jobApplicationManager) {
         this.jobApplicationManager = jobApplicationManager;
+    }
+
+    public void setDocumentManager(DocumentManager documentManager) {
+        this.documentManager = documentManager;
     }
 
     // === Other methods ===
@@ -66,12 +64,8 @@ public class Applicant extends User {
      * @param application   The job application registered.
      */
     public void registerJobApplication(JobApplication application) {
-        if (!filesSubmitted.contains(application.getCV())) {
-            this.addFile(application.getCV());
-        }
-        if (!filesSubmitted.contains(application.getCoverLetter())) {
-            this.addFile(application.getCoverLetter());
-        }
+        this.documentManager.addDocuments(new ArrayList<>(Arrays.asList(application.getCoverLetter(),
+                application.getCV())));
         jobApplicationManager.addJobApplication(application);
     }
 
@@ -127,25 +121,19 @@ public class Applicant extends User {
      *
      * @param today Today's date.
      */
+    // TODO I feel like this shouldn't be here, but if we put it in DocumentManager, there would be coupling
+    // (user must be an instance variable)
     public void removeFilesFromAccount(LocalDate today) {
         if (this.isInactive(today)) {
-            JobApplication lastClosedJobApp = this.jobApplicationManager.getLastClosedJobApp();
-            ArrayList<String> files = this.jobApplicationManager.getFilesSubmittedForApplication(lastClosedJobApp);
-            this.filesSubmitted.removeAll(files);
+            JobApplicationManager JAM = this.getJobApplicationManager();
+            JobApplication lastClosedJobApp = JAM.getLastClosedJobApp();
+            ArrayList<JobApplicationDocument> documents = JAM.getFilesSubmittedForApplication(lastClosedJobApp);
+            this.documentManager.removeDocuments(documents);
         }
     }
 
     // ============================================================================================================== //
     // === Private methods ===
-
-    /**
-     * Add a file to one's account.
-     *
-     * @param file The file contents to be added.
-     */
-    private void addFile(String file) {
-        this.filesSubmitted.add(file);
-    }
 
     /**
      * Report whether the date that the last job posting this applicant applied to was 30 days ago from today.
