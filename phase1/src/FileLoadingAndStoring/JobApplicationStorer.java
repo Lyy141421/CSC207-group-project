@@ -27,7 +27,7 @@ public class JobApplicationStorer extends GenericStorer<JobApplication> {
     private void storePrelimInfo(JobApplication jobApplication, HashMap<String, Object> data) {
         data.put("CV", jobApplication.getCV());
         data.put("CoverLetter", jobApplication.getCoverLetter());
-        data.put("Status", jobApplication.getStatus().getValue());
+        data.put("Status", jobApplication.getStatus());
         data.put("ApplicationDate", jobApplication.getApplicationDate());
     }
 
