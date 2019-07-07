@@ -21,7 +21,7 @@ public class Interview implements Storable {
     private static final int MAX_NUM_ROUNDS = Interview.roundNumberDescriptions.size() - 1;
     // The total number of interviews conducted
     private static int total;
-    // The filename under which this will be saved in the FileLoadingAndStoring.FileSystem
+    // The filename under which this will be saved in the FileSystem
     public static final String FILENAME = "Interviews";
 
     // === Instance variables ===
@@ -31,17 +31,17 @@ public class Interview implements Storable {
     private JobApplication jobApplication;
     // The interviewer
     private Interviewer interviewer;
-    // The UsersAndJobObjects.HRCoordinator who set up the interview
+    // The HRCoordinator who set up the interview
     private HRCoordinator hrCoordinator;
     // The date and time of this interview
     private InterviewTime time;
     // UsersAndJobObjects.Interview notes
     private String interviewNotes = "";
-    // The result of the interview (if the applicant passed)
+    // The result of the interview (null if incomplete, true if passed, false if failed)
     private Boolean pass = null;
-    // UsersAndJobObjects.Interview round
+    // Interview round
     private int roundNumber;
-    // Managers.InterviewManager of the job posting this interview is held for
+    // InterviewManager of the job posting this interview is held for
     private InterviewManager interviewManager;
 
     // === Representation invariants ===
