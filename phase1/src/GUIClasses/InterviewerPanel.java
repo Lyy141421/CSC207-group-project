@@ -15,7 +15,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 
 
 public class InterviewerPanel extends JPanel implements ActionListener, ItemListener {
@@ -24,6 +26,7 @@ public class InterviewerPanel extends JPanel implements ActionListener, ItemList
     LocalDate today;
     ArrayList<Interview> pastInterviews;
     ArrayList<Interview> futureInterviews;
+    ArrayList<Interview> interviewsToBeScheduled;
     private String temporaryNotes = "";
 
     InterviewerPanel (InterviewerInterface interviewerInterface, LocalDate today) {
@@ -33,6 +36,7 @@ public class InterviewerPanel extends JPanel implements ActionListener, ItemList
         this.pastInterviews = interviews.get(0);
         this.futureInterviews = interviews.get(1);
         this.futureInterviews.addAll(interviews.get(2));
+        this.interviewsToBeScheduled = interviewerInterface.getUnscheduledInterviews();
 
         this.setLayout(new CardLayout());
         this.add(home(), "HOME");
@@ -53,6 +57,9 @@ public class InterviewerPanel extends JPanel implements ActionListener, ItemList
 
         return homePanel;
     }
+
+
+    // ====View Interviews panel methods====
 
     private JPanel viewInterviews () {
         JPanel viewPanel = new JPanel(new BorderLayout());
@@ -188,25 +195,40 @@ public class InterviewerPanel extends JPanel implements ActionListener, ItemList
     }
 
 
-    // =========
+    // ====Schedule interview panel methods====
 
     private JPanel scheduleInterviews () {
         JPanel schedulePanel = new JPanel(new BorderLayout());
         JPanel setTime = new JPanel(new FlowLayout(FlowLayout.CENTER));
 
-        JList<String> interviews = new JList<>(new String[]{"Posting1-001 app1", "Posting3-003 app2"});
+        JList<String> interviews = new JList<>(getIdAndApplicants(interviewsToBeScheduled));
         interviews.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
         interviews.setLayoutOrientation(JList.VERTICAL);
-        JComboBox<String> timeSlot = new JComboBox<>(new String[]{"9-10 am", "10-11 am", "1-2 pm",
-                "2-3 pm", "3-4 pm", "4-5 pm"});
+        JComboBox<String> timeSlot = new JComboBox<>(new String[]{"9-10 am", "10-11 am", "1-2 pm", "2-3 pm", "3-4 pm",
+                "4-5 pm"});
         UtilDateModel dateModel = new UtilDateModel();
         JDatePanelImpl datePanel = new JDatePanelImpl(dateModel);
-        JDatePickerImpl closeDateInput = new JDatePickerImpl(datePanel);
+        JDatePickerImpl interviewDate = new JDatePickerImpl(datePanel);
         JButton schedule = new JButton("Confirm");
+        schedule.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                LocalDate date = ((Date) interviewDate.getModel().getValue()).toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                Interview interview = interviewsToBeScheduled.get(interviews.getSelectedIndex());
+                if (date.isAfter(today)) {
+                    boolean canSchedule = interviewerInterface.scheduleInterview(interview, date, timeSlot.getSelectedIndex());
+                    if (!canSchedule) {
+                        JOptionPane.showMessageDialog(schedulePanel, "Unable to book the interview at the selected date and time");
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(schedulePanel, "Please choose a date after today.");
+                }
+            }
+        });
         JButton home = new JButton("Home");
         home.addActionListener(this);
 
-        setTime.add(closeDateInput);
+        setTime.add(interviewDate);
         setTime.add(timeSlot);
         setTime.add(schedule);
 
@@ -215,6 +237,15 @@ public class InterviewerPanel extends JPanel implements ActionListener, ItemList
         schedulePanel.add(home, BorderLayout.SOUTH);
 
         return schedulePanel;
+    }
+
+    private String[] getIdAndApplicants (ArrayList<Interview> interviews) {
+        ArrayList<String> titles = new ArrayList<>();
+        for (Interview interview: interviews) {
+            titles.add(interview.getId()+"-"+interview.getApplicant().getLegalName());
+        }
+
+        return (String[]) titles.toArray();
     }
 
     @Override
