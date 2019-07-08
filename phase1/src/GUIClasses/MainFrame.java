@@ -29,7 +29,6 @@ public class MainFrame extends JFrame {
     private void initUI () {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(854, 480);
-        this.homePanel.setLayout(new CardLayout());
         this.layoutManager = (CardLayout)this.homePanel.getLayout();
         addCards();
         setVisible(true);

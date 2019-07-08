@@ -59,6 +59,34 @@ public class InterviewerInterface extends UserInterface {
         interview.setInterviewNotes(notes);
     }
 
+    /**
+     * Schedule this interview on this date and time slot.
+     *
+     * @param interview The interview to be scheduled.
+     * @param date      The date chosen.
+     * @param timeSlot  The time slot chosen.
+     * @return true iff this interview can be scheduled on this date and at this time.
+     */
+    boolean scheduleInterview(Interview interview, LocalDate date, int timeSlot) {
+        InterviewTime interviewTime = new InterviewTime(date, timeSlot);
+        if (interviewer.isAvailable(interviewTime)) {
+            interview.setTime(interviewTime);
+            return true;
+        } else {
+            return false;
+        }
+
+    }
+
+    /**
+     * Get a list of unscheduled interviews for this interviewer.
+     *
+     * @return a list of unscheduled interviews for this interviewer.
+     */
+    ArrayList<Interview> getUnscheduledInterviews() {
+        return this.interviewer.getUnscheduledInterviews();
+    }
+
     // ============================================================================================================== //
 
     /**
@@ -274,7 +302,11 @@ public class InterviewerInterface extends UserInterface {
             return null;
         }
         else {
-            System.out.println(interview);
+            if (interview.isComplete()) {
+                System.out.println(interview);
+            } else {
+                System.out.println(interview.toStringPrelimInfo());
+            }
             return interview;
         }
     }

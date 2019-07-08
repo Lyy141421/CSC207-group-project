@@ -1,19 +1,25 @@
 package GUIClasses;
 
+import UsersAndJobObjects.Applicant;
 import UsersAndJobObjects.JobPosting;
+import UsersAndJobObjects.User;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 /**
  * JPanel containing all of the GUI needed for Applicant users functionality
  */
 
 class ApplicantPanel extends JPanel{
+    private Applicant loggedUser = new Applicant();
+
     ApplicantPanel() {
-        JPanel applicantPanel = new JPanel(new CardLayout());
+        super(new CardLayout());
 
         JPanel applicantStart = this.buildStartPanel();
 
@@ -21,9 +27,9 @@ class ApplicantPanel extends JPanel{
 
         JPanel viewApps = new JPanel(new GridLayout(1, 3)); //TODO: Implement construction
 
-        applicantPanel.add(applicantStart, "applicantStart");
-        applicantPanel.add(viewJobs, "viewJobs");
-        applicantPanel.add(viewApps, "viewApps");
+        this.add(applicantStart, "applicantStart");
+        this.add(viewJobs, "viewJobs");
+        this.add(viewApps, "viewApps");
     }
 
     /**
@@ -33,50 +39,53 @@ class ApplicantPanel extends JPanel{
         JPanel applicantStart = new JPanel(new GridLayout(3, 1));
 
         JPanel startTitle = new JPanel(null);
+        JButton logOut = new JButton("Logout");
+        logOut.setBounds(10, 10, 80, 20);
+        startTitle.add(logOut);
         JLabel titleText = new JLabel("Applicant Portal", SwingConstants.CENTER);
-        titleText.setBounds(227, 70, 400, 70);
-        titleText.setFont(new Font("Serif", Font.PLAIN, 25));
+        titleText.setBounds(227, 110, 400, 40);
+        titleText.setFont(new Font("Serif", Font.PLAIN, 27));
         startTitle.add(titleText);
 
-        JPanel startForm = this.startPanelForm();
+        JPanel startForm = this.buildStartForm();
 
-        JPanel startMngButton = new JPanel(null);
-        JButton manageApps = new JButton("Manage applications");
-        manageApps.setBounds(327, 40, 200, 20);
-        startMngButton.add(manageApps);
+        JPanel welcomeLabels = new JPanel(null);
 
-        applicantStart.add(startTitle); applicantStart.add(startForm); applicantStart.add(startMngButton);
+        JLabel feelingLucky = new JLabel("Feeling lucky, " + this.loggedUser.getLegalName()
+                + "?", SwingConstants.CENTER);
+        feelingLucky.setBounds(227, 0, 400, 20);
+        welcomeLabels.add(feelingLucky);
+
+        JLabel tutorialLabel = new JLabel("Search nothing to view all postings!", SwingConstants.CENTER);
+        tutorialLabel.setBounds(302, 20, 250, 20);
+        welcomeLabels.add(tutorialLabel);
+
+        applicantStart.add(startTitle); applicantStart.add(startForm); applicantStart.add(welcomeLabels);
         return applicantStart;
     }
 
     /**
-     * Helper for buildStartPanel, takes care of the form panel in the center
+     * Helper to build Applicant start panel
      */
-    private JPanel startPanelForm() {
+    private JPanel buildStartForm() {
         JPanel startForm = new JPanel(null);
 
-        JLabel fieldText = new JLabel("Search by job field");
-        fieldText.setBounds(227, 35, 150, 20);
-        startForm.add(fieldText);
-
-        JTextField fieldEntry = new JTextField();
-        fieldEntry.setBounds(227, 60, 150, 20);
+        JTextField fieldEntry = new JTextField("Looking for a job?");
+        fieldEntry.setBounds(252, 40, 350, 28);
+        fieldEntry.addMouseListener(new MouseAdapter(){
+            @Override
+            public void mouseClicked(MouseEvent e){
+                fieldEntry.setText("");
+            }
+        });
         startForm.add(fieldEntry);
 
-        JButton fieldButton = new JButton("Find jobs");
-        fieldButton.setBounds(252, 100, 100, 20);
+        JButton fieldButton = new JButton("Search by field");
+        fieldButton.setBounds(267, 90, 150, 25);
         startForm.add(fieldButton);
 
-        JLabel companyText = new JLabel("Search by company");
-        companyText.setBounds(477, 35, 150, 20);
-        startForm.add(companyText);
-
-        JTextField companyEntry = new JTextField();
-        companyEntry.setBounds(477, 60, 150, 20);
-        startForm.add(companyEntry);
-
-        JButton companyButton = new JButton("Find jobs");
-        companyButton.setBounds(502, 100, 100, 20);
+        JButton companyButton = new JButton("Search by company");
+        companyButton.setBounds(437, 90, 150, 25);
         startForm.add(companyButton);
 
         return startForm;
@@ -219,5 +228,11 @@ class ApplicantPanel extends JPanel{
         }
 
         return ret;
+    }
+
+    public static void main(String[] args) {
+        JFrame tester = new JFrame("Interface Test");
+        ApplicantPanel test = new ApplicantPanel(); tester.add(test);
+        tester.setSize(854, 480); tester.setVisible(true);
     }
 }
