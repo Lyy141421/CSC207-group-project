@@ -20,7 +20,7 @@ public class InterviewManager {
     private static final int DO_NOTHING = 0;
     static final int SCHEDULE_INTERVIEWS = 1;
     private static final int CHOOSE_APPLICANTS_FOR_HIRE = 2;
-    public static final int HIRE_APPLICANTS = 3;
+    static final int HIRE_APPLICANTS = 3;
 
 
 

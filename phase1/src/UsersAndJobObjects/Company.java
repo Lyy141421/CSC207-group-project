@@ -83,9 +83,11 @@ public class Company implements Storable {
      */
     public ArrayList<JobApplication> getAllApplicationsToCompany(Applicant applicant) {
         ArrayList<JobApplication> apps = new ArrayList<>();
-        for (JobApplication jobApp : applicant.getJobApplicationManager().getJobApplications()) {
-            if (jobApp.getJobPosting().getCompany().equals(this)) {
-                apps.add(jobApp);
+        for (JobPosting jobPosting : this.getJobPostingManager().getJobPostings()) {
+            for (JobApplication jobApp : jobPosting.getJobApplications()) {
+                if (jobApp.getApplicant().equals(applicant)) {
+                    apps.add(jobApp);
+                }
             }
         }
         return apps;
