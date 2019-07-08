@@ -1,9 +1,15 @@
 package GUIClasses;
 
+import Main.JobApplicationSystem;
+import UsersAndJobObjects.Applicant;
+import UsersAndJobObjects.HRCoordinator;
+import UsersAndJobObjects.User;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.LocalDate;
 
 /**
  * REMEMBER:
@@ -205,13 +211,28 @@ class LoginPanel extends JPanel {
             case 2: this.hideCreateNew();
                     this.hidePassError();
                     this.hideBlankField();
-                    this.mainframe.newUserRef.setNewUsername(null);
-                    break; //TODO: handle login
+                    this.GUILogin(userNameEntry.getText());
+                    break;
             case 3: this.showPassError();
                     this.hideCreateNew();
                     this.hideBlankField();
                     break;
         }
+    }
+
+    private void GUILogin(String username) {
+        User user = JobApplicationSystem.getUserManager().findUserByUsername(username);
+        if(user instanceof Applicant) {
+            ApplicantPanel newAppPanel = new ApplicantPanel(username, LocalDate.now(), parent, masterLayout);
+            //TODO: get date
+            this.parent.add(newAppPanel, "APPLICANT");
+            this.masterLayout.show(parent, "APPLICANT");
+        } else if(user instanceof HRCoordinator) {
+            //TODO: Handle
+        } else { //Interviewer
+            //TODO: Handle
+        }
+        this.mainframe.newUserRef.setNewUsername(null);
     }
 
     /**
