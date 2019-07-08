@@ -142,6 +142,17 @@ public class Interview implements Storable {
     }
 
     /**
+     * Get a string representation of the overview of this interview.
+     *
+     * @return a string representation of the overview of this interview.
+     */
+    public String getOverview() {
+        String s = "Interview time: " + this.time.toString() + "\n\n";
+        s += this.toStringPrelimInfo();
+        return s;
+    }
+
+    /**
      * Get a string representation of the preliminary input for this interview.
      *
      * @return a string representation of the preliminary input for this interview.
