@@ -1,5 +1,6 @@
 package GUIClasses;
 
+import Main.JobApplicationSystem;
 import UsersAndJobObjects.Applicant;
 import UsersAndJobObjects.JobPosting;
 import UsersAndJobObjects.User;
@@ -8,6 +9,8 @@ import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -16,10 +19,17 @@ import java.awt.event.MouseEvent;
  */
 
 class ApplicantPanel extends JPanel{
-    private Applicant loggedUser = new Applicant();
+    private ApplicantInterfaceTest BackEnd;
+    private Applicant loggedUser;
+    private JTextField searchbar;
 
-    ApplicantPanel() {
+    ApplicantPanel(String username) {
         super(new CardLayout());
+
+        //this.loggedUser = (Applicant)JobApplicationSystem.getUserManager().findUserByUsername(username);
+        this.loggedUser = new Applicant();
+
+        this.BackEnd = new ApplicantInterfaceTest(this.loggedUser);
 
         JPanel applicantStart = this.buildStartPanel();
 
@@ -38,34 +48,18 @@ class ApplicantPanel extends JPanel{
     private JPanel buildStartPanel() {
         JPanel applicantStart = new JPanel(new GridLayout(3, 1));
 
-        JPanel startTitle = new JPanel(null);
-        JButton logOut = new JButton("Logout");
-        logOut.setBounds(10, 10, 80, 20);
-        startTitle.add(logOut);
-        JLabel titleText = new JLabel("Applicant Portal", SwingConstants.CENTER);
-        titleText.setBounds(227, 110, 400, 40);
-        titleText.setFont(new Font("Serif", Font.PLAIN, 27));
-        startTitle.add(titleText);
+        JPanel startTitle = this.buildTitle();
 
         JPanel startForm = this.buildStartForm();
 
-        JPanel welcomeLabels = new JPanel(null);
-
-        JLabel feelingLucky = new JLabel("Feeling lucky, " + this.loggedUser.getLegalName()
-                + "?", SwingConstants.CENTER);
-        feelingLucky.setBounds(227, 0, 400, 20);
-        welcomeLabels.add(feelingLucky);
-
-        JLabel tutorialLabel = new JLabel("Search nothing to view all postings!", SwingConstants.CENTER);
-        tutorialLabel.setBounds(302, 20, 250, 20);
-        welcomeLabels.add(tutorialLabel);
+        JPanel welcomeLabels = this.buildWelcome();
 
         applicantStart.add(startTitle); applicantStart.add(startForm); applicantStart.add(welcomeLabels);
         return applicantStart;
     }
 
     /**
-     * Helper to build Applicant start panel
+     * Helpers to build Applicant start panel
      */
     private JPanel buildStartForm() {
         JPanel startForm = new JPanel(null);
@@ -78,17 +72,71 @@ class ApplicantPanel extends JPanel{
                 fieldEntry.setText("");
             }
         });
-        startForm.add(fieldEntry);
+        startForm.add(fieldEntry); this.searchbar = fieldEntry;
 
         JButton fieldButton = new JButton("Search by field");
         fieldButton.setBounds(267, 90, 150, 25);
+        fieldButton.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                //TODO: build viewJobs
+                ((CardLayout)getLayout()).show(getThis(), "viewJobs");
+                resetSearch();
+            }
+        });
         startForm.add(fieldButton);
 
         JButton companyButton = new JButton("Search by company");
         companyButton.setBounds(437, 90, 150, 25);
+        companyButton.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                //TODO: build viewJobs
+                ((CardLayout)getLayout()).show(getThis(), "viewJobs");
+                resetSearch();
+            }
+        });
         startForm.add(companyButton);
 
         return startForm;
+    }
+
+    private JPanel buildTitle() {
+        JPanel startTitle = new JPanel(null);
+
+        JButton logOut = new JButton("Logout");
+        logOut.setBounds(5, 5, 80, 20);
+        startTitle.add(logOut);
+
+        JButton manageFiles = new JButton("Files");
+        manageFiles.setBounds(90, 5, 80, 20);
+        startTitle.add(manageFiles);
+
+        JButton viewApps = new JButton("View Applications");
+        viewApps.setBounds(675, 5, 160, 20);
+        startTitle.add(viewApps);
+
+        JLabel titleText = new JLabel("Job Applicant Portal", SwingConstants.CENTER);
+        titleText.setBounds(227, 110, 400, 40);
+        titleText.setFont(new Font("Serif", Font.PLAIN, 27));
+        startTitle.add(titleText);
+
+        return startTitle;
+    }
+
+    private JPanel buildWelcome() {
+        JPanel welcomeLabels = new JPanel(null);
+
+        JLabel feelingLucky = new JLabel("Feeling lucky, " + this.loggedUser.getLegalName()
+                + "?", SwingConstants.CENTER);
+        feelingLucky.setFont(new Font("Serif", Font.PLAIN, 14));
+        feelingLucky.setBounds(227, 0, 400, 20);
+        welcomeLabels.add(feelingLucky);
+
+        JLabel tutorialLabel = new JLabel("Search nothing to view all postings!", SwingConstants.CENTER);
+        tutorialLabel.setFont(new Font("Serif", Font.PLAIN, 14));
+        tutorialLabel.setBounds(302, 20, 250, 20);
+        welcomeLabels.add(tutorialLabel);
+
+        return welcomeLabels;
     }
 
     /**
@@ -142,6 +190,11 @@ class ApplicantPanel extends JPanel{
 
         JButton viewJobsExit = new JButton("Back");
         viewJobsExit.setBounds(92, 415, 100, 20);
+        viewJobsExit.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                ((CardLayout)getLayout()).show(getThis(), "applicantStart");
+            }
+        });
         viewJobsList.add(viewJobsExit);
 
         return viewJobsList;
@@ -230,9 +283,20 @@ class ApplicantPanel extends JPanel{
         return ret;
     }
 
+    private void resetSearch() {
+        this.searchbar.setText("Looking for a job?");
+    }
+
+    /**
+     * Because nested methods
+     */
+    private ApplicantPanel getThis() {
+        return this;
+    }
+
     public static void main(String[] args) {
         JFrame tester = new JFrame("Interface Test");
-        ApplicantPanel test = new ApplicantPanel(); tester.add(test);
-        tester.setSize(854, 480); tester.setVisible(true);
+        ApplicantPanel test = new ApplicantPanel("i dont exist"); tester.add(test);
+        tester.setSize(854, 480); tester.setVisible(true); tester.setResizable(false);
     }
 }
