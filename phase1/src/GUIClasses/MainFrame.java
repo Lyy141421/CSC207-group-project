@@ -8,7 +8,8 @@ public class MainFrame extends JFrame {
 
     LocalDate today;
     private CardLayout layoutManager = new CardLayout();
-    //private JPanel homePanel; NewUserPanel newUserRef;
+    //private JPanel homePanel;
+    NewUserPanel newUserRef;
 
     public MainFrame (LocalDate today) {
         super("GET A JOB");
@@ -44,8 +45,8 @@ public class MainFrame extends JFrame {
     private void addCards () {
         //this.add(this.homePanel);
         // We need to be careful with when these cards get constructed, in case it's missing arguments to run methods
-        this.add(new LoginPanel(this.homePanel, this.layoutManager), "LOGIN");
-        this.newUserRef = new NewUserPanel(this.homePanel, this.layoutManager);
+        this.add(new LoginPanel(this.getContentPane(), this.layoutManager), "LOGIN");
+        this.newUserRef = new NewUserPanel(this.getContentPane(), this.layoutManager);
         this.add(this.newUserRef, "NEWUSER");
         // got User object from login/signup
         //interface = new InterfaceFactory.create(User)
