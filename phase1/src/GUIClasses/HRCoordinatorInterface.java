@@ -627,11 +627,11 @@ public class HRCoordinatorInterface extends UserInterface {
      * @param sc         The scanner for user input.
      * @param jobPosting The job posting in question.
      */
-    private void hireApplicant(Scanner sc, JobPosting jobPosting) {
+    private void hireApplicants(Scanner sc, JobPosting jobPosting) {
         ArrayList<JobApplication> finalCandidates = jobPosting.getInterviewManager().getApplicationsInConsideration();
         ArrayList<JobApplication> jobApps;
         if (finalCandidates.size() == jobPosting.getNumPositions()) {
-            System.out.println("The number of candidates in consideration equls the number of positions for this job.");
+            System.out.println("The number of final candidates equals the number of positions for this job.");
             System.out.println("These candidates will be hired automatically.");
             jobApps = finalCandidates;
         } else {
@@ -659,7 +659,7 @@ public class HRCoordinatorInterface extends UserInterface {
         }
         for (JobPosting jobPosting : readyForHiring) {
             System.out.println(jobPosting);
-            this.hireApplicant(sc, jobPosting);
+            this.hireApplicants(sc, jobPosting);
         }
     }
 
