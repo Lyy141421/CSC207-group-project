@@ -43,32 +43,18 @@ public class ApplicantInterfaceTest extends UserInterface {
         }
     }
 
-    private void displayOpenJobPostingsNotYetAppliedTo(LocalDate today, String field, String companyName) {
+    ArrayList<JobPosting> findAppliablePostings(LocalDate today, String field, String companyName) {
         ArrayList<JobPosting> openJobPostings = applicant.getOpenJobPostingsNotAppliedTo(today);
-        boolean noPostingsFound = true;
+        ArrayList<JobPosting> ret = new ArrayList<>();
         for (JobPosting posting : openJobPostings) {
-            // if field is null, assign value of posting.getField() to filterField so that all postings pass the filter;
-            // otherwise, assign value of field to filterField
             String filterField = (field == null)? posting.getField() : field;
             String filterCompanyName = (companyName == null)? posting.getCompany().getName() : companyName;
             if (filterField.equalsIgnoreCase(posting.getField())
                     && filterCompanyName.equalsIgnoreCase(posting.getCompany().getName())) {
-                noPostingsFound = false;
-                System.out.println("Job ID: " + posting.getId());
-                System.out.println("Title: " + posting.getTitle());
-                System.out.println("Field: " + posting.getField());
-                System.out.println("Description: " + posting.getDescription());
-                System.out.println("Requirements: " + posting.getRequirements());
-                System.out.println("Number of positions: " + posting.getNumPositions());
-                System.out.println("Company: " + posting.getCompany().getName());
-                System.out.println("Post date: " + posting.getPostDate());
-                System.out.println("Close date: " + posting.getCloseDate());
-                System.out.println();
+                ret.add(posting);
             }
         }
-        if (noPostingsFound) {
-            System.out.println("No postings were found matching the specified criteria.");
-        }
+        return ret;
     }
 
     /**

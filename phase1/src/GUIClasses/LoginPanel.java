@@ -9,6 +9,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.LocalDate;
 
 /**
  * REMEMBER:
@@ -222,7 +223,8 @@ class LoginPanel extends JPanel {
     private void GUILogin(String username) {
         User user = JobApplicationSystem.getUserManager().findUserByUsername(username);
         if(user instanceof Applicant) {
-            ApplicantPanel newAppPanel = new ApplicantPanel(username);
+            ApplicantPanel newAppPanel = new ApplicantPanel(username, LocalDate.now(), parent, masterLayout);
+            //TODO: get date
             this.parent.add(newAppPanel, "APPLICANT");
             this.masterLayout.show(parent, "APPLICANT");
         } else if(user instanceof HRCoordinator) {
