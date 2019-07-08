@@ -19,6 +19,7 @@ public class ApplicantLoader extends GenericLoader<Applicant> {
         HashMap data = FileSystem.read(Applicant.FILENAME, applicant.getUsername());
         this.loadPrelimData(applicant, data);
         this.loadJobAppManager(applicant, data);
+        this.loadDocumentManager(applicant, data);
     }
 
     /**
@@ -47,9 +48,15 @@ public class ApplicantLoader extends GenericLoader<Applicant> {
         applicant.setJobApplicationManager(new JobApplicationManager(temp));
     }
 
-    // TODO
     private void loadDocumentManager(Applicant applicant, HashMap data) {
-
+        ArrayList documents = (ArrayList) data.get("Documents");
+        ArrayList jad = new ArrayList();
+        for(Object document : documents){
+            JobApplicationDocument doc = new JobApplicationDocument((String)((ArrayList)document).get(0),
+                    (String)((ArrayList)document).get(1));
+            jad.add(doc);
+        }
+        applicant.setDocumentManager(new DocumentManager(jad));
     }
 
 }

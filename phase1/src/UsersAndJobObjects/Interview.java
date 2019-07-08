@@ -159,7 +159,7 @@ public class Interview implements Storable {
      */
     public String toStringPrelimInfo() {
         String s = "Interview ID: " + this.getId() + "\n";
-        s += "Job Posting: " + this.getJobPosting().getTitle();
+        s += "Job Posting: " + this.getJobPosting().getTitle() + "\n";
         s += "Interviewee: " + this.getApplicant().getLegalName() + " (" + this.getApplicant().getUsername() + ")" +
                 "\n";
         s += "Interview type: " + Interview.roundNumberDescriptions.get(this.getRoundNumber()) + "\n";

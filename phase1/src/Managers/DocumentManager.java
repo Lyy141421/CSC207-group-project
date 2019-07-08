@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public class DocumentManager {
     // List of filenames uploaded to account
-    private ArrayList<JobApplicationDocument> documents;
+    private ArrayList<JobApplicationDocument> documents = new ArrayList<>();
 
     // === Constructor ===
     public DocumentManager() {}

@@ -1,5 +1,6 @@
 package Managers;
 
+import UsersAndJobObjects.JobApplication;
 import UsersAndJobObjects.JobPosting;
 import UsersAndJobObjects.Company;
 import java.time.LocalDate;
@@ -89,7 +90,7 @@ public class JobPostingManager {
         for (JobPosting jobPosting : this.getJobPostings()) {
             if (!jobPosting.isFilled()) {
                 LocalDate closeDate = jobPosting.getCloseDate();
-                if (closeDate.isEqual(today) || closeDate.isBefore(today)) {
+                if (closeDate.isBefore(today)) {
                     jobPostings.add(jobPosting);
                 }
             }
@@ -103,7 +104,7 @@ public class JobPostingManager {
      * @param today Today's date.
      * @return a list of closed job postings that have not yet started the interview process.
      */
-    public ArrayList<JobPosting> getClosedJobPostingsNoInterview(LocalDate today) {
+    public ArrayList<JobPosting> getClosedJobPostingsNoApplicantsChosen(LocalDate today) {
         ArrayList<JobPosting> jobPostings = new ArrayList<>();
         for (JobPosting jobPosting : this.getClosedJobPostingsNotFilled(today)) {
             if (jobPosting.getInterviewManager() == null) {

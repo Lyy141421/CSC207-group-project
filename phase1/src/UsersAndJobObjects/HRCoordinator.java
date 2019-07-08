@@ -74,7 +74,7 @@ public class HRCoordinator extends User {
      * @return an integer that represents the task that the HR Coordinator must accomplish for this job posting.
      */
     int getTask(JobPosting jobPosting, LocalDate today) {
-        if (this.company.getJobPostingManager().getClosedJobPostingsNoInterview(today).contains(jobPosting)) {
+        if (this.company.getJobPostingManager().getClosedJobPostingsNoApplicantsChosen(today).contains(jobPosting)) {
             return InterviewManager.SELECT_APPS_FOR_PHONE_INTERVIEW;
         } else {
             return jobPosting.getInterviewManager().getHrTask();

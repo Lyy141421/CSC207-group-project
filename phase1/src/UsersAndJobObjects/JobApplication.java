@@ -53,6 +53,7 @@ public class JobApplication implements Storable{
         this.jobPosting = jobPosting;
         this.CV = CV;
         this.coverLetter = coverletter;
+        this.status = new Status();
         this.applicationDate = applicationDate;
         JobApplication.totalNumOfApplications++;
     }
@@ -158,6 +159,8 @@ public class JobApplication implements Storable{
         interviewer.addInterview(interview);
         this.status.advanceStatus();
     }
+
+
 
     /**
      * Gets the last interview conducted/scheduled for this job application

@@ -1,7 +1,9 @@
 package FileLoadingAndStoring;
 
+import Managers.DocumentManager;
 import UsersAndJobObjects.Applicant;
 import UsersAndJobObjects.JobApplication;
+import UsersAndJobObjects.JobApplicationDocument;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -46,7 +48,12 @@ public class ApplicantStorer extends GenericStorer<Applicant> {
         data.put("jobApplicationManager", jobapps);
     }
 
-    // TODO
     private void storeDocuments(Applicant applicant, HashMap<String, Object> data) {
+        DocumentManager docman = applicant.getDocumentManager();
+        ArrayList documents = new ArrayList();
+        for(JobApplicationDocument x : docman.getDocuments()){
+            documents.add(new ArrayList<String>() {{add(x.getId()); add(x.getContents());}});
+        }
+        data.put("Documents", documents);
     }
 }

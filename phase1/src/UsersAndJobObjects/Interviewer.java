@@ -1,7 +1,6 @@
 package UsersAndJobObjects;
 
 import Miscellaneous.InterviewTime;
-import Miscellaneous.InterviewTimeComparator;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -107,7 +106,7 @@ public class Interviewer extends User {
      * @return true iff this interviewer is available at this time.
      */
     public boolean isAvailable(InterviewTime interviewTime) {
-        for (Interview interview : this.interviews) {
+        for (Interview interview : this.getScheduledInterviews()) {
             if (interview.getTime().equals(interviewTime)) {
                 return false;
             }
@@ -163,6 +162,20 @@ public class Interviewer extends User {
     }
 
     /**
+     * Get a list of scheduled interviews for this interviewer.
+     * @return  a list of scheduled interviews for this interviewer.
+     */
+    private ArrayList<Interview> getScheduledInterviews() {
+        ArrayList<Interview> scheduledInterviews = new ArrayList<>();
+        for (Interview interview : this.interviews) {
+            if (!this.getUnscheduledInterviews().contains(interview)) {
+                scheduledInterviews.add(interview);
+            }
+        }
+        return scheduledInterviews;
+    }
+
+    /**
      * Get a list of job applications of this interviewer's interviewees.
      *
      * @return a list of job applications of the applicants that are being interviewed by this interviewer.
@@ -205,7 +218,6 @@ public class Interviewer extends User {
      */
     public void passInterview(Interview interview) {
         interview.setPass(true);
-        interview.getInterviewManager().reject(interview.getJobApplication());
     }
 
     /**
@@ -229,6 +241,5 @@ public class Interviewer extends User {
      */
     void addInterview(Interview interview) {
         this.interviews.add(interview);
-        this.interviews.sort(new InterviewTimeComparator());
     }
 }
