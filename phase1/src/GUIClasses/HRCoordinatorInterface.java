@@ -573,9 +573,9 @@ public class HRCoordinatorInterface extends UserInterface {
             }
             System.out.println("The following job applications will have interviews set-up automatically.");
             for (JobApplication jobApp : jobApps) {
+                this.setUpInterviewForJobApplication(jobApp);
                 System.out.println();
                 System.out.println(jobApp);
-                this.setUpInterviewForJobApplication(jobApp);
             }
         }
     }

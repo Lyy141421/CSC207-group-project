@@ -18,7 +18,7 @@ public class Interview implements Storable {
     private static ArrayList<String> roundNumberDescriptions = new ArrayList<>(Arrays.asList("Phone interview",
             "In-person interview 1", "In-person interview 2", "In-person interview 3"));
     // The maximum number of in-person interview rounds
-    private static final int MAX_NUM_ROUNDS = Interview.roundNumberDescriptions.size() - 1;
+    public static final int MAX_NUM_ROUNDS = 3;
     // The total number of interviews conducted
     private static int total;
     // The filename under which this will be saved in the FileSystem

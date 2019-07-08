@@ -12,8 +12,6 @@ public class InterviewManager {
      */
 
     // === Class variables ===
-    // The maximum number of in-person interview rounds
-    private static int MAX_NUM_INTERVIEW_ROUNDS = 3;
     // Integers that represent the task the HR Coordinator needs to accomplish
     static final int CLOSE_POSTING_NO_HIRE = -2;
     public static int SELECT_APPS_FOR_PHONE_INTERVIEW = -1;
@@ -152,15 +150,6 @@ public class InterviewManager {
         return jobAppsSize > 0 && jobAppsSize <= this.jobPosting.getNumPositions();
     }
 
-    /**
-     * Check if interview process has finished the last interview round.
-     *
-     * @return true iff the maximum number of interview rounds has been completed.
-     */
-    public boolean isInterviewProcessOver() {
-        return this.isCurrentRoundOver() && this.currentRound == InterviewManager.MAX_NUM_INTERVIEW_ROUNDS;
-    }
-
 
     /**
      * Get the task required by the HR Coordinator for this job posting at this moment in time.
@@ -203,5 +192,14 @@ public class InterviewManager {
      */
     private boolean hasNoJobApplicationsInConsideration() {
         return this.applicationsInConsideration.isEmpty();
+    }
+
+    /**
+     * Check if interview process has finished the last interview round.
+     *
+     * @return true iff the maximum number of interview rounds has been completed.
+     */
+    private boolean isInterviewProcessOver() {
+        return this.isCurrentRoundOver() && this.currentRound == Interview.MAX_NUM_ROUNDS;
     }
 }

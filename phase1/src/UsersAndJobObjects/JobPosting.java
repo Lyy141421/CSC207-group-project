@@ -6,7 +6,6 @@ import Managers.InterviewManager;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class JobPosting implements Storable {
 
@@ -210,7 +209,7 @@ public class JobPosting implements Storable {
             return;
         }
         InterviewManager interviewManager = this.getInterviewManager();
-        if (interviewManager.getCurrentRound() < Interview.getMaxNumRounds()) {
+        if (interviewManager.getCurrentRound() < Interview.MAX_NUM_ROUNDS) {
             if (interviewManager.isCurrentRoundOver()) {
                 interviewManager.advanceRound();
             }
