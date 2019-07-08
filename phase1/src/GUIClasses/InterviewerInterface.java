@@ -333,10 +333,11 @@ public class InterviewerInterface extends UserInterface {
         System.out.println("Would you like to pass this applicant?");
         String input = this.getInputToken(sc, "Enter 'N' for no or any other key for yes: ");
         sc.nextLine();
-        if (input.equals("N"))
+        if (input.equals("N")) {
             this.interviewer.failInterview(interview);
-        else
+        } else {
             this.interviewer.passInterview(interview);
+        }
     }
 
     /**

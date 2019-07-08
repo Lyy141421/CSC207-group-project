@@ -1,5 +1,6 @@
 package Managers;
 
+import UsersAndJobObjects.JobApplication;
 import UsersAndJobObjects.JobPosting;
 import UsersAndJobObjects.Company;
 import java.time.LocalDate;
@@ -107,6 +108,16 @@ public class JobPostingManager {
         ArrayList<JobPosting> jobPostings = new ArrayList<>();
         for (JobPosting jobPosting : this.getClosedJobPostingsNotFilled(today)) {
             if (jobPosting.getInterviewManager() == null) {
+                jobPostings.add(jobPosting);
+            }
+        }
+        return jobPostings;
+    }
+
+    public ArrayList<JobPosting> getClosedJobPostingsNoApplicationsInConsideration(LocalDate today) {
+        ArrayList<JobPosting> jobPostings = new ArrayList<>();
+        for (JobPosting jobPosting : this.getClosedJobPostingsNotFilled(today)) {
+            if (jobPosting.getInterviewManager().getHrTask() == InterviewManager.CLOSE_POSTING_NO_HIRE) {
                 jobPostings.add(jobPosting);
             }
         }
