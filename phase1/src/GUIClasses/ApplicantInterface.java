@@ -335,16 +335,7 @@ public class ApplicantInterface extends UserInterface {
         int applicationOption = getMenuOption(sc, applicationNumber);
         JobApplication applicationToWithdraw = applications.get(applicationOption - 1);
         boolean appWithdrawn = applicant.withdrawJobApplication(applicationToWithdraw.getJobPosting());
-        if (!applicationToWithdraw.getInterviews().isEmpty()) {
-            Interview interview = applicationToWithdraw.getLastInterview();
-            InterviewManager IM = applicationToWithdraw.getJobPosting().getInterviewManager();
-            if (!interview.isComplete()) {
-                interview.getInterviewer().removeInterview(interview);
-            }
-            if (IM != null) {
-                IM.reject(applicationToWithdraw);
-            }
-        }
+        applicationToWithdraw.getJobPosting().getInterviewManager().withdrawApplication(applicationToWithdraw);
         return appWithdrawn;
     }
 
