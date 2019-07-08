@@ -13,7 +13,7 @@ import java.awt.*;
 
 class ApplicantPanel extends JPanel{
     ApplicantPanel() {
-        JPanel applicantPanel = new JPanel(new CardLayout());
+        super(new CardLayout());
 
         JPanel applicantStart = this.buildStartPanel();
 
@@ -21,9 +21,9 @@ class ApplicantPanel extends JPanel{
 
         JPanel viewApps = new JPanel(new GridLayout(1, 3)); //TODO: Implement construction
 
-        applicantPanel.add(applicantStart, "applicantStart");
-        applicantPanel.add(viewJobs, "viewJobs");
-        applicantPanel.add(viewApps, "viewApps");
+        this.add(applicantStart, "applicantStart");
+        this.add(viewJobs, "viewJobs");
+        this.add(viewApps, "viewApps");
     }
 
     /**
@@ -219,5 +219,11 @@ class ApplicantPanel extends JPanel{
         }
 
         return ret;
+    }
+
+    public static void main(String[] args) {
+        JFrame tester = new JFrame("Interface Test");
+        ApplicantPanel test = new ApplicantPanel(); tester.add(test);
+        tester.setSize(854, 480); tester.setVisible(true);
     }
 }
