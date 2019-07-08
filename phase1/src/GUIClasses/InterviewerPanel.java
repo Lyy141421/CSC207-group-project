@@ -32,7 +32,7 @@ public class InterviewerPanel extends JPanel implements ActionListener, ItemList
 
         this.setLayout(new CardLayout());
         this.add(home(), "HOME");
-        this.add(viewInterviews(this.futureInterviews, this.pastInterviews), "VIEW");
+        this.add(viewInterviews(), "VIEW");
         this.add(scheduleInterviews(), "SCHEDULE");
     }
 
@@ -50,18 +50,20 @@ public class InterviewerPanel extends JPanel implements ActionListener, ItemList
         return homePanel;
     }
 
-    private JPanel viewInterviews (ArrayList<Interview> incompleteInterviews, ArrayList<Interview> completeInterviews) {
+    private JPanel viewInterviews () {
         JPanel viewPanel = new JPanel(new BorderLayout());
         JPanel select = new JPanel();
         select.setLayout(new BoxLayout(select, BoxLayout.Y_AXIS));
 
-        JComboBox<String> interviews = new JComboBox<>();
+        ArrayList<String> allInterviewTitles = getInterviewTitles(this.futureInterviews);
+        allInterviewTitles.addAll(getInterviewTitles(this.pastInterviews));
+        JComboBox<String> interviews = new JComboBox<>((String[]) allInterviewTitles.toArray());
 
         JCheckBox incomplete = new JCheckBox("Incomplete", true);
         incomplete.addItemListener(this);
         JCheckBox complete = new JCheckBox("Complete", true);
         complete.addItemListener(this);
-        JList<String> viewable = new JList<>(new String[]{"abc", "xa"});
+        JList<String> viewable = new JList<>(new String[]{"Overview", "Notes", "CV", "Cover letter"});
 
         select.add(incomplete);
         select.add(complete);
@@ -86,6 +88,19 @@ public class InterviewerPanel extends JPanel implements ActionListener, ItemList
 
         return viewPanel;
     }
+
+    private ArrayList<String> getInterviewTitles(ArrayList<Interview> interviews) {
+        ArrayList<String> titles = new ArrayList<>();
+        for (Interview interview: interviews) {
+            titles.add(interview.getId()+"-"+interview.getTime().toString()+" "+
+                    interview.getApplicant().getLegalName());
+        }
+
+        return titles;
+    }
+
+
+    // =========
 
     private JPanel scheduleInterviews () {
         JPanel schedulePanel = new JPanel(new BorderLayout());
