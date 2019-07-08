@@ -45,7 +45,7 @@ public class HRPanel extends JPanel implements ActionListener {
 
         this.setLayout(new CardLayout());
         this.add(home(), "HOME");
-        this.add(browsePosting(null), "POSTING");
+        this.add(browsePosting(allJP), "POSTING");
         this.add(viewApplication(null), "APPLICATION");
         this.add(searchApplicant(), "APPLICANT");
         this.add(addPosting(), "ADDPOSTING");
