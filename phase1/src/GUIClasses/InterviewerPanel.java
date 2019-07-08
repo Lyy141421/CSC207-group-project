@@ -88,7 +88,7 @@ public class InterviewerPanel extends JPanel implements ActionListener, ItemList
             @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
-                    info.setText(getInfo(allInterviews.get(interviews.getSelectedIndex()), viewable.getSelectedIndex()));
+                    setInfo(allInterviews.get(interviews.getSelectedIndex()), viewable.getSelectedIndex(), info);
                 }
             }
         });
@@ -96,7 +96,7 @@ public class InterviewerPanel extends JPanel implements ActionListener, ItemList
         viewable.addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
-                info.setText(getInfo(allInterviews.get(interviews.getSelectedIndex()), e.getFirstIndex()));
+                setInfo(allInterviews.get(interviews.getSelectedIndex()), e.getFirstIndex(), info);
             }
         });
 
@@ -126,27 +126,28 @@ public class InterviewerPanel extends JPanel implements ActionListener, ItemList
         return titles;
     }
 
-    private String getInfo (Interview interview, int attributeIndex) {
-        String info;
-
+    private void setInfo (Interview interview, int attributeIndex, JTextArea info) {
         switch (attributeIndex) {
             case 0:
-                info = interview.getOverview();
+                info.setText(interview.getOverview());
                 break;
             case 1:
-                info = interview.getInterviewNotes();
+                info.setText(interview.getInterviewNotes());
+                if (interview.isComplete()) {
+                    info.setEditable(true);
+                } else {
+                    info.setEditable(false);
+                }
                 break;
             case 2:
-                info = interview.getJobApplication().getCV().getContents();
+                info.setText(interview.getJobApplication().getCV().getContents());
                 break;
             case 3:
-                info = interview.getJobApplication().getCoverLetter().getContents();
+                info.setText(interview.getJobApplication().getCoverLetter().getContents());
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + attributeIndex);
         }
-
-        return info;
     }
 
 
