@@ -78,6 +78,15 @@ public class InterviewerInterface extends UserInterface {
 
     }
 
+    /**
+     * Get a list of unscheduled interviews for this interviewer.
+     *
+     * @return a list of unscheduled interviews for this interviewer.
+     */
+    ArrayList<Interview> getUnscheduledInterviews() {
+        return this.interviewer.getUnscheduledInterviews();
+    }
+
     // ============================================================================================================== //
 
     /**
