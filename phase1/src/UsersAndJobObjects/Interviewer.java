@@ -1,7 +1,6 @@
 package UsersAndJobObjects;
 
 import Miscellaneous.InterviewTime;
-import Miscellaneous.InterviewTimeComparator;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -219,7 +218,6 @@ public class Interviewer extends User {
      */
     public void passInterview(Interview interview) {
         interview.setPass(true);
-        interview.getInterviewManager().reject(interview.getJobApplication());
     }
 
     /**
@@ -243,6 +241,5 @@ public class Interviewer extends User {
      */
     void addInterview(Interview interview) {
         this.interviews.add(interview);
-        this.interviews.sort(new InterviewTimeComparator());
     }
 }

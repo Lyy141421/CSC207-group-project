@@ -48,7 +48,7 @@ public class InterviewerInterface extends UserInterface {
         this.viewInterviewsForToday(today);
         while (true) {
             try {
-                this.runMainMenu(sc);
+                this.runMainMenu(sc, today);
             } catch (ExitException ee) {
                 break;
             }
@@ -68,7 +68,7 @@ public class InterviewerInterface extends UserInterface {
         return 7;
     }
 
-    private void runMainMenu(Scanner sc) throws ExitException {
+    private void runMainMenu(Scanner sc, LocalDate today) throws ExitException {
         int numOptions = this.displayMainMenuOptions();
         int option = this.getMenuOption(sc, numOptions);
         switch (option) {
@@ -88,7 +88,7 @@ public class InterviewerInterface extends UserInterface {
                 this.viewSpecificInterview(sc);
                 break;
             case 6: //  Conduct next interview
-                this.conductInterview(sc);
+                this.conductInterview(sc, today);
                 break;
             case 7: // Exit
                 throw new ExitException();
@@ -130,10 +130,12 @@ public class InterviewerInterface extends UserInterface {
         System.out.println("Time slots: " + new InterviewTime().getTimeSlotsString());
         int timeSlot = this.getInteger(sc,
                 "Enter the value that corresponds to the preferred time slot: ");
-        InterviewTime interviewTime = new InterviewTime(interviewDate, timeSlot);
+        InterviewTime interviewTime = new InterviewTime(interviewDate, timeSlot - 1);
         if (interviewer.isAvailable(interviewTime)) {
             interview.setTime(interviewTime);
         } else {
+            System.out.println("You already have an interview scheduled at this time. Please select another time.");
+            System.out.println();
             this.scheduleOneInterview(sc, today, interview);
         }
     }
@@ -162,7 +164,7 @@ public class InterviewerInterface extends UserInterface {
             System.out.println("Interviews for today: ");
             for (Interview interview : interviews) {
                 System.out.println();
-                System.out.println(interview);
+                System.out.println(interview.toStringPrelimInfo() + "\n" + "Interview time: " + interview.getTime());
             }
         }
     }
@@ -198,7 +200,9 @@ public class InterviewerInterface extends UserInterface {
         if (jobApplication == null) {
             System.out.println("This job application cannot be found.");
         }
-        System.out.println(jobApplication);
+        else {
+            System.out.println(jobApplication);
+        }
         return jobApplication;
     }
 
@@ -209,8 +213,9 @@ public class InterviewerInterface extends UserInterface {
      */
     private void viewPreviousInterviewsForJobApp(Scanner sc) {
         JobApplication jobApp = this.getJobApplication(sc);
+        System.out.println();
         System.out.println("Previous interviews:");
-        if (jobApp.getInterviews().isEmpty()) {
+        if (jobApp.getInterviews().size() == 1) {
             System.out.println("None");
         } else {
             ArrayList<Interview> interviews = jobApp.getInterviews();
@@ -239,31 +244,55 @@ public class InterviewerInterface extends UserInterface {
     }
 
     /**
-     * Interface for conducting an interview.
+     * Interface for viewing the interview and application info for this interview to be conducted.
+     * @param interview The interview to be conducted.
      */
-    private void conductInterview(Scanner sc) {
+    private void viewInterviewInfoAndApplicationInfo(Interview interview) {
+        System.out.println("Interview:");
+        System.out.println(interview.toStringPrelimInfo() + "\n");
+        System.out.println("Applicant cover letter:");
+        System.out.println(interview.getJobApplication().getCoverLetter().getContents() + "\n");
+        System.out.println("Applicant CV:");
+        System.out.println(interview.getJobApplication().getCV().getContents() + "\n");
+    }
+
+    /**
+     * Interface for determining pass or fail for an interview.
+     * @param sc        The scanner for user input.
+     * @param interview The interview in question.
+     */
+    private void determinePassOrFailInterview(Scanner sc, Interview interview) {
+        System.out.println("Would you like to pass this applicant?");
+        String input = this.getInputToken(sc, "Enter 'N' for no or any other key for yes: ");
+        sc.nextLine();
+        if (input.equals("N"))
+            this.interviewer.failInterview(interview);
+        else
+            this.interviewer.passInterview(interview);
+    }
+
+    /**
+     * Interface for conducting an interview.
+     * @param sc    The scanner for user input
+     * @param today Today's date.
+     */
+    private void conductInterview(Scanner sc, LocalDate today) {
         if (this.interviewer.getInterviews().isEmpty()) {
             System.out.println("You do not have any interviews scheduled.");
+            return;
         }
-        else {
-            Interview interview = this.interviewer.getInterviewsBeforeOnAndAfterDate(LocalDate.now()).get(1).get(0);
-            System.out.println();
-            System.out.println("Interview:");
-            System.out.println(interview.toStringPrelimInfo() + "\n");
-            System.out.println("Applicant cover letter:");
-            System.out.println(interview.getJobApplication().getCoverLetter() + "\n");
-            System.out.println("Applicant CV:");
-            System.out.println(interview.getJobApplication().getCV() + "\n");
-            String notes = this.getInputLinesUntilDone
-                    (sc, "Write interview notes below. Press enter when finished.\n");
-            interview.setInterviewNotes(notes);
-            System.out.println("Would you like to pass this applicant?");
-            String input = this.getInputToken(sc, "Enter 'N' for no or any other key for yes");
-            if (input.equalsIgnoreCase("N"))
-                this.interviewer.failInterview(interview);
-            else
-                this.interviewer.passInterview(interview);
-            this.interviewer.removeInterview(interview);
+        ArrayList<Interview> interviewsToday = this.interviewer.getInterviewsBeforeOnAndAfterDate(today).get(1);
+        if (interviewsToday.isEmpty()) {
+            System.out.println("You do not have any interviews scheduled for today.");
+            return;
         }
+        Interview interview = interviewsToday.get(0);
+        System.out.println();
+        this.viewInterviewInfoAndApplicationInfo(interview);
+        String notes = this.getInputLinesUntilDone
+                (sc, "Write interview notes below. Press enter twice when finished.\n");
+        interview.setInterviewNotes(notes);
+        this.determinePassOrFailInterview(sc, interview);
+        this.interviewer.removeInterview(interview);
     }
 }

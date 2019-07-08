@@ -70,7 +70,8 @@ public class JobApplicationManager {
                     break;
                 }
                 LocalDate interviewDate = interview.getTime().getDate();
-                if (interviewDate.isAfter(today) && today.plusDays(upcomingDays+1).isAfter(interviewDate)) {
+                if (interviewDate.isEqual(today) || (interviewDate.isAfter(today) &&
+                        today.plusDays(upcomingDays+1).isAfter(interviewDate))) {
                     upcomingInterviews.add(interview);
                 }
             }
@@ -91,10 +92,7 @@ public class JobApplicationManager {
         }
         else {
             LocalDate closeDate = this.getLastClosedJobApp().getJobPosting().getCloseDate();
-            if (closeDate.isBefore(today)) {
-                return DAYS.between(today, closeDate);
-            }
-            return 0;
+            return Math.max(0, DAYS.between(closeDate, today));
         }
     }
 
