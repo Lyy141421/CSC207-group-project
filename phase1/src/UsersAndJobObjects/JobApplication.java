@@ -167,7 +167,11 @@ public class JobApplication implements Storable{
      * @return  the last interview conducted/scheduled for this job application.
      */
     public Interview getLastInterview() {
-        return this.interviews.get(this.interviews.size() - 1);
+        if (this.interviews.size() == 0) {
+            return null;
+        } else {
+            return this.interviews.get(this.interviews.size() - 1);
+        }
     }
 
     /**

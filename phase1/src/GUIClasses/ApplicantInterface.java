@@ -289,6 +289,7 @@ public class ApplicantInterface extends UserInterface {
                     return;
                 }
                 else {
+                    System.out.println();
                     JobApplication application = this.createJobApplicationThroughFiles(sc, today, posting);
                     posting.addJobApplication(application);
                     applicant.registerJobApplication(application);
@@ -296,6 +297,7 @@ public class ApplicantInterface extends UserInterface {
                     return;
                 }
             case 2:
+                System.out.println();
                 JobApplication application = this.createJobApplicationThroughTextEntry(sc, today, posting);
                 posting.addJobApplication(application);
                 applicant.registerJobApplication(application);
@@ -331,6 +333,10 @@ public class ApplicantInterface extends UserInterface {
                 int applicationOption = getMenuOption(sc, applicationNumber);
                 JobApplication applicationToWithdraw = applications.get(applicationOption-1);
                 boolean appWithdrawn = applicant.withdrawJobApplication(applicationToWithdraw.getJobPosting());
+                if (!applicationToWithdraw.getInterviews().isEmpty()) {
+                    Interview interview = applicationToWithdraw.getLastInterview();
+                    interview.getInterviewer().removeInterview(interview);
+                }
                 if (appWithdrawn)
                     System.out.println("Application successfully withdrawn.");
                 else {

@@ -94,7 +94,9 @@ public class InterviewManager {
      */
     public boolean isCurrentRoundOver() {
         for (JobApplication jobApp : this.getApplicationsInConsideration()) {
-            if (!jobApp.getLastInterview().isComplete()) {
+            if (jobApp.getLastInterview() == null) {
+                return false;
+            } else if (!jobApp.getLastInterview().isComplete()) {
                 return false;
             }
         }

@@ -538,6 +538,9 @@ public class HRCoordinatorInterface extends UserInterface {
         ArrayList<JobApplication> jobAppsForPhoneInt = new ArrayList<>();
         System.out.println("Job applications submitted for this job posting: ");
         ArrayList<JobApplication> jobApps = jobPosting.getJobApplications();
+        if (jobApps.isEmpty()) {
+            System.out.println("N/A");
+        }
         for (JobApplication jobApp : jobApps) {
             System.out.println();
             System.out.println(jobApp);
@@ -613,14 +616,18 @@ public class HRCoordinatorInterface extends UserInterface {
     private void viewPostingsWithNoApplicationsInConsideration(LocalDate today) {
         JobPostingManager JPM = this.HRC.getCompany().getJobPostingManager();
         ArrayList<JobPosting> jobPostingsNoApps = JPM.getClosedJobPostingsNoApplicationsInConsideration(today);
-        System.out.println("The follow are job postings with no applications in consideration.");
-        System.out.println("Each job posting will be automatically set to filled.");
-        System.out.println("You may want to consider opening other job postings with these job titles.");
+        System.out.println("Job postings with no applications in consideration: ");
         if (jobPostingsNoApps.isEmpty()) {
             System.out.println("N/A");
+        } else {
+            System.out.println();
+            System.out.println("Each job posting will be automatically set to filled with number of positions 0.");
+            System.out.println("You may want to consider opening other job postings with these job titles.");
+            System.out.println();
         }
         for (JobPosting jobPosting : jobPostingsNoApps) {
             System.out.println(jobPosting);
+            jobPosting.setNumPositions(0);
             jobPosting.setFilled();
         }
     }
@@ -659,8 +666,10 @@ public class HRCoordinatorInterface extends UserInterface {
                 System.out.println("These candidates will be hired automatically and the job posting will be set as filled.");
             } else {
                 System.out.println("The number of final candidates is less than the number of positions for this job.");
-                System.out.println("Only these final candidates will be hired automatically and the job posting will be set as filled.");
-                System.out.println("There are still " + IM.getNumApplicationsStillRequired() + " positions remaining.");
+                System.out.println("Only these final candidates will be hired automatically.");
+                System.out.println("The job posting will be set as filled with the number of positions as the number of " +
+                        "people actually hired.");
+                System.out.println("Remaining positions: " + IM.getNumApplicationsStillRequired());
                 System.out.println("You may want to consider opening another job posting for the same title " +
                         "in order to fill the remaining positions.");
             }

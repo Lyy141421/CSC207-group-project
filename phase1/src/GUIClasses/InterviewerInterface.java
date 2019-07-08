@@ -295,7 +295,8 @@ public class InterviewerInterface extends UserInterface {
      * @return the interview that this interviewer wishes to view.
      */
     private Interview viewSpecificInterview(Scanner sc) {
-        int id = this.getInteger(sc,"Enter the ID of the interview you wish to view: ");
+        System.out.println();
+        int id = this.getInteger(sc, "Enter the interview ID: ");
         Interview interview = this.interviewer.findInterviewById(id);
         if (interview == null) {
             System.out.println("This interview cannot be found.");
