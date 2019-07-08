@@ -59,6 +59,7 @@ public class StorerManager {
      * Clears the stored map
      */
     public static void flushStored(){
+        storer_map = new HashMap<>();
         stored = new ArrayList<>();
     }
 
