@@ -719,14 +719,16 @@ public class HRCoordinatorInterface extends UserInterface {
         for (JobApplication jobApp : finalCandidates) {
             System.out.println(i + ".");
             System.out.println(jobApp);
+            System.out.println();
             i++;
         }
         int numPositions = jobPosting.getNumPositions();
-        System.out.println("You must select " + numPositions + " applicants.");
+        System.out.println("You must select " + numPositions + " applicant(s).");
         for (int j = 0; j < numPositions; j++) {
-            String message = "Enter the value corresponding to the applicant that you would like to hire: ";
+            String message = "Enter the value corresponding to an applicant that you would like to hire: ";
             int appNumber = this.getInteger(sc, message);
             hires.add(finalCandidates.get(appNumber - 1));
+            System.out.println();
         }
         return hires;
     }

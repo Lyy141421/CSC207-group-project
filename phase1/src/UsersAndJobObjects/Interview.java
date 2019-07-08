@@ -18,7 +18,7 @@ public class Interview implements Storable {
     private static ArrayList<String> roundNumberDescriptions = new ArrayList<>(Arrays.asList("Phone interview",
             "In-person interview 1", "In-person interview 2", "In-person interview 3"));
     // The maximum number of in-person interview rounds
-    public static final int MAX_NUM_ROUNDS = 3;
+    public static final int MAX_NUM_ROUNDS = 4;
     // The total number of interviews conducted
     private static int total;
     // The filename under which this will be saved in the FileSystem
@@ -35,7 +35,7 @@ public class Interview implements Storable {
     private HRCoordinator hrCoordinator;
     // The date and time of this interview
     private InterviewTime time;
-    // UsersAndJobObjects.Interview notes
+    // Interview notes
     private String interviewNotes = "";
     // The result of the interview (null if incomplete, true if passed, false if failed)
     private Boolean pass = null;
@@ -213,10 +213,6 @@ public class Interview implements Storable {
     }
 
     // === Getters ===
-
-    static int getMaxNumRounds() {
-        return Interview.MAX_NUM_ROUNDS;
-    }
 
     InterviewManager getInterviewManager() {
         return this.interviewManager;
