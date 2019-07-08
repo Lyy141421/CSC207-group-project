@@ -38,34 +38,18 @@ class ApplicantPanel extends JPanel{
     private JPanel buildStartPanel() {
         JPanel applicantStart = new JPanel(new GridLayout(3, 1));
 
-        JPanel startTitle = new JPanel(null);
-        JButton logOut = new JButton("Logout");
-        logOut.setBounds(10, 10, 80, 20);
-        startTitle.add(logOut);
-        JLabel titleText = new JLabel("Applicant Portal", SwingConstants.CENTER);
-        titleText.setBounds(227, 110, 400, 40);
-        titleText.setFont(new Font("Serif", Font.PLAIN, 27));
-        startTitle.add(titleText);
+        JPanel startTitle = this.buildTitle();
 
         JPanel startForm = this.buildStartForm();
 
-        JPanel welcomeLabels = new JPanel(null);
-
-        JLabel feelingLucky = new JLabel("Feeling lucky, " + this.loggedUser.getLegalName()
-                + "?", SwingConstants.CENTER);
-        feelingLucky.setBounds(227, 0, 400, 20);
-        welcomeLabels.add(feelingLucky);
-
-        JLabel tutorialLabel = new JLabel("Search nothing to view all postings!", SwingConstants.CENTER);
-        tutorialLabel.setBounds(302, 20, 250, 20);
-        welcomeLabels.add(tutorialLabel);
+        JPanel welcomeLabels = this.buildWelcome();
 
         applicantStart.add(startTitle); applicantStart.add(startForm); applicantStart.add(welcomeLabels);
         return applicantStart;
     }
 
     /**
-     * Helper to build Applicant start panel
+     * Helpers to build Applicant start panel
      */
     private JPanel buildStartForm() {
         JPanel startForm = new JPanel(null);
@@ -89,6 +73,46 @@ class ApplicantPanel extends JPanel{
         startForm.add(companyButton);
 
         return startForm;
+    }
+
+    private JPanel buildTitle() {
+        JPanel startTitle = new JPanel(null);
+
+        JButton logOut = new JButton("Logout");
+        logOut.setBounds(5, 5, 80, 20);
+        startTitle.add(logOut);
+
+        JButton manageFiles = new JButton("Files");
+        manageFiles.setBounds(90, 5, 80, 20);
+        startTitle.add(manageFiles);
+
+        JButton viewApps = new JButton("View Applications");
+        viewApps.setBounds(675, 5, 160, 20);
+        startTitle.add(viewApps);
+
+        JLabel titleText = new JLabel("Job Applicant Portal", SwingConstants.CENTER);
+        titleText.setBounds(227, 110, 400, 40);
+        titleText.setFont(new Font("Serif", Font.PLAIN, 27));
+        startTitle.add(titleText);
+
+        return startTitle;
+    }
+
+    private JPanel buildWelcome() {
+        JPanel welcomeLabels = new JPanel(null);
+
+        JLabel feelingLucky = new JLabel("Feeling lucky, " + this.loggedUser.getLegalName()
+                + "?", SwingConstants.CENTER);
+        feelingLucky.setFont(new Font("Serif", Font.PLAIN, 14));
+        feelingLucky.setBounds(227, 0, 400, 20);
+        welcomeLabels.add(feelingLucky);
+
+        JLabel tutorialLabel = new JLabel("Search nothing to view all postings!", SwingConstants.CENTER);
+        tutorialLabel.setFont(new Font("Serif", Font.PLAIN, 14));
+        tutorialLabel.setBounds(302, 20, 250, 20);
+        welcomeLabels.add(tutorialLabel);
+
+        return welcomeLabels;
     }
 
     /**
