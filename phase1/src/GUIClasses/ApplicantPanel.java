@@ -38,12 +38,9 @@ class ApplicantPanel extends JPanel{
 
         JPanel applicantStart = this.buildStartPanel();
 
-        JPanel viewJobs = this.buildViewJobs(new ArrayList<>()); //TODO: Pass proper list
-
         JPanel viewApps = new JPanel(new GridLayout(1, 3)); //TODO: Implement construction
 
         this.add(applicantStart, "applicantStart");
-        this.add(viewJobs, "viewJobs");
         this.add(viewApps, "viewApps");
     }
 
@@ -305,6 +302,40 @@ class ApplicantPanel extends JPanel{
     }
 
     /**
+     * Builds the document submission panel for a job posting
+     */
+    private JPanel buildDocApply(JobPosting posting) {
+        JPanel formEntry = new JPanel(null); //TODO: call this when required
+
+        JLabel titleText = new JLabel("Document Submission");
+        titleText.setFont(new Font("Serif", Font.PLAIN, 22));
+        titleText.setBounds(327, 20, 200, 40);
+
+        JLabel resumeText = new JLabel("Please paste your resume here:");
+        resumeText.setBounds(150, 75, 554, 20);
+
+        JTextArea resumeArea = new JTextArea();
+        JScrollPane resumeScroll = new JScrollPane(resumeArea);
+        resumeScroll.setBounds(150, 95, 554, 125);
+
+        JLabel coverText = new JLabel("Please paste your cover letter here:");
+        coverText.setBounds(150, 235, 554, 20);
+
+        JTextArea coverArea = new JTextArea();
+        JScrollPane coverScroll = new JScrollPane(coverArea);
+        coverScroll.setBounds(150, 255, 554, 125);
+
+        JButton submit = new JButton("Apply!");
+        submit.setBounds(387, 400, 80, 30);
+
+        formEntry.add(titleText); formEntry.add(submit);
+        formEntry.add(resumeText); formEntry.add(resumeScroll);
+        formEntry.add(coverText); formEntry.add(coverScroll);
+
+        return formEntry;
+    }
+
+    /**
      * Takes a list of postings and converts them to Name - ID form for card/navigation purposes
      * @param jobPostings the postings in question
      */
@@ -319,6 +350,9 @@ class ApplicantPanel extends JPanel{
         return ret;
     }
 
+    /**
+     * Resets the search bar to its "default" value
+     */
     private void resetSearch() {
         this.searchBar.setText("Looking for a job?");
     }
