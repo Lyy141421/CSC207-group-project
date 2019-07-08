@@ -7,6 +7,7 @@ import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
 import net.sourceforge.jdatepicker.impl.UtilDateModel;
 
 import javax.swing.*;
+import javax.swing.event.ListDataListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
@@ -26,8 +27,15 @@ public class InterviewerPanel extends JPanel implements ActionListener, ItemList
     LocalDate today;
     ArrayList<Interview> pastInterviews;
     ArrayList<Interview> futureInterviews;
+    ArrayList<Interview> allInterviews;
     ArrayList<Interview> interviewsToBeScheduled;
     private String temporaryNotes = "";
+
+    JComboBox<String> interviews;
+    private DefaultComboBoxModel<String> incompleteTitles;
+    private DefaultComboBoxModel<String> completeTitles;
+    private DefaultComboBoxModel<String> allTitles;
+    JList<String> scheduleInterviews;
 
     InterviewerPanel (InterviewerInterface interviewerInterface, LocalDate today) {
         this.interviewerInterface = interviewerInterface;
@@ -37,6 +45,12 @@ public class InterviewerPanel extends JPanel implements ActionListener, ItemList
         this.futureInterviews = interviews.get(1);
         this.futureInterviews.addAll(interviews.get(2));
         this.interviewsToBeScheduled = interviewerInterface.getUnscheduledInterviews();
+        this.allInterviews = deepClone(this.futureInterviews);
+        allInterviews.addAll(deepClone(this.pastInterviews));
+
+        this.incompleteTitles = new DefaultComboBoxModel<>((String[]) getInterviewTitles(this.futureInterviews).toArray());
+        this.completeTitles = new DefaultComboBoxModel<>((String[]) getInterviewTitles(this.pastInterviews).toArray());
+        this.allTitles = new DefaultComboBoxModel<>((String[]) getInterviewTitles(allInterviews).toArray());
 
         this.setLayout(new CardLayout());
         this.add(home(), "HOME");
@@ -69,9 +83,7 @@ public class InterviewerPanel extends JPanel implements ActionListener, ItemList
         passOrFailButtons.setLayout(new BoxLayout(select, BoxLayout.Y_AXIS));
         JPanel buttons = new JPanel(new FlowLayout());
 
-        ArrayList<Interview> allInterviews = deepClone(this.futureInterviews);
-        allInterviews.addAll(deepClone(this.pastInterviews));
-        JComboBox<String> interviews = new JComboBox<>((String[]) getInterviewTitles(allInterviews).toArray());
+        this.interviews = new JComboBox<>(this.allTitles);
         JCheckBox incomplete = new JCheckBox("Incomplete", true);
         incomplete.addItemListener(this);
         JCheckBox complete = new JCheckBox("Complete", true);
@@ -201,9 +213,9 @@ public class InterviewerPanel extends JPanel implements ActionListener, ItemList
         JPanel schedulePanel = new JPanel(new BorderLayout());
         JPanel setTime = new JPanel(new FlowLayout(FlowLayout.CENTER));
 
-        JList<String> interviews = new JList<>(getIdAndApplicants(interviewsToBeScheduled));
-        interviews.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
-        interviews.setLayoutOrientation(JList.VERTICAL);
+        this.scheduleInterviews = new JList<>(getIdAndApplicants(interviewsToBeScheduled));
+        scheduleInterviews.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+        scheduleInterviews.setLayoutOrientation(JList.VERTICAL);
         JComboBox<String> timeSlot = new JComboBox<>(new String[]{"9-10 am", "10-11 am", "1-2 pm", "2-3 pm", "3-4 pm",
                 "4-5 pm"});
         UtilDateModel dateModel = new UtilDateModel();
@@ -232,7 +244,7 @@ public class InterviewerPanel extends JPanel implements ActionListener, ItemList
         setTime.add(timeSlot);
         setTime.add(schedule);
 
-        schedulePanel.add(interviews, BorderLayout.WEST);
+        schedulePanel.add(scheduleInterviews, BorderLayout.WEST);
         schedulePanel.add(setTime, BorderLayout.CENTER);
         schedulePanel.add(home, BorderLayout.SOUTH);
 
@@ -279,15 +291,15 @@ public class InterviewerPanel extends JPanel implements ActionListener, ItemList
         switch (source.getText()) {
             case "Incomplete":
                 if (e.getStateChange() == ItemEvent.SELECTED) {
-                    // Show scheduled interviews
-                }else {
+
+                } else if (e.getStateChange() == ItemEvent.DESELECTED) {
                     // Hide scheduled interviews
                 }
                 break;
             case "Complete":
                 if (e.getStateChange() == ItemEvent.SELECTED) {
                     // Show conducted interviews
-                }else {
+                } else if (e.getStateChange() == ItemEvent.DESELECTED){
                     // Hide conducted interviews
                 }
                 break;
