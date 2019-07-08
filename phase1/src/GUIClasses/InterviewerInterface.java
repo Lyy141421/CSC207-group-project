@@ -103,10 +103,16 @@ public class InterviewerInterface extends UserInterface {
     private void scheduleInterviews(Scanner sc, LocalDate today) {
         ArrayList<Interview> unscheduledInterviews = this.interviewer.getUnscheduledInterviews();
         int i = 1;
-        for (Interview interview : unscheduledInterviews) {
-            System.out.println(i + ".");
-            System.out.println(interview.toStringPrelimInfo());
-            this.scheduleOneInterview(sc, today, interview);
+        System.out.println("Interviews that need to be scheduled: ");
+        if (unscheduledInterviews.isEmpty()) {
+            System.out.println("N/A");
+        }
+        else {
+            for (Interview interview : unscheduledInterviews) {
+                System.out.println(i + ".");
+                System.out.println(interview.toStringPrelimInfo());
+                this.scheduleOneInterview(sc, today, interview);
+            }
         }
     }
 
@@ -117,8 +123,10 @@ public class InterviewerInterface extends UserInterface {
      * @param interview The interview to be scheduled.
      */
     private void scheduleOneInterview(Scanner sc, LocalDate today, Interview interview) {
-        System.out.println("Schedule the time and date below.");
+        System.out.println("Schedule the interview date and time below.");
         LocalDate interviewDate = this.getDate(sc, today, "Date (yyyy-mm-dd): ");
+        sc.nextLine();
+        System.out.println();
         System.out.println("Time slots: " + new InterviewTime().getTimeSlotsString());
         int timeSlot = this.getInteger(sc,
                 "Enter the value that corresponds to the preferred time slot: ");
@@ -195,7 +203,7 @@ public class InterviewerInterface extends UserInterface {
     }
 
     /**
-     * Interface for viewing the previous interviews for this job application.
+     * Interface for viewing the previous interviews for this job application (all except the one that is currently scheduled)
      *
      * @param sc The scanner for user input
      */
@@ -205,7 +213,8 @@ public class InterviewerInterface extends UserInterface {
         if (jobApp.getInterviews().isEmpty()) {
             System.out.println("None");
         } else {
-            for (Interview interview : jobApp.getInterviews()) {
+            ArrayList<Interview> interviews = jobApp.getInterviews();
+            for (Interview interview : interviews.subList(0, interviews.size() - 1)) {
                 System.out.println();
                 System.out.println(interview);
             }

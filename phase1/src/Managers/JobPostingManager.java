@@ -104,10 +104,10 @@ public class JobPostingManager {
      * @param today Today's date.
      * @return a list of closed job postings that have not yet started the interview process.
      */
-    public ArrayList<JobPosting> getClosedJobPostingsNoInterview(LocalDate today) {
+    public ArrayList<JobPosting> getClosedJobPostingsNoApplicantsChosen(LocalDate today) {
         ArrayList<JobPosting> jobPostings = new ArrayList<>();
         for (JobPosting jobPosting : this.getClosedJobPostingsNotFilled(today)) {
-            if (!jobPosting.hasInterviews()) {
+            if (jobPosting.getInterviewManager() == null) {
                 jobPostings.add(jobPosting);
             }
         }

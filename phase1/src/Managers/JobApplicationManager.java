@@ -66,6 +66,9 @@ public class JobApplicationManager {
         ArrayList<Interview> upcomingInterviews = new ArrayList<>();
         for (JobApplication application : jobApplications) {
             for (Interview interview : application.getInterviews()) {
+                if (interview.getTime() == null) {
+                    break;
+                }
                 LocalDate interviewDate = interview.getTime().getDate();
                 if (interviewDate.isAfter(today) && today.plusDays(upcomingDays+1).isAfter(interviewDate)) {
                     upcomingInterviews.add(interview);
@@ -88,8 +91,8 @@ public class JobApplicationManager {
         }
         else {
             LocalDate closeDate = this.getLastClosedJobApp().getJobPosting().getCloseDate();
-            if (closeDate.isAfter(today)) {
-                DAYS.between(today, closeDate);
+            if (closeDate.isBefore(today)) {
+                return DAYS.between(today, closeDate);
             }
             return 0;
         }

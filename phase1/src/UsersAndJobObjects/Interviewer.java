@@ -107,7 +107,7 @@ public class Interviewer extends User {
      * @return true iff this interviewer is available at this time.
      */
     public boolean isAvailable(InterviewTime interviewTime) {
-        for (Interview interview : this.interviews) {
+        for (Interview interview : this.getScheduledInterviews()) {
             if (interview.getTime().equals(interviewTime)) {
                 return false;
             }
@@ -160,6 +160,20 @@ public class Interviewer extends User {
             }
         }
         return unscheduledInterviews;
+    }
+
+    /**
+     * Get a list of scheduled interviews for this interviewer.
+     * @return  a list of scheduled interviews for this interviewer.
+     */
+    private ArrayList<Interview> getScheduledInterviews() {
+        ArrayList<Interview> scheduledInterviews = new ArrayList<>();
+        for (Interview interview : this.interviews) {
+            if (!this.getUnscheduledInterviews().contains(interview)) {
+                scheduledInterviews.add(interview);
+            }
+        }
+        return scheduledInterviews;
     }
 
     /**

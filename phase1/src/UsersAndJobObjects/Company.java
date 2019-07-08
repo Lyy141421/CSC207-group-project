@@ -140,8 +140,8 @@ public class Company implements Storable {
      * @return the interviewer with the least amount of interviews in this field.
      */
     Interviewer findInterviewer(String jobField) {
-        int minNumberOfInterviews = 0;
-        Interviewer interviewerSoFar = null;
+        Interviewer interviewerSoFar = this.fieldToInterviewers.get(jobField).get(0);
+        int minNumberOfInterviews = interviewerSoFar.getInterviews().size();
         for (Interviewer interviewer : this.fieldToInterviewers.get(jobField)) {
             int numberOfInterviews = interviewer.getInterviews().size();
             if (numberOfInterviews <= minNumberOfInterviews) {

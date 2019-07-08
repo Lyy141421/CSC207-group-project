@@ -102,7 +102,7 @@ public class InterviewTime {
     public String getTimeSlotsString() {
         String s = "";
         for (int i = 1; i < InterviewTime.timeSlots.size(); i++) {
-            s += i + " - " + InterviewTime.timeSlots.get(i - 1) + "\t";
+            s += i + ": " + InterviewTime.timeSlots.get(i - 1) + "\t";
         }
         return s;
     }
