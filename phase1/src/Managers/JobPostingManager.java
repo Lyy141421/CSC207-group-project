@@ -72,7 +72,8 @@ public class JobPostingManager {
     public ArrayList<JobPosting> getOpenJobPostings(LocalDate today) {
         ArrayList<JobPosting> jobPostings = new ArrayList<>();
         for (JobPosting jobPosting : this.getJobPostings()) {
-            if (jobPosting.getCloseDate().isAfter(today)) {
+            LocalDate closeDate = jobPosting.getCloseDate();
+            if (closeDate.isAfter(today)) {
                 jobPostings.add(jobPosting);
             }
         }

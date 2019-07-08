@@ -167,7 +167,11 @@ public class JobApplication implements Storable{
      * @return  the last interview conducted/scheduled for this job application.
      */
     public Interview getLastInterview() {
-        return this.interviews.get(this.interviews.size() - 1);
+        if (this.interviews.size() == 0) {
+            return null;
+        } else {
+            return this.interviews.get(this.interviews.size() - 1);
+        }
     }
 
     /**
@@ -193,6 +197,18 @@ public class JobApplication implements Storable{
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-mm-dd");
         s += "Application date: " + this.getApplicationDate().format(dtf);
 
+        return s;
+    }
+
+    /**
+     * Get a string of what an applicant should see when viewing their applications.
+     *
+     * @return a string of what an applicant should see when viewing their applications.
+     */
+    public String toStringForApplicant() {
+        String s = "Title: " + this.getJobPosting().getTitle() + "\n";
+        s += "Company: " + this.getJobPosting().getCompany().getName() + "\n";
+        s += "Status: " + this.getStatus().getDescription();
         return s;
     }
 

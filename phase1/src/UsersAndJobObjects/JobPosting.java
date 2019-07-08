@@ -225,37 +225,38 @@ public class JobPosting implements Storable {
     }
 
     /**
-     * Returns 'yes' or 'no' based on if bool is True/False
-     * @param bool The boolean being converted to a user-friendly string.
-     * @return  'yes' or 'no' based on value of bool.
-     */
-    private String booleanToString(boolean bool) {
-        if (bool) {
-            return "Yes";
-        }
-        else {
-            return "No";
-        }
-    }
-
-    /**
      * Get a string representation of this job posting.
      *
      * @return a string representation of this job posting.
      */
     @Override
     public String toString() {
-        /*String s = "Job ID: " + this.getId() + "\n";
-        s += "Title: " + this.getTitle() + "\n";
-        s += "Field: " + this.getField() + "\n";*/
         String s = "Number of positions: " + this.getNumPositions() + "\n";
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         s += "Post date: " + this.getPostDate().format(dtf) + "\n";
         s += "Close date: " + this.getCloseDate().format(dtf) + "\n";
         s += "Description: " + this.getDescription() + "\n";
         s += "Requirements: " + this.getRequirements() + "\n";
-        // s += "Company: " + this.getCompany().getName() + "\n";
-        // s += "Filled: " + this.booleanToString(this.isFilled()) + "\n";
+        return s;
+    }
+
+    /**
+     * Get a string representation of this job posting for standard input.
+     *
+     * @return a string representation of this job posting for standard input.
+     */
+    public String toStringStandardInput() {
+        String s = "Job ID: " + this.getId() + "\n";
+        s += "Title: " + this.getTitle() + "\n";
+        s += "Field: " + this.getField() + "\n";
+        s += "Number of positions: " + this.getNumPositions() + "\n";
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        s += "Post date: " + this.getPostDate().format(dtf) + "\n";
+        s += "Close date: " + this.getCloseDate().format(dtf) + "\n";
+        s += "Description: " + this.getDescription() + "\n";
+        s += "Requirements: " + this.getRequirements() + "\n";
+        s += "Company: " + this.getCompany().getName() + "\n";
+        s += "Filled: " + this.booleanToString(this.isFilled()) + "\n";
         return s;
     }
 
@@ -286,5 +287,21 @@ public class JobPosting implements Storable {
      */
     void removeJobApplication(JobApplication jobApplication) {
         this.jobApplications.remove(jobApplication);
+    }
+
+    // === Private methods ===
+
+    /**
+     * Returns 'yes' or 'no' based on if bool is True/False
+     *
+     * @param bool The boolean being converted to a user-friendly string.
+     * @return 'yes' or 'no' based on value of bool.
+     */
+    private String booleanToString(boolean bool) {
+        if (bool) {
+            return "Yes";
+        } else {
+            return "No";
+        }
     }
 }

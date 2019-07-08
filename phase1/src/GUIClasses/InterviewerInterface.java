@@ -96,6 +96,7 @@ public class InterviewerInterface extends UserInterface {
     void run(LocalDate today) {
         Scanner sc = new Scanner(System.in);
         this.scheduleInterviews(sc, today);
+        System.out.println();
         this.viewInterviewsForToday(today);
         while (true) {
             try {
@@ -295,7 +296,8 @@ public class InterviewerInterface extends UserInterface {
      * @return the interview that this interviewer wishes to view.
      */
     private Interview viewSpecificInterview(Scanner sc) {
-        int id = this.getInteger(sc,"Enter the ID of the interview you wish to view: ");
+        System.out.println();
+        int id = this.getInteger(sc, "Enter the interview ID: ");
         Interview interview = this.interviewer.findInterviewById(id);
         if (interview == null) {
             System.out.println("This interview cannot be found.");
@@ -316,6 +318,8 @@ public class InterviewerInterface extends UserInterface {
      * @param interview The interview to be conducted.
      */
     private void viewInterviewInfoAndApplicationInfo(Interview interview) {
+        System.out.println("Job Posting: ");
+        System.out.println(interview.getJobApplication().getJobPosting().toStringStandardInput());
         System.out.println("Interview:");
         System.out.println(interview.toStringPrelimInfo() + "\n");
         System.out.println("Applicant cover letter:");
@@ -341,7 +345,7 @@ public class InterviewerInterface extends UserInterface {
     }
 
     /**
-     * Interface for conducting an interview.
+     * Interface for completing an interview.
      * @param sc    The scanner for user input
      */
     private void completeInterview(Scanner sc) {

@@ -1,6 +1,7 @@
 package GUIClasses;
 
 import Main.JobApplicationSystem;
+import Managers.InterviewManager;
 import Miscellaneous.ExitException;
 import UsersAndJobObjects.*;
 
@@ -187,15 +188,7 @@ public class ApplicantInterface extends UserInterface {
             if (filterField.equalsIgnoreCase(posting.getField())
                     && filterCompanyName.equalsIgnoreCase(posting.getCompany().getName())) {
                 noPostingsFound = false;
-                System.out.println("Job ID: " + posting.getId());
-                System.out.println("Title: " + posting.getTitle());
-                System.out.println("Field: " + posting.getField());
-                System.out.println("Description: " + posting.getDescription());
-                System.out.println("Requirements: " + posting.getRequirements());
-                System.out.println("Number of positions: " + posting.getNumPositions());
-                System.out.println("Company: " + posting.getCompany().getName());
-                System.out.println("Post date: " + posting.getPostDate());
-                System.out.println("Close date: " + posting.getCloseDate());
+                System.out.println(posting.toStringStandardInput());
                 System.out.println();
             }
         }
@@ -289,6 +282,7 @@ public class ApplicantInterface extends UserInterface {
                     return;
                 }
                 else {
+                    System.out.println();
                     JobApplication application = this.createJobApplicationThroughFiles(sc, today, posting);
                     posting.addJobApplication(application);
                     applicant.registerJobApplication(application);
@@ -296,6 +290,7 @@ public class ApplicantInterface extends UserInterface {
                     return;
                 }
             case 2:
+                System.out.println();
                 JobApplication application = this.createJobApplicationThroughTextEntry(sc, today, posting);
                 posting.addJobApplication(application);
                 applicant.registerJobApplication(application);
@@ -322,23 +317,26 @@ public class ApplicantInterface extends UserInterface {
                 if (withdrawal) {
                     System.out.print(applicationNumber + ". ");
                 }
-                System.out.println("Title: " + application.getJobPosting().getTitle());
-                System.out.println("Company: " + application.getJobPosting().getCompany().getName());
-                System.out.println("Status: " + application.getStatus().getDescription());
+                System.out.println(application.toStringForApplicant());
                 System.out.println();
             }
             if (withdrawal) {
-                int applicationOption = getMenuOption(sc, applicationNumber);
-                JobApplication applicationToWithdraw = applications.get(applicationOption-1);
-                boolean appWithdrawn = applicant.withdrawJobApplication(applicationToWithdraw.getJobPosting());
-                if (appWithdrawn)
+                if (this.withdrawApplication(sc, applications, applicationNumber)) {
                     System.out.println("Application successfully withdrawn.");
-                else {
+                } else {
                     System.out.println("As the job posting corresponding to this application has already been filled, " +
                             "it is no longer possible to withdraw the application.");
                 }
             }
         }
+    }
+
+    private boolean withdrawApplication(Scanner sc, ArrayList<JobApplication> applications, int applicationNumber) {
+        int applicationOption = getMenuOption(sc, applicationNumber);
+        JobApplication applicationToWithdraw = applications.get(applicationOption - 1);
+        boolean appWithdrawn = applicant.withdrawJobApplication(applicationToWithdraw.getJobPosting());
+        applicationToWithdraw.getJobPosting().getInterviewManager().withdrawApplication(applicationToWithdraw);
+        return appWithdrawn;
     }
 
     /**
@@ -352,23 +350,15 @@ public class ApplicantInterface extends UserInterface {
         System.out.println("Previous job applications:");
         for (JobApplication application : applicant.getJobApplicationManager().getPreviousJobApplications()) {
             JobPosting posting = application.getJobPosting();
-            System.out.println("Title: " + posting.getTitle());
-            System.out.println("Field: " + posting.getField());
-            System.out.println("Description: " + posting.getDescription());
-            System.out.println("Company: " + posting.getCompany().getName());
-            System.out.println("Close date: " + posting.getCloseDate());
-            System.out.println("Status: " + application.getStatus().getDescription());
+            System.out.println(posting.toStringStandardInput());
+            System.out.println("You status: " + application.getStatus());
             System.out.println();
         }
         System.out.println("Current job applications:");
         for (JobApplication application : applicant.getJobApplicationManager().getCurrentJobApplications()) {
             JobPosting posting = application.getJobPosting();
-            System.out.println("Title: " + posting.getTitle());
-            System.out.println("Field: " + posting.getField());
-            System.out.println("Description: " + posting.getDescription());
-            System.out.println("Company: " + posting.getCompany().getName());
-            System.out.println("Close date: " + posting.getCloseDate());
-            System.out.println("Status: " + application.getStatus().getDescription());
+            System.out.println(posting.toStringStandardInput());
+            System.out.println("You status: " + application.getStatus());
             System.out.println();
         }
         if (applicant.getJobApplicationManager().getJobApplications().isEmpty())

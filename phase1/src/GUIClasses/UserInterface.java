@@ -34,8 +34,8 @@ public class UserInterface {
     public static void main(String[] args) {
         UserInterface UI = new UserInterface();
         while (true) {
-            JobApplicationSystem.updateAllInterviewRounds();
             LocalDate today = UI.getTodaysDateValid();
+            JobApplicationSystem.updateAllInterviewRounds();
             User user = UI.login();
             UserInterface userInterface = new InterfaceFactory().create(user);
             userInterface.run(today);

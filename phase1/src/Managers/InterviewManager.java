@@ -1,5 +1,6 @@
 package Managers;
 
+import UsersAndJobObjects.Interview;
 import UsersAndJobObjects.JobApplication;
 import UsersAndJobObjects.JobPosting;
 
@@ -94,7 +95,9 @@ public class InterviewManager {
      */
     public boolean isCurrentRoundOver() {
         for (JobApplication jobApp : this.getApplicationsInConsideration()) {
-            if (!jobApp.getLastInterview().isComplete()) {
+            if (jobApp.getLastInterview() == null) {
+                return false;
+            } else if (!jobApp.getLastInterview().isComplete()) {
                 return false;
             }
         }
@@ -116,6 +119,24 @@ public class InterviewManager {
     public void reject(JobApplication jobApplication) {
         this.applicationsInConsideration.remove(jobApplication);
         this.applicationsRejected.add(jobApplication);
+    }
+
+    /**
+     * Withdraw this application from contention for this job posting.
+     *
+     * @param applicationToWithdraw the application to withdraw.
+     */
+    public void withdrawApplication(JobApplication applicationToWithdraw) {
+        if (!applicationToWithdraw.getInterviews().isEmpty()) {
+            Interview interview = applicationToWithdraw.getLastInterview();
+            InterviewManager IM = applicationToWithdraw.getJobPosting().getInterviewManager();
+            if (!interview.isComplete()) {
+                interview.getInterviewer().removeInterview(interview);
+            }
+            if (IM != null) {
+                IM.reject(applicationToWithdraw);
+            }
+        }
     }
 
     /**
