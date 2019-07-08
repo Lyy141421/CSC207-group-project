@@ -506,6 +506,20 @@ public class HRCoordinatorInterface extends UserInterface {
     }
 
     /**
+     * Interface for viewing high-priority job postings.
+     *
+     * @param sc    The scanner for user input.
+     * @param today Today's date.
+     */
+    private void viewHighPriorityJobPostings(Scanner sc, LocalDate today) {
+        this.viewRecentlyClosedPostings(sc, today);
+        System.out.println();
+        this.viewPostingsThatNeedInterviewsScheduled(today);
+        System.out.println();
+        this.viewPostingsReadyForHiring(sc, today);
+    }
+
+    /**
      * Interface for reviewing all job applications after a job posting has closed.
      */
     private void reviewApplicationsForJobPosting(JobPosting jobPosting) {
@@ -571,28 +585,6 @@ public class HRCoordinatorInterface extends UserInterface {
     }
 
     /**
-     * Interface for hiring an applicant.
-     * @param sc    The scanner for user input.
-     * @param jobPosting    The job posting in question.
-     */
-    private void hireApplicant(Scanner sc, JobPosting jobPosting) {
-        ArrayList<JobApplication> finalCandidates = jobPosting.getInterviewManager().getApplicationsInConsideration();
-        ArrayList<JobApplication> jobApps;
-        if (finalCandidates.size() == jobPosting.getNumPositions()) {
-            jobApps = finalCandidates;
-        } else {
-            jobApps = this.selectApplicationsForHiring(sc, jobPosting, finalCandidates);
-        }
-        for (JobApplication jobApp : jobApps) {
-            jobApp.getStatus().setHired();
-            System.out.println("The new hire's email: " + jobApp.getApplicant().getEmail());
-        }
-        jobPosting.setFilled();
-        jobPosting.getInterviewManager().archiveRejected();
-    }
-
-
-    /**
      * Interface for viewing recently closed postings and selecting who moves on to phone interviews.
      * @param sc      The scanner for user input.
      * @param today   Today's date.
@@ -630,6 +622,30 @@ public class HRCoordinatorInterface extends UserInterface {
     }
 
     /**
+     * Interface for hiring an applicant.
+     *
+     * @param sc         The scanner for user input.
+     * @param jobPosting The job posting in question.
+     */
+    private void hireApplicant(Scanner sc, JobPosting jobPosting) {
+        ArrayList<JobApplication> finalCandidates = jobPosting.getInterviewManager().getApplicationsInConsideration();
+        ArrayList<JobApplication> jobApps;
+        if (finalCandidates.size() == jobPosting.getNumPositions()) {
+            System.out.println("The number of candidates in consideration equls the number of positions for this job.");
+            System.out.println("These candidates will be hired automatically.");
+            jobApps = finalCandidates;
+        } else {
+            jobApps = this.selectApplicationsForHiring(sc, jobPosting, finalCandidates);
+        }
+        for (JobApplication jobApp : jobApps) {
+            jobApp.getStatus().setHired();
+            System.out.println("The new hire's email: " + jobApp.getApplicant().getEmail());
+        }
+        jobPosting.setFilled();
+        jobPosting.getInterviewManager().archiveRejected();
+    }
+
+    /**
      * Interface for viewing postings ready for hiring and selecting the final candidate if need be.
      * @param sc      The scanner for user input.
      * @param today Today's date.
@@ -645,19 +661,6 @@ public class HRCoordinatorInterface extends UserInterface {
             System.out.println(jobPosting);
             this.hireApplicant(sc, jobPosting);
         }
-    }
-
-    /**
-     * Interface for viewing high-priority job postings.
-     * @param sc The scanner for user input.
-     * @param today Today's date.
-     */
-    private void viewHighPriorityJobPostings(Scanner sc, LocalDate today) {
-        this.viewRecentlyClosedPostings(sc, today);
-        System.out.println();
-        this.viewPostingsThatNeedInterviewsScheduled(today);
-        System.out.println();
-        this.viewPostingsReadyForHiring(sc, today);
     }
 
     /**
