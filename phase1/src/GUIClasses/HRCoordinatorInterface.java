@@ -27,6 +27,13 @@ public class HRCoordinatorInterface extends UserInterface {
     // === Methods that GUI will call ===
 
     /**
+     * Get the task that the HR Coordinator must accomplish at this moment for this job posting.
+     */
+    int getTaskForJobPosting(JobPosting jobPosting) {
+        return jobPosting.getInterviewManager().getHrTask();
+    }
+
+    /**
      * Gets a list of lists of job postings that include high priority and all postings for the company.
      * @param today Today's date.
      * @return  the list of lists of job postings required.
@@ -341,15 +348,6 @@ public class HRCoordinatorInterface extends UserInterface {
     }
 
     /**
-     * Get the task that the HR Coordinator or interviewer must accomplish at this moment for this job posting.
-     * @param sc The scanner for user input.
-     */
-    void getTaskForJobPosting(Scanner sc) {
-        JobPosting jobPosting = this.getJobPosting(sc);
-        jobPosting.getInterviewManager().getHrTask();
-    }
-
-    /**
      * Get a list of all applications for a specific job posting.
      * @param jobPosting The job posting in question.
      */
@@ -514,6 +512,8 @@ public class HRCoordinatorInterface extends UserInterface {
     private void viewHighPriorityJobPostings(Scanner sc, LocalDate today) {
         this.viewRecentlyClosedPostings(sc, today);
         System.out.println();
+        this.viewPostingsWithNoApplicationsInConsideration(today);
+        System.out.println();
         this.viewPostingsThatNeedInterviewsScheduled(today);
         System.out.println();
         this.viewPostingsReadyForHiring(sc, today);
@@ -537,7 +537,8 @@ public class HRCoordinatorInterface extends UserInterface {
     private ArrayList<JobApplication> selectJobAppsForPhoneInterview(Scanner sc, JobPosting jobPosting) {
         ArrayList<JobApplication> jobAppsForPhoneInt = new ArrayList<>();
         System.out.println("Job applications submitted for this job posting: ");
-        for (JobApplication jobApp : jobPosting.getJobApplications()) {
+        ArrayList<JobApplication> jobApps = jobPosting.getJobApplications();
+        for (JobApplication jobApp : jobApps) {
             System.out.println();
             System.out.println(jobApp);
             System.out.println();
@@ -605,13 +606,33 @@ public class HRCoordinatorInterface extends UserInterface {
     }
 
     /**
+     * Interface for viewing job postings with no applications in consideration.
+     *
+     * @param today Today's date.
+     */
+    private void viewPostingsWithNoApplicationsInConsideration(LocalDate today) {
+        JobPostingManager JPM = this.HRC.getCompany().getJobPostingManager();
+        ArrayList<JobPosting> jobPostingsNoApps = JPM.getClosedJobPostingsNoApplicationsInConsideration(today);
+        System.out.println("The follow are job postings with no applications in consideration.");
+        System.out.println("Each job posting will be automatically set to filled.");
+        System.out.println("You may want to consider opening other job postings with these job titles.");
+        if (jobPostingsNoApps.isEmpty()) {
+            System.out.println("N/A");
+        }
+        for (JobPosting jobPosting : jobPostingsNoApps) {
+            System.out.println(jobPosting);
+            jobPosting.setFilled();
+        }
+    }
+
+    /**
      * The interface for viewing postings that need interviews scheduled and automatically scheduling them if possible.
      * @param today Today's date.
      */
     private void viewPostingsThatNeedInterviewsScheduled(LocalDate today) {
         JobPostingManager JPM = this.HRC.getCompany().getJobPostingManager();
         ArrayList<JobPosting> recentlyCompletedRound = JPM.getJobPostingsWithRoundCompletedNotForHire(today);
-        System.out.println("Job postings that need interviews scheduled: ");
+        System.out.println("Job postings that need interviews scheduled:");
         if (recentlyCompletedRound.isEmpty()) {
             System.out.println("N/A");
         }
@@ -628,14 +649,22 @@ public class HRCoordinatorInterface extends UserInterface {
      * @param jobPosting The job posting in question.
      */
     private void hireApplicants(Scanner sc, JobPosting jobPosting) {
-        ArrayList<JobApplication> finalCandidates = jobPosting.getInterviewManager().getApplicationsInConsideration();
+        InterviewManager IM = jobPosting.getInterviewManager();
         ArrayList<JobApplication> jobApps;
-        if (finalCandidates.size() == jobPosting.getNumPositions()) {
-            System.out.println("The number of final candidates equals the number of positions for this job.");
-            System.out.println("These candidates will be hired automatically.");
-            jobApps = finalCandidates;
+        if (!IM.isNumApplicantUnderOrAtThreshold()) {   // Number of applications greater than num of positions
+            jobApps = this.selectApplicationsForHiring(sc, jobPosting, IM.getApplicationsInConsideration());
         } else {
-            jobApps = this.selectApplicationsForHiring(sc, jobPosting, finalCandidates);
+            if (IM.getNumApplicationsStillRequired() == 0) {
+                System.out.println("The number of final candidates equals the number of positions for this job.");
+                System.out.println("These candidates will be hired automatically and the job posting will be set as filled.");
+            } else {
+                System.out.println("The number of final candidates is less than the number of positions for this job.");
+                System.out.println("Only these final candidates will be hired automatically and the job posting will be set as filled.");
+                System.out.println("There are still " + IM.getNumApplicationsStillRequired() + " positions remaining.");
+                System.out.println("You may want to consider opening another job posting for the same title " +
+                        "in order to fill the remaining positions.");
+            }
+            jobApps = IM.getApplicationsInConsideration();
         }
         for (JobApplication jobApp : jobApps) {
             jobApp.getStatus().setHired();
@@ -674,12 +703,16 @@ public class HRCoordinatorInterface extends UserInterface {
                                                                  ArrayList<JobApplication> finalCandidates) {
         ArrayList<JobApplication> hires = new ArrayList<>();
         int i = 1;
+        System.out.println("The number of applications in consideration exceeds the number of positions available.");
+        System.out.println("The final candidates' applications: ");
         for (JobApplication jobApp : finalCandidates) {
             System.out.println(i + ".");
             System.out.println(jobApp);
             i++;
         }
-        for (int j = 0; j < jobPosting.getNumPositions(); j++) {
+        int numPositions = jobPosting.getNumPositions();
+        System.out.println("You must select " + numPositions + " applicants.");
+        for (int j = 0; j < numPositions; j++) {
             String message = "Enter the value corresponding to the applicant that you would like to hire: ";
             int appNumber = this.getInteger(sc, message);
             hires.add(finalCandidates.get(appNumber - 1));

@@ -14,11 +14,12 @@ public class InterviewManager {
     // The maximum number of in-person interview rounds
     private static int MAX_NUM_INTERVIEW_ROUNDS = 3;
     // Integers that represent the task the HR Coordinator needs to accomplish
+    static final int CLOSE_POSTING_NO_HIRE = -2;
     public static int SELECT_APPS_FOR_PHONE_INTERVIEW = -1;
     private static final int DO_NOTHING = 0;
     static final int SCHEDULE_INTERVIEWS = 1;
     private static final int CHOOSE_APPLICANTS_FOR_HIRE = 2;
-    static final int HIRE_APPLICANTS = 3;
+    public static final int HIRE_APPLICANTS = 3;
 
 
 
@@ -79,6 +80,15 @@ public class InterviewManager {
     // === Other methods ===
 
     /**
+     * Get the number of applications still required.
+     *
+     * @return the number of applications still required before completely filling all positions.
+     */
+    public int getNumApplicationsStillRequired() {
+        return this.jobPosting.getNumPositions() - this.applicationsInConsideration.size();
+    }
+
+    /**
      * Checks whether the current round of interviews is over.
      * @return  true iff all interviews in this round have been completed.
      */
@@ -114,9 +124,12 @@ public class InterviewManager {
      * @return the integer representing the task the HR Coordinator must accomplish.
      */
     public int getHrTask() {
-        if (this.currentRound != 0 && this.isNumApplicantUnderThreshold()) {
+        if (this.hasNoJobApplicationsInConsideration()) {
+            return InterviewManager.CLOSE_POSTING_NO_HIRE;
+        } else if (this.currentRound != 0 && this.isNumApplicantUnderOrAtThreshold()) {
             return InterviewManager.HIRE_APPLICANTS;
-        } else if (!this.jobPosting.hasInterviews()) {  // Applicants for phone interview selected but no interviews scheduled
+        } else if (!this.jobPosting.getJobApplications().isEmpty() && !this.jobPosting.hasInterviews()) {
+            // Applicants for phone interview selected but no interviews scheduled
             return InterviewManager.SCHEDULE_INTERVIEWS;
         } else if (this.isInterviewProcessOver()) {
             return InterviewManager.CHOOSE_APPLICANTS_FOR_HIRE;
@@ -141,13 +154,23 @@ public class InterviewManager {
     // === Other methods ===
 
     /**
-     * Check if number of applications in consideration is no more than number of positions available in the job
-     * posting.
-     * @return true iff number of applications in consideration is less than or equal to number of position in this
-     * job posting.
+     * Check whether there are any applications in consideration.
+     * @return true iff the number of applications in consideration is equal to 0.
      */
-    private boolean isNumApplicantUnderThreshold () {
-        return this.applicationsInConsideration.size() <= this.jobPosting.getNumPositions();
+    private boolean hasNoJobApplicationsInConsideration() {
+        return this.applicationsInConsideration.isEmpty();
+    }
+
+    /**
+     * Check if the number of applications in consideration is less than or equal to the number of positions available
+     * in the posting and is not zero.
+     *
+     * @return true iff number of applications in consideration is less than or equal to the number of positions
+     * available and is not zero.
+     */
+    public boolean isNumApplicantUnderOrAtThreshold() {
+        int jobAppsSize = this.applicationsInConsideration.size();
+        return jobAppsSize > 0 && jobAppsSize <= this.jobPosting.getNumPositions();
     }
 
     /**
