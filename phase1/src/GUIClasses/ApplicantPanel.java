@@ -1,5 +1,6 @@
 package GUIClasses;
 
+import Main.JobApplicationSystem;
 import UsersAndJobObjects.Applicant;
 import UsersAndJobObjects.JobPosting;
 import UsersAndJobObjects.User;
@@ -8,6 +9,8 @@ import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -16,10 +19,17 @@ import java.awt.event.MouseEvent;
  */
 
 class ApplicantPanel extends JPanel{
-    private Applicant loggedUser = new Applicant();
+    private ApplicantInterfaceTest BackEnd;
+    private Applicant loggedUser;
+    private JTextField searchbar;
 
-    ApplicantPanel() {
+    ApplicantPanel(String username) {
         super(new CardLayout());
+
+        //this.loggedUser = (Applicant)JobApplicationSystem.getUserManager().findUserByUsername(username);
+        this.loggedUser = new Applicant();
+
+        this.BackEnd = new ApplicantInterfaceTest(this.loggedUser);
 
         JPanel applicantStart = this.buildStartPanel();
 
@@ -62,14 +72,28 @@ class ApplicantPanel extends JPanel{
                 fieldEntry.setText("");
             }
         });
-        startForm.add(fieldEntry);
+        startForm.add(fieldEntry); this.searchbar = fieldEntry;
 
         JButton fieldButton = new JButton("Search by field");
         fieldButton.setBounds(267, 90, 150, 25);
+        fieldButton.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                //TODO: build viewJobs
+                ((CardLayout)getLayout()).show(getThis(), "viewJobs");
+                resetSearch();
+            }
+        });
         startForm.add(fieldButton);
 
         JButton companyButton = new JButton("Search by company");
         companyButton.setBounds(437, 90, 150, 25);
+        companyButton.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                //TODO: build viewJobs
+                ((CardLayout)getLayout()).show(getThis(), "viewJobs");
+                resetSearch();
+            }
+        });
         startForm.add(companyButton);
 
         return startForm;
@@ -166,6 +190,11 @@ class ApplicantPanel extends JPanel{
 
         JButton viewJobsExit = new JButton("Back");
         viewJobsExit.setBounds(92, 415, 100, 20);
+        viewJobsExit.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                ((CardLayout)getLayout()).show(getThis(), "applicantStart");
+            }
+        });
         viewJobsList.add(viewJobsExit);
 
         return viewJobsList;
@@ -254,9 +283,20 @@ class ApplicantPanel extends JPanel{
         return ret;
     }
 
+    private void resetSearch() {
+        this.searchbar.setText("Looking for a job?");
+    }
+
+    /**
+     * Because nested methods
+     */
+    private ApplicantPanel getThis() {
+        return this;
+    }
+
     public static void main(String[] args) {
         JFrame tester = new JFrame("Interface Test");
-        ApplicantPanel test = new ApplicantPanel(); tester.add(test);
-        tester.setSize(854, 480); tester.setVisible(true);
+        ApplicantPanel test = new ApplicantPanel("i dont exist"); tester.add(test);
+        tester.setSize(854, 480); tester.setVisible(true); tester.setResizable(false);
     }
 }
