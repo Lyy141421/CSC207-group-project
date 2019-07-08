@@ -201,6 +201,18 @@ public class JobApplication implements Storable{
     }
 
     /**
+     * Get a string of what an applicant should see when viewing their applications.
+     *
+     * @return a string of what an applicant should see when viewing their applications.
+     */
+    public String toStringForApplicant() {
+        String s = "Title: " + this.getJobPosting().getTitle() + "\n";
+        s += "Company: " + this.getJobPosting().getCompany().getName() + "\n";
+        s += "Status: " + this.getStatus().getDescription();
+        return s;
+    }
+
+    /**
      * Get a string representation of this job application.
      *
      * @return a string representation of this job application.

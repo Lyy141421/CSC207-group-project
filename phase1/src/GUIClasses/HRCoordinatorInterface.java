@@ -602,9 +602,11 @@ public class HRCoordinatorInterface extends UserInterface {
             System.out.println("N/A");
         }
         for (JobPosting jobPosting : recentlyClosed) {
+            System.out.println("Job Posting: ");
             System.out.println(jobPosting.toStringStandardInput());
             this.reviewApplicationsForJobPosting(jobPosting);
             this.selectJobAppsForPhoneInterview(sc, jobPosting);
+            System.out.println();
         }
     }
 

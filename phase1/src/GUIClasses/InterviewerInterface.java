@@ -96,6 +96,7 @@ public class InterviewerInterface extends UserInterface {
     void run(LocalDate today) {
         Scanner sc = new Scanner(System.in);
         this.scheduleInterviews(sc, today);
+        System.out.println();
         this.viewInterviewsForToday(today);
         while (true) {
             try {
