@@ -12,13 +12,14 @@ public class MainFrame extends JFrame {
 
     public MainFrame (LocalDate today) {
         super("GET A JOB");
-        today = today;
+        this.today = today;
         initUI();
     }
 
     private MainFrame () {
         super("TESTING INSTANTIATOR DONT USE");
-        this.homePanel = new JPanel (this.layoutManager);
+        this.homePanel = new JPanel(this.layoutManager);
+        this.add(homePanel);
         initUI();
         addCards();
     }
@@ -39,7 +40,7 @@ public class MainFrame extends JFrame {
      */
     // Call methods that create each interface and add to main frame.
     private void addCards () {
-        this.add(this.homePanel);
+        //this.add(this.homePanel);
         // We need to be careful with when these cards get constructed, in case it's missing arguments to run methods
         this.homePanel.add(new LoginPanel(this.homePanel, this.layoutManager), "LOGIN");
         this.newUserRef = new NewUserPanel(this.homePanel, this.layoutManager);
