@@ -34,6 +34,7 @@ public class UserInterface {
     public static void main(String[] args) {
         UserInterface UI = new UserInterface();
         while (true) {
+            JobApplicationSystem.updateAllInterviewRounds();
             LocalDate today = UI.getTodaysDateValid();
             User user = UI.login();
             UserInterface userInterface = new InterfaceFactory().create(user);
@@ -43,10 +44,8 @@ public class UserInterface {
     }
 
     // === Constructors ===
-    private UserInterface() {
-    }
 
-    public UserInterface(User user) {
+    UserInterface(User user) {
         this.user = user;
     }
 
@@ -200,6 +199,10 @@ public class UserInterface {
 
     // ============================================================================================================== //
     // === Private methods ===
+
+    // === Constructor ===
+    private UserInterface() {
+    }
 
     /**
      * Get the date without comparing to previous date.

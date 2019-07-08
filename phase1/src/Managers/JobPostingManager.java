@@ -1,6 +1,5 @@
 package Managers;
 
-import UsersAndJobObjects.JobApplication;
 import UsersAndJobObjects.JobPosting;
 import UsersAndJobObjects.Company;
 import java.time.LocalDate;

@@ -173,6 +173,15 @@ public class JobPosting implements Storable {
     }
 
     /**
+     * Create an interview manager for this job posting.
+     */
+    public void createInterviewManager() {
+        InterviewManager interviewManager = new InterviewManager(this,
+                (ArrayList<JobApplication>) this.getJobApplications().clone());
+        this.setInterviewManager(interviewManager);
+    }
+
+    /**
      * Check whether this job posting has had any interviews.
      * @return  true iff this job posting has had an interview.
      */
@@ -183,6 +192,22 @@ public class JobPosting implements Storable {
             }
         }
         return false;
+    }
+
+    /**
+     * Advance the round of interviews for this job posting.
+     *
+     */
+    public void advanceInterviewRound() {
+        if (interviewManager == null) {
+            return;
+        }
+        InterviewManager interviewManager = this.getInterviewManager();
+        if (interviewManager.getCurrentRound() < Interview.getMaxNumRounds()) {
+            if (interviewManager.isCurrentRoundOver()) {
+                interviewManager.advanceRound();
+            }
+        }
     }
 
     @Override
@@ -261,58 +286,5 @@ public class JobPosting implements Storable {
      */
     void removeJobApplication(JobApplication jobApplication) {
         this.jobApplications.remove(jobApplication);
-    }
-
-    /**
-     * Advance the round of interviews for this job posting.
-     *
-     */
-    void advanceInterviewRound() {
-        InterviewManager interviewManager = this.getInterviewManager();
-        if (interviewManager.getCurrentRound() < Interview.getMaxNumRounds()) {
-            if (interviewManager.isCurrentRoundOver()) {
-                interviewManager.advanceRound();
-            }
-        }
-    }
-
-    /**
-     * Create an interview manager for this job posting.
-     */
-    void createInterviewManager() {
-        ArrayList<ArrayList<JobApplication>> jobApps = this.getApplicationsForPhoneInterview();
-        InterviewManager interviewManager = new InterviewManager(this, jobApps.get(0), jobApps.get(1));
-        this.setInterviewManager(interviewManager);
-    }
-
-    /**
-     * Get the current round of interviews for this job posting.
-     *
-     * @return the current round of interviews for this job posting.
-     */
-    int getCurrentInterviewRound() {
-        return this.interviewManager.getCurrentRound();
-    }
-
-    // ============================================================================================================== //
-    // === Private methods ===
-    // === Other methods ===
-    /**
-     * Get an array of a list of job applications selected and a list of job applications rejected for a phone
-     * interview for this job posting.
-     *
-     * @return an array of lists of job applications selected and rejected for a phone interview.
-     */
-    private ArrayList<ArrayList<JobApplication>> getApplicationsForPhoneInterview() {
-        ArrayList<JobApplication> jobApplicationsInConsideration = new ArrayList<>();
-        ArrayList<JobApplication> jobApplicationsRejected = new ArrayList<>();
-        for (JobApplication jobApplication : this.getJobApplications()) {
-            if (jobApplication.isOnPhoneInterview()) {
-                jobApplicationsInConsideration.add(jobApplication);
-            } else {
-                jobApplicationsRejected.add(jobApplication);
-            }
-        }
-        return new ArrayList<>(Arrays.asList(jobApplicationsInConsideration, jobApplicationsRejected));
     }
 }

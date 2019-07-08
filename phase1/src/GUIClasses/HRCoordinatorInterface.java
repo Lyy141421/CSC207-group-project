@@ -507,13 +507,10 @@ public class HRCoordinatorInterface extends UserInterface {
 
     /**
      * Interface for reviewing all job applications after a job posting has closed.
-     * @param sc The scanner for user input.
      */
-    private void reviewApplicationsForJobPosting(Scanner sc, JobPosting jobPosting) {
+    private void reviewApplicationsForJobPosting(JobPosting jobPosting) {
         jobPosting.reviewApplications();     // This advances the jobApp status to "under review"
-        InterviewManager interviewManager = new InterviewManager(jobPosting,
-                (ArrayList<JobApplication>) jobPosting.getJobApplications().clone(), new ArrayList<>());
-        jobPosting.setInterviewManager(interviewManager);
+        jobPosting.createInterviewManager();
     }
 
     /**
@@ -580,16 +577,18 @@ public class HRCoordinatorInterface extends UserInterface {
      */
     private void hireApplicant(Scanner sc, JobPosting jobPosting) {
         ArrayList<JobApplication> finalCandidates = jobPosting.getInterviewManager().getApplicationsInConsideration();
-        JobApplication jobApp;
+        ArrayList<JobApplication> jobApps;
         if (finalCandidates.size() == jobPosting.getNumPositions()) {
-            jobApp = finalCandidates.get(0);
+            jobApps = finalCandidates;
         } else {
-            jobApp = this.selectApplicationForHiring(sc, finalCandidates);
+            jobApps = this.selectApplicationsForHiring(sc, jobPosting, finalCandidates);
         }
-        jobApp.getStatus().setHired();
+        for (JobApplication jobApp : jobApps) {
+            jobApp.getStatus().setHired();
+            System.out.println("The new hire's email: " + jobApp.getApplicant().getEmail());
+        }
         jobPosting.setFilled();
         jobPosting.getInterviewManager().archiveRejected();
-        System.out.println("The new hire's email: " + jobApp.getApplicant().getEmail());
     }
 
 
@@ -608,7 +607,7 @@ public class HRCoordinatorInterface extends UserInterface {
         }
         for (JobPosting jobPosting : recentlyClosed) {
             System.out.println(jobPosting);
-            this.reviewApplicationsForJobPosting(sc, jobPosting);
+            this.reviewApplicationsForJobPosting(jobPosting);
             this.selectJobAppsForPhoneInterview(sc, jobPosting);
         }
     }
@@ -668,17 +667,21 @@ public class HRCoordinatorInterface extends UserInterface {
      * @param finalCandidates The list of final candidates after all interview rounds have been completed.
      * @return the job application selected.
      */
-    private JobApplication selectApplicationForHiring(Scanner sc, ArrayList<JobApplication> finalCandidates) {
+    private ArrayList<JobApplication> selectApplicationsForHiring(Scanner sc, JobPosting jobPosting,
+                                                                 ArrayList<JobApplication> finalCandidates) {
+        ArrayList<JobApplication> hires = new ArrayList<>();
         int i = 1;
         for (JobApplication jobApp : finalCandidates) {
             System.out.println(i + ".");
             System.out.println(jobApp);
             i++;
         }
-        String message = "Enter the value corresponding to the applicant that you would like to hire: ";
-        int appNumber = this.getInteger(sc, message);
-        return finalCandidates.get(appNumber - 1);
+        for (int j = 0; j < jobPosting.getNumPositions(); j++) {
+            String message = "Enter the value corresponding to the applicant that you would like to hire: ";
+            int appNumber = this.getInteger(sc, message);
+            hires.add(finalCandidates.get(appNumber - 1));
+        }
+        return hires;
     }
-
 
 }

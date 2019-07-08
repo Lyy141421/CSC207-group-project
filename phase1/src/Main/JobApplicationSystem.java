@@ -68,6 +68,15 @@ public class JobApplicationSystem {
         JobApplicationSystem.previousLoginDate = date;
     }
 
+    // === Other methods ===
+    public static void updateAllInterviewRounds() {
+        for (Company company : JobApplicationSystem.companies) {
+            for (JobPosting jobPosting : company.getJobPostingManager().getJobPostings()) {
+                jobPosting.advanceInterviewRound();
+            }
+        }
+    }
+
     // ============================================================================================================== //
     // === Package-private methods ===
     // === Setters ===

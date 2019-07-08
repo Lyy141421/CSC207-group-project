@@ -37,6 +37,28 @@ public class InterviewerInterface extends UserInterface {
         return this.interviewer.getInterviewsBeforeOnAndAfterDate(today);
     }
 
+    /**
+     * Set this interview as pass or fail.
+     * @param pass  Whether or not the applicant passed this interview.
+     */
+    void passOrFailInterview(Interview interview, boolean pass) {
+        if (pass) {
+            this.interviewer.passInterview(interview);
+        }
+        else {
+            this.interviewer.failInterview(interview);
+        }
+    }
+
+    /**
+     * Store interview notes for this interview.
+     * @param interview The interview for which the notes are written.
+     * @param notes The notes taken during the interview.
+     */
+    void storeInterviewNotes(Interview interview, String notes) {
+        interview.setInterviewNotes(notes);
+    }
+
     // ============================================================================================================== //
 
     /**
