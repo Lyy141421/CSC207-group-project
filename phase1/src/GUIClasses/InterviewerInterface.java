@@ -62,7 +62,8 @@ public class InterviewerInterface extends UserInterface {
     // ============================================================================================================== //
 
     /**
-     * Run the UsersAndJobObjects.Interviewer interface.
+     * Run the Interviewer interface.
+     * @param today Today's date.
      */
     void run(LocalDate today) {
         Scanner sc = new Scanner(System.in);
@@ -70,13 +71,18 @@ public class InterviewerInterface extends UserInterface {
         this.viewInterviewsForToday(today);
         while (true) {
             try {
-                this.runMainMenu(sc, today);
+                this.runMainMenu(sc);
             } catch (ExitException ee) {
                 break;
             }
         }
     }
 
+    /**
+     * Interface for displaying the main menu options.
+     *
+     * @return the total number of options.
+     */
     private int displayMainMenuOptions() {
         System.out.println();
         System.out.println("Please select an option below:");
@@ -85,12 +91,18 @@ public class InterviewerInterface extends UserInterface {
         System.out.println("3 - Search specific job application");
         System.out.println("4 - View all previous interviews for specific job application");
         System.out.println("5 - View a specific interview");
-        System.out.println("6 - Conduct next interview");
+        System.out.println("6 - Complete an interview");
         System.out.println("7 - Exit");
         return 7;
     }
 
-    private void runMainMenu(Scanner sc, LocalDate today) throws ExitException {
+    /**
+     * Interface for running the main menu.
+     *
+     * @param sc The scanner for user input.
+     * @throws ExitException if user exits.
+     */
+    private void runMainMenu(Scanner sc) throws ExitException {
         int numOptions = this.displayMainMenuOptions();
         int option = this.getMenuOption(sc, numOptions);
         switch (option) {
@@ -110,7 +122,7 @@ public class InterviewerInterface extends UserInterface {
                 this.viewSpecificInterview(sc);
                 break;
             case 6: //  Conduct next interview
-                this.conductInterview(sc, today);
+                this.completeInterview(sc);
                 break;
             case 7: // Exit
                 throw new ExitException();
@@ -252,16 +264,18 @@ public class InterviewerInterface extends UserInterface {
      * Interface for viewing a specific interview called by the user.
      *
      * @param sc The scanner for user input.
+     * @return the interview that this interviewer wishes to view.
      */
-    private void viewSpecificInterview(Scanner sc) {
+    private Interview viewSpecificInterview(Scanner sc) {
         int id = this.getInteger(sc,"Enter the ID of the interview you wish to view: ");
         Interview interview = this.interviewer.findInterviewById(id);
         if (interview == null) {
             System.out.println("This interview cannot be found.");
-            this.viewSpecificInterview(sc);
+            return null;
         }
         else {
             System.out.println(interview);
+            return interview;
         }
     }
 
@@ -296,25 +310,21 @@ public class InterviewerInterface extends UserInterface {
     /**
      * Interface for conducting an interview.
      * @param sc    The scanner for user input
-     * @param today Today's date.
      */
-    private void conductInterview(Scanner sc, LocalDate today) {
+    private void completeInterview(Scanner sc) {
         if (this.interviewer.getInterviews().isEmpty()) {
-            System.out.println("You do not have any interviews scheduled.");
+            System.out.println("You do not have any interviews to complete.");
             return;
         }
-        ArrayList<Interview> interviewsToday = this.interviewer.getInterviewsBeforeOnAndAfterDate(today).get(1);
-        if (interviewsToday.isEmpty()) {
-            System.out.println("You do not have any interviews scheduled for today.");
-            return;
+        Interview interview = this.viewSpecificInterview(sc);
+        if (interview != null && !interview.isComplete()) {
+            System.out.println();
+            this.viewInterviewInfoAndApplicationInfo(interview);
+            String notes = this.getInputLinesUntilDone
+                    (sc, "Write interview notes below. Press enter twice when finished.\n");
+            interview.setInterviewNotes(notes);
+            this.determinePassOrFailInterview(sc, interview);
+            this.interviewer.removeInterview(interview);
         }
-        Interview interview = interviewsToday.get(0);
-        System.out.println();
-        this.viewInterviewInfoAndApplicationInfo(interview);
-        String notes = this.getInputLinesUntilDone
-                (sc, "Write interview notes below. Press enter twice when finished.\n");
-        interview.setInterviewNotes(notes);
-        this.determinePassOrFailInterview(sc, interview);
-        this.interviewer.removeInterview(interview);
     }
 }
