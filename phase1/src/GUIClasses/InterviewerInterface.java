@@ -317,6 +317,8 @@ public class InterviewerInterface extends UserInterface {
      * @param interview The interview to be conducted.
      */
     private void viewInterviewInfoAndApplicationInfo(Interview interview) {
+        System.out.println("Job Posting: ");
+        System.out.println(interview.getJobApplication().getJobPosting().toStringStandardInput());
         System.out.println("Interview:");
         System.out.println(interview.toStringPrelimInfo() + "\n");
         System.out.println("Applicant cover letter:");
@@ -342,7 +344,7 @@ public class InterviewerInterface extends UserInterface {
     }
 
     /**
-     * Interface for conducting an interview.
+     * Interface for completing an interview.
      * @param sc    The scanner for user input
      */
     private void completeInterview(Scanner sc) {

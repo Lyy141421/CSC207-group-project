@@ -249,7 +249,7 @@ public class HRCoordinatorInterface extends UserInterface {
             System.out.println("This job posting was not found in " + this.HRC.getCompany().getName() + ".");
             return this.getJobPosting(sc);
         } else {
-            System.out.println(jobPosting);
+            System.out.println(jobPosting.toStringStandardInput());
         }
         return jobPosting;
     }
@@ -286,7 +286,7 @@ public class HRCoordinatorInterface extends UserInterface {
         else {
             for (JobPosting jobPosting : jobPostings) {
                 System.out.println();
-                System.out.println(jobPosting);
+                System.out.println(jobPosting.toStringStandardInput());
             }
         }
     }
@@ -305,7 +305,7 @@ public class HRCoordinatorInterface extends UserInterface {
         else {
             for (JobPosting jobPosting : jobPostings) {
                 System.out.println();
-                System.out.println(jobPosting);
+                System.out.println(jobPosting.toStringStandardInput());
             }
         }
     }
@@ -325,7 +325,7 @@ public class HRCoordinatorInterface extends UserInterface {
         else {
             for (JobPosting jobPosting : jobPostings) {
                 System.out.println();
-                System.out.println(jobPosting);
+                System.out.println(jobPosting.toStringStandardInput());
             }
         }
     }
@@ -342,7 +342,7 @@ public class HRCoordinatorInterface extends UserInterface {
         else {
             for (JobPosting jobPosting : jobPostings) {
                 System.out.println();
-                System.out.println(jobPosting);
+                System.out.println(jobPosting.toStringStandardInput());
             }
         }
     }
@@ -602,7 +602,7 @@ public class HRCoordinatorInterface extends UserInterface {
             System.out.println("N/A");
         }
         for (JobPosting jobPosting : recentlyClosed) {
-            System.out.println(jobPosting);
+            System.out.println(jobPosting.toStringStandardInput());
             this.reviewApplicationsForJobPosting(jobPosting);
             this.selectJobAppsForPhoneInterview(sc, jobPosting);
         }
@@ -626,7 +626,7 @@ public class HRCoordinatorInterface extends UserInterface {
             System.out.println();
         }
         for (JobPosting jobPosting : jobPostingsNoApps) {
-            System.out.println(jobPosting);
+            System.out.println(jobPosting.toStringStandardInput());
             jobPosting.setNumPositions(0);
             jobPosting.setFilled();
         }
@@ -644,7 +644,7 @@ public class HRCoordinatorInterface extends UserInterface {
             System.out.println("N/A");
         }
         for (JobPosting jobPosting : recentlyCompletedRound) {
-            System.out.println(jobPosting);
+            System.out.println(jobPosting.toStringStandardInput());
             this.setUpInterviewsForRound(jobPosting);
         }
     }
@@ -696,7 +696,7 @@ public class HRCoordinatorInterface extends UserInterface {
             System.out.println("N/A");
         }
         for (JobPosting jobPosting : readyForHiring) {
-            System.out.println(jobPosting);
+            System.out.println(jobPosting.toStringStandardInput());
             this.hireApplicants(sc, jobPosting);
         }
     }
