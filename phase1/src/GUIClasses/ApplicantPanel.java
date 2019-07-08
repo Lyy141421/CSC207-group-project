@@ -26,7 +26,7 @@ class ApplicantPanel extends JPanel{
     ApplicantPanel(String username) {
         super(new CardLayout());
 
-        //this.loggedUser = (Applicant)JobApplicationSystem.getUserManager().findUserByUsername(username);
+        //this.loggedUser = (Applicant)JobApplicationSystem.getUserManager().findUserByUsername(username); TODO uncomment
         this.loggedUser = new Applicant();
 
         this.BackEnd = new ApplicantInterfaceTest(this.loggedUser);
@@ -131,9 +131,10 @@ class ApplicantPanel extends JPanel{
         feelingLucky.setBounds(227, 0, 400, 20);
         welcomeLabels.add(feelingLucky);
 
-        JLabel tutorialLabel = new JLabel("Search nothing to view all postings!", SwingConstants.CENTER);
+        JLabel tutorialLabel = new JLabel("Leave the search bar blank " +
+                "to view all postings!", SwingConstants.CENTER);
         tutorialLabel.setFont(new Font("Serif", Font.PLAIN, 14));
-        tutorialLabel.setBounds(302, 20, 250, 20);
+        tutorialLabel.setBounds(227, 20, 400, 20);
         welcomeLabels.add(tutorialLabel);
 
         return welcomeLabels;
