@@ -1,7 +1,6 @@
 package UsersAndJobObjects;
 
 import Miscellaneous.InterviewTime;
-import Miscellaneous.InterviewTimeComparator;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -190,6 +189,25 @@ public class Interviewer extends User {
     }
 
     /**
+     * Record that this interview has been failed.
+     *
+     * @param interview The interview that has been conducted.
+     */
+    public void passInterview(Interview interview) {
+        interview.setPass(true);
+    }
+
+    /**
+     * Record that this interview has been failed.
+     *
+     * @param interview The interview that has been conducted.
+     */
+    public void failInterview(Interview interview) {
+        interview.setPass(false);
+        interview.getInterviewManager().reject(interview.getJobApplication());
+    }
+
+    /**
      * Get a string representation of this interviewer's up-coming schedule.
      *
      * @return a string representation of this interviewer's schedule
@@ -212,26 +230,6 @@ public class Interviewer extends User {
         return s.substring(0, s.length() - 2); // Remove extra comma and space
     }
 
-    /**
-     * Record that this interview has been failed.
-     *
-     * @param interview The interview that has been conducted.
-     */
-    public void passInterview(Interview interview) {
-        interview.setPass(true);
-        interview.getInterviewManager().reject(interview.getJobApplication());
-    }
-
-    /**
-     * Record that this interview has been failed.
-     *
-     * @param interview The interview that has been conducted.
-     */
-    public void failInterview(Interview interview) {
-        interview.setPass(false);
-        interview.getInterviewManager().reject(interview.getJobApplication());
-    }
-
     // ============================================================================================================== //
     // === Package-private methods ===
     // === Other methods ===
@@ -243,6 +241,5 @@ public class Interviewer extends User {
      */
     void addInterview(Interview interview) {
         this.interviews.add(interview);
-        this.interviews.sort(new InterviewTimeComparator());
     }
 }

@@ -1,11 +1,14 @@
 package GUIClasses;
 
 import UsersAndJobObjects.Interview;
+import UsersAndJobObjects.JobApplication;
 import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
 import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
 import net.sourceforge.jdatepicker.impl.UtilDateModel;
 
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -32,7 +35,7 @@ public class InterviewerPanel extends JPanel implements ActionListener, ItemList
 
         this.setLayout(new CardLayout());
         this.add(home(), "HOME");
-        this.add(viewInterviews(this.futureInterviews, this.pastInterviews), "VIEW");
+        this.add(viewInterviews(), "VIEW");
         this.add(scheduleInterviews(), "SCHEDULE");
     }
 
@@ -50,18 +53,19 @@ public class InterviewerPanel extends JPanel implements ActionListener, ItemList
         return homePanel;
     }
 
-    private JPanel viewInterviews (ArrayList<Interview> incompleteInterviews, ArrayList<Interview> completeInterviews) {
+    private JPanel viewInterviews () {
         JPanel viewPanel = new JPanel(new BorderLayout());
         JPanel select = new JPanel();
         select.setLayout(new BoxLayout(select, BoxLayout.Y_AXIS));
 
-        JComboBox<String> interviews = new JComboBox<>();
-
+        ArrayList<Interview> allInterviews = deepClone(this.futureInterviews);
+        allInterviews.addAll(deepClone(this.pastInterviews));
+        JComboBox<String> interviews = new JComboBox<>((String[]) getInterviewTitles(allInterviews).toArray());
         JCheckBox incomplete = new JCheckBox("Incomplete", true);
         incomplete.addItemListener(this);
         JCheckBox complete = new JCheckBox("Complete", true);
         complete.addItemListener(this);
-        JList<String> viewable = new JList<>(new String[]{"abc", "xa"});
+        JList<String> viewable = new JList<>(new String[]{"Overview", "Notes", "CV", "Cover letter"});
 
         select.add(incomplete);
         select.add(complete);
@@ -80,12 +84,74 @@ public class InterviewerPanel extends JPanel implements ActionListener, ItemList
         viewable.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
         viewable.setLayoutOrientation(JList.VERTICAL);
 
+        interviews.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if (e.getStateChange() == ItemEvent.SELECTED) {
+                    setInfo(allInterviews.get(interviews.getSelectedIndex()), viewable.getSelectedIndex(), info);
+                }
+            }
+        });
+
+        viewable.addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                setInfo(allInterviews.get(interviews.getSelectedIndex()), e.getFirstIndex(), info);
+            }
+        });
+
         viewPanel.add(interviews, BorderLayout.NORTH);
         viewPanel.add(display, BorderLayout.CENTER);
         viewPanel.add(home, BorderLayout.SOUTH);
 
         return viewPanel;
     }
+
+    private ArrayList<Interview> deepClone (ArrayList<Interview> interviews) {
+        ArrayList<Interview> interviewsClone = new ArrayList<>();
+        for (Interview interview : interviews) {
+            interviewsClone.add(interview);
+        }
+
+        return interviewsClone;
+    }
+
+    private ArrayList<String> getInterviewTitles(ArrayList<Interview> interviews) {
+        ArrayList<String> titles = new ArrayList<>();
+        for (Interview interview: interviews) {
+            titles.add(interview.getId()+"-"+interview.getTime().toString()+" "+
+                    interview.getApplicant().getLegalName());
+        }
+
+        return titles;
+    }
+
+    private void setInfo (Interview interview, int attributeIndex, JTextArea info) {
+        switch (attributeIndex) {
+            case 0:
+                info.setText(interview.getOverview());
+                break;
+            case 1:
+                info.setText(interview.getInterviewNotes());
+                if (interview.isComplete()) {
+                    info.setEditable(true);
+                } else {
+                    info.setEditable(false);
+                }
+                break;
+            case 2:
+                info.setText(interview.getJobApplication().getCV().getContents());
+                break;
+            case 3:
+                info.setText(interview.getJobApplication().getCoverLetter().getContents());
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + attributeIndex);
+        }
+    }
+
+
+    // =========
 
     private JPanel scheduleInterviews () {
         JPanel schedulePanel = new JPanel(new BorderLayout());

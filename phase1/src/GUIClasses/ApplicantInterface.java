@@ -275,6 +275,10 @@ public class ApplicantInterface extends UserInterface {
             postingId = getInteger(sc, "Enter the id of the posting you wish to apply for: ");
             posting = company.getJobPostingManager().getJobPosting(postingId);
         }
+        if (applicant.hasAppliedTo(posting)) {
+            System.out.println("You have already submitted an application for this job posting.");
+            return;
+        }
         int numOptions = this.displaySubmitMenuOptions();
         int option = this.getMenuOption(sc, numOptions);
         switch (option) {

@@ -41,6 +41,12 @@ public class InterviewManager {
 
     // === Constructor ===
 
+    public InterviewManager(JobPosting jobPosting, ArrayList<JobApplication> applicationsInConsideration) {
+        this.jobPosting = jobPosting;
+        this.applicationsInConsideration = applicationsInConsideration;
+        this.applicationsRejected = new ArrayList<>();
+    }
+
     public InterviewManager(JobPosting jobPosting, ArrayList<JobApplication> applicationsInConsideration,
                      ArrayList<JobApplication> applicationsRejected) {
         this.jobPosting = jobPosting;
