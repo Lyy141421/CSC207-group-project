@@ -13,12 +13,12 @@ import java.awt.event.ActionListener;
 class NewUserPanel extends JPanel {
     private UserInterfaceTest BackEnd;
     private CardLayout masterLayout;
-    private JPanel parent;
+    private Container parent;
     private JComboBox mainSelector;
     private String newUsername;
     private JDialog success;
 
-    NewUserPanel(JPanel parent, CardLayout masterLayout) {
+    NewUserPanel(Container parent, CardLayout masterLayout) {
         this.parent = parent;
         this.masterLayout = masterLayout;
         this.setLayout(new GridLayout(3, 1));

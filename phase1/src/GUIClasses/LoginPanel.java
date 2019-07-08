@@ -13,14 +13,14 @@ import java.awt.event.ActionListener;
 class LoginPanel extends JPanel {
     private UserInterfaceTest BackEnd;
     private CardLayout masterLayout;
-    private JPanel parent;
+    private Container parent;
     private MainFrame mainframe;
 
-    LoginPanel(JPanel parent, CardLayout masterLayout) {
+    LoginPanel(Container parent, CardLayout masterLayout) {
         this.parent = parent;
         this.masterLayout = masterLayout;
         this.mainframe = (MainFrame)this.parent.getParent().
-                getParent().getParent().getParent();
+                getParent().getParent();
         this.setLayout(null);
         this.addTextItems();
         this.addEntryItems();
