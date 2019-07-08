@@ -1,8 +1,14 @@
 package GUIClasses;
 
+import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
+import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
+import net.sourceforge.jdatepicker.impl.UtilDateModel;
+
 import javax.swing.*;
 import java.awt.*;
 import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 
 public class MainFrame extends JFrame {
 
@@ -36,6 +42,17 @@ public class MainFrame extends JFrame {
         addCards();
         setVisible(true);
         setResizable(false);
+
+        /*LocalDate actualToday = LocalDate.now();
+        UtilDateModel dateModel = new UtilDateModel();
+        dateModel.setDate(actualToday.getYear(), actualToday.getMonthValue()-1, actualToday.getDayOfMonth());
+        dateModel.setSelected(true);
+        JDatePanelImpl datePanel = new JDatePanelImpl(dateModel);
+        JDatePickerImpl manualToday = new JDatePickerImpl(datePanel);
+
+        // When confirmed this is the date they want:
+        // This converts the Date object from JDatePicker to a LocalDate object
+        today = ((Date) manualToday.getModel().getValue()).toInstant().atZone(ZoneId.systemDefault()).toLocalDate();*/
     }
 
     /**
