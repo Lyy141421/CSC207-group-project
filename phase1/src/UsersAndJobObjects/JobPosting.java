@@ -140,6 +140,13 @@ public class JobPosting implements Storable {
     }
 
     // === Other methods ===
+
+    /**
+     * Check whether this job posting has closed.
+     */
+    public boolean isClosed(LocalDate today) {
+        return this.closeDate.isBefore(today);
+    }
     /**
      * Add this job application for this job posting.
      *

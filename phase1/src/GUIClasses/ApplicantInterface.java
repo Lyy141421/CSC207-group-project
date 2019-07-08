@@ -1,7 +1,6 @@
 package GUIClasses;
 
 import Main.JobApplicationSystem;
-import Managers.InterviewManager;
 import Miscellaneous.ExitException;
 import UsersAndJobObjects.*;
 
@@ -64,10 +63,10 @@ public class ApplicantInterface extends UserInterface {
                 this.submitApplication(sc, today); // Apply for a job
                 return;
             case 4:
-                this.displayApplications(sc, false); // View applications
+                this.displayApplications(sc, today, false); // View applications
                 return;
             case 5:
-                this.displayApplications(sc, true); // Withdraw an application
+                this.displayApplications(sc, today, true); // Withdraw an application
                 return;
             case 6:
                 this.displayAccountHistory(today); // View account history
@@ -220,6 +219,7 @@ public class ApplicantInterface extends UserInterface {
         for (JobApplicationDocument document : applicant.getDocumentManager().getDocuments()) {
             coverLetterFileNumber++;
             System.out.println(coverLetterFileNumber + ". " + document.getContents());
+            System.out.println();
         }
         System.out.println("Please enter the file number of the cover letter you would like to submit.");
         int coverLetterOption = getMenuOption(sc, coverLetterFileNumber);
@@ -304,7 +304,7 @@ public class ApplicantInterface extends UserInterface {
      * @param sc The Scanner for user input.
      * @param withdrawal Whether or not the applicant wishes to withdraw an application.
      */
-    private void displayApplications(Scanner sc, boolean withdrawal) {
+    private void displayApplications(Scanner sc, LocalDate today, boolean withdrawal) {
         System.out.println();
         ArrayList<JobApplication> applications = applicant.getJobApplicationManager().getJobApplications();
         if (applications.isEmpty()) {
@@ -321,7 +321,7 @@ public class ApplicantInterface extends UserInterface {
                 System.out.println();
             }
             if (withdrawal) {
-                if (this.withdrawApplication(sc, applications, applicationNumber)) {
+                if (this.withdrawApplication(sc, today, applications, applicationNumber)) {
                     System.out.println("Application successfully withdrawn.");
                 } else {
                     System.out.println("As the job posting corresponding to this application has already been filled, " +
@@ -331,10 +331,20 @@ public class ApplicantInterface extends UserInterface {
         }
     }
 
-    private boolean withdrawApplication(Scanner sc, ArrayList<JobApplication> applications, int applicationNumber) {
+    /**
+     * Interface for withdrawing an application.
+     *
+     * @param sc                The scanner for user input.
+     * @param today             Today's date.
+     * @param applications      All applications this applicant has submitted.
+     * @param applicationNumber The application number selected.
+     * @return true iff the application was successfully withdrawn.
+     */
+    private boolean withdrawApplication(Scanner sc, LocalDate today, ArrayList<JobApplication> applications,
+                                        int applicationNumber) {
         int applicationOption = getMenuOption(sc, applicationNumber);
         JobApplication applicationToWithdraw = applications.get(applicationOption - 1);
-        boolean appWithdrawn = applicant.withdrawJobApplication(applicationToWithdraw.getJobPosting());
+        boolean appWithdrawn = applicant.withdrawJobApplication(today, applicationToWithdraw.getJobPosting());
         applicationToWithdraw.getJobPosting().getInterviewManager().withdrawApplication(applicationToWithdraw);
         return appWithdrawn;
     }

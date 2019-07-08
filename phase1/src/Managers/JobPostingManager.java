@@ -72,8 +72,7 @@ public class JobPostingManager {
     public ArrayList<JobPosting> getOpenJobPostings(LocalDate today) {
         ArrayList<JobPosting> jobPostings = new ArrayList<>();
         for (JobPosting jobPosting : this.getJobPostings()) {
-            LocalDate closeDate = jobPosting.getCloseDate();
-            if (closeDate.isAfter(today)) {
+            if (!jobPosting.isClosed(today)) {
                 jobPostings.add(jobPosting);
             }
         }
@@ -89,11 +88,8 @@ public class JobPostingManager {
     public ArrayList<JobPosting> getClosedJobPostingsNotFilled(LocalDate today) {
         ArrayList<JobPosting> jobPostings = new ArrayList<>();
         for (JobPosting jobPosting : this.getJobPostings()) {
-            if (!jobPosting.isFilled()) {
-                LocalDate closeDate = jobPosting.getCloseDate();
-                if (closeDate.isBefore(today)) {
-                    jobPostings.add(jobPosting);
-                }
+            if (!jobPosting.isFilled() && jobPosting.isClosed(today)) {
+                jobPostings.add(jobPosting);
             }
         }
         return jobPostings;
