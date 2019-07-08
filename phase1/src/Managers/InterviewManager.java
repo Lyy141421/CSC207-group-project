@@ -38,6 +38,7 @@ public class InterviewManager {
 
     // === Representation invariants ===
     // The list of interviews for each applicant is sorted by date.
+    // 0 <= currentRound <= 3
 
     // === Public methods ===
 
@@ -140,6 +141,28 @@ public class InterviewManager {
     }
 
     /**
+     * Check if the number of applications in consideration is less than or equal to the number of positions available
+     * in the posting and is not zero.
+     *
+     * @return true iff number of applications in consideration is less than or equal to the number of positions
+     * available and is not zero.
+     */
+    public boolean isNumApplicantUnderOrAtThreshold() {
+        int jobAppsSize = this.applicationsInConsideration.size();
+        return jobAppsSize > 0 && jobAppsSize <= this.jobPosting.getNumPositions();
+    }
+
+    /**
+     * Check if interview process has finished the last interview round.
+     *
+     * @return true iff the maximum number of interview rounds has been completed.
+     */
+    public boolean isInterviewProcessOver() {
+        return this.isCurrentRoundOver() && this.currentRound == InterviewManager.MAX_NUM_INTERVIEW_ROUNDS;
+    }
+
+
+    /**
      * Get the task required by the HR Coordinator for this job posting at this moment in time.
      *
      * @return the integer representing the task the HR Coordinator must accomplish.
@@ -181,26 +204,4 @@ public class InterviewManager {
     private boolean hasNoJobApplicationsInConsideration() {
         return this.applicationsInConsideration.isEmpty();
     }
-
-    /**
-     * Check if the number of applications in consideration is less than or equal to the number of positions available
-     * in the posting and is not zero.
-     *
-     * @return true iff number of applications in consideration is less than or equal to the number of positions
-     * available and is not zero.
-     */
-    public boolean isNumApplicantUnderOrAtThreshold() {
-        int jobAppsSize = this.applicationsInConsideration.size();
-        return jobAppsSize > 0 && jobAppsSize <= this.jobPosting.getNumPositions();
-    }
-
-    /**
-     * Check if interview process has finished the last interview round.
-     *
-     * @return true iff the maximum number of interview rounds has been completed.
-     */
-    private boolean isInterviewProcessOver() {
-        return this.isCurrentRoundOver() && this.currentRound == InterviewManager.MAX_NUM_INTERVIEW_ROUNDS;
-    }
-
 }

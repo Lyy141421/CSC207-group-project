@@ -158,7 +158,7 @@ public class ApplicantInterfaceTest extends UserInterface {
      * @param sc The Scanner for user input.
      * @param withdrawal Whether or not the applicant wishes to withdraw an application.
      */
-    private void displayApplications(Scanner sc, boolean withdrawal) {
+    private void displayApplications(Scanner sc, LocalDate today, boolean withdrawal) {
         System.out.println();
         ArrayList<JobApplication> applications = applicant.getJobApplicationManager().getJobApplications();
         if (applications.isEmpty()) {
@@ -179,7 +179,7 @@ public class ApplicantInterfaceTest extends UserInterface {
             if (withdrawal) {
                 int applicationOption = getMenuOption(sc, applicationNumber);
                 JobApplication applicationToWithdraw = applications.get(applicationOption-1);
-                boolean appWithdrawn = applicant.withdrawJobApplication(applicationToWithdraw.getJobPosting());
+                boolean appWithdrawn = applicant.withdrawJobApplication(today, applicationToWithdraw.getJobPosting());
                 if (appWithdrawn)
                     System.out.println("Application successfully withdrawn.");
                 else {
