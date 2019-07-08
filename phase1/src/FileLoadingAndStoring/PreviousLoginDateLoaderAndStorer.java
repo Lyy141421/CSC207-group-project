@@ -25,8 +25,6 @@ class PreviousLoginDateLoaderAndStorer {
             }
         } catch (IOException ioe) {
             ioe.printStackTrace();
-        } catch (NullPointerException npe) {
-            System.out.println("Something happened");
         }
     }
 
