@@ -31,7 +31,7 @@ public class MainFrame extends JFrame {
     private void initUI () {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(854, 480);
-        this.getContentPane().setLayout(new CardLayout());
+        this.getContentPane().setLayout(layoutManager);
         addCards();
         setVisible(true);
         setResizable(false);
