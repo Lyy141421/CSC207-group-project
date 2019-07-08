@@ -1,11 +1,14 @@
 package GUIClasses;
 
 import UsersAndJobObjects.Interview;
+import UsersAndJobObjects.JobApplication;
 import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
 import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
 import net.sourceforge.jdatepicker.impl.UtilDateModel;
 
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -55,10 +58,9 @@ public class InterviewerPanel extends JPanel implements ActionListener, ItemList
         JPanel select = new JPanel();
         select.setLayout(new BoxLayout(select, BoxLayout.Y_AXIS));
 
-        ArrayList<String> allInterviewTitles = getInterviewTitles(this.futureInterviews);
-        allInterviewTitles.addAll(getInterviewTitles(this.pastInterviews));
-        JComboBox<String> interviews = new JComboBox<>((String[]) allInterviewTitles.toArray());
-
+        ArrayList<Interview> allInterviews = deepClone(this.futureInterviews);
+        allInterviews.addAll(deepClone(this.pastInterviews));
+        JComboBox<String> interviews = new JComboBox<>((String[]) getInterviewTitles(allInterviews).toArray());
         JCheckBox incomplete = new JCheckBox("Incomplete", true);
         incomplete.addItemListener(this);
         JCheckBox complete = new JCheckBox("Complete", true);
@@ -82,11 +84,36 @@ public class InterviewerPanel extends JPanel implements ActionListener, ItemList
         viewable.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
         viewable.setLayoutOrientation(JList.VERTICAL);
 
+        interviews.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if (e.getStateChange() == ItemEvent.SELECTED) {
+                    info.setText(getInfo(allInterviews.get(interviews.getSelectedIndex()), viewable.getSelectedIndex()));
+                }
+            }
+        });
+
+        viewable.addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                info.setText(getInfo(allInterviews.get(interviews.getSelectedIndex()), e.getFirstIndex()));
+            }
+        });
+
         viewPanel.add(interviews, BorderLayout.NORTH);
         viewPanel.add(display, BorderLayout.CENTER);
         viewPanel.add(home, BorderLayout.SOUTH);
 
         return viewPanel;
+    }
+
+    private ArrayList<Interview> deepClone (ArrayList<Interview> interviews) {
+        ArrayList<Interview> interviewsClone = new ArrayList<>();
+        for (Interview interview : interviews) {
+            interviewsClone.add(interview);
+        }
+
+        return interviewsClone;
     }
 
     private ArrayList<String> getInterviewTitles(ArrayList<Interview> interviews) {
@@ -97,6 +124,29 @@ public class InterviewerPanel extends JPanel implements ActionListener, ItemList
         }
 
         return titles;
+    }
+
+    private String getInfo (Interview interview, int attributeIndex) {
+        String info;
+
+        switch (attributeIndex) {
+            case 0:
+                info = interview.getOverview();
+                break;
+            case 1:
+                info = interview.getInterviewNotes();
+                break;
+            case 2:
+                info = interview.getJobApplication().getCV().getContents();
+                break;
+            case 3:
+                info = interview.getJobApplication().getCoverLetter().getContents();
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + attributeIndex);
+        }
+
+        return info;
     }
 
 
