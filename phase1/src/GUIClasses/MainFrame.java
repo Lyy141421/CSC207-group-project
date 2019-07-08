@@ -7,7 +7,7 @@ import java.time.LocalDate;
 public class MainFrame extends JFrame {
 
     LocalDate today;
-    private CardLayout layoutManager;
+    private CardLayout layoutManager = new CardLayout();
     private JPanel homePanel; NewUserPanel newUserRef;
 
     public MainFrame (LocalDate today) {
@@ -18,7 +18,7 @@ public class MainFrame extends JFrame {
 
     private MainFrame () {
         super("TESTING INSTANTIATOR DONT USE");
-        this.homePanel = new JPanel (new CardLayout());
+        this.homePanel = new JPanel (this.layoutManager);
         initUI();
         addCards();
     }
@@ -29,7 +29,6 @@ public class MainFrame extends JFrame {
     private void initUI () {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(854, 480);
-        this.layoutManager = (CardLayout)this.homePanel.getLayout();
         addCards();
         setVisible(true);
         setResizable(false);
