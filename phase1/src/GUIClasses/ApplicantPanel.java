@@ -350,6 +350,9 @@ class ApplicantPanel extends JPanel{
         return ret;
     }
 
+    /**
+     * Resets the search bar to its "default" value
+     */
     private void resetSearch() {
         this.searchBar.setText("Looking for a job?");
     }
