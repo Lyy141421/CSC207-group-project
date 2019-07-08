@@ -24,6 +24,7 @@ public class InterviewerPanel extends JPanel implements ActionListener, ItemList
     LocalDate today;
     ArrayList<Interview> pastInterviews;
     ArrayList<Interview> futureInterviews;
+    private String temporaryNotes = "";
 
     InterviewerPanel (InterviewerInterface interviewerInterface, LocalDate today) {
         this.interviewerInterface = interviewerInterface;
@@ -57,6 +58,9 @@ public class InterviewerPanel extends JPanel implements ActionListener, ItemList
         JPanel viewPanel = new JPanel(new BorderLayout());
         JPanel select = new JPanel();
         select.setLayout(new BoxLayout(select, BoxLayout.Y_AXIS));
+        JPanel passOrFailButtons = new JPanel();
+        passOrFailButtons.setLayout(new BoxLayout(select, BoxLayout.Y_AXIS));
+        JPanel buttons = new JPanel(new FlowLayout());
 
         ArrayList<Interview> allInterviews = deepClone(this.futureInterviews);
         allInterviews.addAll(deepClone(this.pastInterviews));
@@ -75,8 +79,20 @@ public class InterviewerPanel extends JPanel implements ActionListener, ItemList
         info.setEditable(false);
         // Phase 2?
         // JButton reschedule = new JButton("Re-schedule");
+        ButtonGroup passOrFail = new ButtonGroup();
+        JRadioButton advance = new JRadioButton("Advance");
+        advance.setSelected(true);
+        JRadioButton fail = new JRadioButton("Fail");
+        passOrFail.add(advance);
+        passOrFail.add(fail);
+        passOrFailButtons.add(advance);
+        passOrFailButtons.add(fail);
+        JButton submit = new JButton("Submit results");
         JButton home = new JButton("Home");
         home.addActionListener(this);
+        buttons.add(passOrFailButtons);
+        buttons.add(submit);
+        buttons.add(home);
 
         JSplitPane display = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, select, new JScrollPane(info));
         display.setDividerLocation(250);
@@ -89,6 +105,8 @@ public class InterviewerPanel extends JPanel implements ActionListener, ItemList
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
                     setInfo(allInterviews.get(interviews.getSelectedIndex()), viewable.getSelectedIndex(), info);
+                    // Phase2: "you have unsaved changes. Would you like to proceed?"
+                    temporaryNotes = "";
                 }
             }
         });
@@ -96,13 +114,32 @@ public class InterviewerPanel extends JPanel implements ActionListener, ItemList
         viewable.addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
+                if (info.isEditable()) {
+                    temporaryNotes = info.getText();
+                }
                 setInfo(allInterviews.get(interviews.getSelectedIndex()), e.getFirstIndex(), info);
+            }
+        });
+
+        submit.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Interview interview = allInterviews.get(interviews.getSelectedIndex());
+                if (viewable.getSelectedIndex()==1) {
+                    interviewerInterface.storeInterviewNotes(interview, info.getText());
+                } else {
+                    interviewerInterface.storeInterviewNotes(interview, temporaryNotes);
+                }
+                interviewerInterface.passOrFailInterview(interview, advance.isSelected());
+
+                // Clear temporarily stored notes
+                temporaryNotes = "";
             }
         });
 
         viewPanel.add(interviews, BorderLayout.NORTH);
         viewPanel.add(display, BorderLayout.CENTER);
-        viewPanel.add(home, BorderLayout.SOUTH);
+        viewPanel.add(buttons, BorderLayout.SOUTH);
 
         return viewPanel;
     }
