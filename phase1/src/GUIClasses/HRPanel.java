@@ -324,9 +324,14 @@ public class HRPanel extends JPanel implements ActionListener {
             public void actionPerformed(ActionEvent e) {
                 ArrayList<JobApplication> apps = HRInterface.getAllJobApplicationsToCompany(nameInput.getText());
                 if (apps.isEmpty()) {
-                    JOptionPane.showMessageDialog(applicantPanel, "One or more fields have illegal input.");
+                    JOptionPane.showMessageDialog(applicantPanel, "The applicant cannot be found.");
                 } else {
-                    // TODO:   Update jobs in panel combobox and switch.
+                    currApps = apps;
+                    appTitles.removeAllElements();
+                    appTitles.addAll(getAppTitles(apps));
+                    //todo: might cause issue
+                    hireOrRejectButtons.setVisible(false);
+                    ((CardLayout) getLayout()).show(getParent(), "APPLICATION");
                 }
             }
         });
