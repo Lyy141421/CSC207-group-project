@@ -1,6 +1,9 @@
 package GUIClasses;
 
+import Main.JobApplicationSystem;
+import Managers.JobApplicationManager;
 import UsersAndJobObjects.Applicant;
+import UsersAndJobObjects.JobApplication;
 import UsersAndJobObjects.JobPosting;
 
 import javax.swing.*;
@@ -294,6 +297,13 @@ class ApplicantPanel extends JPanel{
 
             JButton applyForJob = new JButton("Apply now");
             applyForJob.setBounds(45, 300, 100, 20);
+            applyForJob.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    JPanel docPanel = buildDocApply(j);
+                    add(docPanel, "FORMS");
+                    ((CardLayout)getLayout()).show(getThis(), "FORMS");
+                }
+            } );
             viewJobsAdded2.add(applyForJob);
             viewJobs2.add(viewJobsAdded2);
         }
@@ -305,7 +315,7 @@ class ApplicantPanel extends JPanel{
      * Builds the document submission panel for a job posting
      */
     private JPanel buildDocApply(JobPosting posting) {
-        JPanel formEntry = new JPanel(null); //TODO: call this when required
+        JPanel formEntry = new JPanel(null);
 
         JLabel titleText = new JLabel("Document Submission");
         titleText.setFont(new Font("Serif", Font.PLAIN, 22));
@@ -327,6 +337,14 @@ class ApplicantPanel extends JPanel{
 
         JButton submit = new JButton("Apply!");
         submit.setBounds(387, 400, 80, 30);
+        submit.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                JobApplication app = BackEnd.createAppThroughInput(resumeArea.getText(), coverArea.getText(), posting);
+                posting.addJobApplication(app);
+                loggedUser.registerJobApplication(app);
+                ((CardLayout)getLayout()).show(getThis(), "applicantStart");
+            }
+        } );
 
         formEntry.add(titleText); formEntry.add(submit);
         formEntry.add(resumeText); formEntry.add(resumeScroll);
