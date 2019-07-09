@@ -425,7 +425,7 @@ class ApplicantPanel extends JPanel{
             applyForJob.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     boolean success = BackEnd.withdrawApp(app);
-                    getThis().buildWithdrawWindow(success);
+                    add(getThis().buildWithdrawWindow(success));
                 }
             } );
             viewApps.add(viewAppsAdded, app.getJobPosting().getId());
