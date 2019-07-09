@@ -72,6 +72,10 @@ public abstract class User implements Storable {
 
     // === Other methods ===
 
+    public JobApplication findJobAppById(int ID) {
+        return null;
+    }
+
     /**
      * Report whether this user is the same as obj.
      *

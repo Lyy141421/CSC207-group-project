@@ -7,6 +7,7 @@ import Miscellaneous.ExitException;
 import UsersAndJobObjects.*;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.*;
 
@@ -14,6 +15,10 @@ public class HRCoordinatorInterface extends UserInterface {
     /**
      * The general HR Coordinator interface
      */
+
+    // === Class variables ===
+    private static int SKIP_FIELD_KEY = -1;
+    private static LocalDate SKIP_DATE_KEY = LocalDate.parse("9999-12-31", DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
     // === Instance variables ===
     // The HR Coordinator who is logged in
@@ -76,6 +81,31 @@ public class HRCoordinatorInterface extends UserInterface {
         return this.HRC.getCompany().getAllApplicationsToCompany(applicant);
     }
 
+    /**
+     * Hire or reject an application.
+     *
+     * @param jobApp The job application in question.
+     * @param toHire Whether or not the HR Coordinator wants to hire the applicant.
+     */
+    void hireOrRejectApplication(JobApplication jobApp, boolean toHire) {
+        if (toHire) {
+            jobApp.getStatus().setHired();
+        } else {
+            jobApp.getStatus().setArchived();
+        }
+        jobApp.getJobPosting().setFilled();
+        jobApp.getJobPosting().getInterviewManager().archiveRejected();
+    }
+
+    /**
+     * Set up interviews for this job posting.
+     *
+     * @param jobPosting The job posting in question.
+     */
+    void scheduleInterviews(JobPosting jobPosting) {
+        this.setUpInterviewsForRound(jobPosting);
+    }
+
 
     // ============================================================================================================== //
     // === Methods for standard input === (BACK-UP)!!!
@@ -86,7 +116,7 @@ public class HRCoordinatorInterface extends UserInterface {
      */
     void run(LocalDate today) {
         Scanner sc = new Scanner(System.in);
-        this.viewHighPriorityJobPostings(sc, today);
+        this.viewPostingsWithNoApplicationsInConsideration(today);
         while (true) {
             try {
                 this.runMainMenu(sc, today);
@@ -105,11 +135,16 @@ public class HRCoordinatorInterface extends UserInterface {
         System.out.println();
         System.out.println("Please select an option below:");
         System.out.println("1 - Add a job posting");
-        System.out.println("2 - View job postings in company");
-        System.out.println("3 - View applications for a job posting");
-        System.out.println("4 - View all applications a specific applicant has submitted to the company");
-        System.out.println("5 - Exit");
-        return 5;
+        System.out.println("2 - Update fields for an open job posting");
+        System.out.println("3 - View job postings in company");
+        System.out.println("4 - View applications for a job posting");
+        System.out.println("5 - View all applications a specific applicant has submitted to the company");
+        System.out.println("6 - View all interviews associated with a job application");
+        System.out.println("7 - Select applicants to receive a phone interview");
+        System.out.println("8 - Schedule interviews for a job posting");
+        System.out.println("9 - Hire applicants for a job posting");
+        System.out.println("10 - Exit");
+        return 10;
     }
 
     /**
@@ -126,17 +161,31 @@ public class HRCoordinatorInterface extends UserInterface {
             case 1: // Add job posting
                 this.addJobPosting(sc, today);
                 break;
-            case 2: // View job postings
+            case 2: // Update fields
+                this.updateJobPostingFields(sc, today);
+                break;
+            case 3: // View job postings
                 this.runJobPostingSubMenu(sc, today);
                 break;
-            case 3: // View job applications
+            case 4: // View job applications
                 this.runJobApplicationSubMenu(sc);
                 break;
-            case 4: // View previous job apps to company
+            case 5: // View previous job apps to company
                 Applicant applicant = this.searchSpecificApplicant(sc);
                 this.viewAllJobAppsToCompany(applicant);
                 break;
-            case 5: // Exit
+            case 6: // View interviews associated with a job application
+                this.viewPreviousInterviewsForJobApp(sc);
+                break;
+            case 7: // Select applicants for phone interview
+                this.selectJobAppsForPhoneInterview(sc, today);
+                break;
+            case 8: // Schedule interviews for job posting
+                this.viewPostingsThatNeedInterviewsScheduled(today);
+                break;
+            case 9: // Hire applicants for a job posting
+                this.hireApplicants(sc, today);
+            case 10: // Exit
                 throw new ExitException();
         }
     }
@@ -243,7 +292,7 @@ public class HRCoordinatorInterface extends UserInterface {
      */
     private JobPosting getJobPosting(Scanner sc) {
         System.out.println();
-        int id = this.getInteger(sc, "Enter the ID of the job posting you would like to view: ");
+        int id = this.getInteger(sc, "Enter the job posting ID: ");
         JobPosting jobPosting = this.HRC.getCompany().getJobPostingManager().getJobPosting(id);
         if (jobPosting == null) {
             System.out.println("This job posting was not found in " + this.HRC.getCompany().getName() + ".");
@@ -255,6 +304,24 @@ public class HRCoordinatorInterface extends UserInterface {
     }
 
     /**
+     * Get the fields for a job posting by user input.
+     *
+     * @param sc    The scanner for user input.
+     * @param today Today's date.
+     * @return a list of the fields inputted.
+     */
+    private ArrayList<Object> getFieldsForJobPosting(Scanner sc, LocalDate today) {
+        String title = this.getInputLine(sc, "Job title: ");
+        String field = this.getInputLine(sc, "Job field: ");
+        String description = this.getInputLine(sc, "Job description: ");
+        String requirements = this.getInputLine(sc, "Job requirements: ");
+        int numPositions = this.getInteger(sc, "Number of positions: ");
+        LocalDate closeDate = this.getDate(sc, today, "Close date (yyyy-mm-dd): ");
+        sc.nextLine();
+        return new ArrayList<>(Arrays.asList(title, field, description, requirements, numPositions, closeDate));
+    }
+
+    /**
      * Interface for adding a new job posting to the system.
      * @param sc The scanner for user input.
      * @param today Today's date.
@@ -262,16 +329,36 @@ public class HRCoordinatorInterface extends UserInterface {
     private void addJobPosting(Scanner sc, LocalDate today) {
         System.out.println();
         System.out.println("Complete the following categories for adding a job posting as they appear.");
-        String title = this.getOnlyLetters(sc, "Job title: ");
-        String field = this.getOnlyLetters(sc, "Job field: ");
-        String description = this.getInputLine(sc, "Job description: ");
-        String requirements = this.getInputLine(sc, "Job requirements: ");
-        int numPositions = this.getInteger(sc, "Number of positions: ");
-        LocalDate closeDate = this.getDate(sc, today,"Close date (yyyy-mm-dd): ");
-        sc.nextLine();
-        this.HRC.addJobPosting(title, field, description, requirements, numPositions, today, closeDate);
+        ArrayList<Object> fields = this.getFieldsForJobPosting(sc, today);
+        this.HRC.addJobPosting((String) fields.get(0), (String) fields.get(1), (String) fields.get(2),
+                (String) fields.get(3), (Integer) fields.get(4), today, (LocalDate) fields.get(5));
         System.out.println();
-        System.out.println("You have successfully added " + title + " to the system.");
+        System.out.println();
+        System.out.println("You have successfully added " + fields.get(0) + " to the system.");
+    }
+
+    /**
+     * Interface for updating a job posting.
+     *
+     * @param sc    The scanner for user input.
+     * @param today Today's date.
+     */
+    private void updateJobPostingFields(Scanner sc, LocalDate today) {
+        System.out.println();
+        if (this.HRC.getCompany().getJobPostingManager().getOpenJobPostings(today).isEmpty()) {
+            System.out.println("There are no open job postings to be updated.");
+            return;
+        }
+        JobPosting jobPosting = this.getJobPosting(sc);
+        if (jobPosting.isClosed(today)) {
+            System.out.println("This job posting is closed and can no longer be updated.");
+        } else {
+            System.out.println("Complete the following categories for updating a job posting as they appear.");
+            System.out.println("Enter '" + SKIP_FIELD_KEY + "' if you do not wish to update the category and enter " +
+                    SKIP_DATE_KEY + " if you do not wish to update the close date.");
+            jobPosting.updateFields(SKIP_FIELD_KEY, SKIP_DATE_KEY, this.getFieldsForJobPosting(sc, today));
+            System.out.println("You have successfully updated " + jobPosting.getTitle() + ".");
+        }
     }
 
     /**
@@ -504,22 +591,6 @@ public class HRCoordinatorInterface extends UserInterface {
     }
 
     /**
-     * Interface for viewing high-priority job postings.
-     *
-     * @param sc    The scanner for user input.
-     * @param today Today's date.
-     */
-    private void viewHighPriorityJobPostings(Scanner sc, LocalDate today) {
-        this.viewRecentlyClosedPostings(sc, today);
-        System.out.println();
-        this.viewPostingsWithNoApplicationsInConsideration(today);
-        System.out.println();
-        this.viewPostingsThatNeedInterviewsScheduled(today);
-        System.out.println();
-        this.viewPostingsReadyForHiring(sc, today);
-    }
-
-    /**
      * Interface for reviewing all job applications after a job posting has closed.
      */
     private void reviewApplicationsForJobPosting(JobPosting jobPosting) {
@@ -531,16 +602,17 @@ public class HRCoordinatorInterface extends UserInterface {
      * Interface for selecting the job applications for phone interviews for this job posting.
      *
      * @param sc         The scanner for user input.
-     * @param jobPosting The job posting in question.
-     * @return  a list of job postings that have been selected for a phone interview.
+     * @param today     Today's date.
      */
-    private ArrayList<JobApplication> selectJobAppsForPhoneInterview(Scanner sc, JobPosting jobPosting) {
-        ArrayList<JobApplication> jobAppsForPhoneInt = new ArrayList<>();
-        System.out.println("Job applications submitted for this job posting: ");
-        ArrayList<JobApplication> jobApps = jobPosting.getJobApplications();
-        if (jobApps.isEmpty()) {
-            System.out.println("N/A");
+    private void selectJobAppsForPhoneInterview(Scanner sc, LocalDate today) {
+        ArrayList<JobPosting> jobPostings = this.viewRecentlyClosedPostings(today);
+        if (jobPostings.isEmpty()) {
+            return;
         }
+        JobPosting jobPosting = this.selectJobPosting(sc, jobPostings);
+        this.reviewApplicationsForJobPosting(jobPosting);
+        ArrayList<JobApplication> jobApps = jobPosting.getJobApplications();
+        System.out.println("Job applications submitted for this job posting: ");
         for (JobApplication jobApp : jobApps) {
             System.out.println();
             System.out.println(jobApp);
@@ -552,7 +624,6 @@ public class HRCoordinatorInterface extends UserInterface {
                 jobPosting.getInterviewManager().reject(jobApp);
             }
         }
-        return jobAppsForPhoneInt;
     }
 
     /**
@@ -589,25 +660,50 @@ public class HRCoordinatorInterface extends UserInterface {
     }
 
     /**
-     * Interface for viewing recently closed postings and selecting who moves on to phone interviews.
-     * @param sc      The scanner for user input.
-     * @param today   Today's date.
+     * Print a list of job postings.
+     *
+     * @param jobPostings The job postings to be printed.
      */
-    private void viewRecentlyClosedPostings(Scanner sc, LocalDate today) {
+    private void printListOfJobPostings(ArrayList<JobPosting> jobPostings) {
+        int i = 1;
+        for (JobPosting jobPosting : jobPostings) {
+            System.out.println("Job Posting " + i + ": ");
+            System.out.println(jobPosting.toStringStandardInput());
+            i++;
+            System.out.println();
+        }
+    }
+
+    /**
+     * Interface for viewing recently closed postings and selecting a job posting for which the HR Coordinator wants to
+     * select phone interview candidates.
+     * @param today   Today's date.
+     * @return the job posting selected.
+     */
+    private ArrayList<JobPosting> viewRecentlyClosedPostings(LocalDate today) {
         JobPostingManager JPM = this.HRC.getCompany().getJobPostingManager();
         ArrayList<JobPosting> recentlyClosed = JPM.getClosedJobPostingsNoApplicantsChosen(today);
         System.out.println();
-        System.out.println("Job postings that have recently closed: ");
         if (recentlyClosed.isEmpty()) {
-            System.out.println("N/A");
+            System.out.println("There are no job postings that have recently closed.");
+        } else {
+            System.out.println("Job postings that have recently closed: ");
+            this.printListOfJobPostings(recentlyClosed);
         }
-        for (JobPosting jobPosting : recentlyClosed) {
-            System.out.println("Job Posting: ");
-            System.out.println(jobPosting.toStringStandardInput());
-            this.reviewApplicationsForJobPosting(jobPosting);
-            this.selectJobAppsForPhoneInterview(sc, jobPosting);
-            System.out.println();
-        }
+        return recentlyClosed;
+    }
+
+    /**
+     * Select job posting for phone interview candidate selection.
+     *
+     * @param sc          The scanner for user input.
+     * @param jobPostings The list of job postings to select from.
+     * @return the job posting selected.
+     */
+    private JobPosting selectJobPosting(Scanner sc, ArrayList<JobPosting> jobPostings) {
+        System.out.println("Enter the job posting number for which you would like to select phone interview candidates.");
+        int option = this.getMenuOption(sc, jobPostings.size());
+        return jobPostings.get(option - 1);
     }
 
     /**
@@ -639,15 +735,17 @@ public class HRCoordinatorInterface extends UserInterface {
      * @param today Today's date.
      */
     private void viewPostingsThatNeedInterviewsScheduled(LocalDate today) {
+        System.out.println();
         JobPostingManager JPM = this.HRC.getCompany().getJobPostingManager();
         ArrayList<JobPosting> recentlyCompletedRound = JPM.getJobPostingsWithRoundCompletedNotForHire(today);
-        System.out.println("Job postings that need interviews scheduled:");
         if (recentlyCompletedRound.isEmpty()) {
-            System.out.println("N/A");
-        }
-        for (JobPosting jobPosting : recentlyCompletedRound) {
-            System.out.println(jobPosting.toStringStandardInput());
-            this.setUpInterviewsForRound(jobPosting);
+            System.out.println("No job postings need to have interviews scheduled.");
+        } else {
+            System.out.println("Job postings that need interviews scheduled: ");
+            for (JobPosting jobPosting : recentlyCompletedRound) {
+                System.out.println(jobPosting.toStringStandardInput());
+                this.setUpInterviewsForRound(jobPosting);
+            }
         }
     }
 
@@ -655,26 +753,20 @@ public class HRCoordinatorInterface extends UserInterface {
      * Interface for hiring an applicant.
      *
      * @param sc         The scanner for user input.
-     * @param jobPosting The job posting in question.
+     * @param today     Today's date.
      */
-    private void hireApplicants(Scanner sc, JobPosting jobPosting) {
+    private void hireApplicants(Scanner sc, LocalDate today) {
+        ArrayList<JobPosting> jobPostings = this.viewPostingsReadyForHiring(today);
+        if (jobPostings.isEmpty()) {
+            return;
+        }
+        JobPosting jobPosting = this.selectJobPosting(sc, jobPostings);
         InterviewManager IM = jobPosting.getInterviewManager();
         ArrayList<JobApplication> jobApps;
         if (!IM.isNumApplicantUnderOrAtThreshold()) {   // Number of applications greater than num of positions
             jobApps = this.selectApplicationsForHiring(sc, jobPosting, IM.getApplicationsInConsideration());
         } else {
-            if (IM.getNumApplicationsStillRequired() == 0) {
-                System.out.println("The number of final candidates equals the number of positions for this job.");
-                System.out.println("These candidates will be hired automatically and the job posting will be set as filled.");
-            } else {
-                System.out.println("The number of final candidates is less than the number of positions for this job.");
-                System.out.println("Only these final candidates will be hired automatically.");
-                System.out.println("The job posting will be set as filled with the number of positions as the number of " +
-                        "people actually hired.");
-                System.out.println("Remaining positions: " + IM.getNumApplicationsStillRequired());
-                System.out.println("You may want to consider opening another job posting for the same title " +
-                        "in order to fill the remaining positions.");
-            }
+            this.printMessagesForHiring(IM.getNumOpenPositions());
             jobApps = IM.getApplicationsInConsideration();
         }
         for (JobApplication jobApp : jobApps) {
@@ -686,21 +778,41 @@ public class HRCoordinatorInterface extends UserInterface {
     }
 
     /**
-     * Interface for viewing postings ready for hiring and selecting the final candidate if need be.
-     * @param sc      The scanner for user input.
-     * @param today Today's date.
+     * Print messages for hiring.
+     *
+     * @param numberOfOpenPositions The number of positions still open.
      */
-    private void viewPostingsReadyForHiring(Scanner sc, LocalDate today) {
+    private void printMessagesForHiring(int numberOfOpenPositions) {
+        if (numberOfOpenPositions == 0) {
+            System.out.println("The number of final candidates equals the number of positions for this job.");
+            System.out.println("These candidates will be hired automatically and the job posting will be set as filled.");
+        } else {
+            System.out.println("The number of final candidates is less than the number of positions for this job.");
+            System.out.println("Only these final candidates will be hired automatically.");
+            System.out.println("The job posting will be set as filled with the number of positions as the number of " +
+                    "people actually hired.");
+            System.out.println("Remaining positions: " + numberOfOpenPositions);
+            System.out.println("You may want to consider opening another job posting for the same title " +
+                    "in order to fill the remaining positions.");
+        }
+    }
+
+    /**
+     * Interface for viewing postings ready for hiring.
+     * @param today Today's date.
+     * @return list of job postings ready for hiring.
+     */
+    private ArrayList<JobPosting> viewPostingsReadyForHiring(LocalDate today) {
         JobPostingManager JPM = this.HRC.getCompany().getJobPostingManager();
-        System.out.println("Job postings ready for hiring: ");
         ArrayList<JobPosting> readyForHiring = JPM.getJobPostingsForHiring(today);
+        System.out.println();
         if (readyForHiring.isEmpty()) {
-            System.out.println("N/A");
+            System.out.println("There are no job postings ready for hiring.");
+        } else {
+            System.out.println("Job postings ready for hiring: ");
+            this.printListOfJobPostings(readyForHiring);
         }
-        for (JobPosting jobPosting : readyForHiring) {
-            System.out.println(jobPosting.toStringStandardInput());
-            this.hireApplicants(sc, jobPosting);
-        }
+        return readyForHiring;
     }
 
     /**

@@ -461,7 +461,7 @@ public class HRPanel extends JPanel implements ActionListener {
                 JobPosting selectedJP = currJPs.get(selectedIndex);
                 this.currApps = selectedJP.getJobApplications();
                 this.appTitles.removeAllElements();
-                this.appTitles.addAll(getAppTitles(currApps));
+//                this.appTitles.addAll(getAppTitles(currApps));
                 c.show(this, "APPLICATION");
                 break;
             case "Logout":

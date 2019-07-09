@@ -1,13 +1,12 @@
 package GUIClasses;
 
 import Main.JobApplicationSystem;
-import UsersAndJobObjects.Company;
-import UsersAndJobObjects.Interviewer;
-import UsersAndJobObjects.User;
+import UsersAndJobObjects.*;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class UserInterface {
@@ -195,6 +194,48 @@ public class UserInterface {
             option = this.getInteger(sc, "Enter value: ");
         }
         return option;
+    }
+
+    /**
+     * Get the job application with the id that the user inputs.
+     *
+     * @param sc The scanner for user input.
+     * @return the job application with the id that the user inputs or null if not found.
+     */
+    JobApplication getJobApplication(Scanner sc) {
+        System.out.println();
+        int id = this.getInteger(sc, "Enter the job application ID: ");
+        JobApplication jobApplication = this.user.findJobAppById(id);
+        if (jobApplication == null) {
+            System.out.println("This job application cannot be found.");
+        } else {
+            System.out.println(jobApplication);
+        }
+        return jobApplication;
+    }
+
+    /**
+     * Interface for viewing the previous interviews for this job application (all except the one that is currently scheduled)
+     *
+     * @param sc The scanner for user input
+     */
+    void viewPreviousInterviewsForJobApp(Scanner sc) {
+        JobApplication jobApp = this.getJobApplication(sc);
+        System.out.println();
+        System.out.println("Previous interviews:");
+        if (jobApp.getInterviews().size() == 1) {
+            System.out.println("None");
+        } else {
+            ArrayList<Interview> interviews = jobApp.getInterviews();
+            for (Interview interview : interviews) {
+                System.out.println();
+                if (interview.isComplete()) {
+                    System.out.println(interview);
+                } else {
+                    System.out.println(interview.toStringPrelimInfo());
+                }
+            }
+        }
     }
 
     // ============================================================================================================== //
