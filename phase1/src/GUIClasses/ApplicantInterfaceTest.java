@@ -8,6 +8,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import static Main.JobApplicationSystem.today;
+
 public class ApplicantInterfaceTest extends UserInterface {
     /**
      * The general interface for an applicant
@@ -88,68 +90,12 @@ public class ApplicantInterfaceTest extends UserInterface {
     }
 
     /**
-     * Allow the applicant to enter files as plaintext, and use these files to assemble a JobApplication.
-     *
-     * @param sc The Scanner for user input.
-     * @param today Today's date.
-     * @param posting The job posting that this applicant wishes to apply to.
-     * @return a job application containing this applicant's entered files.
+     * Creates job app through input data
      */
-    private JobApplication createJobApplicationThroughTextEntry(Scanner sc, LocalDate today, JobPosting posting) {
-        String CVContents = getInputLinesUntilDone(sc, "Enter the contents of your CV as a series of plain text lines " +
-                "(program will stop reading after the first empty line): ");
-        String coverLetterContents = getInputLinesUntilDone(sc, "Enter the contents of your cover letter as a series of" +
-                " plain text lines (program will stop reading after the first empty line): ");
+    JobApplication createAppThroughInput(String CVContents, String coverLetterContents, JobPosting posting) {
         JobApplicationDocument CV = new JobApplicationDocument(CVContents);
         JobApplicationDocument coverLetter = new JobApplicationDocument(coverLetterContents);
         return new JobApplication(applicant, posting, CV, coverLetter, today);
-    }
-
-    /**
-     * Submit a job application on behalf of the applicant.
-     *
-     * @param sc The Scanner for user input.
-     * @param today Today's date.
-     */
-    private void submitApplication(Scanner sc, LocalDate today) {
-        System.out.println();
-        String companyName = getInputLine(sc, "Enter the name of the company you wish to apply to: ");
-        Company company = JobApplicationSystem.getCompany(companyName);
-        while (company == null) {
-            System.out.println("No company was found matching name \"" + companyName + "\".");
-            companyName = getInputLine(sc, "Enter the name of the company you wish to apply to: ");
-            company = JobApplicationSystem.getCompany(companyName);
-        }
-        int postingId = getInteger(sc, "Enter the id of the posting you wish to apply for: ");
-        JobPosting posting = company.getJobPostingManager().getJobPosting(postingId);
-        while (posting == null || posting.getCloseDate().isBefore(today)) {
-            System.out.println("No open posting was found matching id " + postingId + ".");
-            System.out.println();
-            postingId = getInteger(sc, "Enter the id of the posting you wish to apply for: ");
-            posting = company.getJobPostingManager().getJobPosting(postingId);
-        }
-        int numOptions = 2;
-        int option = this.getMenuOption(sc, numOptions);
-        switch (option) {
-            case 1:
-                if (applicant.getDocumentManager().getDocuments().isEmpty()) {
-                    System.out.println("You have not yet uploaded any files.");
-                    this.submitApplication(sc, today);
-                    return;
-                }
-                else {
-                    JobApplication application = this.createJobApplicationThroughFiles(sc, today, posting);
-                    posting.addJobApplication(application);
-                    applicant.registerJobApplication(application);
-                    System.out.println("Application successfully submitted.");
-                    return;
-                }
-            case 2:
-                JobApplication application = this.createJobApplicationThroughTextEntry(sc, today, posting);
-                posting.addJobApplication(application);
-                applicant.registerJobApplication(application);
-                System.out.println("Application successfully submitted.");
-        }
     }
 
     /**
