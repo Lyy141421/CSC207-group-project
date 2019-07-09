@@ -146,6 +146,7 @@ class ApplicantPanel extends JPanel{
 
         JButton manageFiles = new JButton("Files"); //TODO Phase 2
         manageFiles.setBounds(590, 5, 80, 20);
+        manageFiles.setEnabled(false);
         startTitle.add(manageFiles);
 
         JButton history = new JButton("Account History");
@@ -338,9 +339,9 @@ class ApplicantPanel extends JPanel{
     private JPanel buildDocApply(JobPosting posting) {
         JPanel formEntry = new JPanel(null);
 
-        JLabel titleText = new JLabel("Document Submission");
+        JLabel titleText = new JLabel("Document Submission", SwingConstants.CENTER);
         titleText.setFont(new Font("Serif", Font.PLAIN, 22));
-        titleText.setBounds(327, 20, 200, 40);
+        titleText.setBounds(277, 20, 300, 40);
 
         JLabel resumeText = new JLabel("Please paste your resume here:");
         resumeText.setBounds(150, 75, 554, 20);

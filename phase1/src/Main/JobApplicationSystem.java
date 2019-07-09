@@ -2,6 +2,7 @@ package Main;
 
 import FileLoadingAndStoring.*;
 import GUIClasses.MainFrame;
+import Managers.JobPostingManager;
 import UsersAndJobObjects.Company;
 import UsersAndJobObjects.Interview;
 import UsersAndJobObjects.JobApplication;
