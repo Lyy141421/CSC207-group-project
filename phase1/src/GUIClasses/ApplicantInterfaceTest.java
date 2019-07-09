@@ -31,6 +31,9 @@ public class ApplicantInterfaceTest extends UserInterface {
         return (upcomingInterviews.size() > 0);
     }
 
+    /**
+     * Returns an arraylist containing all the job postings that apply to the applicant
+     */
     ArrayList<JobPosting> findAppliablePostings(LocalDate today, String field, String companyName) {
         ArrayList<JobPosting> openJobPostings = applicant.getOpenJobPostingsNotAppliedTo(today);
         ArrayList<JobPosting> ret = new ArrayList<>();
