@@ -66,7 +66,7 @@ public class HRPanel extends JPanel implements ActionListener {
         this.setLayout(new CardLayout());
         this.add(home(), "HOME");
         this.add(browsePosting(), "POSTING");
-        this.add(viewApplication(null), "APPLICATION");
+        this.add(viewApplication(), "APPLICATION");
         this.add(searchApplicant(), "APPLICANT");
         this.add(addPosting(), "ADDPOSTING");
     }
@@ -188,31 +188,14 @@ public class HRPanel extends JPanel implements ActionListener {
 
     // ====Application panel methods====
 
-    private JPanel viewApplication (ArrayList<JobApplication> appsToShow) {
+    private JPanel viewApplication () {
         JPanel applicationPanel = new JPanel(new BorderLayout());
         JPanel buttons = new JPanel(new FlowLayout());
 
-        JComboBox<String> app = new JComboBox<>(this.getAppTitles(appsToShow));
         String[] attributes = new String[]{"Overview", "CV", "Cover letter"};
         JList<String> viewable = new JList<>(attributes);
-        JTextArea info = new JTextArea(appsToShow.get(0).getOverview());
+        JTextArea info = new JTextArea();
         info.setEditable(false);
-
-        app.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                if (e.getStateChange() == ItemEvent.SELECTED) {
-                    info.setText(getInfo(appsToShow.get(app.getSelectedIndex()), viewable.getSelectedIndex()));
-                }
-            }
-        });
-
-        viewable.addListSelectionListener(new ListSelectionListener() {
-            @Override
-            public void valueChanged(ListSelectionEvent e) {
-                info.setText(getInfo(appsToShow.get(app.getSelectedIndex()), e.getFirstIndex()));
-            }
-        });
 
         JButton scheduleInterview = new JButton("Schedule");
         JButton hiring = new JButton("Hiring decision");
@@ -225,23 +208,39 @@ public class HRPanel extends JPanel implements ActionListener {
         viewable.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
         viewable.setLayoutOrientation(JList.VERTICAL);
 
+        applications.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if (e.getStateChange() == ItemEvent.SELECTED) {
+                    info.setText(getInfo(currApps.get(applications.getSelectedIndex()), viewable.getSelectedIndex()));
+                }
+            }
+        });
+
+        viewable.addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                info.setText(getInfo(currApps.get(applications.getSelectedIndex()), e.getFirstIndex()));
+            }
+        });
+
         buttons.add(scheduleInterview);
         buttons.add(hiring);
         buttons.add(home);
 
-        applicationPanel.add(app, BorderLayout.NORTH);
+        applicationPanel.add(applications, BorderLayout.NORTH);
         applicationPanel.add(display, BorderLayout.CENTER);
         applicationPanel.add(buttons, BorderLayout.SOUTH);
 
         return applicationPanel;
     }
 
-    private String[] getAppTitles (ArrayList<JobApplication> appsToShow) {
+    private ArrayList<String> getAppTitles (ArrayList<JobApplication> appsToShow) {
         ArrayList<String> titles = new ArrayList<>();
         for (JobApplication app : appsToShow) {
             titles.add(app.getId() + "-" + app.getApplicant().getLegalName());
         }
-        return (String[]) titles.toArray();
+        return titles;
     }
 
     private String getInfo (JobApplication app, int attributeIndex) {
@@ -414,7 +413,11 @@ public class HRPanel extends JPanel implements ActionListener {
                 c.show(this, "ADDPOSTING");
                 break;
             case "View applications":
-            //case "Search":
+                int selectedIndex = this.jobPostings.getSelectedIndex();
+                JobPosting selectedJP = currJPs.get(selectedIndex);
+                this.currApps = selectedJP.getJobApplications();
+                this.appTitles.removeAllElements();
+                this.appTitles.addAll(getAppTitles(currApps));
                 c.show(this, "APPLICATION");
                 break;
             case "Logout":
