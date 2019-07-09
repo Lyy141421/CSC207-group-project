@@ -219,23 +219,12 @@ public class UserInterface {
      *
      * @param sc The scanner for user input
      */
-    void viewPreviousInterviewsForJobApp(Scanner sc) {
+    void viewAllInterviewsForJobApp(Scanner sc) {
         JobApplication jobApp = this.getJobApplication(sc);
         System.out.println();
         System.out.println("Previous interviews:");
-        if (jobApp.getInterviews().size() == 1) {
-            System.out.println("None");
-        } else {
-            ArrayList<Interview> interviews = jobApp.getInterviews();
-            for (Interview interview : interviews) {
-                System.out.println();
-                if (interview.isComplete()) {
-                    System.out.println(interview);
-                } else {
-                    System.out.println(interview.toStringPrelimInfo());
-                }
-            }
-        }
+        ArrayList<Interview> interviews = jobApp.getInterviews();
+        new PrintItems<Interview>().printList(interviews);
     }
 
     // ============================================================================================================== //

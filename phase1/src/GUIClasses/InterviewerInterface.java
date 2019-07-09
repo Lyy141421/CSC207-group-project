@@ -139,13 +139,15 @@ public class InterviewerInterface extends UserInterface {
                 this.viewScheduledInterviews();
                 break;
             case 2: // View job applications of all interviewees
-                this.viewAllJobApplications();
+                ArrayList<JobApplication> jobApps = this.interviewer.getListOfIntervieweeJobApplications();
+                System.out.println("Your interviewees' applications: ");
+                new PrintItems<JobApplication>().printList(jobApps);
                 break;
             case 3: // Search specific job application
                 this.getJobApplication(sc);
                 break;
             case 4: // View all previous interviews for specific job app
-                this.viewPreviousInterviewsForJobApp(sc);
+                this.viewAllInterviewsForJobApp(sc);
                 break;
             case 5: // View specific interview
                 this.viewSpecificInterview(sc);
@@ -230,24 +232,6 @@ public class InterviewerInterface extends UserInterface {
             for (Interview interview : interviews) {
                 System.out.println();
                 System.out.println(interview.toStringPrelimInfo() + "\n" + "Interview time: " + interview.getTime());
-            }
-        }
-    }
-
-    /**
-     * Interface for viewing all the applications of applicants this interviewer is going to interview.
-     */
-    private void viewAllJobApplications() {
-        ArrayList<JobApplication> jobApps = this.interviewer.getListOfIntervieweeJobApplications();
-        System.out.println();
-        if (jobApps.isEmpty()) {
-            System.out.println("You have no interviewees.");
-        }
-        else {
-            System.out.println("Your interviewees' job applications:");
-            for (JobApplication jobApplication : jobApps) {
-                System.out.println();
-                System.out.println(jobApplication);
             }
         }
     }
