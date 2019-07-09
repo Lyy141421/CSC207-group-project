@@ -18,23 +18,23 @@ import java.awt.event.ItemListener;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 
 
-public class InterviewerPanel extends JPanel implements ActionListener, ItemListener {
+public class InterviewerPanel extends JPanel implements ActionListener{
 
     InterviewerInterface interviewerInterface;
     LocalDate today;
     ArrayList<Interview> pastInterviews;
     ArrayList<Interview> futureInterviews;
-    ArrayList<Interview> allInterviews;
     ArrayList<Interview> interviewsToBeScheduled;
     private String temporaryNotes = "";
+    private ArrayList<Interview> currList;
 
     JComboBox<String> interviews;
     private DefaultComboBoxModel<String> incompleteTitles;
     private DefaultComboBoxModel<String> completeTitles;
-    private DefaultComboBoxModel<String> allTitles;
     JList<String> scheduleInterviews;
 
     InterviewerPanel (InterviewerInterface interviewerInterface, LocalDate today) {
@@ -45,12 +45,10 @@ public class InterviewerPanel extends JPanel implements ActionListener, ItemList
         this.futureInterviews = interviews.get(1);
         this.futureInterviews.addAll(interviews.get(2));
         this.interviewsToBeScheduled = interviewerInterface.getUnscheduledInterviews();
-        this.allInterviews = deepClone(this.futureInterviews);
-        allInterviews.addAll(deepClone(this.pastInterviews));
+        this.currList = this.futureInterviews;
 
         this.incompleteTitles = new DefaultComboBoxModel<>((String[]) getInterviewTitles(this.futureInterviews).toArray());
         this.completeTitles = new DefaultComboBoxModel<>((String[]) getInterviewTitles(this.pastInterviews).toArray());
-        this.allTitles = new DefaultComboBoxModel<>((String[]) getInterviewTitles(allInterviews).toArray());
 
         this.setLayout(new CardLayout());
         this.add(home(), "HOME");
@@ -65,9 +63,11 @@ public class InterviewerPanel extends JPanel implements ActionListener, ItemList
         view.addActionListener(this);
         JButton schedule = new JButton("Schedule interview");
         schedule.addActionListener(this);
+        JButton logout = new JButton("Logout");
 
         homePanel.add(view);
         homePanel.add(schedule);
+        homePanel.add(logout);
 
         return homePanel;
     }
@@ -83,11 +83,12 @@ public class InterviewerPanel extends JPanel implements ActionListener, ItemList
         passOrFailButtons.setLayout(new BoxLayout(select, BoxLayout.Y_AXIS));
         JPanel buttons = new JPanel(new FlowLayout());
 
-        this.interviews = new JComboBox<>(this.allTitles);
-        JCheckBox incomplete = new JCheckBox("Incomplete", true);
-        incomplete.addItemListener(this);
-        JCheckBox complete = new JCheckBox("Complete", true);
-        complete.addItemListener(this);
+        this.interviews = new JComboBox<>(this.incompleteTitles);
+        JRadioButton incomplete = new JRadioButton("Incomplete", true);
+        JRadioButton complete = new JRadioButton("Complete", false);
+        ButtonGroup showContent = new ButtonGroup();
+        showContent.add(incomplete);
+        showContent.add(complete);
         JList<String> viewable = new JList<>(new String[]{"Overview", "Notes", "CV", "Cover letter"});
 
         select.add(incomplete);
@@ -100,13 +101,16 @@ public class InterviewerPanel extends JPanel implements ActionListener, ItemList
         // JButton reschedule = new JButton("Re-schedule");
         ButtonGroup passOrFail = new ButtonGroup();
         JRadioButton advance = new JRadioButton("Advance");
+        advance.setEnabled(false);
         advance.setSelected(true);
         JRadioButton fail = new JRadioButton("Fail");
+        fail.setEnabled(false);
         passOrFail.add(advance);
         passOrFail.add(fail);
         passOrFailButtons.add(advance);
         passOrFailButtons.add(fail);
         JButton submit = new JButton("Submit results");
+        submit.setEnabled(false);
         JButton home = new JButton("Home");
         home.addActionListener(this);
         buttons.add(passOrFailButtons);
@@ -119,11 +123,30 @@ public class InterviewerPanel extends JPanel implements ActionListener, ItemList
         viewable.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
         viewable.setLayoutOrientation(JList.VERTICAL);
 
+        incomplete.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if (e.getStateChange() == ItemEvent.SELECTED) {
+                    interviews.setModel(incompleteTitles);
+                    currList = futureInterviews;
+                    advance.setEnabled(false);
+                    fail.setEnabled(false);
+                    submit.setEnabled(false);
+                } else if (e.getStateChange() == ItemEvent.DESELECTED) {
+                    interviews.setModel(completeTitles);
+                    currList = pastInterviews;
+                    advance.setEnabled(true);
+                    fail.setEnabled(true);
+                    submit.setEnabled(true);
+                }
+            }
+        });
+
         interviews.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
-                    setInfo(allInterviews.get(interviews.getSelectedIndex()), viewable.getSelectedIndex(), info);
+                    setInfo(currList.get(interviews.getSelectedIndex()), viewable.getSelectedIndex(), info);
                     // Phase2: "you have unsaved changes. Would you like to proceed?"
                     temporaryNotes = "";
                 }
@@ -136,14 +159,15 @@ public class InterviewerPanel extends JPanel implements ActionListener, ItemList
                 if (info.isEditable()) {
                     temporaryNotes = info.getText();
                 }
-                setInfo(allInterviews.get(interviews.getSelectedIndex()), e.getFirstIndex(), info);
+                setInfo(currList.get(interviews.getSelectedIndex()), e.getFirstIndex(), info);
             }
         });
 
         submit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Interview interview = allInterviews.get(interviews.getSelectedIndex());
+                int selectedIndex = interviews.getSelectedIndex();
+                Interview interview = currList.get(selectedIndex);
                 if (viewable.getSelectedIndex()==1) {
                     interviewerInterface.storeInterviewNotes(interview, info.getText());
                 } else {
@@ -153,6 +177,9 @@ public class InterviewerPanel extends JPanel implements ActionListener, ItemList
 
                 // Clear temporarily stored notes
                 temporaryNotes = "";
+                // Remove interview from list
+                currList.remove(interview);
+                ((DefaultComboBoxModel<String>) interviews.getModel()).removeElementAt(selectedIndex);
             }
         });
 
@@ -161,15 +188,6 @@ public class InterviewerPanel extends JPanel implements ActionListener, ItemList
         viewPanel.add(buttons, BorderLayout.SOUTH);
 
         return viewPanel;
-    }
-
-    private ArrayList<Interview> deepClone (ArrayList<Interview> interviews) {
-        ArrayList<Interview> interviewsClone = new ArrayList<>();
-        for (Interview interview : interviews) {
-            interviewsClone.add(interview);
-        }
-
-        return interviewsClone;
     }
 
     private ArrayList<String> getInterviewTitles(ArrayList<Interview> interviews) {
@@ -226,10 +244,16 @@ public class InterviewerPanel extends JPanel implements ActionListener, ItemList
             @Override
             public void actionPerformed(ActionEvent e) {
                 LocalDate date = ((Date) interviewDate.getModel().getValue()).toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-                Interview interview = interviewsToBeScheduled.get(interviews.getSelectedIndex());
+                int selectedIndex = interviews.getSelectedIndex();
+                Interview interview = interviewsToBeScheduled.get(selectedIndex);
                 if (date.isAfter(today)) {
                     boolean canSchedule = interviewerInterface.scheduleInterview(interview, date, timeSlot.getSelectedIndex());
-                    if (!canSchedule) {
+                    if (canSchedule) {
+                        interviewsToBeScheduled.remove(selectedIndex);
+                        scheduleInterviews.remove(selectedIndex);
+                        futureInterviews.add(interview);
+                        incompleteTitles.addElement(getInterviewTitles(new ArrayList<Interview>(Arrays.asList(interview))).get(0));
+                    } else {
                         JOptionPane.showMessageDialog(schedulePanel, "Unable to book the interview at the selected date and time");
                     }
                 } else {
@@ -260,6 +284,7 @@ public class InterviewerPanel extends JPanel implements ActionListener, ItemList
         return (String[]) titles.toArray();
     }
 
+    // For switching between cards
     @Override
     public void actionPerformed(ActionEvent e) {
         CardLayout c = (CardLayout) this.getLayout();
@@ -275,34 +300,8 @@ public class InterviewerPanel extends JPanel implements ActionListener, ItemList
             case "Schedule interview":
                 c.show(this, "SCHEDULE");
                 break;
-            case "Confirm":
-
-                break;
             default:
                 throw new IllegalStateException("Unexpected value: " + source.getText());
-        }
-
-    }
-
-    @Override
-    public void itemStateChanged(ItemEvent e) {
-        JCheckBox source = (JCheckBox) e.getItemSelectable();
-
-        switch (source.getText()) {
-            case "Incomplete":
-                if (e.getStateChange() == ItemEvent.SELECTED) {
-
-                } else if (e.getStateChange() == ItemEvent.DESELECTED) {
-                    // Hide scheduled interviews
-                }
-                break;
-            case "Complete":
-                if (e.getStateChange() == ItemEvent.SELECTED) {
-                    // Show conducted interviews
-                } else if (e.getStateChange() == ItemEvent.DESELECTED){
-                    // Hide conducted interviews
-                }
-                break;
         }
     }
 }
