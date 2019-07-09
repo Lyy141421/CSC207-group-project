@@ -39,7 +39,7 @@ public class FileSystem {
     public static HashMap read(String filename, String id) {
         JSONObject jobj = null;
         try {
-            jobj = FileToJson(filename).getJSONObject(id);
+            jobj = FileToJson(filename).getJSONObject("data").getJSONObject(id);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -68,7 +68,7 @@ public class FileSystem {
     public static void write(String filename, String id, HashMap data){
         JSONObject jobj = FileToJson(filename);
         try {
-            jobj.put(id, data);
+            ((JSONObject)jobj.get("data")).put(id, data);
             PrintWriter pw = new PrintWriter("phase1/json/" + filename + ".json");
             pw.write(jobj.toString());
             pw.close();
@@ -121,7 +121,12 @@ public class FileSystem {
      * @return An Iterator of Id's
      */
     static Iterator getAllID(String filename){
-        return FileToJson(filename).keys();
+        try {
+            return FileToJson(filename).getJSONObject("data").keys();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     /**
