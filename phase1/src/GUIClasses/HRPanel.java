@@ -111,6 +111,7 @@ public class HRPanel extends JPanel implements ActionListener {
         homePanel.add(manual, c);
 
         JButton logout = new JButton("Logout");
+        logout.addActionListener(this);
 
         c.gridx = 2;
         c.gridy = 2;
@@ -164,9 +165,9 @@ public class HRPanel extends JPanel implements ActionListener {
                     JobPosting selectedJP = currJPs.get(selectedIndex);
                     info.setText(getStatus(selectedJP) + selectedJP.toString());
                     if (scheduleJP.contains(selectedJP)) {
-                        scheduleInterview.setEnabled(false);
-                    } else {
                         scheduleInterview.setEnabled(true);
+                    } else {
+                        scheduleInterview.setEnabled(false);
                     }
                 }
             }
@@ -191,7 +192,7 @@ public class HRPanel extends JPanel implements ActionListener {
         for (JobPosting JP : JPToShow) {
             titles.add(JP.getId() + "-" + JP.getTitle());
         }
-        return (String[]) titles.toArray();
+        return titles.toArray(new String[titles.size()]);
     }
 
     private String getStatus (JobPosting selectedJP) {
@@ -534,8 +535,8 @@ public class HRPanel extends JPanel implements ActionListener {
                 c.show(this, "APPLICATION");
                 break;
             case "Logout":
-                JobApplicationSystem.mainEnd();
                 ((CardLayout) this.contentPane.getLayout()).show(contentPane, "LOGIN");
+                JobApplicationSystem.mainEnd();
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + button.getText());

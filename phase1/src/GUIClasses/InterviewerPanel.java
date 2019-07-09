@@ -284,7 +284,7 @@ public class InterviewerPanel extends JPanel implements ActionListener {
             titles.add(interview.getId() + "-" + interview.getApplicant().getLegalName());
         }
 
-        return (String[]) titles.toArray();
+        return titles.toArray(new String[titles.size()]);
     }
 
     // For switching between cards
