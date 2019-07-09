@@ -247,6 +247,7 @@ public class UserInterface {
         String input = this.getInputToken(sc, "\nEnter '-1' if you would like to stop running the system: ");
         sc.nextLine();
         if (input.equals("-1")) {
+            JobApplicationSystem.mainEnd();
             System.exit(0);
         }
     }
