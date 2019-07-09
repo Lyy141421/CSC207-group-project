@@ -50,6 +50,9 @@ public class Status {
     }
 
     // === Other methods ===
+    boolean isHired() {
+        return this.value == Status.HIRED;
+    }
 
     boolean isArchived() {
         return this.value == Status.ARCHIVED;
