@@ -32,8 +32,8 @@ public class UserInterface {
 
     public static void main(String[] args) {
         UserInterface UI = new UserInterface();
+        JobApplicationSystem.mainStart();
         while (true) {
-            JobApplicationSystem.mainStart();
             JobApplicationSystem.cyclicalTask();
             LocalDate today = UI.getTodaysDateValid();
             JobApplicationSystem.updateAllInterviewRounds();
