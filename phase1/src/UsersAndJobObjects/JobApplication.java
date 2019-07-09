@@ -261,17 +261,4 @@ public class JobApplication implements Storable{
     private void addInterview(Interview interview) {
         this.interviews.add(interview);
     }
-
-    /**
-     * Get the interview IDs for this job application.
-     *
-     * @return the IDs of the interviews that this job application has undergone.
-     */
-    private String getInterviewIDs() {
-        String s = "";
-        for (Interview interview : this.interviews) {
-            s += interview.getId() + ", ";
-        }
-        return s.substring(0, s.length() - 2); // remove last comma and space
-    }
 }
