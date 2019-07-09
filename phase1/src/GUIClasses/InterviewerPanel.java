@@ -1,13 +1,12 @@
 package GUIClasses;
 
+import Main.JobApplicationSystem;
 import UsersAndJobObjects.Interview;
-import UsersAndJobObjects.JobApplication;
 import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
 import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
 import net.sourceforge.jdatepicker.impl.UtilDateModel;
 
 import javax.swing.*;
-import javax.swing.event.ListDataListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
@@ -22,22 +21,25 @@ import java.util.Arrays;
 import java.util.Date;
 
 
-public class InterviewerPanel extends JPanel implements ActionListener{
+public class InterviewerPanel extends JPanel implements ActionListener {
 
-    InterviewerInterface interviewerInterface;
-    LocalDate today;
-    ArrayList<Interview> pastInterviews;
-    ArrayList<Interview> futureInterviews;
-    ArrayList<Interview> interviewsToBeScheduled;
+    private JPanel contentPane;
+    private InterviewerInterface interviewerInterface;
+    private LocalDate today;
+
+    private ArrayList<Interview> pastInterviews;
+    private ArrayList<Interview> futureInterviews;
+    private ArrayList<Interview> interviewsToBeScheduled;
     private String temporaryNotes = "";
     private ArrayList<Interview> currList;
 
-    JComboBox<String> interviews;
+    private JComboBox<String> interviews;
     private DefaultComboBoxModel<String> incompleteTitles;
     private DefaultComboBoxModel<String> completeTitles;
-    JList<String> scheduleInterviews;
+    private JList<String> scheduleInterviews;
 
-    InterviewerPanel (InterviewerInterface interviewerInterface, LocalDate today) {
+    InterviewerPanel(JPanel contentPane, InterviewerInterface interviewerInterface, LocalDate today) {
+        this.contentPane = contentPane;
         this.interviewerInterface = interviewerInterface;
         this.today = today;
         ArrayList<ArrayList<Interview>> interviews = interviewerInterface.getInterviewsBeforeOnAndAfterToday(today);
@@ -56,7 +58,7 @@ public class InterviewerPanel extends JPanel implements ActionListener{
         this.add(scheduleInterviews(), "SCHEDULE");
     }
 
-    private JPanel home () {
+    private JPanel home() {
         JPanel homePanel = new JPanel();
 
         JButton view = new JButton("View interviews");
@@ -64,6 +66,7 @@ public class InterviewerPanel extends JPanel implements ActionListener{
         JButton schedule = new JButton("Schedule interview");
         schedule.addActionListener(this);
         JButton logout = new JButton("Logout");
+        logout.addActionListener(this);
 
         homePanel.add(view);
         homePanel.add(schedule);
@@ -75,7 +78,7 @@ public class InterviewerPanel extends JPanel implements ActionListener{
 
     // ====View Interviews panel methods====
 
-    private JPanel viewInterviews () {
+    private JPanel viewInterviews() {
         JPanel viewPanel = new JPanel(new BorderLayout());
         JPanel select = new JPanel();
         select.setLayout(new BoxLayout(select, BoxLayout.Y_AXIS));
@@ -168,7 +171,7 @@ public class InterviewerPanel extends JPanel implements ActionListener{
             public void actionPerformed(ActionEvent e) {
                 int selectedIndex = interviews.getSelectedIndex();
                 Interview interview = currList.get(selectedIndex);
-                if (viewable.getSelectedIndex()==1) {
+                if (viewable.getSelectedIndex() == 1) {
                     interviewerInterface.storeInterviewNotes(interview, info.getText());
                 } else {
                     interviewerInterface.storeInterviewNotes(interview, temporaryNotes);
@@ -192,15 +195,15 @@ public class InterviewerPanel extends JPanel implements ActionListener{
 
     private ArrayList<String> getInterviewTitles(ArrayList<Interview> interviews) {
         ArrayList<String> titles = new ArrayList<>();
-        for (Interview interview: interviews) {
-            titles.add(interview.getId()+"-"+interview.getTime().toString()+" "+
+        for (Interview interview : interviews) {
+            titles.add(interview.getId() + "-" + interview.getTime().toString() + " " +
                     interview.getApplicant().getLegalName());
         }
 
         return titles;
     }
 
-    private void setInfo (Interview interview, int attributeIndex, JTextArea info) {
+    private void setInfo(Interview interview, int attributeIndex, JTextArea info) {
         switch (attributeIndex) {
             case 0:
                 info.setText(interview.getOverview());
@@ -227,7 +230,7 @@ public class InterviewerPanel extends JPanel implements ActionListener{
 
     // ====Schedule interview panel methods====
 
-    private JPanel scheduleInterviews () {
+    private JPanel scheduleInterviews() {
         JPanel schedulePanel = new JPanel(new BorderLayout());
         JPanel setTime = new JPanel(new FlowLayout(FlowLayout.CENTER));
 
@@ -275,10 +278,10 @@ public class InterviewerPanel extends JPanel implements ActionListener{
         return schedulePanel;
     }
 
-    private String[] getIdAndApplicants (ArrayList<Interview> interviews) {
+    private String[] getIdAndApplicants(ArrayList<Interview> interviews) {
         ArrayList<String> titles = new ArrayList<>();
-        for (Interview interview: interviews) {
-            titles.add(interview.getId()+"-"+interview.getApplicant().getLegalName());
+        for (Interview interview : interviews) {
+            titles.add(interview.getId() + "-" + interview.getApplicant().getLegalName());
         }
 
         return (String[]) titles.toArray();
@@ -299,6 +302,10 @@ public class InterviewerPanel extends JPanel implements ActionListener{
                 break;
             case "Schedule interview":
                 c.show(this, "SCHEDULE");
+                break;
+            case "Logout":
+                JobApplicationSystem.mainEnd();
+                ((CardLayout) contentPane.getLayout()).show(contentPane, "LOGIN");
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + source.getText());
