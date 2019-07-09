@@ -34,7 +34,7 @@ public class ApplicantInterfaceTest extends UserInterface {
     /**
      * Returns an arraylist containing all the job postings that apply to the applicant
      */
-    ArrayList<JobPosting> findAppliablePostings(LocalDate today, String field, String companyName) {
+    ArrayList<JobPosting> findApplicablePostings(LocalDate today, String field, String companyName) {
         ArrayList<JobPosting> openJobPostings = applicant.getOpenJobPostingsNotAppliedTo(today);
         ArrayList<JobPosting> ret = new ArrayList<>();
         for (JobPosting posting : openJobPostings) {
@@ -88,85 +88,61 @@ public class ApplicantInterfaceTest extends UserInterface {
     }
 
     /**
-     * Display all of the applications that the applicant has submitted.
-     *
-     * @param sc The Scanner for user input.
-     * @param withdrawal Whether or not the applicant wishes to withdraw an application.
+     * Returns a list of applicant's applications
      */
-    private void displayApplications(Scanner sc, LocalDate today, boolean withdrawal) {
-        System.out.println();
-        ArrayList<JobApplication> applications = applicant.getJobApplicationManager().getJobApplications();
-        if (applications.isEmpty()) {
-            System.out.println("You have not yet submitted any applications.");
-        }
-        else {
-            int applicationNumber = 0;
-            for (JobApplication application : applications) {
-                applicationNumber++;
-                if (withdrawal) {
-                    System.out.print(applicationNumber + ". ");
-                }
-                System.out.println("Title: " + application.getJobPosting().getTitle());
-                System.out.println("Company: " + application.getJobPosting().getCompany().getName());
-                System.out.println("Status: " + application.getStatus().getDescription());
-                System.out.println();
-            }
-            if (withdrawal) {
-                int applicationOption = getMenuOption(sc, applicationNumber);
-                JobApplication applicationToWithdraw = applications.get(applicationOption-1);
-                boolean appWithdrawn = applicant.withdrawJobApplication(today, applicationToWithdraw.getJobPosting());
-                if (appWithdrawn)
-                    System.out.println("Application successfully withdrawn.");
-                else {
-                    System.out.println("As the job posting corresponding to this application has already been filled, " +
-                            "it is no longer possible to withdraw the application.");
-                }
-            }
-        }
+    ArrayList<JobApplication> getApps() {
+        return applicant.getJobApplicationManager().getJobApplications();
     }
 
     /**
-     * Display the applicant's account history.
-     *
-     * @param today Today's date.
+     * Returns a list of applicant's application's jobpostings
      */
-    private void displayAccountHistory(LocalDate today) {
-        System.out.println();
-        System.out.println("Account created: " + applicant.getDateCreated());
-        System.out.println("Previous job applications:");
-        for (JobApplication application : applicant.getJobApplicationManager().getPreviousJobApplications()) {
-            JobPosting posting = application.getJobPosting();
-            System.out.println("Title: " + posting.getTitle());
-            System.out.println("Field: " + posting.getField());
-            System.out.println("Description: " + posting.getDescription());
-            System.out.println("Company: " + posting.getCompany().getName());
-            System.out.println("Close date: " + posting.getCloseDate());
-            System.out.println("Status: " + application.getStatus().getDescription());
-            System.out.println();
+    ArrayList<JobPosting> helperPostings() {
+        ArrayList<JobPosting>  ret = new ArrayList<JobPosting>();
+        for(JobApplication app : this.getApps()) {
+            ret.add(app.getJobPosting());
         }
-        System.out.println("Current job applications:");
-        for (JobApplication application : applicant.getJobApplicationManager().getCurrentJobApplications()) {
-            JobPosting posting = application.getJobPosting();
-            System.out.println("Title: " + posting.getTitle());
-            System.out.println("Field: " + posting.getField());
-            System.out.println("Description: " + posting.getDescription());
-            System.out.println("Company: " + posting.getCompany().getName());
-            System.out.println("Close date: " + posting.getCloseDate());
-            System.out.println("Status: " + application.getStatus().getDescription());
-            System.out.println();
-        }
+        return ret;
+    }
+
+    /**
+     * Withdraw an application
+     */
+    boolean withdrawApp(JobApplication application) {
+        return applicant.withdrawJobApplication(today, application.getJobPosting());
+    }
+
+    /**
+     * Return status since last job application (none submitted or days since)
+     */
+    String daysSince(LocalDate today) {
         if (applicant.getJobApplicationManager().getJobApplications().isEmpty())
-            System.out.println("You have not yet submitted any job applications.");
+            return("You have not yet submitted any job applications.");
         else
-            System.out.println("It has been " +
+            return("It has been " +
                     applicant.getJobApplicationManager().getNumDaysSinceMostRecentCloseDate(today) +
                     " days since your most recent application closed.");
     }
 
     /**
+     * Builds and returns an html string containing info regarding the applicant's previous applications
+     */
+    String oldApps() {
+        String ret = "<html>Previous applications:";
+        ArrayList<JobApplication> applications = applicant.getJobApplicationManager().getPreviousJobApplications();
+        for (JobApplication application : applications) {
+            JobPosting posting = application.getJobPosting();
+            ret += "<br>Posting: " + posting.getTitle();
+            ret += " (Status: " + application.getStatus() + ")";
+        }
+        ret += "</html>";
+        return ret;
+    }
+
+    /**
      * Display the applicant's submitted documents.
      */
-    private void displayDocuments() {
+    private void displayDocuments() { //TODO Phase 2
         System.out.println();
         ArrayList<JobApplicationDocument> documents = applicant.getDocumentManager().getDocuments();
         if (documents.isEmpty()) {

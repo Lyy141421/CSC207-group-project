@@ -254,6 +254,10 @@ public class HRCoordinatorInterface extends UserInterface {
      * @param today Today's date.
      */
     private void runJobPostingSubMenu(Scanner sc, LocalDate today) {
+        if (this.HRC.getCompany().getJobPostingManager().getJobPostings().isEmpty()) {
+            System.out.println("\nThere are no job postings for this company.");
+            return;
+        }
         int numOptions = this.displayJobPostingSubMenu();
         int option = this.getMenuOption(sc, numOptions);
         PrintItems<JobPosting> printPostings = new PrintItems<>();
@@ -314,7 +318,7 @@ public class HRCoordinatorInterface extends UserInterface {
      */
     private void runJobApplicationSubMenu(Scanner sc) {
         JobPosting jobPosting = this.getJobPosting(sc);
-        if (this.noItemsToViewForJobPosting(jobPosting)) {
+        if (jobPosting == null || this.noItemsToViewForJobPosting(jobPosting)) {
             return;
         }
         int numOptions = this.displayJobApplicationSubMenu();
@@ -375,7 +379,7 @@ public class HRCoordinatorInterface extends UserInterface {
         JobPosting jobPosting = this.HRC.getCompany().getJobPostingManager().getJobPosting(id);
         if (jobPosting == null) {
             System.out.println("This job posting was not found in " + this.HRC.getCompany().getName() + ".");
-            return this.getJobPosting(sc);
+            return null;
         } else {
             System.out.println(jobPosting.toStringStandardInput());
         }
@@ -412,7 +416,6 @@ public class HRCoordinatorInterface extends UserInterface {
         this.HRC.addJobPosting((String) fields.get(0), (String) fields.get(1), (String) fields.get(2),
                 (String) fields.get(3), (Integer) fields.get(4), today, (LocalDate) fields.get(5));
         System.out.println();
-        System.out.println();
         System.out.println("You have successfully added " + fields.get(0) + " to the system.");
     }
 
@@ -429,7 +432,9 @@ public class HRCoordinatorInterface extends UserInterface {
             return;
         }
         JobPosting jobPosting = this.getJobPosting(sc);
-        if (jobPosting.isClosed(today)) {
+        if (jobPosting == null) {
+            return;
+        } else if (jobPosting.isClosed(today)) {
             System.out.println("This job posting is closed and can no longer be updated.");
         } else {
             this.updateJobPostingFields(sc, today, jobPosting);
@@ -447,6 +452,8 @@ public class HRCoordinatorInterface extends UserInterface {
         System.out.println("Enter '" + SKIP_FIELD_KEY + "' if you do not wish to update the category and enter " +
                 SKIP_DATE_KEY + " if you do not wish to update the close date.");
         jobPosting.updateFields(SKIP_FIELD_KEY, SKIP_DATE_KEY, this.getFieldsForJobPosting(sc, today));
+        System.out.println();
+        System.out.println("You have successfully updated " + jobPosting.getTitle() + ".");
     }
 
     /**
@@ -473,6 +480,7 @@ public class HRCoordinatorInterface extends UserInterface {
      * Interface for viewing all the previous job applications this applicant has submitted to this company.
      */
     private void viewAllJobAppsToCompany(Scanner sc) {
+        System.out.println();
         Applicant applicant = this.searchSpecificApplicant(sc);
         if (applicant != null) {
             ArrayList<JobApplication> jobApps = this.HRC.getCompany().getAllApplicationsToCompany(applicant);
@@ -674,6 +682,10 @@ public class HRCoordinatorInterface extends UserInterface {
     private void hireApplicants(Scanner sc, LocalDate today) {
         JobPostingManager JPM = this.HRC.getCompany().getJobPostingManager();
         ArrayList<JobPosting> readyForHiring = JPM.getJobPostingsForHiring(today);
+        if (readyForHiring.isEmpty()) {
+            return;
+        }
+        System.out.println();
         System.out.println("Job postings ready for hiring: ");
         new PrintItems<JobPosting>().printListToSelectFrom(readyForHiring);
         JobPosting jobPosting = this.selectJobPosting(sc, readyForHiring);
