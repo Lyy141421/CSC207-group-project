@@ -103,6 +103,18 @@ public class HRCoordinatorInterface extends UserInterface {
     }
 
     /**
+     * Choose whether this application moves on for phone interviews.
+     *
+     * @param jobApp   The job application in question.
+     * @param selected Whether or not the application is selected to move on.
+     */
+    void selectApplicationForPhoneInterview(JobApplication jobApp, boolean selected) {
+        if (!selected) {
+            jobApp.getJobPosting().getInterviewManager().reject(jobApp);
+        }
+    }
+
+    /**
      * Set up interviews for this job posting.
      *
      * @param jobPosting The job posting in question.
