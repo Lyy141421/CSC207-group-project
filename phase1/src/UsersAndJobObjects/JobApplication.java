@@ -139,12 +139,20 @@ public class JobApplication implements Storable{
         return this.status.isArchived();
     }
 
+    public boolean isUnderReview() {
+        return this.status.isUnderReview();
+    }
+
     public boolean isOnPhoneInterview() {
         return this.status.isOnPhoneInterview();
     }
 
     public boolean isHired() {
         return this.status.isHired();
+    }
+
+    public boolean isInPerson3() {
+        return this.status.isInPerson3();
     }
 
     /**
