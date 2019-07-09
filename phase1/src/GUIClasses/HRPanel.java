@@ -43,7 +43,7 @@ public class HRPanel extends JPanel implements ActionListener {
     private ArrayList<JobPosting> currJPs;
 
     private JComboBox<String> applications = new JComboBox<>();
-    private DefaultComboBoxModel<String> appTitles;
+    private DefaultComboBoxModel<String> appTitles = new DefaultComboBoxModel<>();
     private ArrayList<JobApplication> currApps;
     private JPanel hireOrRejectButtons = new JPanel();
 
@@ -212,6 +212,7 @@ public class HRPanel extends JPanel implements ActionListener {
         JPanel buttons = new JPanel(new FlowLayout());
         hireOrRejectButtons.setLayout(new BoxLayout(hireOrRejectButtons, BoxLayout.Y_AXIS));
 
+        applications.setModel(this.appTitles);
         String[] attributes = new String[]{"Overview", "CV", "Cover letter"};
         JList<String> viewable = new JList<>(attributes);
         JTextArea info = new JTextArea();
@@ -239,6 +240,11 @@ public class HRPanel extends JPanel implements ActionListener {
                     appTitles.removeAllElements();
                     hiringJP.remove(selectedApp.getJobPosting());
                     importantJP.remove(selectedApp.getJobPosting());
+                    for (JobApplication jobApp : currApps) {
+                        if (!(jobApp.isArchived()||jobApp.isHired())) {
+                            HRInterface.hireOrRejectApplication(jobApp, false);
+                        }
+                    }
                     JOptionPane.showMessageDialog(applicationPanel, "All positions for this job has been filled");
                 }
             }
@@ -258,6 +264,9 @@ public class HRPanel extends JPanel implements ActionListener {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
                     JobApplication selectedApp = currApps.get(applications.getSelectedIndex());
                     info.setText(getInfo(selectedApp, viewable.getSelectedIndex()));
+                    if (selectedApp.isHired() || selectedApp.isArchived()) {
+                        hireOrRejectButtons.setVisible(false);
+                    }
                 }
             }
         });
