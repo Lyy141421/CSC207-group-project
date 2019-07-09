@@ -107,7 +107,7 @@ public class HRCoordinatorInterface extends UserInterface {
      *
      * @param jobPosting The job posting in question.
      */
-    boolean scheduleInterviews(JobPosting jobPosting) {
+    boolean setUpInterviews(JobPosting jobPosting) {
         Company company = jobPosting.getCompany();
         String field = jobPosting.getField();
         if (!company.hasInterviewerForField(field)) {
