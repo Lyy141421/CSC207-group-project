@@ -428,7 +428,7 @@ class ApplicantPanel extends JPanel{
                     getThis().buildWithdrawWindow(success);
                 }
             } );
-            viewApps.add(applyForJob, app.getJobPosting().getId());
+            viewApps.add(viewAppsAdded, app.getJobPosting().getId());
         }
 
         return viewApps;
