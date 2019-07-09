@@ -83,7 +83,7 @@ public class InterviewerPanel extends JPanel implements ActionListener {
         JPanel select = new JPanel();
         select.setLayout(new BoxLayout(select, BoxLayout.Y_AXIS));
         JPanel passOrFailButtons = new JPanel();
-        passOrFailButtons.setLayout(new BoxLayout(select, BoxLayout.Y_AXIS));
+        passOrFailButtons.setLayout(new BoxLayout(passOrFailButtons, BoxLayout.Y_AXIS));
         JPanel buttons = new JPanel(new FlowLayout());
 
         this.interviews = new JComboBox<>(this.incompleteTitles);
