@@ -262,7 +262,7 @@ public class UserInterface {
     private LocalDate getTodaysDateValid() {
         Scanner sc = new Scanner(System.in);
         LocalDate previousLoginDate = JobApplicationSystem.getPreviousLoginDate();
-        System.out.println();
+        System.out.println("----------------------------");
         LocalDate date;
         if (previousLoginDate == null) {
             date = this.getDate(sc, "Please enter today's date (yyyy-mm-dd): ");
@@ -406,6 +406,7 @@ public class UserInterface {
         else {
             while (!JobApplicationSystem.getUserManager().passwordCorrect(username, password)) {
                 System.out.println("Incorrect password.");
+                System.out.println();
                 password = this.getInputLine(sc, "Enter your password: ");
             }
             System.out.println("Login successful!");
