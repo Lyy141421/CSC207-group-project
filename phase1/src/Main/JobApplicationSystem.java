@@ -69,31 +69,18 @@ public class JobApplicationSystem {
     }
 
     // === Other methods ===
-    public static void updateAllInterviewRounds() {
-        for (Company company : JobApplicationSystem.companies) {
-            for (JobPosting jobPosting : company.getJobPostingManager().getJobPostings()) {
-                jobPosting.advanceInterviewRound();
+    /**
+     A method which triggers once a day from the time it is started.
+     */
+    public static void cyclicalTask(){
+        TimerTask daily_tasks = new TimerTask() {
+            public void run() {
+                applicant30Day();
             }
-        }
+        };
+        Timer timer = new Timer();
+        timer.scheduleAtFixedRate(daily_tasks, 0, CYCLE_PERIOD);
     }
-
-    // ============================================================================================================== //
-    // === Package-private methods ===
-    // === Setters ===
-
-    static void setToday(LocalDate new_date){
-        today = new_date;
-    }
-
-    static void setCompanies(ArrayList<Company> companies) {
-        JobApplicationSystem.companies = companies;
-    }
-
-    static void setUserManager(UserManager userManager) {
-        JobApplicationSystem.userManager = userManager;
-    }
-
-    // === Other methods ===
 
     /**
      * To be called at the start of the program
@@ -132,6 +119,31 @@ public class JobApplicationSystem {
         StorerManager.endSave();
     }
 
+    public static void updateAllInterviewRounds() {
+        for (Company company : JobApplicationSystem.companies) {
+            for (JobPosting jobPosting : company.getJobPostingManager().getJobPostings()) {
+                jobPosting.advanceInterviewRound();
+            }
+        }
+    }
+
+    // ============================================================================================================== //
+    // === Package-private methods ===
+    // === Setters ===
+
+    static void setToday(LocalDate new_date){
+        today = new_date;
+    }
+
+    static void setCompanies(ArrayList<Company> companies) {
+        JobApplicationSystem.companies = companies;
+    }
+
+    static void setUserManager(UserManager userManager) {
+        JobApplicationSystem.userManager = userManager;
+    }
+
+    // === Other methods ===
     public static Company getCompany(String name) {
         for (Company company : companies) {
             if (company.getName().equalsIgnoreCase(name))
@@ -154,19 +166,6 @@ public class JobApplicationSystem {
 
     // ============================================================================================================== //
     // === Private methods ===
-    /**
-     A method which triggers once a day from the time it is started.
-     */
-    private static void cyclicalTask(){
-        TimerTask daily_tasks = new TimerTask() {
-            public void run() {
-                applicant30Day();
-            }
-        };
-        Timer timer = new Timer();
-        timer.scheduleAtFixedRate(daily_tasks, 0, CYCLE_PERIOD);
-    }
-
     private static void applicant30Day(){
         for(Object app : userManager.getAllApplicants()){
           ((Applicant)app).removeFilesFromAccount(today);

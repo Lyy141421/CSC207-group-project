@@ -27,7 +27,7 @@ import java.util.Date;
 
 public class HRPanel extends JPanel implements ActionListener {
 
-    private JPanel contentPane;
+    private Container contentPane;
     private HRCoordinatorInterface HRInterface;
     private LocalDate today;
 
@@ -48,7 +48,7 @@ public class HRPanel extends JPanel implements ActionListener {
     private JPanel hireOrRejectButtons = new JPanel();
 
     // Create interface for HR
-    HRPanel (JPanel contentPane, HRCoordinatorInterface HRInterface, LocalDate today) {
+    HRPanel (Container contentPane, HRCoordinatorInterface HRInterface, LocalDate today) {
         this.contentPane = contentPane;
         this.HRInterface = HRInterface;
         this.today = today;
@@ -337,7 +337,7 @@ public class HRPanel extends JPanel implements ActionListener {
                 } else {
                     currApps = apps;
                     appTitles.removeAllElements();
-                    appTitles.addAll(getAppTitles(apps));
+                    // TODO doesn't work on Elaine's SDK appTitles.addAll(getAppTitles(apps));
                     //todo: might cause issue
                     hireOrRejectButtons.setVisible(false);
                     ((CardLayout) getLayout()).show(getParent(), "APPLICATION");
@@ -477,7 +477,7 @@ public class HRPanel extends JPanel implements ActionListener {
                 JobPosting selectedJP = currJPs.get(selectedIndex);
                 this.currApps = selectedJP.getJobApplications();
                 this.appTitles.removeAllElements();
-                this.appTitles.addAll(getAppTitles(currApps));
+                //TODO doesn't work for Elaine's SDK this.appTitles.addAll(getAppTitles(currApps));
                 //disable/enable buttons
                 if (hiringJP.contains(selectedJP)) {
                     hireOrRejectButtons.setVisible(true);
