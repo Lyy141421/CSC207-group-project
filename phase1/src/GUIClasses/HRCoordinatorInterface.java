@@ -758,18 +758,7 @@ public class HRCoordinatorInterface extends UserInterface {
         if (!IM.isNumApplicantUnderOrAtThreshold()) {   // Number of applications greater than num of positions
             jobApps = this.selectApplicationsForHiring(sc, jobPosting, IM.getApplicationsInConsideration());
         } else {
-            if (IM.getNumApplicationsStillRequired() == 0) {
-                System.out.println("The number of final candidates equals the number of positions for this job.");
-                System.out.println("These candidates will be hired automatically and the job posting will be set as filled.");
-            } else {
-                System.out.println("The number of final candidates is less than the number of positions for this job.");
-                System.out.println("Only these final candidates will be hired automatically.");
-                System.out.println("The job posting will be set as filled with the number of positions as the number of " +
-                        "people actually hired.");
-                System.out.println("Remaining positions: " + IM.getNumApplicationsStillRequired());
-                System.out.println("You may want to consider opening another job posting for the same title " +
-                        "in order to fill the remaining positions.");
-            }
+            this.printMessagesForHiring(IM.getNumOpenPositions());
             jobApps = IM.getApplicationsInConsideration();
         }
         for (JobApplication jobApp : jobApps) {
@@ -778,6 +767,26 @@ public class HRCoordinatorInterface extends UserInterface {
         }
         jobPosting.setFilled();
         jobPosting.getInterviewManager().archiveRejected();
+    }
+
+    /**
+     * Print messages for hiring.
+     *
+     * @param numberOfOpenPositions The number of positions still open.
+     */
+    private void printMessagesForHiring(int numberOfOpenPositions) {
+        if (numberOfOpenPositions == 0) {
+            System.out.println("The number of final candidates equals the number of positions for this job.");
+            System.out.println("These candidates will be hired automatically and the job posting will be set as filled.");
+        } else {
+            System.out.println("The number of final candidates is less than the number of positions for this job.");
+            System.out.println("Only these final candidates will be hired automatically.");
+            System.out.println("The job posting will be set as filled with the number of positions as the number of " +
+                    "people actually hired.");
+            System.out.println("Remaining positions: " + numberOfOpenPositions);
+            System.out.println("You may want to consider opening another job posting for the same title " +
+                    "in order to fill the remaining positions.");
+        }
     }
 
     /**

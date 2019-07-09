@@ -83,7 +83,7 @@ public class InterviewManager {
      *
      * @return the number of applications still required before completely filling all positions.
      */
-    public int getNumApplicationsStillRequired() {
+    public int getNumOpenPositions() {
         return this.jobPosting.getNumPositions() - this.applicationsInConsideration.size();
     }
 
