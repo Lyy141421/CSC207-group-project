@@ -42,11 +42,8 @@ class ApplicantPanel extends JPanel{
 
         JPanel history = this.buildHistory();
 
-        JPanel viewApps = new JPanel(new GridLayout(1, 3)); //TODO: Implement construction
-
         this.add(applicantStart, "applicantStart");
         this.add(history, "accountHistory");
-        this.add(viewApps, "viewApps");
 
         if(BackEnd.checkUpcomingInterviews(date)) {
             this.add(this.buildReminder());
@@ -164,6 +161,14 @@ class ApplicantPanel extends JPanel{
 
         JButton viewApps = new JButton("View Applications");
         viewApps.setBounds(675, 5, 160, 20);
+        viewApps.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JPanel viewApps = buildViewApps(BackEnd.helperPostings(), BackEnd.getApps());
+                getThis().add(viewApps, "viewApps");
+                ((CardLayout)(getThis().getLayout())).show(getThis(), "viewApps");
+            }
+        });
         startTitle.add(viewApps);
 
         JLabel titleText = new JLabel("Job Applicant Portal", SwingConstants.CENTER);
@@ -322,7 +327,7 @@ class ApplicantPanel extends JPanel{
                 }
             } );
             viewJobsAdded2.add(applyForJob);
-            viewJobs2.add(viewJobsAdded2);
+            viewJobs2.add(viewJobsAdded2, j.getId());
         }
 
         return viewJobs2;
@@ -371,6 +376,66 @@ class ApplicantPanel extends JPanel{
     }
 
     /**
+     * Builds the panel which displays current applications
+     */
+    private JPanel buildViewApps(ArrayList<JobPosting> jobPostings, ArrayList<JobApplication> applications) {
+        JPanel viewApps = new JPanel(new GridLayout(1, 3));
+
+        JPanel viewApps0 = this.buildViewJobs0(jobPostings); viewApps.add(viewApps0);
+
+        JPanel viewApps1 = this.buildViewJobs1(jobPostings); viewApps.add(viewApps1);
+
+        JPanel viewApps2 = this.buildViewApps0(applications); viewApps.add(viewApps2);
+
+        JList<String> jobTitlesList = new JList<>();
+        for(Component c : viewApps0.getComponents()) {
+            if(c instanceof JList) {
+                jobTitlesList = (JList<String>)c;
+            }
+        }
+        jobTitlesList.addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                JList actor =(JList)e.getSource();
+                String cardFromActor = actor.getSelectedValue().toString().replaceAll("[^\\d.]", "");
+                CardLayout c1 = (CardLayout)viewApps1.getLayout();
+                c1.show(viewApps1, cardFromActor);
+                CardLayout c2 = (CardLayout)viewApps2.getLayout();
+                c2.show(viewApps2, cardFromActor);
+            }
+        });
+
+        return viewApps;
+    }
+
+    /**
+     * Builds status and withdraw aspect of view applications
+     */
+    private JPanel buildViewApps0(ArrayList<JobApplication> applications) {
+        JPanel viewApps = new JPanel(new CardLayout());
+
+        for(JobApplication app : applications) {
+            JPanel viewAppsAdded = new JPanel(null);
+
+            JLabel viewJobReqs = new JLabel("Status: " + app.getStatus());
+            viewJobReqs.setBounds(17, 150, 250, 20);
+            viewAppsAdded.add(viewJobReqs);
+
+            JButton applyForJob = new JButton("Apply now");
+            applyForJob.setBounds(45, 300, 100, 20);
+            applyForJob.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    boolean success = BackEnd.withdrawApp(app);
+                    getThis().buildWithdrawWindow(success);
+                }
+            } );
+            viewApps.add(applyForJob, app.getJobPosting().getId());
+        }
+
+        return viewApps;
+    }
+
+    /**
      * Builds reminder dialog if the applicant has an interview on "today"
      */
     private JDialog buildReminder() {
@@ -386,6 +451,31 @@ class ApplicantPanel extends JPanel{
         d.add( new JLabel ("You have interview(s) today!"), SwingConstants.CENTER);
         d.add(b);
         d.setSize(300,80);
+        d.setVisible(true);
+
+        return d;
+    }
+
+    /**
+     * Builds dialog after attempting to withdraw an application
+     */
+    private JDialog buildWithdrawWindow(boolean success) {
+        JDialog d = new JDialog(new JFrame(), "Withdraw Status", true);
+        String text;
+
+        d.setLayout( new FlowLayout() );
+        JButton b = new JButton ("Back");
+        b.addActionListener ( new ActionListener() {
+            public void actionPerformed( ActionEvent e )
+            {
+                d.setVisible(false);
+                ((CardLayout)(getThis().getLayout())).show(getThis(), "applicantStart");
+            }
+        });
+        if (success) {text = "Application withdrawn";} else {text = "Can't withdraw - posting filled";}
+        d.add( new JLabel (text), SwingConstants.CENTER);
+        d.add(b);
+        d.setSize(400,80);
         d.setVisible(true);
 
         return d;

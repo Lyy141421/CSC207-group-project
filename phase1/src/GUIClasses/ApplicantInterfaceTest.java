@@ -88,41 +88,28 @@ public class ApplicantInterfaceTest extends UserInterface {
     }
 
     /**
-     * Display all of the applications that the applicant has submitted.
-     *
-     * @param sc The Scanner for user input.
-     * @param withdrawal Whether or not the applicant wishes to withdraw an application.
+     * Returns a list of applicant's applications
      */
-    private void displayApplications(Scanner sc, LocalDate today, boolean withdrawal) {
-        System.out.println();
-        ArrayList<JobApplication> applications = applicant.getJobApplicationManager().getJobApplications();
-        if (applications.isEmpty()) {
-            System.out.println("You have not yet submitted any applications.");
+    ArrayList<JobApplication> getApps() {
+        return applicant.getJobApplicationManager().getJobApplications();
+    }
+
+    /**
+     * Returns a list of applicant's application's jobpostings
+     */
+    ArrayList<JobPosting> helperPostings() {
+        ArrayList<JobPosting>  ret = new ArrayList<JobPosting>();
+        for(JobApplication app : this.getApps()) {
+            ret.add(app.getJobPosting());
         }
-        else {
-            int applicationNumber = 0;
-            for (JobApplication application : applications) {
-                applicationNumber++;
-                if (withdrawal) {
-                    System.out.print(applicationNumber + ". ");
-                }
-                System.out.println("Title: " + application.getJobPosting().getTitle());
-                System.out.println("Company: " + application.getJobPosting().getCompany().getName());
-                System.out.println("Status: " + application.getStatus().getDescription());
-                System.out.println();
-            }
-            if (withdrawal) {
-                int applicationOption = getMenuOption(sc, applicationNumber);
-                JobApplication applicationToWithdraw = applications.get(applicationOption-1);
-                boolean appWithdrawn = applicant.withdrawJobApplication(today, applicationToWithdraw.getJobPosting());
-                if (appWithdrawn)
-                    System.out.println("Application successfully withdrawn.");
-                else {
-                    System.out.println("As the job posting corresponding to this application has already been filled, " +
-                            "it is no longer possible to withdraw the application.");
-                }
-            }
-        }
+        return ret;
+    }
+
+    /**
+     * Withdraw an application
+     */
+    boolean withdrawApp(JobApplication application) {
+        return applicant.withdrawJobApplication(today, application.getJobPosting());
     }
 
     /**
