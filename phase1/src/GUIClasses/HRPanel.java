@@ -384,7 +384,7 @@ public class HRPanel extends JPanel implements ActionListener {
                 } else {
                     currApps = apps;
                     appTitles.removeAllElements();
-                    appTitles.addAll(getAppTitles(apps));
+                    addListToModel(appTitles, getAppTitles(apps));
                     //todo: might cause issue
                     hireOrRejectButtons.setVisible(false);
                     ((CardLayout) getLayout()).show(getParent(), "APPLICATION");
@@ -401,6 +401,12 @@ public class HRPanel extends JPanel implements ActionListener {
         applicantPanel.add(home, BorderLayout.SOUTH);
 
         return applicantPanel;
+    }
+
+    private void addListToModel(DefaultComboBoxModel<String> model, ArrayList<String> appTitles) {
+        for (String title : appTitles) {
+            model.addElement(title);
+        }
     }
 
 
@@ -524,7 +530,7 @@ public class HRPanel extends JPanel implements ActionListener {
                 JobPosting selectedJP = currJPs.get(selectedIndex);
                 this.currApps = selectedJP.getJobApplications();
                 this.appTitles.removeAllElements();
-                this.appTitles.addAll(getAppTitles(currApps));
+                addListToModel(appTitles, getAppTitles(currApps));
                 c.show(this, "APPLICATION");
                 break;
             case "Logout":
