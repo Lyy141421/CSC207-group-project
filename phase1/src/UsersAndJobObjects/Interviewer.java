@@ -165,7 +165,7 @@ public class Interviewer extends User {
      * Get a list of scheduled interviews for this interviewer.
      * @return  a list of scheduled interviews for this interviewer.
      */
-    private ArrayList<Interview> getScheduledInterviews() {
+    public ArrayList<Interview> getScheduledInterviews() {
         ArrayList<Interview> scheduledInterviews = new ArrayList<>();
         for (Interview interview : this.interviews) {
             if (!this.getUnscheduledInterviews().contains(interview)) {
@@ -173,6 +173,21 @@ public class Interviewer extends User {
             }
         }
         return scheduledInterviews;
+    }
+
+    /**
+     * Get a list of incomplete interviews for this interviewer.
+     *
+     * @return a list of incomplete interviews for this interviewer.
+     */
+    public ArrayList<Interview> getIncompleteInterviewsForWhichInterviewHasOccurred(LocalDate today) {
+        ArrayList<Interview> incompleteInterviews = new ArrayList<>();
+        for (Interview interview : this.interviews) {
+            if (!interview.isComplete() && interview.isBeforeDate(today)) {
+                incompleteInterviews.add(interview);
+            }
+        }
+        return incompleteInterviews;
     }
 
     /**

@@ -97,7 +97,7 @@ public class InterviewerInterface extends UserInterface {
         Scanner sc = new Scanner(System.in);
         this.scheduleInterviews(sc, today);
         System.out.println();
-        this.viewInterviewsForToday(today);
+        this.viewInterviewsToCompleteAfterInterviewDateHasPassed(today);
         while (true) {
             try {
                 this.runMainMenu(sc);
@@ -136,7 +136,7 @@ public class InterviewerInterface extends UserInterface {
         int option = this.getMenuOption(sc, numOptions);
         switch (option) {
             case 1: // View schedule
-                this.viewSchedule();
+                this.viewScheduledInterviews();
                 break;
             case 2: // View job applications of all interviewees
                 this.viewAllJobApplications();
@@ -203,28 +203,30 @@ public class InterviewerInterface extends UserInterface {
         }
     }
 
-
-    /**
-     * Interface for viewing one's schedule.
-     */
-    private void viewSchedule() {
-        String schedule = this.interviewer.getScheduleString();
-        System.out.println();
-        if (schedule == null) {
-            System.out.println("Schedule is empty.");
-        } else {
-            System.out.println(schedule);
-        }
-    }
-
     /**
      * Interface for viewing the interviews that this interviewer is going to conduct today.
      * @param today Today's date
      */
-    private void viewInterviewsForToday(LocalDate today) {
-        List<Interview> interviews = this.interviewer.getInterviewsBeforeOnAndAfterDate(today).get(1);
+    private void viewInterviewsToCompleteAfterInterviewDateHasPassed(LocalDate today) {
+        List<Interview> interviews = this.interviewer.getIncompleteInterviewsForWhichInterviewHasOccurred(today);
         if (!interviews.isEmpty()) {
-            System.out.println("Interviews for today: ");
+            System.out.println("Interviews to complete: ");
+            for (Interview interview : interviews) {
+                System.out.println();
+                System.out.println(interview.toStringPrelimInfo());
+            }
+        }
+    }
+
+    /**
+     * Interface for viewing scheduled interviews.
+     */
+    private void viewScheduledInterviews() {
+        List<Interview> interviews = this.interviewer.getScheduledInterviews();
+        if (interviews.isEmpty()) {
+            System.out.println("Schedule is empty.");
+        } else {
+            System.out.println("Interviews scheduled: ");
             for (Interview interview : interviews) {
                 System.out.println();
                 System.out.println(interview.toStringPrelimInfo() + "\n" + "Interview time: " + interview.getTime());

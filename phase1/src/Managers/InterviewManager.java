@@ -17,8 +17,7 @@ public class InterviewManager {
     public static int SELECT_APPS_FOR_PHONE_INTERVIEW = -1;
     private static final int DO_NOTHING = 0;
     static final int SCHEDULE_INTERVIEWS = 1;
-    private static final int CHOOSE_APPLICANTS_FOR_HIRE = 2;
-    static final int HIRE_APPLICANTS = 3;
+    static final int HIRE_APPLICANTS = 2;
 
 
 
@@ -36,7 +35,7 @@ public class InterviewManager {
 
     // === Representation invariants ===
     // The list of interviews for each applicant is sorted by date.
-    // 0 <= currentRound <= 3
+    // 0 <= currentRound <= 4
 
     // === Public methods ===
 
@@ -94,13 +93,12 @@ public class InterviewManager {
      */
     public boolean isCurrentRoundOver() {
         for (JobApplication jobApp : this.getApplicationsInConsideration()) {
-            if (jobApp.getLastInterview() == null) {
-                return false;
-            } else if (!jobApp.getLastInterview().isComplete()) {
-                return false;
+            Interview lastInterview = jobApp.getLastInterview();
+            if (lastInterview != null && lastInterview.isComplete()) {
+                return true;
             }
         }
-        return true;
+        return false;
     }
 
     /**
@@ -165,7 +163,7 @@ public class InterviewManager {
             // Applicants for phone interview selected but no interviews scheduled
             return InterviewManager.SCHEDULE_INTERVIEWS;
         } else if (this.isInterviewProcessOver()) {
-            return InterviewManager.CHOOSE_APPLICANTS_FOR_HIRE;
+            return InterviewManager.HIRE_APPLICANTS;
         } else if (this.isCurrentRoundOver()) {
             return InterviewManager.SCHEDULE_INTERVIEWS;
         } else {
