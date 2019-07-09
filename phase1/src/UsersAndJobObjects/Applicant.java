@@ -115,8 +115,8 @@ public class Applicant extends User {
     public ArrayList<JobPosting> getOpenJobPostingsNotAppliedTo(LocalDate today) {
         ArrayList<JobPosting> jobPostingsNotAppliedTo = new ArrayList<>();
         for (Company company : JobApplicationSystem.getCompanies()) {
-            for (JobPosting posting : company.getJobPostingManager().getJobPostings())
-                if (today.isBefore(posting.getCloseDate()) && !this.hasAppliedTo(posting)) {
+            for (JobPosting posting : company.getJobPostingManager().getOpenJobPostings(today))
+                if (!this.hasAppliedTo(posting)) {
                     jobPostingsNotAppliedTo.add(posting);
                 }
         }
