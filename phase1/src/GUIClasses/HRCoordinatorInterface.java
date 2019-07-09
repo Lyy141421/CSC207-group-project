@@ -84,18 +84,18 @@ public class HRCoordinatorInterface extends UserInterface {
     /**
      * Hire or reject an application.
      *
-     * @param jobPosting    The job posting to be filled
      * @param jobApp The job application in question.
      * @param toHire Whether or not the HR Coordinator wants to hire the applicant.
      */
-    boolean hireOrRejectApplication(JobPosting jobPosting, JobApplication jobApp, boolean toHire) {
+    boolean hireOrRejectApplication(JobApplication jobApp, boolean toHire) {
         if (toHire) {
             jobApp.getStatus().setHired();
         } else {
             jobApp.getStatus().setArchived();
         }
-        jobApp.getJobPosting().setFilled();
-        jobApp.getJobPosting().getInterviewManager().archiveRejected();
+        JobPosting jobPosting = jobApp.getJobPosting();
+        jobPosting.setFilled();
+        jobPosting.getInterviewManager().archiveRejected();
         if (jobPosting.getInterviewManager().getNumOpenPositions() > 0) {
             return false;
         }
