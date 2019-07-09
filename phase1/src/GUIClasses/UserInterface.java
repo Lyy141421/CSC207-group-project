@@ -31,14 +31,18 @@ public class UserInterface {
     }
 
     public static void main(String[] args) {
+        JobApplicationSystem.mainStart();
+        JobApplicationSystem.cyclicalTask();
         UserInterface UI = new UserInterface();
         while (true) {
+            System.out.println("Welcome to GET A JOB!\n");
             LocalDate today = UI.getTodaysDateValid();
             JobApplicationSystem.updateAllInterviewRounds();
             User user = UI.login();
             UserInterface userInterface = new InterfaceFactory().create(user);
             userInterface.run(today);
-            System.out.println();
+            System.out.println("\nThank you for using GET A JOB. Have a wonderful day!");
+            UI.closeProgram();
         }
     }
 
@@ -232,8 +236,19 @@ public class UserInterface {
     // ============================================================================================================== //
     // === Private methods ===
 
-    // === Constructor ===
     private UserInterface() {
+    }
+
+    /**
+     * Close the program upon user input.
+     */
+    private void closeProgram() {
+        Scanner sc = new Scanner(System.in);
+        String input = this.getInputToken(sc, "\nEnter '-1' if you would like to stop running the system: ");
+        sc.nextLine();
+        if (input.equals("-1")) {
+            System.exit(0);
+        }
     }
 
     /**
