@@ -31,8 +31,7 @@ class ApplicantPanel extends JPanel{
     ApplicantPanel(String username, LocalDate date, Container parent, CardLayout masterLayout) {
         super(new CardLayout());
 
-        //this.loggedUser = (Applicant)JobApplicationSystem.getUserManager().findUserByUsername(username); TODO uncomment
-        this.loggedUser = new Applicant();
+        this.loggedUser = (Applicant)JobApplicationSystem.getUserManager().findUserByUsername(username);
         this.date = date;
         this.BackEnd = new ApplicantInterfaceTest(this.loggedUser);
         this.parent = parent;
