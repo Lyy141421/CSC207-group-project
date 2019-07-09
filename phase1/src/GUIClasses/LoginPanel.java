@@ -212,6 +212,8 @@ class LoginPanel extends JPanel {
                     this.hidePassError();
                     this.hideBlankField();
                     this.GUILogin(userNameEntry.getText());
+                    userNameEntry.setText("");
+                    passwordEntry.setText("");
                     break;
             case 3: this.showPassError();
                     this.hideCreateNew();
