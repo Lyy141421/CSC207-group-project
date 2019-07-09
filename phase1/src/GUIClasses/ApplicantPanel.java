@@ -521,7 +521,7 @@ class ApplicantPanel extends JPanel{
         int len = jobPostings.size();
         String[] ret = new String[len];
 
-        for(int i=0; i < len - 1; i++) {
+        for(int i=0; i < len; i++) {
             ret[i] = jobPostings.get(i).getTitle() + " - " + jobPostings.get(i).getId();
         }
 
