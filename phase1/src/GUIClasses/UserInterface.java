@@ -221,10 +221,12 @@ public class UserInterface {
      */
     void viewAllInterviewsForJobApp(Scanner sc) {
         JobApplication jobApp = this.getJobApplication(sc);
-        System.out.println();
-        System.out.println("Previous interviews:");
-        ArrayList<Interview> interviews = jobApp.getInterviews();
-        new PrintItems<Interview>().printList(interviews);
+        if (jobApp != null) {
+            System.out.println();
+            System.out.println("Previous interviews:");
+            ArrayList<Interview> interviews = jobApp.getInterviews();
+            new PrintItems<Interview>().printList(interviews);
+        }
     }
 
     // ============================================================================================================== //
