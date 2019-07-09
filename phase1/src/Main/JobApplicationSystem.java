@@ -37,8 +37,6 @@ public class JobApplicationSystem {
 
     public static void main(String[] args) {
         mainStart();
-        ((HRCoordinator)userManager.findUserByUsername("Stacy")).addJobPosting("New HR Manager", "HR", "I want out so have this", "Not a single one", 1, LocalDate.now(), LocalDate.now().plusDays(5));
-        companies.get(0).getJobPostingManager().getJobPostings().get(1);
         cyclicalTask();
         SwingUtilities.invokeLater(new Runnable() {
             @Override
