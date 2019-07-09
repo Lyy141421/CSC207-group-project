@@ -84,25 +84,26 @@ public class UserManager {
      * @return the password after encryption
      */
     private String encrypt(String password) {
-        try
-        {
-            Key aesKey = new SecretKeySpec(this.key.getBytes(), "AES");
-            Cipher cipher = Cipher.getInstance("AES");
-            cipher.init(Cipher.ENCRYPT_MODE, aesKey);
-
-            byte[] encrypted = cipher.doFinal(password.getBytes());
-            StringBuilder sb = new StringBuilder();
-            for (byte b: encrypted) {
-                sb.append((char)b);
-            }
-
-            return sb.toString();
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-            return "Encryption Error";
-        }
+//        try
+//        {
+//            Key aesKey = new SecretKeySpec(this.key.getBytes(), "AES");
+//            Cipher cipher = Cipher.getInstance("AES");
+//            cipher.init(Cipher.ENCRYPT_MODE, aesKey);
+//
+//            byte[] encrypted = cipher.doFinal(password.getBytes());
+//            StringBuilder sb = new StringBuilder();
+//            for (byte b: encrypted) {
+//                sb.append((char)b);
+//            }
+//
+//            return sb.toString();
+//        }
+//        catch(Exception e)
+//        {
+//            e.printStackTrace();
+//            return "Encryption Error";
+//        }
+        return password;
     }
 
     /**
@@ -112,25 +113,26 @@ public class UserManager {
      * @return the password decrypted
      */
     private String decrypt (String encrypted) {
-        try
-        {
-            Key aesKey = new SecretKeySpec(this.key.getBytes(), "AES");
-            Cipher cipher = Cipher.getInstance("AES");
-
-            byte[] bb = new byte[encrypted.length()];
-            for (int i=0; i<encrypted.length(); i++) {
-                bb[i] = (byte) encrypted.charAt(i);
-            }
-
-            cipher.init(Cipher.DECRYPT_MODE, aesKey);
-            return new String(cipher.doFinal(bb));
-
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-            return "Decryption Error";
-        }
+//        try
+//        {
+//            Key aesKey = new SecretKeySpec(this.key.getBytes(), "AES");
+//            Cipher cipher = Cipher.getInstance("AES");
+//
+//            byte[] bb = new byte[encrypted.length()];
+//            for (int i=0; i<encrypted.length(); i++) {
+//                bb[i] = (byte) encrypted.charAt(i);
+//            }
+//
+//            cipher.init(Cipher.DECRYPT_MODE, aesKey);
+//            return new String(cipher.doFinal(bb));
+//
+//        }
+//        catch(Exception e)
+//        {
+//            e.printStackTrace();
+//            return "Decryption Error";
+//        }
+          return encrypted;
     }
 
     // === Array operations on allUsers ===

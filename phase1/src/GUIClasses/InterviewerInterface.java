@@ -167,14 +167,12 @@ public class InterviewerInterface extends UserInterface {
      */
     private void scheduleInterviews(Scanner sc, LocalDate today) {
         ArrayList<Interview> unscheduledInterviews = this.interviewer.getUnscheduledInterviews();
-        int i = 1;
         System.out.println("Interviews that need to be scheduled: ");
         if (unscheduledInterviews.isEmpty()) {
             System.out.println("N/A");
         }
         else {
             for (Interview interview : unscheduledInterviews) {
-                System.out.println(i + ".");
                 System.out.println(interview.toStringPrelimInfo());
                 this.scheduleOneInterview(sc, today, interview);
             }

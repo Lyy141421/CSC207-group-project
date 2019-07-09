@@ -31,14 +31,18 @@ public class UserInterface {
     }
 
     public static void main(String[] args) {
+        JobApplicationSystem.mainStart();
+        JobApplicationSystem.cyclicalTask();
         UserInterface UI = new UserInterface();
         while (true) {
+            System.out.println("Welcome to GET A JOB!\n");
             LocalDate today = UI.getTodaysDateValid();
             JobApplicationSystem.updateAllInterviewRounds();
             User user = UI.login();
             UserInterface userInterface = new InterfaceFactory().create(user);
             userInterface.run(today);
-            System.out.println();
+            System.out.println("\nThank you for using GET A JOB. Have a wonderful day!");
+            UI.closeProgram();
         }
     }
 
@@ -232,8 +236,20 @@ public class UserInterface {
     // ============================================================================================================== //
     // === Private methods ===
 
-    // === Constructor ===
     private UserInterface() {
+    }
+
+    /**
+     * Close the program upon user input.
+     */
+    private void closeProgram() {
+        Scanner sc = new Scanner(System.in);
+        String input = this.getInputToken(sc, "\nEnter '-1' if you would like to stop running the system or any other key to keep running: ");
+        sc.nextLine();
+        if (input.equals("-1")) {
+            JobApplicationSystem.mainEnd();
+            System.exit(0);
+        }
     }
 
     /**
@@ -262,7 +278,6 @@ public class UserInterface {
     private LocalDate getTodaysDateValid() {
         Scanner sc = new Scanner(System.in);
         LocalDate previousLoginDate = JobApplicationSystem.getPreviousLoginDate();
-        System.out.println();
         LocalDate date;
         if (previousLoginDate == null) {
             date = this.getDate(sc, "Please enter today's date (yyyy-mm-dd): ");
@@ -397,7 +412,7 @@ public class UserInterface {
      */
     private User login() {
         Scanner sc = new Scanner(System.in);
-        String username = this.getInputToken(sc, "Enter your username: ");
+        String username = this.getInputToken(sc, "\nEnter your username: ");
         sc.nextLine();
         String password = this.getInputLine(sc, "Enter your password: ");
         if (JobApplicationSystem.getUserManager().findUserByUsername(username) == null) {

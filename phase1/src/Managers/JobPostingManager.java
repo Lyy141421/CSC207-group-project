@@ -48,6 +48,15 @@ public class JobPostingManager {
     }
 
     /**
+     * Remove a job posting from this company.
+     *
+     * @param jobPosting The job posting to be removed.
+     */
+    public void removeJobPosting(JobPosting jobPosting) {
+        this.jobPostings.remove(jobPosting);
+    }
+
+    /**
      * Get the job posting from this company with this ID. Return null if not found.
      *
      * @param ID The id of the job posting in question.
