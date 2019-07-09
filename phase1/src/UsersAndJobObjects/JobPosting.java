@@ -6,7 +6,6 @@ import Managers.InterviewManager;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class JobPosting implements Storable {
 
@@ -169,6 +168,15 @@ public class JobPosting implements Storable {
     }
 
     /**
+     * Check whether this job postings has had any applications submitted.
+     *
+     * @return true iff this job posting has at least one application submitted.
+     */
+    public boolean hasNoApplicationsSubmitted() {
+        return this.jobApplications.isEmpty();
+    }
+
+    /**
      * Check whether this job posting has closed.
      */
     public boolean isClosed(LocalDate today) {
@@ -242,6 +250,19 @@ public class JobPosting implements Storable {
                 interviewManager.advanceRound();
             }
         }
+    }
+
+    /**
+     * Get a list of emails of applicants rejected.
+     *
+     * @return a list of emails of applicants rejected.
+     */
+    public ArrayList<String> getEmailsForRejectList() {
+        ArrayList<String> emails = new ArrayList<>();
+        for (JobApplication jobApp : this.jobApplications) {
+            emails.add(jobApp.getApplicant().getEmail());
+        }
+        return emails;
     }
 
     @Override
