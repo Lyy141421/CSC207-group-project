@@ -197,33 +197,34 @@ public class ApplicantInterface extends UserInterface {
     }
 
     /**
-     * Allow the applicant to select files from their account, and use these files to assemble a JobApplication.
+     * Allow the applicant to select a document from their account files.
+     * @param sc The Scanner for user input.
+     * @param documentType The type of document being selected.
+     * @return the document selected.
+     */
+    private JobApplicationDocument selectDocumentFromFiles(Scanner sc, String documentType) {
+        System.out.println("Here are your files: ");
+        int fileNumber = 0;
+        for (JobApplicationDocument document : applicant.getDocumentManager().getDocuments()) {
+            fileNumber++;
+            System.out.println(fileNumber + ". " + document.getContents());
+            System.out.println();
+        }
+        System.out.println("Please enter the file number of the " + documentType + " you would like to submit.");
+        int option = getMenuOption(sc, fileNumber);
+        return applicant.getDocumentManager().getDocuments().get(option-1);
+    }
+    /**
+     * Allow the applicant to select documents from their account, and use these documents to assemble a JobApplication.
      *
      * @param sc The Scanner for user input.
      * @param today Today's date.
      * @param posting The job posting that this applicant wishes to apply to.
-     * @return a job application containing this applicant's chosen files.
+     * @return a job application containing this applicant's chosen documents.
      */
     private JobApplication createJobApplicationThroughFiles(Scanner sc, LocalDate today, JobPosting posting) {
-        System.out.println("Here are your files: ");
-        int CVFileNumber = 0;
-        for (JobApplicationDocument document : applicant.getDocumentManager().getDocuments()) {
-            CVFileNumber++;
-            System.out.println(CVFileNumber + ". " + document.getContents());
-            System.out.println();
-        }
-        System.out.println("Please enter the file number of the CV you would like to submit.");
-        int CVOption = getMenuOption(sc, CVFileNumber);
-        JobApplicationDocument CV = applicant.getDocumentManager().getDocuments().get(CVOption-1);
-        int coverLetterFileNumber = 0;
-        for (JobApplicationDocument document : applicant.getDocumentManager().getDocuments()) {
-            coverLetterFileNumber++;
-            System.out.println(coverLetterFileNumber + ". " + document.getContents());
-            System.out.println();
-        }
-        System.out.println("Please enter the file number of the cover letter you would like to submit.");
-        int coverLetterOption = getMenuOption(sc, coverLetterFileNumber);
-        JobApplicationDocument coverLetter = applicant.getDocumentManager().getDocuments().get(coverLetterOption-1);
+        JobApplicationDocument CV = this.selectDocumentFromFiles(sc, "CV");
+        JobApplicationDocument coverLetter = this.selectDocumentFromFiles(sc, "cover letter");
         return new JobApplication(applicant, posting, CV, coverLetter, today);
     }
 
@@ -236,23 +237,22 @@ public class ApplicantInterface extends UserInterface {
      * @return a job application containing this applicant's entered files.
      */
     private JobApplication createJobApplicationThroughTextEntry(Scanner sc, LocalDate today, JobPosting posting) {
-        String CVContents = getInputLinesUntilDone(sc, "Enter the contents of your CV as a series of plain text lines " +
-                "(program will stop reading after the first empty line): ");
-        String coverLetterContents = getInputLinesUntilDone(sc, "Enter the contents of your cover letter as a series of" +
-                " plain text lines (program will stop reading after the first empty line): ");
+        String CVContents = getInputLinesUntilDone(sc, "Enter the contents of your CV as a series of plain " +
+                "text lines (program will stop reading after the first empty line): ");
+        String coverLetterContents = getInputLinesUntilDone(sc, "Enter the contents of your cover letter " +
+                "as a series of plain text lines (program will stop reading after the first empty line): ");
         JobApplicationDocument CV = new JobApplicationDocument(CVContents);
         JobApplicationDocument coverLetter = new JobApplicationDocument(coverLetterContents);
         return new JobApplication(applicant, posting, CV, coverLetter, today);
     }
 
     /**
-     * Submit a job application on behalf of the applicant.
-     *
+     * Get the posting that the applicant wishes to apply to.
      * @param sc The Scanner for user input.
      * @param today Today's date.
+     * @return the posting that the applicant wishes to apply to.
      */
-    private void submitApplication(Scanner sc, LocalDate today) {
-        System.out.println();
+    private JobPosting getPostingForJobApplication(Scanner sc, LocalDate today) {
         String companyName = getInputLine(sc, "Enter the name of the company you wish to apply to: ");
         Company company = JobApplicationSystem.getCompany(companyName);
         while (company == null) {
@@ -268,6 +268,18 @@ public class ApplicantInterface extends UserInterface {
             postingId = getInteger(sc, "Enter the id of the posting you wish to apply for: ");
             posting = company.getJobPostingManager().getJobPosting(postingId);
         }
+        return posting;
+    }
+
+    /**
+     * Submit a job application on behalf of the applicant.
+     *
+     * @param sc The Scanner for user input.
+     * @param today Today's date.
+     */
+    private void submitApplication(Scanner sc, LocalDate today) {
+        JobPosting posting = this.getPostingForJobApplication(sc, today);
+        System.out.println();
         if (applicant.hasAppliedTo(posting)) {
             System.out.println("You have already submitted an application for this job posting.");
             return;
@@ -282,19 +294,17 @@ public class ApplicantInterface extends UserInterface {
                     return;
                 }
                 else {
-                    System.out.println();
                     JobApplication application = this.createJobApplicationThroughFiles(sc, today, posting);
                     posting.addJobApplication(application);
                     applicant.registerJobApplication(application);
-                    System.out.println("Application successfully submitted.");
+                    System.out.println("\nApplication successfully submitted.");
                     return;
                 }
             case 2:
-                System.out.println();
                 JobApplication application = this.createJobApplicationThroughTextEntry(sc, today, posting);
                 posting.addJobApplication(application);
                 applicant.registerJobApplication(application);
-                System.out.println("Application successfully submitted.");
+                System.out.println("\nApplication successfully submitted.");
         }
     }
 
@@ -307,26 +317,23 @@ public class ApplicantInterface extends UserInterface {
     private void displayApplications(Scanner sc, LocalDate today, boolean withdrawal) {
         System.out.println();
         ArrayList<JobApplication> applications = applicant.getJobApplicationManager().getJobApplications();
-        if (applications.isEmpty()) {
+        if (applications.isEmpty())
             System.out.println("You have not yet submitted any applications.");
-        }
         else {
             int applicationNumber = 0;
             for (JobApplication application : applications) {
                 applicationNumber++;
-                if (withdrawal) {
+                if (withdrawal)
                     System.out.print(applicationNumber + ". ");
-                }
                 System.out.println(application.toStringForApplicant());
                 System.out.println();
             }
             if (withdrawal) {
-                if (this.withdrawApplication(sc, today, applications, applicationNumber)) {
+                if (this.withdrawApplication(sc, today, applications, applicationNumber))
                     System.out.println("Application successfully withdrawn.");
-                } else {
+                else
                     System.out.println("As the job posting corresponding to this application has already been filled, " +
                             "it is no longer possible to withdraw the application.");
-                }
             }
         }
     }
@@ -350,6 +357,23 @@ public class ApplicantInterface extends UserInterface {
     }
 
     /**
+     * Display either the previous or current applications this applicant has submitted, depending on whether
+     * previous is true.
+     * @param previous whether or not the applications shown should be previous applications.
+     */
+    private void displayApplicationHistory(boolean previous) {
+        ArrayList<JobApplication> applications = previous ?
+                applicant.getJobApplicationManager().getPreviousJobApplications()
+                : applicant.getJobApplicationManager().getCurrentJobApplications();
+        for (JobApplication application : applications) {
+            JobPosting posting = application.getJobPosting();
+            System.out.println(posting.toStringStandardInput());
+            System.out.println("Your status: " + application.getStatus());
+            System.out.println();
+        }
+    }
+
+    /**
      * Display the applicant's account history.
      *
      * @param today Today's date.
@@ -358,19 +382,9 @@ public class ApplicantInterface extends UserInterface {
         System.out.println();
         System.out.println("Account created: " + applicant.getDateCreated());
         System.out.println("Previous job applications:");
-        for (JobApplication application : applicant.getJobApplicationManager().getPreviousJobApplications()) {
-            JobPosting posting = application.getJobPosting();
-            System.out.println(posting.toStringStandardInput());
-            System.out.println("You status: " + application.getStatus());
-            System.out.println();
-        }
+        this.displayApplicationHistory(true);
         System.out.println("Current job applications:");
-        for (JobApplication application : applicant.getJobApplicationManager().getCurrentJobApplications()) {
-            JobPosting posting = application.getJobPosting();
-            System.out.println(posting.toStringStandardInput());
-            System.out.println("You status: " + application.getStatus());
-            System.out.println();
-        }
+        this.displayApplicationHistory(false);
         if (applicant.getJobApplicationManager().getJobApplications().isEmpty())
             System.out.println("You have not yet submitted any job applications.");
         else
