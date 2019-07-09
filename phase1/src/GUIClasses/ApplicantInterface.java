@@ -187,12 +187,11 @@ public class ApplicantInterface extends UserInterface {
             if (filterField.equalsIgnoreCase(posting.getField())
                     && filterCompanyName.equalsIgnoreCase(posting.getCompany().getName())) {
                 noPostingsFound = false;
-                System.out.println(posting.toStringStandardInput());
-                System.out.println();
+                System.out.println("\n" + posting.toStringStandardInput());
             }
         }
         if (noPostingsFound) {
-            System.out.println("No postings were found matching the specified criteria.");
+            System.out.println("\nNo postings were found matching the specified criteria.");
         }
     }
 
@@ -203,14 +202,13 @@ public class ApplicantInterface extends UserInterface {
      * @return the document selected.
      */
     private JobApplicationDocument selectDocumentFromFiles(Scanner sc, String documentType) {
-        System.out.println("Here are your files: ");
+        System.out.println("\nHere are your files: ");
         int fileNumber = 0;
         for (JobApplicationDocument document : applicant.getDocumentManager().getDocuments()) {
             fileNumber++;
-            System.out.println(fileNumber + ". " + document.getContents());
-            System.out.println();
+            System.out.println("\n" + fileNumber + ". " + document.getContents());
         }
-        System.out.println("Please enter the file number of the " + documentType + " you would like to submit.");
+        System.out.println("\nPlease enter the file number of the " + documentType + " you would like to submit.");
         int option = getMenuOption(sc, fileNumber);
         return applicant.getDocumentManager().getDocuments().get(option-1);
     }
@@ -237,9 +235,9 @@ public class ApplicantInterface extends UserInterface {
      * @return a job application containing this applicant's entered files.
      */
     private JobApplication createJobApplicationThroughTextEntry(Scanner sc, LocalDate today, JobPosting posting) {
-        String CVContents = getInputLinesUntilDone(sc, "Enter the contents of your CV as a series of plain " +
+        String CVContents = getInputLinesUntilDone(sc, "\nEnter the contents of your CV as a series of plain " +
                 "text lines (program will stop reading after the first empty line): ");
-        String coverLetterContents = getInputLinesUntilDone(sc, "Enter the contents of your cover letter " +
+        String coverLetterContents = getInputLinesUntilDone(sc, "\nEnter the contents of your cover letter " +
                 "as a series of plain text lines (program will stop reading after the first empty line): ");
         JobApplicationDocument CV = new JobApplicationDocument(CVContents);
         JobApplicationDocument coverLetter = new JobApplicationDocument(coverLetterContents);

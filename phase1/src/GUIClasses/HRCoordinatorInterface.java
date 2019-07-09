@@ -555,20 +555,6 @@ public class HRCoordinatorInterface extends UserInterface {
     }
 
     /**
-     * Print a list of job postings.
-     *
-     * @param jobPostings The job postings to be printed.
-     */
-    private void printListOfJobPostingsToSelect(ArrayList<JobPosting> jobPostings) {
-        int i = 1;
-        for (JobPosting jobPosting : jobPostings) {
-            System.out.println("Job Posting " + i + ": ");
-            System.out.println(jobPosting.toStringStandardInput() + "\n");
-            i++;
-        }
-    }
-
-    /**
      * Interface for viewing recently closed postings and selecting a job posting for which the HR Coordinator wants to
      * select phone interview candidates.
      * @param today   Today's date.
@@ -581,7 +567,7 @@ public class HRCoordinatorInterface extends UserInterface {
             System.out.println("\nThere are no job postings that have recently closed.");
         } else {
             System.out.println("\nJob postings that have recently closed: ");
-            this.printListOfJobPostingsToSelect(recentlyClosed);
+            new PrintItems<JobPosting>().printList(recentlyClosed);
         }
         return recentlyClosed;
     }
