@@ -245,6 +245,5 @@ class LoginPanel extends JPanel {
         this.hidePassError();
         this.mainframe.newUserRef.setNewUsername(username);
         this.masterLayout.show(parent, "NEWUSER");
-        JobApplicationSystem.mainEnd();
     }
 }

@@ -61,6 +61,7 @@ class UserInterfaceTest {
         } else {
             JobApplicationSystem.getUserManager().createApplicant(
                     username, password, name, email, LocalDate.now(), true);
+            JobApplicationSystem.mainEnd();
             return 3;
         }
     }
@@ -84,6 +85,7 @@ class UserInterfaceTest {
         } else {
             JobApplicationSystem.getUserManager().createHRCoordinator(
                     username, password, name, email, company, LocalDate.now(), true);
+            JobApplicationSystem.mainEnd();
             return 3;
         }
     }
@@ -108,6 +110,7 @@ class UserInterfaceTest {
         } else {
             JobApplicationSystem.getUserManager().createInterviewer(
                     username, password, name, email, company, field, LocalDate.now(), true);
+            JobApplicationSystem.mainEnd();
             return 3;
         }
     }

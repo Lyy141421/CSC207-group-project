@@ -45,6 +45,10 @@ class ApplicantPanel extends JPanel{
 
         this.add(applicantStart, "applicantStart");
         this.add(viewApps, "viewApps");
+
+        if(BackEnd.checkUpcomingInterviews(date)) {
+
+        }
     }
 
     /**
