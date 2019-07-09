@@ -33,8 +33,8 @@ public class UserInterface {
     public static void main(String[] args) {
         UserInterface UI = new UserInterface();
         JobApplicationSystem.mainStart();
+        JobApplicationSystem.cyclicalTask();
         while (true) {
-            JobApplicationSystem.cyclicalTask();
             LocalDate today = UI.getTodaysDateValid();
             JobApplicationSystem.updateAllInterviewRounds();
             System.out.println("Welcome to GET A JOB!");
