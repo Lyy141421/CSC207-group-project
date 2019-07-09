@@ -137,6 +137,7 @@ class ApplicantPanel extends JPanel{
             @Override
             public void actionPerformed(ActionEvent e) {
                 masterLayout.show(parent, "LOGIN");
+                JobApplicationSystem.mainEnd();
             }
         });
         startTitle.add(logOut);
