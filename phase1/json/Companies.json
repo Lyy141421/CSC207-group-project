@@ -1,1 +1,24 @@
-{"data":{"Bing":{"jobpostings":[["JobPostings","1"]],"fields":[],"hrCoordinators":[["HRCoordinators","Stacy"]]}}}
+{
+  "data": {
+    "Company": {
+      "jobpostings": [],
+      "fields": [],
+      "hrCoordinators": []
+    },
+    "Bing": {
+      "jobpostings": [
+        [
+          "JobPostings",
+          "1"
+        ]
+      ],
+      "fields": [],
+      "hrCoordinators": [
+        [
+          "HRCoordinators",
+          "Stacy"
+        ]
+      ]
+    }
+  }
+}

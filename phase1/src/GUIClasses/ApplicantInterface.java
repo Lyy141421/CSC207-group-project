@@ -159,15 +159,15 @@ public class ApplicantInterface extends UserInterface {
         int option = this.getMenuOption(sc, numOptions);
         switch (option) {
             case 1:
-                String field = getInputLine(sc, "Enter your field: ");
+                String field = getInputLine(sc, "\nEnter your field: ");
                 this.displayOpenJobPostingsNotYetAppliedTo(today, field, null);
                 return;
             case 2:
-                String companyName = getInputLine(sc, "Enter your company name: ");
+                String companyName = getInputLine(sc, "\nEnter your company name: ");
                 this.displayOpenJobPostingsNotYetAppliedTo(today, null, companyName);
                 return;
             case 3:
-                field = getInputLine(sc, "Enter your field: ");
+                field = getInputLine(sc, "\nEnter your field: ");
                 companyName = getInputLine(sc, "Enter your company name: ");
                 this.displayOpenJobPostingsNotYetAppliedTo(today, field, companyName);
                 return;

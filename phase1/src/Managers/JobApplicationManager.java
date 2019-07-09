@@ -104,7 +104,7 @@ public class JobApplicationManager {
     public ArrayList<JobApplication> getPreviousJobApplications() {
         ArrayList<JobApplication> previousJobApps = new ArrayList<>();
         for (JobApplication jobApplication : this.getJobApplications()) {
-            if (jobApplication.isArchived()) {
+            if (jobApplication.isArchived() || jobApplication.isHired()) {
                 previousJobApps.add(jobApplication);
             }
         }

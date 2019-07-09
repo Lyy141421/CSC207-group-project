@@ -35,7 +35,7 @@ public class UserInterface {
         JobApplicationSystem.cyclicalTask();
         UserInterface UI = new UserInterface();
         while (true) {
-            System.out.println("Welcome to GET A JOB!\n");
+            System.out.println("\nWelcome to GET A JOB!\n");
             LocalDate today = UI.getTodaysDateValid();
             JobApplicationSystem.updateAllInterviewRounds();
             User user = UI.login();
