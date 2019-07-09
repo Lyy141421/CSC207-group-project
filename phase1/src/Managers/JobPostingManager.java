@@ -111,10 +111,33 @@ public class JobPostingManager {
         return jobPostings;
     }
 
+    /**
+     * Get a list of job postings with no applications in consideration.
+     *
+     * @param today Today's date.
+     * @return a list of job postings with no applications in consideration.
+     */
     public ArrayList<JobPosting> getClosedJobPostingsNoApplicationsInConsideration(LocalDate today) {
         ArrayList<JobPosting> jobPostings = new ArrayList<>();
         for (JobPosting jobPosting : this.getClosedJobPostingsNotFilled(today)) {
-            if (jobPosting.getInterviewManager().getHrTask() == InterviewManager.CLOSE_POSTING_NO_HIRE) {
+            if (jobPosting.getInterviewManager() != null &&
+                    jobPosting.getInterviewManager().getHrTask() == InterviewManager.CLOSE_POSTING_NO_HIRE) {
+                jobPostings.add(jobPosting);
+            }
+        }
+        return jobPostings;
+    }
+
+    /**
+     * Get a list of job postings that have closed with no applications submitted.
+     *
+     * @param today Today's date
+     * @return a list of job postings with no applications.
+     */
+    public ArrayList<JobPosting> getClosedJobPostingsNoApplicationsSubmitted(LocalDate today) {
+        ArrayList<JobPosting> jobPostings = new ArrayList<>();
+        for (JobPosting jobPosting : this.getClosedJobPostingsNotFilled(today)) {
+            if (jobPosting.hasNoApplicationsSubmitted()) {
                 jobPostings.add(jobPosting);
             }
         }
