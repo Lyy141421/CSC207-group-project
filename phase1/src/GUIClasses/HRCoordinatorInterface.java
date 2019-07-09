@@ -102,8 +102,21 @@ public class HRCoordinatorInterface extends UserInterface {
      *
      * @param jobPosting The job posting in question.
      */
-    void scheduleInterviews(JobPosting jobPosting) {
-        this.setUpInterviewsForRound(jobPosting);
+    boolean scheduleInterviews(JobPosting jobPosting) {
+        Company company = jobPosting.getCompany();
+        String field = jobPosting.getField();
+        if (!company.hasInterviewerForField(field)) {
+            return false;
+        } else {
+            ArrayList<JobApplication> jobApps = jobPosting.getInterviewManager().getApplicationsInConsideration();
+            if (jobApps.isEmpty()) {
+                return false;
+            }
+            for (JobApplication jobApp : jobApps) {
+                jobApp.setUpInterview(this.HRC, jobApp.getStatus().getValue() + 1);
+            }
+            return true;
+        }
     }
 
 
@@ -116,6 +129,7 @@ public class HRCoordinatorInterface extends UserInterface {
      */
     void run(LocalDate today) {
         Scanner sc = new Scanner(System.in);
+        this.viewPostingsWithNoApplicationsSubmitted(sc, today);
         this.viewPostingsWithNoApplicationsInConsideration(today);
         while (true) {
             try {
@@ -162,7 +176,7 @@ public class HRCoordinatorInterface extends UserInterface {
                 this.addJobPosting(sc, today);
                 break;
             case 2: // Update fields
-                this.updateJobPostingFields(sc, today);
+                this.viewUpdateJobPosting(sc, today);
                 break;
             case 3: // View job postings
                 this.runJobPostingSubMenu(sc, today);
@@ -216,21 +230,29 @@ public class HRCoordinatorInterface extends UserInterface {
     private void runJobPostingSubMenu(Scanner sc, LocalDate today) {
         int numOptions = this.displayJobPostingSubMenu();
         int option = this.getMenuOption(sc, numOptions);
+        PrintItems<JobPosting> printPostings = new PrintItems<>();
         switch (option) {
             case 1: // Search job posting
                 this.getJobPosting(sc);
                 break;
             case 2: // View open job postings
-                this.viewAllOpenJobPostingsInCompany(today);
+                ArrayList<JobPosting> openJobPostings = this.HRC.getCompany().getJobPostingManager().
+                        getOpenJobPostings(today);
+                printPostings.printList(openJobPostings);
                 break;
             case 3: // View closed job postings not yet filled
-                this.viewAllClosedJobPostingsNotFilledInCompany(today);
+                ArrayList<JobPosting> closedJobPostingsNotFilled = this.HRC.getCompany().getJobPostingManager().
+                        getClosedJobPostingsNotFilled(today);
+                printPostings.printList(closedJobPostingsNotFilled);
                 break;
             case 4: // View all filled job postings
-                this.viewAllFilledJobPostingsInCompany();
+                ArrayList<JobPosting> filledJobPostings = this.HRC.getCompany().getJobPostingManager().
+                        getFilledJobPostings();
+                printPostings.printList(filledJobPostings);
                 break;
             case 5: // View all job postings in company
-                this.viewAllJobPostingsInCompany();
+                ArrayList<JobPosting> allJobPostings = this.HRC.getCompany().getJobPostingManager().getJobPostings();
+                printPostings.printList(allJobPostings);
                 break;
             case 6: // Return to main menu
                 break;
@@ -262,27 +284,50 @@ public class HRCoordinatorInterface extends UserInterface {
      */
     private void runJobApplicationSubMenu(Scanner sc) {
         JobPosting jobPosting = this.getJobPosting(sc);
+        if (this.noItemsToViewForJobPosting(jobPosting)) {
+            return;
+        }
         int numOptions = this.displayJobApplicationSubMenu();
         int option = this.getMenuOption(sc, numOptions);
+        PrintItems<JobApplication> printApps = new PrintItems<>();
         switch (option) {
             case 1: // Search job application
                 this.searchSpecificJobApplication(sc, jobPosting);
                 break;
             case 2: // View all apps in consideration
-                this.viewAppsInConsiderationForJobPosting(jobPosting);
+                ArrayList<JobApplication> jobAppsInConsideration = jobPosting.getInterviewManager().
+                        getApplicationsInConsideration();
+                printApps.printList(jobAppsInConsideration);
                 break;
             case 3: // View all apps rejected
-                this.viewAppsRejectedForJobPosting(jobPosting);
+                ArrayList<JobApplication> jobAppsRejected = jobPosting.getInterviewManager().getApplicationsRejected();
+                printApps.printList(jobAppsRejected);
                 break;
             case 4: // View email list of apps rejected
-                this.viewEmailsOfRejected(jobPosting);
+                ArrayList<String> emailListRejected = jobPosting.getEmailsForRejectList();
+                new PrintItems<String>().printList(emailListRejected);
                 break;
             case 5: // View all applications
-                this.viewAllApplicationsForJobPosting(jobPosting);
+                ArrayList<JobApplication> jobApps = jobPosting.getJobApplications();
+                printApps.printList(jobApps);
                 break;
             case 6: // Return to main menu
                 break;
         }
+    }
+
+    /**
+     * Print that no applications can be viewed.
+     *
+     * @param jobPosting Job posting in question.
+     * @return true iff there are no items to view for this job posting.
+     */
+    private boolean noItemsToViewForJobPosting(JobPosting jobPosting) {
+        if (jobPosting.getInterviewManager() == null) {
+            System.out.println("Job posting is still open. No applications to view.");
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -343,7 +388,7 @@ public class HRCoordinatorInterface extends UserInterface {
      * @param sc    The scanner for user input.
      * @param today Today's date.
      */
-    private void updateJobPostingFields(Scanner sc, LocalDate today) {
+    private void viewUpdateJobPosting(Scanner sc, LocalDate today) {
         System.out.println();
         if (this.HRC.getCompany().getJobPostingManager().getOpenJobPostings(today).isEmpty()) {
             System.out.println("There are no open job postings to be updated.");
@@ -353,180 +398,21 @@ public class HRCoordinatorInterface extends UserInterface {
         if (jobPosting.isClosed(today)) {
             System.out.println("This job posting is closed and can no longer be updated.");
         } else {
-            System.out.println("Complete the following categories for updating a job posting as they appear.");
-            System.out.println("Enter '" + SKIP_FIELD_KEY + "' if you do not wish to update the category and enter " +
-                    SKIP_DATE_KEY + " if you do not wish to update the close date.");
-            jobPosting.updateFields(SKIP_FIELD_KEY, SKIP_DATE_KEY, this.getFieldsForJobPosting(sc, today));
-            System.out.println("You have successfully updated " + jobPosting.getTitle() + ".");
+            this.updateJobPostingFields(sc, today, jobPosting);
         }
     }
 
     /**
-     * Interface for viewing all job postings within the company.
+     * Interface for updating the fields for a job posting.
+     * @param sc        The scanner for user input.
+     * @param today     Today's date.
+     * @param jobPosting    The job posting to be updated.
      */
-    private void viewAllJobPostingsInCompany() {
-        ArrayList<JobPosting> jobPostings = this.HRC.getCompany().getJobPostingManager().getJobPostings();
-        if (jobPostings.isEmpty()) {
-            System.out.println();
-            System.out.println("No job postings to view.");
-        }
-        else {
-            for (JobPosting jobPosting : jobPostings) {
-                System.out.println();
-                System.out.println(jobPosting.toStringStandardInput());
-            }
-        }
-    }
-
-    /**
-     * Interface for viewing all open job posting within the company.
-     *
-     * @param today Today's date.
-     */
-    private void viewAllOpenJobPostingsInCompany(LocalDate today) {
-        ArrayList<JobPosting> jobPostings = this.HRC.getCompany().getJobPostingManager().getOpenJobPostings(today);
-        if (jobPostings.isEmpty()) {
-            System.out.println();
-            System.out.println("No job postings to view.");
-        }
-        else {
-            for (JobPosting jobPosting : jobPostings) {
-                System.out.println();
-                System.out.println(jobPosting.toStringStandardInput());
-            }
-        }
-    }
-
-    /**
-     * Interface for viewing all job postings not filled within the company
-     *
-     * @param today Today's date
-     */
-    private void viewAllClosedJobPostingsNotFilledInCompany(LocalDate today) {
-        ArrayList<JobPosting> jobPostings = this.HRC.getCompany().getJobPostingManager().
-                getClosedJobPostingsNotFilled(today);
-        if (jobPostings.isEmpty()) {
-            System.out.println();
-            System.out.println("No job postings to view.");
-        }
-        else {
-            for (JobPosting jobPosting : jobPostings) {
-                System.out.println();
-                System.out.println(jobPosting.toStringStandardInput());
-            }
-        }
-    }
-
-    /**
-     * Interface for viewing all filled job postings within the company.
-     */
-    private void viewAllFilledJobPostingsInCompany() {
-        ArrayList<JobPosting> jobPostings = this.HRC.getCompany().getJobPostingManager().getFilledJobPostings();
-        if (jobPostings.isEmpty()) {
-            System.out.println();
-            System.out.println("No job postings to view.");
-        }
-        else {
-            for (JobPosting jobPosting : jobPostings) {
-                System.out.println();
-                System.out.println(jobPosting.toStringStandardInput());
-            }
-        }
-    }
-
-    /**
-     * Get a list of all applications for a specific job posting.
-     * @param jobPosting The job posting in question.
-     */
-    private void viewAllApplicationsForJobPosting(JobPosting jobPosting) {
-        ArrayList<JobApplication> jobApps = jobPosting.getJobApplications();
-        if (jobApps.isEmpty()) {
-            System.out.println();
-            System.out.println("No applications to view.");
-        }
-        else {
-            for (JobApplication jobApp : jobApps) {
-                System.out.println();
-                System.out.println(jobApp);
-            }
-        }
-    }
-
-    /**
-     * Get a list of all the job applications in consideration for a job posting.
-     * @param jobPosting The job posting in question.
-     */
-    private void viewAppsInConsiderationForJobPosting(JobPosting jobPosting) {
-        InterviewManager interviewManager = jobPosting.getInterviewManager();
-        if (interviewManager == null) {
-            System.out.println();
-            System.out.println("Job posting is still open. No applications to view.");
-        }
-        else {
-            ArrayList<JobApplication> jobApps = interviewManager.getApplicationsInConsideration();
-            if (jobApps.isEmpty()) {
-                System.out.println();
-                System.out.println("No applications to view.");
-            }
-            else {
-                for (JobApplication jobApp : jobApps) {
-                    System.out.println();
-                    System.out.println(jobApp);
-                }
-            }
-        }
-    }
-
-    /**
-     * Get a list of all the job applications rejected for a job posting.
-     *
-     * @param jobPosting The job posting in question.
-     */
-    private void viewAppsRejectedForJobPosting(JobPosting jobPosting) {
-        InterviewManager interviewManager = jobPosting.getInterviewManager();
-        if (interviewManager == null) {
-            System.out.println();
-            System.out.println("Job posting is still open. No applications to view.");
-        }
-        else {
-            ArrayList<JobApplication> jobApps = jobPosting.getInterviewManager().getApplicationsRejected();
-            if (jobApps.isEmpty()) {
-                System.out.println();
-                System.out.println("No applications to view.");
-            }
-            else {
-                for (JobApplication jobApp : jobApps) {
-                    System.out.println();
-                    System.out.println(jobApp);
-                }
-            }
-        }
-    }
-
-    /**
-     * Interface for viewing a list of emails of applicants who have been rejected to this job posting.
-     *
-     * @param jobPosting The job posting in question.
-     */
-    private void viewEmailsOfRejected(JobPosting jobPosting) {
-        InterviewManager interviewManager = jobPosting.getInterviewManager();
-        if (interviewManager == null) {
-            System.out.println();
-            System.out.println("Job posting is still open. No applications to view.");
-        }
-        else {
-            ArrayList<JobApplication> jobApps = jobPosting.getInterviewManager().getApplicationsRejected();
-            if (jobApps.isEmpty()) {
-                System.out.println();
-                System.out.println("No applications to view.");
-            }
-            else {
-                for (JobApplication jobApp : jobApps) {
-                    System.out.println();
-                    System.out.println(jobApp.getApplicant().getEmail());
-                }
-            }
-        }
+    private void updateJobPostingFields(Scanner sc, LocalDate today, JobPosting jobPosting) {
+        System.out.println("Complete the following categories for updating a job posting as they appear.");
+        System.out.println("Enter '" + SKIP_FIELD_KEY + "' if you do not wish to update the category and enter " +
+                SKIP_DATE_KEY + " if you do not wish to update the close date.");
+        jobPosting.updateFields(SKIP_FIELD_KEY, SKIP_DATE_KEY, this.getFieldsForJobPosting(sc, today));
     }
 
     /**
@@ -556,20 +442,9 @@ public class HRCoordinatorInterface extends UserInterface {
      * @param applicant The applicant in question.
      */
     private void viewAllJobAppsToCompany(Applicant applicant) {
-        if (applicant == null) {
-            return;
-        }
-        ArrayList<JobApplication> jobApps = this.HRC.getCompany().getAllApplicationsToCompany(applicant);
-        if (jobApps.isEmpty()) {
-            System.out.println();
-            System.out.println("No applications to view.");
-        }
-        else {
-            System.out.println("Job applications submitted by " + applicant.getUsername() + ": ");
-            for (JobApplication jobApp : jobApps) {
-                System.out.println();
-                System.out.println(jobApp);
-            }
+        if (applicant != null) {
+            ArrayList<JobApplication> jobApps = this.HRC.getCompany().getAllApplicationsToCompany(applicant);
+            new PrintItems<JobApplication>().printList(jobApps);
         }
     }
 
@@ -644,7 +519,7 @@ public class HRCoordinatorInterface extends UserInterface {
             }
             System.out.println("The following job applications will have interviews set-up automatically.");
             for (JobApplication jobApp : jobApps) {
-                this.setUpInterviewForJobApplication(jobApp);
+                jobApp.setUpInterview(this.HRC, jobApp.getStatus().getValue() + 1);
                 System.out.println();
                 System.out.println(jobApp);
             }
@@ -652,19 +527,11 @@ public class HRCoordinatorInterface extends UserInterface {
     }
 
     /**
-     * Interface for setting up an interview for a job application.
-     * @param jobApplication    The job application for which an interview is to be set up.
-     */
-    private void setUpInterviewForJobApplication(JobApplication jobApplication) {
-        jobApplication.setUpInterview(this.HRC, jobApplication.getStatus().getValue() + 1);
-    }
-
-    /**
      * Print a list of job postings.
      *
      * @param jobPostings The job postings to be printed.
      */
-    private void printListOfJobPostings(ArrayList<JobPosting> jobPostings) {
+    private void printListOfJobPostingsToSelect(ArrayList<JobPosting> jobPostings) {
         int i = 1;
         for (JobPosting jobPosting : jobPostings) {
             System.out.println("Job Posting " + i + ": ");
@@ -688,7 +555,7 @@ public class HRCoordinatorInterface extends UserInterface {
             System.out.println("There are no job postings that have recently closed.");
         } else {
             System.out.println("Job postings that have recently closed: ");
-            this.printListOfJobPostings(recentlyClosed);
+            this.printListOfJobPostingsToSelect(recentlyClosed);
         }
         return recentlyClosed;
     }
@@ -713,20 +580,37 @@ public class HRCoordinatorInterface extends UserInterface {
      */
     private void viewPostingsWithNoApplicationsInConsideration(LocalDate today) {
         JobPostingManager JPM = this.HRC.getCompany().getJobPostingManager();
-        ArrayList<JobPosting> jobPostingsNoApps = JPM.getClosedJobPostingsNoApplicationsInConsideration(today);
-        System.out.println("Job postings with no applications in consideration: ");
-        if (jobPostingsNoApps.isEmpty()) {
-            System.out.println("N/A");
-        } else {
-            System.out.println();
-            System.out.println("Each job posting will be automatically set to filled with number of positions 0.");
-            System.out.println("You may want to consider opening other job postings with these job titles.");
+        ArrayList<JobPosting> jobPostingsNoAppsInConsideration =
+                JPM.getClosedJobPostingsNoApplicationsInConsideration(today);
+        if (!jobPostingsNoAppsInConsideration.isEmpty()) {
+            System.out.println("Job postings with no applications in consideration: ");
             System.out.println();
         }
-        for (JobPosting jobPosting : jobPostingsNoApps) {
+        for (JobPosting jobPosting : jobPostingsNoAppsInConsideration) {
             System.out.println(jobPosting.toStringStandardInput());
+            System.out.println("Each job posting will be automatically set to filled with number of positions 0.");
+            System.out.println("You may want to consider opening other job postings with these job titles.");
             jobPosting.setNumPositions(0);
             jobPosting.setFilled();
+        }
+    }
+
+    /**
+     * Interface for viewing and possibly updating the job postings with no applications submitted.
+     *
+     * @param sc    The scanner for user input.
+     * @param today Today's date.
+     */
+    private void viewPostingsWithNoApplicationsSubmitted(Scanner sc, LocalDate today) {
+        JobPostingManager JPM = this.HRC.getCompany().getJobPostingManager();
+        for (JobPosting jobPosting : JPM.getClosedJobPostingsNoApplicationsSubmitted(today)) {
+            System.out.println("No applications have been submitted for this job posting.");
+            System.out.println("Would you like to update its fields? ");
+            String response = this.getInputToken(sc, "Enter 'N' for no or any other key for yes: ");
+            sc.nextLine();
+            if (!response.equals("N")) {
+                this.updateJobPostingFields(sc, today, jobPosting);
+            }
         }
     }
 
@@ -756,11 +640,10 @@ public class HRCoordinatorInterface extends UserInterface {
      * @param today     Today's date.
      */
     private void hireApplicants(Scanner sc, LocalDate today) {
-        ArrayList<JobPosting> jobPostings = this.viewPostingsReadyForHiring(today);
-        if (jobPostings.isEmpty()) {
-            return;
-        }
-        JobPosting jobPosting = this.selectJobPosting(sc, jobPostings);
+        JobPostingManager JPM = this.HRC.getCompany().getJobPostingManager();
+        ArrayList<JobPosting> readyForHiring = JPM.getJobPostingsForHiring(today);
+        new PrintItems<JobPosting>().printListToSelectFrom(readyForHiring);
+        JobPosting jobPosting = this.selectJobPosting(sc, readyForHiring);
         InterviewManager IM = jobPosting.getInterviewManager();
         ArrayList<JobApplication> jobApps;
         if (!IM.isNumApplicantUnderOrAtThreshold()) {   // Number of applications greater than num of positions
@@ -795,24 +678,6 @@ public class HRCoordinatorInterface extends UserInterface {
             System.out.println("You may want to consider opening another job posting for the same title " +
                     "in order to fill the remaining positions.");
         }
-    }
-
-    /**
-     * Interface for viewing postings ready for hiring.
-     * @param today Today's date.
-     * @return list of job postings ready for hiring.
-     */
-    private ArrayList<JobPosting> viewPostingsReadyForHiring(LocalDate today) {
-        JobPostingManager JPM = this.HRC.getCompany().getJobPostingManager();
-        ArrayList<JobPosting> readyForHiring = JPM.getJobPostingsForHiring(today);
-        System.out.println();
-        if (readyForHiring.isEmpty()) {
-            System.out.println("There are no job postings ready for hiring.");
-        } else {
-            System.out.println("Job postings ready for hiring: ");
-            this.printListOfJobPostings(readyForHiring);
-        }
-        return readyForHiring;
     }
 
     /**
