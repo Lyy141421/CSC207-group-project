@@ -33,12 +33,16 @@ public class UserInterface {
     public static void main(String[] args) {
         UserInterface UI = new UserInterface();
         while (true) {
+            JobApplicationSystem.mainStart();
+            JobApplicationSystem.cyclicalTask();
             LocalDate today = UI.getTodaysDateValid();
             JobApplicationSystem.updateAllInterviewRounds();
+            System.out.println("Welcome to GET A JOB!");
             User user = UI.login();
             UserInterface userInterface = new InterfaceFactory().create(user);
             userInterface.run(today);
-            System.out.println();
+            JobApplicationSystem.mainEnd();
+            System.out.println("Thank you for using GET A JOB!");
         }
     }
 

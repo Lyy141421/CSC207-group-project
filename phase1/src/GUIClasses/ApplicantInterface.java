@@ -29,7 +29,6 @@ public class ApplicantInterface extends UserInterface {
      * @param today Today's date.
      */
     void run(LocalDate today) {
-        JobApplicationSystem.mainStart();
         Scanner sc = new Scanner(System.in);
         System.out.println("Welcome, " + applicant.getLegalName() + ".");
         this.displayUpcomingInterviews(today);
@@ -38,7 +37,6 @@ public class ApplicantInterface extends UserInterface {
                 this.runMainMenu(sc, today);
             }
             catch (ExitException ee) {
-                JobApplicationSystem.mainEnd();
                 return;
             }
         }

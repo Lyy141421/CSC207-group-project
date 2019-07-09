@@ -95,7 +95,6 @@ public class InterviewerInterface extends UserInterface {
      * @param today Today's date.
      */
     void run(LocalDate today) {
-        JobApplicationSystem.mainStart();
         Scanner sc = new Scanner(System.in);
         this.scheduleInterviews(sc, today);
         System.out.println();
@@ -104,7 +103,6 @@ public class InterviewerInterface extends UserInterface {
             try {
                 this.runMainMenu(sc);
             } catch (ExitException ee) {
-                JobApplicationSystem.mainEnd();
                 break;
             }
         }

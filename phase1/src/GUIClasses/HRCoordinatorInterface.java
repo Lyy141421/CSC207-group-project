@@ -155,7 +155,6 @@ public class HRCoordinatorInterface extends UserInterface {
      * @param today Today's date.
      */
     void run(LocalDate today) {
-        JobApplicationSystem.mainStart();
         Scanner sc = new Scanner(System.in);
         this.viewPostingsWithNoApplicationsSubmitted(sc, today);
         this.viewPostingsWithNoApplicationsInConsideration(today);
@@ -163,7 +162,6 @@ public class HRCoordinatorInterface extends UserInterface {
             try {
                 this.runMainMenu(sc, today);
             } catch (ExitException ee) {
-                JobApplicationSystem.mainEnd();
                 break;
             }
         }
