@@ -99,7 +99,7 @@ public class JobApplicationSystem {
      * To be called at the start of the program
      * Used to load all objects from json memory
      */
-    static void mainStart() {
+    public static void mainStart() {
         LoaderManager applicant = new LoaderManager(new ApplicantLoader(), Applicant.class, Applicant.FILENAME);
         LoaderManager hrcoordinator = new LoaderManager(new HRCoordinatorLoader(), HRCoordinator.class, HRCoordinator.FILENAME);
         LoaderManager interviewer = new LoaderManager(new InterviewerLoader(), Interviewer.class, Interviewer.FILENAME);
@@ -157,7 +157,7 @@ public class JobApplicationSystem {
     /**
      A method which triggers once a day from the time it is started.
      */
-    private static void cyclicalTask(){
+    public static void cyclicalTask() {
         TimerTask daily_tasks = new TimerTask() {
             public void run() {
                 applicant30Day();
