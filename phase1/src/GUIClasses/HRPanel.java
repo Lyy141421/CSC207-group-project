@@ -191,6 +191,8 @@ public class HRPanel extends JPanel implements ActionListener {
     private JPanel viewApplication () {
         JPanel applicationPanel = new JPanel(new BorderLayout());
         JPanel buttons = new JPanel(new FlowLayout());
+        JPanel hireOrRejectButtons = new JPanel();
+        hireOrRejectButtons.setLayout(new BoxLayout(hireOrRejectButtons, BoxLayout.Y_AXIS));
 
         String[] attributes = new String[]{"Overview", "CV", "Cover letter"};
         JList<String> viewable = new JList<>(attributes);
@@ -198,7 +200,31 @@ public class HRPanel extends JPanel implements ActionListener {
         info.setEditable(false);
 
         JButton scheduleInterview = new JButton("Schedule");
-        JButton hiring = new JButton("Hiring decision");
+        scheduleInterview.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int selectedIndex = applications.getSelectedIndex();
+                JobApplication selectedApp = currApps.get(selectedIndex);
+
+            }
+        });
+        JRadioButton hire = new JRadioButton("Hire");
+        hire.setSelected(true);
+        JRadioButton reject = new JRadioButton("Reject");
+        ButtonGroup hireOrReject = new ButtonGroup();
+        hireOrReject.add(hire);
+        hireOrReject.add(reject);
+        hireOrRejectButtons.add(hire);
+        hireOrRejectButtons.add(reject);
+        JButton confirm = new JButton("Confirm");
+        confirm.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int selectedIndex = applications.getSelectedIndex();
+                JobApplication selectedApp = currApps.get(selectedIndex);
+                // call pass/fail
+            }
+        });
         JButton home = new JButton("Home");
         home.addActionListener(this);
 
@@ -212,7 +238,23 @@ public class HRPanel extends JPanel implements ActionListener {
             @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
-                    info.setText(getInfo(currApps.get(applications.getSelectedIndex()), viewable.getSelectedIndex()));
+                    JobApplication selectedApp = currApps.get(applications.getSelectedIndex());
+                    info.setText(getInfo(selectedApp, viewable.getSelectedIndex()));
+                    if (scheduleJP.contains(selectedApp)) {
+                        scheduleInterview.setVisible(true);
+                        hireOrRejectButtons.setVisible(false);
+                        confirm.setVisible(false);
+                    } else if (hiringJP.contains(selectedApp)) {
+                        scheduleInterview.setVisible(false);
+                        hireOrRejectButtons.setVisible(true);
+                        confirm.setVisible(true);
+                    } else if (prePhoneJP.contains(selectedApp)) {
+                        // how?
+                    }else {
+                        scheduleInterview.setVisible(false);
+                        hireOrRejectButtons.setVisible(false);
+                        confirm.setVisible(false);
+                    }
                 }
             }
         });
@@ -220,12 +262,14 @@ public class HRPanel extends JPanel implements ActionListener {
         viewable.addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
-                info.setText(getInfo(currApps.get(applications.getSelectedIndex()), e.getFirstIndex()));
+                JobApplication selectedApp = currApps.get(applications.getSelectedIndex());
+                info.setText(getInfo(selectedApp, e.getFirstIndex()));
             }
         });
 
         buttons.add(scheduleInterview);
-        buttons.add(hiring);
+        buttons.add(hireOrRejectButtons);
+        buttons.add(confirm);
         buttons.add(home);
 
         applicationPanel.add(applications, BorderLayout.NORTH);
