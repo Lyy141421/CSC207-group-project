@@ -150,8 +150,7 @@ public class JobPosting implements Storable {
      */
     public void updateFields(int skipFieldKey, LocalDate skipDateKey, ArrayList<Object> fields) {
         for (int i = 0; i < fields.size(); i++) {
-            if (!(fields.get(i).equals(String.valueOf(skipFieldKey)) || fields.get(i).equals(skipFieldKey) ||
-                    ((LocalDate) fields.get(i)).isEqual(skipDateKey))) {
+            if (fields.get(i) instanceof String && !(fields.get(i).equals(String.valueOf(skipFieldKey)))) {
                 if (i == 0) {
                     this.setTitle((String.valueOf(fields.get(i))));
                 } else if (i == 1) {
@@ -160,11 +159,11 @@ public class JobPosting implements Storable {
                     this.setDescription((String.valueOf(fields.get(i))));
                 } else if (i == 3) {
                     this.setRequirements((String.valueOf(fields.get(i))));
-                } else if (i == 4) {
-                    this.setNumPositions((Integer) fields.get(i));
-                } else if (i == 5) {
-                    this.setCloseDate((LocalDate) fields.get(i));
                 }
+            } else if (fields.get(i) instanceof Integer && !fields.get(i).equals(skipFieldKey)) {
+                this.setNumPositions((Integer) fields.get(i));
+            } else if (fields.get(i) instanceof LocalDate && !((LocalDate) fields.get(i)).isEqual(skipDateKey)) {
+                this.setCloseDate((LocalDate) fields.get(i));
             }
         }
     }
