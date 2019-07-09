@@ -23,7 +23,7 @@ import java.util.Date;
 
 public class InterviewerPanel extends JPanel implements ActionListener {
 
-    private JPanel contentPane;
+    private Container contentPane;
     private InterviewerInterface interviewerInterface;
     private LocalDate today;
 
@@ -38,7 +38,7 @@ public class InterviewerPanel extends JPanel implements ActionListener {
     private DefaultComboBoxModel<String> completeTitles;
     private JList<String> scheduleInterviews;
 
-    InterviewerPanel(JPanel contentPane, InterviewerInterface interviewerInterface, LocalDate today) {
+    InterviewerPanel(Container contentPane, InterviewerInterface interviewerInterface, LocalDate today) {
         this.contentPane = contentPane;
         this.interviewerInterface = interviewerInterface;
         this.today = today;

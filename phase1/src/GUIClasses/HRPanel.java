@@ -27,7 +27,7 @@ import java.util.Date;
 
 public class HRPanel extends JPanel implements ActionListener {
 
-    private JPanel contentPane;
+    private Container contentPane;
     private HRCoordinatorInterface HRInterface;
     private LocalDate today;
 
@@ -48,7 +48,7 @@ public class HRPanel extends JPanel implements ActionListener {
     private JPanel hireOrRejectButtons = new JPanel();
 
     // Create interface for HR
-    HRPanel (JPanel contentPane, HRCoordinatorInterface HRInterface, LocalDate today) {
+    HRPanel (Container contentPane, HRCoordinatorInterface HRInterface, LocalDate today) {
         this.contentPane = contentPane;
         this.HRInterface = HRInterface;
         this.today = today;
