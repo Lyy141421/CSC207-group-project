@@ -1,6 +1,7 @@
 package GUIClasses;
 
 
+import Main.JobApplicationSystem;
 import UsersAndJobObjects.JobApplication;
 import UsersAndJobObjects.JobPosting;
 import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
@@ -23,30 +24,49 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 
-// 3 rounds
+
 public class HRPanel extends JPanel implements ActionListener {
 
+    private JPanel contentPane;
     private HRCoordinatorInterface HRInterface;
     private LocalDate today;
+
     private ArrayList<JobPosting> prePhoneJP;
     private ArrayList<JobPosting> scheduleJP;
     private ArrayList<JobPosting> hiringJP;
+    private ArrayList<JobPosting> importantJP = new ArrayList<>();
     private ArrayList<JobPosting> allJP;
 
+    private JComboBox<String> jobPostings = new JComboBox<>();
+    private DefaultComboBoxModel<String> allTitles;
+    private DefaultComboBoxModel<String> importantTitles;
+    private ArrayList<JobPosting> currJPs;
+
+    private JComboBox<String> applications = new JComboBox<>();
+    private DefaultComboBoxModel<String> appTitles;
+    private ArrayList<JobApplication> currApps;
+
     // Create interface for HR
-    HRPanel (HRCoordinatorInterface HRInterface, LocalDate today) {
+    HRPanel (JPanel contentPane, HRCoordinatorInterface HRInterface, LocalDate today) {
+        this.contentPane = contentPane;
         this.HRInterface = HRInterface;
         this.today = today;
         ArrayList<ArrayList<JobPosting>> HRInfoList = HRInterface.getHighPriorityAndAllJobPostings(today);
         this.prePhoneJP = HRInfoList.get(0);
         this.scheduleJP = HRInfoList.get(1);
         this.hiringJP = HRInfoList.get(2);
+        this.importantJP.addAll(this.prePhoneJP);
+        this.importantJP.addAll(this.scheduleJP);
+        this.importantJP.addAll(this.hiringJP);
         this.allJP = HRInfoList.get(3);
+
+        this.allTitles = new DefaultComboBoxModel<>(getJPTitles(allJP));
+        this.importantTitles = new DefaultComboBoxModel<>(getJPTitles(importantJP));
 
         this.setLayout(new CardLayout());
         this.add(home(), "HOME");
-        this.add(browsePosting(allJP), "POSTING");
-        this.add(viewApplication(null), "APPLICATION");
+        this.add(browsePosting(), "POSTING");
+        this.add(viewApplication(), "APPLICATION");
         this.add(searchApplicant(), "APPLICANT");
         this.add(addPosting(), "ADDPOSTING");
     }
@@ -103,12 +123,12 @@ public class HRPanel extends JPanel implements ActionListener {
     // ====browsePosting methods====
 
     // Need to pass in list of job postings (all for browse all or particular for to-do)
-    private JPanel browsePosting (ArrayList<JobPosting> JPToShow) {
+    private JPanel browsePosting () {
         JPanel postingPanel = new JPanel(new BorderLayout());
         JPanel buttons = new JPanel(new FlowLayout());
 
         // could change
-        JComboBox<String> jobPostings = new JComboBox<>(this.getJPTitles(JPToShow));
+
         JTextArea info = new JTextArea("Job posting status here. Changes according to JobPosting selected in JComboBox");
         info.setEditable(false);
         info.setBorder(new EtchedBorder(EtchedBorder.LOWERED));
@@ -118,7 +138,7 @@ public class HRPanel extends JPanel implements ActionListener {
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
                     int selectedIndex = jobPostings.getSelectedIndex();
-                    JobPosting selectedJP = JPToShow.get(selectedIndex);
+                    JobPosting selectedJP = currJPs.get(selectedIndex);
                     info.setText(getStatus(selectedJP) + selectedJP.toString());
                 }
             }
@@ -168,31 +188,14 @@ public class HRPanel extends JPanel implements ActionListener {
 
     // ====Application panel methods====
 
-    private JPanel viewApplication (ArrayList<JobApplication> appsToShow) {
+    private JPanel viewApplication () {
         JPanel applicationPanel = new JPanel(new BorderLayout());
         JPanel buttons = new JPanel(new FlowLayout());
 
-        JComboBox<String> app = new JComboBox<>(this.getAppTitles(appsToShow));
         String[] attributes = new String[]{"Overview", "CV", "Cover letter"};
         JList<String> viewable = new JList<>(attributes);
-        JTextArea info = new JTextArea(appsToShow.get(0).getOverview());
+        JTextArea info = new JTextArea();
         info.setEditable(false);
-
-        app.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                if (e.getStateChange() == ItemEvent.SELECTED) {
-                    info.setText(getInfo(appsToShow.get(app.getSelectedIndex()), viewable.getSelectedIndex()));
-                }
-            }
-        });
-
-        viewable.addListSelectionListener(new ListSelectionListener() {
-            @Override
-            public void valueChanged(ListSelectionEvent e) {
-                info.setText(getInfo(appsToShow.get(app.getSelectedIndex()), e.getFirstIndex()));
-            }
-        });
 
         JButton scheduleInterview = new JButton("Schedule");
         JButton hiring = new JButton("Hiring decision");
@@ -205,23 +208,39 @@ public class HRPanel extends JPanel implements ActionListener {
         viewable.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
         viewable.setLayoutOrientation(JList.VERTICAL);
 
+        applications.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if (e.getStateChange() == ItemEvent.SELECTED) {
+                    info.setText(getInfo(currApps.get(applications.getSelectedIndex()), viewable.getSelectedIndex()));
+                }
+            }
+        });
+
+        viewable.addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                info.setText(getInfo(currApps.get(applications.getSelectedIndex()), e.getFirstIndex()));
+            }
+        });
+
         buttons.add(scheduleInterview);
         buttons.add(hiring);
         buttons.add(home);
 
-        applicationPanel.add(app, BorderLayout.NORTH);
+        applicationPanel.add(applications, BorderLayout.NORTH);
         applicationPanel.add(display, BorderLayout.CENTER);
         applicationPanel.add(buttons, BorderLayout.SOUTH);
 
         return applicationPanel;
     }
 
-    private String[] getAppTitles (ArrayList<JobApplication> appsToShow) {
+    private ArrayList<String> getAppTitles (ArrayList<JobApplication> appsToShow) {
         ArrayList<String> titles = new ArrayList<>();
         for (JobApplication app : appsToShow) {
             titles.add(app.getId() + "-" + app.getApplicant().getLegalName());
         }
-        return (String[]) titles.toArray();
+        return titles;
     }
 
     private String getInfo (JobApplication app, int attributeIndex) {
@@ -378,7 +397,13 @@ public class HRPanel extends JPanel implements ActionListener {
                 c.show(this, "HOME");
                 break;
             case "Browse all job postings":
+                this.currJPs = this.allJP;
+                this.jobPostings.setModel(this.allTitles);
+                c.show(this, "POSTING");
+                break;
             case "To-Do":
+                this.currJPs = this.importantJP;
+                this.jobPostings.setModel(this.importantTitles);
                 c.show(this, "POSTING");
                 break;
             case "Search applicant":
@@ -388,8 +413,16 @@ public class HRPanel extends JPanel implements ActionListener {
                 c.show(this, "ADDPOSTING");
                 break;
             case "View applications":
-            //case "Search":
+                int selectedIndex = this.jobPostings.getSelectedIndex();
+                JobPosting selectedJP = currJPs.get(selectedIndex);
+                this.currApps = selectedJP.getJobApplications();
+                this.appTitles.removeAllElements();
+                this.appTitles.addAll(getAppTitles(currApps));
                 c.show(this, "APPLICATION");
+                break;
+            case "Logout":
+                JobApplicationSystem.mainEnd();
+                ((CardLayout) this.contentPane.getLayout()).show(contentPane, "LOGIN");
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + button.getText());

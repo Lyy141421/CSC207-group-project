@@ -69,8 +69,8 @@ public class MainFrame extends JFrame {
         //interface = new InterfaceFactory.create(User)
         //if User instanceOf ...
         //(cast to xxxInterface) interface
-//        this.add(new HRPanel(interface, today), "HR");
-//        this.add(new InterviewerPanel(interface, today), "INTERVIEWER");
+//        this.add(new HRPanel(this.getContentPane(), interface, today), "HR");
+//        this.add(new InterviewerPanel(this.getContentPane(), interface, today), "INTERVIEWER");
 //        this.add(new ApplicantPanel(), "APPLICANT");
     }
 
