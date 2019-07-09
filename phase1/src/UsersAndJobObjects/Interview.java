@@ -172,10 +172,12 @@ public class Interview implements Storable {
      */
     @Override
     public String toString() {
-        String s = "Interview time: " + this.time.toString() + "\n";
-        s += this.toStringPrelimInfo();
-        s += "Interview notes: \n" + this.getInterviewNotes();
-        s += "Passed: " + this.isPassed();
+        String s = toStringPrelimInfo() + "\n";
+        if (this.isComplete()) {
+            s += "Interview time: " + this.time.toString() + "\n";
+            s += "Interview notes: \n" + this.getInterviewNotes();
+            s += "Passed: " + this.isPassed();
+        }
         return s;
     }
 

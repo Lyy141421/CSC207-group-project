@@ -103,6 +103,28 @@ public class HRCoordinatorInterface extends UserInterface {
     }
 
     /**
+     * Checks whether this job application has been rejected.
+     *
+     * @param jobApplication The job application in question.
+     * @return true iff this job application has been rejected.
+     */
+    boolean isRejected(JobApplication jobApplication) {
+        return jobApplication.getJobPosting().getInterviewManager().getApplicationsRejected().contains(jobApplication);
+    }
+
+    /**
+     * Choose whether this application moves on for phone interviews.
+     *
+     * @param jobApp   The job application in question.
+     * @param selected Whether or not the application is selected to move on.
+     */
+    void selectApplicationForPhoneInterview(JobApplication jobApp, boolean selected) {
+        if (!selected) {
+            jobApp.getJobPosting().getInterviewManager().reject(jobApp);
+        }
+    }
+
+    /**
      * Set up interviews for this job posting.
      *
      * @param jobPosting The job posting in question.
@@ -190,11 +212,10 @@ public class HRCoordinatorInterface extends UserInterface {
                 this.runJobApplicationSubMenu(sc);
                 break;
             case 5: // View previous job apps to company
-                Applicant applicant = this.searchSpecificApplicant(sc);
-                this.viewAllJobAppsToCompany(applicant);
+                this.viewAllJobAppsToCompany(sc);
                 break;
             case 6: // View interviews associated with a job application
-                this.viewPreviousInterviewsForJobApp(sc);
+                this.viewAllInterviewsForJobApp(sc);
                 break;
             case 7: // Select applicants for phone interview
                 this.selectJobAppsForPhoneInterview(sc, today);
@@ -243,20 +264,24 @@ public class HRCoordinatorInterface extends UserInterface {
             case 2: // View open job postings
                 ArrayList<JobPosting> openJobPostings = this.HRC.getCompany().getJobPostingManager().
                         getOpenJobPostings(today);
+                System.out.println("Open postings: ");
                 printPostings.printList(openJobPostings);
                 break;
             case 3: // View closed job postings not yet filled
                 ArrayList<JobPosting> closedJobPostingsNotFilled = this.HRC.getCompany().getJobPostingManager().
                         getClosedJobPostingsNotFilled(today);
+                System.out.println("Closed postings: ");
                 printPostings.printList(closedJobPostingsNotFilled);
                 break;
             case 4: // View all filled job postings
                 ArrayList<JobPosting> filledJobPostings = this.HRC.getCompany().getJobPostingManager().
                         getFilledJobPostings();
+                System.out.println("Filled postings: ");
                 printPostings.printList(filledJobPostings);
                 break;
             case 5: // View all job postings in company
                 ArrayList<JobPosting> allJobPostings = this.HRC.getCompany().getJobPostingManager().getJobPostings();
+                System.out.println("All postings: ");
                 printPostings.printList(allJobPostings);
                 break;
             case 6: // Return to main menu
@@ -302,18 +327,22 @@ public class HRCoordinatorInterface extends UserInterface {
             case 2: // View all apps in consideration
                 ArrayList<JobApplication> jobAppsInConsideration = jobPosting.getInterviewManager().
                         getApplicationsInConsideration();
+                System.out.println("Applications in consideration: ");
                 printApps.printList(jobAppsInConsideration);
                 break;
             case 3: // View all apps rejected
                 ArrayList<JobApplication> jobAppsRejected = jobPosting.getInterviewManager().getApplicationsRejected();
+                System.out.println("Applications rejected: ");
                 printApps.printList(jobAppsRejected);
                 break;
             case 4: // View email list of apps rejected
                 ArrayList<String> emailListRejected = jobPosting.getEmailsForRejectList();
+                System.out.println("Emails of rejected applicants: ");
                 new PrintItems<String>().printList(emailListRejected);
                 break;
             case 5: // View all applications
                 ArrayList<JobApplication> jobApps = jobPosting.getJobApplications();
+                System.out.println("All applications: ");
                 printApps.printList(jobApps);
                 break;
             case 6: // Return to main menu
@@ -432,10 +461,8 @@ public class HRCoordinatorInterface extends UserInterface {
             System.out.println("This applicant cannot be found.");
             return null;
         }
-        for (JobPosting jobPosting : this.HRC.getCompany().getJobPostingManager().getJobPostings()) {
-            if (applicant.hasAppliedTo(jobPosting)) {
-                return applicant;
-            }
+        if (this.HRC.getCompany().hasApplicantAppliedHere(applicant)) {
+            return applicant;
         }
         System.out.println();
         System.out.println("This applicant has not applied to this company.");
@@ -444,9 +471,9 @@ public class HRCoordinatorInterface extends UserInterface {
 
     /**
      * Interface for viewing all the previous job applications this applicant has submitted to this company.
-     * @param applicant The applicant in question.
      */
-    private void viewAllJobAppsToCompany(Applicant applicant) {
+    private void viewAllJobAppsToCompany(Scanner sc) {
+        Applicant applicant = this.searchSpecificApplicant(sc);
         if (applicant != null) {
             ArrayList<JobApplication> jobApps = this.HRC.getCompany().getAllApplicationsToCompany(applicant);
             new PrintItems<JobApplication>().printList(jobApps);
@@ -647,6 +674,7 @@ public class HRCoordinatorInterface extends UserInterface {
     private void hireApplicants(Scanner sc, LocalDate today) {
         JobPostingManager JPM = this.HRC.getCompany().getJobPostingManager();
         ArrayList<JobPosting> readyForHiring = JPM.getJobPostingsForHiring(today);
+        System.out.println("Job postings ready for hiring: ");
         new PrintItems<JobPosting>().printListToSelectFrom(readyForHiring);
         JobPosting jobPosting = this.selectJobPosting(sc, readyForHiring);
         InterviewManager IM = jobPosting.getInterviewManager();

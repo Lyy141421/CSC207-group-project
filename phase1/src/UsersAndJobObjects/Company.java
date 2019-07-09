@@ -94,6 +94,21 @@ public class Company implements Storable {
     }
 
     /**
+     * Check whether this applicant has applied to this company.
+     *
+     * @param applicant The applicant in question.
+     * @return true iff this applicant has applied to this company.
+     */
+    public boolean hasApplicantAppliedHere(Applicant applicant) {
+        for (JobPosting jobPosting : this.getJobPostingManager().getJobPostings()) {
+            if (applicant.hasAppliedTo(jobPosting)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * Report whether this company is the same as obj.
      *
      * @param obj     The object to be compared with.
