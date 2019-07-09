@@ -24,27 +24,16 @@ public class ApplicantInterfaceTest extends UserInterface {
     }
 
     /**
-     * Display the upcoming interviews for this applicant.
-     *
-     * @param today Today's date.
+     * Check if there are interviews on the date of login
      */
-    private void displayUpcomingInterviews(LocalDate today) {
+    boolean checkUpcomingInterviews(LocalDate today) {
         ArrayList<Interview> upcomingInterviews = applicant.getJobApplicationManager().getUpcomingInterviews(today);
-        if (upcomingInterviews.size() == 0) {
-            System.out.println("You have no upcoming interviews.");
-        }
-        else {
-            System.out.println("Here are your upcoming interviews:");
-            for (Interview interview : upcomingInterviews) {
-                System.out.println("Title: " + interview.getJobApplication().getJobPosting().getTitle());
-                System.out.println("Company: " + interview.getJobApplication().getJobPosting().getCompany().getName());
-                System.out.println(interview.getRoundNumberDescription(interview.getRoundNumber()));
-                System.out.println(interview.getTime());
-                System.out.println();
-            }
-        }
+        return (upcomingInterviews.size() > 0);
     }
 
+    /**
+     * Returns an arraylist containing all the job postings that apply to the applicant
+     */
     ArrayList<JobPosting> findAppliablePostings(LocalDate today, String field, String companyName) {
         ArrayList<JobPosting> openJobPostings = applicant.getOpenJobPostingsNotAppliedTo(today);
         ArrayList<JobPosting> ret = new ArrayList<>();

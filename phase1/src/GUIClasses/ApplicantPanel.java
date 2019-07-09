@@ -45,6 +45,10 @@ class ApplicantPanel extends JPanel{
 
         this.add(applicantStart, "applicantStart");
         this.add(viewApps, "viewApps");
+
+        if(BackEnd.checkUpcomingInterviews(date)) {
+            this.buildReminder();
+        }
     }
 
     /**
@@ -137,6 +141,7 @@ class ApplicantPanel extends JPanel{
             @Override
             public void actionPerformed(ActionEvent e) {
                 masterLayout.show(parent, "LOGIN");
+                JobApplicationSystem.mainEnd();
             }
         });
         startTitle.add(logOut);
@@ -351,6 +356,24 @@ class ApplicantPanel extends JPanel{
         formEntry.add(coverText); formEntry.add(coverScroll);
 
         return formEntry;
+    }
+
+    private JDialog buildReminder() {
+        JDialog d = new JDialog(new JFrame() , "Reminder", true);
+        d.setLayout( new FlowLayout() );
+        JButton b = new JButton ("OK");
+        b.addActionListener ( new ActionListener() {
+            public void actionPerformed( ActionEvent e )
+            {
+                d.setVisible(false);
+            }
+        });
+        d.add( new JLabel ("You have interview(s) today!"), SwingConstants.CENTER);
+        d.add(b);
+        d.setSize(300,80);
+        d.setVisible(true);
+
+        return d;
     }
 
     /**

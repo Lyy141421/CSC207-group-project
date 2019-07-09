@@ -120,7 +120,7 @@ public class JobApplicationSystem {
      * To be called at the end of the Program
      * Used to Save all Objects to json memory
      */
-    static void mainEnd(){
+    public static void mainEnd(){
         StorerManager.flushStored();
         StorerManager applicant = new StorerManager(new ApplicantStorer(), Applicant.class, userManager.getAllApplicants());
         StorerManager hrcoordinator = new StorerManager(new HRCoordinatorStorer(), HRCoordinator.class, userManager.getAllHRCoordinator());
