@@ -33,12 +33,16 @@ public class UserInterface {
     public static void main(String[] args) {
         UserInterface UI = new UserInterface();
         while (true) {
+            JobApplicationSystem.mainStart();
+            JobApplicationSystem.cyclicalTask();
             LocalDate today = UI.getTodaysDateValid();
             JobApplicationSystem.updateAllInterviewRounds();
+            System.out.println("Welcome to GET A JOB!");
             User user = UI.login();
             UserInterface userInterface = new InterfaceFactory().create(user);
             userInterface.run(today);
-            System.out.println();
+            JobApplicationSystem.mainEnd();
+            System.out.println("Thank you for using GET A JOB!");
         }
     }
 
@@ -262,7 +266,7 @@ public class UserInterface {
     private LocalDate getTodaysDateValid() {
         Scanner sc = new Scanner(System.in);
         LocalDate previousLoginDate = JobApplicationSystem.getPreviousLoginDate();
-        System.out.println();
+        System.out.println("----------------------------");
         LocalDate date;
         if (previousLoginDate == null) {
             date = this.getDate(sc, "Please enter today's date (yyyy-mm-dd): ");
@@ -406,6 +410,7 @@ public class UserInterface {
         else {
             while (!JobApplicationSystem.getUserManager().passwordCorrect(username, password)) {
                 System.out.println("Incorrect password.");
+                System.out.println();
                 password = this.getInputLine(sc, "Enter your password: ");
             }
             System.out.println("Login successful!");

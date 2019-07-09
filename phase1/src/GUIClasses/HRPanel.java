@@ -46,6 +46,7 @@ public class HRPanel extends JPanel implements ActionListener {
     private DefaultComboBoxModel<String> appTitles = new DefaultComboBoxModel<>();
     private ArrayList<JobApplication> currApps;
     private JPanel hireOrRejectButtons = new JPanel();
+    private JPanel phoneOrNotButtons = new JPanel();
 
     // Create interface for HR
     HRPanel (Container contentPane, HRCoordinatorInterface HRInterface, LocalDate today) {
@@ -134,17 +135,6 @@ public class HRPanel extends JPanel implements ActionListener {
         info.setEditable(false);
         info.setBorder(new EtchedBorder(EtchedBorder.LOWERED));
 
-        jobPostings.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                if (e.getStateChange() == ItemEvent.SELECTED) {
-                    int selectedIndex = jobPostings.getSelectedIndex();
-                    JobPosting selectedJP = currJPs.get(selectedIndex);
-                    info.setText(getStatus(selectedJP) + selectedJP.toString());
-                }
-            }
-        });
-
         JButton viewApplications = new JButton("View applications");
         JButton scheduleInterview = new JButton("Schedule");
         scheduleInterview.addActionListener(new ActionListener() {
@@ -153,7 +143,6 @@ public class HRPanel extends JPanel implements ActionListener {
                 int selectedIndex = jobPostings.getSelectedIndex();
                 JobPosting selectedJP = currJPs.get(selectedIndex);
                 boolean success = HRInterface.setUpInterviews(selectedJP);
-                // TODO: Remove this JP from scheduleJP, jobPostings(Combobox)
                 if (success) {
                     scheduleJP.remove(selectedJP);
                     importantJP.remove(selectedJP);
@@ -166,6 +155,22 @@ public class HRPanel extends JPanel implements ActionListener {
         viewApplications.addActionListener(this);
         JButton home = new JButton("Home");
         home.addActionListener(this);
+
+        jobPostings.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if (e.getStateChange() == ItemEvent.SELECTED) {
+                    int selectedIndex = jobPostings.getSelectedIndex();
+                    JobPosting selectedJP = currJPs.get(selectedIndex);
+                    info.setText(getStatus(selectedJP) + selectedJP.toString());
+                    if (scheduleJP.contains(selectedJP)) {
+                        scheduleInterview.setEnabled(false);
+                    } else {
+                        scheduleInterview.setEnabled(true);
+                    }
+                }
+            }
+        });
 
         jobPostings.setAlignmentX(Component.CENTER_ALIGNMENT);
         info.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -226,22 +231,20 @@ public class HRPanel extends JPanel implements ActionListener {
         hireOrReject.add(reject);
         hireOrRejectButtons.add(hire);
         hireOrRejectButtons.add(reject);
-        JButton confirm = new JButton("Confirm");
-        hireOrRejectButtons.add(confirm);
-        confirm.addActionListener(new ActionListener() {
+        JButton confirm1 = new JButton("Confirm");
+        hireOrRejectButtons.add(confirm1);
+        confirm1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 int selectedIndex = applications.getSelectedIndex();
                 JobApplication selectedApp = currApps.get(selectedIndex);
                 boolean filled = HRInterface.hireOrRejectApplication(selectedApp, hire.isSelected());
-                // TODO: Remove title from applications (JcomboBox), check hiring done?
-                // Maybe not remove title from applications to match with currApps, but check status of application when selected?
                 if (filled) {
                     appTitles.removeAllElements();
                     hiringJP.remove(selectedApp.getJobPosting());
                     importantJP.remove(selectedApp.getJobPosting());
                     for (JobApplication jobApp : currApps) {
-                        if (!(jobApp.isArchived()||jobApp.isHired())) {
+                        if (!(HRInterface.isRejected(jobApp)||jobApp.isHired())) {
                             HRInterface.hireOrRejectApplication(jobApp, false);
                         }
                     }
@@ -249,6 +252,33 @@ public class HRPanel extends JPanel implements ActionListener {
                 }
             }
         });
+
+        phoneOrNotButtons.setLayout(new BoxLayout(phoneOrNotButtons, BoxLayout.Y_AXIS));
+        JRadioButton phone = new JRadioButton("Select for phone Interview");
+        phone.setSelected(true);
+        JRadioButton noPhone = new JRadioButton("Reject");
+        ButtonGroup phoneOrNot = new ButtonGroup();
+        phoneOrNot.add(phone);
+        phoneOrNot.add(noPhone);
+        phoneOrNotButtons.add(phone);
+        phoneOrNotButtons.add(noPhone);
+        JButton confirm2 = new JButton("Confirm");
+        phoneOrNotButtons.add(confirm2);
+        confirm2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int selectedIndex = applications.getSelectedIndex();
+                JobApplication selectedApp = currApps.get(selectedIndex);
+                HRInterface.selectApplicationForPhoneInterview(selectedApp, phone.isSelected());
+                if (isPhoneSetup()) {
+                    appTitles.removeAllElements();
+                    prePhoneJP.remove(selectedApp.getJobPosting());
+                    scheduleJP.add(selectedApp.getJobPosting());
+                    JOptionPane.showMessageDialog(applicationPanel, "All applications have been processed. Please proceed to schedule interviews.");
+                }
+            }
+        });
+
         JButton home = new JButton("Home");
         home.addActionListener(this);
 
@@ -264,8 +294,15 @@ public class HRPanel extends JPanel implements ActionListener {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
                     JobApplication selectedApp = currApps.get(applications.getSelectedIndex());
                     info.setText(getInfo(selectedApp, viewable.getSelectedIndex()));
-                    if (selectedApp.isHired() || selectedApp.isArchived()) {
+                    if (selectedApp.isInPerson3() && !HRInterface.isRejected(selectedApp)) {
+                        hireOrRejectButtons.setVisible(true);
+                        phoneOrNotButtons.setVisible(false);
+                    } else if (selectedApp.isUnderReview() && !HRInterface.isRejected(selectedApp)) {
                         hireOrRejectButtons.setVisible(false);
+                        phoneOrNotButtons.setVisible(true);
+                    } else {
+                        hireOrRejectButtons.setVisible(false);
+                        phoneOrNotButtons.setVisible(false);
                     }
                 }
             }
@@ -280,7 +317,7 @@ public class HRPanel extends JPanel implements ActionListener {
         });
 
         buttons.add(hireOrRejectButtons);
-        buttons.add(confirm);
+        buttons.add(phoneOrNotButtons);
         buttons.add(home);
 
         applicationPanel.add(applications, BorderLayout.NORTH);
@@ -288,6 +325,16 @@ public class HRPanel extends JPanel implements ActionListener {
         applicationPanel.add(buttons, BorderLayout.SOUTH);
 
         return applicationPanel;
+    }
+
+    private boolean isPhoneSetup() {
+        boolean isSetup = true;
+        for (JobApplication jobApps : currApps) {
+            if (!(jobApps.isOnPhoneInterview()||HRInterface.isRejected(jobApps))) {
+                isSetup = false;
+            }
+        }
+        return isSetup;
     }
 
     private ArrayList<String> getAppTitles (ArrayList<JobApplication> appsToShow) {
@@ -337,7 +384,7 @@ public class HRPanel extends JPanel implements ActionListener {
                 } else {
                     currApps = apps;
                     appTitles.removeAllElements();
-                    appTitles.addAll(getAppTitles(apps));
+                    addListToModel(appTitles, getAppTitles(apps));
                     //todo: might cause issue
                     hireOrRejectButtons.setVisible(false);
                     ((CardLayout) getLayout()).show(getParent(), "APPLICATION");
@@ -354,6 +401,12 @@ public class HRPanel extends JPanel implements ActionListener {
         applicantPanel.add(home, BorderLayout.SOUTH);
 
         return applicantPanel;
+    }
+
+    private void addListToModel(DefaultComboBoxModel<String> model, ArrayList<String> appTitles) {
+        for (String title : appTitles) {
+            model.addElement(title);
+        }
     }
 
 
@@ -477,13 +530,7 @@ public class HRPanel extends JPanel implements ActionListener {
                 JobPosting selectedJP = currJPs.get(selectedIndex);
                 this.currApps = selectedJP.getJobApplications();
                 this.appTitles.removeAllElements();
-                this.appTitles.addAll(getAppTitles(currApps));
-                //disable/enable buttons
-                if (hiringJP.contains(selectedJP)) {
-                    hireOrRejectButtons.setVisible(true);
-                } else {
-                    hireOrRejectButtons.setVisible(false);
-                }
+                addListToModel(appTitles, getAppTitles(currApps));
                 c.show(this, "APPLICATION");
                 break;
             case "Logout":

@@ -50,6 +50,10 @@ public class Status {
     }
 
     // === Other methods ===
+    boolean isUnderReview () {
+        return this.value == Status.UNDER_REVIEW;
+    }
+
     boolean isHired() {
         return this.value == Status.HIRED;
     }
@@ -60,6 +64,10 @@ public class Status {
 
     boolean isOnPhoneInterview() {
         return this.value == Status.PHONE_INTERVIEW;
+    }
+
+    boolean isInPerson3() {
+        return this.value == Status.IN_PERSON_3;
     }
 
     /**

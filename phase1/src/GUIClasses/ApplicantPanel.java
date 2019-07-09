@@ -416,7 +416,7 @@ class ApplicantPanel extends JPanel{
         for(JobApplication app : applications) {
             JPanel viewAppsAdded = new JPanel(null);
 
-            JLabel viewJobReqs = new JLabel("Status: " + app.getStatus());
+            JLabel viewJobReqs = new JLabel("Status: " + app.getStatus().getDescription());
             viewJobReqs.setBounds(17, 150, 250, 20);
             viewAppsAdded.add(viewJobReqs);
 
@@ -425,10 +425,10 @@ class ApplicantPanel extends JPanel{
             applyForJob.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     boolean success = BackEnd.withdrawApp(app);
-                    getThis().buildWithdrawWindow(success);
+                    add(getThis().buildWithdrawWindow(success));
                 }
             } );
-            viewApps.add(applyForJob, app.getJobPosting().getId());
+            viewApps.add(viewAppsAdded, app.getJobPosting().getId());
         }
 
         return viewApps;
@@ -521,7 +521,7 @@ class ApplicantPanel extends JPanel{
         int len = jobPostings.size();
         String[] ret = new String[len];
 
-        for(int i=0; i < len - 1; i++) {
+        for(int i=0; i < len; i++) {
             ret[i] = jobPostings.get(i).getTitle() + " - " + jobPostings.get(i).getId();
         }
 

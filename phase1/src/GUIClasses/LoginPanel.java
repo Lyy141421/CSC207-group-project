@@ -224,19 +224,19 @@ class LoginPanel extends JPanel {
 
     private void GUILogin(String username) {
         User user = JobApplicationSystem.getUserManager().findUserByUsername(username);
-        LocalDate date = LocalDate.now(); //TODO get as input
+        LocalDate date = LocalDate.now();
         if(user instanceof Applicant) {
             ApplicantPanel newAppPanel = new ApplicantPanel(username, date, parent, masterLayout);
             this.parent.add(newAppPanel, "APPLICANT");
             this.masterLayout.show(parent, "APPLICANT");
         } else if(user instanceof HRCoordinator) {
-            HRPanel newHRPanel = new HRPanel(parent, new HRCoordinatorInterface(user), date);
+            HRPanel newHRPanel = new HRPanel(this.parent, new HRCoordinatorInterface(user), date);
             this.parent.add(newHRPanel, "HRC");
-            this.masterLayout.show(parent, "HRC");
+            this.masterLayout.show(this.parent, "HRC");
         } else { //Interviewer
-            InterviewerPanel newInterviewerPanel = new InterviewerPanel(parent, new InterviewerInterface(user), date);
-            this.parent.add(newInterviewerPanel, "INTERVIEWER");
-            this.masterLayout.show(parent, "INTERVIEWER");
+            InterviewerPanel newIntPanel = new InterviewerPanel(this.parent, new InterviewerInterface(user), date);
+            this.parent.add(newIntPanel, "INTERVIEWER");
+            this.masterLayout.show(this.parent, "INTERVIEWER");
         }
         this.mainframe.newUserRef.setNewUsername(null);
     }

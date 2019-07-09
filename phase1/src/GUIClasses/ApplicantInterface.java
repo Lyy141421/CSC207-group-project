@@ -125,7 +125,6 @@ public class ApplicantInterface extends UserInterface {
      * @return the number of options in the menu.
      */
     private int displayFilterOptions() {
-        System.out.println();
         System.out.println("Select the search filter you would like to use:");
         System.out.println("1 - Filter by field");
         System.out.println("2 - Filter by company");
@@ -255,6 +254,7 @@ public class ApplicantInterface extends UserInterface {
         Company company = JobApplicationSystem.getCompany(companyName);
         while (company == null) {
             System.out.println("No company was found matching name \"" + companyName + "\".");
+            System.out.println();
             companyName = getInputLine(sc, "Enter the name of the company you wish to apply to: ");
             company = JobApplicationSystem.getCompany(companyName);
         }
