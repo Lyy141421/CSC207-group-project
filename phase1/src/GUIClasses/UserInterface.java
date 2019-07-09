@@ -244,7 +244,7 @@ public class UserInterface {
      */
     private void closeProgram() {
         Scanner sc = new Scanner(System.in);
-        String input = this.getInputToken(sc, "\nEnter '-1' if you would like to stop running the system: ");
+        String input = this.getInputToken(sc, "\nEnter '-1' if you would like to stop running the system or any other key to keep running: ");
         sc.nextLine();
         if (input.equals("-1")) {
             JobApplicationSystem.mainEnd();
@@ -278,7 +278,6 @@ public class UserInterface {
     private LocalDate getTodaysDateValid() {
         Scanner sc = new Scanner(System.in);
         LocalDate previousLoginDate = JobApplicationSystem.getPreviousLoginDate();
-        System.out.println();
         LocalDate date;
         if (previousLoginDate == null) {
             date = this.getDate(sc, "Please enter today's date (yyyy-mm-dd): ");
@@ -413,7 +412,7 @@ public class UserInterface {
      */
     private User login() {
         Scanner sc = new Scanner(System.in);
-        String username = this.getInputToken(sc, "Enter your username: ");
+        String username = this.getInputToken(sc, "\nEnter your username: ");
         sc.nextLine();
         String password = this.getInputLine(sc, "Enter your password: ");
         if (JobApplicationSystem.getUserManager().findUserByUsername(username) == null) {
