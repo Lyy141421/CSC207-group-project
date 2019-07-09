@@ -63,6 +63,23 @@ public class HRCoordinator extends User {
         this.company.getJobPostingManager().addJobPosting(jobPosting);
     }
 
+    /**
+     * Get a job application with this ID.
+     *
+     * @param ID The ID in question.
+     * @return the job application with this ID or null if cannot be accessed/found.
+     */
+    public JobApplication findJobAppById(int ID) {
+        for (JobPosting jobPosting : this.company.getJobPostingManager().getJobPostings()) {
+            for (JobApplication jobApplication : jobPosting.getJobApplications()) {
+                if (Integer.parseInt(jobApplication.getId()) == ID) {
+                    return jobApplication;
+                }
+            }
+        }
+        return null;
+    }
+
     // ============================================================================================================== //
     // === Package-private methods ===
 

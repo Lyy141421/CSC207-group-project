@@ -253,45 +253,6 @@ public class InterviewerInterface extends UserInterface {
     }
 
     /**
-     * Get the job application with the id that the user inputs.
-     *
-     * @param sc The scanner for user input.
-     * @return the job application with the id that the user inputs or null if not found.
-     */
-    private JobApplication getJobApplication(Scanner sc) {
-        System.out.println();
-        int id = this.getInteger(sc, "Enter the ID of the job application you wish to view: ");
-        JobApplication jobApplication = this.interviewer.findJobAppById(id);
-        if (jobApplication == null) {
-            System.out.println("This job application cannot be found.");
-        }
-        else {
-            System.out.println(jobApplication);
-        }
-        return jobApplication;
-    }
-
-    /**
-     * Interface for viewing the previous interviews for this job application (all except the one that is currently scheduled)
-     *
-     * @param sc The scanner for user input
-     */
-    private void viewPreviousInterviewsForJobApp(Scanner sc) {
-        JobApplication jobApp = this.getJobApplication(sc);
-        System.out.println();
-        System.out.println("Previous interviews:");
-        if (jobApp.getInterviews().size() == 1) {
-            System.out.println("None");
-        } else {
-            ArrayList<Interview> interviews = jobApp.getInterviews();
-            for (Interview interview : interviews.subList(0, interviews.size() - 1)) {
-                System.out.println();
-                System.out.println(interview);
-            }
-        }
-    }
-
-    /**
      * Interface for viewing a specific interview called by the user.
      *
      * @param sc The scanner for user input.

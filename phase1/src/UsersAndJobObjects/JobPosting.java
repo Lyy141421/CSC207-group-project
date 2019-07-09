@@ -6,6 +6,7 @@ import Managers.InterviewManager;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class JobPosting implements Storable {
 
@@ -139,6 +140,34 @@ public class JobPosting implements Storable {
     }
 
     // === Other methods ===
+
+    /**
+     * Update the fields for this job posting.
+     *
+     * @param skipFieldKey The key that represents if the field should not be updated.
+     * @param skipDateKey  The key that represents if the date should not be updated.
+     * @param fields       The list of fields to be updated.
+     */
+    public void updateFields(int skipFieldKey, LocalDate skipDateKey, ArrayList<Object> fields) {
+        for (int i = 0; i < fields.size(); i++) {
+            if (!(fields.get(i).equals(String.valueOf(skipFieldKey)) || fields.get(i).equals(skipFieldKey) ||
+                    ((LocalDate) fields.get(i)).isEqual(skipDateKey))) {
+                if (i == 0) {
+                    this.setTitle((String.valueOf(fields.get(i))));
+                } else if (i == 1) {
+                    this.setField((String.valueOf(fields.get(i))));
+                } else if (i == 2) {
+                    this.setDescription((String.valueOf(fields.get(i))));
+                } else if (i == 3) {
+                    this.setRequirements((String.valueOf(fields.get(i))));
+                } else if (i == 4) {
+                    this.setNumPositions((Integer) fields.get(i));
+                } else if (i == 5) {
+                    this.setCloseDate((LocalDate) fields.get(i));
+                }
+            }
+        }
+    }
 
     /**
      * Check whether this job posting has closed.
