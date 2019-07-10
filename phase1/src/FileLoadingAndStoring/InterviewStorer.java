@@ -16,7 +16,7 @@ public class InterviewStorer extends GenericStorer<Interview> {
         LoaderManager.mapPut(Interview.FILENAME, String.valueOf(interview.getId()), this);
         HashMap<String, Object> data = new HashMap<>();
         this.storePrelimInfo(interview, data);
-        this.storeApplicant(jobApplicationSystem, interview, data);
+        this.storeJobApplicant(jobApplicationSystem, interview, data);
         this.storeInterviewer(jobApplicationSystem, interview, data);
         this.storeHRCoordinator(jobApplicationSystem, interview, data);
         this.storeInterviewTime(interview, data);
@@ -29,10 +29,10 @@ public class InterviewStorer extends GenericStorer<Interview> {
         data.put("roundNumber", interview.getRoundNumber());
     }
 
-    private void storeApplicant(JobApplicationSystem jobApplicationSystem, Interview interview, HashMap<String, Object> data) {
+    private void storeJobApplicant(JobApplicationSystem jobApplicationSystem, Interview interview, HashMap<String, Object> data) {
         data.put("JobApplication", new ArrayList() {{
-            add(Applicant.FILENAME);
-            add(interview.getApplicant().getUsername());
+            add(JobApplication.FILENAME);
+            add(interview.getJobApplication().getId());
             StorerManager.subStore(jobApplicationSystem, interview.getApplicant());
         }});
     }
