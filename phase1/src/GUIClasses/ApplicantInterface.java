@@ -187,7 +187,7 @@ public class ApplicantInterface extends UserInterface {
             if (filterField.equalsIgnoreCase(posting.getField())
                     && filterCompanyName.equalsIgnoreCase(posting.getCompany().getName())) {
                 noPostingsFound = false;
-                System.out.println("\n" + posting.toStringStandardInput());
+                System.out.println("\n" + posting.toString());
             }
         }
         if (noPostingsFound) {
@@ -361,7 +361,7 @@ public class ApplicantInterface extends UserInterface {
                 : applicant.getJobApplicationManager().getCurrentJobApplications();
         for (JobApplication application : applications) {
             JobPosting posting = application.getJobPosting();
-            System.out.println(posting.toStringStandardInput());
+            System.out.println(posting.toString());
             System.out.println("Your status: " + application.getStatus());
             System.out.println();
         }

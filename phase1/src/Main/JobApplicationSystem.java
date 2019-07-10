@@ -28,8 +28,9 @@ public class JobApplicationSystem {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         JobApplicationSystem JAS = new JobApplicationSystem();
-        JAS.mainStart();
         UserInterface UI = new UserInterface();
+        UI.getTodaysDateValid(sc, JAS);
+        JAS.mainStart();
         while (true) {
             UI.getTodaysDateValid(sc, JAS);
             UI.run(sc, JAS);

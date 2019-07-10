@@ -183,7 +183,6 @@ public class Interview implements Storable {
         Interview.total++;
     }
 
-    // TODO Eliminate?
     Interview(JobApplication jobApplication, Interviewer interviewer, HRCoordinator hrCoordinator,
               InterviewManager interviewManager, InterviewTime time, int roundNumber) {
         this.jobApplication = jobApplication;

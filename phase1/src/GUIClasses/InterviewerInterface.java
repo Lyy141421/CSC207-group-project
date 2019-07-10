@@ -207,7 +207,7 @@ public class InterviewerInterface extends UserInterface {
      */
     private void viewInterviewInfoAndApplicationInfo(Interview interview) {
         System.out.println("Job Posting: ");
-        System.out.println(interview.getJobApplication().getJobPosting().toStringStandardInput());
+        System.out.println(interview.getJobApplication().getJobPosting().toString());
         System.out.println("Interview:");
         System.out.println(interview.toStringPrelimInfo() + "\n");
         System.out.println("Applicant cover letter:");

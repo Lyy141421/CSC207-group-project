@@ -37,7 +37,7 @@ public class UserInterface {
      * @param jobApplicationSystem The job application system being used.
      */
     public void run(Scanner sc, JobApplicationSystem jobApplicationSystem) {
-        System.out.println("\nWelcome to GET A JOB!\n");
+        System.out.println("\nWelcome to GET A JOB!");
         jobApplicationSystem.applicant30Day();
         jobApplicationSystem.updateAllInterviewRounds();
         User user = this.login(sc, jobApplicationSystem);
