@@ -12,17 +12,18 @@ public class JobPostingStorer extends GenericStorer<JobPosting> {
 
     /**
      * Stores the job posting.
+     * @param jobApplicationSystem The job application system being used.
      * @param jobPosting    The job posting to be stored.
      */
-    void storeOne(JobPosting jobPosting){
+    void storeOne(JobApplicationSystem jobApplicationSystem, JobPosting jobPosting) {
         LoaderManager.mapPut(JobPosting.FILENAME, String.valueOf(jobPosting.getId()), jobPosting);
         HashMap<String, Object> data = new HashMap<>();
         this.storePrelimData(jobPosting, data);
-        this.storeCompany(jobPosting, data);
-        this.storeAllApplications(jobPosting, data);
-        if (jobPosting.isClosed(JobApplicationSystem.getToday())) {
-            this.storeApplicationsInConsideration(jobPosting, data);
-            this.storeApplicationsRejected(jobPosting, data);
+        this.storeCompany(jobApplicationSystem, jobPosting, data);
+        this.storeAllApplications(jobApplicationSystem, jobPosting, data);
+        if (jobPosting.isClosed(jobApplicationSystem.getToday())) {
+            this.storeApplicationsInConsideration(jobApplicationSystem, jobPosting, data);
+            this.storeApplicationsRejected(jobApplicationSystem, jobPosting, data);
             this.storeCurrentRound(jobPosting, data);
         }
         FileSystem.write(JobPosting.FILENAME, String.valueOf(jobPosting.getId()), data);
@@ -39,43 +40,43 @@ public class JobPostingStorer extends GenericStorer<JobPosting> {
         data.put("filled", jobPosting.isFilled());
     }
 
-    private void storeCompany(JobPosting jobPosting, HashMap<String, Object> data) {
+    private void storeCompany(JobApplicationSystem jobApplicationSystem, JobPosting jobPosting, HashMap<String, Object> data) {
         Company c = jobPosting.getCompany();
         data.put("Company", new ArrayList(){{add(Company.FILENAME); add(c.getName());}});
-        StorerManager.subStore(c);
+        StorerManager.subStore(jobApplicationSystem, c);
     }
 
-    private void storeAllApplications(JobPosting jobPosting, HashMap<String, Object> data) {
+    private void storeAllApplications(JobApplicationSystem jobApplicationSystem, JobPosting jobPosting, HashMap<String, Object> data) {
         ArrayList jobapplications = new ArrayList();
         for(JobApplication x : jobPosting.getJobApplications()){
             jobapplications.add(new ArrayList() {{
                 add(JobApplication.FILENAME);
                 add(x.getIdString());
-                StorerManager.subStore(x);
+                StorerManager.subStore(jobApplicationSystem, x);
             }});
         }
         data.put("jobapplications", jobapplications);
     }
 
-    private void storeApplicationsInConsideration(JobPosting jobPosting, HashMap<String, Object> data) {
+    private void storeApplicationsInConsideration(JobApplicationSystem jobApplicationSystem, JobPosting jobPosting, HashMap<String, Object> data) {
         ArrayList applicationsInConsideration = new ArrayList();
         for(JobApplication x : jobPosting.getInterviewManager().getApplicationsInConsideration()){
             applicationsInConsideration.add(new ArrayList() {{
                 add(JobApplication.FILENAME);
                 add(x.getIdString());
-                StorerManager.subStore(x);
+                StorerManager.subStore(jobApplicationSystem, x);
             }});
         }
         data.put("applicationsInConsideration", applicationsInConsideration);
     }
 
-    private void storeApplicationsRejected(JobPosting jobPosting, HashMap<String, Object> data) {
+    private void storeApplicationsRejected(JobApplicationSystem jobApplicationSystem, JobPosting jobPosting, HashMap<String, Object> data) {
         ArrayList applicationsRejected = new ArrayList();
         for(JobApplication x : jobPosting.getInterviewManager().getApplicationsRejected()){
             applicationsRejected.add(new ArrayList() {{
                 add(JobApplication.FILENAME);
                 add(x.getIdString());
-                StorerManager.subStore(x);
+                StorerManager.subStore(jobApplicationSystem, x);
             }});
         }
         data.put("applicationsRejected", applicationsRejected);

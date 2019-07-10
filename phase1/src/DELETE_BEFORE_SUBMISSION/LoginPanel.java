@@ -1,5 +1,6 @@
-package GUIClasses;
+package DELETE_BEFORE_SUBMISSION;
 
+//import GUIClasses.UserInterfaceTest;
 import Main.JobApplicationSystem;
 import UsersAndJobObjects.Applicant;
 import UsersAndJobObjects.HRCoordinator;
@@ -22,7 +23,7 @@ class LoginPanel extends JPanel {
     private Container parent;
     private MainFrame mainframe;
 
-    LoginPanel(Container parent, CardLayout masterLayout) {
+    /*LoginPanel(Container parent, CardLayout masterLayout) {
         this.parent = parent;
         this.masterLayout = masterLayout;
         this.mainframe = (MainFrame)this.parent.getParent().
@@ -33,10 +34,10 @@ class LoginPanel extends JPanel {
         this.BackEnd = new UserInterfaceTest();
     }
 
-    /**
+    *//**
      * Adds the text items required for the login screen.
      * Note "Incorrect password" warning and "User not found" are hidden by default.
-     */
+     *//*
     private void addTextItems() {
         JLabel welcomeLabel = new JLabel("CSC207 Summer 2019 Job Application System", SwingConstants.CENTER);
         welcomeLabel.setFont(new Font("Serif", Font.PLAIN, 30));
@@ -64,10 +65,10 @@ class LoginPanel extends JPanel {
         this.add(createNewText); this.add(wrongPass); this.add(blankEntry);
     }
 
-    /**
+    *//**
      * Adds the interactive items necessary for the login screen.
      * Note "Create New User" button is hidden by default.
-     */
+     *//*
     private void addEntryItems() {
         JTextField userNameEntry = new JTextField();
         userNameEntry.setBounds(427, 220, 100, 30);
@@ -97,9 +98,9 @@ class LoginPanel extends JPanel {
         this.add(createNewButton);
     }
 
-    /**
+    *//**
      * Shows prompt to create new account
-     */
+     *//*
     private void showCreateNew() {
         Component[] components = this.getComponents();
         for(Component c : components) {
@@ -115,9 +116,9 @@ class LoginPanel extends JPanel {
         }
     }
 
-    /**
+    *//**
      * Hides prompt to create a new user
-     */
+     *//*
     private void hideCreateNew() {
         Component[] components = this.getComponents();
         for(Component c : components) {
@@ -133,9 +134,9 @@ class LoginPanel extends JPanel {
         }
     }
 
-    /**
+    *//**
      * Shows wrong pass warning
-     */
+     *//*
     private void showPassError() {
         Component[] components = this.getComponents();
         for(Component c : components) {
@@ -148,9 +149,9 @@ class LoginPanel extends JPanel {
         }
     }
 
-    /**
+    *//**
      * Hides wrong pass warning
-     */
+     *//*
     private void hidePassError() {
         Component[] components = this.getComponents();
         for(Component c : components) {
@@ -163,9 +164,9 @@ class LoginPanel extends JPanel {
         }
     }
 
-    /**
+    *//**
      * Shows blank field warning
-     */
+     *//*
     private void showBlankField() {
         Component[] components = this.getComponents();
         for(Component c : components) {
@@ -178,9 +179,9 @@ class LoginPanel extends JPanel {
         }
     }
 
-    /**
+    *//**
      * Hides blank field warning
-     */
+     *//*
     private void hideBlankField() {
         Component[] components = this.getComponents();
         for(Component c : components) {
@@ -193,10 +194,10 @@ class LoginPanel extends JPanel {
         }
     }
 
-    /**
+    *//**
      * attempts login with the provided information
      * Cases: 0 - blank field, 1 - no user exists, 2 - successful login, 3 - wrong pass
-     */
+     *//*
     private void login(JTextField userNameEntry, JPasswordField passwordEntry) {
         int result = BackEnd.login(userNameEntry.getText(), new String(passwordEntry.getPassword()));
         switch(result) {
@@ -237,13 +238,13 @@ class LoginPanel extends JPanel {
         this.mainframe.newUserRef.setNewUsername(null);
     }
 
-    /**
+    *//**
      * passes user to the existing create user class, and requests card change
-     */
+     *//*
     private void createUser(String username) {
         this.hideCreateNew();
         this.hidePassError();
         this.mainframe.newUserRef.setNewUsername(username);
         this.masterLayout.show(parent, "NEWUSER");
-    }
+    }*/
 }

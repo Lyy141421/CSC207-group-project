@@ -1,14 +1,12 @@
-package GUIClasses;
+package DELETE_BEFORE_SUBMISSION;
 
-import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
-import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
-import net.sourceforge.jdatepicker.impl.UtilDateModel;
+//import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
+//import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
+//import net.sourceforge.jdatepicker.impl.UtilDateModel;
 
 import javax.swing.*;
 import java.awt.*;
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Date;
 
 public class MainFrame extends JFrame {
 
@@ -17,7 +15,7 @@ public class MainFrame extends JFrame {
     //private JPanel homePanel;
     NewUserPanel newUserRef;
 
-    public MainFrame (LocalDate today) {
+    /*public MainFrame (LocalDate today) {
         super("GET A JOB");
         this.today = today;
         initUI();
@@ -32,9 +30,9 @@ public class MainFrame extends JFrame {
         addCards();
     }
 
-    /**
+    *//**
      * Sets up the parameters used in the main JFrame
-     */
+     *//*
     private void initUI () {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(854, 480);
@@ -43,7 +41,7 @@ public class MainFrame extends JFrame {
         setVisible(true);
         setResizable(false);
 
-        /*LocalDate actualToday = LocalDate.now();
+        *//*LocalDate actualToday = LocalDate.now();
         UtilDateModel dateModel = new UtilDateModel();
         dateModel.setDate(actualToday.getYear(), actualToday.getMonthValue()-1, actualToday.getDayOfMonth());
         dateModel.setSelected(true);
@@ -52,12 +50,12 @@ public class MainFrame extends JFrame {
 
         // When confirmed this is the date they want:
         // This converts the Date object from JDatePicker to a LocalDate object
-        today = ((Date) manualToday.getModel().getValue()).toInstant().atZone(ZoneId.systemDefault()).toLocalDate();*/
+        today = ((Date) manualToday.getModel().getValue()).toInstant().atZone(ZoneId.systemDefault()).toLocalDate();*//*
     }
 
-    /**
+    *//**
      * Constructs each of the JPanels used within the JFrame
-     */
+     *//*
     // Call methods that create each interface and add to main frame.
     private void addCards () {
         //this.add(this.homePanel);
@@ -76,5 +74,5 @@ public class MainFrame extends JFrame {
 
     public static void main(String[] args) {
         MainFrame test = new MainFrame();
-    }
+    }*/
 }

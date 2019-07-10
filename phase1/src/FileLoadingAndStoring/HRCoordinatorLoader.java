@@ -1,5 +1,6 @@
 package FileLoadingAndStoring;
 
+import Main.JobApplicationSystem;
 import UsersAndJobObjects.Company;
 import UsersAndJobObjects.HRCoordinator;
 
@@ -13,10 +14,10 @@ public class HRCoordinatorLoader extends GenericLoader<HRCoordinator> {
      * Loads the HR Coordinator.
      * @param hrCoordinator The HR Coordinator to be loaded.
      */
-    void loadOne(HRCoordinator hrCoordinator){
+    void loadOne(JobApplicationSystem jobApplicationSystem, HRCoordinator hrCoordinator) {
         HashMap data = FileSystem.read(HRCoordinator.FILENAME, hrCoordinator.getUsername());
         this.loadPrelimData(hrCoordinator, data);
-        this.loadCompany(hrCoordinator, data);
+        this.loadCompany(jobApplicationSystem, hrCoordinator, data);
     }
 
     /**
@@ -37,8 +38,8 @@ public class HRCoordinatorLoader extends GenericLoader<HRCoordinator> {
      *
      * @param data The data for this HR Coordinator.
      */
-    private void loadCompany(HRCoordinator hrCoordinator, HashMap data) {
-        hrCoordinator.setCompany((Company) LoaderManager.subLoad(Company.class, (String)
+    private void loadCompany(JobApplicationSystem jobApplicationSystem, HRCoordinator hrCoordinator, HashMap data) {
+        hrCoordinator.setCompany((Company) LoaderManager.subLoad(jobApplicationSystem, Company.class, (String)
                         ((ArrayList) data.get("Company")).get(0), (String) ((ArrayList) data.get("Company")).get(1)));
     }
 }

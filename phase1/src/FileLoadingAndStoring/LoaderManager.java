@@ -1,5 +1,7 @@
 package FileLoadingAndStoring;
 
+import Main.JobApplicationSystem;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -75,22 +77,24 @@ public class LoaderManager {
     /**
      * Loads an object from within another object to be assigned by that object
      *
+     * @param jobApplicationSystem The job application system that is used.
      * @param clazz - the class of the Object
      * @param filename - The filename of the object
      * @param id - the Id of the object
      * @return the subloaded object
      */
-    static Object subLoad(Class clazz, String filename, String id){
+    static Object subLoad(JobApplicationSystem jobApplicationSystem, Class clazz, String filename, String id) {
         if(ObjInMap(filename, id)){
             return mapGet(filename, id);
         }
         else{
-            Constructor con = null;
+            Constructor con;
             try {
                 con = clazz.getConstructor(String.class);
                 Object obj = con.newInstance(id);
                 mapPut(filename, id, obj);
-                loader_map.get(mapGet(filename, id).getClass()).loader.loadOne(mapGet(filename, id));
+                loader_map.get(mapGet(filename, id).getClass()).loader.loadOne(jobApplicationSystem,
+                        mapGet(filename, id));
                 return obj;
             } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
                 e.printStackTrace();
@@ -101,23 +105,25 @@ public class LoaderManager {
 
     /**
      * Loads all Loaders in loader_map
+     * @param jobApplicationSystem The job application system being used.
      */
-    public static void startLoad(){
+    public static void startLoad(JobApplicationSystem jobApplicationSystem) {
         for(Object x : loader_map.keySet()){
-            loader_map.get(x).load();
+            loader_map.get(x).load(jobApplicationSystem);
         }
-        new PreviousLoginDateLoaderAndStorer().loadPreviousLoginDate();
+        new PreviousLoginDateLoaderAndStorer().loadPreviousLoginDate(jobApplicationSystem);
     }
 
     // === Instance Methods ===
 
     /**
      * Loads all objects in this LoaderManager
+     * @param jobApplicationSystem The job application system being used.
      */
-    private void load(){
+    private void load(JobApplicationSystem jobApplicationSystem) {
         this.fillMap();
         for(Object obj : this.getArray()){
-            this.loader.loadOne(obj);
+            this.loader.loadOne(jobApplicationSystem, obj);
         }
     }
 
@@ -128,7 +134,7 @@ public class LoaderManager {
         Iterator i = FileSystem.getAllID(this.filename);
         while(i.hasNext()){
             String id = (String)i.next();
-            Constructor con = null;
+            Constructor con;
             try {
                 con = clazz.getConstructor(String.class);
                 Object obj = con.newInstance(id);

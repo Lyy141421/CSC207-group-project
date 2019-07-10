@@ -26,15 +26,16 @@ public class ApplicantInterface extends UserInterface {
     /**
      * Run the applicant interface.
      *
-     * @param today Today's date.
+     * @param sc The scanner for user input.
+     * @param jobApplicationSystem The job application system being used.
      */
-    void run(LocalDate today) {
-        Scanner sc = new Scanner(System.in);
-        System.out.println("Welcome, " + applicant.getLegalName() + ".");
-        this.displayUpcomingInterviews(today);
+    @Override
+    public void run(Scanner sc, JobApplicationSystem jobApplicationSystem) {
+        System.out.println("Welcome, " + this.user.getLegalName() + ".\n");
+        this.displayUpcomingInterviews(jobApplicationSystem.getToday());
         while (true) {
             try {
-                this.runMainMenu(sc, today);
+                this.runMainMenu(sc, jobApplicationSystem, jobApplicationSystem.getToday());
             }
             catch (ExitException ee) {
                 return;
@@ -47,20 +48,22 @@ public class ApplicantInterface extends UserInterface {
      * Run the main menu of the applicant interface.
      *
      * @param sc The Scanner for user input.
+     * @param jobApplicationSystem The job application system being used.
      * @param today Today's date.
      */
-    private void runMainMenu(Scanner sc, LocalDate today) throws ExitException{
+    private void runMainMenu(Scanner sc, JobApplicationSystem jobApplicationSystem, LocalDate today)
+            throws ExitException {
         int numOptions = displayMainMenuOptions();
         int option = getMenuOption(sc, numOptions);
         switch (option) {
             case 1:
-                this.setJobPostingSearchFilters(sc, today); // Browse open job postings not applied to
+                this.setJobPostingSearchFilters(sc, jobApplicationSystem, today); // Browse open job postings not applied to
                 return;
             case 2:
                 this.displayDocuments(); // View uploaded documents
                 return;
             case 3:
-                this.submitApplication(sc, today); // Apply for a job
+                this.submitApplication(sc, jobApplicationSystem, today); // Apply for a job
                 return;
             case 4:
                 this.displayApplications(sc, today, false); // View applications
@@ -151,31 +154,31 @@ public class ApplicantInterface extends UserInterface {
      * @param sc The Scanner for user input.
      * @param today Today's date.
      */
-    private void setJobPostingSearchFilters(Scanner sc, LocalDate today) {
+    private void setJobPostingSearchFilters(Scanner sc, JobApplicationSystem jobApplicationSystem, LocalDate today) {
         System.out.println();
         int numOptions = this.displayFilterOptions();
         int option = this.getMenuOption(sc, numOptions);
         switch (option) {
             case 1:
                 String field = getInputLine(sc, "\nEnter your field: ");
-                this.displayOpenJobPostingsNotYetAppliedTo(today, field, null);
+                this.displayOpenJobPostingsNotYetAppliedTo(jobApplicationSystem, field, null);
                 return;
             case 2:
                 String companyName = getInputLine(sc, "\nEnter your company name: ");
-                this.displayOpenJobPostingsNotYetAppliedTo(today, null, companyName);
+                this.displayOpenJobPostingsNotYetAppliedTo(jobApplicationSystem, null, companyName);
                 return;
             case 3:
                 field = getInputLine(sc, "\nEnter your field: ");
                 companyName = getInputLine(sc, "Enter your company name: ");
-                this.displayOpenJobPostingsNotYetAppliedTo(today, field, companyName);
+                this.displayOpenJobPostingsNotYetAppliedTo(jobApplicationSystem, field, companyName);
                 return;
             case 4:
-                this.displayOpenJobPostingsNotYetAppliedTo(today, null, null);
+                this.displayOpenJobPostingsNotYetAppliedTo(jobApplicationSystem, null, null);
         }
     }
 
-    private void displayOpenJobPostingsNotYetAppliedTo(LocalDate today, String field, String companyName) {
-        ArrayList<JobPosting> openJobPostings = applicant.getOpenJobPostingsNotAppliedTo(today);
+    private void displayOpenJobPostingsNotYetAppliedTo(JobApplicationSystem jobApplicationSystem, String field, String companyName) {
+        ArrayList<JobPosting> openJobPostings = applicant.getOpenJobPostingsNotAppliedTo(jobApplicationSystem);
         boolean noPostingsFound = true;
         for (JobPosting posting : openJobPostings) {
             // if field is null, assign value of posting.getField() to filterField so that all postings pass the filter;
@@ -245,17 +248,19 @@ public class ApplicantInterface extends UserInterface {
     /**
      * Get the posting that the applicant wishes to apply to.
      * @param sc The Scanner for user input.
+     * @param jobApplicationSystem The job application system being used.
      * @param today Today's date.
      * @return the posting that the applicant wishes to apply to.
      */
-    private JobPosting getPostingForJobApplication(Scanner sc, LocalDate today) {
+    private JobPosting getPostingForJobApplication(Scanner sc, JobApplicationSystem jobApplicationSystem,
+                                                   LocalDate today) {
         String companyName = getInputLine(sc, "Enter the name of the company you wish to apply to: ");
-        Company company = JobApplicationSystem.getCompany(companyName);
+        Company company = jobApplicationSystem.getCompany(companyName);
         while (company == null) {
             System.out.println("No company was found matching name \"" + companyName + "\".");
             System.out.println();
             companyName = getInputLine(sc, "Enter the name of the company you wish to apply to: ");
-            company = JobApplicationSystem.getCompany(companyName);
+            company = jobApplicationSystem.getCompany(companyName);
         }
         int postingId = getInteger(sc, "Enter the id of the posting you wish to apply for: ");
         JobPosting posting = company.getJobPostingManager().getJobPosting(postingId);
@@ -272,12 +277,13 @@ public class ApplicantInterface extends UserInterface {
      * Submit a job application on behalf of the applicant.
      *
      * @param sc The Scanner for user input.
+     * @param jobApplicationSystem The job application system being used.
      * @param today Today's date.
      */
-    private void submitApplication(Scanner sc, LocalDate today) {
-        JobPosting posting = this.getPostingForJobApplication(sc, today);
+    private void submitApplication(Scanner sc, JobApplicationSystem jobApplicationSystem, LocalDate today) {
+        JobPosting posting = this.getPostingForJobApplication(sc, jobApplicationSystem, today);
         System.out.println();
-        if (applicant.hasAppliedTo(posting)) {
+        if (this.applicant.hasAppliedTo(posting)) {
             System.out.println("You have already submitted an application for this job posting.");
             return;
         }
@@ -288,20 +294,18 @@ public class ApplicantInterface extends UserInterface {
                 if (applicant.getDocumentManager().getDocuments().isEmpty()) {
                     System.out.println("You have not yet uploaded any files.");
                     System.out.println();
-                    this.submitApplication(sc, today);
-                    return;
                 }
                 else {
                     JobApplication application = this.createJobApplicationThroughFiles(sc, today, posting);
                     posting.addJobApplication(application);
                     applicant.registerJobApplication(application);
                     System.out.println("\nApplication successfully submitted.");
-                    return;
                 }
+                break;
             case 2:
                 JobApplication application = this.createJobApplicationThroughTextEntry(sc, today, posting);
                 posting.addJobApplication(application);
-                applicant.registerJobApplication(application);
+                this.applicant.registerJobApplication(application);
                 System.out.println("\nApplication successfully submitted.");
         }
     }

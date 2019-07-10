@@ -1,5 +1,6 @@
 package FileLoadingAndStoring;
 
+import Main.JobApplicationSystem;
 import UsersAndJobObjects.Company;
 import UsersAndJobObjects.Interview;
 import UsersAndJobObjects.Interviewer;
@@ -14,11 +15,11 @@ public class InterviewerLoader extends GenericLoader<Interviewer> {
      *  Loads the interviewer.
      * @param interviewer   The interviewer to be loaded.
      */
-    void loadOne(Interviewer interviewer){
+    void loadOne(JobApplicationSystem jobApplicationSystem, Interviewer interviewer) {
         HashMap data = FileSystem.read(Interviewer.FILENAME, interviewer.getUsername());
         this.loadPrelimData(interviewer, data);
-        this.loadCompany(interviewer, data);
-        this.loadInterviews(interviewer, data);
+        this.loadCompany(jobApplicationSystem, interviewer, data);
+        this.loadInterviews(jobApplicationSystem, interviewer, data);
     }
 
     /**
@@ -40,8 +41,8 @@ public class InterviewerLoader extends GenericLoader<Interviewer> {
      *
      * @param data The data for this interviewer.
      */
-    private void loadCompany(Interviewer interviewer, HashMap data) {
-        interviewer.setCompany((Company) LoaderManager.subLoad(Company.class, (String)
+    private void loadCompany(JobApplicationSystem jobApplicationSystem, Interviewer interviewer, HashMap data) {
+        interviewer.setCompany((Company) LoaderManager.subLoad(jobApplicationSystem, Company.class, (String)
                         ((ArrayList) data.get("company")).get(0), (String) ((ArrayList) data.get("company")).get(1)));
     }
 
@@ -50,10 +51,10 @@ public class InterviewerLoader extends GenericLoader<Interviewer> {
      *
      * @param data The data for this interviewer.
      */
-    private void loadInterviews(Interviewer interviewer, HashMap data) {
+    private void loadInterviews(JobApplicationSystem jobApplicationSystem, Interviewer interviewer, HashMap data) {
         ArrayList<Interview> interviews = new ArrayList<>();
         for (Object x : (ArrayList) (data.get("interviews"))) {
-            interviews.add((Interview) LoaderManager.subLoad(Interview.class, (String) ((ArrayList) x).get(0), (String)
+            interviews.add((Interview) LoaderManager.subLoad(jobApplicationSystem, Interview.class, (String) ((ArrayList) x).get(0), (String)
                     ((ArrayList) x).get(1)));
         }
         interviewer.setInterviews(interviews);

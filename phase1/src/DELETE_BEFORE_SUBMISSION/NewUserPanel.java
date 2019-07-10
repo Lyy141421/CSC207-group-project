@@ -1,4 +1,6 @@
-package GUIClasses;
+package DELETE_BEFORE_SUBMISSION;
+
+//import GUIClasses.UserInterfaceTest;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,7 +20,7 @@ class NewUserPanel extends JPanel {
     private String newUsername;
     private JDialog success;
 
-    NewUserPanel(Container parent, CardLayout masterLayout) {
+    /*NewUserPanel(Container parent, CardLayout masterLayout) {
         this.parent = parent;
         this.masterLayout = masterLayout;
         this.setLayout(new GridLayout(3, 1));
@@ -42,9 +44,9 @@ class NewUserPanel extends JPanel {
         this.success = this.buildDialog();
     }
 
-    /**
+    *//**
      * Adds the drop down menu which allows a user to pick the account type being created
-     */
+     *//*
     private JPanel buildSelector() {
         JPanel selectorPanel = new JPanel(null); selectorPanel.setName("selectorPanel");
 
@@ -66,9 +68,9 @@ class NewUserPanel extends JPanel {
         return selectorPanel;
     }
 
-    /**
+    *//**
      * Adds the different registration forms in card form to the master panel
-     */
+     *//*
     private JPanel buildForms() {
         JPanel formPanel = new JPanel(new CardLayout()); formPanel.setName("formPanel");
 
@@ -79,9 +81,9 @@ class NewUserPanel extends JPanel {
         return formPanel;
     }
 
-    /**
+    *//**
      * Applicant form
-     */
+     *//*
     private void addAppForm(JPanel formPanel) {
         JPanel applicantCard = new JPanel(null); applicantCard.setName("applicantCard");
 
@@ -115,9 +117,9 @@ class NewUserPanel extends JPanel {
         formPanel.add(applicantCard, "Applicant");
     }
 
-    /**
+    *//**
      * Interviewer form
-     */
+     *//*
     private void addIntForm(JPanel formPanel) {
         JPanel interviewerCard = new JPanel(null); interviewerCard.setName("interviewerCard");
 
@@ -160,9 +162,9 @@ class NewUserPanel extends JPanel {
         formPanel.add(interviewerCard, "Interviewer");
     }
 
-    /**
+    *//**
      * HR Coordinator Form
-     */
+     *//*
     private void addHRCForm(JPanel formPanel) {
         JPanel HRCCard = new JPanel(null); HRCCard.setName("HRCCard");
 
@@ -205,9 +207,9 @@ class NewUserPanel extends JPanel {
         formPanel.add(HRCCard, "HR Coordinator");
     }
 
-    /**
+    *//**
      * Adds buttons to create account as well as return to login
-     */
+     *//*
     private JPanel buildButtons() {
         JPanel buttonPanel = new JPanel(null); buttonPanel.setName("buttonPanel");
 
@@ -249,10 +251,10 @@ class NewUserPanel extends JPanel {
         return buttonPanel;
     }
 
-    /**
+    *//**
      * Attempts to create the selected user type with the given inputs
      * @return 0 - blank entry, 1 - bad email, 2 - bad company, 3 - success
-     */
+     *//*
     private int createUser() {
         switch(this.mainSelector.getSelectedItem().toString()) {
             case "Applicant":
@@ -265,10 +267,10 @@ class NewUserPanel extends JPanel {
         return 0;
     }
 
-    /**
+    *//**
      * The below functions simply attempt to instantiate their corresponding user types
      * @return 0 - blank entry, 1 - bad email, 2 - bad company, 3 - success
-     */
+     *//*
     private int createApplicant() {
         JPanel forms = this.getPanelByName(this, "formPanel");
         Component[] items = this.getPanelByName(forms, "applicantCard").getComponents();
@@ -287,9 +289,9 @@ class NewUserPanel extends JPanel {
         return BackEnd.createNewHRC(this.BackEnd.getInputs(items, this.newUsername));
     }
 
-    /**
+    *//**
      * Finds a panel within another panel by its name as set by .setName()
-     */
+     *//*
     private JPanel getPanelByName(JPanel panel, String name) {
         JPanel ret = new JPanel();
         for(Component c : panel.getComponents()) {
@@ -300,10 +302,10 @@ class NewUserPanel extends JPanel {
         return ret;
     }
 
-    /**
+    *//**
      * Updates the GUI's visuals based on the result of an account creation
      * @param status 0 - blank entry, 1 - bad email, 2 - bad company, 3 - success
-     */
+     *//*
     private void postCreation(int status) {
         switch(status) {
             case 0:
@@ -323,10 +325,10 @@ class NewUserPanel extends JPanel {
         }
     }
 
-    /**
+    *//**
      *
      * @param text content of the jlabel which is to be shown
-     */
+     *//*
     private void postUpdater(String text) {
         JPanel buttons = this.getPanelByName(this, "buttonPanel");
         for(Component c : buttons.getComponents()) {
@@ -375,5 +377,5 @@ class NewUserPanel extends JPanel {
 
     void setNewUsername(String username) {
         this.newUsername = username;
-    }
+    }*/
 }

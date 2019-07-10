@@ -1,12 +1,13 @@
-package GUIClasses;
+package DELETE_BEFORE_SUBMISSION;
 
 
+import GUIClasses.HRCoordinatorInterface;
 import Main.JobApplicationSystem;
 import UsersAndJobObjects.JobApplication;
 import UsersAndJobObjects.JobPosting;
-import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
-import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
-import net.sourceforge.jdatepicker.impl.UtilDateModel;
+//import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
+//import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
+//import net.sourceforge.jdatepicker.impl.UtilDateModel;
 
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
@@ -25,7 +26,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 
-public class HRPanel extends JPanel implements ActionListener {
+public class HRPanel extends JPanel { //implements ActionListener {
 
     private Container contentPane;
     private HRCoordinatorInterface HRInterface;
@@ -49,7 +50,7 @@ public class HRPanel extends JPanel implements ActionListener {
     private JPanel phoneOrNotButtons = new JPanel();
 
     // Create interface for HR
-    HRPanel (Container contentPane, HRCoordinatorInterface HRInterface, LocalDate today) {
+    /*HRPanel (Container contentPane, HRCoordinatorInterface HRInterface, LocalDate today) {
         this.contentPane = contentPane;
         this.HRInterface = HRInterface;
         this.today = today;
@@ -553,5 +554,5 @@ public class HRPanel extends JPanel implements ActionListener {
         }
 
         return valid;
-    }
+    }*/
 }

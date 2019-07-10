@@ -1,5 +1,6 @@
 package FileLoadingAndStoring;
 
+import Main.JobApplicationSystem;
 import UsersAndJobObjects.Company;
 import UsersAndJobObjects.Interview;
 import UsersAndJobObjects.Interviewer;
@@ -13,15 +14,15 @@ public class InterviewerStorer extends GenericStorer<Interviewer> {
      * Store the interviewer.
      * @param interviewer   The interviewer to be stored.
      */
-    void storeOne(Interviewer interviewer){
+    void storeOne(JobApplicationSystem jobApplicationSystem, Interviewer interviewer) {
         LoaderManager.mapPut(Interviewer.FILENAME, interviewer.getUsername(), interviewer);
         HashMap<String, Object> data = new HashMap<>();
-        this.storePrelimInfo(interviewer, data);
-        this.storeInterviews(interviewer, data);
+        this.storePrelimInfo(jobApplicationSystem, interviewer, data);
+        this.storeInterviews(jobApplicationSystem, interviewer, data);
         FileSystem.write(Interviewer.FILENAME, interviewer.getUsername(), data);
     }
 
-    private void storePrelimInfo(Interviewer interviewer, HashMap<String, Object> data) {
+    private void storePrelimInfo(JobApplicationSystem jobApplicationSystem, Interviewer interviewer, HashMap<String, Object> data) {
         data.put("password", interviewer.getPassword());
         data.put("legalName", interviewer.getLegalName());
         data.put("email", interviewer.getEmail());
@@ -29,16 +30,16 @@ public class InterviewerStorer extends GenericStorer<Interviewer> {
         data.put("field", interviewer.getField());
         data.put("company", new String[]{Company.FILENAME,
                 interviewer.getCompany().getName()});
-        StorerManager.subStore(interviewer.getCompany());
+        StorerManager.subStore(jobApplicationSystem, interviewer.getCompany());
     }
 
-    private void storeInterviews(Interviewer interviewer, HashMap<String, Object> data) {
+    private void storeInterviews(JobApplicationSystem jobApplicationSystem, Interviewer interviewer, HashMap<String, Object> data) {
         ArrayList<ArrayList> interview_list = new ArrayList<>();
         for(Interview x : interviewer.getInterviews()){
             interview_list.add(new ArrayList<Object>() {{
                 add(Interview.FILENAME);
                 add(String.valueOf(x.getId()));
-                StorerManager.subStore(x);
+                StorerManager.subStore(jobApplicationSystem, x);
             }});
         }
         data.put("interviews", interview_list);

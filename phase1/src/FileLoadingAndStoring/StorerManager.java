@@ -1,5 +1,8 @@
 package FileLoadingAndStoring;
 
+import Main.JobApplicationSystem;
+import UsersAndJobObjects.JobApplication;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -28,12 +31,13 @@ public class StorerManager {
 
     /**
      * Saves all Storer classes in the storer maps
+     * @param jobApplicationSystem The job application system being used.
      */
-    public static void endSave(){
+    public static void endSave(JobApplicationSystem jobApplicationSystem) {
         for(Object x : storer_map.keySet()){
-            storer_map.get(x).store();
+            storer_map.get(x).store(jobApplicationSystem);
         }
-        new PreviousLoginDateLoaderAndStorer().storePreviousLoginDate();
+        new PreviousLoginDateLoaderAndStorer().storePreviousLoginDate(jobApplicationSystem);
     }
 
     /**
@@ -65,12 +69,13 @@ public class StorerManager {
 
     /**
      * Substores any items which have been called in the containing object being stored
+     * @param jobApplicationSystem The job application system being used.
      * @param obj the object to be substored
      */
-    public static void subStore(Object obj){
+    static void subStore(JobApplicationSystem jobApplicationSystem, Object obj) {
         if(!isStored(obj)){
             addStored(obj);
-            storer_map.get(obj.getClass()).storer.storeOne(obj);
+            storer_map.get(obj.getClass()).storer.storeOne(jobApplicationSystem, obj);
         }
 
     }
@@ -79,10 +84,11 @@ public class StorerManager {
 
     /**
      * Stores all Objects in obj_list
+     * @param jobApplicationSystem The job application system being used.
      */
-    void store(){
+    void store(JobApplicationSystem jobApplicationSystem) {
         for(Object x : obj_list){
-            storer.storeOne(x);
+            storer.storeOne(jobApplicationSystem, x);
         }
     }
 

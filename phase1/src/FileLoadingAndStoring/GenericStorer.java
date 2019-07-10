@@ -1,22 +1,13 @@
 package FileLoadingAndStoring;
 
-import java.util.ArrayList;
+import Main.JobApplicationSystem;
 
-public abstract class GenericStorer<T> {
-
-    /**
-     * Store all the objects in this list.
-     * @param objects    The objects to be stored.
-     */
-    public void storeAll(ArrayList<T> objects) {
-        for (T object : objects) {
-            this.storeOne(object);
-        }
-    }
+abstract class GenericStorer<T> {
 
     /**
      * Store this object.
+     * @param jobApplicationSystem The job application system being used.
      * @param object    The object to be stored.
      */
-    abstract void storeOne(T object);
+    abstract void storeOne(JobApplicationSystem jobApplicationSystem, T object);
 }

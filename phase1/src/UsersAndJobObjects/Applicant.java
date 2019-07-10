@@ -109,13 +109,12 @@ public class Applicant extends User {
     /**
      * Get a list of open job postings not yet applied to.
      *
-     * @param today Today's date.
      * @return a list of open job postings not yet applied to.
      */
-    public ArrayList<JobPosting> getOpenJobPostingsNotAppliedTo(LocalDate today) {
+    public ArrayList<JobPosting> getOpenJobPostingsNotAppliedTo(JobApplicationSystem jobApplicationSystem) {
         ArrayList<JobPosting> jobPostingsNotAppliedTo = new ArrayList<>();
-        for (Company company : JobApplicationSystem.getCompanies()) {
-            for (JobPosting posting : company.getJobPostingManager().getOpenJobPostings(today))
+        for (Company company : jobApplicationSystem.getCompanies()) {
+            for (JobPosting posting : company.getJobPostingManager().getOpenJobPostings(jobApplicationSystem.getToday()))
                 if (!this.hasAppliedTo(posting)) {
                     jobPostingsNotAppliedTo.add(posting);
                 }

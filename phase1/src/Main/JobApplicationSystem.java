@@ -1,92 +1,74 @@
 package Main;
 
 import FileLoadingAndStoring.*;
-import GUIClasses.MainFrame;
-import UsersAndJobObjects.Company;
-import UsersAndJobObjects.Interview;
-import UsersAndJobObjects.JobApplication;
-import UsersAndJobObjects.JobPosting;
+import DELETE_BEFORE_SUBMISSION.MainFrame;
+import GUIClasses.InterfaceFactory;
+import GUIClasses.UserInterface;
+import UsersAndJobObjects.*;
 import Managers.UserManager;
-import UsersAndJobObjects.Applicant;
-import UsersAndJobObjects.HRCoordinator;
-import UsersAndJobObjects.Interviewer;
 
-import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.Scanner;
 import javax.swing.*;
 
 public class JobApplicationSystem {
 
     // === Instance variables ===
-    // The time in Milliseconds for the cyclicalTask to repeat
-//    private static final int CYCLE_PERIOD = 86400000;
     // List of companies registered in the system
-    private static ArrayList<Company> companies = new ArrayList<>();
+    private ArrayList<Company> companies = new ArrayList<>();
     // The user manager for the system
-    private static UserManager userManager = new UserManager();
+    private UserManager userManager = new UserManager();
     // The date this program interprets as today (Defaults to today)
-    private static LocalDate today = LocalDate.now();
+    private LocalDate today = LocalDate.now();
     // The previous login date for this application
-    private static LocalDate previousLoginDate;
+    private LocalDate previousLoginDate;
+
+
+    // === Main method ===
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        JobApplicationSystem JAS = new JobApplicationSystem();
+        JAS.mainStart();
+        UserInterface UI = new UserInterface();
+        while (true) {
+            UI.getTodaysDateValid(sc, JAS);
+            UI.run(sc, JAS);
+            JAS.mainEnd();
+        }
+    }
+
 
     // === Public methods ===
-
-    public static void main(String[] args) {
-        mainStart();
-//        cyclicalTask();
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                new MainFrame(today);
-            }
-        });
-    }
-
     // === Getters ===
 
-    public static UserManager getUserManager() {
-        return JobApplicationSystem.userManager;
+    public UserManager getUserManager() {
+        return this.userManager;
     }
 
-    public static ArrayList<Company> getCompanies() {
-        return JobApplicationSystem.companies;
+    public ArrayList<Company> getCompanies() {
+        return this.companies;
     }
 
-    public static LocalDate getToday() {
-        return JobApplicationSystem.today;
+    public LocalDate getToday() {
+        return this.today;
     }
 
-    public static LocalDate getPreviousLoginDate() {
-        return JobApplicationSystem.previousLoginDate;
+    public LocalDate getPreviousLoginDate() {
+        return this.previousLoginDate;
     }
 
     // === Setters ===
-    public static void setPreviousLoginDate(LocalDate date) {
-        JobApplicationSystem.previousLoginDate = date;
+    public void setPreviousLoginDate(LocalDate date) {
+        this.previousLoginDate = date;
     }
 
     // === Other methods ===
-//    /**
-//     A method which triggers once a day from the time it is started.
-//     */
-//    public static void cyclicalTask(){
-//        TimerTask daily_tasks = new TimerTask() {
-//            public void run() {
-//                applicant30Day();
-//            }
-//        };
-//        Timer timer = new Timer();
-//        timer.scheduleAtFixedRate(daily_tasks, 0, CYCLE_PERIOD);
-//    }
-
     /**
      * To be called at the start of the program
      * Used to load all objects from json memory
      */
-    public static void mainStart() {
+    public void mainStart() {
         LoaderManager applicant = new LoaderManager(new ApplicantLoader(), Applicant.class, Applicant.FILENAME);
         LoaderManager hrcoordinator = new LoaderManager(new HRCoordinatorLoader(), HRCoordinator.class, HRCoordinator.FILENAME);
         LoaderManager interviewer = new LoaderManager(new InterviewerLoader(), Interviewer.class, Interviewer.FILENAME);
@@ -94,7 +76,7 @@ public class JobApplicationSystem {
         LoaderManager interview = new LoaderManager(new InterviewLoader(), Interview.class, Interview.FILENAME);
         LoaderManager jobposting = new LoaderManager(new JobPostingLoader(), JobPosting.class, JobPosting.FILENAME);
         LoaderManager jobapplication = new LoaderManager(new JobApplicationLoader(), JobApplication.class, JobApplication.FILENAME);
-        LoaderManager.startLoad();
+        LoaderManager.startLoad(this);
         userManager.addUserList(applicant.getArray());
         userManager.addUserList(hrcoordinator.getArray());
         userManager.addUserList(interviewer.getArray());
@@ -107,7 +89,7 @@ public class JobApplicationSystem {
      * To be called at the end of the Program
      * Used to Save all Objects to json memory
      */
-    public static void mainEnd(){
+    public void mainEnd() {
         StorerManager.flushStored();
         StorerManager applicant = new StorerManager(new ApplicantStorer(), Applicant.class, userManager.getAllApplicants());
         StorerManager hrcoordinator = new StorerManager(new HRCoordinatorStorer(), HRCoordinator.class, userManager.getAllHRCoordinator());
@@ -116,36 +98,30 @@ public class JobApplicationSystem {
         StorerManager interview = new StorerManager(new InterviewStorer(), Interview.class, new ArrayList());
         StorerManager jobposting = new StorerManager(new JobPostingStorer(), JobPosting.class, new ArrayList());
         StorerManager jobapplication = new StorerManager(new JobApplicationStorer(), JobApplication.class, new ArrayList());
-        StorerManager.endSave();
+        StorerManager.endSave(this);
     }
 
-    public static void updateAllInterviewRounds() {
-        for (Company company : JobApplicationSystem.companies) {
+    /**
+     * Updates all the interview rounds that have been completed.
+     */
+    public void updateAllInterviewRounds() {
+        for (Company company : this.companies) {
             for (JobPosting jobPosting : company.getJobPostingManager().getJobPostings()) {
                 jobPosting.advanceInterviewRound();
             }
         }
     }
 
-    // ============================================================================================================== //
-    // === Package-private methods ===
-    // === Setters ===
-
-    static void setToday(LocalDate new_date){
-        today = new_date;
-    }
-
-    static void setCompanies(ArrayList<Company> companies) {
-        JobApplicationSystem.companies = companies;
-    }
-
-    static void setUserManager(UserManager userManager) {
-        JobApplicationSystem.userManager = userManager;
-    }
-
     // === Other methods ===
-    public static Company getCompany(String name) {
-        for (Company company : companies) {
+
+    /**
+     * Gets the company with this name.
+     *
+     * @param name The name of the company.
+     * @return the company with this name or null if cannot be found.
+     */
+    public Company getCompany(String name) {
+        for (Company company : this.companies) {
             if (company.getName().equalsIgnoreCase(name))
                 return company;
         }
@@ -158,18 +134,27 @@ public class JobApplicationSystem {
      * @param name The name of the company.
      * @return the company created.
      */
-    public static Company createCompany(String name) {
+    public Company createCompany(String name) {
         Company company = new Company(name);
-        JobApplicationSystem.companies.add(company);
+        this.companies.add(company);
         return company;
     }
 
-    // ============================================================================================================== //
-    // === Private methods ===
-    public static void applicant30Day() {
-        for(Object app : userManager.getAllApplicants()){
-          ((Applicant)app).removeFilesFromAccount(today);
+    /**
+     * Methods that removes the files from one's account if user has not been active for at least 30 days.
+     */
+    public void applicant30Day() {
+        for (Object app : this.userManager.getAllApplicants()) {
+            ((Applicant) app).removeFilesFromAccount(today);
         }
+    }
+
+    // ============================================================================================================== //
+    // === Package-private methods ===
+    // === Setter ===
+
+    void setToday(LocalDate new_date) {
+        this.today = new_date;
     }
 
 }

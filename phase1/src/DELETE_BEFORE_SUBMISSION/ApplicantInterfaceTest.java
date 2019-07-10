@@ -1,5 +1,6 @@
-package GUIClasses;
+package DELETE_BEFORE_SUBMISSION;
 
+import GUIClasses.UserInterface;
 import Main.JobApplicationSystem;
 import Miscellaneous.ExitException;
 import UsersAndJobObjects.*;
@@ -8,14 +9,14 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import static Main.JobApplicationSystem.today;
+//import static Main.JobApplicationSystem.today;
 
 public class ApplicantInterfaceTest extends UserInterface {
     /**
      * The general interface for an applicant
      */
 
-    // === Instance variables ===
+    /*// === Instance variables ===
     private Applicant applicant = (Applicant) this.user; // The applicant currently logged in
 
     // === Constructor ===
@@ -23,17 +24,17 @@ public class ApplicantInterfaceTest extends UserInterface {
         super(user);
     }
 
-    /**
+    *//**
      * Check if there are interviews on the date of login
-     */
+     *//*
     boolean checkUpcomingInterviews(LocalDate today) {
         ArrayList<Interview> upcomingInterviews = applicant.getJobApplicationManager().getUpcomingInterviews(today);
         return (upcomingInterviews.size() > 0);
     }
 
-    /**
+    *//**
      * Returns an arraylist containing all the job postings that apply to the applicant
-     */
+     *//*
     ArrayList<JobPosting> findApplicablePostings(LocalDate today, String field, String companyName) {
         ArrayList<JobPosting> openJobPostings = applicant.getOpenJobPostingsNotAppliedTo(today);
         ArrayList<JobPosting> ret = new ArrayList<>();
@@ -48,14 +49,14 @@ public class ApplicantInterfaceTest extends UserInterface {
         return ret;
     }
 
-    /**
+    *//**
      * Allow the applicant to select files from their account, and use these files to assemble a JobApplication.
      *
      * @param sc The Scanner for user input.
      * @param today Today's date.
      * @param posting The job posting that this applicant wishes to apply to.
      * @return a job application containing this applicant's chosen files.
-     */
+     *//*
     private JobApplication createJobApplicationThroughFiles(Scanner sc, LocalDate today, JobPosting posting) {
         System.out.println("Here are your files: ");
         int CVFileNumber = 0;
@@ -78,25 +79,25 @@ public class ApplicantInterfaceTest extends UserInterface {
         return new JobApplication(applicant, posting, CV, coverLetter, today);
     }
 
-    /**
+    *//**
      * Creates job app through input data
-     */
+     *//*
     JobApplication createAppThroughInput(String CVContents, String coverLetterContents, JobPosting posting) {
         JobApplicationDocument CV = new JobApplicationDocument(CVContents);
         JobApplicationDocument coverLetter = new JobApplicationDocument(coverLetterContents);
         return new JobApplication(applicant, posting, CV, coverLetter, today);
     }
 
-    /**
+    *//**
      * Returns a list of applicant's applications
-     */
+     *//*
     ArrayList<JobApplication> getApps() {
         return applicant.getJobApplicationManager().getJobApplications();
     }
 
-    /**
+    *//**
      * Returns a list of applicant's application's jobpostings
-     */
+     *//*
     ArrayList<JobPosting> helperPostings() {
         ArrayList<JobPosting>  ret = new ArrayList<JobPosting>();
         for(JobApplication app : this.getApps()) {
@@ -105,16 +106,16 @@ public class ApplicantInterfaceTest extends UserInterface {
         return ret;
     }
 
-    /**
+    *//**
      * Withdraw an application
-     */
+     *//*
     boolean withdrawApp(JobApplication application) {
         return applicant.withdrawJobApplication(today, application.getJobPosting());
     }
 
-    /**
+    *//**
      * Return status since last job application (none submitted or days since)
-     */
+     *//*
     String daysSince(LocalDate today) {
         if (applicant.getJobApplicationManager().getJobApplications().isEmpty())
             return("You have not yet submitted any job applications.");
@@ -124,9 +125,9 @@ public class ApplicantInterfaceTest extends UserInterface {
                     " days since your most recent application closed.");
     }
 
-    /**
+    *//**
      * Builds and returns an html string containing info regarding the applicant's previous applications
-     */
+     *//*
     String oldApps() {
         String ret = "<html>Previous applications:";
         ArrayList<JobApplication> applications = applicant.getJobApplicationManager().getPreviousJobApplications();
@@ -139,9 +140,9 @@ public class ApplicantInterfaceTest extends UserInterface {
         return ret;
     }
 
-    /**
+    *//**
      * Display the applicant's submitted documents.
-     */
+     *//*
     private void displayDocuments() { //TODO Phase 2
         System.out.println();
         ArrayList<JobApplicationDocument> documents = applicant.getDocumentManager().getDocuments();
@@ -154,5 +155,5 @@ public class ApplicantInterfaceTest extends UserInterface {
                 System.out.println();
             }
         }
-    }
+    }*/
 }

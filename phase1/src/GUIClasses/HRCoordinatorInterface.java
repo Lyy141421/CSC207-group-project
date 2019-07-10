@@ -29,143 +29,30 @@ public class HRCoordinatorInterface extends UserInterface {
         super(user);
     }
 
-    // === Methods that GUI will call ===
+    // === Inherited method ===
 
-    /**
-     * Get the task that the HR Coordinator must accomplish at this moment for this job posting.
-     */
-    int getTaskForJobPosting(JobPosting jobPosting) {
-        return jobPosting.getInterviewManager().getHrTask();
-    }
-
-    /**
-     * Gets a list of lists of job postings that include high priority and all postings for the company.
-     * @param today Today's date.
-     * @return  the list of lists of job postings required.
-     */
-    ArrayList<ArrayList<JobPosting>> getHighPriorityAndAllJobPostings(LocalDate today) {
-        JobPostingManager JPM = this.HRC.getCompany().getJobPostingManager();
-        ArrayList<ArrayList<JobPosting>> jobPostingsList = new ArrayList<>();
-        jobPostingsList.add(JPM.getClosedJobPostingsNoApplicantsChosen(today));
-        jobPostingsList.add(JPM.getJobPostingsWithRoundCompletedNotForHire(today));
-        jobPostingsList.add(JPM.getJobPostingsForHiring(today));
-        jobPostingsList.add(JPM.getJobPostings());
-        return jobPostingsList;
-    }
-
-    /**
-     * Add a job posting for this company.
-     * @param today  Today's date.
-     * @param jobPostingFields  The fields that the user inputs.
-     */
-    void addJobPosting(LocalDate today, Object[] jobPostingFields) {
-        String title = (String) jobPostingFields[0];
-        String field = (String) jobPostingFields[1];
-        String description = (String) jobPostingFields[2];
-        String requirements = (String) jobPostingFields[3];
-        int numPositions = (Integer) jobPostingFields[4];
-        LocalDate closeDate = (LocalDate) jobPostingFields[5];
-        this.HRC.addJobPosting(title, field, description, requirements, numPositions, today, closeDate);
-    }
-
-    /**
-     * Get all job applications submitted by this applicant with this username.
-     * @param applicantUsername The applicant username inputted.
-     * @return  a list of job applications submitted by this applicant with this username.
-     */
-    ArrayList<JobApplication> getAllJobApplicationsToCompany(String applicantUsername) {
-        Applicant applicant = (Applicant) JobApplicationSystem.getUserManager().findUserByUsername(applicantUsername);
-        if (applicant == null) {
-            return new ArrayList<>();
-        }
-        return this.HRC.getCompany().getAllApplicationsToCompany(applicant);
-    }
-
-    /**
-     * Hire or reject an application.
-     *
-     * @param jobApp The job application in question.
-     * @param toHire Whether or not the HR Coordinator wants to hire the applicant.
-     */
-    boolean hireOrRejectApplication(JobApplication jobApp, boolean toHire) {
-        if (toHire) {
-            jobApp.getStatus().setHired();
-        } else {
-            jobApp.getStatus().setArchived();
-        }
-        JobPosting jobPosting = jobApp.getJobPosting();
-        jobPosting.setFilled();
-        jobPosting.getInterviewManager().archiveRejected();
-        if (jobPosting.getInterviewManager().getNumOpenPositions() > 0) {
-            return false;
-        }
-        return true;
-    }
-
-    /**
-     * Checks whether this job application has been rejected.
-     *
-     * @param jobApplication The job application in question.
-     * @return true iff this job application has been rejected.
-     */
-    boolean isRejected(JobApplication jobApplication) {
-        return jobApplication.getJobPosting().getInterviewManager().getApplicationsRejected().contains(jobApplication);
-    }
-
-    /**
-     * Choose whether this application moves on for phone interviews.
-     *
-     * @param jobApp   The job application in question.
-     * @param selected Whether or not the application is selected to move on.
-     */
-    void selectApplicationForPhoneInterview(JobApplication jobApp, boolean selected) {
-        if (!selected) {
-            jobApp.getJobPosting().getInterviewManager().reject(jobApp);
-        }
-    }
-
-    /**
-     * Set up interviews for this job posting.
-     *
-     * @param jobPosting The job posting in question.
-     */
-    boolean setUpInterviews(JobPosting jobPosting) {
-        Company company = jobPosting.getCompany();
-        String field = jobPosting.getField();
-        if (!company.hasInterviewerForField(field)) {
-            return false;
-        } else {
-            ArrayList<JobApplication> jobApps = jobPosting.getInterviewManager().getApplicationsInConsideration();
-            if (jobApps.isEmpty()) {
-                return false;
-            }
-            for (JobApplication jobApp : jobApps) {
-                jobApp.setUpInterview(this.HRC, jobApp.getStatus().getValue() + 1);
-            }
-            return true;
-        }
-    }
-
-
-    // ============================================================================================================== //
-    // === Methods for standard input === (BACK-UP)!!!
     /**
      * Run the main HR Coordinator interface.
      *
-     * @param today Today's date.
+     * @param sc The scanner for user input.
+     * @param jobApplicationSystem The job application system being used.
      */
-    void run(LocalDate today) {
-        Scanner sc = new Scanner(System.in);
-        this.viewPostingsWithNoApplicationsSubmitted(sc, today);
-        this.viewPostingsWithNoApplicationsInConsideration(today);
+    @Override
+    public void run(Scanner sc, JobApplicationSystem jobApplicationSystem) {
+        System.out.println("Welcome, " + this.user.getLegalName() + ".\n");
+        this.viewPostingsWithNoApplicationsSubmitted(sc, jobApplicationSystem.getToday());
+        this.viewPostingsWithNoApplicationsInConsideration(jobApplicationSystem.getToday());
         while (true) {
             try {
-                this.runMainMenu(sc, today);
+                this.runMainMenu(sc, jobApplicationSystem);
             } catch (ExitException ee) {
                 break;
             }
         }
     }
+
+    // ============================================================================================================== //
+    // === Private methods ===
 
     /**
      * Interface for displaying main menu options.
@@ -191,39 +78,39 @@ public class HRCoordinatorInterface extends UserInterface {
      * Run the main menu for the HR Coordinator.
      *
      * @param sc    The Scanner for user input.
-     * @param today Today's date.
      * @throws ExitException Signals that user wants to exit the program
      */
-    private void runMainMenu(Scanner sc, LocalDate today) throws ExitException {
+    private void runMainMenu(Scanner sc, JobApplicationSystem jobApplicationSystem)
+            throws ExitException {
         int numOptions = this.displayMainMenuOptions();
         int option = this.getMenuOption(sc, numOptions);
         switch (option) {
             case 1: // Add job posting
-                this.addJobPosting(sc, today);
+                this.addJobPosting(sc, jobApplicationSystem.getToday());
                 break;
             case 2: // Update fields
-                this.viewUpdateJobPosting(sc, today);
+                this.viewUpdateJobPosting(sc, jobApplicationSystem.getToday());
                 break;
             case 3: // View job postings
-                this.runJobPostingSubMenu(sc, today);
+                this.runJobPostingSubMenu(sc, jobApplicationSystem.getToday());
                 break;
             case 4: // View job applications
-                this.runJobApplicationSubMenu(sc);
+                this.runJobApplicationSubMenu(sc, jobApplicationSystem);
                 break;
             case 5: // View previous job apps to company
-                this.viewAllJobAppsToCompany(sc);
+                this.viewAllJobAppsToCompany(sc, jobApplicationSystem);
                 break;
             case 6: // View interviews associated with a job application
                 this.viewAllInterviewsForJobApp(sc);
                 break;
             case 7: // Select applicants for phone interview
-                this.selectJobAppsForPhoneInterview(sc, today);
+                this.selectJobAppsForPhoneInterview(sc, jobApplicationSystem.getToday());
                 break;
             case 8: // Schedule interviews for job posting
-                this.viewPostingsThatNeedInterviewsScheduled(today);
+                this.viewPostingsThatNeedInterviewsScheduled(jobApplicationSystem.getToday());
                 break;
             case 9: // Hire applicants for a job posting
-                this.hireApplicants(sc, today);
+                this.hireApplicants(sc, jobApplicationSystem.getToday());
                 break;
             case 10: // Exit
                 throw new ExitException();
@@ -312,9 +199,10 @@ public class HRCoordinatorInterface extends UserInterface {
      * Run the job application sub menu.
      *
      * @param sc the scanner for user input.
+     * @param jobApplicationSystem  The job application system being used.
      *
      */
-    private void runJobApplicationSubMenu(Scanner sc) {
+    private void runJobApplicationSubMenu(Scanner sc, JobApplicationSystem jobApplicationSystem) {
         JobPosting jobPosting = this.getJobPosting(sc);
         if (jobPosting == null || this.noItemsToViewForJobPosting(jobPosting)) {
             return;
@@ -324,7 +212,7 @@ public class HRCoordinatorInterface extends UserInterface {
         PrintItems<JobApplication> printApps = new PrintItems<>();
         switch (option) {
             case 1: // Search job application
-                this.searchSpecificJobApplication(sc, jobPosting);
+                this.searchSpecificJobApplication(sc, jobApplicationSystem, jobPosting);
                 break;
             case 2: // View all apps in consideration
                 ArrayList<JobApplication> jobAppsInConsideration = jobPosting.getInterviewManager().
@@ -452,10 +340,11 @@ public class HRCoordinatorInterface extends UserInterface {
     /**
      * Searching for a specific applicant who has applied to the company.
      * @param sc    The scanner for user input.
+     * @param jobApplicationSystem  The job application system that is being used.
      */
-    private Applicant searchSpecificApplicant(Scanner sc) {
+    private Applicant searchSpecificApplicant(Scanner sc, JobApplicationSystem jobApplicationSystem) {
         String username = this.getInputToken(sc, "\nEnter the applicant username you would like to view: ");
-        Applicant applicant = (Applicant) JobApplicationSystem.getUserManager().findUserByUsername(username);
+        Applicant applicant = (Applicant) jobApplicationSystem.getUserManager().findUserByUsername(username);
         sc.nextLine();
         if (applicant == null) {
             System.out.println("This applicant cannot be found.");
@@ -470,9 +359,11 @@ public class HRCoordinatorInterface extends UserInterface {
 
     /**
      * Interface for viewing all the previous job applications this applicant has submitted to this company.
+     * @param sc   The scanner for user input.
+     * @param jobApplicationSystem The job application system being used.
      */
-    private void viewAllJobAppsToCompany(Scanner sc) {
-        Applicant applicant = this.searchSpecificApplicant(sc);
+    private void viewAllJobAppsToCompany(Scanner sc, JobApplicationSystem jobApplicationSystem) {
+        Applicant applicant = this.searchSpecificApplicant(sc, jobApplicationSystem);
         if (applicant != null) {
             ArrayList<JobApplication> jobApps = this.HRC.getCompany().getAllApplicationsToCompany(applicant);
             new PrintItems<JobApplication>().printList(jobApps);
@@ -482,10 +373,12 @@ public class HRCoordinatorInterface extends UserInterface {
     /**
      * Interface for searching for a specific job application.
      * @param sc The scanner for user input.
+     * @param jobApplicationSystem  The job application system being used.
      * @param jobPosting The job posting in question.
      */
-    private void searchSpecificJobApplication(Scanner sc, JobPosting jobPosting) {
-        Applicant applicant = this.searchSpecificApplicant(sc);
+    private void searchSpecificJobApplication(Scanner sc, JobApplicationSystem jobApplicationSystem,
+                                              JobPosting jobPosting) {
+        Applicant applicant = this.searchSpecificApplicant(sc, jobApplicationSystem);
         if (applicant != null) {
             JobApplication jobApp = jobPosting.findJobApplication(applicant);
             if (jobApp == null) {

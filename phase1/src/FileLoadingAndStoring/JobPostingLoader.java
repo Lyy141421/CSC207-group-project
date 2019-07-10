@@ -15,19 +15,20 @@ public class JobPostingLoader extends GenericLoader<JobPosting> {
 
     /**
      * Loads the job posting.
+     * @param jobApplicationSystem The job application system being used.
      * @param jobPosting The job posting to be loaded.
      */
-    void loadOne(JobPosting jobPosting){
+    void loadOne(JobApplicationSystem jobApplicationSystem, JobPosting jobPosting) {
         HashMap data = FileSystem.read(JobPosting.FILENAME,  String.valueOf(jobPosting.getId()));
         this.loadPrelimData(data, jobPosting);
-        this.loadJobApps(data, jobPosting);
-        if (jobPosting.isClosed(JobApplicationSystem.getToday())) {
-            ArrayList<JobApplication> appsInConsideration = this.loadAppsInConsideration(data);
-            ArrayList<JobApplication> appsRejected = this.loadAppsRejected(data);
+        this.loadJobApps(jobApplicationSystem, data, jobPosting);
+        if (jobPosting.isClosed(jobApplicationSystem.getToday())) {
+            ArrayList<JobApplication> appsInConsideration = this.loadAppsInConsideration(jobApplicationSystem, data);
+            ArrayList<JobApplication> appsRejected = this.loadAppsRejected(jobApplicationSystem, data);
             jobPosting.setInterviewManager(new InterviewManager(jobPosting, appsInConsideration, appsRejected,
                     (int) data.get("currentRound")));
         }
-        jobPosting.setCompany((Company) LoaderManager.subLoad(Company.class, (String)((ArrayList)data.
+        jobPosting.setCompany((Company) LoaderManager.subLoad(jobApplicationSystem, Company.class, (String) ((ArrayList) data.
                         get("Company")).get(0),
                 (String)((ArrayList)data.get("Company")).get(1)));
     }
@@ -57,10 +58,10 @@ public class JobPostingLoader extends GenericLoader<JobPosting> {
      * @param data The data for this job posting.
      * @param jobPosting The job posting to load.
      */
-    private void loadJobApps(HashMap data, JobPosting jobPosting) {
+    private void loadJobApps(JobApplicationSystem jobApplicationSystem, HashMap data, JobPosting jobPosting) {
         ArrayList<JobApplication> jobApplications = new ArrayList<>();
         for (ArrayList x : (ArrayList<ArrayList>) data.get("jobapplications")) {
-            jobApplications.add((JobApplication) LoaderManager.subLoad(JobApplication.class, (String) x.get(0),
+            jobApplications.add((JobApplication) LoaderManager.subLoad(jobApplicationSystem, JobApplication.class, (String) x.get(0),
                     (String) x.get(1)));
         }
         jobPosting.setJobApplications(jobApplications);
@@ -72,10 +73,10 @@ public class JobPostingLoader extends GenericLoader<JobPosting> {
      * @param data The data for this job posting.
      * @return a list of job applications in consideration.
      */
-    private ArrayList<JobApplication> loadAppsInConsideration(HashMap data) {
+    private ArrayList<JobApplication> loadAppsInConsideration(JobApplicationSystem jobApplicationSystem, HashMap data) {
         ArrayList<JobApplication> applicationsInConsideration = new ArrayList<>();
         for (ArrayList x : (ArrayList<ArrayList>) data.get("applicationsInConsideration")) {
-            applicationsInConsideration.add((JobApplication) LoaderManager.subLoad(JobApplication.class,
+            applicationsInConsideration.add((JobApplication) LoaderManager.subLoad(jobApplicationSystem, JobApplication.class,
                     (String) x.get(0), (String) x.get(1)));
         }
         return applicationsInConsideration;
@@ -87,10 +88,10 @@ public class JobPostingLoader extends GenericLoader<JobPosting> {
      * @param data The data for this job posting.
      * @return a list of job applications rejected for this job posting.
      */
-    private ArrayList<JobApplication> loadAppsRejected(HashMap data) {
+    private ArrayList<JobApplication> loadAppsRejected(JobApplicationSystem jobApplicationSystem, HashMap data) {
         ArrayList<JobApplication> applicationsRejected = new ArrayList<>();
         for (ArrayList x : (ArrayList<ArrayList>) data.get("applicationsRejected")) {
-            applicationsRejected.add((JobApplication) LoaderManager.subLoad(JobApplication.class, (String) x.get(0),
+            applicationsRejected.add((JobApplication) LoaderManager.subLoad(jobApplicationSystem, JobApplication.class, (String) x.get(0),
                     (String) x.get(1)));
         }
         return applicationsRejected;

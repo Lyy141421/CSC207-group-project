@@ -1,10 +1,11 @@
-package GUIClasses;
+package DELETE_BEFORE_SUBMISSION;
 
+import GUIClasses.InterviewerInterface;
 import Main.JobApplicationSystem;
 import UsersAndJobObjects.Interview;
-import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
-import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
-import net.sourceforge.jdatepicker.impl.UtilDateModel;
+//import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
+//import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
+//import net.sourceforge.jdatepicker.impl.UtilDateModel;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -21,9 +22,9 @@ import java.util.Arrays;
 import java.util.Date;
 
 
-public class InterviewerPanel extends JPanel implements ActionListener {
+public class InterviewerPanel extends JPanel { //implements ActionListener {
 
-    private Container contentPane;
+    /*private Container contentPane;
     private InterviewerInterface interviewerInterface;
     private LocalDate today;
 
@@ -310,6 +311,6 @@ public class InterviewerPanel extends JPanel implements ActionListener {
             default:
                 throw new IllegalStateException("Unexpected value: " + source.getText());
         }
-    }
+    }*/
 }
 

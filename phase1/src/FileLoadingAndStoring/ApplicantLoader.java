@@ -1,5 +1,6 @@
 package FileLoadingAndStoring;
 
+import Main.JobApplicationSystem;
 import Managers.DocumentManager;
 import Managers.JobApplicationManager;
 import UsersAndJobObjects.Applicant;
@@ -15,10 +16,10 @@ public class ApplicantLoader extends GenericLoader<Applicant> {
     /**
      * Loads the applicant
      */
-    void loadOne(Applicant applicant){
+    void loadOne(JobApplicationSystem jobApplicationSystem, Applicant applicant) {
         HashMap data = FileSystem.read(Applicant.FILENAME, applicant.getUsername());
         this.loadPrelimData(applicant, data);
-        this.loadJobAppManager(applicant, data);
+        this.loadJobAppManager(jobApplicationSystem, applicant, data);
         this.loadDocumentManager(applicant, data);
     }
 
@@ -39,10 +40,10 @@ public class ApplicantLoader extends GenericLoader<Applicant> {
      *
      * @param data This applicant's data.
      */
-    private void loadJobAppManager(Applicant applicant, HashMap data) {
+    private void loadJobAppManager(JobApplicationSystem jobApplicationSystem, Applicant applicant, HashMap data) {
         ArrayList<JobApplication> temp = new ArrayList<>();
         for (ArrayList x : (ArrayList<ArrayList>) (data.get("jobApplicationManager"))) {
-            temp.add((JobApplication) LoaderManager.subLoad(JobApplication.class, (String) x.get(0),
+            temp.add((JobApplication) LoaderManager.subLoad(jobApplicationSystem, JobApplication.class, (String) x.get(0),
                     (String) x.get(1)));
         }
         applicant.setJobApplicationManager(new JobApplicationManager(temp));

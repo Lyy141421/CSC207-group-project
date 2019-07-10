@@ -14,53 +14,65 @@ public class UserInterface {
      * The general user interface
      */
 
-
-    // === Instance variables ===
+    // === Instance variable ===
     // The user who logged in
     User user;
 
-
-    // === Methods FOR GUI to call ===
-    /**
-     * Check whether the date inputted by the user as today is valid.
-     * @param today     Today's date that is selected by the user.
-     * @return  true iff the date selected by the user is on or after the previous login date.
-     */
-    boolean getValidTodayDate(LocalDate today) {
-        return !today.isBefore(JobApplicationSystem.getPreviousLoginDate());
-    }
-
-    public static void main(String[] args) {
-        JobApplicationSystem.mainStart();
-        UserInterface UI = new UserInterface();
-        while (true) {
-            System.out.println("\nWelcome to GET A JOB!\n");
-            LocalDate today = UI.getTodaysDateValid();
-            JobApplicationSystem.applicant30Day();
-            JobApplicationSystem.updateAllInterviewRounds();
-            User user = UI.login();
-            UserInterface userInterface = new InterfaceFactory().create(user);
-            userInterface.run(today);
-            System.out.println("\nThank you for using GET A JOB. Have a wonderful day!");
-            UI.closeProgram();
-        }
-    }
-
-    // === Constructors ===
-
-    UserInterface(User user) {
+    // === Public methods ===
+    // === Constructor ===
+    public UserInterface(User user) {
         this.user = user;
     }
 
+    // ============================================================================================================== //
+    // === Public methods ===
 
-    // === Inherited methods ===
-    /**
-     * Run this user interface.
-     * @param today Today's date.
-     */
-    void run(LocalDate today) {
+    // === Constructor ===
+    public UserInterface() {
     }
 
+    // === Method to be overridden ===
+
+    /**
+     * Run this user interface.
+     *
+     * @param sc                   The scanner for user input.
+     * @param jobApplicationSystem The job application system being used.
+     */
+    public void run(Scanner sc, JobApplicationSystem jobApplicationSystem) {
+        System.out.println("\nWelcome to GET A JOB!\n");
+        jobApplicationSystem.applicant30Day();
+        jobApplicationSystem.updateAllInterviewRounds();
+        User user = this.login(sc, jobApplicationSystem);
+        UserInterface userInterface = new InterfaceFactory().create(user);
+        userInterface.run(sc, jobApplicationSystem);
+        System.out.println("\nThank you for using GET A JOB. Have a wonderful day!");
+        this.closeProgram(sc, jobApplicationSystem);
+    }
+
+    // === Other method ===
+
+    /**
+     * Get and set today's date as inputted by the user.
+     * @param sc    The scanner for user input
+     * @param jobApplicationSystem The job application system being used.
+     */
+    public void getTodaysDateValid(Scanner sc, JobApplicationSystem jobApplicationSystem) {
+        LocalDate previousLoginDate = jobApplicationSystem.getPreviousLoginDate();
+        LocalDate date;
+        if (previousLoginDate == null) {
+            date = this.getDate(sc, "Please enter today's date (yyyy-mm-dd): ");
+        } else {
+            date = this.getDate(sc, jobApplicationSystem.getPreviousLoginDate(),
+                    "Please enter today's date (yyyy-mm-dd): ");
+        }
+        jobApplicationSystem.setPreviousLoginDate(date);
+    }
+
+    // ============================================================================================================== //
+    // === Package-private methods ===
+
+    // === Methods to be inherited ===
     /**
      * Get the input from the user (with spaces)
      *
@@ -122,7 +134,7 @@ public class UserInterface {
      * @param message   The prompt that is displayed.
      * @return  the string of letters inputted by the user.
      */
-    String getOnlyLetters(Scanner sc, String message) {
+    private String getOnlyLetters(Scanner sc, String message) {
         String input = this.getInputLine(sc, message);
         boolean onlyLetters = true;
         for (int i = 0; i < input.length(); i++) {
@@ -237,89 +249,6 @@ public class UserInterface {
     // ============================================================================================================== //
     // === Private methods ===
 
-    private UserInterface() {
-    }
-
-    /**
-     * Close the program upon user input.
-     */
-    private void closeProgram() {
-        Scanner sc = new Scanner(System.in);
-        String input = this.getInputToken(sc, "\nEnter '-1' if you would like to stop running the system or any other key to keep running: ");
-        sc.nextLine();
-        if (input.equals("-1")) {
-            JobApplicationSystem.mainEnd();
-            System.exit(0);
-        }
-    }
-
-    /**
-     * Get the date without comparing to previous date.
-     * @param sc        The scanner for user input.
-     * @param message   The prompt displayed.
-     * @return  the date the user inputs.
-     */
-    private LocalDate getDate(Scanner sc, String message) {
-        System.out.print(message);
-        String input = sc.next();
-        try {
-            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            return LocalDate.parse(input, dtf);
-        } catch (DateTimeParseException dtpe) {
-            System.out.println("Cannot read date. Please enter again.");
-            System.out.println();
-            return this.getDate(sc, message);
-        }
-    }
-
-    /**
-     * Get today's date as inputted by the user.
-     * @return  today's date
-     */
-    private LocalDate getTodaysDateValid() {
-        Scanner sc = new Scanner(System.in);
-        LocalDate previousLoginDate = JobApplicationSystem.getPreviousLoginDate();
-        LocalDate date;
-        if (previousLoginDate == null) {
-            date = this.getDate(sc, "Please enter today's date (yyyy-mm-dd): ");
-        }
-        else {
-            date = this.getDate(sc, JobApplicationSystem.getPreviousLoginDate(),
-                    "Please enter today's date (yyyy-mm-dd): ");
-        }
-        JobApplicationSystem.setPreviousLoginDate(date);
-        return date;
-
-    }
-
-    /**
-     * Get an e-mail address as input from the user. E-mail address must be in valid format.
-     *
-     * @param sc The scanner for user input.
-     * @param message   The prompt that is displayed.
-     * @return the e-mail address inputted by the user.
-     */
-
-    private String getValidEmail(Scanner sc, String message) {
-        String input = this.getInputLine(sc, message);
-        boolean validEmail = true;
-        if (!input.contains("@") || input.charAt(0) == '@')
-            validEmail = false;
-        else {
-            String[] splitInput = input.split("@", 2);
-            if (!splitInput[1].contains(".") || splitInput[1].charAt(0) == '.'
-                    || splitInput[1].charAt(splitInput[1].length()-1) == '.')
-                validEmail = false;
-        }
-        if (validEmail)
-            return input;
-        else {
-            System.out.println("Invalid input. Please enter again.");
-            System.out.println();
-            return this.getValidEmail(sc, message);
-        }
-    }
-
     /**
      * Interface for displaying user types.
      *
@@ -338,11 +267,12 @@ public class UserInterface {
      * Sign up this user based on the user type selected.
      *
      * @param sc       The scanner for user input.
+     * @param jobApplicationSystem  The job application system being used.
      * @param username The user's username.
      * @param password The user's password.
      * @return the new user instance created.
      */
-    private User signUp(Scanner sc, String username, String password) {
+    private User signUp(Scanner sc, JobApplicationSystem jobApplicationSystem, String username, String password) {
         System.out.println();
         String legalName = this.getOnlyLetters(sc, "Enter your legal name: ");
         String email = this.getValidEmail(sc, "Enter your email address: ");
@@ -352,12 +282,12 @@ public class UserInterface {
             case 1:
                 System.out.println();
                 System.out.println("Sign-up successful!");
-                return JobApplicationSystem.getUserManager().createApplicant
+                return jobApplicationSystem.getUserManager().createApplicant
                         (username, password, legalName, email, LocalDate.now(), true);
             case 2:
-                return this.createNewInterviewer(sc, username, password, legalName, email);
+                return this.createNewInterviewer(sc, jobApplicationSystem, username, password, legalName, email);
             case 3:
-                return this.createNewHRC(sc, username, password, legalName, email);
+                return this.createNewHRC(sc, jobApplicationSystem, username, password, legalName, email);
         }
         return null;    // Won't execute because option number is guaranteed to be within bounds.
     }
@@ -366,19 +296,23 @@ public class UserInterface {
      * Create a new HR Coordinator.
      *
      * @param sc       The scanner for user input.
+     * @param jobApplicationSystem The job application system being used
      * @param username The HR Coordinator's username.
      * @param password The HR Coordinator's password.
+     * @param legalName The HR Coordinator's legalName
+     * @param email     The HR Coordinator's email.
      * @return the new HR Coordinator instance created.
      */
-    private User createNewHRC(Scanner sc, String username, String password, String legalName, String email) {
+    private User createNewHRC(Scanner sc, JobApplicationSystem jobApplicationSystem, String username, String password,
+                              String legalName, String email) {
         System.out.println();
         String companyName = this.getInputLine(sc, "Enter your company name: ");
-        Company company = JobApplicationSystem.getCompany(companyName);
+        Company company = jobApplicationSystem.getCompany(companyName);
         if (company == null) {
-            company = JobApplicationSystem.createCompany(companyName);
+            company = jobApplicationSystem.createCompany(companyName);
         }
         System.out.println("Sign-up successful!");
-        return JobApplicationSystem.getUserManager().createHRCoordinator(username, password, legalName, email, company,
+        return jobApplicationSystem.getUserManager().createHRCoordinator(username, password, legalName, email, company,
                 LocalDate.now(), true);
     }
 
@@ -386,22 +320,26 @@ public class UserInterface {
      * Create a new interviewer.
      *
      * @param sc       The scanner for user input.
+     * @param jobApplicationSystem The job application system being used.
      * @param username The interviewer's username.
      * @param password The interviewer's password.
+     * @param legalName The interviewer's legal name.
+     * @param email     The interviewer's email.
      * @return the new interviewer instance created.
      */
-    private User createNewInterviewer(Scanner sc, String username, String password, String legalName, String email) {
+    private User createNewInterviewer(Scanner sc, JobApplicationSystem jobApplicationSystem, String username,
+                                      String password, String legalName, String email) {
         System.out.println();
         String companyName = this.getInputLine(sc, "Enter your company name: ");
-        Company company = JobApplicationSystem.getCompany(companyName);
+        Company company = jobApplicationSystem.getCompany(companyName);
         while (company == null) {
             System.out.println("Company name not found.");
             companyName = this.getInputLine(sc, "Enter your company name: ");
-            company = JobApplicationSystem.getCompany(companyName);
+            company = jobApplicationSystem.getCompany(companyName);
         }
         String field = this.getOnlyLetters(sc, "Enter your field: ");
         System.out.println("Sign-up successful!");
-        Interviewer interviewer = JobApplicationSystem.getUserManager().createInterviewer(username, password,
+        Interviewer interviewer = jobApplicationSystem.getUserManager().createInterviewer(username, password,
                 legalName, email, company, field, LocalDate.now(), true);
         company.addInterviewer(interviewer);
         return interviewer;
@@ -410,24 +348,87 @@ public class UserInterface {
     /**
      * Login this user into the system. Sign them up if username does not already exist in the system.
      *
+     * @param sc The scanner for user input.
+     * @param jobApplicationSystem The job application system being used.
      * @return the user who logged-in.
      */
-    private User login() {
-        Scanner sc = new Scanner(System.in);
+    private User login(Scanner sc, JobApplicationSystem jobApplicationSystem) {
         String username = this.getInputToken(sc, "\nEnter your username: ");
         sc.nextLine();
         String password = this.getInputLine(sc, "Enter your password: ");
-        if (JobApplicationSystem.getUserManager().findUserByUsername(username) == null) {
-            return signUp(sc, username, password);
-        }
-        else {
-            while (!JobApplicationSystem.getUserManager().passwordCorrect(username, password)) {
+        if (jobApplicationSystem.getUserManager().findUserByUsername(username) == null) {
+            return signUp(sc, jobApplicationSystem, username, password);
+        } else {
+            while (!jobApplicationSystem.getUserManager().passwordCorrect(username, password)) {
                 System.out.println("Incorrect password.");
                 password = this.getInputLine(sc, "Enter your password: ");
             }
             System.out.println("Login successful!");
             System.out.println();
-            return JobApplicationSystem.getUserManager().findUserByUsername(username);
+            return jobApplicationSystem.getUserManager().findUserByUsername(username);
+        }
+    }
+
+    /**
+     * Get the date without comparing to previous date.
+     *
+     * @param sc      The scanner for user input.
+     * @param message The prompt displayed.
+     * @return the date the user inputs.
+     */
+    private LocalDate getDate(Scanner sc, String message) {
+        System.out.print(message);
+        String input = sc.next();
+        try {
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            return LocalDate.parse(input, dtf);
+        } catch (DateTimeParseException dtpe) {
+            System.out.println("Cannot read date. Please enter again.");
+            System.out.println();
+            return this.getDate(sc, message);
+        }
+    }
+
+    /**
+     * Get an e-mail address as input from the user. E-mail address must be in valid format.
+     *
+     * @param sc      The scanner for user input.
+     * @param message The prompt that is displayed.
+     * @return the e-mail address inputted by the user.
+     */
+
+    private String getValidEmail(Scanner sc, String message) {
+        String input = this.getInputLine(sc, message);
+        boolean validEmail = true;
+        if (!input.contains("@") || input.charAt(0) == '@')
+            validEmail = false;
+        else {
+            String[] splitInput = input.split("@", 2);
+            if (!splitInput[1].contains(".") || splitInput[1].charAt(0) == '.'
+                    || splitInput[1].charAt(splitInput[1].length() - 1) == '.')
+                validEmail = false;
+        }
+        if (validEmail)
+            return input;
+        else {
+            System.out.println("Invalid input. Please enter again.");
+            System.out.println();
+            return this.getValidEmail(sc, message);
+        }
+    }
+
+    /**
+     * Close the program upon user input.
+     *
+     * @param sc                   The scanner for user input.
+     * @param jobApplicationSystem The job application system being used.
+     */
+    private void closeProgram(Scanner sc, JobApplicationSystem jobApplicationSystem) {
+        String input = this.getInputToken(sc, "\nEnter '-1' if you would like to stop running the system or " +
+                "any other key (except 'Enter') to keep running: ");
+        sc.nextLine();
+        if (input.equals("-1")) {
+            System.exit(0);
         }
     }
 }

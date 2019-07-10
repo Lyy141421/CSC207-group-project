@@ -1,4 +1,4 @@
-package GUIClasses;
+package DELETE_BEFORE_SUBMISSION;
 
 import Main.JobApplicationSystem;
 import UsersAndJobObjects.Company;
@@ -19,7 +19,7 @@ class UserInterfaceTest {
      * The general user interface
      */
 
-    // === Constructors ===
+    /*// === Constructors ===
     UserInterfaceTest() {
     }
 
@@ -29,11 +29,11 @@ class UserInterfaceTest {
 
     // === Private methods ===
 
-    /**
+    *//**
      * Get an e-mail address as input from the user. E-mail address must be in valid format.
      *
      * @return the e-mail address inputted by the user.
-     */
+     *//*
 
     private boolean checkValidEmail(String email) {
         if (!email.contains("@") || email.charAt(0) == '@')
@@ -45,10 +45,10 @@ class UserInterfaceTest {
         }
     }
 
-    /**
+    *//**
      * Create a new Applicant.
      * @return 0 - blank entry, 1 - bad email, 2 - bad company, 3 - success
-     */
+     *//*
     int createNewApplicant(HashMap<String, String> inputs) {
         String username = inputs.get("username");
         String password = inputs.get("password");
@@ -66,10 +66,10 @@ class UserInterfaceTest {
         }
     }
 
-    /**
+    *//**
      * Create a new HR Coordinator.
      * @return 0 - blank entry, 1 - bad email, 2 - bad company, 3 - success
-     */
+     *//*
     int createNewHRC(HashMap<String, String> inputs) {
         String username = inputs.get("username");
         String password = inputs.get("password");
@@ -90,10 +90,10 @@ class UserInterfaceTest {
         }
     }
 
-    /**
+    *//**
      * Create a new interviewer.
      * @return 0 - blank entry, 1 - bad email, 2 - bad company, 3 - success
-     */
+     *//*
     int createNewInterviewer(HashMap<String, String> inputs) {
         String username = inputs.get("username");
         String password = inputs.get("password");
@@ -115,9 +115,9 @@ class UserInterfaceTest {
         }
     }
 
-    /**
+    *//**
      * Collects user input data from the different forms, so that a new account may be created
-     */
+     *//*
     HashMap<String, String> getInputs(Component[] items, String newUsername) {
         HashMap<String, String> ret = new HashMap<>();
         ret.put("username", newUsername);
@@ -145,10 +145,10 @@ class UserInterfaceTest {
         return ret;
     }
 
-    /**
+    *//**
      * Determine status of the login
      * @return 0 - blank field, 1 - no user exists, 2 - successful login, 3 - wrong pass
-     */
+     *//*
     int login(String username, String password) {
         if (JobApplicationSystem.getUserManager().findUserByUsername(username) == null) {
             return 1;
@@ -162,5 +162,5 @@ class UserInterfaceTest {
                 return 3;
             }
         }
-    }
+    }*/
 }

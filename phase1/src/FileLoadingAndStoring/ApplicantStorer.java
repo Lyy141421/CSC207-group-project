@@ -1,5 +1,6 @@
 package FileLoadingAndStoring;
 
+import Main.JobApplicationSystem;
 import Managers.DocumentManager;
 import UsersAndJobObjects.Applicant;
 import UsersAndJobObjects.JobApplication;
@@ -14,11 +15,11 @@ public class ApplicantStorer extends GenericStorer<Applicant> {
      * Store the applicant.
      * @param applicant The applicant to be stored.
      */
-    void storeOne(Applicant applicant){
+    void storeOne(JobApplicationSystem jobApplicationSystem, Applicant applicant) {
         LoaderManager.mapPut(Applicant.FILENAME, applicant.getUsername(), this);
         HashMap<String, Object> data = new HashMap<>();
         this.storePrelimInfo(applicant, data);
-        this.storeJobApplications(applicant, data);
+        this.storeJobApplications(jobApplicationSystem, applicant, data);
         this.storeDocuments(applicant, data);
         FileSystem.write(Applicant.FILENAME, applicant.getUsername(), data);
     }
@@ -35,14 +36,14 @@ public class ApplicantStorer extends GenericStorer<Applicant> {
         data.put("dateCreated", applicant.getDateCreated());
     }
 
-    private void storeJobApplications(Applicant applicant, HashMap<String, Object> data) {
+    private void storeJobApplications(JobApplicationSystem jobApplicationSystem, Applicant applicant, HashMap<String, Object> data) {
         ArrayList<ArrayList> jobapps = new ArrayList<>();
         for(JobApplication x : applicant.getJobApplicationManager().getJobApplications()){
             ArrayList<String> temp = new ArrayList<>();
             temp.add(JobApplication.FILENAME);
             temp.add(x.getIdString());
             jobapps.add(temp);
-            StorerManager.subStore(x);
+            StorerManager.subStore(jobApplicationSystem, x);
 
         }
         data.put("jobApplicationManager", jobapps);

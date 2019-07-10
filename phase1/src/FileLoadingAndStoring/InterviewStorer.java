@@ -1,9 +1,7 @@
 package FileLoadingAndStoring;
 
-import UsersAndJobObjects.Applicant;
-import UsersAndJobObjects.HRCoordinator;
-import UsersAndJobObjects.Interview;
-import UsersAndJobObjects.Interviewer;
+import Main.JobApplicationSystem;
+import UsersAndJobObjects.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,13 +12,13 @@ public class InterviewStorer extends GenericStorer<Interview> {
      * Stores the interview.
      * @param interview The interview to be stored.
      */
-    void storeOne(Interview interview){
+    void storeOne(JobApplicationSystem jobApplicationSystem, Interview interview) {
         LoaderManager.mapPut(Interview.FILENAME, String.valueOf(interview.getId()), this);
         HashMap<String, Object> data = new HashMap<>();
         this.storePrelimInfo(interview, data);
-        this.storeApplicant(interview, data);
-        this.storeInterviewer(interview, data);
-        this.storeHRCoordinator(interview, data);
+        this.storeApplicant(jobApplicationSystem, interview, data);
+        this.storeInterviewer(jobApplicationSystem, interview, data);
+        this.storeHRCoordinator(jobApplicationSystem, interview, data);
         this.storeInterviewTime(interview, data);
     }
 
@@ -30,27 +28,27 @@ public class InterviewStorer extends GenericStorer<Interview> {
         data.put("roundNumber", interview.getRoundNumber());
     }
 
-    private void storeApplicant(Interview interview, HashMap<String, Object> data) {
+    private void storeApplicant(JobApplicationSystem jobApplicationSystem, Interview interview, HashMap<String, Object> data) {
         data.put("UsersAndJobObjects.JobApplication", new ArrayList() {{
             add(Applicant.FILENAME);
             add(interview.getApplicant().getUsername());
-            StorerManager.subStore(interview.getApplicant());
+            StorerManager.subStore(jobApplicationSystem, interview.getApplicant());
         }});
     }
 
-    private void storeInterviewer(Interview interview, HashMap<String, Object> data) {
+    private void storeInterviewer(JobApplicationSystem jobApplicationSystem, Interview interview, HashMap<String, Object> data) {
         data.put("interviewer", new ArrayList() {{
             add(Interviewer.FILENAME);
             add(interview.getInterviewer().getUsername());
-            StorerManager.subStore(interview.getInterviewer());
+            StorerManager.subStore(jobApplicationSystem, interview.getInterviewer());
         }});
     }
 
-    private void storeHRCoordinator(Interview interview, HashMap<String, Object> data) {
+    private void storeHRCoordinator(JobApplicationSystem jobApplicationSystem, Interview interview, HashMap<String, Object> data) {
         data.put("UsersAndJobObjects.HRCoordinator", new ArrayList() {{
             add(HRCoordinator.FILENAME);
             add(interview.getHRCoordinator().getUsername());
-            StorerManager.subStore(interview.getHRCoordinator());
+            StorerManager.subStore(jobApplicationSystem, interview.getHRCoordinator());
         }});
     }
 

@@ -1,5 +1,6 @@
 package FileLoadingAndStoring;
 
+import Main.JobApplicationSystem;
 import Miscellaneous.InterviewTime;
 import UsersAndJobObjects.HRCoordinator;
 import UsersAndJobObjects.Interview;
@@ -16,11 +17,11 @@ public class InterviewLoader extends GenericLoader<Interview> {
      * Loads this interview
      * @param interview The interview to be loaded.
      */
-    void loadOne(Interview interview) {
+    void loadOne(JobApplicationSystem jobApplicationSystem, Interview interview) {
         HashMap data = FileSystem.read(Interview.FILENAME, String.valueOf(interview.getId()));
-        this.loadJobApplication(interview, data);
-        this.loadInterviewer(interview, data);
-        this.loadHRCoordinator(interview, data);
+        this.loadJobApplication(jobApplicationSystem, interview, data);
+        this.loadInterviewer(jobApplicationSystem, interview, data);
+        this.loadHRCoordinator(jobApplicationSystem, interview, data);
         this.loadPrelimData(interview, data);
     }
 
@@ -38,20 +39,20 @@ public class InterviewLoader extends GenericLoader<Interview> {
                 (int) data.get("InterviewTimeTimeslot")));
     }
 
-    private void loadJobApplication(Interview interview, HashMap data) {
-        interview.setJobApplication((JobApplication) LoaderManager.subLoad(JobApplication.class, (String) ((ArrayList)
+    private void loadJobApplication(JobApplicationSystem jobApplicationSystem, Interview interview, HashMap data) {
+        interview.setJobApplication((JobApplication) LoaderManager.subLoad(jobApplicationSystem, JobApplication.class, (String) ((ArrayList)
                 data.get("JobApplication")).get(0), (String)
                 ((ArrayList) data.get("JobApplication")).get(1)));
     }
 
-    private void loadInterviewer(Interview interview, HashMap data) {
-        interview.setHrCoordinator((HRCoordinator) LoaderManager.subLoad(HRCoordinator.class, (String)
+    private void loadInterviewer(JobApplicationSystem jobApplicationSystem, Interview interview, HashMap data) {
+        interview.setHrCoordinator((HRCoordinator) LoaderManager.subLoad(jobApplicationSystem, HRCoordinator.class, (String)
                 ((ArrayList) data.get("HRCoordinator")).get(0), (String) ((ArrayList)
                 data.get("HRCoordinator")).get(1)));
     }
 
-    private void loadHRCoordinator(Interview interview, HashMap data) {
-        interview.setInterviewer((Interviewer) LoaderManager.subLoad(Interviewer.class, (String) ((ArrayList)
+    private void loadHRCoordinator(JobApplicationSystem jobApplicationSystem, Interview interview, HashMap data) {
+        interview.setInterviewer((Interviewer) LoaderManager.subLoad(jobApplicationSystem, Interviewer.class, (String) ((ArrayList)
                 data.get("interviewer")).get(0), (String) ((ArrayList) data.get("interviewer")).get(1)));
     }
 }
