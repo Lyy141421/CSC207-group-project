@@ -208,8 +208,8 @@ public class JobApplication implements Storable{
         String s = "Application ID: " + this.getId() + "\n";
         s += "Applicant: " + this.getApplicant().getLegalName() + "(" + this.getApplicant().getUsername() + ")" + "\n";
         s += "Job Posting: " + this.getJobPosting().getTitle() + " -- ID: " + this.getJobPosting().getId();
-        s += "\n\nCV: \n" + this.getCV().getContents() + "\n\n";
-        s += "Cover letter: \n" + this.getCoverLetter().getContents() + "\n\n";
+        s += "\n\nCV: \n" + this.getCV() + "\n\n";
+        s += "Cover letter: \n" + this.getCoverLetter() + "\n\n";
         s += "Status: " + this.status.getDescription() + "\n";
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         s += "Application date: " + this.getApplicationDate().format(dtf);
