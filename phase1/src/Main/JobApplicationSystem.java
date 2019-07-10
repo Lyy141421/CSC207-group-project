@@ -1,8 +1,6 @@
 package Main;
 
 import FileLoadingAndStoring.*;
-import DELETE_BEFORE_SUBMISSION.MainFrame;
-import GUIClasses.InterfaceFactory;
 import GUIClasses.UserInterface;
 import UsersAndJobObjects.*;
 import Managers.UserManager;
@@ -10,7 +8,6 @@ import Managers.UserManager;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
-import javax.swing.*;
 
 public class JobApplicationSystem {
 

@@ -2,9 +2,7 @@ package GUIClasses;
 
 import Managers.InterviewManager;
 import Managers.JobPostingManager;
-import UsersAndJobObjects.Company;
-import UsersAndJobObjects.JobApplication;
-import UsersAndJobObjects.JobPosting;
+import UsersAndJobObjects.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -14,6 +12,14 @@ class HRCoordinatorHighPriorityInterface extends HRCoordinatorInterface {
     /**
      * Interface for the HRCoordinator high priority sub menu.
      */
+
+    // === Instance variable ===
+    private HRCoordinator HRC;
+
+    // === Constructor ===
+    HRCoordinatorHighPriorityInterface(HRCoordinator HRC) {
+        this.HRC = HRC;
+    }
 
     /**
      * Run the job posting sub-menu.
@@ -37,6 +43,7 @@ class HRCoordinatorHighPriorityInterface extends HRCoordinatorInterface {
      * Display the sub menu for high priority tasks.
      */
     private int displayMenu() {
+        System.out.println("\nPlease select an option below:");
         System.out.println("1 - Select applicants to receive a phone interview");
         System.out.println("2 - Schedule interviews");
         System.out.println("3 - Hire applicants");

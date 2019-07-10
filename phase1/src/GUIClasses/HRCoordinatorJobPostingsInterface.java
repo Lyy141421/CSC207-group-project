@@ -1,6 +1,7 @@
 package GUIClasses;
 
 import Managers.JobPostingManager;
+import UsersAndJobObjects.HRCoordinator;
 import UsersAndJobObjects.JobPosting;
 
 import java.time.LocalDate;
@@ -17,6 +18,14 @@ class HRCoordinatorJobPostingsInterface extends HRCoordinatorInterface {
     // === Class variables ===
     private static int SKIP_FIELD_KEY = -1;
     private static LocalDate SKIP_DATE_KEY = LocalDate.parse("9999-12-31", DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+
+    // === Instance variable ===
+    private HRCoordinator HRC;
+
+    // === Constructor ===
+    HRCoordinatorJobPostingsInterface(HRCoordinator HRC) {
+        this.HRC = HRC;
+    }
 
     /**
      * Run the job posting sub-menu.

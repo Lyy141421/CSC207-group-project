@@ -18,20 +18,21 @@ public class HRCoordinatorInterface extends UserInterface {
     // The HR Coordinator who is logged in
     HRCoordinator HRC = (HRCoordinator) this.user;
     // The high priority interface
-    private HRCoordinatorHighPriorityInterface HRCHighPriorityInterface = new HRCoordinatorHighPriorityInterface();
+    private HRCoordinatorHighPriorityInterface HRCHighPriorityInterface;
     // The job posting actions interface
-    private HRCoordinatorJobPostingsInterface HRCJobPostingsInterface =
-            new HRCoordinatorJobPostingsInterface();
+    private HRCoordinatorJobPostingsInterface HRCJobPostingsInterface;
     // The job applications actions interface
-    private HRCoordinatorJobAppsInterface HRCJobApplicationsInterface =
-            new HRCoordinatorJobAppsInterface();
+    private HRCoordinatorJobAppsInterface HRCJobApplicationsInterface;
 
     // === Constructor ===
     HRCoordinatorInterface() {
-    }  // Default for job posting actions interface
+    }
 
     HRCoordinatorInterface(User user) {
         super(user);
+        HRCHighPriorityInterface = new HRCoordinatorHighPriorityInterface(this.HRC);
+        HRCJobPostingsInterface = new HRCoordinatorJobPostingsInterface(this.HRC);
+        HRCJobApplicationsInterface = new HRCoordinatorJobAppsInterface();
     }
 
     // === Inherited method ===
