@@ -42,9 +42,9 @@ public class UserInterface {
         jobApplicationSystem.updateAllInterviewRounds();
         User user = this.login(sc, jobApplicationSystem);
         UserInterface userInterface;
-        if (user.getClass().getName().equals("Applicant"))
+        if (user instanceof Applicant)
             userInterface = new ApplicantInterface(user);
-        else if (user.getClass().getName().equals("Interviewer"))
+        else if (user instanceof Interviewer)
             userInterface = new InterviewerInterface(user);
         else
             userInterface = new HRCoordinatorInterface(user);
