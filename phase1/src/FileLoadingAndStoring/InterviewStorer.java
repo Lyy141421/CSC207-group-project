@@ -30,7 +30,7 @@ public class InterviewStorer extends GenericStorer<Interview> {
     }
 
     private void storeApplicant(JobApplicationSystem jobApplicationSystem, Interview interview, HashMap<String, Object> data) {
-        data.put("UsersAndJobObjects.JobApplication", new ArrayList() {{
+        data.put("JobApplication", new ArrayList() {{
             add(Applicant.FILENAME);
             add(interview.getApplicant().getUsername());
             StorerManager.subStore(jobApplicationSystem, interview.getApplicant());
@@ -46,7 +46,7 @@ public class InterviewStorer extends GenericStorer<Interview> {
     }
 
     private void storeHRCoordinator(JobApplicationSystem jobApplicationSystem, Interview interview, HashMap<String, Object> data) {
-        data.put("UsersAndJobObjects.HRCoordinator", new ArrayList() {{
+        data.put("HRCoordinator", new ArrayList() {{
             add(HRCoordinator.FILENAME);
             add(interview.getHRCoordinator().getUsername());
             StorerManager.subStore(jobApplicationSystem, interview.getHRCoordinator());
