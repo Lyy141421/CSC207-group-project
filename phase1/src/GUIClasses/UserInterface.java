@@ -27,12 +27,7 @@ public class UserInterface {
     // ============================================================================================================== //
     // === Public methods ===
 
-    // === Constructor ===
-    public UserInterface() {
-    }
-
     // === Method to be overridden ===
-
     /**
      * Run this user interface.
      *
@@ -50,8 +45,7 @@ public class UserInterface {
         this.closeProgram(sc, jobApplicationSystem);
     }
 
-    // === Other method ===
-
+    // === Other methods ===
     /**
      * Get and set today's date as inputted by the user.
      * @param sc    The scanner for user input
@@ -126,29 +120,6 @@ public class UserInterface {
             this.getInputToken(sc, message);
         }
         return input;
-    }
-
-    /**
-     * Gets a string of letters inputted by the user.
-     * @param sc    The scanner for user input.
-     * @param message   The prompt that is displayed.
-     * @return  the string of letters inputted by the user.
-     */
-    private String getOnlyLetters(Scanner sc, String message) {
-        String input = this.getInputLine(sc, message);
-        boolean onlyLetters = true;
-        for (int i = 0; i < input.length(); i++) {
-            if (!Character.isLetter(input.charAt(i)) && !Character.isSpaceChar(input.charAt(i))) {
-                onlyLetters = false;
-            }
-        }
-        if (onlyLetters) {
-            return input;
-        }
-        else {
-            System.out.println("Invalid input. Please enter again.");
-            return this.getOnlyLetters(sc, message);
-        }
     }
 
     /**
@@ -248,7 +219,6 @@ public class UserInterface {
 
     // ============================================================================================================== //
     // === Private methods ===
-
     /**
      * Interface for displaying user types.
      *
@@ -283,7 +253,7 @@ public class UserInterface {
                 System.out.println();
                 System.out.println("Sign-up successful!");
                 return jobApplicationSystem.getUserManager().createApplicant
-                        (username, password, legalName, email, LocalDate.now(), true);
+                        (username, password, legalName, email, jobApplicationSystem.getToday());
             case 2:
                 return this.createNewInterviewer(sc, jobApplicationSystem, username, password, legalName, email);
             case 3:
@@ -313,7 +283,7 @@ public class UserInterface {
         }
         System.out.println("Sign-up successful!");
         return jobApplicationSystem.getUserManager().createHRCoordinator(username, password, legalName, email, company,
-                LocalDate.now(), true);
+                jobApplicationSystem.getToday());
     }
 
     /**
@@ -340,7 +310,7 @@ public class UserInterface {
         String field = this.getOnlyLetters(sc, "Enter your field: ");
         System.out.println("Sign-up successful!");
         Interviewer interviewer = jobApplicationSystem.getUserManager().createInterviewer(username, password,
-                legalName, email, company, field, LocalDate.now(), true);
+                legalName, email, company, field, jobApplicationSystem.getToday());
         company.addInterviewer(interviewer);
         return interviewer;
     }
@@ -366,6 +336,29 @@ public class UserInterface {
             System.out.println("Login successful!");
             System.out.println();
             return jobApplicationSystem.getUserManager().findUserByUsername(username);
+        }
+    }
+
+    /**
+     * Gets a string of letters inputted by the user.
+     *
+     * @param sc      The scanner for user input.
+     * @param message The prompt that is displayed.
+     * @return the string of letters inputted by the user.
+     */
+    private String getOnlyLetters(Scanner sc, String message) {
+        String input = this.getInputLine(sc, message);
+        boolean onlyLetters = true;
+        for (int i = 0; i < input.length(); i++) {
+            if (!Character.isLetter(input.charAt(i)) && !Character.isSpaceChar(input.charAt(i))) {
+                onlyLetters = false;
+            }
+        }
+        if (onlyLetters) {
+            return input;
+        } else {
+            System.out.println("Invalid input. Please enter again.");
+            return this.getOnlyLetters(sc, message);
         }
     }
 
@@ -396,7 +389,6 @@ public class UserInterface {
      * @param message The prompt that is displayed.
      * @return the e-mail address inputted by the user.
      */
-
     private String getValidEmail(Scanner sc, String message) {
         String input = this.getInputLine(sc, message);
         boolean validEmail = true;

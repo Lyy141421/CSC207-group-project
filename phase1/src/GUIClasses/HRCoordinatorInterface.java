@@ -53,7 +53,6 @@ public class HRCoordinatorInterface extends UserInterface {
 
     // ============================================================================================================== //
     // === Private methods ===
-
     /**
      * Interface for displaying main menu options.
      *
@@ -304,7 +303,7 @@ public class HRCoordinatorInterface extends UserInterface {
     }
 
     /**
-     * Interface for updating a job posting.
+     * Entire interface for updating a job posting.
      *
      * @param sc    The scanner for user input.
      * @param today Today's date.

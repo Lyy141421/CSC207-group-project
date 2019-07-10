@@ -3,9 +3,12 @@ package GUIClasses;
 import java.util.ArrayList;
 
 class PrintItems<T> {
+    /**
+     * Prints a list of items.
+     */
 
     /**
-     * Print a list if objects.
+     * Print an unnumbered list of objects.
      *
      * @param objects The objects to be printed
      */
@@ -18,6 +21,11 @@ class PrintItems<T> {
         }
     }
 
+    /**
+     * Prints a numbered list of objects.
+     *
+     * @param objects The objects to be printed.
+     */
     void printListToSelectFrom(ArrayList<T> objects) {
         if (objects.isEmpty()) {
             System.out.println("\nNo items to view.");

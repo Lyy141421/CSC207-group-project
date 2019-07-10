@@ -43,6 +43,7 @@ public class ApplicantInterface extends UserInterface {
         }
     }
 
+    // ============================================================================================================== //
     // === Private methods ===
     /**
      * Run the main menu of the applicant interface.

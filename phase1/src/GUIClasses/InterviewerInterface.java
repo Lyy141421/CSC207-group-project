@@ -50,7 +50,6 @@ public class InterviewerInterface extends UserInterface {
 
     // ============================================================================================================== //
     // === Private methods ===
-
     /**
      * Interface for displaying the main menu options.
      *

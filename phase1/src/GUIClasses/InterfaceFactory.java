@@ -3,6 +3,9 @@ package GUIClasses;
 import UsersAndJobObjects.User;
 
 public class InterfaceFactory implements AbstractFactory<UserInterface> {
+    /**
+     * Factory that creates the appropriate interface.
+     */
 
     // === Class variables ===
     // The name of the applicant class
