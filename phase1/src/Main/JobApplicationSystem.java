@@ -23,16 +23,19 @@ public class JobApplicationSystem {
     private LocalDate today;
     // The previous login date for this application
     private LocalDate previousLoginDate;
+    // Access to the main class
+    static public JobApplicationSystem JAS;
 
     // === Main method ===
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        JobApplicationSystem JAS = new JobApplicationSystem();
-        JAS.mainStart();
+        JAS = new JobApplicationSystem();
         UserInterface UI = new UserInterface();
+        UI.getTodaysDateValid(sc, JAS);
+        JAS.mainStart();
         while (true) {
-            UI.getTodaysDateValid(sc, JAS);
             UI.run(sc, JAS);
+            UI.getTodaysDateValid(sc, JAS);
         }
     }
 
@@ -83,10 +86,10 @@ public class JobApplicationSystem {
      */
     public void mainEnd() {
         StorerManager.flushStored();
-        StorerManager applicant = new StorerManager(new ApplicantStorer(), Applicant.class, userManager.getAllApplicants());
-        StorerManager hrcoordinator = new StorerManager(new HRCoordinatorStorer(), HRCoordinator.class, userManager.getAllHRCoordinator());
-        StorerManager interviewer = new StorerManager(new InterviewerStorer(), Interviewer.class, userManager.getAllInterviewers());
-        StorerManager company = new StorerManager(new CompanyStorer(), Company.class, companies);
+        StorerManager applicant = new StorerManager(new ApplicantStorer(), Applicant.class, JAS.userManager.getAllApplicants());
+        StorerManager hrcoordinator = new StorerManager(new HRCoordinatorStorer(), HRCoordinator.class, JAS.userManager.getAllHRCoordinator());
+        StorerManager interviewer = new StorerManager(new InterviewerStorer(), Interviewer.class, JAS.userManager.getAllInterviewers());
+        StorerManager company = new StorerManager(new CompanyStorer(), Company.class, JAS.companies);
         StorerManager interview = new StorerManager(new InterviewStorer(), Interview.class, new ArrayList());
         StorerManager jobposting = new StorerManager(new JobPostingStorer(), JobPosting.class, new ArrayList());
         StorerManager jobapplication = new StorerManager(new JobApplicationStorer(), JobApplication.class, new ArrayList());
@@ -144,11 +147,11 @@ public class JobApplicationSystem {
         LoaderManager jobposting = new LoaderManager(new JobPostingLoader(), JobPosting.class, JobPosting.FILENAME);
         LoaderManager jobapplication = new LoaderManager(new JobApplicationLoader(), JobApplication.class, JobApplication.FILENAME);
         LoaderManager.startLoad(this);
-        userManager.addUserList(applicant.getArray());
-        userManager.addUserList(hrcoordinator.getArray());
-        userManager.addUserList(interviewer.getArray());
+        JAS.userManager.addUserList(applicant.getArray());
+        JAS.userManager.addUserList(hrcoordinator.getArray());
+        JAS.userManager.addUserList(interviewer.getArray());
         for (Object comp : company.getArray()) {
-            companies.add((Company) comp);
+            JAS.companies.add((Company) comp);
         }
     }
 
