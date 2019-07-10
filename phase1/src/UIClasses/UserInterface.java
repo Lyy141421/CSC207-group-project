@@ -41,7 +41,13 @@ public class UserInterface {
         jobApplicationSystem.applicant30Day();
         jobApplicationSystem.updateAllInterviewRounds();
         User user = this.login(sc, jobApplicationSystem);
-        UserInterface userInterface = new InterfaceFactory().create(user);
+        UserInterface userInterface;
+        if (user.getClass().getName().equals("Applicant"))
+            userInterface = new ApplicantInterface(user);
+        else if (user.getClass().getName().equals("Interviewer"))
+            userInterface = new InterviewerInterface(user);
+        else
+            userInterface = new HRCoordinatorInterface(user);
         userInterface.run(sc, jobApplicationSystem);
         System.out.println("\nThank you for using GET A JOB. Have a wonderful day!");
         this.closeProgram(sc, jobApplicationSystem);
