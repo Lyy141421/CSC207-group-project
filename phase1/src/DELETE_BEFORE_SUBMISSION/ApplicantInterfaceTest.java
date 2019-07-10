@@ -1,13 +1,6 @@
 package DELETE_BEFORE_SUBMISSION;
 
-import GUIClasses.UserInterface;
-import Main.JobApplicationSystem;
-import Miscellaneous.ExitException;
-import UsersAndJobObjects.*;
-
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Scanner;
+import UIClasses.UserInterface;
 
 //import static Main.JobApplicationSystem.today;
 

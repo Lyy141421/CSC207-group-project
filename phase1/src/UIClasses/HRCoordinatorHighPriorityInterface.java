@@ -1,4 +1,4 @@
-package GUIClasses;
+package UIClasses;
 
 import Managers.InterviewManager;
 import Managers.JobPostingManager;
@@ -114,7 +114,7 @@ class HRCoordinatorHighPriorityInterface extends HRCoordinatorInterface {
             System.out.println("\nThere are no job postings that have recently closed.");
         } else {
             System.out.println("\nJob postings that have recently closed: ");
-            new PrintItems<JobPosting>().printListToSelectFrom(recentlyClosed);
+            this.printListToSelectFrom(recentlyClosed);
         }
         return recentlyClosed;
     }
@@ -197,7 +197,7 @@ class HRCoordinatorHighPriorityInterface extends HRCoordinatorInterface {
             return;
         }
         System.out.println("\nJob postings ready for hiring: ");
-        new PrintItems<JobPosting>().printListToSelectFrom(readyForHiring);
+        this.printListToSelectFrom(readyForHiring);
         JobPosting jobPosting = this.selectJobPostingForPhoneInterview(sc, readyForHiring);
         InterviewManager IM = jobPosting.getInterviewManager();
         ArrayList<JobApplication> jobApps;
@@ -245,14 +245,9 @@ class HRCoordinatorHighPriorityInterface extends HRCoordinatorInterface {
     private ArrayList<JobApplication> selectApplicationsForHiring(Scanner sc, JobPosting jobPosting,
                                                                   ArrayList<JobApplication> finalCandidates) {
         ArrayList<JobApplication> hires = new ArrayList<>();
-        int i = 1;
         System.out.println("The number of applications in consideration exceeds the number of positions available.");
         System.out.println("The final candidates' applications: ");
-        for (JobApplication jobApp : finalCandidates) {
-            System.out.println(i + ".");
-            System.out.println(jobApp + "\n");
-            i++;
-        }
+        this.printListToSelectFrom(finalCandidates);
         int numPositions = jobPosting.getNumPositions();
         System.out.println("You must select " + numPositions + " applicant(s).");
         for (int j = 0; j < numPositions; j++) {

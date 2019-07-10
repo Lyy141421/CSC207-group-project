@@ -1,4 +1,4 @@
-package GUIClasses;
+package UIClasses;
 
 import Managers.JobPostingManager;
 import UsersAndJobObjects.HRCoordinator;
@@ -101,7 +101,7 @@ class HRCoordinatorJobPostingsInterface extends HRCoordinatorInterface {
         ArrayList<JobPosting> openJobPostings = this.HRC.getCompany().getJobPostingManager().
                 getOpenJobPostings(today);
         System.out.println("\nOpen postings: ");
-        new PrintItems<JobPosting>().printList(openJobPostings);
+        this.printList(openJobPostings);
     }
 
     /**
@@ -113,7 +113,7 @@ class HRCoordinatorJobPostingsInterface extends HRCoordinatorInterface {
         ArrayList<JobPosting> closedJobPostingsNotFilled = this.HRC.getCompany().getJobPostingManager().
                 getClosedJobPostingsNotFilled(today);
         System.out.println("\nClosed postings: ");
-        new PrintItems<JobPosting>().printList(closedJobPostingsNotFilled);
+        this.printList(closedJobPostingsNotFilled);
     }
 
     /**
@@ -123,7 +123,7 @@ class HRCoordinatorJobPostingsInterface extends HRCoordinatorInterface {
         ArrayList<JobPosting> filledJobPostings = this.HRC.getCompany().getJobPostingManager().
                 getFilledJobPostings();
         System.out.println("\nFilled postings: ");
-        new PrintItems<JobPosting>().printList(filledJobPostings);
+        this.printList(filledJobPostings);
     }
 
     /**
@@ -132,7 +132,7 @@ class HRCoordinatorJobPostingsInterface extends HRCoordinatorInterface {
     private void displayAllPostings() {
         ArrayList<JobPosting> allJobPostings = this.HRC.getCompany().getJobPostingManager().getJobPostings();
         System.out.println("\nAll postings: ");
-        new PrintItems<JobPosting>().printList(allJobPostings);
+        this.printList(allJobPostings);
     }
 
     /**
