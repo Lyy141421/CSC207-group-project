@@ -26,6 +26,9 @@ public class UserInterface {
 
     // ============================================================================================================== //
     // === Public methods ===
+    // === Constructor ===
+    public UserInterface() {
+    }
 
     // === Method to be overridden ===
     /**
