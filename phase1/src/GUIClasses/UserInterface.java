@@ -31,18 +31,18 @@ public class UserInterface {
     }
 
     public static void main(String[] args) {
-        UserInterface UI = new UserInterface();
         JobApplicationSystem.mainStart();
-        JobApplicationSystem.cyclicalTask();
+        UserInterface UI = new UserInterface();
         while (true) {
+            System.out.println("\nWelcome to GET A JOB!\n");
             LocalDate today = UI.getTodaysDateValid();
+            JobApplicationSystem.applicant30Day();
             JobApplicationSystem.updateAllInterviewRounds();
-            System.out.println("Welcome to GET A JOB!");
             User user = UI.login();
             UserInterface userInterface = new InterfaceFactory().create(user);
             userInterface.run(today);
-            JobApplicationSystem.mainEnd();
-            System.out.println("Thank you for using GET A JOB!");
+            System.out.println("\nThank you for using GET A JOB. Have a wonderful day!");
+            UI.closeProgram();
         }
     }
 
@@ -237,8 +237,20 @@ public class UserInterface {
     // ============================================================================================================== //
     // === Private methods ===
 
-    // === Constructor ===
     private UserInterface() {
+    }
+
+    /**
+     * Close the program upon user input.
+     */
+    private void closeProgram() {
+        Scanner sc = new Scanner(System.in);
+        String input = this.getInputToken(sc, "\nEnter '-1' if you would like to stop running the system or any other key to keep running: ");
+        sc.nextLine();
+        if (input.equals("-1")) {
+            JobApplicationSystem.mainEnd();
+            System.exit(0);
+        }
     }
 
     /**
@@ -267,7 +279,6 @@ public class UserInterface {
     private LocalDate getTodaysDateValid() {
         Scanner sc = new Scanner(System.in);
         LocalDate previousLoginDate = JobApplicationSystem.getPreviousLoginDate();
-        System.out.println("----------------------------");
         LocalDate date;
         if (previousLoginDate == null) {
             date = this.getDate(sc, "Please enter today's date (yyyy-mm-dd): ");
@@ -403,7 +414,7 @@ public class UserInterface {
      */
     private User login() {
         Scanner sc = new Scanner(System.in);
-        String username = this.getInputToken(sc, "Enter your username: ");
+        String username = this.getInputToken(sc, "\nEnter your username: ");
         sc.nextLine();
         String password = this.getInputLine(sc, "Enter your password: ");
         if (JobApplicationSystem.getUserManager().findUserByUsername(username) == null) {
@@ -412,7 +423,6 @@ public class UserInterface {
         else {
             while (!JobApplicationSystem.getUserManager().passwordCorrect(username, password)) {
                 System.out.println("Incorrect password.");
-                System.out.println();
                 password = this.getInputLine(sc, "Enter your password: ");
             }
             System.out.println("Login successful!");

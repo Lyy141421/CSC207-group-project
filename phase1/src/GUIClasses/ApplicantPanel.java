@@ -146,7 +146,6 @@ class ApplicantPanel extends JPanel{
 
         JButton manageFiles = new JButton("Files"); //TODO Phase 2
         manageFiles.setBounds(590, 5, 80, 20);
-        manageFiles.setEnabled(false);
         startTitle.add(manageFiles);
 
         JButton history = new JButton("Account History");
@@ -339,9 +338,9 @@ class ApplicantPanel extends JPanel{
     private JPanel buildDocApply(JobPosting posting) {
         JPanel formEntry = new JPanel(null);
 
-        JLabel titleText = new JLabel("Document Submission", SwingConstants.CENTER);
+        JLabel titleText = new JLabel("Document Submission");
         titleText.setFont(new Font("Serif", Font.PLAIN, 22));
-        titleText.setBounds(277, 20, 300, 40);
+        titleText.setBounds(327, 20, 200, 40);
 
         JLabel resumeText = new JLabel("Please paste your resume here:");
         resumeText.setBounds(150, 75, 554, 20);
@@ -417,7 +416,7 @@ class ApplicantPanel extends JPanel{
         for(JobApplication app : applications) {
             JPanel viewAppsAdded = new JPanel(null);
 
-            JLabel viewJobReqs = new JLabel("Status: " + app.getStatus().getDescription());
+            JLabel viewJobReqs = new JLabel("Status: " + app.getStatus());
             viewJobReqs.setBounds(17, 150, 250, 20);
             viewAppsAdded.add(viewJobReqs);
 
@@ -426,7 +425,7 @@ class ApplicantPanel extends JPanel{
             applyForJob.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     boolean success = BackEnd.withdrawApp(app);
-                    add(getThis().buildWithdrawWindow(success));
+                    getThis().buildWithdrawWindow(success);
                 }
             } );
             viewApps.add(viewAppsAdded, app.getJobPosting().getId());

@@ -40,7 +40,7 @@ public class JobPosting implements Storable {
      */
     public JobPosting(String id){
         this.id = Integer.parseInt(id);
-        JobPosting.postingsCreated = Integer.max(this.id, JobPosting.postingsCreated - 1) + 1;
+        JobPosting.postingsCreated = Integer.max(this.id, JobPosting.postingsCreated);
     }
 
     // === Getters ===

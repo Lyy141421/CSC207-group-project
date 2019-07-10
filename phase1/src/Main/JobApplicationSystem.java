@@ -2,7 +2,6 @@ package Main;
 
 import FileLoadingAndStoring.*;
 import GUIClasses.MainFrame;
-import Managers.JobPostingManager;
 import UsersAndJobObjects.Company;
 import UsersAndJobObjects.Interview;
 import UsersAndJobObjects.JobApplication;
@@ -167,7 +166,7 @@ public class JobApplicationSystem {
 
     // ============================================================================================================== //
     // === Private methods ===
-    private static void applicant30Day(){
+    public static void applicant30Day() {
         for(Object app : userManager.getAllApplicants()){
           ((Applicant)app).removeFilesFromAccount(today);
         }

@@ -133,8 +133,7 @@ public class ApplicantInterfaceTest extends UserInterface {
         for (JobApplication application : applications) {
             JobPosting posting = application.getJobPosting();
             ret += "<br>Posting: " + posting.getTitle();
-            String asd = application.getStatus().getDescription();
-            ret += " (Status: " + application.getStatus().getDescription() + ")";
+            ret += " (Status: " + application.getStatus() + ")";
         }
         ret += "</html>";
         return ret;

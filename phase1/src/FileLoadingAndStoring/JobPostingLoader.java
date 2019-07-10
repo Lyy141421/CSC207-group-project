@@ -1,6 +1,5 @@
 package FileLoadingAndStoring;
 
-import Main.JobApplicationSystem;
 import Managers.InterviewManager;
 import UsersAndJobObjects.Company;
 import UsersAndJobObjects.JobApplication;
@@ -21,12 +20,10 @@ public class JobPostingLoader extends GenericLoader<JobPosting> {
         HashMap data = FileSystem.read(JobPosting.FILENAME,  String.valueOf(jobPosting.getId()));
         this.loadPrelimData(data, jobPosting);
         this.loadJobApps(data, jobPosting);
-        if(jobPosting.isClosed(JobApplicationSystem.today)) {
-            ArrayList<JobApplication> appsInConsideration = this.loadAppsInConsideration(data);
-            ArrayList<JobApplication> appsRejected = this.loadAppsRejected(data);
-            jobPosting.setInterviewManager(new InterviewManager(jobPosting, appsInConsideration, appsRejected,
-                    (int) data.get("currentRound")));
-        }
+        ArrayList<JobApplication> appsInConsideration = this.loadAppsInConsideration(data);
+        ArrayList<JobApplication> appsRejected = this.loadAppsRejected(data);
+        jobPosting.setInterviewManager(new InterviewManager(jobPosting, appsInConsideration, appsRejected,
+                (int) data.get("currentRound")));
         jobPosting.setCompany((Company) LoaderManager.subLoad(Company.class, (String)((ArrayList)data.
                         get("Company")).get(0),
                 (String)((ArrayList)data.get("Company")).get(1)));
