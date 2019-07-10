@@ -11,7 +11,7 @@ import java.util.Iterator;
 public class LoaderManager {
     //The List of all Loaders
     private static HashMap<Class, LoaderManager> loader_map = new HashMap<>();
-    //The Hashmap of objects by Filename and then by ID
+    //The HashMap of objects by Filename and then by ID
     private static HashMap<String, HashMap<String, Object>> obj_map = new HashMap<>();
 
     // === Instance Variables ===
