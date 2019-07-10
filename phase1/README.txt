@@ -2,8 +2,11 @@ Hello,
 
 We've created a job application system using standard input. It requires 8 files for it to run.
 7 of them are .json files that are used to store data relating to the application users, the companies, job postings
-and job applications created and updated when the program is in use. The last file is a .txt file to store the previous
-login date so that you may test the 30-day applicant document delete function outlined in the specification.
+and job applications created and updated when the program is in use. As a result, YOU MUST ADD ALL THE LIBRARIES IN THE
+'lib' DIRECTORY SO THAT THE APPLICATION WILL RUN!
+
+The last file is a .txt file to store the previous login date so that you may test the 30-day applicant document delete
+function outlined in the specification.
 All of these files contain sample data so that the application should run when you first use it.
 
 The file loading data into memory occurs when you first press the run button in the IDE and the file saving occurs when
