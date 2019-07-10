@@ -6,6 +6,9 @@ and job applications created and updated when the program is in use. The last fi
 login date so that you may test the 30-day applicant document delete function outlined in the specification.
 All of these files contain sample data so that the application should run when you first use it.
 
+The file loading data into memory occurs when you first press the run button in the IDE and the file saving occurs when
+you enter '-1' to close the program when prompted.
+
 These are the assumptions that we made:
 - Usernames are unique
 - Company names are unique
