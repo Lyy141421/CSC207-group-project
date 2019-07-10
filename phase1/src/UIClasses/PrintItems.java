@@ -1,4 +1,4 @@
-package GUIClasses;
+package UIClasses;
 
 import java.util.ArrayList;
 

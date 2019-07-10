@@ -1,4 +1,4 @@
-package GUIClasses;
+package UIClasses;
 
 interface AbstractFactory<T> {
     /**

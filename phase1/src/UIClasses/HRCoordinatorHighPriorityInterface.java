@@ -1,4 +1,4 @@
-package GUIClasses;
+package UIClasses;
 
 import Managers.InterviewManager;
 import Managers.JobPostingManager;

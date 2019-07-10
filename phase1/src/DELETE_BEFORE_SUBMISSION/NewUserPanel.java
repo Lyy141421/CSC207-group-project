@@ -1,6 +1,6 @@
 package DELETE_BEFORE_SUBMISSION;
 
-//import GUIClasses.UserInterfaceTest;
+//import UIClasses.UserInterfaceTest;
 
 import javax.swing.*;
 import java.awt.*;

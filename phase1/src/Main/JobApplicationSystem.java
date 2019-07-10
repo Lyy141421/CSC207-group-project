@@ -1,7 +1,7 @@
 package Main;
 
 import FileLoadingAndStoring.*;
-import GUIClasses.UserInterface;
+import UIClasses.UserInterface;
 import UsersAndJobObjects.*;
 import Managers.UserManager;
 

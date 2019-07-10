@@ -1,6 +1,6 @@
 package DELETE_BEFORE_SUBMISSION;
 
-//import GUIClasses.UserInterfaceTest;
+//import UIClasses.UserInterfaceTest;
 import Main.JobApplicationSystem;
 import UsersAndJobObjects.Applicant;
 import UsersAndJobObjects.HRCoordinator;
