@@ -603,6 +603,7 @@ public class HRCoordinatorInterface extends UserInterface {
             System.out.println("You may want to consider opening other job postings with these job titles.");
             jobPosting.setNumPositions(0);
             jobPosting.setFilled();
+            jobPosting.getInterviewManager().archiveRejected();
         }
     }
 
