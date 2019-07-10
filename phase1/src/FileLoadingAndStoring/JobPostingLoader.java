@@ -55,6 +55,7 @@ public class JobPostingLoader extends GenericLoader<JobPosting> {
     /**
      * Load the job applications for this job posting.
      *
+     * @param jobApplicationSystem The job application system being used.
      * @param data The data for this job posting.
      * @param jobPosting The job posting to load.
      */
@@ -70,6 +71,7 @@ public class JobPostingLoader extends GenericLoader<JobPosting> {
     /**
      * Load the applications in consideration for this job posting.
      *
+     * @param jobApplicationSystem The job application system being used.
      * @param data The data for this job posting.
      * @return a list of job applications in consideration.
      */
@@ -85,6 +87,7 @@ public class JobPostingLoader extends GenericLoader<JobPosting> {
     /**
      * Load the applications rejected for this job posting.
      *
+     * @param jobApplicationSystem  The job application system being used.
      * @param data The data for this job posting.
      * @return a list of job applications rejected for this job posting.
      */

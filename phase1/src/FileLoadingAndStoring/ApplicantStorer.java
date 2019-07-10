@@ -13,6 +13,7 @@ public class ApplicantStorer extends GenericStorer<Applicant> {
 
     /**
      * Store the applicant.
+     * @param jobApplicationSystem The job application system being used.
      * @param applicant The applicant to be stored.
      */
     void storeOne(JobApplicationSystem jobApplicationSystem, Applicant applicant) {
@@ -36,6 +37,13 @@ public class ApplicantStorer extends GenericStorer<Applicant> {
         data.put("dateCreated", applicant.getDateCreated());
     }
 
+    /**
+     * Store the job applications for this applicant.
+     *
+     * @param jobApplicationSystem The job application system being used.
+     * @param applicant            The applicant being loaded.
+     * @param data                 The applicant's data.
+     */
     private void storeJobApplications(JobApplicationSystem jobApplicationSystem, Applicant applicant, HashMap<String, Object> data) {
         ArrayList<ArrayList> jobapps = new ArrayList<>();
         for(JobApplication x : applicant.getJobApplicationManager().getJobApplications()){
@@ -49,6 +57,11 @@ public class ApplicantStorer extends GenericStorer<Applicant> {
         data.put("jobApplicationManager", jobapps);
     }
 
+    /**
+     * Store the documents for this applicant.
+     * @param applicant The applicant being stored.
+     * @param data  The applicant's data.
+     */
     private void storeDocuments(Applicant applicant, HashMap<String, Object> data) {
         DocumentManager docman = applicant.getDocumentManager();
         ArrayList documents = new ArrayList();

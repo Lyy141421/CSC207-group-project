@@ -15,6 +15,8 @@ public class ApplicantLoader extends GenericLoader<Applicant> {
 
     /**
      * Loads the applicant
+     * @param jobApplicationSystem The job application system being used.
+     * @param applicant The applicant being loaded
      */
     void loadOne(JobApplicationSystem jobApplicationSystem, Applicant applicant) {
         HashMap data = FileSystem.read(Applicant.FILENAME, applicant.getUsername());
@@ -26,6 +28,7 @@ public class ApplicantLoader extends GenericLoader<Applicant> {
     /**
      * Load the preliminary data for this applicant.
      *
+     * @param applicant The applicant being loaded.
      * @param data This applicant's data.
      */
     private void loadPrelimData(Applicant applicant, HashMap data) {
@@ -38,6 +41,8 @@ public class ApplicantLoader extends GenericLoader<Applicant> {
     /**
      * Load the job application manager for this applicant.
      *
+     * @param jobApplicationSystem The job application system being used.
+     * @param applicant The applicant being loaded.
      * @param data This applicant's data.
      */
     private void loadJobAppManager(JobApplicationSystem jobApplicationSystem, Applicant applicant, HashMap data) {
@@ -49,6 +54,12 @@ public class ApplicantLoader extends GenericLoader<Applicant> {
         applicant.setJobApplicationManager(new JobApplicationManager(temp));
     }
 
+    /**
+     * Load the document manager for this applicant.
+     *
+     * @param applicant The applicant being loarded.
+     * @param data      This applicant's data.
+     */
     private void loadDocumentManager(Applicant applicant, HashMap data) {
         ArrayList documents = (ArrayList) data.get("Documents");
         ArrayList jad = new ArrayList();

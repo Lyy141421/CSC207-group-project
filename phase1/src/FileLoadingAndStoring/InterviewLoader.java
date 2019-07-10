@@ -15,6 +15,7 @@ public class InterviewLoader extends GenericLoader<Interview> {
 
     /**
      * Loads this interview
+     * @param jobApplicationSystem The job application system being used.
      * @param interview The interview to be loaded.
      */
     void loadOne(JobApplicationSystem jobApplicationSystem, Interview interview) {
@@ -26,9 +27,9 @@ public class InterviewLoader extends GenericLoader<Interview> {
     }
 
     /**
-     * Load the preliminary data for this UsersAndJobObjects.Interviewer.
-     *
-     * @param data The UsersAndJobObjects.Company's Data
+     * Load the preliminary data for this Interview.
+     * @param interview The interview being loaded
+     * @param data The Company's Data
      */
     private void loadPrelimData(Interview interview, HashMap data) {
         interview.setInterviewNotes((String)data.get("interviewNotes"));
@@ -39,18 +40,37 @@ public class InterviewLoader extends GenericLoader<Interview> {
                 (int) data.get("InterviewTimeTimeslot")));
     }
 
+    /**
+     * Loads the job applications for this interview.
+     *
+     * @param jobApplicationSystem The job application system being used.
+     * @param interview            The interview being loaded
+     * @param data                 The Company's Data
+     */
     private void loadJobApplication(JobApplicationSystem jobApplicationSystem, Interview interview, HashMap data) {
         interview.setJobApplication((JobApplication) LoaderManager.subLoad(jobApplicationSystem, JobApplication.class, (String) ((ArrayList)
                 data.get("JobApplication")).get(0), (String)
                 ((ArrayList) data.get("JobApplication")).get(1)));
     }
 
+    /**
+     * Loads the interviewer for this interview.
+     * @param jobApplicationSystem The job application system being used.
+     * @param interview The interview being loaded
+     * @param data The Company's Data
+     */
     private void loadInterviewer(JobApplicationSystem jobApplicationSystem, Interview interview, HashMap data) {
         interview.setHrCoordinator((HRCoordinator) LoaderManager.subLoad(jobApplicationSystem, HRCoordinator.class, (String)
                 ((ArrayList) data.get("HRCoordinator")).get(0), (String) ((ArrayList)
                 data.get("HRCoordinator")).get(1)));
     }
 
+    /**
+     * Loads the HR Coordinator for this interview.
+     * @param jobApplicationSystem The job application system being used.
+     * @param interview The interview being loaded
+     * @param data The Company's Data
+     */
     private void loadHRCoordinator(JobApplicationSystem jobApplicationSystem, Interview interview, HashMap data) {
         interview.setInterviewer((Interviewer) LoaderManager.subLoad(jobApplicationSystem, Interviewer.class, (String) ((ArrayList)
                 data.get("interviewer")).get(0), (String) ((ArrayList) data.get("interviewer")).get(1)));

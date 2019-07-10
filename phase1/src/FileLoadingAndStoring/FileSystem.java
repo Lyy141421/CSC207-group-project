@@ -9,26 +9,7 @@ import java.util.Iterator;
 
 public class FileSystem {
 
-    /**
-     * Converts a JsonArray to a list
-     *
-     * @param jarry - the JSONArray to be converted
-     * @return Returns the list of the JsonArray
-     * @throws JSONException
-     */
-    static ArrayList JArrayToList(JSONArray jarry) throws JSONException {
-        ArrayList<Object> list = new ArrayList<Object>();
-        for(int i = 0; i < jarry.length(); i++){
-            if(jarry.get(i) instanceof JSONArray){
-                list.add(JArrayToList((JSONArray) jarry.get(i)));
-            }
-            else{
-                list.add(jarry.get(i));
-            }
-        }
-        return list;
-    }
-
+    // === Public methods ===
     /**
      * Loads an object as a HashMap
      *
@@ -59,7 +40,7 @@ public class FileSystem {
     }
 
     /**
-     *Saves the object in a json library
+     * Saves the object in a json library
      *
      * @param filename the name of the json file (Excluding .json)
      * @param id The unique Id of the Item being saved
@@ -75,6 +56,28 @@ public class FileSystem {
         } catch (JSONException | FileNotFoundException e) {
             e.printStackTrace();
         }
+    }
+
+    // ============================================================================================================== //
+    // === Package-private methods ===
+
+    /**
+     * Converts a JsonArray to a list
+     *
+     * @param jarry - the JSONArray to be converted
+     * @return Returns the list of the JsonArray
+     * @throws JSONException
+     */
+    static ArrayList JArrayToList(JSONArray jarry) throws JSONException {
+        ArrayList<Object> list = new ArrayList<Object>();
+        for (int i = 0; i < jarry.length(); i++) {
+            if (jarry.get(i) instanceof JSONArray) {
+                list.add(JArrayToList((JSONArray) jarry.get(i)));
+            } else {
+                list.add(jarry.get(i));
+            }
+        }
+        return list;
     }
 
     /**

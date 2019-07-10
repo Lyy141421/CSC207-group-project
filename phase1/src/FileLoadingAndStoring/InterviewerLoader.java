@@ -13,6 +13,7 @@ public class InterviewerLoader extends GenericLoader<Interviewer> {
 
     /**
      *  Loads the interviewer.
+     * @param jobApplicationSystem The job application system being used.
      * @param interviewer   The interviewer to be loaded.
      */
     void loadOne(JobApplicationSystem jobApplicationSystem, Interviewer interviewer) {
@@ -25,20 +26,23 @@ public class InterviewerLoader extends GenericLoader<Interviewer> {
     /**
      * Load the preliminary data for this interviewer.
      *
+     * @param interviewer   The interviewer being loaded
      * @param data The data for this interviewer.
      */
-    private void loadPrelimData(Interviewer interivewer, HashMap data) {
-        interivewer.setPassword((String) data.get("password"));
-        interivewer.setLegalName((String) data.get("legalName"));
-        interivewer.setEmail((String) data.get("email"));
-        interivewer.setPassword((String)data.get("password"));
-        interivewer.setDateCreated(LocalDate.parse((String) data.get("dateCreated")));
-        interivewer.setField((String) data.get("field"));
+    private void loadPrelimData(Interviewer interviewer, HashMap data) {
+        interviewer.setPassword((String) data.get("password"));
+        interviewer.setLegalName((String) data.get("legalName"));
+        interviewer.setEmail((String) data.get("email"));
+        interviewer.setPassword((String) data.get("password"));
+        interviewer.setDateCreated(LocalDate.parse((String) data.get("dateCreated")));
+        interviewer.setField((String) data.get("field"));
     }
 
     /**
      * Load the company for this interviewer.
      *
+     * @param jobApplicationSystem  The job application system being used.
+     * @param interviewer The interviewer being loaded.
      * @param data The data for this interviewer.
      */
     private void loadCompany(JobApplicationSystem jobApplicationSystem, Interviewer interviewer, HashMap data) {
@@ -49,6 +53,8 @@ public class InterviewerLoader extends GenericLoader<Interviewer> {
     /**
      * Load the interviews for this interviewer.
      *
+     * @param jobApplicationSystem  The job application system being used.
+     * @param interviewer The interviewer being loaded.
      * @param data The data for this interviewer.
      */
     private void loadInterviews(JobApplicationSystem jobApplicationSystem, Interviewer interviewer, HashMap data) {

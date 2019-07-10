@@ -29,6 +29,12 @@ public class JobPostingStorer extends GenericStorer<JobPosting> {
         FileSystem.write(JobPosting.FILENAME, String.valueOf(jobPosting.getId()), data);
     }
 
+    /**
+     * Store the preliminary information for this job posting.
+     *
+     * @param jobPosting The job posting being stored.
+     * @param data       The data for this job posting.
+     */
     private void storePrelimData(JobPosting jobPosting, HashMap<String, Object> data) {
         data.put("title", jobPosting.getTitle());
         data.put("field", jobPosting.getField());
@@ -40,12 +46,24 @@ public class JobPostingStorer extends GenericStorer<JobPosting> {
         data.put("filled", jobPosting.isFilled());
     }
 
+    /**
+     * Store the company for this job posting.
+     * @param jobApplicationSystem The job application system being used.
+     * @param jobPosting    The job posting being stored.
+     * @param data  The data for this job posting.
+     */
     private void storeCompany(JobApplicationSystem jobApplicationSystem, JobPosting jobPosting, HashMap<String, Object> data) {
         Company c = jobPosting.getCompany();
         data.put("Company", new ArrayList(){{add(Company.FILENAME); add(c.getName());}});
         StorerManager.subStore(jobApplicationSystem, c);
     }
 
+    /**
+     * Store all applications for this job posting.
+     * @param jobApplicationSystem The job application system being used.
+     * @param jobPosting    The job posting being stored.
+     * @param data  The data for this job posting.
+     */
     private void storeAllApplications(JobApplicationSystem jobApplicationSystem, JobPosting jobPosting, HashMap<String, Object> data) {
         ArrayList jobapplications = new ArrayList();
         for(JobApplication x : jobPosting.getJobApplications()){
@@ -58,6 +76,12 @@ public class JobPostingStorer extends GenericStorer<JobPosting> {
         data.put("jobapplications", jobapplications);
     }
 
+    /**
+     * Store the applications in consideration for this job posting.
+     * @param jobApplicationSystem The job application system being used.
+     * @param jobPosting    The job posting being stored.
+     * @param data  The data for this job posting.
+     */
     private void storeApplicationsInConsideration(JobApplicationSystem jobApplicationSystem, JobPosting jobPosting, HashMap<String, Object> data) {
         ArrayList applicationsInConsideration = new ArrayList();
         for(JobApplication x : jobPosting.getInterviewManager().getApplicationsInConsideration()){
@@ -70,6 +94,12 @@ public class JobPostingStorer extends GenericStorer<JobPosting> {
         data.put("applicationsInConsideration", applicationsInConsideration);
     }
 
+    /**
+     * Store the applications rejected for this job posting.
+     * @param jobApplicationSystem The job application system being used.
+     * @param jobPosting    The job posting being stored.
+     * @param data  The data for this job posting.
+     */
     private void storeApplicationsRejected(JobApplicationSystem jobApplicationSystem, JobPosting jobPosting, HashMap<String, Object> data) {
         ArrayList applicationsRejected = new ArrayList();
         for(JobApplication x : jobPosting.getInterviewManager().getApplicationsRejected()){
@@ -82,6 +112,11 @@ public class JobPostingStorer extends GenericStorer<JobPosting> {
         data.put("applicationsRejected", applicationsRejected);
     }
 
+    /**
+     * Store the current round of this job posting.
+     * @param jobPosting    The job posting being stored.
+     * @param data  The data for this job posting.
+     */
     private void storeCurrentRound(JobPosting jobPosting, HashMap<String, Object> data) {
         data.put("currentRound", jobPosting.getInterviewManager().getCurrentRound());
     }

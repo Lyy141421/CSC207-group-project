@@ -12,6 +12,7 @@ public class InterviewerStorer extends GenericStorer<Interviewer> {
 
     /**
      * Store the interviewer.
+     * @param jobApplicationSystem  The job application system being used.
      * @param interviewer   The interviewer to be stored.
      */
     void storeOne(JobApplicationSystem jobApplicationSystem, Interviewer interviewer) {
@@ -22,6 +23,13 @@ public class InterviewerStorer extends GenericStorer<Interviewer> {
         FileSystem.write(Interviewer.FILENAME, interviewer.getUsername(), data);
     }
 
+    /**
+     * Store the preliminary information for this interviewer.
+     *
+     * @param jobApplicationSystem The job application system being used.
+     * @param interviewer          The interviewer to be stored.
+     * @param data                 The interviewer's data.
+     */
     private void storePrelimInfo(JobApplicationSystem jobApplicationSystem, Interviewer interviewer, HashMap<String, Object> data) {
         data.put("password", interviewer.getPassword());
         data.put("legalName", interviewer.getLegalName());
@@ -33,6 +41,12 @@ public class InterviewerStorer extends GenericStorer<Interviewer> {
         StorerManager.subStore(jobApplicationSystem, interviewer.getCompany());
     }
 
+    /**
+     * Store the interviews for this interviewer.
+     * @param jobApplicationSystem  The job application system being used.
+     * @param interviewer   The interviewer to be stored.
+     * @param data The data for this interviewer.
+     */
     private void storeInterviews(JobApplicationSystem jobApplicationSystem, Interviewer interviewer, HashMap<String, Object> data) {
         ArrayList<ArrayList> interview_list = new ArrayList<>();
         for(Interview x : interviewer.getInterviews()){

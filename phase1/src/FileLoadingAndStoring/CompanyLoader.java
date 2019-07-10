@@ -10,7 +10,9 @@ import java.util.HashMap;
 public class CompanyLoader extends GenericLoader<Company> {
 
     /**
-     * Load this UsersAndJobObjects.Company.
+     * Load this Company.
+     * @param jobApplicationSystem The job application system being used.
+     * @param company The company being loaded.
      */
     void loadOne(JobApplicationSystem jobApplicationSystem, Company company) {
         HashMap data = FileSystem.read(Company.FILENAME, company.getName());
@@ -23,7 +25,9 @@ public class CompanyLoader extends GenericLoader<Company> {
     /**
      * Loads the HRCoordinators from memory
      *
-     * @param data The UsersAndJobObjects.Company's Data
+     * @param jobApplicationSystem  The job application system being used.
+     * @param company The company being loaded.
+     * @param data The Company's Data
      */
     private void loadHRCoordinators(JobApplicationSystem jobApplicationSystem, Company company, HashMap data) {
         ArrayList<HRCoordinator> hrcords = new ArrayList<>();
@@ -37,7 +41,9 @@ public class CompanyLoader extends GenericLoader<Company> {
     /**
      * Loads the FieldMap from memory
      *
-     * @param data The UsersAndJobObjects.Company's Data
+     * @param jobApplicationSystem The job application system being loaded
+     * @param company   The company being loaded.
+     * @param data The Company's Data
      */
     private void loadFieldMap(JobApplicationSystem jobApplicationSystem, Company company, HashMap data) {
         HashMap<String, ArrayList<Interviewer>> fieldmap = new HashMap<>();
@@ -55,7 +61,9 @@ public class CompanyLoader extends GenericLoader<Company> {
     /**
      * Loads the FieldMap from memory
      *
-     * @param data The UsersAndJobObjects.Company's Data
+     * @param jobApplicationSystem The job application system being loaded
+     * @param company The company being loaded.
+     * @param data The Company's Data
      */
     private void loadJobPostingManager(JobApplicationSystem jobApplicationSystem, Company company, HashMap data) {
         ArrayList<JobPosting> jobpostings = new ArrayList<>();

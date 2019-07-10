@@ -12,6 +12,7 @@ public class HRCoordinatorLoader extends GenericLoader<HRCoordinator> {
 
     /**
      * Loads the HR Coordinator.
+     * @param jobApplicationSystem  The job application system being used.
      * @param hrCoordinator The HR Coordinator to be loaded.
      */
     void loadOne(JobApplicationSystem jobApplicationSystem, HRCoordinator hrCoordinator) {
@@ -23,6 +24,7 @@ public class HRCoordinatorLoader extends GenericLoader<HRCoordinator> {
     /**
      * Load the preliminary data for this HR Coordinator.
      *
+     * @param hrCoordinator The HR Coordinator being loaded,
      * @param data The data for this HR Coordinator.
      */
     private void loadPrelimData(HRCoordinator hrCoordinator, HashMap data) {
@@ -36,6 +38,8 @@ public class HRCoordinatorLoader extends GenericLoader<HRCoordinator> {
     /**
      * Load this HR Coordinator's company.
      *
+     * @param jobApplicationSystem The job application system being used.
+     * @param hrCoordinator The HR Coordinator being loaded.
      * @param data The data for this HR Coordinator.
      */
     private void loadCompany(JobApplicationSystem jobApplicationSystem, HRCoordinator hrCoordinator, HashMap data) {
