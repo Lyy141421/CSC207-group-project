@@ -20,6 +20,7 @@ public class InterviewStorer extends GenericStorer<Interview> {
         this.storeInterviewer(jobApplicationSystem, interview, data);
         this.storeHRCoordinator(jobApplicationSystem, interview, data);
         this.storeInterviewTime(interview, data);
+        FileSystem.write(Interview.FILENAME, String.valueOf(interview.getId()), data);
     }
 
     private void storePrelimInfo(Interview interview, HashMap<String, Object> data) {

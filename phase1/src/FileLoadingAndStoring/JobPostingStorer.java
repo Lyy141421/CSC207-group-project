@@ -21,7 +21,7 @@ public class JobPostingStorer extends GenericStorer<JobPosting> {
         this.storePrelimData(jobPosting, data);
         this.storeCompany(jobApplicationSystem, jobPosting, data);
         this.storeAllApplications(jobApplicationSystem, jobPosting, data);
-        if (jobPosting.isClosed(jobApplicationSystem.getToday())) {
+        if (jobPosting.isClosed(jobApplicationSystem.JAS.getToday())) {
             this.storeApplicationsInConsideration(jobApplicationSystem, jobPosting, data);
             this.storeApplicationsRejected(jobApplicationSystem, jobPosting, data);
             this.storeCurrentRound(jobPosting, data);
