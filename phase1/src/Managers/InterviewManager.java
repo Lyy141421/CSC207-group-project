@@ -13,8 +13,7 @@ public class InterviewManager {
 
     // === Class variables ===
     // Integers that represent the task the HR Coordinator needs to accomplish
-    static final int CLOSE_POSTING_NO_HIRE = -2;
-    public static int SELECT_APPS_FOR_PHONE_INTERVIEW = -1;
+    static final int CLOSE_POSTING_NO_HIRE = -1;
     private static final int DO_NOTHING = 0;
     static final int SCHEDULE_INTERVIEWS = 1;
     static final int HIRE_APPLICANTS = 2;
@@ -28,8 +27,6 @@ public class InterviewManager {
     private ArrayList<JobApplication> applicationsRejected;
     // The current round of interviews
     private int currentRound;
-    // Integer that represents the task the HR Coordinator needs to fulfill
-    private int hrTask;
 
     // === Representation invariants ===
     // The list of interviews for each applicant is sorted by date.
@@ -37,8 +34,7 @@ public class InterviewManager {
 
     // === Public methods ===
 
-    // === Constructor ===
-
+    // === Constructors ===
     public InterviewManager(JobPosting jobPosting, ArrayList<JobApplication> applicationsInConsideration) {
         this.jobPosting = jobPosting;
         this.applicationsInConsideration = applicationsInConsideration;
@@ -61,7 +57,6 @@ public class InterviewManager {
     }
 
     // === Getters ===
-
     public int getCurrentRound() {
         return this.currentRound;
     }
@@ -75,7 +70,6 @@ public class InterviewManager {
     }
 
     // === Other methods ===
-
     /**
      * Get the number of applications still required.
      *
@@ -146,13 +140,23 @@ public class InterviewManager {
         return jobAppsSize > 0 && jobAppsSize <= this.jobPosting.getNumPositions();
     }
 
+    /**
+     * Archive all the rejected applications for this job posting.
+     */
+    public void archiveRejected() {
+        for (JobApplication jobApp : this.getApplicationsRejected()) {
+            jobApp.getStatus().setArchived();
+        }
+    }
 
+    // ============================================================================================================== //
+    // === Package-private methods ===
     /**
      * Get the task required by the HR Coordinator for this job posting at this moment in time.
      *
      * @return the integer representing the task the HR Coordinator must accomplish.
      */
-    public int getHrTask() {
+    int getHrTask() {
         if (this.hasNoJobApplicationsInConsideration()) {
             return InterviewManager.CLOSE_POSTING_NO_HIRE;
         } else if (this.currentRound != 0 && this.isNumApplicantUnderOrAtThreshold()) {
@@ -166,15 +170,6 @@ public class InterviewManager {
             return InterviewManager.SCHEDULE_INTERVIEWS;
         } else {
             return InterviewManager.DO_NOTHING;
-        }
-    }
-
-    /**
-     * Archive all the rejected applications for this job posting.
-     */
-    public void archiveRejected() {
-        for (JobApplication jobApp : this.getApplicationsRejected()) {
-            jobApp.getStatus().setArchived();
         }
     }
     

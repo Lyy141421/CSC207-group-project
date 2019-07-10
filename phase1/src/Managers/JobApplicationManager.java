@@ -30,13 +30,11 @@ public class JobApplicationManager {
     }
 
     // === Getters ===
-
     public ArrayList<JobApplication> getJobApplications() {
         return this.jobApplications;
     }
 
     // === Other methods ===
-
     /**
      * Add a job application to this applicant's application list.
      *
@@ -126,13 +124,6 @@ public class JobApplicationManager {
         return currentJobApps;
     }
 
-    // ============================================================================================================== //
-    // === Package-private methods ===
-
-    void setJobApplications(ArrayList<JobApplication> jobApplications) {
-        this.jobApplications = jobApplications;
-    }
-
     /**
      * Get a list of files submitted for this job application.
      *
@@ -159,7 +150,6 @@ public class JobApplicationManager {
 
     // ============================================================================================================== //
     // === Private methods ===
-
     /**
      * Find the job application associated with this job posting.
      *

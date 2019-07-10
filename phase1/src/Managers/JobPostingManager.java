@@ -1,6 +1,5 @@
 package Managers;
 
-import UsersAndJobObjects.JobApplication;
 import UsersAndJobObjects.JobPosting;
 import UsersAndJobObjects.Company;
 import java.time.LocalDate;
@@ -19,8 +18,8 @@ public class JobPostingManager {
 
 
     // === Public methods ===
-    // === Constructors ===
 
+    // === Constructors ===
     public JobPostingManager(Company company) {
         this.company = company;
     }
@@ -31,13 +30,11 @@ public class JobPostingManager {
     }
 
     // === Getters ===
-
     public ArrayList<JobPosting> getJobPostings() {
         return this.jobPostings;
     }
 
     // === Other methods ===
-
     /**
      * Add a job posting to this company.
      *
@@ -204,37 +201,12 @@ public class JobPostingManager {
     // === Package-private methods ===
 
     // === Getters ===
-
     Company getCompany() {
         return this.company;
     }
 
     // === Setters ===
-
-    void setJobPostings(ArrayList<JobPosting> jobPostings) {
-        this.jobPostings = jobPostings;
-    }
-
     void setCompany(Company company) {
         this.company = company;
     }
-
-    // === Other methods ===
-
-    /**
-     * Search the job postings by title within this company.
-     *
-     * @param jobTitle The job title.
-     * @return the list of job postings with this job title.
-     */
-    ArrayList<JobPosting> searchJobPostingByTitle(String jobTitle) {
-        ArrayList<JobPosting> jobPostings = new ArrayList<>();
-        for (JobPosting jobPosting : this.getJobPostings()) {
-            if (jobPosting.getTitle().equalsIgnoreCase(jobTitle)) {
-                jobPostings.add(jobPosting);
-            }
-        }
-        return jobPostings;
-    }
-
 }

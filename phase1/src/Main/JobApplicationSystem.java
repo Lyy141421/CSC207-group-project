@@ -19,11 +19,10 @@ public class JobApplicationSystem {
     private ArrayList<Company> companies = new ArrayList<>();
     // The user manager for the system
     private UserManager userManager = new UserManager();
-    // The date this program interprets as today (Defaults to today)
-    private LocalDate today = LocalDate.now();
+    // The date this program interprets as today.
+    private LocalDate today;
     // The previous login date for this application
     private LocalDate previousLoginDate;
-
 
     // === Main method ===
     public static void main(String[] args) {
@@ -58,7 +57,6 @@ public class JobApplicationSystem {
     }
 
     // === Setters ===
-
     public void setToday(LocalDate new_date) {
         this.today = new_date;
     }
@@ -69,23 +67,13 @@ public class JobApplicationSystem {
 
     // === Other methods ===
     /**
-     * To be called at the start of the program
-     * Used to load all objects from json memory
+     * Updates all the interview rounds that have been completed.
      */
-    public void mainStart() {
-        LoaderManager applicant = new LoaderManager(new ApplicantLoader(), Applicant.class, Applicant.FILENAME);
-        LoaderManager hrcoordinator = new LoaderManager(new HRCoordinatorLoader(), HRCoordinator.class, HRCoordinator.FILENAME);
-        LoaderManager interviewer = new LoaderManager(new InterviewerLoader(), Interviewer.class, Interviewer.FILENAME);
-        LoaderManager company = new LoaderManager(new CompanyLoader(), Company.class, Company.FILENAME);
-        LoaderManager interview = new LoaderManager(new InterviewLoader(), Interview.class, Interview.FILENAME);
-        LoaderManager jobposting = new LoaderManager(new JobPostingLoader(), JobPosting.class, JobPosting.FILENAME);
-        LoaderManager jobapplication = new LoaderManager(new JobApplicationLoader(), JobApplication.class, JobApplication.FILENAME);
-        LoaderManager.startLoad(this);
-        userManager.addUserList(applicant.getArray());
-        userManager.addUserList(hrcoordinator.getArray());
-        userManager.addUserList(interviewer.getArray());
-        for(Object comp : company.getArray()){
-            companies.add((Company)comp);
+    public void updateAllInterviewRounds() {
+        for (Company company : this.companies) {
+            for (JobPosting jobPosting : company.getJobPostingManager().getJobPostings()) {
+                jobPosting.advanceInterviewRound();
+            }
         }
     }
 
@@ -105,19 +93,7 @@ public class JobApplicationSystem {
         StorerManager.endSave(this);
     }
 
-    /**
-     * Updates all the interview rounds that have been completed.
-     */
-    public void updateAllInterviewRounds() {
-        for (Company company : this.companies) {
-            for (JobPosting jobPosting : company.getJobPostingManager().getJobPostings()) {
-                jobPosting.advanceInterviewRound();
-            }
-        }
-    }
-
     // === Other methods ===
-
     /**
      * Gets the company with this name.
      *
@@ -150,6 +126,29 @@ public class JobApplicationSystem {
     public void applicant30Day() {
         for (Object app : this.userManager.getAllApplicants()) {
             ((Applicant) app).removeFilesFromAccount(today);
+        }
+    }
+
+    // === Private methods ===
+
+    /**
+     * To be called at the start of the program
+     * Used to load all objects from json memory
+     */
+    private void mainStart() {
+        LoaderManager applicant = new LoaderManager(new ApplicantLoader(), Applicant.class, Applicant.FILENAME);
+        LoaderManager hrcoordinator = new LoaderManager(new HRCoordinatorLoader(), HRCoordinator.class, HRCoordinator.FILENAME);
+        LoaderManager interviewer = new LoaderManager(new InterviewerLoader(), Interviewer.class, Interviewer.FILENAME);
+        LoaderManager company = new LoaderManager(new CompanyLoader(), Company.class, Company.FILENAME);
+        LoaderManager interview = new LoaderManager(new InterviewLoader(), Interview.class, Interview.FILENAME);
+        LoaderManager jobposting = new LoaderManager(new JobPostingLoader(), JobPosting.class, JobPosting.FILENAME);
+        LoaderManager jobapplication = new LoaderManager(new JobApplicationLoader(), JobApplication.class, JobApplication.FILENAME);
+        LoaderManager.startLoad(this);
+        userManager.addUserList(applicant.getArray());
+        userManager.addUserList(hrcoordinator.getArray());
+        userManager.addUserList(interviewer.getArray());
+        for (Object comp : company.getArray()) {
+            companies.add((Company) comp);
         }
     }
 

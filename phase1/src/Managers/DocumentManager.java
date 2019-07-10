@@ -8,7 +8,7 @@ public class DocumentManager {
     // List of filenames uploaded to account
     private ArrayList<JobApplicationDocument> documents = new ArrayList<>();
 
-    // === Constructor ===
+    // === Constructors ===
     public DocumentManager() {}
 
     public DocumentManager(ArrayList<JobApplicationDocument> documents) {
@@ -16,7 +16,6 @@ public class DocumentManager {
     }
 
     // === Getters ===
-
     public ArrayList<JobApplicationDocument> getDocuments() {
         return this.documents;
     }
@@ -30,14 +29,7 @@ public class DocumentManager {
         return null;
     }
 
-    // === Setters ===
-
-    void setDocuments(ArrayList<JobApplicationDocument> documents) {
-        this.documents = documents;
-    }
-
     // === Other methods ===
-
     /**
      * Add a document to this account.
      *
