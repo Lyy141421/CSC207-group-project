@@ -49,8 +49,7 @@ public class Interview implements Storable {
 
 
     // === Public methods ===
-    // === Constructors ===
-
+    // === Constructor ===
     public Interview(String id){
         this.ID = Integer.parseInt(id);
         Interview.total = Integer.max(this.ID, Interview.total - 1) + 1;
@@ -98,7 +97,6 @@ public class Interview implements Storable {
     }
 
     // === Setters ===
-
     public void setJobApplication(JobApplication jobApplication) {
         this.jobApplication = jobApplication;
     }
@@ -132,24 +130,12 @@ public class Interview implements Storable {
     }
 
     // === Other methods ===
-
     /**
      * Check whether interview is completed.
      * @return  true iff the interview is completed.
      */
     public boolean isComplete() {
         return this.pass != null;
-    }
-
-    /**
-     * Get a string representation of the overview of this interview.
-     *
-     * @return a string representation of the overview of this interview.
-     */
-    public String getOverview() {
-        String s = "Interview time: " + this.time.toString() + "\n\n";
-        s += this.toStringPrelimInfo();
-        return s;
     }
 
     /**
@@ -166,10 +152,6 @@ public class Interview implements Storable {
         return s;
     }
 
-    /**
-     * Get a string representation of all the information for this interview.
-     * @return  a string representation of all the information for this interview.
-     */
     @Override
     public String toString() {
         String s = toStringPrelimInfo() + "\n";
@@ -182,9 +164,8 @@ public class Interview implements Storable {
     }
 
     // ============================================================================================================== //
-
-
     // === Package-private methods === //
+
     // === Constructors ===
     Interview() {
         this.ID = Interview.total;
@@ -202,6 +183,7 @@ public class Interview implements Storable {
         Interview.total++;
     }
 
+    // TODO Eliminate?
     Interview(JobApplication jobApplication, Interviewer interviewer, HRCoordinator hrCoordinator,
               InterviewManager interviewManager, InterviewTime time, int roundNumber) {
         this.jobApplication = jobApplication;
@@ -215,15 +197,11 @@ public class Interview implements Storable {
     }
 
     // === Getters ===
-
     InterviewManager getInterviewManager() {
         return this.interviewManager;
     }
 
-    private JobPosting getJobPosting() {
-        return this.jobApplication.getJobPosting();
-    }
-
+    // === Other methods ===
     /**
      * Check whether this interview is scheduled before this date.
      * @param date  The date in question.
@@ -233,13 +211,12 @@ public class Interview implements Storable {
         return this.getTime().getDate().isBefore(date);
     }
 
-    /**
-     * Check whether this interview is scheduled on this date.
-     * @param date  The date in question.
-     * @return  true iff this interview is scheduled on this date.
-     */
-    boolean isOnDate(LocalDate date) {
-        return this.getTime().getDate().isEqual(date);
+    // ============================================================================================================== //
+    // === Private methods ===
+
+    // === Getter ===
+    private JobPosting getJobPosting() {
+        return this.jobApplication.getJobPosting();
     }
 
 }

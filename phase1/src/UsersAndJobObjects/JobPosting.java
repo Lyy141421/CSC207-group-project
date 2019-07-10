@@ -13,7 +13,6 @@ public class JobPosting implements Storable {
     // The filename under which this will be saved in the FileLoadingAndStoring.FileSystem
     public static final String FILENAME = "JobPostings";
 
-
     // === Instance variables ===
     private static int postingsCreated; // Total number of postings created
     private int id; // Unique identifier for this job posting
@@ -31,20 +30,14 @@ public class JobPosting implements Storable {
 
 
     // === Public methods ===
-    // === Constructor ===
 
-    /**
-     * Constructor from memory
-     *
-     * @param id The id of this object which it is saved under
-     */
+    // === Constructor ===
     public JobPosting(String id){
         this.id = Integer.parseInt(id);
         JobPosting.postingsCreated = Integer.max(this.id, JobPosting.postingsCreated - 1) + 1;
     }
 
     // === Getters ===
-
     public String getId() {
         return Integer.toString(this.id);
     }
@@ -93,7 +86,7 @@ public class JobPosting implements Storable {
         return this.interviewManager;
     }
 
-    // == Setters ===
+    // === Setters ===
     public void setTitle(String title) {
         this.title = title;
     }
@@ -139,7 +132,6 @@ public class JobPosting implements Storable {
     }
 
     // === Other methods ===
-
     /**
      * Update the fields for this job posting.
      *
@@ -279,14 +271,9 @@ public class JobPosting implements Storable {
         return this.id;
     }
 
-    /**
-     * Get a string representation of this job posting.
-     *
-     * @return a string representation of this job posting.
-     */
     @Override
     public String toString() {
-        String s = "Posting ID: " + String.valueOf(id) + "\n";
+        String s = "Posting ID: " + this.getId() + "\n";
         s += "Number of positions: " + this.getNumPositions() + "\n";
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         s += "Post date: " + this.getPostDate().format(dtf) + "\n";
@@ -318,7 +305,8 @@ public class JobPosting implements Storable {
 
     // ============================================================================================================== //
     // === Package-private methods ===
-    // === Constructors ===
+
+    // === Constructor ===
     JobPosting(String title, String field, String description, String requirements, int numPositions, Company company,
                LocalDate postDate, LocalDate closeDate) {
         postingsCreated++;
@@ -335,7 +323,6 @@ public class JobPosting implements Storable {
     }
 
     // === Other methods ===
-
     /**
      * Remove this job application for this job posting.
      *
@@ -346,7 +333,6 @@ public class JobPosting implements Storable {
     }
 
     // === Private methods ===
-
     /**
      * Returns 'yes' or 'no' based on if bool is True/False
      *

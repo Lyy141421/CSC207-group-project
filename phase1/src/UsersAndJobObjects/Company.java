@@ -25,13 +25,11 @@ public class Company implements Storable {
 
     // === Public methods ===
     // === Constructors ===
-
     public Company(String name) {
         this.name = name;
     }
 
     // === Getters ==
-
     public String getId(){ return getName(); }
 
     public String getName() {
@@ -51,7 +49,6 @@ public class Company implements Storable {
     }
 
     // === Setters ===
-
     public void setHrCoordinators(ArrayList<HRCoordinator> hrCoordinators) {
         this.hrCoordinators = hrCoordinators;
     }
@@ -65,7 +62,6 @@ public class Company implements Storable {
     }
 
     // === Other methods ===
-
     /**
      * Check whether this job field has interviewers.
      * @param field The field in question.
@@ -73,6 +69,19 @@ public class Company implements Storable {
      */
     public boolean hasInterviewerForField(String field) {
         return this.getFieldToInterviewers().keySet().contains(field);
+    }
+
+    /**
+     * Add an interviewer to this company.
+     *
+     * @param interviewer The interviewer to be added.
+     */
+    public void addInterviewer(Interviewer interviewer) {
+        String field = interviewer.getField();
+        if (!this.fieldToInterviewers.containsKey(field)) {
+            this.fieldToInterviewers.put(field, new ArrayList<>());
+        }
+        this.fieldToInterviewers.get(field).add(interviewer);
     }
 
     /**
@@ -108,12 +117,6 @@ public class Company implements Storable {
         return false;
     }
 
-    /**
-     * Report whether this company is the same as obj.
-     *
-     * @param obj     The object to be compared with.
-     * @return true iff obj is a company and has the same name as this company.
-     */
     @Override
     public boolean equals(Object obj) {
         if (!(obj instanceof Company)) {
@@ -124,10 +127,6 @@ public class Company implements Storable {
         }
     }
 
-    /**
-     * Return a hashcode for this company.
-     * @return an int; the same int should be returned for all companies equal to this company.
-     */
     @Override
     public int hashCode() {
         int sum = 0;
@@ -139,8 +138,8 @@ public class Company implements Storable {
 
     // ============================================================================================================== //
     // === Package-private methods ===
-    // === Constructors ===
 
+    // === Constructors ===
     Company(String name, ArrayList<HRCoordinator> hrCoordinators,
             HashMap<String, ArrayList<Interviewer>> fieldToInterviewers, JobPostingManager jobPostingManager) {
         this.name = name;
@@ -150,7 +149,6 @@ public class Company implements Storable {
     }
 
     // === Other methods ===
-
     /**
      * Find the interviewer with the least amount of interviews in this job field.
      * @param jobField  The job field of the interviewer to be found.
@@ -168,18 +166,4 @@ public class Company implements Storable {
         }
         return interviewerSoFar;
     }
-
-    /**
-     * Add an interviewer to this company.
-     *
-     * @param interviewer The interviewer to be added.
-     */
-    public void addInterviewer(Interviewer interviewer) {
-        String field = interviewer.getField();
-        if (!this.fieldToInterviewers.containsKey(field)) {
-            this.fieldToInterviewers.put(field, new ArrayList<>());
-        }
-        this.fieldToInterviewers.get(field).add(interviewer);
-    }
-
 }

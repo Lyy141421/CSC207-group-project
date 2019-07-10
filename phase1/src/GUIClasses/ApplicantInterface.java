@@ -35,7 +35,7 @@ public class ApplicantInterface extends UserInterface {
         this.displayUpcomingInterviews(jobApplicationSystem.getToday());
         while (true) {
             try {
-                this.runMainMenu(sc, jobApplicationSystem, jobApplicationSystem.getToday());
+                this.runMainMenu(sc, jobApplicationSystem);
             }
             catch (ExitException ee) {
                 return;
@@ -49,30 +49,29 @@ public class ApplicantInterface extends UserInterface {
      *
      * @param sc The Scanner for user input.
      * @param jobApplicationSystem The job application system being used.
-     * @param today Today's date.
      */
-    private void runMainMenu(Scanner sc, JobApplicationSystem jobApplicationSystem, LocalDate today)
+    private void runMainMenu(Scanner sc, JobApplicationSystem jobApplicationSystem)
             throws ExitException {
         int numOptions = displayMainMenuOptions();
         int option = getMenuOption(sc, numOptions);
         switch (option) {
             case 1:
-                this.setJobPostingSearchFilters(sc, jobApplicationSystem, today); // Browse open job postings not applied to
+                this.setJobPostingSearchFilters(sc, jobApplicationSystem); // Browse open job postings not applied to
                 return;
             case 2:
                 this.displayDocuments(); // View uploaded documents
                 return;
             case 3:
-                this.submitApplication(sc, jobApplicationSystem, today); // Apply for a job
+                this.submitApplication(sc, jobApplicationSystem); // Apply for a job
                 return;
             case 4:
-                this.displayApplications(sc, today, false); // View applications
+                this.displayApplications(sc, jobApplicationSystem.getToday(), false); // View applications
                 return;
             case 5:
-                this.displayApplications(sc, today, true); // Withdraw an application
+                this.displayApplications(sc, jobApplicationSystem.getToday(), true); // Withdraw an application
                 return;
             case 6:
-                this.displayAccountHistory(today); // View account history
+                this.displayAccountHistory(jobApplicationSystem.getToday()); // View account history
                 return;
             case 7:
                 throw new ExitException(); // Exit
@@ -142,7 +141,7 @@ public class ApplicantInterface extends UserInterface {
      * @return the number of options in the menu.
      */
     private int displaySubmitMenuOptions() {
-        System.out.println("Select an application option:");
+        System.out.println("\nSelect an application method:");
         System.out.println("1 - Apply using a CV and cover letter from your account files");
         System.out.println("2 - Enter a CV and cover letter manually");
         return 2;
@@ -152,9 +151,8 @@ public class ApplicantInterface extends UserInterface {
      * Display the open job postings that this applicant has not applied to.
      *
      * @param sc The Scanner for user input.
-     * @param today Today's date.
      */
-    private void setJobPostingSearchFilters(Scanner sc, JobApplicationSystem jobApplicationSystem, LocalDate today) {
+    private void setJobPostingSearchFilters(Scanner sc, JobApplicationSystem jobApplicationSystem) {
         System.out.println();
         int numOptions = this.displayFilterOptions();
         int option = this.getMenuOption(sc, numOptions);
@@ -204,14 +202,11 @@ public class ApplicantInterface extends UserInterface {
      */
     private JobApplicationDocument selectDocumentFromFiles(Scanner sc, String documentType) {
         System.out.println("\nHere are your files: ");
-        int fileNumber = 0;
-        for (JobApplicationDocument document : applicant.getDocumentManager().getDocuments()) {
-            fileNumber++;
-            System.out.println("\n" + fileNumber + ". " + document.getContents());
-        }
+        ArrayList<JobApplicationDocument> documents = this.applicant.getDocumentManager().getDocuments();
+        new PrintItems<JobApplicationDocument>().printListToSelectFrom(documents);
         System.out.println("\nPlease enter the file number of the " + documentType + " you would like to submit.");
-        int option = getMenuOption(sc, fileNumber);
-        return applicant.getDocumentManager().getDocuments().get(option-1);
+        int option = getMenuOption(sc, documents.size());
+        return this.applicant.getDocumentManager().getDocuments().get(option - 1);
     }
     /**
      * Allow the applicant to select documents from their account, and use these documents to assemble a JobApplication.
@@ -249,20 +244,18 @@ public class ApplicantInterface extends UserInterface {
      * Get the posting that the applicant wishes to apply to.
      * @param sc The Scanner for user input.
      * @param jobApplicationSystem The job application system being used.
-     * @param today Today's date.
      * @return the posting that the applicant wishes to apply to.
      */
-    private JobPosting getPostingForJobApplication(Scanner sc, JobApplicationSystem jobApplicationSystem,
-                                                   LocalDate today) {
+    private JobPosting getPostingForJobApplication(Scanner sc, JobApplicationSystem jobApplicationSystem) {
         String companyName = getInputLine(sc, "\nEnter the name of the company you wish to apply to: ");
         Company company = jobApplicationSystem.getCompany(companyName);
         if (company == null) {
-            System.out.println("No company was found matching name \"" + companyName + "\n.");
+            System.out.println("\nNo company was found matching name \"" + companyName + ".");
             return null;
         }
-        int postingId = getInteger(sc, "Enter the id of the posting you wish to apply for: ");
+        int postingId = getInteger(sc, "Enter the ID of the posting you wish to apply for: ");
         JobPosting posting = company.getJobPostingManager().getJobPosting(postingId);
-        if (posting == null || posting.getCloseDate().isBefore(today)) {
+        if (posting == null || posting.getCloseDate().isBefore(jobApplicationSystem.getToday())) {
             System.out.println("\nNo open posting was found matching id " + postingId + ".");
         }
         return posting;
@@ -273,10 +266,9 @@ public class ApplicantInterface extends UserInterface {
      *
      * @param sc The Scanner for user input.
      * @param jobApplicationSystem The job application system being used.
-     * @param today Today's date.
      */
-    private void submitApplication(Scanner sc, JobApplicationSystem jobApplicationSystem, LocalDate today) {
-        JobPosting posting = this.getPostingForJobApplication(sc, jobApplicationSystem, today);
+    private void submitApplication(Scanner sc, JobApplicationSystem jobApplicationSystem) {
+        JobPosting posting = this.getPostingForJobApplication(sc, jobApplicationSystem);
         if (posting == null) {
             return;
         }
@@ -289,18 +281,20 @@ public class ApplicantInterface extends UserInterface {
         switch (option) {
             case 1:
                 if (applicant.getDocumentManager().getDocuments().isEmpty()) {
-                    System.out.println("You have not yet uploaded any files.");
+                    System.out.println("\nYou have not uploaded any files.");
                     System.out.println();
                 }
                 else {
-                    JobApplication application = this.createJobApplicationThroughFiles(sc, today, posting);
+                    JobApplication application = this.createJobApplicationThroughFiles(sc,
+                            jobApplicationSystem.getToday(), posting);
                     posting.addJobApplication(application);
                     applicant.registerJobApplication(application);
                     System.out.println("\nApplication successfully submitted.");
                 }
                 break;
             case 2:
-                JobApplication application = this.createJobApplicationThroughTextEntry(sc, today, posting);
+                JobApplication application = this.createJobApplicationThroughTextEntry(sc,
+                        jobApplicationSystem.getToday(), posting);
                 posting.addJobApplication(application);
                 this.applicant.registerJobApplication(application);
                 System.out.println("\nApplication successfully submitted.");
@@ -375,7 +369,7 @@ public class ApplicantInterface extends UserInterface {
     /**
      * Display the applicant's account history.
      *
-     * @param today Today's date.
+     * @param today Today's date
      */
     private void displayAccountHistory(LocalDate today) {
         System.out.println();
@@ -401,14 +395,6 @@ public class ApplicantInterface extends UserInterface {
     private void displayDocuments() {
         System.out.println();
         ArrayList<JobApplicationDocument> documents = applicant.getDocumentManager().getDocuments();
-        if (documents.isEmpty()) {
-            System.out.println("You have not yet uploaded any documents.");
-        }
-        else {
-            for (JobApplicationDocument document : documents) {
-                System.out.println(document.getContents());
-                System.out.println();
-            }
-        }
+        new PrintItems<JobApplicationDocument>().printList(documents);
     }
 }

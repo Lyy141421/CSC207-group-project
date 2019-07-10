@@ -39,8 +39,8 @@ public class JobApplication implements Storable{
     // - interviews are ordered in terms of round number
 
     // === Public methods ===
-    // === Constructors ===
 
+    // === Constructors ===
     public JobApplication(String id) {
         this.ID = Integer.parseInt(id);
         JobApplication.totalNumOfApplications = Integer.max(this.ID, JobApplication.totalNumOfApplications - 1) + 1;
@@ -71,7 +71,6 @@ public class JobApplication implements Storable{
     }
 
     // === Getters ===
-
     public String getId() {
         return Integer.toString(this.ID);
     }
@@ -135,24 +134,21 @@ public class JobApplication implements Storable{
 
     // === Other methods ===
 
+    /**
+     * Checks whether this application has been archived.
+     *
+     * @return true iff this application is set to archived.
+     */
     public boolean isArchived() {
         return this.status.isArchived();
     }
 
-    public boolean isUnderReview() {
-        return this.status.isUnderReview();
-    }
-
-    public boolean isOnPhoneInterview() {
-        return this.status.isOnPhoneInterview();
-    }
-
+    /**
+     * Checks whether the applicant of this application has been hired.
+     * @return true iff this application is set to hired.
+     */
     public boolean isHired() {
         return this.status.isHired();
-    }
-
-    public boolean isInPerson3() {
-        return this.status.isInPerson3();
     }
 
     /**
@@ -171,8 +167,6 @@ public class JobApplication implements Storable{
         interviewer.addInterview(interview);
         this.status.advanceStatus();
     }
-
-
 
     /**
      * Gets the last interview conducted/scheduled for this job application
@@ -196,39 +190,19 @@ public class JobApplication implements Storable{
     }
 
     /**
-     * Get a string of the overview of this job application, including id, applicant name, job posting, status,
-     * and application date.
-     *
-     * @return a string of the overview of this job application.
-     */
-    public String getOverview() {
-        String s = "Application ID: " + this.getId() + "\n";
-        s += "Applicant: " + this.getApplicant().getLegalName() + "(" + this.getApplicant().getUsername() + ")" + "\n";
-        s += "Job Posting: " + this.getJobPosting().getTitle() + " -- ID: " + this.getJobPosting().getId();
-        s += "Status: " + this.status.getDescription() + "\n";
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-mm-dd");
-        s += "Application date: " + this.getApplicationDate().format(dtf);
-
-        return s;
-    }
-
-    /**
      * Get a string of what an applicant should see when viewing their applications.
      *
      * @return a string of what an applicant should see when viewing their applications.
      */
     public String toStringForApplicant() {
-        String s = "Title: " + this.getJobPosting().getTitle() + "\n";
-        s += "Company: " + this.getJobPosting().getCompany().getName() + "\n";
-        s += "Status: " + this.getStatus().getDescription();
+        String s = "Application ID: " + this.getId() + "\n";
+        s += "Job Posting: " + this.getJobPosting().getTitle() + " -- ID: " + this.getJobPosting().getId();
+        s += "Status: " + this.getStatus().getDescription() + "\n";
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        s += "Application date: " + this.getApplicationDate().format(dtf);
         return s;
     }
 
-    /**
-     * Get a string representation of this job application.
-     *
-     * @return a string representation of this job application.
-     */
     @Override
     public String toString() {
         String s = "Application ID: " + this.getId() + "\n";
@@ -244,8 +218,8 @@ public class JobApplication implements Storable{
 
     // ============================================================================================================== //
     // === Package-private methods ===
-    // === Constructors ===
 
+    // === Constructors ===
     JobApplication(LocalDate applicationDate) {
         this.ID = JobApplication.totalNumOfApplications;
         this.applicationDate = applicationDate;
@@ -259,8 +233,8 @@ public class JobApplication implements Storable{
         JobApplication.totalNumOfApplications++;
     }
 
+    // ============================================================================================================== //
     // === Private methods ===
-
     /**
      * Add an interview for this job application.
      *

@@ -16,6 +16,8 @@ public class Applicant extends User {
     // === Class variables ===
     // The filename under which this will be saved in the FileLoadingAndStoring.FileSystem
     public static final String FILENAME = "Applicants";
+    // Number of days passed for user account to be deemed inActive
+    private static final int INACTIVE_DAYS = 30;
 
     // === Instance variables ===
     // The applicant's job application manager
@@ -43,7 +45,6 @@ public class Applicant extends User {
     }
 
     // === Getters ===
-
     public JobApplicationManager getJobApplicationManager() {
         return this.jobApplicationManager;
     }
@@ -53,7 +54,6 @@ public class Applicant extends User {
     }
 
     // === Setters ===
-
     public void setJobApplicationManager(JobApplicationManager jobApplicationManager) {
         this.jobApplicationManager = jobApplicationManager;
     }
@@ -63,7 +63,6 @@ public class Applicant extends User {
     }
 
     // === Other methods ===
-
     /**
      * Register this job application for this applicant.
      * @param application   The job application registered.
@@ -77,6 +76,7 @@ public class Applicant extends User {
     /**
      * Remove this applicant's application for this job.
      *
+     * @param today Today's date.
      * @param jobPosting The job that this user wants to withdraw their application from.
      * @return true iff this applicant can successfully withdraw their application; else return false
      */
@@ -109,6 +109,7 @@ public class Applicant extends User {
     /**
      * Get a list of open job postings not yet applied to.
      *
+     * @param jobApplicationSystem The job application system being used.
      * @return a list of open job postings not yet applied to.
      */
     public ArrayList<JobPosting> getOpenJobPostingsNotAppliedTo(JobApplicationSystem jobApplicationSystem) {
@@ -127,8 +128,7 @@ public class Applicant extends User {
      *
      * @param today Today's date.
      */
-    // TODO I feel like this shouldn't be here, but if we put it in DocumentManager, there would be coupling
-    // (user must be an instance variable)
+    // TODO move to document manager in phase 2
     public void removeFilesFromAccount(LocalDate today) {
         if (this.isInactive(today)) {
             JobApplicationManager JAM = this.getJobApplicationManager();
@@ -140,7 +140,6 @@ public class Applicant extends User {
 
     // ============================================================================================================== //
     // === Private methods ===
-
     /**
      * Report whether the date that the last job posting this applicant applied to was 30 days ago from today.
      *
@@ -148,6 +147,6 @@ public class Applicant extends User {
      * @return true iff today's date is 30 days after the closing date for the last job this applicant applied to.
      */
     private boolean isInactive(LocalDate today) {
-        return this.jobApplicationManager.getNumDaysSinceMostRecentCloseDate(today) >= 30;
+        return this.jobApplicationManager.getNumDaysSinceMostRecentCloseDate(today) >= Applicant.INACTIVE_DAYS;
     }
 }

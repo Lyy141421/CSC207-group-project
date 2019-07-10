@@ -22,8 +22,8 @@ public abstract class User implements Storable {
     private LocalDate dateCreated;
 
     // === Public methods ===
-    // === Getters ===
 
+    // === Getters ===
     public String getId() {
         return getUsername();
     }
@@ -49,7 +49,6 @@ public abstract class User implements Storable {
     }
 
     // === Setters ===
-
     public void setUsername(String username) {
         this.username = username;
     }
@@ -71,17 +70,16 @@ public abstract class User implements Storable {
     }
 
     // === Other methods ===
-
+    /**
+     * Get the job application with this ID.
+     * @param ID    The ID of the job application.
+     * @return the job application with this ID or null if not found.
+     */
     public JobApplication findJobAppById(int ID) {
         return null;
     }
 
-    /**
-     * Report whether this user is the same as obj.
-     *
-     * @param obj The other object being compared to.
-     * @return true iff obj is an user and has the same username as this account.
-     */
+
     @Override
     public boolean equals(Object obj) {
         if (!(obj instanceof User)) {
@@ -91,11 +89,6 @@ public abstract class User implements Storable {
         }
     }
 
-    /**
-     * Return a hashcode for this user.
-     *
-     * @return an int; the same int should be returned for all users equal to this user.
-     */
     @Override
     public int hashCode() {
         int sum = 0;
@@ -108,7 +101,6 @@ public abstract class User implements Storable {
     // ============================================================================================================== //
     // === Package-private methods ===
     // === Constructors ===
-
     User() {}
 
     User(String username, String password, String legalName, String email, LocalDate dateCreated) {

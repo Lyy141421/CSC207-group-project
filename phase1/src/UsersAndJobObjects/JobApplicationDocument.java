@@ -36,12 +36,9 @@ public class JobApplicationDocument implements Storable {
         return this.contents;
     }
 
-    // === Setters ===
-    public void setContents(String contents) {
-        this.contents = contents;
+    // === Other methods ===
+    @Override
+    public String toString() {
+        return this.getContents();
     }
-
-
-
-
 }

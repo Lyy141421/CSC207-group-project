@@ -68,13 +68,13 @@ public class Interviewer extends User {
     }
 
     // === Other methods ===
-
     /**
      * Find the job application with this id from the list of job applications that this interviewer can view.
      *
      * @param id The id in question.
      * @return the job application associated with this id or null if not found.
      */
+    @Override
     public JobApplication findJobAppById(int id) {
         for (Interview interview : this.interviews) {
             if (Integer.parseInt(interview.getJobApplication().getId()) == id) {
@@ -121,30 +121,6 @@ public class Interviewer extends User {
      */
     public void removeInterview(Interview interview) {
         this.interviews.remove(interview);
-    }
-
-    /**
-     * Get a list of interviews scheduled for this date.
-     *
-     * @param date The date in question.
-     * @return a list of interviews scheduled for this date.
-     */
-    public ArrayList<ArrayList<Interview>> getInterviewsBeforeOnAndAfterDate(LocalDate date) {
-        ArrayList<Interview> interviewsBefore = new ArrayList<>();
-        ArrayList<Interview> interviewsToday = new ArrayList<>();
-        ArrayList<Interview> interviewsAfter = new ArrayList<>();
-        for (Interview interview : this.interviews) {
-            if (interview.isBeforeDate(date)) {
-                interviewsBefore.add(interview);
-            }
-            else if (interview.isOnDate(date)) {
-                interviewsToday.add(interview);
-            }
-            else {
-                interviewsAfter.add(interview);
-            }
-        }
-        return new ArrayList<>(Arrays.asList(interviewsBefore, interviewsToday, interviewsAfter));
     }
 
     /**
@@ -222,33 +198,8 @@ public class Interviewer extends User {
         interview.getInterviewManager().reject(interview.getJobApplication());
     }
 
-    /**
-     * Get a string representation of this interviewer's up-coming schedule.
-     *
-     * @return a string representation of this interviewer's schedule
-     */
-    public String getScheduleString() {
-        if (this.interviews.isEmpty()) {
-            return null;
-        }
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        String s = "";
-        InterviewTime interviewTime = this.interviews.get(0).getTime();
-        s += interviewTime.getDate().format(dtf) + ": ";
-        for (Interview interview : this.interviews) {
-            if (!interview.getTime().isOnSameDate(interviewTime)) {
-                s = s.substring(0, s.length() - 2); // Remove extra comma and space from previous ling
-                s += "\n" + interview.getTime().getDate().format(dtf) + ": ";
-            }
-            s += new InterviewTime().getTimeSlotCorrespondingToInt(interview.getTime().getTimeSlot()) + ", ";
-        }
-        return s.substring(0, s.length() - 2); // Remove extra comma and space
-    }
-
     // ============================================================================================================== //
     // === Package-private methods ===
-    // === Other methods ===
-
     /**
      * Add an interview to this interviewer's list of interviews in sorted order.
      *

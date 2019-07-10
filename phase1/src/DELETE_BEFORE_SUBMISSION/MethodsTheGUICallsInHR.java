@@ -1,18 +1,18 @@
 package DELETE_BEFORE_SUBMISSION;
 
 import Main.JobApplicationSystem;
+import Managers.InterviewManager;
 import Managers.JobPostingManager;
-import UsersAndJobObjects.Applicant;
-import UsersAndJobObjects.Company;
-import UsersAndJobObjects.JobApplication;
-import UsersAndJobObjects.JobPosting;
+import UsersAndJobObjects.*;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class MethodsTheGUICallsInHR {
     // === Methods that GUI will call ===
 
+    // HRCoordinator Interface class
     /*    *//**
      * Get the task that the HR Coordinator must accomplish at this moment for this job posting.
      *//*
@@ -125,6 +125,50 @@ public class MethodsTheGUICallsInHR {
                 jobApp.setUpInterview(this.HRC, jobApp.getStatus().getValue() + 1);
             }
             return true;
+        }
+    }*/
+
+    // Job Application class
+/*    public boolean isUnderReview() {
+        return this.status.isUnderReview();
+    }
+
+    public boolean isOnPhoneInterview() {
+        return this.status.isOnPhoneInterview();
+    }
+
+    public boolean isInPerson3() {
+        return this.status.isInPerson3();
+    }*/
+
+
+    // Status class
+    /*boolean isUnderReview () {
+        return this.value == Status.UNDER_REVIEW;
+    }
+
+    boolean isOnPhoneInterview() {
+        return this.value == Status.PHONE_INTERVIEW;
+    }
+
+    boolean isInPerson3() {
+        return this.value == Status.IN_PERSON_3;
+    }*/
+
+
+    // HR Coordinator class
+    /*    *//**
+     * Get the task that the HR Coordinator must accomplish for this job posting.
+     *
+     * @param jobPosting The job posting in question.
+     * @param today      Today's date.
+     * @return an integer that represents the task that the HR Coordinator must accomplish for this job posting.
+     *//*
+    int getTask(JobPosting jobPosting, LocalDate today) {
+        if (this.company.getJobPostingManager().getClosedJobPostingsNoApplicantsChosen(today).contains(jobPosting)) {
+            return InterviewManager.SELECT_APPS_FOR_PHONE_INTERVIEW;
+        } else {
+            return jobPosting.getInterviewManager().getHrTask();
         }
     }*/
 

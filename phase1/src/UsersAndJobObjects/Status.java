@@ -5,7 +5,7 @@ import java.util.HashMap;
 public class Status {
     // === Class variables ===
     // Job application statuses as constants
-    static final int ARCHIVED = -3;
+    private static final int ARCHIVED = -3;
     private static final int SUBMITTED = -2;
     private static final int UNDER_REVIEW = -1;
     private static final int PHONE_INTERVIEW = 0;
@@ -28,9 +28,7 @@ public class Status {
     // === Instance variable ===
     private int value = Status.SUBMITTED;
 
-    // === Constructor ===
-    public Status() {}
-
+    // === Constructors ===
     public Status(int value) {
         this.value = value;
     }
@@ -40,10 +38,6 @@ public class Status {
         return this.value;
     }
 
-    public String getDescription() {
-        return Status.descriptions.get(this.value);
-    }
-
     // === Setters ===
     public void setValue(int value) {
         this.value = value;
@@ -51,50 +45,62 @@ public class Status {
 
     // === Other methods ===
 
-
-    @Override
-    public String toString() {
-        return descriptions.get(value);
-    }
-
-    boolean isUnderReview () {
-        return this.value == Status.UNDER_REVIEW;
-    }
-
-    boolean isHired() {
-        return this.value == Status.HIRED;
-    }
-
-    boolean isArchived() {
-        return this.value == Status.ARCHIVED;
-    }
-
-    boolean isOnPhoneInterview() {
-        return this.value == Status.PHONE_INTERVIEW;
-    }
-
-    boolean isInPerson3() {
-        return this.value == Status.IN_PERSON_3;
-    }
-
-    /**
-     * Advance this status.
-     */
-    public void advanceStatus() {
-        this.value ++;
-    }
-
     /**
      * Set this status as "Archived".
      */
     public void setArchived() {
-        this.value = Status.ARCHIVED;
+        this.setValue(Status.ARCHIVED);
     }
 
     /**
      * Set this status as "Hired".
      */
     public void setHired() {
-        this.value = Status.HIRED;
+        this.setValue(Status.HIRED);
     }
+
+    @Override
+    public String toString() {
+        return Status.descriptions.get(this.value);
+    }
+
+    // ============================================================================================================== //
+    // === Package-private methods ===
+
+    // === Constructors ===
+    Status() {
+    }
+
+    // === Getters ===
+    String getDescription() {
+        return Status.descriptions.get(this.value);
+    }
+
+    // === Other methods ===
+
+    /**
+     * Checks whether this status is set to hired.
+     *
+     * @return true iff this status is set to hired.
+     */
+    boolean isHired() {
+        return this.value == Status.HIRED;
+    }
+
+    /**
+     * Checks whether this status is set to archived.
+     * @return true iff this status is set to archived.
+     */
+    boolean isArchived() {
+        return this.value == Status.ARCHIVED;
+    }
+
+    /**
+     * Advance this status.
+     */
+    void advanceStatus() {
+        this.value ++;
+    }
+
+
 }

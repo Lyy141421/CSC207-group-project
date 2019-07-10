@@ -297,9 +297,10 @@ public class HRCoordinatorInterface extends UserInterface {
     private void addJobPosting(Scanner sc, LocalDate today) {
         System.out.println("\nComplete the following categories for adding a job posting as they appear.");
         ArrayList<Object> fields = this.getFieldsForJobPosting(sc, today);
-        this.HRC.addJobPosting((String) fields.get(0), (String) fields.get(1), (String) fields.get(2),
+        JobPosting jobPosting = this.HRC.addJobPosting((String) fields.get(0), (String) fields.get(1), (String) fields.get(2),
                 (String) fields.get(3), (Integer) fields.get(4), today, (LocalDate) fields.get(5));
-        System.out.println("\nYou have successfully added " + fields.get(0) + " to the system.");
+        System.out.println("\nYou have successfully added '" + jobPosting.getTitle() +
+                "' (Job Posting ID: " + jobPosting.getId() + ") to the system.");
     }
 
     /**
@@ -332,9 +333,10 @@ public class HRCoordinatorInterface extends UserInterface {
     private void updateJobPostingFields(Scanner sc, LocalDate today, JobPosting jobPosting) {
         System.out.println("Complete the following categories for updating a job posting as they appear.");
         System.out.println("Enter '" + SKIP_FIELD_KEY + "' if you do not wish to update the category and enter " +
-                SKIP_DATE_KEY + " if you do not wish to update the close date.");
+                SKIP_DATE_KEY + " if you do not wish to update the close date.\n");
         jobPosting.updateFields(SKIP_FIELD_KEY, SKIP_DATE_KEY, this.getFieldsForJobPosting(sc, today));
-        System.out.println("\nYou have successfully updated " + jobPosting.getTitle() + ".");
+        System.out.println("\nYou have successfully updated '" + jobPosting.getTitle() + "' (Job Posting ID: " +
+                jobPosting.getId() + ").");
     }
 
     /**

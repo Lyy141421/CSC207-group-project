@@ -20,7 +20,6 @@ public class HRCoordinator extends User {
 
     // === Public methods ===
     // === Constructors ===
-
     public HRCoordinator(){}
 
     public HRCoordinator(String id) {
@@ -34,13 +33,11 @@ public class HRCoordinator extends User {
     }
 
     // === Getters ===
-
     public Company getCompany() {
         return this.company;
     }
 
     // === Setters ===
-
     public void setCompany(Company company) {
         this.company = company;
     }
@@ -56,11 +53,12 @@ public class HRCoordinator extends User {
      * @param postDate       The date this job posting was posted.
      * @param closeDate      The date this job posting is closed.
      */
-    public void addJobPosting(String jobTitle, String jobField, String jobDescription, String requirements,
-                              int numPositions, LocalDate postDate, LocalDate closeDate) {
+    public JobPosting addJobPosting(String jobTitle, String jobField, String jobDescription, String requirements,
+                                    int numPositions, LocalDate postDate, LocalDate closeDate) {
         JobPosting jobPosting = new JobPosting(jobTitle, jobField, jobDescription, requirements,
                 numPositions, this.company, postDate, closeDate);
         this.company.getJobPostingManager().addJobPosting(jobPosting);
+        return jobPosting;
     }
 
     /**
@@ -69,6 +67,7 @@ public class HRCoordinator extends User {
      * @param ID The ID in question.
      * @return the job application with this ID or null if cannot be accessed/found.
      */
+    @Override
     public JobApplication findJobAppById(int ID) {
         for (JobPosting jobPosting : this.company.getJobPostingManager().getJobPostings()) {
             for (JobApplication jobApplication : jobPosting.getJobApplications()) {
@@ -78,23 +77,5 @@ public class HRCoordinator extends User {
             }
         }
         return null;
-    }
-
-    // ============================================================================================================== //
-    // === Package-private methods ===
-
-    /**
-     * Get the task that the HR Coordinator must accomplish for this job posting.
-     *
-     * @param jobPosting The job posting in question.
-     * @param today      Today's date.
-     * @return an integer that represents the task that the HR Coordinator must accomplish for this job posting.
-     */
-    int getTask(JobPosting jobPosting, LocalDate today) {
-        if (this.company.getJobPostingManager().getClosedJobPostingsNoApplicantsChosen(today).contains(jobPosting)) {
-            return InterviewManager.SELECT_APPS_FOR_PHONE_INTERVIEW;
-        } else {
-            return jobPosting.getInterviewManager().getHrTask();
-        }
     }
 }
