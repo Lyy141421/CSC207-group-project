@@ -10,6 +10,9 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 class HRCoordinatorJobPostingsInterface extends HRCoordinatorInterface {
+    /**
+     * Interface for the HRCoordinator and all things to do with job postings.
+     */
 
     // === Class variables ===
     private static int SKIP_FIELD_KEY = -1;

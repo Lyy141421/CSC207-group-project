@@ -11,6 +11,9 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 class HRCoordinatorHighPriorityInterface extends HRCoordinatorInterface {
+    /**
+     * Interface for the HRCoordinator high priority sub menu.
+     */
 
     /**
      * Run the job posting sub-menu.
@@ -30,7 +33,6 @@ class HRCoordinatorHighPriorityInterface extends HRCoordinatorInterface {
 
     // ============================================================================================================== //
     // === Private methods ===
-
     /**
      * Display the sub menu for high priority tasks.
      */

@@ -9,6 +9,9 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 class HRCoordinatorJobAppsInterface extends HRCoordinatorInterface {
+    /**
+     * Interface for the HRCoordinator job applications sub menu.
+     */
 
     /**
      * Run the job application sub menu.
@@ -28,7 +31,6 @@ class HRCoordinatorJobAppsInterface extends HRCoordinatorInterface {
 
     // ============================================================================================================== //
     // === Private methods ===
-
     /**
      * Display the job application sub-menu.
      *
