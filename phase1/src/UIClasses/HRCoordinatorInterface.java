@@ -185,7 +185,7 @@ public class HRCoordinatorInterface extends UserInterface {
         Applicant applicant = this.searchSpecificApplicant(sc, jobApplicationSystem);
         if (applicant != null) {
             ArrayList<JobApplication> jobApps = this.HRC.getCompany().getAllApplicationsToCompany(applicant);
-            new PrintItems<JobApplication>().printList(jobApps);
+            this.printList(jobApps);
         }
     }
 

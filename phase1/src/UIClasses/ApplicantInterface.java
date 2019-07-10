@@ -202,9 +202,9 @@ public class ApplicantInterface extends UserInterface {
      * @return the document selected.
      */
     private JobApplicationDocument selectDocumentFromFiles(Scanner sc, String documentType) {
-        System.out.println("\nHere are your files: ");
         ArrayList<JobApplicationDocument> documents = this.applicant.getDocumentManager().getDocuments();
-        new PrintItems<JobApplicationDocument>().printListToSelectFrom(documents);
+        System.out.println("\nHere are your files: ");
+        this.printListToSelectFrom(documents);
         System.out.println("\nPlease enter the file number of the " + documentType + " you would like to submit.");
         int option = getMenuOption(sc, documents.size());
         return this.applicant.getDocumentManager().getDocuments().get(option - 1);
@@ -218,9 +218,15 @@ public class ApplicantInterface extends UserInterface {
      * @return a job application containing this applicant's chosen documents.
      */
     private JobApplication createJobApplicationThroughFiles(Scanner sc, LocalDate today, JobPosting posting) {
-        JobApplicationDocument CV = this.selectDocumentFromFiles(sc, "CV");
-        JobApplicationDocument coverLetter = this.selectDocumentFromFiles(sc, "cover letter");
-        return new JobApplication(applicant, posting, CV, coverLetter, today);
+        if (applicant.getDocumentManager().getDocuments().isEmpty()) {
+            System.out.println("You have not yet uploaded any documents.");
+            return null;
+        }
+        else {
+            JobApplicationDocument CV = this.selectDocumentFromFiles(sc, "CV");
+            JobApplicationDocument coverLetter = this.selectDocumentFromFiles(sc, "cover letter");
+            return new JobApplication(applicant, posting, CV, coverLetter, today);
+        }
     }
 
     /**
@@ -394,8 +400,7 @@ public class ApplicantInterface extends UserInterface {
      * Display the applicant's submitted documents.
      */
     private void displayDocuments() {
-        System.out.println();
         ArrayList<JobApplicationDocument> documents = applicant.getDocumentManager().getDocuments();
-        new PrintItems<JobApplicationDocument>().printList(documents);
+        this.printList(documents);
     }
 }

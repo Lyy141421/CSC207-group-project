@@ -54,6 +54,35 @@ public class UserInterface {
     }
 
     // === Other methods ===
+
+    /**
+     * Prints a list of objects.
+     *
+     * @param objects The objects to be printed.
+     */
+    void printList(ArrayList objects) {
+        if (objects.isEmpty()) {
+            System.out.println("\nNo items to view.");
+        }
+        for (int i = 0; i < objects.size(); i++)
+            System.out.println("\n" + objects.get(i));
+    }
+
+    /**
+     * Prints a numbered list of objects.
+     *
+     * @param objects The objects to be printed.
+     */
+    void printListToSelectFrom(ArrayList objects) {
+        if (objects.isEmpty()) {
+            System.out.println("\nNo items to view.");
+        }
+        for (int i = 1; i <= objects.size(); i++) {
+            System.out.println("\n" + i + ".");
+            System.out.println(objects.get(i - 1));
+        }
+    }
+
     /**
      * Get and set today's date as inputted by the user.
      * @param sc    The scanner for user input
@@ -221,7 +250,7 @@ public class UserInterface {
             System.out.println();
             System.out.println("Previous interviews:");
             ArrayList<Interview> interviews = jobApp.getInterviews();
-            new PrintItems<Interview>().printList(interviews);
+            this.printList(interviews);
         }
     }
 
