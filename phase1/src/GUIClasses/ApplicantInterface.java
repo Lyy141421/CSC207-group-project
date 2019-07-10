@@ -139,7 +139,6 @@ public class ApplicantInterface extends UserInterface {
      * @return the number of options in the menu.
      */
     private int displaySubmitMenuOptions() {
-        System.out.println();
         System.out.println("Select an application option:");
         System.out.println("1 - Apply using a CV and cover letter from your account files");
         System.out.println("2 - Enter a CV and cover letter manually");
@@ -158,15 +157,15 @@ public class ApplicantInterface extends UserInterface {
         int option = this.getMenuOption(sc, numOptions);
         switch (option) {
             case 1:
-                String field = getInputLine(sc, "Enter your field: ");
+                String field = getInputLine(sc, "\nEnter your field: ");
                 this.displayOpenJobPostingsNotYetAppliedTo(today, field, null);
                 return;
             case 2:
-                String companyName = getInputLine(sc, "Enter your company name: ");
+                String companyName = getInputLine(sc, "\nEnter your company name: ");
                 this.displayOpenJobPostingsNotYetAppliedTo(today, null, companyName);
                 return;
             case 3:
-                field = getInputLine(sc, "Enter your field: ");
+                field = getInputLine(sc, "\nEnter your field: ");
                 companyName = getInputLine(sc, "Enter your company name: ");
                 this.displayOpenJobPostingsNotYetAppliedTo(today, field, companyName);
                 return;
@@ -288,6 +287,7 @@ public class ApplicantInterface extends UserInterface {
             case 1:
                 if (applicant.getDocumentManager().getDocuments().isEmpty()) {
                     System.out.println("You have not yet uploaded any files.");
+                    System.out.println();
                     this.submitApplication(sc, today);
                     return;
                 }
@@ -383,12 +383,15 @@ public class ApplicantInterface extends UserInterface {
         this.displayApplicationHistory(true);
         System.out.println("Current job applications:");
         this.displayApplicationHistory(false);
+        long numDaysSinceClose = applicant.getJobApplicationManager().getNumDaysSinceMostRecentCloseDate(today);
         if (applicant.getJobApplicationManager().getJobApplications().isEmpty())
             System.out.println("You have not yet submitted any job applications.");
+        else if (numDaysSinceClose == 0)
+            System.out.println("Your most recent posting closed today.");
+        else if (numDaysSinceClose == 1)
+            System.out.println("It has been 1 day since your most recent posting closed.");
         else
-            System.out.println("It has been " +
-                    applicant.getJobApplicationManager().getNumDaysSinceMostRecentCloseDate(today) +
-                    " days since your most recent application closed.");
+            System.out.println("It has been " + numDaysSinceClose + " days since your most recent posting closed.");
     }
 
     /**
@@ -402,7 +405,7 @@ public class ApplicantInterface extends UserInterface {
         }
         else {
             for (JobApplicationDocument document : documents) {
-                System.out.println(document);
+                System.out.println(document.getContents());
                 System.out.println();
             }
         }

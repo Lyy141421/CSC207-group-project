@@ -173,7 +173,7 @@ public class HRCoordinatorInterface extends UserInterface {
      * @return the number of options.
      */
     private int displayMainMenuOptions() {
-        System.out.println("\nPlease select an option below:");
+        System.out.println("Please select an option below:");
         System.out.println("1 - Add a job posting");
         System.out.println("2 - Update fields for an open job posting");
         System.out.println("3 - View job postings in company");
@@ -567,7 +567,7 @@ public class HRCoordinatorInterface extends UserInterface {
             System.out.println("\nThere are no job postings that have recently closed.");
         } else {
             System.out.println("\nJob postings that have recently closed: ");
-            new PrintItems<JobPosting>().printList(recentlyClosed);
+            new PrintItems<JobPosting>().printListToSelectFrom(recentlyClosed);
         }
         return recentlyClosed;
     }
@@ -603,6 +603,7 @@ public class HRCoordinatorInterface extends UserInterface {
             System.out.println("You may want to consider opening other job postings with these job titles.");
             jobPosting.setNumPositions(0);
             jobPosting.setFilled();
+            jobPosting.getInterviewManager().archiveRejected();
         }
     }
 

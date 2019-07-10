@@ -19,8 +19,6 @@ public class InterviewManager {
     static final int SCHEDULE_INTERVIEWS = 1;
     static final int HIRE_APPLICANTS = 2;
 
-
-
     // === Instance variables ===
     // The job posting for this interview manager
     private JobPosting jobPosting;

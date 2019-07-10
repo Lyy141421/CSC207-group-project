@@ -40,7 +40,7 @@ public class JobPosting implements Storable {
      */
     public JobPosting(String id){
         this.id = Integer.parseInt(id);
-        JobPosting.postingsCreated = Integer.max(this.id, JobPosting.postingsCreated);
+        JobPosting.postingsCreated = Integer.max(this.id, JobPosting.postingsCreated - 1) + 1;
     }
 
     // === Getters ===
@@ -286,7 +286,8 @@ public class JobPosting implements Storable {
      */
     @Override
     public String toString() {
-        String s = "Number of positions: " + this.getNumPositions() + "\n";
+        String s = "Posting ID: " + String.valueOf(id) + "\n";
+        s += "Number of positions: " + this.getNumPositions() + "\n";
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         s += "Post date: " + this.getPostDate().format(dtf) + "\n";
         s += "Close date: " + this.getCloseDate().format(dtf) + "\n";

@@ -111,7 +111,6 @@ public class HRPanel extends JPanel implements ActionListener {
         homePanel.add(manual, c);
 
         JButton logout = new JButton("Logout");
-        logout.addActionListener(this);
 
         c.gridx = 2;
         c.gridy = 2;
@@ -163,9 +162,9 @@ public class HRPanel extends JPanel implements ActionListener {
                     JobPosting selectedJP = currJPs.get(selectedIndex);
                     info.setText(getStatus(selectedJP) + selectedJP.toString());
                     if (scheduleJP.contains(selectedJP)) {
-                        scheduleInterview.setEnabled(true);
-                    } else {
                         scheduleInterview.setEnabled(false);
+                    } else {
+                        scheduleInterview.setEnabled(true);
                     }
                 }
             }
@@ -192,7 +191,7 @@ public class HRPanel extends JPanel implements ActionListener {
         for (JobPosting JP : JPToShow) {
             titles.add(JP.getId() + "-" + JP.getTitle());
         }
-        return titles.toArray(new String[titles.size()]);
+        return (String[]) titles.toArray();
     }
 
     private String getStatus (JobPosting selectedJP) {
@@ -385,7 +384,7 @@ public class HRPanel extends JPanel implements ActionListener {
                 } else {
                     currApps = apps;
                     appTitles.removeAllElements();
-                    addListToModel(appTitles, getAppTitles(apps));
+                    appTitles.addAll(getAppTitles(apps));
                     //todo: might cause issue
                     hireOrRejectButtons.setVisible(false);
                     ((CardLayout) getLayout()).show(getParent(), "APPLICATION");
@@ -402,12 +401,6 @@ public class HRPanel extends JPanel implements ActionListener {
         applicantPanel.add(home, BorderLayout.SOUTH);
 
         return applicantPanel;
-    }
-
-    private void addListToModel(DefaultComboBoxModel<String> model, ArrayList<String> appTitles) {
-        for (String title : appTitles) {
-            model.addElement(title);
-        }
     }
 
 
@@ -531,12 +524,12 @@ public class HRPanel extends JPanel implements ActionListener {
                 JobPosting selectedJP = currJPs.get(selectedIndex);
                 this.currApps = selectedJP.getJobApplications();
                 this.appTitles.removeAllElements();
-                addListToModel(appTitles, getAppTitles(currApps));
+                this.appTitles.addAll(getAppTitles(currApps));
                 c.show(this, "APPLICATION");
                 break;
             case "Logout":
-                ((CardLayout) this.contentPane.getLayout()).show(contentPane, "LOGIN");
                 JobApplicationSystem.mainEnd();
+                ((CardLayout) this.contentPane.getLayout()).show(contentPane, "LOGIN");
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + button.getText());
