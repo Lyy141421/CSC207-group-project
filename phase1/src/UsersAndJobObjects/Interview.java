@@ -157,7 +157,7 @@ public class Interview implements Storable {
         String s = toStringPrelimInfo() + "\n";
         if (this.isComplete()) {
             s += "Interview time: " + this.time.toString() + "\n";
-            s += "Interview notes: \n" + this.getInterviewNotes();
+            s += "Interview notes: \n" + this.getInterviewNotes() + "\n";
             s += "Passed: " + this.isPassed();
         }
         return s;
