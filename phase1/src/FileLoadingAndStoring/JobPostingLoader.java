@@ -21,7 +21,7 @@ public class JobPostingLoader extends GenericLoader<JobPosting> {
         HashMap data = FileSystem.read(JobPosting.FILENAME,  String.valueOf(jobPosting.getId()));
         this.loadPrelimData(data, jobPosting);
         this.loadJobApps(data, jobPosting);
-        if(jobPosting.isClosed(JobApplicationSystem.today)) {
+        if (jobPosting.isClosed(JobApplicationSystem.getToday())) {
             ArrayList<JobApplication> appsInConsideration = this.loadAppsInConsideration(data);
             ArrayList<JobApplication> appsRejected = this.loadAppsRejected(data);
             jobPosting.setInterviewManager(new InterviewManager(jobPosting, appsInConsideration, appsRejected,

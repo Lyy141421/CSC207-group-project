@@ -22,21 +22,21 @@ public class JobApplicationSystem {
 
     // === Instance variables ===
     // The time in Milliseconds for the cyclicalTask to repeat
-    private static final int CYCLE_PERIOD = 86400000;
+//    private static final int CYCLE_PERIOD = 86400000;
     // List of companies registered in the system
     private static ArrayList<Company> companies = new ArrayList<>();
     // The user manager for the system
     private static UserManager userManager = new UserManager();
     // The date this program interprets as today (Defaults to today)
-    public static LocalDate today = LocalDate.now();
+    private static LocalDate today = LocalDate.now();
     // The previous login date for this application
-    public static LocalDate previousLoginDate;
+    private static LocalDate previousLoginDate;
 
     // === Public methods ===
 
     public static void main(String[] args) {
         mainStart();
-        cyclicalTask();
+//        cyclicalTask();
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
@@ -69,18 +69,18 @@ public class JobApplicationSystem {
     }
 
     // === Other methods ===
-    /**
-     A method which triggers once a day from the time it is started.
-     */
-    public static void cyclicalTask(){
-        TimerTask daily_tasks = new TimerTask() {
-            public void run() {
-                applicant30Day();
-            }
-        };
-        Timer timer = new Timer();
-        timer.scheduleAtFixedRate(daily_tasks, 0, CYCLE_PERIOD);
-    }
+//    /**
+//     A method which triggers once a day from the time it is started.
+//     */
+//    public static void cyclicalTask(){
+//        TimerTask daily_tasks = new TimerTask() {
+//            public void run() {
+//                applicant30Day();
+//            }
+//        };
+//        Timer timer = new Timer();
+//        timer.scheduleAtFixedRate(daily_tasks, 0, CYCLE_PERIOD);
+//    }
 
     /**
      * To be called at the start of the program
