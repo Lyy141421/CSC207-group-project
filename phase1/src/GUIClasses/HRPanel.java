@@ -130,8 +130,6 @@ public class HRPanel extends JPanel implements ActionListener {
         JPanel postingPanel = new JPanel(new BorderLayout());
         JPanel buttons = new JPanel(new FlowLayout());
 
-        // could change
-
         JTextArea info = new JTextArea("Job posting status here. Changes according to JobPosting selected in JComboBox");
         info.setEditable(false);
         info.setBorder(new EtchedBorder(EtchedBorder.LOWERED));
@@ -172,6 +170,8 @@ public class HRPanel extends JPanel implements ActionListener {
                 }
             }
         });
+
+        // TODO: when page first loaded, first item is automatically displayed, but not SELECTED for itemListener to pick up.
 
         jobPostings.setAlignmentX(Component.CENTER_ALIGNMENT);
         info.setAlignmentX(Component.CENTER_ALIGNMENT);
