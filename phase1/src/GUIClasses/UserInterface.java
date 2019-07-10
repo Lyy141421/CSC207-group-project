@@ -18,7 +18,6 @@ public class UserInterface {
     // The user who logged in
     User user;
 
-    // === Public methods ===
     // === Constructor ===
     UserInterface(User user) {
         this.user = user;
