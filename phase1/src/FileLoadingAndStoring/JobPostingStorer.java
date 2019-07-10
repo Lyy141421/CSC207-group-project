@@ -1,5 +1,6 @@
 package FileLoadingAndStoring;
 
+import Main.JobApplicationSystem;
 import UsersAndJobObjects.Company;
 import UsersAndJobObjects.JobApplication;
 import UsersAndJobObjects.JobPosting;
@@ -19,9 +20,11 @@ public class JobPostingStorer extends GenericStorer<JobPosting> {
         this.storePrelimData(jobPosting, data);
         this.storeCompany(jobPosting, data);
         this.storeAllApplications(jobPosting, data);
-        this.storeApplicationsInConsideration(jobPosting, data);
-        this.storeApplicationsRejected(jobPosting, data);
-        this.storeCurrentRound(jobPosting, data);
+        if(jobPosting.isClosed(JobApplicationSystem.today)) {
+            this.storeApplicationsInConsideration(jobPosting, data);
+            this.storeApplicationsRejected(jobPosting, data);
+            this.storeCurrentRound(jobPosting, data);
+        }
         FileSystem.write(JobPosting.FILENAME, String.valueOf(jobPosting.getId()), data);
     }
 
