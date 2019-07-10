@@ -118,7 +118,7 @@ public class InterviewerInterface extends UserInterface {
         System.out.println("Please select an option below:");
         System.out.println("1 - View schedule");
         System.out.println("2 - View job applications for all interviewees");
-        System.out.println("3 - Search specific job application");
+        System.out.println("3 - Find specific job application for interviewee");
         System.out.println("4 - View all previous interviews for specific job application");
         System.out.println("5 - View a specific interview");
         System.out.println("6 - Complete an interview");

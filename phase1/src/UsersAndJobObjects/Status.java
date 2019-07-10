@@ -50,6 +50,13 @@ public class Status {
     }
 
     // === Other methods ===
+
+
+    @Override
+    public String toString() {
+        return descriptions.get(value);
+    }
+
     boolean isUnderReview () {
         return this.value == Status.UNDER_REVIEW;
     }

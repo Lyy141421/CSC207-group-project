@@ -195,6 +195,7 @@ public class UserInterface {
         int option = this.getInteger(sc, "Enter value: ");
         while (option < 1 || option > numOptions) {
             System.out.println("Invalid input. Please try again.");
+            System.out.println();
             option = this.getInteger(sc, "Enter value: ");
         }
         return option;
@@ -303,6 +304,7 @@ public class UserInterface {
             return input;
         else {
             System.out.println("Invalid input. Please enter again.");
+            System.out.println();
             return this.getValidEmail(sc, message);
         }
     }

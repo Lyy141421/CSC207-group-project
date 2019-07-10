@@ -567,7 +567,7 @@ public class HRCoordinatorInterface extends UserInterface {
             System.out.println("\nThere are no job postings that have recently closed.");
         } else {
             System.out.println("\nJob postings that have recently closed: ");
-            new PrintItems<JobPosting>().printList(recentlyClosed);
+            new PrintItems<JobPosting>().printListToSelectFrom(recentlyClosed);
         }
         return recentlyClosed;
     }
