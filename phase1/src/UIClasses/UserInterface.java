@@ -1,4 +1,4 @@
-package GUIClasses;
+package UIClasses;
 
 import Main.JobApplicationSystem;
 import UsersAndJobObjects.*;
@@ -41,13 +41,48 @@ public class UserInterface {
         jobApplicationSystem.applicant30Day();
         jobApplicationSystem.updateAllInterviewRounds();
         User user = this.login(sc, jobApplicationSystem);
-        UserInterface userInterface = new InterfaceFactory().create(user);
+        UserInterface userInterface;
+        if (user instanceof Applicant)
+            userInterface = new ApplicantInterface(user);
+        else if (user instanceof Interviewer)
+            userInterface = new InterviewerInterface(user);
+        else
+            userInterface = new HRCoordinatorInterface(user);
         userInterface.run(sc, jobApplicationSystem);
         System.out.println("\nThank you for using GET A JOB. Have a wonderful day!");
         this.closeProgram(sc, jobApplicationSystem);
     }
 
     // === Other methods ===
+
+    /**
+     * Prints a list of objects.
+     *
+     * @param objects The objects to be printed.
+     */
+    void printList(ArrayList objects) {
+        if (objects.isEmpty()) {
+            System.out.println("\nNo items to view.");
+        }
+        for (int i = 0; i < objects.size(); i++)
+            System.out.println("\n" + objects.get(i));
+    }
+
+    /**
+     * Prints a numbered list of objects.
+     *
+     * @param objects The objects to be printed.
+     */
+    void printListToSelectFrom(ArrayList objects) {
+        if (objects.isEmpty()) {
+            System.out.println("\nNo items to view.");
+        }
+        for (int i = 1; i <= objects.size(); i++) {
+            System.out.println("\n" + i + ".");
+            System.out.println(objects.get(i - 1));
+        }
+    }
+
     /**
      * Get and set today's date as inputted by the user.
      * @param sc    The scanner for user input
@@ -215,7 +250,7 @@ public class UserInterface {
             System.out.println();
             System.out.println("Previous interviews:");
             ArrayList<Interview> interviews = jobApp.getInterviews();
-            new PrintItems<Interview>().printList(interviews);
+            this.printList(interviews);
         }
     }
 

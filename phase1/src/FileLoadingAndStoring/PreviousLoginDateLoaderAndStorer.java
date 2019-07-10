@@ -10,6 +10,7 @@ class PreviousLoginDateLoaderAndStorer {
 
     /**
      * Loads the previous login date saved in "PreviousLoginDate.txt' in memory.
+     * @param jobApplicationSystem The job application system being used.
      */
     void loadPreviousLoginDate(JobApplicationSystem jobApplicationSystem) {
         try (BufferedReader fileReader = new BufferedReader(new FileReader("phase1/files/PreviousLoginDate.txt"))) {
@@ -30,6 +31,7 @@ class PreviousLoginDateLoaderAndStorer {
 
     /**
      * Stores the previous login date in 'PreviousLoginDate.txt'.
+     * @param jobApplicationSystem The job application system being used.
      *
      */
     void storePreviousLoginDate(JobApplicationSystem jobApplicationSystem) {

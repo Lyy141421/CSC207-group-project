@@ -3,6 +3,9 @@ package FileLoadingAndStoring;
 import Main.JobApplicationSystem;
 
 abstract class GenericStorer<T> {
+    /**
+     * Stores the object in the appropriate file.
+     */
 
     /**
      * Store this object.

@@ -1,4 +1,4 @@
-package GUIClasses;
+package UIClasses;
 
 import Main.JobApplicationSystem;
 import UsersAndJobObjects.*;
@@ -118,7 +118,7 @@ class HRCoordinatorJobAppsInterface extends HRCoordinatorInterface {
         ArrayList<JobApplication> jobAppsInConsideration = jobPosting.getInterviewManager().
                 getApplicationsInConsideration();
         System.out.println("Applications in consideration: ");
-        new PrintItems<JobApplication>().printList(jobAppsInConsideration);
+        this.printList(jobAppsInConsideration);
     }
 
     /**
@@ -129,7 +129,7 @@ class HRCoordinatorJobAppsInterface extends HRCoordinatorInterface {
     private void displayAppsRejected(JobPosting jobPosting) {
         ArrayList<JobApplication> jobAppsRejected = jobPosting.getInterviewManager().getApplicationsRejected();
         System.out.println("Applications rejected: ");
-        new PrintItems<JobApplication>().printList(jobAppsRejected);
+        this.printList(jobAppsRejected);
     }
 
     /**
@@ -140,7 +140,7 @@ class HRCoordinatorJobAppsInterface extends HRCoordinatorInterface {
     private void displayRejectedEmailList(JobPosting jobPosting) {
         ArrayList<String> emailListRejected = jobPosting.getEmailsForRejectList();
         System.out.println("Emails of rejected applicants: ");
-        new PrintItems<String>().printList(emailListRejected);
+        this.printList(emailListRejected);
     }
 
     /**
@@ -151,6 +151,6 @@ class HRCoordinatorJobAppsInterface extends HRCoordinatorInterface {
     private void displayAllApps(JobPosting jobPosting) {
         ArrayList<JobApplication> jobApps = jobPosting.getJobApplications();
         System.out.println("All applications: ");
-        new PrintItems<JobApplication>().printList(jobApps);
+        this.printList(jobApps);
     }
 }

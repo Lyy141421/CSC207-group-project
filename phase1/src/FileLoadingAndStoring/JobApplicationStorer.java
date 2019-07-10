@@ -13,6 +13,7 @@ public class JobApplicationStorer extends GenericStorer<JobApplication> {
 
     /**
      * Stores the job application.
+     * @param jobApplicationSystem The job application system being used.
      * @param jobApplication    The job application to be stored.
      */
     void storeOne(JobApplicationSystem jobApplicationSystem, JobApplication jobApplication) {
@@ -25,6 +26,12 @@ public class JobApplicationStorer extends GenericStorer<JobApplication> {
         FileSystem.write(JobApplication.FILENAME, String.valueOf(jobApplication.getId()), data);
     }
 
+    /**
+     * Stores the preliminary information for this job application.
+     *
+     * @param jobApplication The job application being stored.
+     * @param data           The job application's data.
+     */
     private void storePrelimInfo(JobApplication jobApplication, HashMap<String, Object> data) {
         if(!(jobApplication.getCV() == null)){
             data.put("CV", jobApplication.getCV().getId());
@@ -34,6 +41,11 @@ public class JobApplicationStorer extends GenericStorer<JobApplication> {
         data.put("ApplicationDate", jobApplication.getApplicationDate());
     }
 
+    /**
+     * Stores the preliminary information for this job application.
+     * @param jobApplication    The job application being stored.
+     * @param data  The job application's data.
+     */
     private void storeApplicant(JobApplicationSystem jobApplicationSystem, JobApplication jobApplication, HashMap<String, Object> data) {
         data.put("Applicant", new ArrayList() {{
             add(Applicant.FILENAME);
@@ -42,6 +54,11 @@ public class JobApplicationStorer extends GenericStorer<JobApplication> {
         }});
     }
 
+    /**
+     * Stores the preliminary information for this job application.
+     * @param jobApplication    The job application being stored.
+     * @param data  The job application's data.
+     */
     private void storeJobPosting(JobApplicationSystem jobApplicationSystem, JobApplication jobApplication, HashMap<String, Object> data) {
         data.put("JobPosting", new ArrayList() {{
             add(JobPosting.FILENAME);
@@ -50,6 +67,11 @@ public class JobApplicationStorer extends GenericStorer<JobApplication> {
         }});
     }
 
+    /**
+     * Stores the preliminary information for this job application.
+     * @param jobApplication    The job application being stored.
+     * @param data  The job application's data.
+     */
     private void storeInterviews(JobApplicationSystem jobApplicationSystem, JobApplication jobApplication, HashMap<String, Object> data) {
         ArrayList interviews = new ArrayList();
         for (Interview x : jobApplication.getInterviews()) {

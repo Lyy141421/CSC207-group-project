@@ -23,7 +23,6 @@ public class LoaderManager {
     private String filename;
 
     // === Constructor ===
-
     public LoaderManager(GenericLoader loader, Class clazz, String filename){
         this.loader = loader;
         this.clazz = clazz;

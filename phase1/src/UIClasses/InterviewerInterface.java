@@ -1,4 +1,4 @@
-package GUIClasses;
+package UIClasses;
 
 import Main.JobApplicationSystem;
 import Miscellaneous.ExitException;
@@ -84,7 +84,7 @@ public class InterviewerInterface extends UserInterface {
             case 2: // View job applications of all interviewees
                 ArrayList<JobApplication> jobApps = this.interviewer.getListOfIntervieweeJobApplications();
                 System.out.println("Your interviewees' applications: ");
-                new PrintItems<JobApplication>().printList(jobApps);
+                this.printList(jobApps);
                 break;
             case 3: // Search specific job application
                 this.getJobApplication(sc);

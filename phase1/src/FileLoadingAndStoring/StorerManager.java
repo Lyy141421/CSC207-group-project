@@ -19,6 +19,7 @@ public class StorerManager {
     //List of all objects to be saved
     private ArrayList obj_list;
 
+    // === Public methods ===
     // === Constructor ===
 
     public StorerManager(GenericStorer storer, Class clazz, ArrayList list){
@@ -41,25 +42,6 @@ public class StorerManager {
     }
 
     /**
-     * Adds and object to stored
-     *
-     * @param obj the object to be added
-     */
-    private static void addStored(Object obj){
-        stored.add(obj);
-    }
-
-    /**
-     * Checks if the object has been stored
-     *
-     * @param obj - the object being checked against
-     * @return boolean on weather or not it has been stored
-     */
-    private static boolean isStored(Object obj){
-        return stored.contains(obj);
-    }
-
-    /**
      * Clears the stored map
      */
     public static void flushStored(){
@@ -67,6 +49,8 @@ public class StorerManager {
         stored = new ArrayList<>();
     }
 
+    // ============================================================================================================== //
+    // === Package-private methods ===
     /**
      * Substores any items which have been called in the containing object being stored
      * @param jobApplicationSystem The job application system being used.
@@ -91,5 +75,28 @@ public class StorerManager {
             storer.storeOne(jobApplicationSystem, x);
         }
     }
+
+    // ============================================================================================================== //
+    // === Private methods ===
+
+    /**
+     * Adds and object to stored
+     *
+     * @param obj the object to be added
+     */
+    private static void addStored(Object obj) {
+        stored.add(obj);
+    }
+
+    /**
+     * Checks if the object has been stored
+     *
+     * @param obj - the object being checked against
+     * @return boolean on weather or not it has been stored
+     */
+    private static boolean isStored(Object obj) {
+        return stored.contains(obj);
+    }
+
 
 }

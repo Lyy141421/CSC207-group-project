@@ -3,6 +3,9 @@ package FileLoadingAndStoring;
 import Main.JobApplicationSystem;
 
 abstract class GenericLoader<T> {
+    /**
+     * Loads an object input memory.
+     */
 
     /**
      * Loads one object of this type into memory.

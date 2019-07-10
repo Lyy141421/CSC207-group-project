@@ -11,6 +11,8 @@ public class JobApplicationLoader extends GenericLoader<JobApplication> {
 
     /**
      * Load this job application.
+     * @param jobApplicationSystem The job application system being used.
+     * @param jobApplication The job application being loaded.
      */
     void loadOne(JobApplicationSystem jobApplicationSystem, JobApplication jobApplication) {
         HashMap data = FileSystem.read(JobApplication.FILENAME, String.valueOf(jobApplication.getId()));
@@ -25,6 +27,7 @@ public class JobApplicationLoader extends GenericLoader<JobApplication> {
     /**
      * Load the preliminary data for this job application.
      *
+     * @param jobApplication The job application being loaded.
      * @param data The data for this job application.
      */
     private void loadPrelimData(JobApplication jobApplication, HashMap data) {
@@ -35,6 +38,8 @@ public class JobApplicationLoader extends GenericLoader<JobApplication> {
     /**
      * Load the application for this job application.
      *
+     * @param jobApplicationSystem The job application system being used.
+     * @param jobApplication The job application being loaded.
      * @param data The data for this job application.
      */
     private void loadApplicant(JobApplicationSystem jobApplicationSystem, JobApplication jobApplication, HashMap data) {
@@ -46,6 +51,8 @@ public class JobApplicationLoader extends GenericLoader<JobApplication> {
     /**
      * Load the application for this job application.
      *
+     * @param jobApplicationSystem The job application system being used.
+     * @param jobApplication The job application being loaded.
      * @param data The data for this job application.
      */
     private void loadPosting(JobApplicationSystem jobApplicationSystem, JobApplication jobApplication, HashMap data) {

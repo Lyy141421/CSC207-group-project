@@ -10,6 +10,7 @@ public class CompanyStorer extends GenericStorer<Company> {
 
     /**
      * Stores the company.
+     * @param jobApplicationSystem The job application system being used.
      * @param company   The company to be stored.
      */
     void storeOne(JobApplicationSystem jobApplicationSystem, Company company) {
@@ -21,6 +22,13 @@ public class CompanyStorer extends GenericStorer<Company> {
         FileSystem.write(Company.FILENAME, company.getName(), data);
     }
 
+    /**
+     * Stores the HR Coordinators for this company.
+     *
+     * @param jobApplicationSystem The job application system being used.
+     * @param company              The company to be stored.
+     * @param data                 The company's data.
+     */
     private void storeHRCoordinators(JobApplicationSystem jobApplicationSystem, Company company, HashMap<String, Object> data) {
         ArrayList<ArrayList<String>> hrcoords = new ArrayList<>();
         for(HRCoordinator x : company.getHrCoordinators()){
@@ -33,6 +41,12 @@ public class CompanyStorer extends GenericStorer<Company> {
         data.put("hrCoordinators", hrcoords);
     }
 
+    /**
+     * Stores the field to interviewers map for this company.
+     * @param jobApplicationSystem  The job application system being used.
+     * @param company   The company to be stored.
+     * @param data  The company's data.
+     */
     private void storeFieldToInterviewers(JobApplicationSystem jobApplicationSystem, Company company,
                                           HashMap<String, Object> data) {
         ArrayList fields = new ArrayList();
@@ -50,6 +64,12 @@ public class CompanyStorer extends GenericStorer<Company> {
         data.put("fields", fields);
     }
 
+    /**
+     * Stores the job postings for this company.
+     * @param jobApplicationSystem  The job application system being used.
+     * @param company   The company to be stored.
+     * @param data  The company's data.
+     */
     private void storeJobPostings(JobApplicationSystem jobApplicationSystem, Company company, HashMap<String, Object> data) {
         ArrayList<ArrayList<String>> jobpostings = new ArrayList<>();
         for(JobPosting x : company.getJobPostingManager().getJobPostings()){

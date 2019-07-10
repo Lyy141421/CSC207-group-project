@@ -10,6 +10,7 @@ public class HRCoordinatorStorer extends GenericStorer<HRCoordinator> {
 
     /**
      * Stores the HR Coordinator.
+     * @param jobApplicationSystem The job application system being used.
      * @param hrCoordinator     The HR Coordinator to be stored.
      */
     void storeOne(JobApplicationSystem jobApplicationSystem, HRCoordinator hrCoordinator) {
