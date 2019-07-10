@@ -20,7 +20,7 @@ public class UserInterface {
 
     // === Public methods ===
     // === Constructor ===
-    public UserInterface(User user) {
+    UserInterface(User user) {
         this.user = user;
     }
 
@@ -66,7 +66,7 @@ public class UserInterface {
             date = this.getDate(sc, jobApplicationSystem.getPreviousLoginDate(),
                     "Please enter today's date (yyyy-mm-dd): ");
         }
-        jobApplicationSystem.setPreviousLoginDate(date);
+        jobApplicationSystem.setToday(date);
     }
 
     // ============================================================================================================== //
@@ -421,14 +421,16 @@ public class UserInterface {
      * Close the program upon user input.
      *
      * @param sc                   The scanner for user input.
-     * @param jobApplicationSystem The job application system being used.
+     * @param jobApplicationSystem  The job application system being used.
      */
     private void closeProgram(Scanner sc, JobApplicationSystem jobApplicationSystem) {
         String input = this.getInputToken(sc, "\nEnter '-1' if you would like to stop running the system or " +
                 "any other key (except 'Enter') to keep running: ");
         sc.nextLine();
         if (input.equals("-1")) {
+            jobApplicationSystem.mainEnd();
             System.exit(0);
         }
+        System.out.println();
     }
 }

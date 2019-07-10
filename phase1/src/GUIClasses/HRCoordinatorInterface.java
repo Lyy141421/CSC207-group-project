@@ -60,7 +60,7 @@ public class HRCoordinatorInterface extends UserInterface {
      * @return the number of options.
      */
     private int displayMainMenuOptions() {
-        System.out.println("Please select an option below:");
+        System.out.println("\nPlease select an option below:");
         System.out.println("1 - Add a job posting");
         System.out.println("2 - Update fields for an open job posting");
         System.out.println("3 - View job postings in company");

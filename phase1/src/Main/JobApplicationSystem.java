@@ -34,7 +34,6 @@ public class JobApplicationSystem {
         while (true) {
             UI.getTodaysDateValid(sc, JAS);
             UI.run(sc, JAS);
-            JAS.mainEnd();
         }
     }
 
@@ -59,6 +58,11 @@ public class JobApplicationSystem {
     }
 
     // === Setters ===
+
+    public void setToday(LocalDate new_date) {
+        this.today = new_date;
+    }
+
     public void setPreviousLoginDate(LocalDate date) {
         this.previousLoginDate = date;
     }
@@ -147,14 +151,6 @@ public class JobApplicationSystem {
         for (Object app : this.userManager.getAllApplicants()) {
             ((Applicant) app).removeFilesFromAccount(today);
         }
-    }
-
-    // ============================================================================================================== //
-    // === Package-private methods ===
-    // === Setter ===
-
-    void setToday(LocalDate new_date) {
-        this.today = new_date;
     }
 
 }

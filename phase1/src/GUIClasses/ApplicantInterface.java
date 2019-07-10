@@ -254,21 +254,16 @@ public class ApplicantInterface extends UserInterface {
      */
     private JobPosting getPostingForJobApplication(Scanner sc, JobApplicationSystem jobApplicationSystem,
                                                    LocalDate today) {
-        String companyName = getInputLine(sc, "Enter the name of the company you wish to apply to: ");
+        String companyName = getInputLine(sc, "\nEnter the name of the company you wish to apply to: ");
         Company company = jobApplicationSystem.getCompany(companyName);
-        while (company == null) {
-            System.out.println("No company was found matching name \"" + companyName + "\".");
-            System.out.println();
-            companyName = getInputLine(sc, "Enter the name of the company you wish to apply to: ");
-            company = jobApplicationSystem.getCompany(companyName);
+        if (company == null) {
+            System.out.println("No company was found matching name \"" + companyName + "\n.");
+            return null;
         }
         int postingId = getInteger(sc, "Enter the id of the posting you wish to apply for: ");
         JobPosting posting = company.getJobPostingManager().getJobPosting(postingId);
-        while (posting == null || posting.getCloseDate().isBefore(today)) {
-            System.out.println("No open posting was found matching id " + postingId + ".");
-            System.out.println();
-            postingId = getInteger(sc, "Enter the id of the posting you wish to apply for: ");
-            posting = company.getJobPostingManager().getJobPosting(postingId);
+        if (posting == null || posting.getCloseDate().isBefore(today)) {
+            System.out.println("\nNo open posting was found matching id " + postingId + ".");
         }
         return posting;
     }
@@ -282,9 +277,11 @@ public class ApplicantInterface extends UserInterface {
      */
     private void submitApplication(Scanner sc, JobApplicationSystem jobApplicationSystem, LocalDate today) {
         JobPosting posting = this.getPostingForJobApplication(sc, jobApplicationSystem, today);
-        System.out.println();
+        if (posting == null) {
+            return;
+        }
         if (this.applicant.hasAppliedTo(posting)) {
-            System.out.println("You have already submitted an application for this job posting.");
+            System.out.println("\nYou have already submitted an application for this job posting.");
             return;
         }
         int numOptions = this.displaySubmitMenuOptions();
