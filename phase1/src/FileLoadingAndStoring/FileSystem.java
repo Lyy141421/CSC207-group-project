@@ -69,7 +69,7 @@ public class FileSystem {
         JSONObject jobj = FileToJson(filename);
         try {
             ((JSONObject)jobj.get("data")).put(id, data);
-            PrintWriter pw = new PrintWriter("phase1/json/" + filename + ".json");
+            PrintWriter pw = new PrintWriter("phase1/files/" + filename + ".json");
             pw.write(jobj.toString());
             pw.close();
         } catch (JSONException | FileNotFoundException e) {
@@ -87,7 +87,7 @@ public class FileSystem {
         Object obj = null;
         JSONObject jobj = null;
         try {
-            obj = new JSONParser().parse(new FileReader("phase1/json/" + filename + ".json"));
+            obj = new JSONParser().parse(new FileReader("phase1/files/" + filename + ".json"));
             jobj = new JSONObject(obj.toString());
         } catch (IOException | ParseException | JSONException e) {
             jobj = new JSONObject();
@@ -106,7 +106,7 @@ public class FileSystem {
         JSONObject jobj = FileToJson(filename);
         jobj.remove(id);
         try {
-            PrintWriter pw = new PrintWriter("phase1/json/" + filename + ".json");
+            PrintWriter pw = new PrintWriter("phase1/files/" + filename + ".json");
             pw.write(jobj.toString());
             pw.close();
         } catch (FileNotFoundException e) {

@@ -12,14 +12,14 @@ class PreviousLoginDateLoaderAndStorer {
      * Loads the previous login date saved in "PreviousLoginDate.txt' in memory.
      */
     void loadPreviousLoginDate(JobApplicationSystem jobApplicationSystem) {
-        try (BufferedReader fileReader = new BufferedReader(new FileReader("phase1/json/PreviousLoginDate.txt"))) {
+        try (BufferedReader fileReader = new BufferedReader(new FileReader("phase1/files/PreviousLoginDate.txt"))) {
             String dateString = fileReader.readLine().trim();
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             LocalDate date = LocalDate.parse(dateString, dtf);
             jobApplicationSystem.setPreviousLoginDate(date);
         } catch (FileNotFoundException fnfe) {
             try {
-                new FileWriter("phase1/json/PreviousLoginDate.txt");
+                new FileWriter("phase1/files/PreviousLoginDate.txt");
             } catch (IOException ioe) {
                 ioe.printStackTrace();
             }
