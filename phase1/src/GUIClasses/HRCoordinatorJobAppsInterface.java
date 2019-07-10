@@ -1,9 +1,7 @@
 package GUIClasses;
 
 import Main.JobApplicationSystem;
-import UsersAndJobObjects.Applicant;
-import UsersAndJobObjects.JobApplication;
-import UsersAndJobObjects.JobPosting;
+import UsersAndJobObjects.*;
 
 import java.util.ArrayList;
 import java.util.Scanner;
