@@ -166,7 +166,7 @@ public class JobApplicationSystem {
 
     // ============================================================================================================== //
     // === Private methods ===
-    private static void applicant30Day(){
+    public static void applicant30Day() {
         for(Object app : userManager.getAllApplicants()){
           ((Applicant)app).removeFilesFromAccount(today);
         }
