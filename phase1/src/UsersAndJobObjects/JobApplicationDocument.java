@@ -6,7 +6,7 @@ public class JobApplicationDocument implements Storable {
 
     // === Class variables ===
     // The total number of job application documents
-    private static int total;
+    private static int totalNumOfDocuments;
 
     // === Instance variables ===
     // The ID of this document
@@ -16,15 +16,15 @@ public class JobApplicationDocument implements Storable {
 
     // === Constructor ===
     public JobApplicationDocument(String contents) {
-        this.ID = String.valueOf(JobApplicationDocument.total);
+        JobApplicationDocument.totalNumOfDocuments++;
+        this.ID = String.valueOf(JobApplicationDocument.totalNumOfDocuments);
         this.contents = contents;
-        JobApplicationDocument.total++;
     }
 
     public JobApplicationDocument(String title, String contents) {
+        JobApplicationDocument.totalNumOfDocuments++;
         this.ID = title;
         this.contents = contents;
-        JobApplicationDocument.total++;
     }
 
     // === Getters ===
