@@ -165,7 +165,7 @@ class HRCoordinatorJobPostingsInterface extends UserInterface {
      * @param today Today's date.
      */
     void addJobPosting(Scanner sc, LocalDate today) {
-        System.out.println("\nComplete the following categories for adding a job posting as they appear.");
+        System.out.println("\n\nComplete the following categories for adding a job posting as they appear.");
         ArrayList<Object> fields = this.getFieldsForJobPosting(sc, today, false);
         JobPosting jobPosting = this.HRC.addJobPosting((String) fields.get(0), (String) fields.get(1),
                 (String) fields.get(2), (String) fields.get(3), (Integer) fields.get(4), today,

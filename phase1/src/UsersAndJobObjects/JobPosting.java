@@ -151,7 +151,7 @@ public class JobPosting implements Storable {
                 } else if (i == 3) {
                     this.setRequirements((String.valueOf(fields.get(i))));
                 }
-            } else if (fields.get(i) instanceof Integer && !fields.get(i).equals(skipFieldKey)) {
+            } else if (fields.get(i) instanceof Integer && (Integer) fields.get(i) > skipFieldKey) {
                 this.setNumPositions((Integer) fields.get(i));
             } else if (fields.get(i) instanceof LocalDate && !((LocalDate) fields.get(i)).isEqual(skipDateKey)) {
                 this.setCloseDate((LocalDate) fields.get(i));
