@@ -41,13 +41,7 @@ public class UserInterface {
         jobApplicationSystem.applicant30Day();
         jobApplicationSystem.updateAllInterviewRounds();
         User user = this.login(sc, jobApplicationSystem);
-        UserInterface userInterface;
-        if (user instanceof Applicant)
-            userInterface = new ApplicantInterface(user);
-        else if (user instanceof Interviewer)
-            userInterface = new InterviewerInterface(user);
-        else
-            userInterface = new HRCoordinatorInterface(user);
+        UserInterface userInterface = new InterfaceFactory().create(user);
         userInterface.run(sc, jobApplicationSystem);
         System.out.println("\nThank you for using GET A JOB. Have a wonderful day!");
         this.closeProgram(sc, jobApplicationSystem);
@@ -176,6 +170,22 @@ public class UserInterface {
             System.out.println();
             return this.getInteger(sc, message);
         }
+    }
+
+    /**
+     * Get the positive integer inputted by the user.
+     *
+     * @param sc      The scanner for user input.
+     * @param message The prompt that is displayed.
+     * @return the integer inputted by the user.
+     */
+    int getPositiveInteger(Scanner sc, String message) {
+        int input = this.getInteger(sc, message);
+        if (input < 1) {
+            System.out.println("Invalid input. Please enter a number > 0.");
+            this.getPositiveInteger(sc, message);
+        }
+        return input;
     }
 
     /**

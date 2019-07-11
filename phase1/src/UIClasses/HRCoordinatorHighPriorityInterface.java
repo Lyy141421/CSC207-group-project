@@ -8,12 +8,13 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-class HRCoordinatorHighPriorityInterface extends HRCoordinatorInterface {
+class HRCoordinatorHighPriorityInterface extends UserInterface {
     /**
      * Interface for the HRCoordinator high priority sub menu.
      */
 
     // === Instance variable ===
+    // The HR Coordinator who logged in
     private HRCoordinator HRC;
 
     // === Constructor ===

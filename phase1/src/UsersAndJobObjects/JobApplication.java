@@ -196,7 +196,7 @@ public class JobApplication implements Storable{
      */
     public String toStringForApplicant() {
         String s = "Application ID: " + this.getId() + "\n";
-        s += "Job Posting: " + this.getJobPosting().getTitle() + " -- ID: " + this.getJobPosting().getId();
+        s += "Job Posting: " + this.getJobPosting().getTitle() + " -- ID: " + this.getJobPosting().getId() + "\n";
         s += "Status: " + this.getStatus().getDescription() + "\n";
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         s += "Application date: " + this.getApplicationDate().format(dtf);
