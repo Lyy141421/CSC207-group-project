@@ -246,7 +246,7 @@ public class InterviewerInterface extends UserInterface {
         Interview interview = this.viewSpecificInterview(sc);
         if (interview != null && !interview.isComplete()) {
             if (interview.getTime().getDate().isAfter(today)) {
-                System.out.println("\nThe interview is scheduled for after today");
+                System.out.println("\nThe interview is scheduled for after today.");
                 return;
             }
             System.out.println();

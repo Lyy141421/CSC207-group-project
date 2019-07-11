@@ -31,11 +31,12 @@ These are some key design decisions we made:
     - This is done automatically in the system when the HR Coordinator selects the option to 'set-up interviews'
     such that the interviewer assigned has the least number of interviews scheduled at the time of set-up
 - Interviewers schedule the date and time for the interview --- the applicant has no choice
-- Interviewers can log into the application and fill out the necessary information to pass/fail an applicant after the
-    interview date
+- Interviewers can log into the application and fill out the necessary information to pass/fail an applicant on and
+    after the interview date (the time slot is assumed to be followed if on the day of)
 - If the number of applicants in consideration is less than the number of positions, those in consideration are
     immediately hired and the job posting closes permanently
 - If no applications are submitted for a job posting, the HR Coordinator can update its fields, including the close date
     if they want to. Or else, the job posting is removed from the system.
     - This is the only case when job postings are removed from the system. Everything else remains in the system and
     can be accessed by the HR Coordinator.
+-

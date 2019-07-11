@@ -363,8 +363,10 @@ public class UserInterface {
             company = jobApplicationSystem.createCompany(companyName);
         }
         System.out.println("Sign-up successful!");
-        return jobApplicationSystem.getUserManager().createHRCoordinator(username, password, legalName, email, company,
+        HRCoordinator HRC = jobApplicationSystem.getUserManager().createHRCoordinator(username, password, legalName, email, company,
                 jobApplicationSystem.getToday());
+        company.addHRCoordinator(HRC);
+        return HRC;
     }
 
     /**
