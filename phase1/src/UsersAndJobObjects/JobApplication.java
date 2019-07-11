@@ -221,16 +221,16 @@ public class JobApplication implements Storable{
 
     // === Constructors ===
     JobApplication(LocalDate applicationDate) {
+        JobApplication.totalNumOfApplications++;
         this.ID = JobApplication.totalNumOfApplications;
         this.applicationDate = applicationDate;
-        JobApplication.totalNumOfApplications++;
     }
 
     JobApplication(JobPosting jobPosting, LocalDate applicationDate) {
+        JobApplication.totalNumOfApplications++;
         this.ID = JobApplication.totalNumOfApplications;
         this.jobPosting = jobPosting;
         this.applicationDate = applicationDate;
-        JobApplication.totalNumOfApplications++;
     }
 
     // ============================================================================================================== //
