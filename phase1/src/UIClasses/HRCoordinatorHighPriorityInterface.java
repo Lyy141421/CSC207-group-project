@@ -128,7 +128,7 @@ class HRCoordinatorHighPriorityInterface extends UserInterface {
      * @return the job posting selected.
      */
     private JobPosting selectJobPostingForPhoneInterview(Scanner sc, ArrayList<JobPosting> jobPostings) {
-        System.out.println("Enter the job posting number for which you would like to select phone interview candidates.");
+        System.out.println("\nEnter the job posting number for which you would like to select phone interview candidates.");
         int option = this.getMenuOption(sc, jobPostings.size());
         return jobPostings.get(option - 1);
     }
@@ -169,14 +169,14 @@ class HRCoordinatorHighPriorityInterface extends UserInterface {
         Company company = jobPosting.getCompany();
         String field = jobPosting.getField();
         if (!company.hasInterviewerForField(field)) {
-            System.out.println("Interviews cannot be set-up for this job posting as there are no interviewers for this field.");
+            System.out.println("\nInterviews cannot be set-up for this job posting as there are no interviewers for this field.");
         } else {
             ArrayList<JobApplication> jobApps = jobPosting.getInterviewManager().getApplicationsInConsideration();
             if (jobApps.isEmpty()) {
-                System.out.println("No interviews to schedule.");
+                System.out.println("\nNo interviews to schedule.");
                 return;
             }
-            System.out.println("The following job applications will have interviews set-up automatically.");
+            System.out.println("\nThe following job applications will have interviews set-up automatically.");
             for (JobApplication jobApp : jobApps) {
                 jobApp.setUpInterview(this.HRC, jobApp.getStatus().getValue() + 1);
                 System.out.println("\n" + jobApp);
@@ -223,7 +223,7 @@ class HRCoordinatorHighPriorityInterface extends UserInterface {
      */
     private void printMessagesForHiring(int numberOfOpenPositions) {
         if (numberOfOpenPositions == 0) {
-            System.out.println("The number of final candidates equals the number of positions for this job.");
+            System.out.println("\nThe number of final candidates equals the number of positions for this job.");
             System.out.println("These candidates will be hired automatically and the job posting will be set as filled.");
         } else {
             System.out.println("The number of final candidates is less than the number of positions for this job.");
@@ -246,7 +246,7 @@ class HRCoordinatorHighPriorityInterface extends UserInterface {
     private ArrayList<JobApplication> selectApplicationsForHiring(Scanner sc, JobPosting jobPosting,
                                                                   ArrayList<JobApplication> finalCandidates) {
         ArrayList<JobApplication> hires = new ArrayList<>();
-        System.out.println("The number of applications in consideration exceeds the number of positions available.");
+        System.out.println("\nThe number of applications in consideration exceeds the number of positions available.");
         System.out.println("The final candidates' applications: ");
         this.printListToSelectFrom(finalCandidates);
         int numPositions = jobPosting.getNumPositions();

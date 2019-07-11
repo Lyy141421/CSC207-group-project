@@ -62,6 +62,16 @@ public class Company implements Storable {
     }
 
     // === Other methods ===
+
+    /**
+     * Adds the HR Coordinator to the company.
+     *
+     * @param hrCoordinator The HR Coordinator to be added.
+     */
+    public void addHRCoordinator(HRCoordinator hrCoordinator) {
+        this.hrCoordinators.add(hrCoordinator);
+    }
+
     /**
      * Check whether this job field has interviewers.
      * @param field The field in question.

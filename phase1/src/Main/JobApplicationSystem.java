@@ -1,6 +1,7 @@
 package Main;
 
 import FileLoadingAndStoring.*;
+import Miscellaneous.ExitException;
 import UIClasses.UserInterface;
 import UsersAndJobObjects.*;
 import Managers.UserManager;
@@ -28,11 +29,17 @@ public class JobApplicationSystem {
         Scanner sc = new Scanner(System.in);
         JAS = new JobApplicationSystem();
         UserInterface UI = new UserInterface();
+        new PreviousLoginDateLoaderAndStorer().loadPreviousLoginDate(JAS);
         UI.getTodaysDateValid(sc, JAS);
         JAS.mainStart();
         while (true) {
-            UI.run(sc, JAS);
-            UI.getTodaysDateValid(sc, JAS);
+            try {
+                UI.run(sc, JAS);
+                UI.getTodaysDateValid(sc, JAS);
+            } catch (ExitException ee) {
+                JAS.mainEnd();
+                System.exit(0);
+            }
         }
     }
 
