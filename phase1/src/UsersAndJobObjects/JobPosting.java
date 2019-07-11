@@ -200,7 +200,7 @@ public class JobPosting implements Storable {
     /**
      * Review the applications submitted for this job posting.
      */
-    public void reviewApplications() {
+    public void reviewJobApplications() {
         for (JobApplication jobApp : this.getJobApplications()) {
             jobApp.getStatus().advanceStatus();
         }

@@ -137,7 +137,7 @@ class HRCoordinatorHighPriorityInterface extends UserInterface {
      * Interface for reviewing all job applications after a job posting has closed.
      */
     private void reviewApplicationsForJobPosting(JobPosting jobPosting) {
-        jobPosting.reviewApplications();     // This advances the jobApp status to "under review"
+        jobPosting.reviewJobApplications();     // This advances the jobApp status to "under review"
         jobPosting.createInterviewManager();
     }
 
