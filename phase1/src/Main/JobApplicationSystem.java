@@ -1,6 +1,7 @@
 package Main;
 
 import FileLoadingAndStoring.*;
+import Miscellaneous.ExitException;
 import UIClasses.UserInterface;
 import UsersAndJobObjects.*;
 import Managers.UserManager;
@@ -30,8 +31,13 @@ public class JobApplicationSystem {
         UI.getTodaysDateValid(sc, JAS);
         JAS.mainStart(JAS);
         while (true) {
-            UI.run(sc, JAS);
-            UI.getTodaysDateValid(sc, JAS);
+            try {
+                UI.run(sc, JAS);
+                UI.getTodaysDateValid(sc, JAS);
+            } catch (ExitException ee) {
+                JAS.mainEnd();
+                System.exit(0);
+            }
         }
     }
 

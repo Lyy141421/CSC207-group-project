@@ -1,6 +1,7 @@
 package UIClasses;
 
 import Main.JobApplicationSystem;
+import Miscellaneous.ExitException;
 import UsersAndJobObjects.*;
 
 import java.time.LocalDate;
@@ -36,7 +37,7 @@ public class UserInterface {
      * @param sc                   The scanner for user input.
      * @param jobApplicationSystem The job application system being used.
      */
-    public void run(Scanner sc, JobApplicationSystem jobApplicationSystem) {
+    public void run(Scanner sc, JobApplicationSystem jobApplicationSystem) throws ExitException {
         System.out.println("\nWelcome to GET A JOB!");
         jobApplicationSystem.applicant30Day();
         jobApplicationSystem.updateAllInterviewRounds();
@@ -44,7 +45,7 @@ public class UserInterface {
         UserInterface userInterface = new InterfaceFactory().create(user);
         userInterface.run(sc, jobApplicationSystem);
         System.out.println("\nThank you for using GET A JOB. Have a wonderful day!");
-        this.closeProgram(sc, jobApplicationSystem);
+        this.closeProgram(sc);
     }
 
     // === Other methods ===
@@ -85,15 +86,13 @@ public class UserInterface {
     public void getTodaysDateValid(Scanner sc, JobApplicationSystem jobApplicationSystem) {
         LocalDate previousLoginDate = jobApplicationSystem.getPreviousLoginDate();
         LocalDate date;
-        if (previousLoginDate == null) {
+        if (previousLoginDate == null) {    // First start up
             date = this.getDate(sc, "Please enter today's date (yyyy-mm-dd): ");
-        } else if (jobApplicationSystem.getToday() == null) {
-            date = this.getDateIncludingToday(sc, jobApplicationSystem.getPreviousLoginDate(),
-                    "Please enter today's date (yyyy-mm-dd): ");
-        } else {
+        } else {    // While the application runs
             date = this.getDateIncludingToday(sc, jobApplicationSystem.getToday(),
                     "Please enter today's date (yyyy-mm-dd): ");
         }
+        jobApplicationSystem.setPreviousLoginDate(date);
         jobApplicationSystem.setToday(date);
     }
 
@@ -496,15 +495,13 @@ public class UserInterface {
      * Close the program upon user input.
      *
      * @param sc                   The scanner for user input.
-     * @param jobApplicationSystem  The job application system being used.
      */
-    private void closeProgram(Scanner sc, JobApplicationSystem jobApplicationSystem) {
+    private void closeProgram(Scanner sc) throws ExitException {
         String input = this.getInputToken(sc, "\nEnter '-1' if you would like to stop running the system or " +
                 "any other key (except 'Enter') to keep running: ");
         sc.nextLine();
         if (input.equals("-1")) {
-            jobApplicationSystem.mainEnd(jobApplicationSystem);
-            System.exit(0);
+            throw new ExitException();
         }
         System.out.println();
     }
