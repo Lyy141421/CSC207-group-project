@@ -147,7 +147,7 @@ class HRCoordinatorJobPostingsInterface extends UserInterface {
         String description = this.getInputLine(sc, "Job description: ");
         String requirements = this.getInputLine(sc, "Job requirements: ");
         int numPositions = this.getPositiveInteger(sc, "Number of positions: ");
-        LocalDate closeDate = this.getDate(sc, today, "Close date (yyyy-mm-dd): ");
+        LocalDate closeDate = this.getDateIncludingToday(sc, today, "Close date (yyyy-mm-dd): ");
         sc.nextLine();
         return new ArrayList<>(Arrays.asList(title, field, description, requirements, numPositions, closeDate));
     }

@@ -88,7 +88,7 @@ public class UserInterface {
         if (previousLoginDate == null) {
             date = this.getDate(sc, "Please enter today's date (yyyy-mm-dd): ");
         } else {
-            date = this.getDate(sc, jobApplicationSystem.getPreviousLoginDate(),
+            date = this.getDateIncludingToday(sc, jobApplicationSystem.getPreviousLoginDate(),
                     "Please enter today's date (yyyy-mm-dd): ");
         }
         jobApplicationSystem.setToday(date);
@@ -195,7 +195,7 @@ public class UserInterface {
      * @param message   The prompt that is displayed.
      * @return  the date inputted by the user.
      */
-    LocalDate getDate(Scanner sc, LocalDate today, String message) {
+    LocalDate getDateIncludingToday(Scanner sc, LocalDate today, String message) {
         System.out.print(message);
         String input = sc.next();
         try {
@@ -204,13 +204,40 @@ public class UserInterface {
             if (date.isBefore(today)) {
                 System.out.println("Invalid date. Please enter again.");
                 System.out.println();
-                return this.getDate(sc, today, message);
+                return this.getDateIncludingToday(sc, today, message);
             }
             return date;
         } catch (DateTimeParseException dtpe) {
             System.out.println("Cannot read date. Please enter again.");
             System.out.println();
-            return this.getDate(sc, today, message);
+            return this.getDateIncludingToday(sc, today, message);
+        }
+    }
+
+    /**
+     * Get the date inputted by the user not including today's date.
+     *
+     * @param sc      The scanner for user input.
+     * @param today   Today's date.
+     * @param message The prompt that is displayed.
+     * @return the date inputted by the user.
+     */
+    LocalDate getDateAfterToday(Scanner sc, LocalDate today, String message) {
+        System.out.print(message);
+        String input = sc.next();
+        try {
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            LocalDate date = LocalDate.parse(input, dtf);
+            if (date.isBefore(today) || date.isEqual(today)) {
+                System.out.println("Invalid date. Please enter again.");
+                System.out.println();
+                return this.getDateAfterToday(sc, today, message);
+            }
+            return date;
+        } catch (DateTimeParseException dtpe) {
+            System.out.println("Cannot read date. Please enter again.");
+            System.out.println();
+            return this.getDateAfterToday(sc, today, message);
         }
     }
 
