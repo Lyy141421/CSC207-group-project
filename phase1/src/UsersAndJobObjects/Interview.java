@@ -20,7 +20,7 @@ public class Interview implements Storable {
     // The maximum number of in-person interview rounds
     public static final int MAX_NUM_ROUNDS = 4;
     // The total number of interviews conducted
-    private static int total;
+    private static int totalNumOfInterviews;
     // The filename under which this will be saved in the FileSystem
     public static final String FILENAME = "Interviews";
 
@@ -52,7 +52,7 @@ public class Interview implements Storable {
     // === Constructor ===
     public Interview(String id){
         this.ID = Integer.parseInt(id);
-        Interview.total = Integer.max(this.ID, Interview.total - 1) + 1;
+        Interview.totalNumOfInterviews = Integer.max(this.ID, Interview.totalNumOfInterviews);
     }
 
     // === Getters ===
@@ -168,31 +168,31 @@ public class Interview implements Storable {
 
     // === Constructors ===
     Interview() {
-        this.ID = Interview.total;
-        Interview.total++;
+        Interview.totalNumOfInterviews++;
+        this.ID = Interview.totalNumOfInterviews;
     }
 
     Interview(JobApplication jobApplication, Interviewer interviewer, HRCoordinator hrCoordinator,
               InterviewManager interviewManager, int roundNumber) {
+        Interview.totalNumOfInterviews++;
         this.jobApplication = jobApplication;
         this.interviewer = interviewer;
         this.hrCoordinator = hrCoordinator;
         this.interviewManager = interviewManager;
         this.roundNumber = roundNumber;
-        this.ID = Interview.total;
-        Interview.total++;
+        this.ID = Interview.totalNumOfInterviews;
     }
 
     Interview(JobApplication jobApplication, Interviewer interviewer, HRCoordinator hrCoordinator,
               InterviewManager interviewManager, InterviewTime time, int roundNumber) {
+        Interview.totalNumOfInterviews++;
         this.jobApplication = jobApplication;
         this.interviewer = interviewer;
         this.hrCoordinator = hrCoordinator;
         this.interviewManager = interviewManager;
         this.time = time;
         this.roundNumber = roundNumber;
-        this.ID = Interview.total;
-        Interview.total++;
+        this.ID = Interview.totalNumOfInterviews;
     }
 
     // === Getters ===
