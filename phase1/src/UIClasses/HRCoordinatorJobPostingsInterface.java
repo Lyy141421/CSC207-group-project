@@ -139,14 +139,20 @@ class HRCoordinatorJobPostingsInterface extends UserInterface {
      *
      * @param sc    The scanner for user input.
      * @param today Today's date.
+     * @param update Whether or not the fields are being updated (true) vs. added (false)
      * @return a list of the fields inputted.
      */
-    private ArrayList<Object> getFieldsForJobPosting(Scanner sc, LocalDate today) {
+    private ArrayList<Object> getFieldsForJobPosting(Scanner sc, LocalDate today, boolean update) {
         String title = this.getInputLine(sc, "Job title: ");
         String field = this.getInputLine(sc, "Job field: ");
         String description = this.getInputLine(sc, "Job description: ");
         String requirements = this.getInputLine(sc, "Job requirements: ");
-        int numPositions = this.getNaturalNumber(sc, "Number of positions: ");
+        int numPositions;
+        if (update) {
+            numPositions = this.getNaturalNumber(sc, "Number of positions: ");
+        } else {
+            numPositions = this.getPositiveInteger(sc, "Number of positions: ");
+        }
         LocalDate closeDate = this.getDateIncludingToday(sc, today, "Close date (yyyy-mm-dd): ");
         sc.nextLine();
         return new ArrayList<>(Arrays.asList(title, field, description, requirements, numPositions, closeDate));
@@ -159,8 +165,8 @@ class HRCoordinatorJobPostingsInterface extends UserInterface {
      * @param today Today's date.
      */
     void addJobPosting(Scanner sc, LocalDate today) {
-        System.out.println("\nComplete the following categories for adding a job posting as they appear.");
-        ArrayList<Object> fields = this.getFieldsForJobPosting(sc, today);
+        System.out.println("\n\nComplete the following categories for adding a job posting as they appear.");
+        ArrayList<Object> fields = this.getFieldsForJobPosting(sc, today, false);
         JobPosting jobPosting = this.HRC.addJobPosting((String) fields.get(0), (String) fields.get(1),
                 (String) fields.get(2), (String) fields.get(3), (Integer) fields.get(4), today,
                 (LocalDate) fields.get(5));
@@ -182,7 +188,7 @@ class HRCoordinatorJobPostingsInterface extends UserInterface {
         JobPosting jobPosting = new HRCoordinatorInterface(this.HRC).getJobPosting(sc);
         if (jobPosting != null) {
             if (jobPosting.isClosed(today)) {
-                System.out.println("This job posting is closed and can no longer be updated.");
+                System.out.println("\nThis job posting is closed and can no longer be updated.");
             } else {
                 this.updateJobPostingFields(sc, today, jobPosting);
             }
@@ -197,10 +203,10 @@ class HRCoordinatorJobPostingsInterface extends UserInterface {
      * @param jobPosting The job posting to be updated.
      */
     private void updateJobPostingFields(Scanner sc, LocalDate today, JobPosting jobPosting) {
-        System.out.println("Complete the following categories for updating a job posting as they appear.");
+        System.out.println("\nComplete the following categories for updating a job posting as they appear.");
         System.out.println("Enter '" + SKIP_FIELD_KEY + "' if you do not wish to update the category and enter " +
                 SKIP_DATE_KEY + " if you do not wish to update the close date.\n");
-        jobPosting.updateFields(SKIP_FIELD_KEY, SKIP_DATE_KEY, this.getFieldsForJobPosting(sc, today));
+        jobPosting.updateFields(SKIP_FIELD_KEY, SKIP_DATE_KEY, this.getFieldsForJobPosting(sc, today, true));
         System.out.println("\nYou have successfully updated '" + jobPosting.getTitle() + "' (Job Posting ID: " +
                 jobPosting.getId() + ").");
     }

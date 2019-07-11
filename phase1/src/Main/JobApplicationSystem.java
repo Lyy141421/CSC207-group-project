@@ -28,6 +28,7 @@ public class JobApplicationSystem {
         Scanner sc = new Scanner(System.in);
         JAS = new JobApplicationSystem();
         UserInterface UI = new UserInterface();
+        new PreviousLoginDateLoaderAndStorer().loadPreviousLoginDate(JAS);
         UI.getTodaysDateValid(sc, JAS);
         JAS.mainStart();
         while (true) {
