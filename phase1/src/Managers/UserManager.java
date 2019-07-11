@@ -18,7 +18,6 @@ public class UserManager {
 
     // === Instance Variables ===
     private ArrayList<User> allUsers = new ArrayList<>(); //Array in which all users are stored
-    private String key = "CSC207Summer2019"; //Key used for password AES Encryption
 
     // === Creating User accounts and adding them to allUsers ===
     /**

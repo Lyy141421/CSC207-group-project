@@ -159,7 +159,7 @@ public class HRCoordinatorInterface extends UserInterface {
             System.out.println("This applicant cannot be found.");
             return null;
         }
-        if (this.HRC.getCompany().hasApplicantAppliedHere(applicant)) {
+        if (this.HRC.getCompany().hasAppliedHere(applicant)) {
             return applicant;
         }
         System.out.println("This applicant has not applied to this company.");

@@ -118,7 +118,7 @@ public class Company implements Storable {
      * @param applicant The applicant in question.
      * @return true iff this applicant has applied to this company.
      */
-    public boolean hasApplicantAppliedHere(Applicant applicant) {
+    public boolean hasAppliedHere(Applicant applicant) {
         for (JobPosting jobPosting : this.getJobPostingManager().getJobPostings()) {
             if (applicant.hasAppliedTo(jobPosting)) {
                 return true;
@@ -164,7 +164,7 @@ public class Company implements Storable {
      * @param jobField  The job field of the interviewer to be found.
      * @return the interviewer with the least amount of interviews in this field.
      */
-    Interviewer findInterviewer(String jobField) {
+    Interviewer findInterviewerByField(String jobField) {
         Interviewer interviewerSoFar = this.fieldToInterviewers.get(jobField).get(0);
         int minNumberOfInterviews = interviewerSoFar.getInterviews().size();
         for (Interviewer interviewer : this.fieldToInterviewers.get(jobField)) {

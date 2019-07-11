@@ -160,7 +160,7 @@ public class JobApplication implements Storable{
     public void setUpInterview(HRCoordinator hrCoordinator, int round) {
         JobPosting jobPosting = this.getJobPosting();
         String jobField = jobPosting.getField();
-        Interviewer interviewer = hrCoordinator.getCompany().findInterviewer(jobField);
+        Interviewer interviewer = hrCoordinator.getCompany().findInterviewerByField(jobField);
         Interview interview = new Interview(this, interviewer, hrCoordinator,
                 jobPosting.getInterviewManager(), round);
         this.addInterview(interview);
