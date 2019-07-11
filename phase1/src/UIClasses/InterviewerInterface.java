@@ -168,12 +168,12 @@ public class InterviewerInterface extends UserInterface {
     private void viewScheduledInterviews() {
         List<Interview> interviews = this.interviewer.getScheduledInterviews();
         if (interviews.isEmpty()) {
-            System.out.println("Schedule is empty.");
+            System.out.println("\nSchedule is empty.");
         } else {
-            System.out.println("Interviews scheduled: ");
+            System.out.println("\nInterviews scheduled: ");
             for (Interview interview : interviews) {
                 System.out.println();
-                System.out.println(interview.toStringPrelimInfo() + "\n" + "Interview time: " + interview.getTime());
+                System.out.println("\n" + interview.toStringPrelimInfo() + "\n" + "Interview time: " + interview.getTime());
             }
         }
     }
@@ -189,14 +189,14 @@ public class InterviewerInterface extends UserInterface {
         int id = this.getInteger(sc, "Enter the interview ID: ");
         Interview interview = this.interviewer.findInterviewById(id);
         if (interview == null) {
-            System.out.println("This interview cannot be found.");
+            System.out.println("\nThis interview cannot be found.");
             return null;
         }
         else {
             if (interview.isComplete()) {
-                System.out.println(interview);
+                System.out.println("\n" + interview);
             } else {
-                System.out.println(interview.toStringPrelimInfo());
+                System.out.println("\n" + interview.toStringPrelimInfo());
             }
             return interview;
         }
