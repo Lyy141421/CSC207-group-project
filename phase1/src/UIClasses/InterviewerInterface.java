@@ -41,7 +41,7 @@ public class InterviewerInterface extends UserInterface {
         this.viewInterviewsToCompleteAfterInterviewDateHasPassed(jobApplicationSystem.getToday());
         while (true) {
             try {
-                this.runMainMenu(sc);
+                this.runMainMenu(sc, jobApplicationSystem);
             } catch (ExitException ee) {
                 break;
             }
@@ -72,9 +72,10 @@ public class InterviewerInterface extends UserInterface {
      * Interface for running the main menu.
      *
      * @param sc The scanner for user input.
+     * @param jobApplicationSystem The job application system being used.
      * @throws ExitException if user exits.
      */
-    private void runMainMenu(Scanner sc) throws ExitException {
+    private void runMainMenu(Scanner sc, JobApplicationSystem jobApplicationSystem) throws ExitException {
         int numOptions = this.displayMainMenuOptions();
         int option = this.getMenuOption(sc, numOptions);
         switch (option) {
@@ -96,7 +97,7 @@ public class InterviewerInterface extends UserInterface {
                 this.viewSpecificInterview(sc);
                 break;
             case 6: //  Conduct next interview
-                this.completeInterview(sc);
+                this.completeInterview(sc, jobApplicationSystem.getToday());
                 break;
             case 7: // Exit
                 throw new ExitException();
@@ -130,7 +131,7 @@ public class InterviewerInterface extends UserInterface {
      */
     private void scheduleOneInterview(Scanner sc, LocalDate today, Interview interview) {
         System.out.println("Schedule the interview date and time below.");
-        LocalDate interviewDate = this.getDate(sc, today, "Date (yyyy-mm-dd): ");
+        LocalDate interviewDate = this.getDateAfterToday(sc, today, "Date (yyyy-mm-dd): ");
         sc.nextLine();
         System.out.println();
         System.out.println("Time slots: " + new InterviewTime().getTimeSlotsString());
@@ -235,14 +236,15 @@ public class InterviewerInterface extends UserInterface {
     /**
      * Interface for completing an interview.
      * @param sc    The scanner for user input
+     * @param today Today's date.
      */
-    private void completeInterview(Scanner sc) {
+    private void completeInterview(Scanner sc, LocalDate today) {
         if (this.interviewer.getInterviews().isEmpty()) {
             System.out.println("You do not have any interviews to complete.");
             return;
         }
         Interview interview = this.viewSpecificInterview(sc);
-        if (interview != null && !interview.isComplete()) {
+        if (interview != null && !interview.getTime().getDate().isBefore(today) && !interview.isComplete()) {
             System.out.println();
             this.viewInterviewInfoAndApplicationInfo(interview);
             String notes = this.getInputLinesUntilDone
