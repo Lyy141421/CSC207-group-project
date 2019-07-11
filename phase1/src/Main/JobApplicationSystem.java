@@ -18,7 +18,7 @@ public class JobApplicationSystem {
     // The user manager for the system
     private UserManager userManager = new UserManager();
     // The date this program interprets as today.
-    private LocalDate today;
+    private LocalDate today = LocalDate.MIN;
     // The previous login date for this application
     private LocalDate previousLoginDate;
 
