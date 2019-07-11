@@ -1,6 +1,6 @@
 package Miscellaneous;
 
-interface AbstractFactory<T> {
+public interface AbstractFactory<T> {
     /**
      * Factory that creates appropriate objects.
      */
