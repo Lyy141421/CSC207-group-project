@@ -38,7 +38,6 @@ public class StorerManager {
         for(Object x : storer_map.keySet()){
             storer_map.get(x).store(jobApplicationSystem);
         }
-        new PreviousLoginDateLoaderAndStorer().storePreviousLoginDate(jobApplicationSystem);
     }
 
     /**

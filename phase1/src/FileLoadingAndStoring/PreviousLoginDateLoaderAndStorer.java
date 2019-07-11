@@ -34,7 +34,7 @@ public class PreviousLoginDateLoaderAndStorer {
      * @param jobApplicationSystem The job application system being used.
      *
      */
-    void storePreviousLoginDate(JobApplicationSystem jobApplicationSystem) {
+    public void storePreviousLoginDate(JobApplicationSystem jobApplicationSystem) {
         try (PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("phase1/files/PreviousLoginDate.txt")))) {
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             String dateString = jobApplicationSystem.getToday().format(dtf);
