@@ -152,11 +152,13 @@ public class LoaderManager {
      * @return array of the Objects
      */
     public ArrayList<Object> getArray(){
+        try{
         ArrayList<Object> out = new ArrayList<>();
         for(String key : this.getHashMap().keySet()){
             out.add(getHashMap().get(key));
         }
         return out;
+    }catch(Exception e){return new ArrayList<>();}
     }
 
     /**
