@@ -43,7 +43,7 @@ public class JobApplication implements Storable{
     // === Constructors ===
     public JobApplication(String id) {
         this.ID = Integer.parseInt(id);
-        JobApplication.totalNumOfApplications = Integer.max(this.ID, JobApplication.totalNumOfApplications+1);
+        JobApplication.totalNumOfApplications = Integer.max(this.ID, JobApplication.totalNumOfApplications);
     }
 
     public JobApplication(Applicant applicant, JobPosting jobPosting, JobApplicationDocument CV,
