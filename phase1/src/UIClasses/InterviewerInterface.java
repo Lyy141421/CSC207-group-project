@@ -117,7 +117,7 @@ public class InterviewerInterface extends UserInterface {
         }
         else {
             for (Interview interview : unscheduledInterviews) {
-                System.out.println(interview.toStringPrelimInfo());
+                System.out.println("\n" + interview.toStringPrelimInfo());
                 this.scheduleOneInterview(sc, today, interview);
             }
         }
@@ -244,7 +244,11 @@ public class InterviewerInterface extends UserInterface {
             return;
         }
         Interview interview = this.viewSpecificInterview(sc);
-        if (interview != null && !interview.getTime().getDate().isBefore(today) && !interview.isComplete()) {
+        if (interview != null && !interview.isComplete()) {
+            if (interview.getTime().getDate().isAfter(today)) {
+                System.out.println("\nThe interview is scheduled for after today");
+                return;
+            }
             System.out.println();
             this.viewInterviewInfoAndApplicationInfo(interview);
             String notes = this.getInputLinesUntilDone
