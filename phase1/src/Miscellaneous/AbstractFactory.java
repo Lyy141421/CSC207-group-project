@@ -1,4 +1,4 @@
-package UIClasses;
+package Miscellaneous;
 
 interface AbstractFactory<T> {
     /**
