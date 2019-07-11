@@ -87,8 +87,11 @@ public class UserInterface {
         LocalDate date;
         if (previousLoginDate == null) {
             date = this.getDate(sc, "Please enter today's date (yyyy-mm-dd): ");
-        } else {
+        } else if (jobApplicationSystem.getToday() == null) {
             date = this.getDateIncludingToday(sc, jobApplicationSystem.getPreviousLoginDate(),
+                    "Please enter today's date (yyyy-mm-dd): ");
+        } else {
+            date = this.getDateIncludingToday(sc, jobApplicationSystem.getToday(),
                     "Please enter today's date (yyyy-mm-dd): ");
         }
         jobApplicationSystem.setToday(date);
