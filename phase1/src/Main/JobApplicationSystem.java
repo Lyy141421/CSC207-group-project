@@ -147,7 +147,7 @@ public class JobApplicationSystem {
     private void mainEnd() {
         StorerManager.flushStored();
         StorerManager applicant = new StorerManager(new ApplicantStorer(), Applicant.class, this.userManager.getAllApplicants());
-        StorerManager hrcoordinator = new StorerManager(new HRCoordinatorStorer(), HRCoordinator.class, this.userManager.getAllHRCoordinator());
+        StorerManager hrcoordinator = new StorerManager(new HRCoordinatorStorer(), HRCoordinator.class, this.userManager.getAllHRCoordinators());
         StorerManager interviewer = new StorerManager(new InterviewerStorer(), Interviewer.class, this.userManager.getAllInterviewers());
         StorerManager company = new StorerManager(new CompanyStorer(), Company.class, this.companies);
         StorerManager interview = new StorerManager(new InterviewStorer(), Interview.class, new ArrayList());

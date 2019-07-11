@@ -24,6 +24,13 @@ public class UserManager {
     /**
      * All of the following methods create new instances of the various child classes of User
      */
+    public Applicant createApplicant(String username, String password,
+                                     String legalName, String email, LocalDate dateCreated) {
+        Applicant newApplicant = new Applicant(username, password, legalName, email, dateCreated);
+        this.allUsers.add(newApplicant);
+        return newApplicant;
+    }
+
     public Interviewer createInterviewer(String username, String password, String legalName, String email, Company company,
                                          String field, LocalDate dateCreated) {
         Interviewer newInterviewer = new Interviewer(username, password, legalName, email, company, field, dateCreated);
@@ -36,13 +43,6 @@ public class UserManager {
         HRCoordinator newHRC = new HRCoordinator(username, password, legalName, email, company, dateCreated);
         this.allUsers.add(newHRC);
         return newHRC;
-    }
-
-    public Applicant createApplicant(String username, String password,
-                                     String legalName, String email, LocalDate dateCreated) {
-        Applicant newApplicant = new Applicant(username, password, legalName, email, dateCreated);
-        this.allUsers.add(newApplicant);
-        return newApplicant;
     }
 
     // === User operations ===
@@ -75,7 +75,7 @@ public class UserManager {
      *
      * @return list of all existing (UsersAndJobObjects.User type)
      */
-    public ArrayList getAllApplicants() {
+    public ArrayList<User> getAllApplicants() {
         ArrayList<User> ret = new ArrayList<>();
         for(User user: this.allUsers) {
             if(user instanceof Applicant) {
@@ -85,20 +85,20 @@ public class UserManager {
         return ret;
     }
 
-    public ArrayList getAllHRCoordinator() {
+    public ArrayList<User> getAllInterviewers() {
         ArrayList<User> ret = new ArrayList<>();
         for(User user: this.allUsers) {
-            if(user instanceof HRCoordinator) {
+            if(user instanceof Interviewer) {
                 ret.add(user);
             }
         }
         return ret;
     }
 
-    public ArrayList getAllInterviewers() {
+    public ArrayList<User> getAllHRCoordinators() {
         ArrayList<User> ret = new ArrayList<>();
         for(User user: this.allUsers) {
-            if(user instanceof Interviewer) {
+            if(user instanceof HRCoordinator) {
                 ret.add(user);
             }
         }
