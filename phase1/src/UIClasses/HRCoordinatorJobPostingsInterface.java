@@ -16,7 +16,7 @@ class HRCoordinatorJobPostingsInterface extends UserInterface {
      */
 
     // === Class variables ===
-    private static int SKIP_FIELD_KEY = -1;
+    private static int SKIP_FIELD_KEY = 0;
     private static LocalDate SKIP_DATE_KEY = LocalDate.parse("9999-12-31", DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
     // === Instance variable ===
@@ -146,7 +146,7 @@ class HRCoordinatorJobPostingsInterface extends UserInterface {
         String field = this.getInputLine(sc, "Job field: ");
         String description = this.getInputLine(sc, "Job description: ");
         String requirements = this.getInputLine(sc, "Job requirements: ");
-        int numPositions = this.getPositiveInteger(sc, "Number of positions: ");
+        int numPositions = this.getNaturalNumber(sc, "Number of positions: ");
         LocalDate closeDate = this.getDateIncludingToday(sc, today, "Close date (yyyy-mm-dd): ");
         sc.nextLine();
         return new ArrayList<>(Arrays.asList(title, field, description, requirements, numPositions, closeDate));

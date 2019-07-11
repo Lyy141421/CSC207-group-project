@@ -154,21 +154,25 @@ public class UserInterface {
     }
 
     /**
-     * Get the integer inputted by the user.
+     * Get the natural number inputted by the user.
      *
      * @param sc      The scanner for user input.
      * @param message The prompt that is displayed.
      * @return the integer inputted by the user.
      */
-    int getInteger(Scanner sc, String message) {
+    int getNaturalNumber(Scanner sc, String message) {
         System.out.print(message);
         String input = sc.nextLine();
         try {
-            return Integer.parseInt(input);
+            int intInput = Integer.parseInt(input);
+            if (intInput < 0) {
+                throw new NumberFormatException();
+            }
+            return intInput;
         } catch (NumberFormatException nfe) {
             System.out.println("Invalid input. Please try again.");
             System.out.println();
-            return this.getInteger(sc, message);
+            return this.getNaturalNumber(sc, message);
         }
     }
 
@@ -180,7 +184,7 @@ public class UserInterface {
      * @return the integer inputted by the user.
      */
     int getPositiveInteger(Scanner sc, String message) {
-        int input = this.getInteger(sc, message);
+        int input = this.getNaturalNumber(sc, message);
         if (input < 1) {
             System.out.println("Invalid input. Please enter a number > 0.");
             this.getPositiveInteger(sc, message);
@@ -249,11 +253,11 @@ public class UserInterface {
      * @return the option selected.
      */
     int getMenuOption(Scanner sc, int numOptions) {
-        int option = this.getInteger(sc, "Enter value: ");
+        int option = this.getNaturalNumber(sc, "Enter value: ");
         while (option < 1 || option > numOptions) {
             System.out.println("Invalid input. Please try again.");
             System.out.println();
-            option = this.getInteger(sc, "Enter value: ");
+            option = this.getNaturalNumber(sc, "Enter value: ");
         }
         return option;
     }
@@ -266,7 +270,7 @@ public class UserInterface {
      */
     JobApplication getJobApplication(Scanner sc) {
         System.out.println();
-        int id = this.getInteger(sc, "Enter the job application ID: ");
+        int id = this.getNaturalNumber(sc, "Enter the job application ID: ");
         JobApplication jobApplication = this.user.findJobAppById(id);
         if (jobApplication == null) {
             System.out.println("This job application cannot be found.");
