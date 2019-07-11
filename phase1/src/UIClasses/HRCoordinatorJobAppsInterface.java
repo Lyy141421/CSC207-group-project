@@ -6,10 +6,21 @@ import UsersAndJobObjects.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-class HRCoordinatorJobAppsInterface extends HRCoordinatorInterface {
+class HRCoordinatorJobAppsInterface extends UserInterface {
     /**
      * Interface for the HRCoordinator job applications sub menu.
      */
+
+    // === Instance variable ===
+    // The HR Coordinator who logged in
+    private HRCoordinator HRC;
+
+
+    // === Constructor ===
+    HRCoordinatorJobAppsInterface(HRCoordinator HRC) {
+        this.HRC = HRC;
+    }
+
 
     /**
      * Run the job application sub menu.
@@ -18,7 +29,7 @@ class HRCoordinatorJobAppsInterface extends HRCoordinatorInterface {
      * @param jobApplicationSystem The job application system being used.
      */
     void runMenu(Scanner sc, JobApplicationSystem jobApplicationSystem) {
-        JobPosting jobPosting = this.getJobPosting(sc);
+        JobPosting jobPosting = new HRCoordinatorInterface(this.HRC).getJobPosting(sc);
         if (jobPosting == null || this.noItemsToViewForJobPosting(jobPosting)) {
             return;
         }
@@ -98,7 +109,7 @@ class HRCoordinatorJobAppsInterface extends HRCoordinatorInterface {
      */
     private void searchSpecificJobApplication(Scanner sc, JobApplicationSystem jobApplicationSystem,
                                               JobPosting jobPosting) {
-        Applicant applicant = this.searchSpecificApplicant(sc, jobApplicationSystem);
+        Applicant applicant = new HRCoordinatorInterface(this.HRC).searchSpecificApplicant(sc, jobApplicationSystem);
         if (applicant != null) {
             JobApplication jobApp = jobPosting.findJobApplication(applicant);
             if (jobApp == null) {

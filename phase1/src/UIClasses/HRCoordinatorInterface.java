@@ -16,23 +16,12 @@ public class HRCoordinatorInterface extends UserInterface {
 
     // === Instance variables ===
     // The HR Coordinator who is logged in
-    HRCoordinator HRC = (HRCoordinator) this.user;
-    // The high priority interface
-    private HRCoordinatorHighPriorityInterface HRCHighPriorityInterface;
-    // The job posting actions interface
-    private HRCoordinatorJobPostingsInterface HRCJobPostingsInterface;
-    // The job applications actions interface
-    private HRCoordinatorJobAppsInterface HRCJobApplicationsInterface;
+    private HRCoordinator HRC;
 
     // === Constructor ===
-    HRCoordinatorInterface() {
-    }
-
     HRCoordinatorInterface(User user) {
         super(user);
-        HRCHighPriorityInterface = new HRCoordinatorHighPriorityInterface(this.HRC);
-        HRCJobPostingsInterface = new HRCoordinatorJobPostingsInterface(this.HRC);
-        HRCJobApplicationsInterface = new HRCoordinatorJobAppsInterface();
+        this.HRC = (HRCoordinator) this.user;
     }
 
     // === Inherited method ===
@@ -44,8 +33,9 @@ public class HRCoordinatorInterface extends UserInterface {
      */
     @Override
     public void run(Scanner sc, JobApplicationSystem jobApplicationSystem) {
-        System.out.println("Welcome, " + this.user.getLegalName() + ".\n");
-        HRCJobPostingsInterface.viewPostingsWithNoApplicationsSubmitted(sc, jobApplicationSystem.getToday());
+        System.out.println("Welcome, " + this.HRC.getLegalName() + ".\n");
+        new HRCoordinatorJobPostingsInterface(this.HRC).viewPostingsWithNoApplicationsSubmitted(sc,
+                jobApplicationSystem.getToday());
         this.viewPostingsWithNoApplicationsInConsideration(jobApplicationSystem.getToday());
         while (true) {
             try {
@@ -65,7 +55,7 @@ public class HRCoordinatorInterface extends UserInterface {
      * @return the job posting being searched for.
      */
     JobPosting getJobPosting(Scanner sc) {
-        int id = this.getInteger(sc, "\nEnter the job posting ID: ");
+        int id = this.getPositiveInteger(sc, "\nEnter the job posting ID: ");
         JobPosting jobPosting = this.HRC.getCompany().getJobPostingManager().getJobPosting(id);
         if (jobPosting == null) {
             System.out.println("\nThis job posting was not found in " + this.HRC.getCompany().getName() + ".");
@@ -131,19 +121,19 @@ public class HRCoordinatorInterface extends UserInterface {
         int option = this.getMenuOption(sc, numOptions);
         switch (option) {
             case 1: // View high priority tasks
-                HRCHighPriorityInterface.runMenu(sc, jobApplicationSystem.getToday());
+                new HRCoordinatorHighPriorityInterface(this.HRC).runMenu(sc, jobApplicationSystem.getToday());
                 break;
             case 2: // Add job posting
-                HRCJobPostingsInterface.addJobPosting(sc, jobApplicationSystem.getToday());
+                new HRCoordinatorJobPostingsInterface(this.HRC).addJobPosting(sc, jobApplicationSystem.getToday());
                 break;
             case 3: // Update fields
-                HRCJobPostingsInterface.updateJobPostingFull(sc, jobApplicationSystem.getToday());
+                new HRCoordinatorJobPostingsInterface(this.HRC).updateJobPostingFull(sc, jobApplicationSystem.getToday());
                 break;
             case 4: // View job postings
-                HRCJobPostingsInterface.runMenu(sc, jobApplicationSystem.getToday());
+                new HRCoordinatorJobPostingsInterface(this.HRC).runMenu(sc, jobApplicationSystem.getToday());
                 break;
             case 5: // View job applications
-                HRCJobApplicationsInterface.runMenu(sc, jobApplicationSystem);
+                new HRCoordinatorJobAppsInterface(this.HRC).runMenu(sc, jobApplicationSystem);
                 break;
             case 6: // View previous job apps to company
                 this.viewAllJobAppsToCompany(sc, jobApplicationSystem);

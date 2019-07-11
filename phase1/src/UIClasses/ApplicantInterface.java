@@ -263,7 +263,7 @@ public class ApplicantInterface extends UserInterface {
         int postingId = getInteger(sc, "Enter the ID of the posting you wish to apply for: ");
         JobPosting posting = company.getJobPostingManager().getJobPosting(postingId);
         if (posting == null || posting.getCloseDate().isBefore(jobApplicationSystem.getToday())) {
-            System.out.println("\nNo open posting was found matching id " + postingId + ".");
+            System.out.println("\nNo open posting was found matching ID " + postingId + ".");
         }
         return posting;
     }
@@ -365,11 +365,13 @@ public class ApplicantInterface extends UserInterface {
         ArrayList<JobApplication> applications = previous ?
                 applicant.getJobApplicationManager().getPreviousJobApplications()
                 : applicant.getJobApplicationManager().getCurrentJobApplications();
+        if (applications.isEmpty()) {
+            System.out.println("N/A");
+        }
         for (JobApplication application : applications) {
             JobPosting posting = application.getJobPosting();
-            System.out.println(posting.toString());
+            System.out.println("\n" + posting.toString());
             System.out.println("Your status: " + application.getStatus());
-            System.out.println();
         }
     }
 
@@ -381,9 +383,9 @@ public class ApplicantInterface extends UserInterface {
     private void displayAccountHistory(LocalDate today) {
         System.out.println();
         System.out.println("Account created: " + applicant.getDateCreated());
-        System.out.println("Previous job applications:");
+        System.out.println("\nPrevious job applications:");
         this.displayApplicationHistory(true);
-        System.out.println("Current job applications:");
+        System.out.println("\nCurrent job applications:");
         this.displayApplicationHistory(false);
         long numDaysSinceClose = applicant.getJobApplicationManager().getNumDaysSinceMostRecentCloseDate(today);
         if (applicant.getJobApplicationManager().getJobApplications().isEmpty())
@@ -401,6 +403,6 @@ public class ApplicantInterface extends UserInterface {
      */
     private void displayDocuments() {
         ArrayList<JobApplicationDocument> documents = applicant.getDocumentManager().getDocuments();
-        this.printList(documents);
+        this.printListToSelectFrom(documents);
     }
 }

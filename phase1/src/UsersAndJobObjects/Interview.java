@@ -45,7 +45,7 @@ public class Interview implements Storable {
     private InterviewManager interviewManager;
 
     // === Representation invariants ===
-    // ID >= 0
+    // ID >= 1
 
 
     // === Public methods ===

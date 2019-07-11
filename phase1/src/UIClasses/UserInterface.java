@@ -179,6 +179,22 @@ public class UserInterface {
     }
 
     /**
+     * Get the positive integer inputted by the user.
+     *
+     * @param sc      The scanner for user input.
+     * @param message The prompt that is displayed.
+     * @return the integer inputted by the user.
+     */
+    int getPositiveInteger(Scanner sc, String message) {
+        int input = this.getInteger(sc, message);
+        if (input < 1) {
+            System.out.println("Invalid input. Please enter a number > 0.");
+            this.getPositiveInteger(sc, message);
+        }
+        return input;
+    }
+
+    /**
      * Get the date inputted by the user.
      * @param sc        The scanner for user input.
      * @param today     Today's date.

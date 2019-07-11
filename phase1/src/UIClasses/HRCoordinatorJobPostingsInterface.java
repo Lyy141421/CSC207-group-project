@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
-class HRCoordinatorJobPostingsInterface extends HRCoordinatorInterface {
+class HRCoordinatorJobPostingsInterface extends UserInterface {
     /**
      * Interface for the HRCoordinator and all things to do with job postings.
      */
@@ -57,7 +57,6 @@ class HRCoordinatorJobPostingsInterface extends HRCoordinatorInterface {
         System.out.println("2 - View all open job postings");
         System.out.println("3 - View all closed job postings not yet filled");
         System.out.println("4 - View all filled job postings");
-        System.out.println("5 - View all ");
         System.out.println("5 - View all job postings");
         System.out.println("6 - Return to main menu");
         return 6;
@@ -73,7 +72,7 @@ class HRCoordinatorJobPostingsInterface extends HRCoordinatorInterface {
     private void runMenuAction(Scanner sc, LocalDate today, int option) {
         switch (option) {
             case 1: // Search job posting
-                this.getJobPosting(sc);
+                new HRCoordinatorInterface(this.HRC).getJobPosting(sc);
                 break;
             case 2: // View open job postings
                 this.displayOpenPostings(today);
@@ -147,7 +146,7 @@ class HRCoordinatorJobPostingsInterface extends HRCoordinatorInterface {
         String field = this.getInputLine(sc, "Job field: ");
         String description = this.getInputLine(sc, "Job description: ");
         String requirements = this.getInputLine(sc, "Job requirements: ");
-        int numPositions = this.getInteger(sc, "Number of positions: ");
+        int numPositions = this.getPositiveInteger(sc, "Number of positions: ");
         LocalDate closeDate = this.getDate(sc, today, "Close date (yyyy-mm-dd): ");
         sc.nextLine();
         return new ArrayList<>(Arrays.asList(title, field, description, requirements, numPositions, closeDate));
@@ -180,7 +179,7 @@ class HRCoordinatorJobPostingsInterface extends HRCoordinatorInterface {
             System.out.println("\nThere are no open job postings to be updated.");
             return;
         }
-        JobPosting jobPosting = this.getJobPosting(sc);
+        JobPosting jobPosting = new HRCoordinatorInterface(this.HRC).getJobPosting(sc);
         if (jobPosting != null) {
             if (jobPosting.isClosed(today)) {
                 System.out.println("This job posting is closed and can no longer be updated.");
