@@ -82,22 +82,6 @@ public class JobApplicationSystem {
         }
     }
 
-    /**
-     * To be called at the end of the Program
-     * Used to Save all Objects to json memory
-     */
-    public void mainEnd(JobApplicationSystem JAS) {
-        StorerManager.flushStored();
-        StorerManager applicant = new StorerManager(new ApplicantStorer(), Applicant.class, JAS.userManager.getAllApplicants());
-        StorerManager hrcoordinator = new StorerManager(new HRCoordinatorStorer(), HRCoordinator.class, JAS.userManager.getAllHRCoordinator());
-        StorerManager interviewer = new StorerManager(new InterviewerStorer(), Interviewer.class, JAS.userManager.getAllInterviewers());
-        StorerManager company = new StorerManager(new CompanyStorer(), Company.class, JAS.companies);
-        StorerManager interview = new StorerManager(new InterviewStorer(), Interview.class, new ArrayList());
-        StorerManager jobposting = new StorerManager(new JobPostingStorer(), JobPosting.class, new ArrayList());
-        StorerManager jobapplication = new StorerManager(new JobApplicationStorer(), JobApplication.class, new ArrayList());
-        StorerManager.endSave(this);
-    }
-
     // === Other methods ===
     /**
      * Gets the company with this name.
@@ -135,7 +119,6 @@ public class JobApplicationSystem {
     }
 
     // === Private methods ===
-
     /**
      * To be called at the start of the program
      * Used to load all objects from json memory
@@ -157,4 +140,19 @@ public class JobApplicationSystem {
         }
     }
 
+    /**
+     * To be called at the end of the Program
+     * Used to Save all Objects to json memory
+     */
+    private void mainEnd(JobApplicationSystem JAS) {
+        StorerManager.flushStored();
+        StorerManager applicant = new StorerManager(new ApplicantStorer(), Applicant.class, JAS.userManager.getAllApplicants());
+        StorerManager hrcoordinator = new StorerManager(new HRCoordinatorStorer(), HRCoordinator.class, JAS.userManager.getAllHRCoordinator());
+        StorerManager interviewer = new StorerManager(new InterviewerStorer(), Interviewer.class, JAS.userManager.getAllInterviewers());
+        StorerManager company = new StorerManager(new CompanyStorer(), Company.class, JAS.companies);
+        StorerManager interview = new StorerManager(new InterviewStorer(), Interview.class, new ArrayList());
+        StorerManager jobposting = new StorerManager(new JobPostingStorer(), JobPosting.class, new ArrayList());
+        StorerManager jobapplication = new StorerManager(new JobApplicationStorer(), JobApplication.class, new ArrayList());
+        StorerManager.endSave(this);
+    }
 }
