@@ -60,6 +60,7 @@ public class CompanyStorer extends GenericStorer<Company> {
                     StorerManager.subStore(jobApplicationSystem, interviewer);
                 }});
             }
+            fields.add(temp);
         }
         data.put("fields", fields);
     }
