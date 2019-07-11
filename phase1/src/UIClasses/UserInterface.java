@@ -393,7 +393,7 @@ public class UserInterface {
             companyName = this.getInputLine(sc, "Enter your company name: ");
             company = jobApplicationSystem.getCompany(companyName);
         }
-        String field = this.getOnlyLetters(sc, "Enter your field: ");
+        String field = this.getInputLine(sc, "Enter your field: ");
         System.out.println("Sign-up successful!");
         Interviewer interviewer = jobApplicationSystem.getUserManager().createInterviewer(username, password,
                 legalName, email, company, field, jobApplicationSystem.getToday());

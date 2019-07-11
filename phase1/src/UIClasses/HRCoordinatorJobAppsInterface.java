@@ -64,7 +64,7 @@ class HRCoordinatorJobAppsInterface extends UserInterface {
      */
     private boolean noItemsToViewForJobPosting(JobPosting jobPosting) {
         if (jobPosting.getInterviewManager() == null) {
-            System.out.println("Job posting is still open. No applications to view.");
+            System.out.println("\nJob posting is still open. No applications to view.");
             return true;
         }
         return false;
