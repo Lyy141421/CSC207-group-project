@@ -43,11 +43,12 @@ public class JobApplication implements Storable{
     // === Constructors ===
     public JobApplication(String id) {
         this.ID = Integer.parseInt(id);
-        JobApplication.totalNumOfApplications = Integer.max(this.ID, JobApplication.totalNumOfApplications - 1) + 1;
+        JobApplication.totalNumOfApplications = Integer.max(this.ID, JobApplication.totalNumOfApplications+1);
     }
 
     public JobApplication(Applicant applicant, JobPosting jobPosting, JobApplicationDocument CV,
                           JobApplicationDocument coverletter, LocalDate applicationDate) {
+        JobApplication.totalNumOfApplications++;
         this.ID = JobApplication.totalNumOfApplications;
         this.applicant = applicant;
         this.jobPosting = jobPosting;
@@ -55,11 +56,11 @@ public class JobApplication implements Storable{
         this.coverLetter = coverletter;
         this.status = new Status();
         this.applicationDate = applicationDate;
-        JobApplication.totalNumOfApplications++;
     }
 
     public JobApplication(Applicant applicant, JobPosting jobPosting, JobApplicationDocument CV,
                           JobApplicationDocument coverletter, Status status, LocalDate applicationDate) {
+        JobApplication.totalNumOfApplications++;
         this.ID = JobApplication.totalNumOfApplications;
         this.applicant = applicant;
         this.jobPosting = jobPosting;
@@ -67,7 +68,6 @@ public class JobApplication implements Storable{
         this.coverLetter = coverletter;
         this.status = status;
         this.applicationDate = applicationDate;
-        JobApplication.totalNumOfApplications++;
     }
 
     // === Getters ===
@@ -208,8 +208,8 @@ public class JobApplication implements Storable{
         String s = "Application ID: " + this.getId() + "\n";
         s += "Applicant: " + this.getApplicant().getLegalName() + "(" + this.getApplicant().getUsername() + ")" + "\n";
         s += "Job Posting: " + this.getJobPosting().getTitle() + " -- ID: " + this.getJobPosting().getId();
-        s += "\n\nCV: \n" + this.getCV().getContents() + "\n\n";
-        s += "Cover letter: \n" + this.getCoverLetter().getContents() + "\n\n";
+        s += "\n\nCV: \n" + this.getCV() + "\n\n";
+        s += "Cover letter: \n" + this.getCoverLetter() + "\n\n";
         s += "Status: " + this.status.getDescription() + "\n";
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         s += "Application date: " + this.getApplicationDate().format(dtf);
