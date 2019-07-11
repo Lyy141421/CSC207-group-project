@@ -188,7 +188,7 @@ class HRCoordinatorJobPostingsInterface extends UserInterface {
         JobPosting jobPosting = new HRCoordinatorInterface(this.HRC).getJobPosting(sc);
         if (jobPosting != null) {
             if (jobPosting.isClosed(today)) {
-                System.out.println("This job posting is closed and can no longer be updated.");
+                System.out.println("\nThis job posting is closed and can no longer be updated.");
             } else {
                 this.updateJobPostingFields(sc, today, jobPosting);
             }
@@ -203,7 +203,7 @@ class HRCoordinatorJobPostingsInterface extends UserInterface {
      * @param jobPosting The job posting to be updated.
      */
     private void updateJobPostingFields(Scanner sc, LocalDate today, JobPosting jobPosting) {
-        System.out.println("Complete the following categories for updating a job posting as they appear.");
+        System.out.println("\nComplete the following categories for updating a job posting as they appear.");
         System.out.println("Enter '" + SKIP_FIELD_KEY + "' if you do not wish to update the category and enter " +
                 SKIP_DATE_KEY + " if you do not wish to update the close date.\n");
         jobPosting.updateFields(SKIP_FIELD_KEY, SKIP_DATE_KEY, this.getFieldsForJobPosting(sc, today, true));

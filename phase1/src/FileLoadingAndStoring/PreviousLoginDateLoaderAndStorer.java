@@ -6,13 +6,13 @@ import java.io.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-class PreviousLoginDateLoaderAndStorer {
+public class PreviousLoginDateLoaderAndStorer {
 
     /**
      * Loads the previous login date saved in "PreviousLoginDate.txt' in memory.
      * @param jobApplicationSystem The job application system being used.
      */
-    void loadPreviousLoginDate(JobApplicationSystem jobApplicationSystem) {
+    public void loadPreviousLoginDate(JobApplicationSystem jobApplicationSystem) {
         try (BufferedReader fileReader = new BufferedReader(new FileReader("phase1/files/PreviousLoginDate.txt"))) {
             String dateString = fileReader.readLine().trim();
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
