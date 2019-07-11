@@ -14,7 +14,7 @@ public class JobPosting implements Storable {
     public static final String FILENAME = "JobPostings";
 
     // === Instance variables ===
-    private static int postingsCreated; // Total number of postings created
+    private static int totalNumOfPostings; // Total number of postings created
     private int id; // Unique identifier for this job posting
     private String title; // The job title
     private String field; // The job field
@@ -34,7 +34,7 @@ public class JobPosting implements Storable {
     // === Constructor ===
     public JobPosting(String id){
         this.id = Integer.parseInt(id);
-        JobPosting.postingsCreated = Integer.max(this.id, JobPosting.postingsCreated);
+        JobPosting.totalNumOfPostings = Integer.max(this.id, JobPosting.totalNumOfPostings);
     }
 
     // === Getters ===
@@ -288,7 +288,7 @@ public class JobPosting implements Storable {
         s += "Description: " + this.getDescription() + "\n";
         s += "Requirements: " + this.getRequirements() + "\n";
         s += "Company: " + this.getCompany().getName() + "\n";
-        s += "Filled: " + this.booleanToString(this.isFilled()) + "\n";
+        s += "Filled: " + (this.isFilled() ? "Yes" : "No"); // "Yes" if posting is filled; "No" otherwise
         return s;
     }
 
@@ -298,8 +298,8 @@ public class JobPosting implements Storable {
     // === Constructor ===
     JobPosting(String title, String field, String description, String requirements, int numPositions, Company company,
                LocalDate postDate, LocalDate closeDate) {
-        postingsCreated++;
-        this.id = postingsCreated;
+        totalNumOfPostings++;
+        this.id = totalNumOfPostings;
         this.title = title;
         this.field = field;
         this.description = description;
@@ -319,20 +319,5 @@ public class JobPosting implements Storable {
      */
     void removeJobApplication(JobApplication jobApplication) {
         this.jobApplications.remove(jobApplication);
-    }
-
-    // === Private methods ===
-    /**
-     * Returns 'yes' or 'no' based on if bool is True/False
-     *
-     * @param bool The boolean being converted to a user-friendly string.
-     * @return 'yes' or 'no' based on value of bool.
-     */
-    private String booleanToString(boolean bool) {
-        if (bool) {
-            return "Yes";
-        } else {
-            return "No";
-        }
     }
 }
