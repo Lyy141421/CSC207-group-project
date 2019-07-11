@@ -260,7 +260,7 @@ public class ApplicantInterface extends UserInterface {
             System.out.println("\nNo company was found matching name \"" + companyName + ".");
             return null;
         }
-        int postingId = getInteger(sc, "Enter the ID of the posting you wish to apply for: ");
+        int postingId = getNaturalNumber(sc, "Enter the ID of the posting you wish to apply for: ");
         JobPosting posting = company.getJobPostingManager().getJobPosting(postingId);
         if (posting == null || posting.getCloseDate().isBefore(jobApplicationSystem.getToday())) {
             System.out.println("\nNo open posting was found matching ID " + postingId + ".");

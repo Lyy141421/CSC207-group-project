@@ -253,7 +253,7 @@ class HRCoordinatorHighPriorityInterface extends UserInterface {
         System.out.println("You must select " + numPositions + " applicant(s).");
         for (int j = 0; j < numPositions; j++) {
             String message = "\nEnter the value corresponding to an applicant that you would like to hire: ";
-            int appNumber = this.getInteger(sc, message);
+            int appNumber = this.getNaturalNumber(sc, message);
             hires.add(finalCandidates.get(appNumber - 1));
         }
         return hires;

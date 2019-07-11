@@ -135,7 +135,7 @@ public class InterviewerInterface extends UserInterface {
         sc.nextLine();
         System.out.println();
         System.out.println("Time slots: " + new InterviewTime().getTimeSlotsString());
-        int timeSlot = this.getInteger(sc,
+        int timeSlot = this.getNaturalNumber(sc,
                 "Enter the value that corresponds to the preferred time slot: ");
         InterviewTime interviewTime = new InterviewTime(interviewDate, timeSlot - 1);
         if (interviewer.isAvailable(interviewTime)) {
@@ -186,7 +186,7 @@ public class InterviewerInterface extends UserInterface {
      */
     private Interview viewSpecificInterview(Scanner sc) {
         System.out.println();
-        int id = this.getInteger(sc, "Enter the interview ID: ");
+        int id = this.getNaturalNumber(sc, "Enter the interview ID: ");
         Interview interview = this.interviewer.findInterviewById(id);
         if (interview == null) {
             System.out.println("\nThis interview cannot be found.");
