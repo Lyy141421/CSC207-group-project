@@ -1,11 +1,11 @@
 {
   "data": {
-    "1": {
+    "0": {
       "Status": 0,
       "CV": "TestFile",
       "JobPosting": [
         "JobPostings",
-        "1"
+        "0"
       ],
       "CoverLetter": "TestFile",
       "ApplicationDate": "2019-01-01",
@@ -16,7 +16,7 @@
       "interviews": [
         [
           "Interviews",
-          "1"
+          "0"
         ]
       ]
     }
