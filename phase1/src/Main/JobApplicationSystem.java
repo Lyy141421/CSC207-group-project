@@ -35,7 +35,7 @@ public class JobApplicationSystem {
                 UI.run(sc, JAS);
                 UI.getTodaysDateValid(sc, JAS);
             } catch (ExitException ee) {
-                JAS.mainEnd();
+                JAS.mainEnd(JAS);
                 System.exit(0);
             }
         }
