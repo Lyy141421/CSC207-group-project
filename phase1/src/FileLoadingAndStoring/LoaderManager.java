@@ -137,7 +137,9 @@ public class LoaderManager {
             try {
                 con = clazz.getConstructor(String.class);
                 Object obj = con.newInstance(id);
-                mapPut(filename, id, obj);
+                if(!ObjInMap(filename, id)) {
+                    mapPut(filename, id, obj);
+                }
             } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
                 e.printStackTrace();
             }
