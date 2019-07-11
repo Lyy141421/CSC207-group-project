@@ -22,7 +22,7 @@ public class JobPostingLoader extends GenericLoader<JobPosting> {
         HashMap data = FileSystem.read(JobPosting.FILENAME,  String.valueOf(jobPosting.getId()));
         this.loadPrelimData(data, jobPosting);
         this.loadJobApps(jobApplicationSystem, data, jobPosting);
-        if (jobPosting.isClosed(JobApplicationSystem.JAS.getToday())) {
+        if (jobPosting.isClosed(jobApplicationSystem.getToday())) {
             ArrayList<JobApplication> appsInConsideration = this.loadAppsInConsideration(jobApplicationSystem, data);
             ArrayList<JobApplication> appsRejected = this.loadAppsRejected(jobApplicationSystem, data);
             jobPosting.setInterviewManager(new InterviewManager(jobPosting, appsInConsideration, appsRejected,

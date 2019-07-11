@@ -503,7 +503,7 @@ public class UserInterface {
                 "any other key (except 'Enter') to keep running: ");
         sc.nextLine();
         if (input.equals("-1")) {
-            jobApplicationSystem.mainEnd();
+            jobApplicationSystem.mainEnd(jobApplicationSystem);
             System.exit(0);
         }
         System.out.println();

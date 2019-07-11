@@ -20,17 +20,15 @@ public class JobApplicationSystem {
     private LocalDate today;
     // The previous login date for this application
     private LocalDate previousLoginDate;
-    // Access to the main class
-    static public JobApplicationSystem JAS;
 
     // === Main method ===
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        JAS = new JobApplicationSystem();
+        JobApplicationSystem JAS = new JobApplicationSystem();
         UserInterface UI = new UserInterface();
         new PreviousLoginDateLoaderAndStorer().loadPreviousLoginDate(JAS);
         UI.getTodaysDateValid(sc, JAS);
-        JAS.mainStart();
+        JAS.mainStart(JAS);
         while (true) {
             UI.run(sc, JAS);
             UI.getTodaysDateValid(sc, JAS);
@@ -82,7 +80,7 @@ public class JobApplicationSystem {
      * To be called at the end of the Program
      * Used to Save all Objects to json memory
      */
-    public void mainEnd() {
+    public void mainEnd(JobApplicationSystem JAS) {
         StorerManager.flushStored();
         StorerManager applicant = new StorerManager(new ApplicantStorer(), Applicant.class, JAS.userManager.getAllApplicants());
         StorerManager hrcoordinator = new StorerManager(new HRCoordinatorStorer(), HRCoordinator.class, JAS.userManager.getAllHRCoordinator());
@@ -136,7 +134,7 @@ public class JobApplicationSystem {
      * To be called at the start of the program
      * Used to load all objects from json memory
      */
-    private void mainStart() {
+    private void mainStart(JobApplicationSystem JAS) {
         LoaderManager applicant = new LoaderManager(new ApplicantLoader(), Applicant.class, Applicant.FILENAME);
         LoaderManager hrcoordinator = new LoaderManager(new HRCoordinatorLoader(), HRCoordinator.class, HRCoordinator.FILENAME);
         LoaderManager interviewer = new LoaderManager(new InterviewerLoader(), Interviewer.class, Interviewer.FILENAME);
