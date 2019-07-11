@@ -110,7 +110,6 @@ public class LoaderManager {
         for(Object x : loader_map.keySet()){
             loader_map.get(x).load(jobApplicationSystem);
         }
-        new PreviousLoginDateLoaderAndStorer().loadPreviousLoginDate(jobApplicationSystem);
     }
 
     // === Instance Methods ===

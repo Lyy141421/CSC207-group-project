@@ -27,7 +27,8 @@ public class JobApplicationSystem {
         Scanner sc = new Scanner(System.in);
         JobApplicationSystem JAS = new JobApplicationSystem();
         UserInterface UI = new UserInterface();
-        new PreviousLoginDateLoaderAndStorer().loadPreviousLoginDate(JAS);
+        PreviousLoginDateLoaderAndStorer dateLoaderAndStorer = new PreviousLoginDateLoaderAndStorer();
+        dateLoaderAndStorer.loadPreviousLoginDate(JAS);
         UI.getTodaysDateValid(sc, JAS);
         JAS.mainStart();
         while (true) {
@@ -36,6 +37,7 @@ public class JobApplicationSystem {
                 UI.getTodaysDateValid(sc, JAS);
             } catch (ExitException ee) {
                 JAS.mainEnd();
+                dateLoaderAndStorer.storePreviousLoginDate(JAS);
                 System.exit(0);
             }
         }
