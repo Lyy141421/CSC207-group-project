@@ -1,5 +1,6 @@
 package UIClasses;
 
+import Miscellaneous.AbstractFactory;
 import UsersAndJobObjects.User;
 
 public class InterfaceFactory implements AbstractFactory<UserInterface> {
