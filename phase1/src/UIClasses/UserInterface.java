@@ -85,11 +85,15 @@ public class UserInterface {
      */
     public void getTodaysDateValid(Scanner sc, JobApplicationSystem jobApplicationSystem) {
         LocalDate previousLoginDate = jobApplicationSystem.getPreviousLoginDate();
+        LocalDate todaysDate = jobApplicationSystem.getToday();
         LocalDate date;
-        if (previousLoginDate == null) {    // First start up
+        if (previousLoginDate == null) {    // First start up with no PreviousLoginDate.txt
             date = this.getDate(sc, "Please enter today's date (yyyy-mm-dd): ");
+        } else if (todaysDate == null) {    // First start up with date in PreviousLoginDate.txt
+            date = this.getDateIncludingToday(sc, previousLoginDate,
+                    "Please enter today's date (yyyy-mm-dd): ");
         } else {    // While the application runs
-            date = this.getDateIncludingToday(sc, jobApplicationSystem.getToday(),
+            date = this.getDateIncludingToday(sc, todaysDate,
                     "Please enter today's date (yyyy-mm-dd): ");
         }
         jobApplicationSystem.setPreviousLoginDate(date);
