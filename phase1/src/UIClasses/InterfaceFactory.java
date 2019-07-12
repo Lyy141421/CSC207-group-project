@@ -1,9 +1,8 @@
 package UIClasses;
 
-import Miscellaneous.AbstractFactory;
 import UsersAndJobObjects.User;
 
-public class InterfaceFactory implements AbstractFactory<UserInterface> {
+public class InterfaceFactory {
     /**
      * Factory that creates the appropriate interface for the user.
      */
@@ -22,7 +21,7 @@ public class InterfaceFactory implements AbstractFactory<UserInterface> {
      * @param object The user who logged in.
      * @return the appropriate interface for this user.
      */
-    public UserInterface create(Object object) {
+    public UserInterface createInterface(Object object) {
         User user = (User) object;
         switch (user.getClass().getName()) {
             case InterfaceFactory.APPLICANT_CLASS_NAME:
