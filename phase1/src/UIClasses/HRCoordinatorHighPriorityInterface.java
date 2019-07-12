@@ -237,11 +237,12 @@ class HRCoordinatorHighPriorityInterface extends UserInterface {
     }
 
     /**
-     * Interface for selecting the application of the applicant who is to be hired.
+     * Interface for selecting the application of the applicant(s) who are to be hired.
      *
      * @param sc              The scanner for user input.
+     * @param jobPosting      The job posting for which the applicant(s) will be hired.
      * @param finalCandidates The list of final candidates after all interview rounds have been completed.
-     * @return the job application selected.
+     * @return the job application(s) selected.
      */
     private ArrayList<JobApplication> selectApplicationsForHiring(Scanner sc, JobPosting jobPosting,
                                                                   ArrayList<JobApplication> finalCandidates) {

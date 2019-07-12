@@ -27,6 +27,7 @@ class HRCoordinatorJobPostingsInterface extends UserInterface {
         this.HRC = HRC;
     }
 
+    // === Package-private methods
     /**
      * Run the job posting sub-menu.
      *
@@ -41,6 +42,66 @@ class HRCoordinatorJobPostingsInterface extends UserInterface {
         int numOptions = this.displayMenu();
         int option = this.getMenuOption(sc, numOptions);
         this.runMenuAction(sc, today, option);
+    }
+
+    /**
+     * Interface for viewing and possibly updating the job postings with no applications submitted.
+     *
+     * @param sc    The scanner for user input.
+     * @param today Today's date.
+     */
+    void viewPostingsWithNoApplicationsSubmitted(Scanner sc, LocalDate today) {
+        JobPostingManager JPM = this.HRC.getCompany().getJobPostingManager();
+        for (JobPosting jobPosting : JPM.getClosedJobPostingsNoApplicationsSubmitted(today)) {
+            System.out.println("\nNo applications have been submitted for this job posting:");
+            System.out.println("\n" + jobPosting);
+            System.out.println("Would you like to update its fields? ");
+            String response = this.getInputToken(sc, "Enter 'N' for no or any other key for yes: ");
+            sc.nextLine();
+            if (!response.equals("N")) {
+                this.updateJobPostingFields(sc, today, jobPosting);
+            } else {
+                System.out.println("\nThis job posting will be removed from the system.");
+                JPM.removeJobPosting(jobPosting);
+            }
+        }
+    }
+
+    /**
+     * Interface for adding a new job posting to the system.
+     *
+     * @param sc    The scanner for user input.
+     * @param today Today's date.
+     */
+    void addJobPosting(Scanner sc, LocalDate today) {
+        System.out.println("\n\nComplete the following categories for adding a job posting as they appear.");
+        ArrayList<Object> fields = this.getFieldsForJobPosting(sc, today, false);
+        JobPosting jobPosting = this.HRC.addJobPosting((String) fields.get(0), (String) fields.get(1),
+                (String) fields.get(2), (String) fields.get(3), (Integer) fields.get(4), today,
+                (LocalDate) fields.get(5));
+        System.out.println("\nYou have successfully added '" + jobPosting.getTitle() +
+                "' (Job Posting ID: " + jobPosting.getId() + ") to the system.");
+    }
+
+    /**
+     * Entire interface for updating a job posting.
+     *
+     * @param sc    The scanner for user input.
+     * @param today Today's date.
+     */
+    void updateJobPostingFull(Scanner sc, LocalDate today) {
+        if (this.HRC.getCompany().getJobPostingManager().getOpenJobPostings(today).isEmpty()) {
+            System.out.println("\nThere are no open job postings to be updated.");
+            return;
+        }
+        JobPosting jobPosting = new HRCoordinatorInterface(this.HRC).getJobPosting(sc);
+        if (jobPosting != null) {
+            if (jobPosting.isClosed(today)) {
+                System.out.println("\nThis job posting is closed and can no longer be updated.");
+            } else {
+                this.updateJobPostingFields(sc, today, jobPosting);
+            }
+        }
     }
 
     // ============================================================================================================== //
@@ -159,43 +220,6 @@ class HRCoordinatorJobPostingsInterface extends UserInterface {
     }
 
     /**
-     * Interface for adding a new job posting to the system.
-     *
-     * @param sc    The scanner for user input.
-     * @param today Today's date.
-     */
-    void addJobPosting(Scanner sc, LocalDate today) {
-        System.out.println("\n\nComplete the following categories for adding a job posting as they appear.");
-        ArrayList<Object> fields = this.getFieldsForJobPosting(sc, today, false);
-        JobPosting jobPosting = this.HRC.addJobPosting((String) fields.get(0), (String) fields.get(1),
-                (String) fields.get(2), (String) fields.get(3), (Integer) fields.get(4), today,
-                (LocalDate) fields.get(5));
-        System.out.println("\nYou have successfully added '" + jobPosting.getTitle() +
-                "' (Job Posting ID: " + jobPosting.getId() + ") to the system.");
-    }
-
-    /**
-     * Entire interface for updating a job posting.
-     *
-     * @param sc    The scanner for user input.
-     * @param today Today's date.
-     */
-    void updateJobPostingFull(Scanner sc, LocalDate today) {
-        if (this.HRC.getCompany().getJobPostingManager().getOpenJobPostings(today).isEmpty()) {
-            System.out.println("\nThere are no open job postings to be updated.");
-            return;
-        }
-        JobPosting jobPosting = new HRCoordinatorInterface(this.HRC).getJobPosting(sc);
-        if (jobPosting != null) {
-            if (jobPosting.isClosed(today)) {
-                System.out.println("\nThis job posting is closed and can no longer be updated.");
-            } else {
-                this.updateJobPostingFields(sc, today, jobPosting);
-            }
-        }
-    }
-
-    /**
      * Interface for updating the fields for a job posting.
      *
      * @param sc         The scanner for user input.
@@ -209,28 +233,5 @@ class HRCoordinatorJobPostingsInterface extends UserInterface {
         jobPosting.updateFields(SKIP_FIELD_KEY, SKIP_DATE_KEY, this.getFieldsForJobPosting(sc, today, true));
         System.out.println("\nYou have successfully updated '" + jobPosting.getTitle() + "' (Job Posting ID: " +
                 jobPosting.getId() + ").");
-    }
-
-    /**
-     * Interface for viewing and possibly updating the job postings with no applications submitted.
-     *
-     * @param sc    The scanner for user input.
-     * @param today Today's date.
-     */
-    void viewPostingsWithNoApplicationsSubmitted(Scanner sc, LocalDate today) {
-        JobPostingManager JPM = this.HRC.getCompany().getJobPostingManager();
-        for (JobPosting jobPosting : JPM.getClosedJobPostingsNoApplicationsSubmitted(today)) {
-            System.out.println("\nNo applications have been submitted for this job posting:");
-            System.out.println("\n" + jobPosting);
-            System.out.println("Would you like to update its fields? ");
-            String response = this.getInputToken(sc, "Enter 'N' for no or any other key for yes: ");
-            sc.nextLine();
-            if (!response.equals("N")) {
-                this.updateJobPostingFields(sc, today, jobPosting);
-            } else {
-                System.out.println("\nThis job posting will be removed from the system.");
-                JPM.removeJobPosting(jobPosting);
-            }
-        }
     }
 }
