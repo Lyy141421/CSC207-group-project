@@ -10,26 +10,26 @@ public class JobApplicationDocument implements Storable {
 
     // === Instance variables ===
     // The ID of this document
-    private String ID;
+    private String id;
     // The contents of this job application document
     private String contents;
 
     // === Constructor ===
     public JobApplicationDocument(String contents) {
         JobApplicationDocument.totalNumOfDocuments++;
-        this.ID = String.valueOf(JobApplicationDocument.totalNumOfDocuments);
+        this.id = String.valueOf(JobApplicationDocument.totalNumOfDocuments);
         this.contents = contents;
     }
 
     public JobApplicationDocument(String title, String contents) {
         JobApplicationDocument.totalNumOfDocuments++;
-        this.ID = title;
+        this.id = title;
         this.contents = contents;
     }
 
     // === Getters ===
     public String getId() {
-        return this.ID;
+        return this.id;
     }
 
     public String getContents() {

@@ -31,15 +31,6 @@ public class DocumentManager {
 
     // === Other methods ===
     /**
-     * Add a document to this account.
-     *
-     * @param document The document to be added.
-     */
-    void addDocument(JobApplicationDocument document) {
-        this.documents.add(document);
-    }
-
-    /**
      * Add the documents from a list if they do not yet exist in this document manager.
      * @param documents The documents to be added.
      */

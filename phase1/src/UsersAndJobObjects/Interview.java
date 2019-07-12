@@ -26,7 +26,7 @@ public class Interview implements Storable {
 
     // === Instance variables ===
     // The unique identifier for this interview
-    private int ID;
+    private int id;
     // The job application associated with this interview
     private JobApplication jobApplication;
     // The interviewer
@@ -51,13 +51,13 @@ public class Interview implements Storable {
     // === Public methods ===
     // === Constructor ===
     public Interview(String id){
-        this.ID = Integer.parseInt(id);
-        Interview.totalNumOfInterviews = Integer.max(this.ID, Interview.totalNumOfInterviews);
+        this.id = Integer.parseInt(id);
+        Interview.totalNumOfInterviews = Integer.max(this.id, Interview.totalNumOfInterviews);
     }
 
     // === Getters ===
     public String getId() {
-        return Integer.toString(this.ID);
+        return Integer.toString(this.id);
     }
 
     public JobApplication getJobApplication() {
@@ -169,7 +169,7 @@ public class Interview implements Storable {
     // === Constructors ===
     Interview() {
         Interview.totalNumOfInterviews++;
-        this.ID = Interview.totalNumOfInterviews;
+        this.id = Interview.totalNumOfInterviews;
     }
 
     Interview(JobApplication jobApplication, Interviewer interviewer, HRCoordinator hrCoordinator,
@@ -180,7 +180,7 @@ public class Interview implements Storable {
         this.hrCoordinator = hrCoordinator;
         this.interviewManager = interviewManager;
         this.roundNumber = roundNumber;
-        this.ID = Interview.totalNumOfInterviews;
+        this.id = Interview.totalNumOfInterviews;
     }
 
     Interview(JobApplication jobApplication, Interviewer interviewer, HRCoordinator hrCoordinator,
@@ -192,7 +192,7 @@ public class Interview implements Storable {
         this.interviewManager = interviewManager;
         this.time = time;
         this.roundNumber = roundNumber;
-        this.ID = Interview.totalNumOfInterviews;
+        this.id = Interview.totalNumOfInterviews;
     }
 
     // === Getters ===
