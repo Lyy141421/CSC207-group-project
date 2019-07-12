@@ -202,7 +202,7 @@ class HRCoordinatorHighPriorityInterface extends UserInterface {
         JobPosting jobPosting = this.selectJobPostingForPhoneInterview(sc, readyForHiring);
         InterviewManager IM = jobPosting.getInterviewManager();
         ArrayList<JobApplication> jobApps;
-        if (!IM.isNumApplicantUnderOrAtThreshold()) {   // Number of applications greater than num of positions
+        if (!IM.isNumApplicationsUnderOrAtThreshold()) {   // Number of applications greater than num of positions
             jobApps = this.selectApplicationsForHiring(sc, jobPosting, IM.getApplicationsInConsideration());
         } else {
             this.printMessagesForHiring(IM.getNumOpenPositions());
@@ -253,7 +253,7 @@ class HRCoordinatorHighPriorityInterface extends UserInterface {
         System.out.println("You must select " + numPositions + " applicant(s).");
         for (int j = 0; j < numPositions; j++) {
             String message = "\nEnter the value corresponding to an applicant that you would like to hire: ";
-            int appNumber = this.getNaturalNumber(sc, message);
+            int appNumber = this.getPositiveInteger(sc, message);
             hires.add(finalCandidates.get(appNumber - 1));
         }
         return hires;

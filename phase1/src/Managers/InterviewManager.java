@@ -135,7 +135,7 @@ public class InterviewManager {
      * @return true iff number of applications in consideration is less than or equal to the number of positions
      * available and is not zero.
      */
-    public boolean isNumApplicantUnderOrAtThreshold() {
+    public boolean isNumApplicationsUnderOrAtThreshold() {
         int jobAppsSize = this.applicationsInConsideration.size();
         return jobAppsSize > 0 && jobAppsSize <= this.jobPosting.getNumPositions();
     }
@@ -159,7 +159,7 @@ public class InterviewManager {
     int getHrTask() {
         if (this.hasNoJobApplicationsInConsideration()) {
             return InterviewManager.CLOSE_POSTING_NO_HIRE;
-        } else if (this.currentRound != 0 && this.isNumApplicantUnderOrAtThreshold()) {
+        } else if (this.currentRound != 0 && this.isNumApplicationsUnderOrAtThreshold()) {
             return InterviewManager.HIRE_APPLICANTS;
         } else if (!this.jobPosting.getJobApplications().isEmpty() && !this.jobPosting.hasInterviews()) {
             // Applicants for phone interview selected but no interviews scheduled

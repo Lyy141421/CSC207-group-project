@@ -69,7 +69,7 @@ public class Applicant extends User {
      */
     public void registerJobApplication(JobApplication application) {
         this.documentManager.addDocuments(new ArrayList<>(Arrays.asList(application.getCoverLetter(),
-                application.getCV())));
+                application.getCv())));
         jobApplicationManager.addJobApplication(application);
     }
 
