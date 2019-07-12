@@ -135,7 +135,7 @@ public class InterviewerInterface extends UserInterface {
         sc.nextLine();
         System.out.println();
         System.out.println("Time slots: " + new InterviewTime().getTimeSlotsString());
-        int timeSlot = this.getPositiveInteger(sc,
+        int timeSlot = this.getNaturalNumber(sc,
                 "Enter the value that corresponds to the preferred time slot: ");
         InterviewTime interviewTime = new InterviewTime(interviewDate, timeSlot - 1);
         if (interviewer.isAvailable(interviewTime)) {
@@ -152,7 +152,7 @@ public class InterviewerInterface extends UserInterface {
      * @param today Today's date
      */
     private void viewInterviewsToCompleteAfterInterviewDateHasPassed(LocalDate today) {
-        List<Interview> interviews = this.interviewer.getIncompleteInterviews(today);
+        List<Interview> interviews = this.interviewer.getIncompleteInterviewsForWhichInterviewHasOccurred(today);
         if (!interviews.isEmpty()) {
             System.out.println("Interviews to complete: ");
             for (Interview interview : interviews) {
@@ -186,7 +186,7 @@ public class InterviewerInterface extends UserInterface {
      */
     private Interview viewSpecificInterview(Scanner sc) {
         System.out.println();
-        int id = this.getPositiveInteger(sc, "Enter the interview ID: ");
+        int id = this.getNaturalNumber(sc, "Enter the interview ID: ");
         Interview interview = this.interviewer.findInterviewById(id);
         if (interview == null) {
             System.out.println("\nThis interview cannot be found.");
@@ -214,7 +214,7 @@ public class InterviewerInterface extends UserInterface {
         System.out.println("Applicant cover letter:");
         System.out.println(interview.getJobApplication().getCoverLetter().getContents() + "\n");
         System.out.println("Applicant CV:");
-        System.out.println(interview.getJobApplication().getCv().getContents() + "\n");
+        System.out.println(interview.getJobApplication().getCV().getContents() + "\n");
     }
 
     /**

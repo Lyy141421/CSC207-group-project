@@ -22,7 +22,7 @@ public class InterviewTime {
 
     // === Public methods ===
     // === Constructors ===
-    public InterviewTime(){}
+    public InterviewTime(){};
 
     public InterviewTime(LocalDate date, int timeSlot) {
         this.date = date;

@@ -1,5 +1,7 @@
 package UsersAndJobObjects;
 
+import Managers.InterviewManager;
+
 import java.time.LocalDate;
 
 public class HRCoordinator extends User {

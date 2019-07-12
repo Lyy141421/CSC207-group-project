@@ -20,7 +20,7 @@ public class JobApplicationLoader extends GenericLoader<JobApplication> {
         this.loadApplicant(jobApplicationSystem, jobApplication, data);
         this.loadPosting(jobApplicationSystem, jobApplication, data);
         this.loadInterviews(jobApplicationSystem, jobApplication, data);
-        jobApplication.setCv(jobApplication.getApplicant().getDocumentManager().getDocumentById((String) data.get("CV")));
+        jobApplication.setCV(jobApplication.getApplicant().getDocumentManager().getDocumentById((String) data.get("CV")));
         jobApplication.setCoverLetter(jobApplication.getApplicant().getDocumentManager().getDocumentById((String) data.get("CoverLetter")));
     }
 

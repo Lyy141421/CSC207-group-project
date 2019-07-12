@@ -33,8 +33,8 @@ public class JobApplicationStorer extends GenericStorer<JobApplication> {
      * @param data           The job application's data.
      */
     private void storePrelimInfo(JobApplication jobApplication, HashMap<String, Object> data) {
-        if(!(jobApplication.getCv() == null)){
-            data.put("CV", jobApplication.getCv().getId());
+        if(!(jobApplication.getCV() == null)){
+            data.put("CV", jobApplication.getCV().getId());
             data.put("CoverLetter", jobApplication.getCoverLetter().getId());
         }
         data.put("Status", jobApplication.getStatus().getValue());

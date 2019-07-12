@@ -3,7 +3,9 @@ package UsersAndJobObjects;
 import Miscellaneous.InterviewTime;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Interviewer extends User {
 
@@ -154,7 +156,7 @@ public class Interviewer extends User {
      *
      * @return a list of incomplete interviews for this interviewer.
      */
-    public ArrayList<Interview> getIncompleteInterviews(LocalDate today) {
+    public ArrayList<Interview> getIncompleteInterviewsForWhichInterviewHasOccurred(LocalDate today) {
         ArrayList<Interview> incompleteInterviews = new ArrayList<>();
         for (Interview interview : this.interviews) {
             if (!interview.isComplete() && interview.isBeforeDate(today)) {
@@ -178,7 +180,7 @@ public class Interviewer extends User {
     }
 
     /**
-     * Record that this interview has been passed.
+     * Record that this interview has been failed.
      *
      * @param interview The interview that has been conducted.
      */

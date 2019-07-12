@@ -19,6 +19,11 @@ public class UserInterface {
     // The user who logged in
     User user;
 
+    // === Constructor ===
+    UserInterface(User user) {
+        this.user = user;
+    }
+
     // ============================================================================================================== //
     // === Public methods ===
     // === Constructor ===
@@ -44,37 +49,7 @@ public class UserInterface {
     }
 
     // === Other methods ===
-    /**
-     * Get and set today's date as inputted by the user.
-     * @param sc    The scanner for user input
-     * @param jobApplicationSystem The job application system being used.
-     */
-    public void getTodaysDateValid(Scanner sc, JobApplicationSystem jobApplicationSystem) {
-        LocalDate previousLoginDate = jobApplicationSystem.getPreviousLoginDate();
-        LocalDate todaysDate = jobApplicationSystem.getToday();
-        LocalDate date;
-        if (previousLoginDate == null) {    // First start up with no PreviousLoginDate.txt
-            date = this.getDate(sc, "Please enter today's date (yyyy-mm-dd): ");
-        } else if (todaysDate == null) {    // First start up with date in PreviousLoginDate.txt
-            date = this.getDateIncludingToday(sc, previousLoginDate,
-                    "Please enter today's date (yyyy-mm-dd): ");
-        } else {    // While the application runs
-            date = this.getDateIncludingToday(sc, todaysDate,
-                    "Please enter today's date (yyyy-mm-dd): ");
-        }
-        jobApplicationSystem.setPreviousLoginDate(date);
-        jobApplicationSystem.setToday(date);
-    }
 
-    // ============================================================================================================== //
-    // === Package-private methods ===
-
-    // === Constructor ===
-    UserInterface(User user) {
-        this.user = user;
-    }
-
-    // === Methods to be inherited ===
     /**
      * Prints a list of objects.
      *
@@ -103,6 +78,32 @@ public class UserInterface {
         }
     }
 
+    /**
+     * Get and set today's date as inputted by the user.
+     * @param sc    The scanner for user input
+     * @param jobApplicationSystem The job application system being used.
+     */
+    public void getTodaysDateValid(Scanner sc, JobApplicationSystem jobApplicationSystem) {
+        LocalDate previousLoginDate = jobApplicationSystem.getPreviousLoginDate();
+        LocalDate todaysDate = jobApplicationSystem.getToday();
+        LocalDate date;
+        if (previousLoginDate == null) {    // First start up with no PreviousLoginDate.txt
+            date = this.getDate(sc, "Please enter today's date (yyyy-mm-dd): ");
+        } else if (todaysDate == null) {    // First start up with date in PreviousLoginDate.txt
+            date = this.getDateIncludingToday(sc, previousLoginDate,
+                    "Please enter today's date (yyyy-mm-dd): ");
+        } else {    // While the application runs
+            date = this.getDateIncludingToday(sc, todaysDate,
+                    "Please enter today's date (yyyy-mm-dd): ");
+        }
+        jobApplicationSystem.setPreviousLoginDate(date);
+        jobApplicationSystem.setToday(date);
+    }
+
+    // ============================================================================================================== //
+    // === Package-private methods ===
+
+    // === Methods to be inherited ===
     /**
      * Get the input from the user (with spaces)
      *
@@ -258,11 +259,11 @@ public class UserInterface {
      * @return the option selected.
      */
     int getMenuOption(Scanner sc, int numOptions) {
-        int option = this.getPositiveInteger(sc, "Enter value: ");
-        while (option > numOptions) {
+        int option = this.getNaturalNumber(sc, "Enter value: ");
+        while (option < 1 || option > numOptions) {
             System.out.println("Invalid input. Please try again.");
             System.out.println();
-            option = this.getPositiveInteger(sc, "Enter value: ");
+            option = this.getNaturalNumber(sc, "Enter value: ");
         }
         return option;
     }
@@ -275,7 +276,7 @@ public class UserInterface {
      */
     JobApplication getJobApplication(Scanner sc) {
         System.out.println();
-        int id = this.getPositiveInteger(sc, "Enter the job application ID: ");
+        int id = this.getNaturalNumber(sc, "Enter the job application ID: ");
         JobApplication jobApplication = this.user.findJobAppById(id);
         if (jobApplication == null) {
             System.out.println("This job application cannot be found.");

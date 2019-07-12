@@ -19,13 +19,13 @@ public class JobApplication implements Storable{
 
     // === Instance variables ===
     // Unique identifier for a submitted job application
-    private int id;
+    private int ID;
     // The applicant for a job
     private Applicant applicant;
     // The JobPosting that was applied for
     private JobPosting jobPosting;
     // The file name of the CV submitted for this application
-    private JobApplicationDocument cv;
+    private JobApplicationDocument CV;
     // The the file name of the cover letter submitted for this application
     private JobApplicationDocument coverLetter;
     // The status of this application
@@ -42,29 +42,29 @@ public class JobApplication implements Storable{
 
     // === Constructors ===
     public JobApplication(String id) {
-        this.id = Integer.parseInt(id);
-        JobApplication.totalNumOfApplications = Integer.max(this.id, JobApplication.totalNumOfApplications);
+        this.ID = Integer.parseInt(id);
+        JobApplication.totalNumOfApplications = Integer.max(this.ID, JobApplication.totalNumOfApplications);
     }
 
-    public JobApplication(Applicant applicant, JobPosting jobPosting, JobApplicationDocument cv,
+    public JobApplication(Applicant applicant, JobPosting jobPosting, JobApplicationDocument CV,
                           JobApplicationDocument coverletter, LocalDate applicationDate) {
         JobApplication.totalNumOfApplications++;
-        this.id = JobApplication.totalNumOfApplications;
+        this.ID = JobApplication.totalNumOfApplications;
         this.applicant = applicant;
         this.jobPosting = jobPosting;
-        this.cv = cv;
+        this.CV = CV;
         this.coverLetter = coverletter;
         this.status = new Status();
         this.applicationDate = applicationDate;
     }
 
-    public JobApplication(Applicant applicant, JobPosting jobPosting, JobApplicationDocument cv,
+    public JobApplication(Applicant applicant, JobPosting jobPosting, JobApplicationDocument CV,
                           JobApplicationDocument coverletter, Status status, LocalDate applicationDate) {
         JobApplication.totalNumOfApplications++;
-        this.id = JobApplication.totalNumOfApplications;
+        this.ID = JobApplication.totalNumOfApplications;
         this.applicant = applicant;
         this.jobPosting = jobPosting;
-        this.cv = cv;
+        this.CV = CV;
         this.coverLetter = coverletter;
         this.status = status;
         this.applicationDate = applicationDate;
@@ -72,7 +72,7 @@ public class JobApplication implements Storable{
 
     // === Getters ===
     public String getId() {
-        return Integer.toString(this.id);
+        return Integer.toString(this.ID);
     }
 
     public Applicant getApplicant() {
@@ -83,8 +83,8 @@ public class JobApplication implements Storable{
         return this.jobPosting;
     }
 
-    public JobApplicationDocument getCv() {
-        return this.cv;
+    public JobApplicationDocument getCV() {
+        return this.CV;
     }
 
     public JobApplicationDocument getCoverLetter() {
@@ -112,8 +112,8 @@ public class JobApplication implements Storable{
         this.jobPosting = jobPosting;
     }
 
-    public void setCv(JobApplicationDocument cv) {
-        this.cv = cv;
+    public void setCV(JobApplicationDocument CV) {
+        this.CV = CV;
     }
 
     public void setCoverLetter(JobApplicationDocument coverLetter) {
@@ -181,12 +181,12 @@ public class JobApplication implements Storable{
     }
 
     /**
-     * Getter for the id
+     * Getter for the ID
      *
      * @return the string of the id
      */
     public String getIdString() {
-        return Integer.toString(this.id);
+        return Integer.toString(this.ID);
     }
 
     /**
@@ -208,7 +208,7 @@ public class JobApplication implements Storable{
         String s = "Application ID: " + this.getId() + "\n";
         s += "Applicant: " + this.getApplicant().getLegalName() + "(" + this.getApplicant().getUsername() + ")" + "\n";
         s += "Job Posting: " + this.getJobPosting().getTitle() + " -- ID: " + this.getJobPosting().getId();
-        s += "\n\nCV: \n" + this.getCv() + "\n\n";
+        s += "\n\nCV: \n" + this.getCV() + "\n\n";
         s += "Cover letter: \n" + this.getCoverLetter() + "\n\n";
         s += "Status: " + this.status.getDescription() + "\n";
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -222,13 +222,13 @@ public class JobApplication implements Storable{
     // === Constructors ===
     JobApplication(LocalDate applicationDate) {
         JobApplication.totalNumOfApplications++;
-        this.id = JobApplication.totalNumOfApplications;
+        this.ID = JobApplication.totalNumOfApplications;
         this.applicationDate = applicationDate;
     }
 
     JobApplication(JobPosting jobPosting, LocalDate applicationDate) {
         JobApplication.totalNumOfApplications++;
-        this.id = JobApplication.totalNumOfApplications;
+        this.ID = JobApplication.totalNumOfApplications;
         this.jobPosting = jobPosting;
         this.applicationDate = applicationDate;
     }
