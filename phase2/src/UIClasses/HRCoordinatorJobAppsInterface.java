@@ -34,7 +34,7 @@ class HRCoordinatorJobAppsInterface extends UserInterface {
             return;
         }
         int numOptions = this.displayMenu();
-        int option = this.getMenuOption(sc, numOptions);
+        int option = this.getMenuOption(numOptions);
         this.runMenuAction(sc, jobApplicationSystem, jobPosting, option);
     }
 

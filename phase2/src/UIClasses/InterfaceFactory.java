@@ -1,5 +1,6 @@
 package UIClasses;
 
+import Main.JobApplicationSystem;
 import UsersAndJobObjects.User;
 
 public class InterfaceFactory {
@@ -21,15 +22,14 @@ public class InterfaceFactory {
      * @param object The user who logged in.
      * @return the appropriate interface for this user.
      */
-    public UserInterface createInterface(Object object) {
-        User user = (User) object;
+    public UserInterface createInterface(JobApplicationSystem JAS, User user) {
         switch (user.getClass().getName()) {
             case InterfaceFactory.APPLICANT_CLASS_NAME:
-                return new ApplicantInterface(user);
+                return new ApplicantInterface(JAS, user);
             case InterfaceFactory.INTERVIEWER_CLASS_NAME:
-                return new InterviewerInterface(user);
+                return new InterviewerInterface(JAS, user);
             case InterfaceFactory.HRCOORDINATOR_CLASS_NAME:
-                return new HRCoordinatorInterface(user);
+                return new HRCoordinatorInterface(JAS, user);
         }
         return null;
     }

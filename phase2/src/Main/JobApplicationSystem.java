@@ -37,11 +37,10 @@ public class JobApplicationSystem {
         DataLoaderAndStorer dataLoaderAndStorer = new DataLoaderAndStorer(JAS, "users.ser",
                 "companies.ser", "previousLoginDate.txt");
         dataLoaderAndStorer.loadAllData();
-        UI.getTodaysDateValid(sc, JAS);
         while (true) {
             try {
-                UI.run(sc, JAS);
                 UI.getTodaysDateValid(sc, JAS);
+                UI.run();
             } catch (ExitException ee) {
                 dataLoaderAndStorer.storeAllData();
                 System.exit(0);
@@ -69,6 +68,10 @@ public class JobApplicationSystem {
     }
 
     // === Setters ===
+    public void setCompanies(ArrayList<Company> companies) {
+        this.companies = companies;
+    }
+
     public void setToday(LocalDate new_date) {
         this.today = new_date;
     }
@@ -122,8 +125,8 @@ public class JobApplicationSystem {
      * Methods that removes the files from one's account if user has not been active for at least 30 days.
      */
     public void applicant30Day() {
-        for (Object app : this.userManager.getAllApplicants()) {
-            ((Applicant) app).removeFilesFromAccount(today);
+        for (Applicant app : this.userManager.getAllApplicants()) {
+            app.getDocumentManager().removeFilesFromAccount(this.today);
         }
     }
 }

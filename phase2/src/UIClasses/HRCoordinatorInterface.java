@@ -29,14 +29,12 @@ public class HRCoordinatorInterface extends UserInterface {
     /**
      * Run the main HR Coordinator interface.
      *
-     * @param sc                   The scanner for user input.
-     * @param jobApplicationSystem The job application system being used.
      */
     @Override
-    public void run(Scanner sc, JobApplicationSystem jobApplicationSystem) {
+    public void run() {
         System.out.println("Welcome, " + this.HRC.getLegalName() + ".\n");
-        new HRCoordinatorJobPostingsInterface(this.HRC).viewPostingsWithNoApplicationsSubmitted(sc,
-                jobApplicationSystem.getToday());
+        new HRCoordinatorJobPostingsInterface(this.HRC).viewPostingsWithNoApplicationsSubmitted(
+        );
         this.viewPostingsWithNoApplicationsInConsideration(jobApplicationSystem.getToday());
         while (true) {
             try {
@@ -119,19 +117,19 @@ public class HRCoordinatorInterface extends UserInterface {
     private void runMainMenu(Scanner sc, JobApplicationSystem jobApplicationSystem)
             throws ExitException {
         int numOptions = this.displayMainMenuOptions();
-        int option = this.getMenuOption(sc, numOptions);
+        int option = this.getMenuOption(numOptions);
         switch (option) {
             case 1: // View high priority tasks
                 new HRCoordinatorHighPriorityInterface(this.HRC).runMenu(sc, jobApplicationSystem.getToday());
                 break;
             case 2: // Add job posting
-                new HRCoordinatorJobPostingsInterface(this.HRC).addJobPosting(sc, jobApplicationSystem.getToday());
+                new HRCoordinatorJobPostingsInterface(this.HRC).addJobPosting();
                 break;
             case 3: // Update fields
                 new HRCoordinatorJobPostingsInterface(this.HRC).updateJobPostingFull(sc, jobApplicationSystem.getToday());
                 break;
             case 4: // View job postings
-                new HRCoordinatorJobPostingsInterface(this.HRC).runMenu(sc, jobApplicationSystem.getToday());
+                new HRCoordinatorJobPostingsInterface(this.HRC).runMenu();
                 break;
             case 5: // View job applications
                 new HRCoordinatorJobAppsInterface(this.HRC).runMenu(sc, jobApplicationSystem);
@@ -140,7 +138,7 @@ public class HRCoordinatorInterface extends UserInterface {
                 this.viewAllJobAppsToCompany(sc, jobApplicationSystem);
                 break;
             case 7: // View interviews associated with a job application
-                this.viewAllInterviewsForJobApp(sc);
+                this.viewAllInterviewsForJobApp();
                 break;
             case 8: // Exit
                 throw new ExitException();

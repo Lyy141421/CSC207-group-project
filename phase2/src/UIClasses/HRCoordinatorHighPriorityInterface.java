@@ -34,7 +34,7 @@ class HRCoordinatorHighPriorityInterface extends UserInterface {
             return;
         }
         int numOptions = this.displayMenu();
-        int option = this.getMenuOption(sc, numOptions);
+        int option = this.getMenuOption(numOptions);
         this.runMenuAction(sc, today, option);
     }
 
@@ -130,7 +130,7 @@ class HRCoordinatorHighPriorityInterface extends UserInterface {
      */
     private JobPosting selectJobPostingForPhoneInterview(Scanner sc, ArrayList<JobPosting> jobPostings) {
         System.out.println("\nEnter the job posting number for which you would like to select phone interview candidates.");
-        int option = this.getMenuOption(sc, jobPostings.size());
+        int option = this.getMenuOption(jobPostings.size());
         return jobPostings.get(option - 1);
     }
 

@@ -32,35 +32,31 @@ class HRCoordinatorJobPostingsInterface extends UserInterface {
     /**
      * Run the job posting sub-menu.
      *
-     * @param sc    The scanner for user input.
-     * @param today Today's date.
      */
-    void runMenu(Scanner sc, LocalDate today) {
+    void runMenu() {
         if (this.HRC.getCompany().getJobPostingManager().getJobPostings().isEmpty()) {
             System.out.println("\nThere are no job postings for this company.");
             return;
         }
         int numOptions = this.displayMenu();
-        int option = this.getMenuOption(sc, numOptions);
-        this.runMenuAction(sc, today, option);
+        int option = this.getMenuOption(numOptions);
+        this.runMenuAction(option);
     }
 
     /**
      * Interface for viewing and possibly updating the job postings with no applications submitted.
      *
-     * @param sc    The scanner for user input.
-     * @param today Today's date.
      */
-    void viewPostingsWithNoApplicationsSubmitted(Scanner sc, LocalDate today) {
+    void viewPostingsWithNoApplicationsSubmitted() {
         JobPostingManager JPM = this.HRC.getCompany().getJobPostingManager();
         for (JobPosting jobPosting : JPM.getClosedJobPostingsNoApplicationsSubmitted(today)) {
             System.out.println("\nNo applications have been submitted for this job posting:");
             System.out.println("\n" + jobPosting);
             System.out.println("Would you like to update its fields? ");
-            String response = this.getInputToken(sc, "Enter 'N' for no or any other key for yes: ");
-            sc.nextLine();
+            String response = this.getInputToken("Enter 'N' for no or any other key for yes: ");
+            this.sc.nextLine();
             if (!response.equals("N")) {
-                this.updateJobPostingFields(sc, today, jobPosting);
+                this.updateJobPostingFields(jobPosting);
             } else {
                 System.out.println("\nThis job posting will be removed from the system.");
                 JPM.removeJobPosting(jobPosting);
@@ -71,14 +67,12 @@ class HRCoordinatorJobPostingsInterface extends UserInterface {
     /**
      * Interface for adding a new job posting to the system.
      *
-     * @param sc    The scanner for user input.
-     * @param today Today's date.
      */
-    void addJobPosting(Scanner sc, LocalDate today) {
+    void addJobPosting() {
         System.out.println("\n\nComplete the following categories for adding a job posting as they appear.");
-        ArrayList<Object> fields = this.getFieldsForJobPosting(sc, today, false);
+        ArrayList<Object> fields = this.getFieldsForJobPosting(false);
         JobPosting jobPosting = this.HRC.addJobPosting((String) fields.get(0), (String) fields.get(1),
-                (String) fields.get(2), (String) fields.get(3), (Integer) fields.get(4), today,
+                (String) fields.get(2), (String) fields.get(3), (Integer) fields.get(4), this.today,
                 (LocalDate) fields.get(5));
         System.out.println("\nYou have successfully added '" + jobPosting.getTitle() +
                 "' (Job Posting ID: " + jobPosting.getId() + ") to the system.");
@@ -100,7 +94,7 @@ class HRCoordinatorJobPostingsInterface extends UserInterface {
             if (jobPosting.isClosed(today)) {
                 System.out.println("\nThis job posting is closed and can no longer be updated.");
             } else {
-                this.updateJobPostingFields(sc, today, jobPosting);
+                this.updateJobPostingFields(jobPosting);
             }
         }
     }
@@ -127,11 +121,9 @@ class HRCoordinatorJobPostingsInterface extends UserInterface {
     /**
      * Run the action selected by the user in the job postings sub menu.
      *
-     * @param sc     The scanner for user input.
-     * @param today  Today's date.
      * @param option The option number selected.
      */
-    private void runMenuAction(Scanner sc, LocalDate today, int option) {
+    private void runMenuAction(int option) {
         switch (option) {
             case 1: // Search job posting
                 new HRCoordinatorInterface(this.HRC).getJobPosting(sc);
@@ -199,12 +191,10 @@ class HRCoordinatorJobPostingsInterface extends UserInterface {
     /**
      * Get the fields for a job posting by user input.
      *
-     * @param sc     The scanner for user input.
-     * @param today  Today's date.
      * @param update Whether or not the fields are being updated (true) vs. added (false)
      * @return a list of the fields inputted.
      */
-    private ArrayList<Object> getFieldsForJobPosting(Scanner sc, LocalDate today, boolean update) {
+    private ArrayList<Object> getFieldsForJobPosting(boolean update) {
         String title = this.getInputLine(sc, "Job title: ");
         String field = this.getInputLine(sc, "Job field: ");
         String description = this.getInputLine(sc, "Job description: ");
@@ -223,15 +213,13 @@ class HRCoordinatorJobPostingsInterface extends UserInterface {
     /**
      * Interface for updating the fields for a job posting.
      *
-     * @param sc         The scanner for user input.
-     * @param today      Today's date.
      * @param jobPosting The job posting to be updated.
      */
-    private void updateJobPostingFields(Scanner sc, LocalDate today, JobPosting jobPosting) {
+    private void updateJobPostingFields(JobPosting jobPosting) {
         System.out.println("\nComplete the following categories for updating a job posting as they appear.");
         System.out.println("Enter '" + SKIP_FIELD_KEY + "' if you do not wish to update the category and enter " +
                 SKIP_DATE_KEY + " if you do not wish to update the close date.\n");
-        jobPosting.updateFields(SKIP_FIELD_KEY, SKIP_DATE_KEY, this.getFieldsForJobPosting(sc, today, true));
+        jobPosting.updateFields(SKIP_FIELD_KEY, SKIP_DATE_KEY, this.getFieldsForJobPosting(true));
         System.out.println("\nYou have successfully updated '" + jobPosting.getTitle() + "' (Job Posting ID: " +
                 jobPosting.getId() + ").");
     }

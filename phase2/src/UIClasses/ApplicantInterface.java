@@ -26,16 +26,15 @@ public class ApplicantInterface extends UserInterface {
     /**
      * Run the applicant interface.
      *
-     * @param sc                   The scanner for user input.
      * @param jobApplicationSystem The job application system being used.
      */
     @Override
-    public void run(Scanner sc, JobApplicationSystem jobApplicationSystem) {
+    public void run(JobApplicationSystem jobApplicationSystem) {
         System.out.println("Welcome, " + this.user.getLegalName() + ".\n");
         this.displayUpcomingInterviews(jobApplicationSystem.getToday());
         while (true) {
             try {
-                this.runMainMenu(sc, jobApplicationSystem);
+                this.runMainMenu(jobApplicationSystem);
             } catch (ExitException ee) {
                 return;
             }
@@ -48,28 +47,27 @@ public class ApplicantInterface extends UserInterface {
     /**
      * Run the main menu of the applicant interface.
      *
-     * @param sc                   The Scanner for user input.
      * @param jobApplicationSystem The job application system being used.
      */
-    private void runMainMenu(Scanner sc, JobApplicationSystem jobApplicationSystem)
+    private void runMainMenu(JobApplicationSystem jobApplicationSystem)
             throws ExitException {
         int numOptions = displayMainMenuOptions();
-        int option = getMenuOption(sc, numOptions);
+        int option = getMenuOption(numOptions);
         switch (option) {
             case 1:
-                this.setJobPostingSearchFilters(sc, jobApplicationSystem); // Browse open job postings not applied to
+                this.setJobPostingSearchFilters(jobApplicationSystem); // Browse open job postings not applied to
                 return;
             case 2:
                 this.displayDocuments(); // View uploaded documents
                 return;
             case 3:
-                this.submitApplication(sc, jobApplicationSystem); // Apply for a job
+                this.submitApplication(jobApplicationSystem); // Apply for a job
                 return;
             case 4:
-                this.displayApplications(sc, jobApplicationSystem.getToday(), false); // View applications
+                this.displayApplications(jobApplicationSystem.getToday(), false); // View applications
                 return;
             case 5:
-                this.displayApplications(sc, jobApplicationSystem.getToday(), true); // Withdraw an application
+                this.displayApplications(jobApplicationSystem.getToday(), true); // Withdraw an application
                 return;
             case 6:
                 this.displayAccountHistory(jobApplicationSystem.getToday()); // View account history
@@ -155,7 +153,7 @@ public class ApplicantInterface extends UserInterface {
     private void setJobPostingSearchFilters(Scanner sc, JobApplicationSystem jobApplicationSystem) {
         System.out.println();
         int numOptions = this.displayFilterOptions();
-        int option = this.getMenuOption(sc, numOptions);
+        int option = this.getMenuOption(numOptions);
         switch (option) {
             case 1:
                 String field = getInputLine(sc, "\nEnter your field: ");
@@ -197,16 +195,15 @@ public class ApplicantInterface extends UserInterface {
     /**
      * Allow the applicant to select a document from their account files.
      *
-     * @param sc           The Scanner for user input.
      * @param documentType The type of document being selected.
      * @return the document selected.
      */
-    private JobApplicationDocument selectDocumentFromFiles(Scanner sc, String documentType) {
+    private JobApplicationDocument selectDocumentFromFiles(String documentType) {
         ArrayList<JobApplicationDocument> documents = this.applicant.getDocumentManager().getDocuments();
         System.out.println("\nHere are your files: ");
         this.printListToSelectFrom(documents);
         System.out.println("\nPlease enter the file number of the " + documentType + " you would like to submit.");
-        int option = getMenuOption(sc, documents.size());
+        int option = getMenuOption(documents.size());
         return this.applicant.getDocumentManager().getDocuments().get(option - 1);
     }
 
@@ -223,8 +220,8 @@ public class ApplicantInterface extends UserInterface {
             System.out.println("You have not yet uploaded any documents.");
             return null;
         } else {
-            JobApplicationDocument CV = this.selectDocumentFromFiles(sc, "CV");
-            JobApplicationDocument coverLetter = this.selectDocumentFromFiles(sc, "cover letter");
+            JobApplicationDocument CV = this.selectDocumentFromFiles("CV");
+            JobApplicationDocument coverLetter = this.selectDocumentFromFiles("cover letter");
             return new JobApplication(applicant, posting, CV, coverLetter, today);
         }
     }
@@ -232,12 +229,11 @@ public class ApplicantInterface extends UserInterface {
     /**
      * Allow the applicant to enter files as plaintext, and use these files to assemble a JobApplication.
      *
-     * @param sc      The Scanner for user input.
      * @param today   Today's date.
      * @param posting The job posting that this applicant wishes to apply to.
      * @return a job application containing this applicant's entered files.
      */
-    private JobApplication createJobApplicationThroughTextEntry(Scanner sc, LocalDate today, JobPosting posting) {
+    private JobApplication createJobApplicationThroughTextEntry(JobPosting posting) {
         String CVContents = getInputLinesUntilDone(sc, "\nEnter the contents of your CV as a series of plain " +
                 "text lines (program will stop reading after the first empty line): ");
         String coverLetterContents = getInputLinesUntilDone(sc, "\nEnter the contents of your cover letter " +
@@ -285,7 +281,7 @@ public class ApplicantInterface extends UserInterface {
             return;
         }
         int numOptions = this.displaySubmitMenuOptions();
-        int option = this.getMenuOption(sc, numOptions);
+        int option = this.getMenuOption(numOptions);
         switch (option) {
             case 1:
                 if (applicant.getDocumentManager().getDocuments().isEmpty()) {
@@ -349,7 +345,7 @@ public class ApplicantInterface extends UserInterface {
      */
     private boolean withdrawApplication(Scanner sc, LocalDate today, ArrayList<JobApplication> applications,
                                         int applicationNumber) {
-        int applicationOption = getMenuOption(sc, applicationNumber);
+        int applicationOption = getMenuOption(applicationNumber);
         JobApplication applicationToWithdraw = applications.get(applicationOption - 1);
         boolean appWithdrawn = applicant.withdrawJobApplication(today, applicationToWithdraw.getJobPosting());
         applicationToWithdraw.getJobPosting().getInterviewManager().withdrawApplication(applicationToWithdraw);

@@ -86,37 +86,33 @@ public class UserManager {
      *
      * @return list of all existing (UsersAndJobObjects.User type)
      */
-    public ArrayList<User> getAllApplicants() {
-        ArrayList<User> ret = new ArrayList<>();
+    public ArrayList<Applicant> getAllApplicants() {
+        ArrayList<Applicant> ret = new ArrayList<>();
         for (User user : this.allUsers) {
             if (user instanceof Applicant) {
-                ret.add(user);
+                ret.add((Applicant) user);
             }
         }
         return ret;
     }
 
-    public ArrayList<User> getAllInterviewers() {
-        ArrayList<User> ret = new ArrayList<>();
+    public ArrayList<Interviewer> getAllInterviewers() {
+        ArrayList<Interviewer> ret = new ArrayList<>();
         for (User user : this.allUsers) {
             if (user instanceof Interviewer) {
-                ret.add(user);
+                ret.add((Interviewer) user);
             }
         }
         return ret;
     }
 
-    public ArrayList<User> getAllHRCoordinators() {
-        ArrayList<User> ret = new ArrayList<>();
+    public ArrayList<HRCoordinator> getAllHRCoordinators() {
+        ArrayList<HRCoordinator> ret = new ArrayList<>();
         for (User user : this.allUsers) {
             if (user instanceof HRCoordinator) {
-                ret.add(user);
+                ret.add((HRCoordinator) user);
             }
         }
         return ret;
-    }
-
-    public void addUserList(ArrayList list) {
-        allUsers.addAll(list);
     }
 }
