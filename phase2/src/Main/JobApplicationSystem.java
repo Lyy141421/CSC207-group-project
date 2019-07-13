@@ -6,6 +6,7 @@ import UIClasses.UserInterface;
 import UsersAndJobObjects.*;
 import Managers.UserManager;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -23,25 +24,26 @@ public class JobApplicationSystem {
     private LocalDate previousLoginDate;
 
     // === Main method ===
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException, ClassNotFoundException {
         JobApplicationSystem.run();
     }
 
 
     // === Class methods ===
-    public static void run() {
+    public static void run() throws ClassNotFoundException, IOException {
         Scanner sc = new Scanner(System.in);
         JobApplicationSystem JAS = new JobApplicationSystem();
         UserInterface UI = new UserInterface();
-        PreviousLoginDateLoaderAndStorer dateLoaderAndStorer = new PreviousLoginDateLoaderAndStorer();
-        dateLoaderAndStorer.loadPreviousLoginDate(JAS);
+        DataLoaderAndStorer dataLoaderAndStorer = new DataLoaderAndStorer(JAS, "users.ser",
+                "companies.ser", "previousLoginDate.txt");
+        dataLoaderAndStorer.loadAllData();
         UI.getTodaysDateValid(sc, JAS);
         while (true) {
             try {
                 UI.run(sc, JAS);
                 UI.getTodaysDateValid(sc, JAS);
             } catch (ExitException ee) {
-                dateLoaderAndStorer.storePreviousLoginDate(JAS);
+                dataLoaderAndStorer.storeAllData();
                 System.exit(0);
             }
         }

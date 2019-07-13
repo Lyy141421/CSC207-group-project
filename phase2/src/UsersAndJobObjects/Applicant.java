@@ -21,7 +21,7 @@ public class Applicant extends User {
     // The applicant's job application manager
     private JobApplicationManager jobApplicationManager = new JobApplicationManager();
     // The applicant's document manager
-    private DocumentManager documentManager = new DocumentManager();
+    private DocumentManager documentManager = new DocumentManager(this);
 
     // === Public methods ===
     // === Constructors ===
@@ -125,23 +125,6 @@ public class Applicant extends User {
         return jobPostingsNotAppliedTo;
     }
 
-    /**
-     * Remove the files submitted for an application to a job posting that has been closed for 30 days.
-     *
-     * @param today Today's date.
-     */
-    // TODO move to document manager in phase 2
-    public void removeFilesFromAccount(LocalDate today) {
-        if (this.isInactive(today)) {
-            JobApplicationManager JAM = this.getJobApplicationManager();
-            JobApplication lastClosedJobApp = JAM.getLastClosedJobApp();
-            ArrayList<JobApplicationDocument> documents = JAM.getFilesSubmittedForApplication(lastClosedJobApp);
-            this.documentManager.removeDocuments(documents);
-        }
-    }
-
-    // ============================================================================================================== //
-    // === Private methods ===
 
     /**
      * Report whether the date that the last job posting this applicant applied to was 30 days ago from today.
@@ -149,7 +132,7 @@ public class Applicant extends User {
      * @param today Today's date.
      * @return true iff today's date is 30 days after the closing date for the last job this applicant applied to.
      */
-    private boolean isInactive(LocalDate today) {
+    public boolean isInactive(LocalDate today) {
         return this.jobApplicationManager.getNumDaysSinceMostRecentCloseDate(today) >= Applicant.INACTIVE_DAYS;
     }
 }
