@@ -1,10 +1,8 @@
 package UIClasses;
 
-import Main.JobApplicationSystem;
 import UsersAndJobObjects.*;
 
 import java.util.ArrayList;
-import java.util.Scanner;
 
 class HRCoordinatorJobAppsInterface extends UserInterface {
     /**
@@ -25,17 +23,15 @@ class HRCoordinatorJobAppsInterface extends UserInterface {
     /**
      * Run the job application sub menu.
      *
-     * @param sc                   the scanner for user input.
-     * @param jobApplicationSystem The job application system being used.
      */
-    void runMenu(Scanner sc, JobApplicationSystem jobApplicationSystem) {
-        JobPosting jobPosting = new HRCoordinatorInterface(this.HRC).getJobPosting(sc);
+    void runMenu() {
+        JobPosting jobPosting = new HRCoordinatorInterface(this.HRC).getJobPosting();
         if (jobPosting == null || this.noItemsToViewForJobPosting(jobPosting)) {
             return;
         }
         int numOptions = this.displayMenu();
         int option = this.getMenuOption(numOptions);
-        this.runMenuAction(sc, jobApplicationSystem, jobPosting, option);
+        this.runMenuAction(jobPosting, option);
     }
 
     // ============================================================================================================== //
@@ -73,16 +69,13 @@ class HRCoordinatorJobAppsInterface extends UserInterface {
 
     /**
      * Run the action selected by the user in the job application sub menu.
-     *
-     * @param sc                   The scanner for user input.
-     * @param jobApplicationSystem The job application system being used.
-     * @param jobPosting           The job posting selected.
+     *  @param jobPosting           The job posting selected.
      * @param option               The option number selected.
      */
-    private void runMenuAction(Scanner sc, JobApplicationSystem jobApplicationSystem, JobPosting jobPosting, int option) {
+    private void runMenuAction(JobPosting jobPosting, int option) {
         switch (option) {
             case 1: // Search job application
-                this.searchSpecificJobApplication(sc, jobApplicationSystem, jobPosting);
+                this.searchSpecificJobApplication(jobPosting);
                 break;
             case 2: // View all apps in consideration
                 this.displayAppsInConsideration(jobPosting);
@@ -104,13 +97,10 @@ class HRCoordinatorJobAppsInterface extends UserInterface {
     /**
      * Interface for searching for a specific job application.
      *
-     * @param sc                   The scanner for user input.
-     * @param jobApplicationSystem The job application system being used.
      * @param jobPosting           The job posting in question.
      */
-    private void searchSpecificJobApplication(Scanner sc, JobApplicationSystem jobApplicationSystem,
-                                              JobPosting jobPosting) {
-        Applicant applicant = new HRCoordinatorInterface(this.HRC).searchSpecificApplicant(sc, jobApplicationSystem);
+    private void searchSpecificJobApplication(JobPosting jobPosting) {
+        Applicant applicant = new HRCoordinatorInterface(this.HRC).searchSpecificApplicant();
         if (applicant != null) {
             JobApplication jobApp = jobPosting.findJobApplication(applicant);
             if (jobApp == null) {

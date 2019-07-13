@@ -31,15 +31,16 @@ public class JobApplicationSystem {
 
     // === Class methods ===
     public static void run() throws ClassNotFoundException, IOException {
-        Scanner sc = new Scanner(System.in);
         JobApplicationSystem JAS = new JobApplicationSystem();
-        UserInterface UI = new UserInterface();
+        UserInterface UI = new UserInterface(JAS);
         DataLoaderAndStorer dataLoaderAndStorer = new DataLoaderAndStorer(JAS, "users.ser",
                 "companies.ser", "previousLoginDate.txt");
         dataLoaderAndStorer.loadAllData();
         while (true) {
             try {
-                UI.getTodaysDateValid(sc, JAS);
+                UI.getTodaysDateValid();
+                JAS.applicant30Day();
+                JAS.updateAllInterviewRounds();
                 UI.run();
             } catch (ExitException ee) {
                 dataLoaderAndStorer.storeAllData();
@@ -80,18 +81,6 @@ public class JobApplicationSystem {
         this.previousLoginDate = date;
     }
 
-    // === Other methods ===
-
-    /**
-     * Updates all the interview rounds that have been completed.
-     */
-    public void updateAllInterviewRounds() {
-        for (Company company : this.companies) {
-            for (JobPosting jobPosting : company.getJobPostingManager().getJobPostings()) {
-                jobPosting.advanceInterviewRound();
-            }
-        }
-    }
 
     // === Other methods ===
 
@@ -121,12 +110,26 @@ public class JobApplicationSystem {
         return company;
     }
 
+    // ============================================================================================================== //
+    // === Private methods ===
+
     /**
      * Methods that removes the files from one's account if user has not been active for at least 30 days.
      */
-    public void applicant30Day() {
+    private void applicant30Day() {
         for (Applicant app : this.userManager.getAllApplicants()) {
             app.getDocumentManager().removeFilesFromAccount(this.today);
+        }
+    }
+
+    /**
+     * Updates all the interview rounds that have been completed.
+     */
+    private void updateAllInterviewRounds() {
+        for (Company company : this.companies) {
+            for (JobPosting jobPosting : company.getJobPostingManager().getJobPostings()) {
+                jobPosting.advanceInterviewRound();
+            }
         }
     }
 }

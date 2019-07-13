@@ -5,9 +5,7 @@ import Managers.JobPostingManager;
 import Miscellaneous.ExitException;
 import UsersAndJobObjects.*;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.*;
 
 public class HRCoordinatorInterface extends UserInterface {
     /**
@@ -19,8 +17,8 @@ public class HRCoordinatorInterface extends UserInterface {
     private HRCoordinator HRC;
 
     // === Constructor ===
-    HRCoordinatorInterface(User user) {
-        super(user);
+    HRCoordinatorInterface(JobApplicationSystem JAS, User user) {
+        super(JAS, user);
         this.HRC = (HRCoordinator) this.user;
     }
 
@@ -35,10 +33,10 @@ public class HRCoordinatorInterface extends UserInterface {
         System.out.println("Welcome, " + this.HRC.getLegalName() + ".\n");
         new HRCoordinatorJobPostingsInterface(this.HRC).viewPostingsWithNoApplicationsSubmitted(
         );
-        this.viewPostingsWithNoApplicationsInConsideration(jobApplicationSystem.getToday());
+        this.viewPostingsWithNoApplicationsInConsideration();
         while (true) {
             try {
-                this.runMainMenu(sc, jobApplicationSystem);
+                this.runMainMenu();
             } catch (ExitException ee) {
                 break;
             }
@@ -50,11 +48,10 @@ public class HRCoordinatorInterface extends UserInterface {
     /**
      * Interface for getting a job posting by this HR Coordinator's company.
      *
-     * @param sc The scanner for user input.
      * @return the job posting being searched for.
      */
-    JobPosting getJobPosting(Scanner sc) {
-        int id = this.getPositiveInteger(sc, "\nEnter the job posting ID: ");
+    JobPosting getJobPosting() {
+        int id = this.getPositiveInteger("\nEnter the job posting ID: ");
         JobPosting jobPosting = this.HRC.getCompany().getJobPostingManager().getJobPosting(id);
         if (jobPosting == null) {
             System.out.println("\nThis job posting was not found in " + this.HRC.getCompany().getName() + ".");
@@ -71,9 +68,8 @@ public class HRCoordinatorInterface extends UserInterface {
     /**
      * Interface for viewing job postings with no applications in consideration.
      *
-     * @param today Today's date.
      */
-    private void viewPostingsWithNoApplicationsInConsideration(LocalDate today) {
+    private void viewPostingsWithNoApplicationsInConsideration() {
         JobPostingManager JPM = this.HRC.getCompany().getJobPostingManager();
         ArrayList<JobPosting> jobPostingsNoAppsInConsideration =
                 JPM.getClosedJobPostingsNoApplicationsInConsideration(today);
@@ -111,31 +107,30 @@ public class HRCoordinatorInterface extends UserInterface {
     /**
      * Run the main menu for the HR Coordinator.
      *
-     * @param sc The Scanner for user input.
      * @throws ExitException Signals that user wants to exit the program
      */
-    private void runMainMenu(Scanner sc, JobApplicationSystem jobApplicationSystem)
+    private void runMainMenu()
             throws ExitException {
         int numOptions = this.displayMainMenuOptions();
         int option = this.getMenuOption(numOptions);
         switch (option) {
             case 1: // View high priority tasks
-                new HRCoordinatorHighPriorityInterface(this.HRC).runMenu(sc, jobApplicationSystem.getToday());
+                new HRCoordinatorHighPriorityInterface(this.HRC).runMenu();
                 break;
             case 2: // Add job posting
                 new HRCoordinatorJobPostingsInterface(this.HRC).addJobPosting();
                 break;
             case 3: // Update fields
-                new HRCoordinatorJobPostingsInterface(this.HRC).updateJobPostingFull(sc, jobApplicationSystem.getToday());
+                new HRCoordinatorJobPostingsInterface(this.HRC).updateJobPostingFull();
                 break;
             case 4: // View job postings
                 new HRCoordinatorJobPostingsInterface(this.HRC).runMenu();
                 break;
             case 5: // View job applications
-                new HRCoordinatorJobAppsInterface(this.HRC).runMenu(sc, jobApplicationSystem);
+                new HRCoordinatorJobAppsInterface(this.HRC).runMenu();
                 break;
             case 6: // View previous job apps to company
-                this.viewAllJobAppsToCompany(sc, jobApplicationSystem);
+                this.viewAllJobAppsToCompany();
                 break;
             case 7: // View interviews associated with a job application
                 this.viewAllInterviewsForJobApp();
@@ -148,13 +143,11 @@ public class HRCoordinatorInterface extends UserInterface {
     /**
      * Searching for a specific applicant who has applied to the company.
      *
-     * @param sc                   The scanner for user input.
-     * @param jobApplicationSystem The job application system that is being used.
      */
-    Applicant searchSpecificApplicant(Scanner sc, JobApplicationSystem jobApplicationSystem) {
-        String username = this.getInputToken(sc, "\nEnter the applicant username you would like to view: ");
-        Applicant applicant = (Applicant) jobApplicationSystem.getUserManager().findUserByUsername(username);
-        sc.nextLine();
+    Applicant searchSpecificApplicant() {
+        String username = this.getInputToken("\nEnter the applicant username you would like to view: ");
+        Applicant applicant = (Applicant) this.JAS.getUserManager().findUserByUsername(username);
+        this.sc.nextLine();
         if (applicant == null) {
             System.out.println("This applicant cannot be found.");
             return null;
@@ -169,11 +162,9 @@ public class HRCoordinatorInterface extends UserInterface {
     /**
      * Interface for viewing all the previous job applications this applicant has submitted to this company.
      *
-     * @param sc                   The scanner for user input.
-     * @param jobApplicationSystem The job application system being used.
      */
-    private void viewAllJobAppsToCompany(Scanner sc, JobApplicationSystem jobApplicationSystem) {
-        Applicant applicant = this.searchSpecificApplicant(sc, jobApplicationSystem);
+    private void viewAllJobAppsToCompany() {
+        Applicant applicant = this.searchSpecificApplicant();
         if (applicant != null) {
             ArrayList<JobApplication> jobApps = this.HRC.getCompany().getAllApplicationsToCompany(applicant);
             this.printList(jobApps);

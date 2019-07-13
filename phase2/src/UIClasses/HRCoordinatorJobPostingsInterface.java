@@ -8,7 +8,6 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Scanner;
 
 class HRCoordinatorJobPostingsInterface extends UserInterface {
     /**
@@ -81,17 +80,15 @@ class HRCoordinatorJobPostingsInterface extends UserInterface {
     /**
      * Entire interface for updating a job posting.
      *
-     * @param sc    The scanner for user input.
-     * @param today Today's date.
      */
-    void updateJobPostingFull(Scanner sc, LocalDate today) {
-        if (this.HRC.getCompany().getJobPostingManager().getOpenJobPostings(today).isEmpty()) {
+    void updateJobPostingFull() {
+        if (this.HRC.getCompany().getJobPostingManager().getOpenJobPostings(this.today).isEmpty()) {
             System.out.println("\nThere are no open job postings to be updated.");
             return;
         }
-        JobPosting jobPosting = new HRCoordinatorInterface(this.HRC).getJobPosting(sc);
+        JobPosting jobPosting = new HRCoordinatorInterface(this.HRC).getJobPosting();
         if (jobPosting != null) {
-            if (jobPosting.isClosed(today)) {
+            if (jobPosting.isClosed(this.today)) {
                 System.out.println("\nThis job posting is closed and can no longer be updated.");
             } else {
                 this.updateJobPostingFields(jobPosting);
@@ -126,13 +123,13 @@ class HRCoordinatorJobPostingsInterface extends UserInterface {
     private void runMenuAction(int option) {
         switch (option) {
             case 1: // Search job posting
-                new HRCoordinatorInterface(this.HRC).getJobPosting(sc);
+                new HRCoordinatorInterface(this.HRC).getJobPosting();
                 break;
             case 2: // View open job postings
-                this.displayOpenPostings(today);
+                this.displayOpenPostings();
                 break;
             case 3: // View closed job postings not yet filled
-                this.displayClosedPostingsNotFilled(today);
+                this.displayClosedPostingsNotFilled();
                 break;
             case 4: // View all filled job postings
                 this.displayFilledPostings();
@@ -148,11 +145,10 @@ class HRCoordinatorJobPostingsInterface extends UserInterface {
     /**
      * View all open job postings.
      *
-     * @param today Today's date.
      */
-    private void displayOpenPostings(LocalDate today) {
+    private void displayOpenPostings() {
         ArrayList<JobPosting> openJobPostings = this.HRC.getCompany().getJobPostingManager().
-                getOpenJobPostings(today);
+                getOpenJobPostings(this.today);
         System.out.println("\nOpen postings: ");
         this.printList(openJobPostings);
     }
@@ -160,11 +156,10 @@ class HRCoordinatorJobPostingsInterface extends UserInterface {
     /**
      * View all closed postings not yet filled.
      *
-     * @param today Today's date.
      */
-    private void displayClosedPostingsNotFilled(LocalDate today) {
+    private void displayClosedPostingsNotFilled() {
         ArrayList<JobPosting> closedJobPostingsNotFilled = this.HRC.getCompany().getJobPostingManager().
-                getClosedJobPostingsNotFilled(today);
+                getClosedJobPostingsNotFilled(this.today);
         System.out.println("\nClosed postings: ");
         this.printList(closedJobPostingsNotFilled);
     }
@@ -195,17 +190,17 @@ class HRCoordinatorJobPostingsInterface extends UserInterface {
      * @return a list of the fields inputted.
      */
     private ArrayList<Object> getFieldsForJobPosting(boolean update) {
-        String title = this.getInputLine(sc, "Job title: ");
-        String field = this.getInputLine(sc, "Job field: ");
-        String description = this.getInputLine(sc, "Job description: ");
-        String requirements = this.getInputLine(sc, "Job requirements: ");
+        String title = this.getInputLine("Job title: ");
+        String field = this.getInputLine("Job field: ");
+        String description = this.getInputLine("Job description: ");
+        String requirements = this.getInputLine("Job requirements: ");
         int numPositions;
         if (update) {
-            numPositions = this.getNaturalNumber(sc, "Number of positions: ");
+            numPositions = this.getNaturalNumber("Number of positions: ");
         } else {
-            numPositions = this.getPositiveInteger(sc, "Number of positions: ");
+            numPositions = this.getPositiveInteger("Number of positions: ");
         }
-        LocalDate closeDate = this.getDateIncludingToday(sc, today, "Close date (yyyy-mm-dd): ");
+        LocalDate closeDate = this.getDateIncludingToday("Close date (yyyy-mm-dd): ");
         sc.nextLine();
         return new ArrayList<>(Arrays.asList(title, field, description, requirements, numPositions, closeDate));
     }

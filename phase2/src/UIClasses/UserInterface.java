@@ -40,10 +40,8 @@ public class UserInterface {
      */
     public void run() throws ExitException {
         System.out.println("\nWelcome to GET A JOB!");
-        this.JAS.applicant30Day();
-        this.JAS.updateAllInterviewRounds();
         User user = this.login();
-        UserInterface userInterface = new InterfaceFactory().createInterface(user);
+        UserInterface userInterface = new InterfaceFactory().createInterface(JAS, user);
         userInterface.run();
         System.out.println("\nThank you for using GET A JOB. Have a wonderful day!");
         this.closeProgram();
@@ -78,6 +76,13 @@ public class UserInterface {
     UserInterface(JobApplicationSystem JAS, User user) {
         this.JAS = JAS;
         this.user = user;
+    }
+
+    UserInterface(User user) {
+        this.user = user;
+    }
+
+    UserInterface() {
     }
 
     // === Methods to be inherited ===
