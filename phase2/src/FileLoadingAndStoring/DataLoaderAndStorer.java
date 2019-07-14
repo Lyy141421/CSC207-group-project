@@ -1,8 +1,8 @@
 package FileLoadingAndStoring;
 
 import Main.JobApplicationSystem;
-import UsersAndJobObjects.Company;
-import UsersAndJobObjects.User;
+import CompanyStuff.Company;
+import Main.User;
 
 import java.io.*;
 import java.time.LocalDate;

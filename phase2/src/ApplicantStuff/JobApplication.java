@@ -1,4 +1,7 @@
-package UsersAndJobObjects;
+package ApplicantStuff;
+
+import CompanyStuff.JobPosting;
+import CompanyStuff.Interview;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -133,7 +136,7 @@ public class JobApplication implements Serializable {
      *
      * @return true iff this application is set to archived.
      */
-    public boolean isArchived() {
+    boolean isArchived() {
         return this.status.isArchived();
     }
 
@@ -142,25 +145,8 @@ public class JobApplication implements Serializable {
      *
      * @return true iff this application is set to hired.
      */
-    public boolean isHired() {
+    boolean isHired() {
         return this.status.isHired();
-    }
-
-    /**
-     * Set up an interview for the applicant with this job application.
-     *
-     * @param hrCoordinator The HR Coordinator who set up this interview
-     * @param round         The interview round.
-     */
-    public void setUpInterview(HRCoordinator hrCoordinator, int round) {
-        JobPosting jobPosting = this.getJobPosting();
-        String jobField = jobPosting.getField();
-        Interviewer interviewer = hrCoordinator.getCompany().findInterviewerByField(jobField);
-        Interview interview = new Interview(this, interviewer, hrCoordinator,
-                jobPosting.getInterviewManager(), round);
-        this.addInterview(interview);
-        interviewer.addInterview(interview);
-        this.status.advanceStatus();
     }
 
     /**
@@ -228,7 +214,7 @@ public class JobApplication implements Serializable {
      *
      * @param interview The interview to be added.
      */
-    private void addInterview(Interview interview) {
+    public void addInterview(Interview interview) {
         this.interviews.add(interview);
     }
 }

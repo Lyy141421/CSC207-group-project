@@ -1,10 +1,11 @@
-package UsersAndJobObjects;
+package ApplicantStuff;
 
 import Main.JobApplicationSystem;
-import Managers.DocumentManager;
-import Managers.JobApplicationManager;
+import DocumentManagers.DocumentManager;
+import CompanyStuff.Company;
+import Main.User;
+import CompanyStuff.JobPosting;
 
-import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,30 +22,32 @@ public class Applicant extends User {
     // === Instance variables ===
     // The applicant's job application manager
     private JobApplicationManager jobApplicationManager = new JobApplicationManager();
+    // The applicant's document manager
+    private ApplicantDocumentManager documentManager;
 
     // === Public methods ===
     // === Constructors ===
 
-    public Applicant() throws IOException {
+    public Applicant() {
     }
 
-    public Applicant(String id) throws IOException {
-        this.setUsername(id);
-    }
-
-    public Applicant(String username, String password, String legalName, String email, LocalDate dateCreated) throws IOException {
+    public Applicant(String username, String password, String legalName, String email, LocalDate dateCreated) {
         super(username, password, legalName, email, dateCreated);
+        this.documentManager = new ApplicantDocumentManager(this);
     }
 
     public Applicant(String username, String password, String legalName, String email, LocalDate dateCreated,
-                     DocumentManager documentManager) {
-        super(username, password, legalName, email, dateCreated, documentManager);
-    }
-
-    public Applicant(String username, String password, String legalName, String email, LocalDate dateCreated,
-                     JobApplicationManager jobApplicationManager, DocumentManager documentManager) {
-        super(username, password, legalName, email, dateCreated, documentManager);
+                     JobApplicationManager jobApplicationManager) {
+        super(username, password, legalName, email, dateCreated);
         this.jobApplicationManager = jobApplicationManager;
+        this.documentManager = new ApplicantDocumentManager(this);
+    }
+
+    public Applicant(String username, String password, String legalName, String email, LocalDate dateCreated,
+                     JobApplicationManager jobApplicationManager, ApplicantDocumentManager documentManager) {
+        super(username, password, legalName, email, dateCreated);
+        this.jobApplicationManager = jobApplicationManager;
+        this.documentManager = documentManager;
     }
 
     // === Getters ===
@@ -60,8 +63,7 @@ public class Applicant extends User {
      * @param application The job application registered.
      */
     public void registerJobApplication(JobApplication application) {
-        this.getDocumentManager().addDocuments(new ArrayList<>(Arrays.asList(application.getCoverLetter(),
-                application.getCv())));
+        //this.getDocumentManager().addDocuments(new ArrayList<>(Arrays.asList(application.getCoverLetter(), application.getCv())));
         jobApplicationManager.addJobApplication(application);
     }
 
@@ -75,7 +77,8 @@ public class Applicant extends User {
     public boolean withdrawJobApplication(LocalDate today, JobPosting jobPosting) {
         if (this.hasAppliedTo(jobPosting) && !jobPosting.isFilled()) {
             if (!jobPosting.isClosed(today)) {
-                jobPosting.removeJobApplication(jobPosting.findJobApplication(this));
+                // TODO replace with notify
+                //jobPosting.removeJobApplication(jobPosting.findJobApplication(this));
             }
             this.jobApplicationManager.removeJobApplication(jobPosting);
             return true;

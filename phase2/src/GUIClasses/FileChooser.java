@@ -36,30 +36,21 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.ArrayList;
 
 
-/*
- * FileChooserDemo.java uses these files:
- *   images/Open16.gif
- *   images/Save16.gif
- */
 public class FileChooser extends JPanel implements ActionListener {
     static private final String newline = "\n";
     JButton uploadButton;
-    //JButton openButton, saveButton;
-    JTextArea log;
+    JButton submitButton;
+    JPanel log = new JPanel();
+    JPanel removeFileButtonsPanel = new JPanel();
     JFileChooser fc;
     String uploadButtonIconPath = "phase2/images/Open16.gif";
+    ArrayList<File> filesToSubmit = new ArrayList<>();
 
     public FileChooser() {
         super(new BorderLayout());
-
-        //Create the log first, because the action listeners
-        //need to refer to it.
-        log = new JTextArea(5, 20);
-        log.setMargin(new Insets(5, 5, 5, 5));
-        log.setEditable(false);
-        JScrollPane logScrollPane = new JScrollPane(log);
 
         //Create a file chooser
         fc = new JFileChooser();
@@ -78,13 +69,21 @@ public class FileChooser extends JPanel implements ActionListener {
                 new ImageIcon(uploadButtonIconPath));
         uploadButton.addActionListener(this);
 
-        //For layout purposes, put the buttons in a separate panel
-        JPanel buttonPanel = new JPanel(); //use FlowLayout
-        buttonPanel.add(uploadButton);
+        JPanel uploadButtonPanel = new JPanel();
+        uploadButtonPanel.add(uploadButton);
+
+        submitButton = new JButton("Submit");
+        submitButton.addActionListener(new SubmitJobApplicationListener(this.filesToSubmit));
+
+        JPanel submitButtonPanel = new JPanel();
+        submitButtonPanel.add(submitButton);
+        add(submitButtonPanel, BorderLayout.AFTER_LAST_LINE);
 
         //Add the buttons and the log to this panel.
-        add(buttonPanel, BorderLayout.PAGE_START);
-        add(logScrollPane, BorderLayout.CENTER);
+        add(uploadButtonPanel, BorderLayout.PAGE_START);
+        add(log, BorderLayout.CENTER);
+
+        log.add(removeFileButtonsPanel, BorderLayout.CENTER);
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -93,13 +92,13 @@ public class FileChooser extends JPanel implements ActionListener {
 
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 File file = fc.getSelectedFile();
-                //This is where a real application would open the file.
-                // TODO save file to list of documents in user
-                log.append("Uploading: " + file.getName() + "." + newline);
-            } else {
-                log.append("Upload command cancelled by user." + newline);
+                JButton removeFileButton = new JButton("Remove " + file.getName());
+                removeFileButtonsPanel.add(removeFileButton);
+                log.add(removeFileButtonsPanel, BorderLayout.CENTER);
+                removeFileButton.addActionListener(
+                        new RemoveFileButtonListener(removeFileButtonsPanel, removeFileButton, this.filesToSubmit, file));
+                this.filesToSubmit.add(file);
             }
-            log.setCaretPosition(log.getDocument().getLength());
         }
     }
 
@@ -111,14 +110,15 @@ public class FileChooser extends JPanel implements ActionListener {
      */
     private static void createAndShowGUI() {
         //Create and set up the window.
-        JFrame frame = new JFrame("Upload file");
+        JFrame frame = new JFrame("Submit files");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         //Add content to the window.
         frame.add(new FileChooser());
 
         //Display the window.
-        frame.pack();
+        //frame.pack();
+        frame.setSize(300, 300);
         frame.setVisible(true);
     }
 

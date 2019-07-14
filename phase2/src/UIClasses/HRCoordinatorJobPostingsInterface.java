@@ -1,9 +1,9 @@
 package UIClasses;
 
 import Main.JobApplicationSystem;
-import Managers.JobPostingManager;
-import UsersAndJobObjects.HRCoordinator;
-import UsersAndJobObjects.JobPosting;
+import CompanyStuff.JobPostingManager;
+import CompanyStuff.HRCoordinator;
+import CompanyStuff.JobPosting;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;

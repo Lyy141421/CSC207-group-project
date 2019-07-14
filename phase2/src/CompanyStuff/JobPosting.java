@@ -1,6 +1,7 @@
-package UsersAndJobObjects;
+package CompanyStuff;
 
-import Managers.InterviewManager;
+import ApplicantStuff.Applicant;
+import ApplicantStuff.JobApplication;
 
 import java.io.Serializable;
 import java.time.LocalDate;

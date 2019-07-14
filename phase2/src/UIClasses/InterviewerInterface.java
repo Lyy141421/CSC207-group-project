@@ -3,10 +3,10 @@ package UIClasses;
 import Main.JobApplicationSystem;
 import Miscellaneous.ExitException;
 import Miscellaneous.InterviewTime;
-import UsersAndJobObjects.Interview;
-import UsersAndJobObjects.Interviewer;
-import UsersAndJobObjects.JobApplication;
-import UsersAndJobObjects.User;
+import CompanyStuff.Interview;
+import CompanyStuff.Interviewer;
+import ApplicantStuff.JobApplication;
+import Main.User;
 
 import java.time.LocalDate;
 import java.util.ArrayList;

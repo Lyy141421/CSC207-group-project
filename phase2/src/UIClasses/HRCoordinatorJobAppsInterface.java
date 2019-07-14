@@ -1,7 +1,10 @@
 package UIClasses;
 
+import ApplicantStuff.JobApplication;
+import CompanyStuff.JobPosting;
 import Main.JobApplicationSystem;
-import UsersAndJobObjects.*;
+import ApplicantStuff.Applicant;
+import CompanyStuff.HRCoordinator;
 
 import java.util.ArrayList;
 

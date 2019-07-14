@@ -1,9 +1,13 @@
 package UIClasses;
 
+import ApplicantStuff.JobApplication;
+import CompanyStuff.JobPosting;
 import Main.JobApplicationSystem;
-import Managers.JobPostingManager;
+import CompanyStuff.JobPostingManager;
 import Miscellaneous.ExitException;
-import UsersAndJobObjects.*;
+import ApplicantStuff.Applicant;
+import CompanyStuff.HRCoordinator;
+import Main.User;
 
 import java.util.ArrayList;
 
@@ -109,8 +113,7 @@ public class HRCoordinatorInterface extends UserInterface {
      *
      * @throws ExitException Signals that user wants to exit the program
      */
-    private void runMainMenu()
-            throws ExitException {
+    private void runMainMenu() throws ExitException {
         int numOptions = this.displayMainMenuOptions();
         int option = this.getMenuOption(numOptions);
         switch (option) {

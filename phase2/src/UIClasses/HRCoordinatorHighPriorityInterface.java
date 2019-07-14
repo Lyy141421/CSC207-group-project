@@ -1,8 +1,11 @@
 package UIClasses;
 
-import Managers.InterviewManager;
-import Managers.JobPostingManager;
-import UsersAndJobObjects.*;
+import ApplicantStuff.JobApplication;
+import CompanyStuff.Company;
+import CompanyStuff.JobPosting;
+import CompanyStuff.InterviewManager;
+import CompanyStuff.JobPostingManager;
+import CompanyStuff.HRCoordinator;
 
 import java.util.ArrayList;
 

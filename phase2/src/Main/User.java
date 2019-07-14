@@ -1,8 +1,9 @@
-package UsersAndJobObjects;
+package Main;
 
-import Managers.DocumentManager;
+import DocumentManagers.DocumentManager;
+import ApplicantStuff.JobApplication;
+import DocumentManagers.UserDocumentManager;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.time.LocalDate;
 
@@ -22,15 +23,22 @@ public abstract class User implements Serializable {
     private String email;
     // The date the account was created
     private LocalDate dateCreated;
-    // The applicant's document manager
-    private DocumentManager documentManager;
 
     // === Public methods ===
 
-    // === Getters ===
-    public String getId() {
-        return getUsername();
+    // === Constructors ===
+    public User() {
     }
+
+    public User(String username, String password, String legalName, String email, LocalDate dateCreated) {
+        this.username = username;
+        this.password = password;
+        this.legalName = legalName;
+        this.email = email;
+        this.dateCreated = dateCreated;
+    }
+
+    // === Getters ===
 
     public String getUsername() {
         return this.username;
@@ -50,10 +58,6 @@ public abstract class User implements Serializable {
 
     public LocalDate getDateCreated() {
         return this.dateCreated;
-    }
-
-    public DocumentManager getDocumentManager() {
-        return this.documentManager;
     }
 
     // === Setters ===
@@ -96,28 +100,4 @@ public abstract class User implements Serializable {
         return sum;
     }
 
-    // ============================================================================================================== //
-    // === Package-private methods ===
-    // === Constructors ===
-    User() {
-    }
-
-    User(String username, String password, String legalName, String email, LocalDate dateCreated) throws IOException {
-        this.username = username;
-        this.password = password;
-        this.legalName = legalName;
-        this.email = email;
-        this.dateCreated = dateCreated;
-        this.documentManager = new DocumentManager(this);
-    }
-
-    User(String username, String password, String legalName, String email, LocalDate dateCreated,
-         DocumentManager documentManager) {
-        this.username = username;
-        this.password = password;
-        this.legalName = legalName;
-        this.email = email;
-        this.dateCreated = dateCreated;
-        this.documentManager = documentManager;
-    }
 }

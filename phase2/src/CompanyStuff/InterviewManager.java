@@ -1,8 +1,6 @@
-package Managers;
+package CompanyStuff;
 
-import UsersAndJobObjects.Interview;
-import UsersAndJobObjects.JobApplication;
-import UsersAndJobObjects.JobPosting;
+import ApplicantStuff.JobApplication;
 
 import java.io.Serializable;
 import java.util.ArrayList;

@@ -1,6 +1,6 @@
 package GUIClasses;
 
-import UsersAndJobObjects.Applicant;
+import ApplicantStuff.Applicant;
 
 import javax.swing.*;
 import java.awt.*;

@@ -1,6 +1,6 @@
 package Miscellaneous;
 
-import UsersAndJobObjects.JobApplication;
+import ApplicantStuff.JobApplication;
 
 import java.time.LocalDate;
 import java.util.Comparator;

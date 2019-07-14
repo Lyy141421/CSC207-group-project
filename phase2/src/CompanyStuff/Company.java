@@ -1,6 +1,7 @@
-package UsersAndJobObjects;
+package CompanyStuff;
 
-import Managers.JobPostingManager;
+import ApplicantStuff.Applicant;
+import ApplicantStuff.JobApplication;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -38,7 +39,7 @@ public class Company implements Serializable {
         return this.hrCoordinators;
     }
 
-    public HashMap<String, ArrayList<Interviewer>> getFieldToInterviewers() {
+    HashMap<String, ArrayList<Interviewer>> getFieldToInterviewers() {
         return this.fieldToInterviewers;
     }
 
@@ -165,5 +166,21 @@ public class Company implements Serializable {
             }
         }
         return interviewerSoFar;
+    }
+
+    /**
+     * Set up an interview for the applicant with this job application.
+     *
+     * @param round The interview round.
+     */
+    // TODO Interview factory?
+    public void setUpInterview(JobApplication jobApplication, int round) {
+        JobPosting jobPosting = jobApplication.getJobPosting();
+        Interviewer interviewer = this.findInterviewerByField(jobPosting.getField());
+        Interview interview = new Interview(jobApplication, jobPosting.getInterviewManager());
+        // TODO make this action observable and notify jobApplication and interviewer
+        jobApplication.addInterview(interview);
+        interviewer.addInterview(interview);
+        jobApplication.getStatus().advanceStatus();
     }
 }

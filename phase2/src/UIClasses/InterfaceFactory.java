@@ -1,7 +1,7 @@
 package UIClasses;
 
 import Main.JobApplicationSystem;
-import UsersAndJobObjects.User;
+import Main.User;
 
 class InterfaceFactory {
     /**
@@ -10,11 +10,11 @@ class InterfaceFactory {
 
     // === Class variables ===
     // The name of the applicant class
-    private static final String APPLICANT_CLASS_NAME = "UsersAndJobObjects.Applicant";
+    private static final String APPLICANT_CLASS_NAME = "Users.Applicant";
     // The name of the interviewer class
     private static final String INTERVIEWER_CLASS_NAME = "UsersAndJobObjects.Interviewer";
     // The name of the HR coordinator class
-    private static final String HRCOORDINATOR_CLASS_NAME = "UsersAndJobObjects.HRCoordinator";
+    private static final String HRCOORDINATOR_CLASS_NAME = "Users.HRCoordinator";
 
     /**
      * Create the appropriate interface for this user.
@@ -23,7 +23,7 @@ class InterfaceFactory {
      * @param user  The user who logged in
      * @return the appropriate interface for this user.
      */
-    public UserInterface createInterface(JobApplicationSystem JAS, User user) {
+    UserInterface createInterface(JobApplicationSystem JAS, User user) {
         switch (user.getClass().getName()) {
             case InterfaceFactory.APPLICANT_CLASS_NAME:
                 return new ApplicantInterface(JAS, user);

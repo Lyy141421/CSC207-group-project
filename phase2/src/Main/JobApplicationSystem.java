@@ -1,15 +1,15 @@
 package Main;
 
+import CompanyStuff.Company;
+import CompanyStuff.JobPosting;
 import FileLoadingAndStoring.*;
 import Miscellaneous.ExitException;
-import UIClasses.UserInterface;
-import UsersAndJobObjects.*;
-import Managers.UserManager;
+//import UIClasses.UserInterface;
+import ApplicantStuff.Applicant;
 
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 public class JobApplicationSystem {
 
@@ -25,11 +25,11 @@ public class JobApplicationSystem {
 
     // === Main method ===
     public static void main(String[] args) throws IOException, ClassNotFoundException {
-        JobApplicationSystem.run();
+        //JobApplicationSystem.run();
     }
 
 
-    // === Class methods ===
+/*    // === Class methods ===
     public static void run() throws ClassNotFoundException, IOException {
         JobApplicationSystem JAS = new JobApplicationSystem();
         UserInterface UI = new UserInterface(JAS);
@@ -47,7 +47,7 @@ public class JobApplicationSystem {
                 System.exit(0);
             }
         }
-    }
+    }*/
 
     // === Public methods ===
     // === Getters ===
@@ -118,7 +118,8 @@ public class JobApplicationSystem {
      */
     private void applicant30Day() {
         for (Applicant app : this.userManager.getAllApplicants()) {
-            app.getDocumentManager().removeFilesFromAccount(this.today);
+            // TODO fix
+            //app.getDocumentManager().removeFilesFromAccount(this.today);
         }
     }
 

@@ -1,8 +1,9 @@
-package Managers;
+package ApplicantStuff;
 
+import CompanyStuff.Interview;
+import CompanyStuff.JobPosting;
 import Miscellaneous.InterviewTimeComparator;
 import Miscellaneous.CloseDateComparator;
-import UsersAndJobObjects.*;
 
 
 import java.io.Serializable;

@@ -1,8 +1,13 @@
 package UIClasses;
 
+import ApplicantStuff.JobApplication;
+import CompanyStuff.Company;
+import CompanyStuff.Interview;
 import Main.JobApplicationSystem;
 import Miscellaneous.ExitException;
-import UsersAndJobObjects.*;
+import CompanyStuff.HRCoordinator;
+import CompanyStuff.Interviewer;
+import Main.User;
 
 import java.io.IOException;
 import java.time.LocalDate;

@@ -1,4 +1,4 @@
-package UsersAndJobObjects;
+package ApplicantStuff;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -101,7 +101,7 @@ public class Status implements Serializable {
     /**
      * Advance this status.
      */
-    void advanceStatus() {
+    public void advanceStatus() {
         this.value++;
     }
 

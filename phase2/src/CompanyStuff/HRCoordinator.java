@@ -1,4 +1,7 @@
-package UsersAndJobObjects;
+package CompanyStuff;
+
+import Main.User;
+import ApplicantStuff.JobApplication;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -15,7 +18,7 @@ public class HRCoordinator extends User {
 
     // === Public methods ===
     // === Constructors ===
-    public HRCoordinator() throws IOException {
+    public HRCoordinator() {
     }
 
     public HRCoordinator(String username, String password, String legalName, String email, Company company,

@@ -1,16 +1,11 @@
-package Managers;
+package Main;
 
-import UsersAndJobObjects.Applicant;
-import UsersAndJobObjects.HRCoordinator;
-import UsersAndJobObjects.Interviewer;
-import UsersAndJobObjects.User;
-import UsersAndJobObjects.Company;
+import ApplicantStuff.Applicant;
+import CompanyStuff.HRCoordinator;
+import CompanyStuff.Interviewer;
+import CompanyStuff.Company;
 
-import javax.crypto.Cipher;
-import javax.crypto.spec.SecretKeySpec;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.security.Key;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -35,8 +30,8 @@ public class UserManager {
     /**
      * All of the following methods create new instances of the various child classes of User
      */
-    public Applicant createApplicant(String username, String password,
-                                     String legalName, String email, LocalDate dateCreated) throws IOException {
+    public Applicant createApplicant(String username, String password, String legalName, String email, LocalDate dateCreated)
+            throws IOException {
         Applicant newApplicant = new Applicant(username, password, legalName, email, dateCreated);
         this.allUsers.add(newApplicant);
         return newApplicant;

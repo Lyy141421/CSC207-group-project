@@ -1,10 +1,15 @@
 package UIClasses;
 
+import ApplicantStuff.JobApplication;
+import CompanyStuff.Company;
+import CompanyStuff.Interview;
+import CompanyStuff.JobPosting;
+import ApplicantStuff.JobApplicationDocument;
 import Main.JobApplicationSystem;
 import Miscellaneous.ExitException;
-import UsersAndJobObjects.*;
+import ApplicantStuff.Applicant;
+import Main.User;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class ApplicantInterface extends UserInterface {
@@ -27,7 +32,7 @@ public class ApplicantInterface extends UserInterface {
      *
      */
     @Override
-    public void run() throws IOException {
+    public void run() {
         System.out.println("Welcome, " + this.user.getLegalName() + ".\n");
         this.displayUpcomingInterviews();
         while (true) {
@@ -46,7 +51,7 @@ public class ApplicantInterface extends UserInterface {
      * Run the main menu of the applicant interface.
      *
      */
-    private void runMainMenu() throws ExitException, IOException {
+    private void runMainMenu() throws ExitException {
         int numOptions = displayMainMenuOptions();
         int option = getMenuOption(numOptions);
         switch (option) {
@@ -223,7 +228,7 @@ public class ApplicantInterface extends UserInterface {
      * @param posting The job posting that this applicant wishes to apply to.
      * @return a job application containing this applicant's entered files.
      */
-    private JobApplication createJobApplicationThroughTextEntry(JobPosting posting) throws IOException {
+    private JobApplication createJobApplicationThroughTextEntry(JobPosting posting) {
         String CVContents = getInputLinesUntilDone("\nEnter the contents of your CV as a series of plain " +
                 "text lines (program will stop reading after the first empty line): ");
         String coverLetterContents = getInputLinesUntilDone("\nEnter the contents of your cover letter " +
@@ -257,7 +262,7 @@ public class ApplicantInterface extends UserInterface {
      * Submit a job application on behalf of the applicant.
      *
      */
-    private void submitApplication() throws IOException {
+    private void submitApplication() {
         JobPosting posting = this.getPostingForJobApplication();
         if (posting == null) {
             return;

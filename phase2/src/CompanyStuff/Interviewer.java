@@ -1,8 +1,9 @@
-package UsersAndJobObjects;
+package CompanyStuff;
 
 import Miscellaneous.InterviewTime;
+import Main.User;
+import ApplicantStuff.JobApplication;
 
-import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -23,11 +24,11 @@ public class Interviewer extends User {
     // === Public methods ===
     // === Constructors ===
 
-    public Interviewer() throws IOException {
+    public Interviewer() {
     }
 
     public Interviewer(String username, String password, String legalName, String email, Company company, String field,
-                       LocalDate dateCreated) throws IOException {
+                       LocalDate dateCreated) {
         super(username, password, legalName, email, dateCreated);
         this.company = company;
         this.field = field;
@@ -154,7 +155,7 @@ public class Interviewer extends User {
     public ArrayList<Interview> getIncompleteInterviews(LocalDate today) {
         ArrayList<Interview> incompleteInterviews = new ArrayList<>();
         for (Interview interview : this.interviews) {
-            if (!interview.isComplete() && interview.isBeforeDate(today)) {
+            if (!interview.isComplete() && interview.getTime().getDate().isBefore(today)) {
                 incompleteInterviews.add(interview);
             }
         }
