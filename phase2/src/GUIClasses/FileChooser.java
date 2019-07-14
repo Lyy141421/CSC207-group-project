@@ -41,9 +41,9 @@ import java.util.ArrayList;
 
 public class FileChooser extends JPanel implements ActionListener {
     static private final String newline = "\n";
+    static private final Color LIGHT_RED = new Color(255, 210, 210);
     JButton uploadButton;
     JButton submitButton;
-    JPanel log = new JPanel();
     JPanel removeFileButtonsPanel = new JPanel();
     JFileChooser fc;
     String uploadButtonIconPath = "phase2/images/Open16.gif";
@@ -81,9 +81,9 @@ public class FileChooser extends JPanel implements ActionListener {
 
         //Add the buttons and the log to this panel.
         add(uploadButtonPanel, BorderLayout.PAGE_START);
-        add(log, BorderLayout.CENTER);
 
-        log.add(removeFileButtonsPanel, BorderLayout.CENTER);
+        removeFileButtonsPanel.setBackground(Color.WHITE);
+        add(removeFileButtonsPanel, BorderLayout.CENTER);
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -93,11 +93,13 @@ public class FileChooser extends JPanel implements ActionListener {
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 File file = fc.getSelectedFile();
                 JButton removeFileButton = new JButton("Remove " + file.getName());
-                removeFileButtonsPanel.add(removeFileButton);
-                log.add(removeFileButtonsPanel, BorderLayout.CENTER);
+                removeFileButton.setBackground(LIGHT_RED);
+                removeFileButtonsPanel.add(removeFileButton, BorderLayout.SOUTH);
+                removeFileButtonsPanel.validate();
+                removeFileButtonsPanel.repaint();
                 removeFileButton.addActionListener(
-                        new RemoveFileButtonListener(removeFileButtonsPanel, removeFileButton, this.filesToSubmit, file));
-                this.filesToSubmit.add(file);
+                        new RemoveFileButtonListener(removeFileButtonsPanel, removeFileButton, filesToSubmit, file));
+                filesToSubmit.add(file);
             }
         }
     }

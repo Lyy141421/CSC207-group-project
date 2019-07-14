@@ -23,5 +23,7 @@ public class RemoveFileButtonListener implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         this.filesToSubmit.remove(fileToRemove);
         this.panelWithButtons.remove(buttonToRemove);
+        this.panelWithButtons.validate();
+        this.panelWithButtons.repaint();
     }
 }
