@@ -4,6 +4,7 @@ import Main.JobApplicationSystem;
 import Miscellaneous.ExitException;
 import UsersAndJobObjects.*;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class ApplicantInterface extends UserInterface {
@@ -26,7 +27,7 @@ public class ApplicantInterface extends UserInterface {
      *
      */
     @Override
-    public void run() {
+    public void run() throws IOException {
         System.out.println("Welcome, " + this.user.getLegalName() + ".\n");
         this.displayUpcomingInterviews();
         while (true) {
@@ -45,8 +46,7 @@ public class ApplicantInterface extends UserInterface {
      * Run the main menu of the applicant interface.
      *
      */
-    private void runMainMenu()
-            throws ExitException {
+    private void runMainMenu() throws ExitException, IOException {
         int numOptions = displayMainMenuOptions();
         int option = getMenuOption(numOptions);
         switch (option) {
@@ -223,13 +223,13 @@ public class ApplicantInterface extends UserInterface {
      * @param posting The job posting that this applicant wishes to apply to.
      * @return a job application containing this applicant's entered files.
      */
-    private JobApplication createJobApplicationThroughTextEntry(JobPosting posting) {
+    private JobApplication createJobApplicationThroughTextEntry(JobPosting posting) throws IOException {
         String CVContents = getInputLinesUntilDone("\nEnter the contents of your CV as a series of plain " +
                 "text lines (program will stop reading after the first empty line): ");
         String coverLetterContents = getInputLinesUntilDone("\nEnter the contents of your cover letter " +
                 "as a series of plain text lines (program will stop reading after the first empty line): ");
-        JobApplicationDocument CV = new JobApplicationDocument(CVContents);
-        JobApplicationDocument coverLetter = new JobApplicationDocument(coverLetterContents);
+        JobApplicationDocument CV = new JobApplicationDocument(this.applicant, CVContents);
+        JobApplicationDocument coverLetter = new JobApplicationDocument(this.applicant, coverLetterContents);
         return new JobApplication(applicant, posting, CV, coverLetter, today);
     }
 
@@ -257,7 +257,7 @@ public class ApplicantInterface extends UserInterface {
      * Submit a job application on behalf of the applicant.
      *
      */
-    private void submitApplication() {
+    private void submitApplication() throws IOException {
         JobPosting posting = this.getPostingForJobApplication();
         if (posting == null) {
             return;

@@ -1,5 +1,8 @@
 package UsersAndJobObjects;
 
+import Managers.DocumentManager;
+
+import java.io.IOException;
 import java.io.Serializable;
 import java.time.LocalDate;
 
@@ -19,6 +22,8 @@ public abstract class User implements Serializable {
     private String email;
     // The date the account was created
     private LocalDate dateCreated;
+    // The applicant's document manager
+    private DocumentManager documentManager;
 
     // === Public methods ===
 
@@ -47,25 +52,17 @@ public abstract class User implements Serializable {
         return this.dateCreated;
     }
 
+    public DocumentManager getDocumentManager() {
+        return this.documentManager;
+    }
+
     // === Setters ===
     public void setUsername(String username) {
         this.username = username;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public void setLegalName(String legalName) {
-        this.legalName = legalName;
-    }
-
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public void setDateCreated(LocalDate dateCreated) {
-        this.dateCreated = dateCreated;
     }
 
     // === Other methods ===
@@ -105,11 +102,22 @@ public abstract class User implements Serializable {
     User() {
     }
 
-    User(String username, String password, String legalName, String email, LocalDate dateCreated) {
+    User(String username, String password, String legalName, String email, LocalDate dateCreated) throws IOException {
         this.username = username;
         this.password = password;
         this.legalName = legalName;
         this.email = email;
         this.dateCreated = dateCreated;
+        this.documentManager = new DocumentManager(this);
+    }
+
+    User(String username, String password, String legalName, String email, LocalDate dateCreated,
+         DocumentManager documentManager) {
+        this.username = username;
+        this.password = password;
+        this.legalName = legalName;
+        this.email = email;
+        this.dateCreated = dateCreated;
+        this.documentManager = documentManager;
     }
 }

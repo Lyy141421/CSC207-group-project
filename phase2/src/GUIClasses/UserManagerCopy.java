@@ -1,3 +1,4 @@
+/*
 package GUIClasses;
 
 import UsersAndJobObjects.*;
@@ -24,11 +25,13 @@ public class UserManagerCopy {
 
     // === Creating UsersAndJobObjects.User accounts and adding them to allUsers ===
 
-    /**
-     * All of the following methods create new instances of the various child classes of UsersAndJobObjects.User
-     *
-     * @param newUser Checks if the user being created is new/whether encryption is required
-     */
+    */
+/**
+ * All of the following methods create new instances of the various child classes of UsersAndJobObjects.User
+ *
+ * @param newUser Checks if the user being created is new/whether encryption is required
+ *//*
+
     public Interviewer createInterviewer(String username, String password, String legalName, String email, Company company,
                                          String field, LocalDate dateCreated, boolean newUser) {
         if (newUser) {
@@ -64,20 +67,24 @@ public class UserManagerCopy {
 
     // === UsersAndJobObjects.User Operations and password encryption ===
 
-    /**
-     * Checks if the password submitted matches the UsersAndJobObjects.User's password, returns boolean
-     */
+    */
+/**
+ * Checks if the password submitted matches the UsersAndJobObjects.User's password, returns boolean
+ *//*
+
     public boolean passwordCorrect(String checkedUsername, String password) {
         User checkedUser = findUserByUsername(checkedUsername);
         return this.decrypt(checkedUser.getPassword()).equals(password);
     }
 
-    /**
-     * Encrypts user passwords using a predefined Key and AES encryption.
-     *
-     * @param password the password being encrypted
-     * @return the password after encryption
-     */
+    */
+/**
+ * Encrypts user passwords using a predefined Key and AES encryption.
+ *
+ * @param password the password being encrypted
+ * @return the password after encryption
+ *//*
+
     private String encrypt(String password) {
 //        try
 //        {
@@ -101,12 +108,14 @@ public class UserManagerCopy {
         return password;
     }
 
-    /**
-     * Decrypts stored passwords using a predefined Key and AES decryption.
-     *
-     * @param encrypted the password, stored in encrypted form
-     * @return the password decrypted
-     */
+    */
+/**
+ * Decrypts stored passwords using a predefined Key and AES decryption.
+ *
+ * @param encrypted the password, stored in encrypted form
+ * @return the password decrypted
+ *//*
+
     private String decrypt(String encrypted) {
 //        try
 //        {
@@ -132,10 +141,12 @@ public class UserManagerCopy {
 
     // === Array operations on allUsers ===
 
-    /**
-     * @param username Account being searched for
-     * @return Account with the provided username. >RETURNS NULL IF NONE FOUND<
-     */
+    */
+/**
+ * @param username Account being searched for
+ * @return Account with the provided username. >RETURNS NULL IF NONE FOUND<
+ *//*
+
     public User findUserByUsername(String username) {
         for (User user : this.allUsers) {
             if (user.getUsername().equals(username)) {
@@ -145,11 +156,13 @@ public class UserManagerCopy {
         return null;
     }
 
-    /**
-     * Deletes a user from the system based on the username
-     *
-     * @param username the username of the user being deleted
-     */
+    */
+/**
+ * Deletes a user from the system based on the username
+ *
+ * @param username the username of the user being deleted
+ *//*
+
     void deleteByUsername(String username) {
         for (User user : this.allUsers) {
             if (user.getUsername().equals(username)) {
@@ -160,12 +173,14 @@ public class UserManagerCopy {
         //TODO: Delete from file system
     }
 
-    /**
-     * FOR ALL METHODS BELOW THIS JAVADOC
-     * Returns all of the relevant type of users in an arraylist.
-     *
-     * @return list of all existing (UsersAndJobObjects.User type)
-     */
+    */
+/**
+ * FOR ALL METHODS BELOW THIS JAVADOC
+ * Returns all of the relevant type of users in an arraylist.
+ *
+ * @return list of all existing (UsersAndJobObjects.User type)
+ *//*
+
     public ArrayList getAllApplicants() {
         ArrayList<User> ret = new ArrayList<>();
         for (User user : this.allUsers) {
@@ -200,3 +215,4 @@ public class UserManagerCopy {
         allUsers.addAll(list);
     }
 }
+*/

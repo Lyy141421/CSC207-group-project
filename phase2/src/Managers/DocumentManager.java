@@ -3,39 +3,40 @@ package Managers;
 import UsersAndJobObjects.Applicant;
 import UsersAndJobObjects.JobApplication;
 import UsersAndJobObjects.JobApplicationDocument;
+import UsersAndJobObjects.User;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class DocumentManager implements Serializable {
+    // The user for which this document manager is for
+    private User user;
     // List of filenames uploaded to account
     private ArrayList<JobApplicationDocument> documents = new ArrayList<>();
-    // The user for which this document manager is for
-    private Applicant applicant;
+    // The folder name
+    private String folderName = "phase2/userDocuments/" + this.user.getUsername();
+    // The actual folder that contains this user's documents
+    private File folder;
 
     // === Constructors ===
-    public DocumentManager(Applicant applicant) {
-        this.applicant = applicant;
+    public DocumentManager(User user) {
+        this.user = user;
+        this.folder = new File(this.folderName);
+        this.folder.mkdir();
     }
 
-    public DocumentManager(Applicant applicant, ArrayList<JobApplicationDocument> documents) {
-        this.applicant = applicant;
+    public DocumentManager(User user, ArrayList<JobApplicationDocument> documents, String folderName) {
+        this.user = user;
         this.documents = documents;
+        this.folderName = folderName;
     }
 
     // === Getters ===
     public ArrayList<JobApplicationDocument> getDocuments() {
         return this.documents;
-    }
-
-    public JobApplicationDocument getDocumentById(String Id) {
-        for (JobApplicationDocument x : getDocuments()) {
-            if (x.getId().equals(Id)) {
-                return x;
-            }
-        }
-        return null;
     }
 
     // === Other methods ===
@@ -54,25 +55,28 @@ public class DocumentManager implements Serializable {
     }
 
     /**
-     * Remove all documents in this list from the document manager's document list.
-     *
-     * @param documentList The list of documents to be removed.
-     */
-    public void removeDocuments(ArrayList<JobApplicationDocument> documentList) {
-        this.documents.removeAll(documentList);
-    }
-
-    /**
      * Remove the files submitted for an application to a job posting that has been closed for 30 days.
      *
      * @param today Today's date.
      */
     public void removeFilesFromAccount(LocalDate today) {
-        if (this.applicant.isInactive(today)) {
-            JobApplicationManager JAM = this.applicant.getJobApplicationManager();
-            JobApplication lastClosedJobApp = JAM.getLastClosedJobApp();
-            ArrayList<JobApplicationDocument> documents = JAM.getFilesSubmittedForApplication(lastClosedJobApp);
-            this.removeDocuments(documents);
+        if (this.user instanceof Applicant) {
+            Applicant applicant = (Applicant) user;
+            if (applicant.isInactive(today)) {
+                JobApplicationManager JAM = applicant.getJobApplicationManager();
+                JobApplication lastClosedJobApp = JAM.getLastClosedJobApp();
+                ArrayList<JobApplicationDocument> documents = JAM.getFilesSubmittedForApplication(lastClosedJobApp);
+                this.removeDocuments(documents);
+            }
         }
+    }
+
+    /**
+     * Remove all documents in this list from the document manager's document list.
+     *
+     * @param documentList The list of documents to be removed.
+     */
+    private void removeDocuments(ArrayList<JobApplicationDocument> documentList) {
+        this.documents.removeAll(documentList);
     }
 }

@@ -4,6 +4,7 @@ import Main.JobApplicationSystem;
 import Managers.DocumentManager;
 import Managers.JobApplicationManager;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,46 +21,35 @@ public class Applicant extends User {
     // === Instance variables ===
     // The applicant's job application manager
     private JobApplicationManager jobApplicationManager = new JobApplicationManager();
-    // The applicant's document manager
-    private DocumentManager documentManager = new DocumentManager(this);
 
     // === Public methods ===
     // === Constructors ===
 
-    public Applicant() {
+    public Applicant() throws IOException {
     }
 
-    public Applicant(String id) {
+    public Applicant(String id) throws IOException {
         this.setUsername(id);
     }
 
-    public Applicant(String username, String password, String legalName, String email, LocalDate dateCreated) {
+    public Applicant(String username, String password, String legalName, String email, LocalDate dateCreated) throws IOException {
         super(username, password, legalName, email, dateCreated);
     }
 
     public Applicant(String username, String password, String legalName, String email, LocalDate dateCreated,
+                     DocumentManager documentManager) {
+        super(username, password, legalName, email, dateCreated, documentManager);
+    }
+
+    public Applicant(String username, String password, String legalName, String email, LocalDate dateCreated,
                      JobApplicationManager jobApplicationManager, DocumentManager documentManager) {
-        super(username, password, legalName, email, dateCreated);
+        super(username, password, legalName, email, dateCreated, documentManager);
         this.jobApplicationManager = jobApplicationManager;
-        this.documentManager = documentManager;
     }
 
     // === Getters ===
     public JobApplicationManager getJobApplicationManager() {
         return this.jobApplicationManager;
-    }
-
-    public DocumentManager getDocumentManager() {
-        return this.documentManager;
-    }
-
-    // === Setters ===
-    public void setJobApplicationManager(JobApplicationManager jobApplicationManager) {
-        this.jobApplicationManager = jobApplicationManager;
-    }
-
-    public void setDocumentManager(DocumentManager documentManager) {
-        this.documentManager = documentManager;
     }
 
     // === Other methods ===
@@ -70,7 +60,7 @@ public class Applicant extends User {
      * @param application The job application registered.
      */
     public void registerJobApplication(JobApplication application) {
-        this.documentManager.addDocuments(new ArrayList<>(Arrays.asList(application.getCoverLetter(),
+        this.getDocumentManager().addDocuments(new ArrayList<>(Arrays.asList(application.getCoverLetter(),
                 application.getCv())));
         jobApplicationManager.addJobApplication(application);
     }

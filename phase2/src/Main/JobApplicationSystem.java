@@ -33,8 +33,8 @@ public class JobApplicationSystem {
     public static void run() throws ClassNotFoundException, IOException {
         JobApplicationSystem JAS = new JobApplicationSystem();
         UserInterface UI = new UserInterface(JAS);
-        DataLoaderAndStorer dataLoaderAndStorer = new DataLoaderAndStorer(JAS, "users.ser",
-                "companies.ser", "previousLoginDate.txt");
+        DataLoaderAndStorer dataLoaderAndStorer = new DataLoaderAndStorer(JAS, "phase2/files/users.ser",
+                "phase2/files/companies.ser", "phase2/files/previousLoginDate.txt");
         dataLoaderAndStorer.loadAllData();
         while (true) {
             try {

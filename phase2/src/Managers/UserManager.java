@@ -9,6 +9,7 @@ import UsersAndJobObjects.Company;
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.security.Key;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -35,21 +36,21 @@ public class UserManager {
      * All of the following methods create new instances of the various child classes of User
      */
     public Applicant createApplicant(String username, String password,
-                                     String legalName, String email, LocalDate dateCreated) {
+                                     String legalName, String email, LocalDate dateCreated) throws IOException {
         Applicant newApplicant = new Applicant(username, password, legalName, email, dateCreated);
         this.allUsers.add(newApplicant);
         return newApplicant;
     }
 
     public Interviewer createInterviewer(String username, String password, String legalName, String email, Company company,
-                                         String field, LocalDate dateCreated) {
+                                         String field, LocalDate dateCreated) throws IOException {
         Interviewer newInterviewer = new Interviewer(username, password, legalName, email, company, field, dateCreated);
         this.allUsers.add(newInterviewer);
         return newInterviewer;
     }
 
     public HRCoordinator createHRCoordinator(String username, String password, String legalName,
-                                             String email, Company company, LocalDate dateCreated) {
+                                             String email, Company company, LocalDate dateCreated) throws IOException {
         HRCoordinator newHRC = new HRCoordinator(username, password, legalName, email, company, dateCreated);
         this.allUsers.add(newHRC);
         return newHRC;

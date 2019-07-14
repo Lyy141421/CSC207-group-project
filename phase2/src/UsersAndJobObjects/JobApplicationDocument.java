@@ -1,44 +1,45 @@
 package UsersAndJobObjects;
 
-import java.io.Serializable;
+import java.io.*;
 
 public class JobApplicationDocument implements Serializable {
 
-    // === Class variables ===
-    // The total number of job application documents
-    private static int totalNumOfDocuments;
-
     // === Instance variables ===
-    // The ID of this document
-    private String id;
+    // The user to which this document belongs
+    private User user;
+    // The unique file name of this document
+    private String fileName;
     // The contents of this job application document
-    private String contents;
+    private File file;
 
     // === Constructor ===
-    public JobApplicationDocument(String contents) {
-        JobApplicationDocument.totalNumOfDocuments++;
-        this.id = String.valueOf(JobApplicationDocument.totalNumOfDocuments);
-        this.contents = contents;
+    public JobApplicationDocument(User user, File file) {
+        this.user = user;
+        this.fileName = file.getName();
+        this.file = file;
     }
 
-    public JobApplicationDocument(String title, String contents) {
-        JobApplicationDocument.totalNumOfDocuments++;
-        this.id = title;
-        this.contents = contents;
+    public JobApplicationDocument(User user, String contents) throws IOException {
+        this.user = user;
+        this.fileName = user.getUsername() + "_" + user.getUsername() + ".txt";
+        this.file = this.createNewFile(this.fileName, contents);
     }
 
     // === Getters ===
-    public String getId() {
-        return this.id;
+    public String getFileName() {
+        return this.fileName;
     }
 
-    public String getContents() {
-        return this.contents;
+    public File getFile() {
+        return this.file;
     }
 
     // === Other methods ===
-    @Override
-    public String toString() {
-        return this.getContents();
+    private File createNewFile(String fileName, String contents) throws IOException {
+        File newFile = new File(this.fileName);
+        newFile.createNewFile();
+        PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(fileName)));
+        out.println(contents);
+        return newFile;
     }
 }

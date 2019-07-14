@@ -204,9 +204,9 @@ public class InterviewerInterface extends UserInterface {
         System.out.println("Interview:");
         System.out.println(interview.toStringPrelimInfo() + "\n");
         System.out.println("Applicant cover letter:");
-        System.out.println(interview.getJobApplication().getCoverLetter().getContents() + "\n");
+//        System.out.println(interview.getJobApplication().getCoverLetter().getContents() + "\n");
         System.out.println("Applicant CV:");
-        System.out.println(interview.getJobApplication().getCv().getContents() + "\n");
+//        System.out.println(interview.getJobApplication().getCv().getContents() + "\n");
     }
 
     /**

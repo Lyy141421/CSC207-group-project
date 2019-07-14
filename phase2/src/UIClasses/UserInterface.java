@@ -4,6 +4,7 @@ import Main.JobApplicationSystem;
 import Miscellaneous.ExitException;
 import UsersAndJobObjects.*;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -39,7 +40,7 @@ public class UserInterface {
      * Run this user interface.
      *
      */
-    public void run() throws ExitException {
+    public void run() throws ExitException, IOException {
         System.out.println("\nWelcome to GET A JOB!");
         User user = this.login();
         UserInterface userInterface = new InterfaceFactory().createInterface(JAS, user);
@@ -349,7 +350,7 @@ public class UserInterface {
      * @param password             The user's password.
      * @return the new user instance created.
      */
-    private User signUp(String username, String password) {
+    private User signUp(String username, String password) throws IOException {
         System.out.println();
         String legalName = this.getOnlyLetters("Enter your legal name: ");
         String email = this.getValidEmail("Enter your email address: ");
@@ -378,8 +379,7 @@ public class UserInterface {
      * @param email                The HR Coordinator's email.
      * @return the new HR Coordinator instance created.
      */
-    private User createNewHRC(String username, String password,
-                              String legalName, String email) {
+    private User createNewHRC(String username, String password, String legalName, String email) throws IOException {
         System.out.println();
         String companyName = this.getInputLine("Enter your company name: ");
         Company company = this.JAS.getCompany(companyName);
@@ -402,8 +402,7 @@ public class UserInterface {
      * @param email                The interviewer's email.
      * @return the new interviewer instance created.
      */
-    private User createNewInterviewer(String username,
-                                      String password, String legalName, String email) {
+    private User createNewInterviewer(String username, String password, String legalName, String email) throws IOException {
         System.out.println();
         String companyName = this.getInputLine("Enter your company name: ");
         Company company = this.JAS.getCompany(companyName);
@@ -425,7 +424,7 @@ public class UserInterface {
      *
      * @return the user who logged-in.
      */
-    private User login() {
+    private User login() throws IOException {
         String username = this.getInputToken("\nEnter your username: ");
         sc.nextLine();
         String password = this.getInputLine("Enter your password: ");

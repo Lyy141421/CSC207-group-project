@@ -1,5 +1,6 @@
 package UsersAndJobObjects;
 
+import java.io.IOException;
 import java.time.LocalDate;
 
 public class HRCoordinator extends User {
@@ -14,15 +15,11 @@ public class HRCoordinator extends User {
 
     // === Public methods ===
     // === Constructors ===
-    public HRCoordinator() {
-    }
-
-    public HRCoordinator(String id) {
-        this.setUsername(id);
+    public HRCoordinator() throws IOException {
     }
 
     public HRCoordinator(String username, String password, String legalName, String email, Company company,
-                         LocalDate dateCreated) {
+                         LocalDate dateCreated) throws IOException {
         super(username, password, legalName, email, dateCreated);
         this.company = company;
     }

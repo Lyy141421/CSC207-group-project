@@ -2,6 +2,7 @@ package UsersAndJobObjects;
 
 import Miscellaneous.InterviewTime;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -22,15 +23,11 @@ public class Interviewer extends User {
     // === Public methods ===
     // === Constructors ===
 
-    public Interviewer() {
-    }
-
-    public Interviewer(String id) {
-        this.setUsername(id);
+    public Interviewer() throws IOException {
     }
 
     public Interviewer(String username, String password, String legalName, String email, Company company, String field,
-                       LocalDate dateCreated) {
+                       LocalDate dateCreated) throws IOException {
         super(username, password, legalName, email, dateCreated);
         this.company = company;
         this.field = field;
