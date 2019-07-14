@@ -3,7 +3,7 @@ package UIClasses;
 import Main.JobApplicationSystem;
 import UsersAndJobObjects.User;
 
-public class InterfaceFactory {
+class InterfaceFactory {
     /**
      * Factory that creates the appropriate interface for the user.
      */
@@ -19,7 +19,8 @@ public class InterfaceFactory {
     /**
      * Create the appropriate interface for this user.
      *
-     * @param object The user who logged in.
+     * @param JAS The job application system being used
+     * @param user  The user who logged in
      * @return the appropriate interface for this user.
      */
     public UserInterface createInterface(JobApplicationSystem JAS, User user) {

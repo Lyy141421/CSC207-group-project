@@ -4,9 +4,10 @@ import UsersAndJobObjects.Interview;
 import UsersAndJobObjects.JobApplication;
 import UsersAndJobObjects.JobPosting;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class InterviewManager {
+public class InterviewManager implements Serializable {
     /**
      * A class that manages interviews for a job posting.
      */

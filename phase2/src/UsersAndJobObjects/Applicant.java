@@ -1,5 +1,6 @@
 package UsersAndJobObjects;
 
+import Main.JobApplicationSystem;
 import Managers.DocumentManager;
 import Managers.JobApplicationManager;
 
@@ -112,10 +113,10 @@ public class Applicant extends User {
      *
      * @return a list of open job postings not yet applied to.
      */
-    public ArrayList<JobPosting> getOpenJobPostingsNotAppliedTo() {
+    public ArrayList<JobPosting> getOpenJobPostingsNotAppliedTo(JobApplicationSystem JAS) {
         ArrayList<JobPosting> jobPostingsNotAppliedTo = new ArrayList<>();
-        for (Company company : jobApplicationSystem.getCompanies()) {
-            for (JobPosting posting : company.getJobPostingManager().getOpenJobPostings(jobApplicationSystem.getToday()))
+        for (Company company : JAS.getCompanies()) {
+            for (JobPosting posting : company.getJobPostingManager().getOpenJobPostings(JAS.getToday()))
                 if (!this.hasAppliedTo(posting)) {
                     jobPostingsNotAppliedTo.add(posting);
                 }

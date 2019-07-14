@@ -4,10 +4,11 @@ import UsersAndJobObjects.Applicant;
 import UsersAndJobObjects.JobApplication;
 import UsersAndJobObjects.JobApplicationDocument;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-public class DocumentManager {
+public class DocumentManager implements Serializable {
     // List of filenames uploaded to account
     private ArrayList<JobApplicationDocument> documents = new ArrayList<>();
     // The user for which this document manager is for

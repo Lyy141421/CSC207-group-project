@@ -1,5 +1,6 @@
 package UIClasses;
 
+import Main.JobApplicationSystem;
 import UsersAndJobObjects.*;
 
 import java.util.ArrayList;
@@ -15,7 +16,8 @@ class HRCoordinatorJobAppsInterface extends UserInterface {
 
 
     // === Constructor ===
-    HRCoordinatorJobAppsInterface(HRCoordinator HRC) {
+    HRCoordinatorJobAppsInterface(JobApplicationSystem JAS, HRCoordinator HRC) {
+        super(JAS);
         this.HRC = HRC;
     }
 
@@ -25,7 +27,7 @@ class HRCoordinatorJobAppsInterface extends UserInterface {
      *
      */
     void runMenu() {
-        JobPosting jobPosting = new HRCoordinatorInterface(this.HRC).getJobPosting();
+        JobPosting jobPosting = new HRCoordinatorInterface(this.JAS, this.HRC).getJobPosting();
         if (jobPosting == null || this.noItemsToViewForJobPosting(jobPosting)) {
             return;
         }
@@ -100,7 +102,7 @@ class HRCoordinatorJobAppsInterface extends UserInterface {
      * @param jobPosting           The job posting in question.
      */
     private void searchSpecificJobApplication(JobPosting jobPosting) {
-        Applicant applicant = new HRCoordinatorInterface(this.HRC).searchSpecificApplicant();
+        Applicant applicant = new HRCoordinatorInterface(this.JAS, this.HRC).searchSpecificApplicant();
         if (applicant != null) {
             JobApplication jobApp = jobPosting.findJobApplication(applicant);
             if (jobApp == null) {

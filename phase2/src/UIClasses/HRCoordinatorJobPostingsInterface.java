@@ -1,5 +1,6 @@
 package UIClasses;
 
+import Main.JobApplicationSystem;
 import Managers.JobPostingManager;
 import UsersAndJobObjects.HRCoordinator;
 import UsersAndJobObjects.JobPosting;
@@ -22,7 +23,8 @@ class HRCoordinatorJobPostingsInterface extends UserInterface {
     private HRCoordinator HRC;
 
     // === Constructor ===
-    HRCoordinatorJobPostingsInterface(HRCoordinator HRC) {
+    HRCoordinatorJobPostingsInterface(JobApplicationSystem JAS, HRCoordinator HRC) {
+        super(JAS);
         this.HRC = HRC;
     }
 
@@ -86,7 +88,7 @@ class HRCoordinatorJobPostingsInterface extends UserInterface {
             System.out.println("\nThere are no open job postings to be updated.");
             return;
         }
-        JobPosting jobPosting = new HRCoordinatorInterface(this.HRC).getJobPosting();
+        JobPosting jobPosting = new HRCoordinatorInterface(this.JAS, this.HRC).getJobPosting();
         if (jobPosting != null) {
             if (jobPosting.isClosed(this.today)) {
                 System.out.println("\nThis job posting is closed and can no longer be updated.");
@@ -123,7 +125,7 @@ class HRCoordinatorJobPostingsInterface extends UserInterface {
     private void runMenuAction(int option) {
         switch (option) {
             case 1: // Search job posting
-                new HRCoordinatorInterface(this.HRC).getJobPosting();
+                new HRCoordinatorInterface(this.JAS, this.HRC).getJobPosting();
                 break;
             case 2: // View open job postings
                 this.displayOpenPostings();

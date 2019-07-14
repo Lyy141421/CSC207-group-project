@@ -3,10 +3,11 @@ package Managers;
 import UsersAndJobObjects.JobPosting;
 import UsersAndJobObjects.Company;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-public class JobPostingManager {
+public class JobPostingManager implements Serializable {
     /**
      * A class that manages the job postings for each company
      */

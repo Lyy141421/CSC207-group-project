@@ -5,13 +5,14 @@ import Miscellaneous.CloseDateComparator;
 import UsersAndJobObjects.*;
 
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 import static java.time.temporal.ChronoUnit.DAYS;
 
-public class JobApplicationManager {
+public class JobApplicationManager implements Serializable {
 
     // === Instance variables ===
     // List of job applications submitted sorted chronologically by close date

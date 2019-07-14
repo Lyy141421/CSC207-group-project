@@ -23,13 +23,14 @@ public class UserInterface {
     // The Job application being used
     JobApplicationSystem JAS;
     // Today's date
-    LocalDate today = JAS.getToday();
+    LocalDate today;
 
     // ============================================================================================================== //
     // === Public methods ===
     // === Constructor ===
     public UserInterface(JobApplicationSystem JAS) {
         this.JAS = JAS;
+        this.today = JAS.getToday();
     }
 
     // === Method to be overridden ===
@@ -58,7 +59,7 @@ public class UserInterface {
         LocalDate date;
         if (previousLoginDate == null) {    // First start up with no PreviousLoginDate.txt
             date = this.getDate("Please enter today's date (yyyy-mm-dd): ");
-        } else if (this.today == null) {    // First start up with date in PreviousLoginDate.txt
+        } else if (this.today == null) {    // First start up with date in data.ser
             date = this.getDateIncludingToday(previousLoginDate,
                     "Please enter today's date (yyyy-mm-dd): ");
         } else {    // While the application runs
@@ -75,10 +76,7 @@ public class UserInterface {
     // === Constructor ===
     UserInterface(JobApplicationSystem JAS, User user) {
         this.JAS = JAS;
-        this.user = user;
-    }
-
-    UserInterface(User user) {
+        this.today = JAS.getToday();
         this.user = user;
     }
 
@@ -245,13 +243,13 @@ public class UserInterface {
             if (date.isBefore(today)) {
                 System.out.println("Invalid date. Please enter again.");
                 System.out.println();
-                return this.getDateIncludingToday(message);
+                return this.getDateIncludingToday(today, message);
             }
             return date;
         } catch (DateTimeParseException dtpe) {
             System.out.println("Cannot read date. Please enter again.");
             System.out.println();
-            return this.getDateIncludingToday(message);
+            return this.getDateIncludingToday(today, message);
         }
     }
 

@@ -167,7 +167,7 @@ public class ApplicantInterface extends UserInterface {
     }
 
     private void displayOpenJobPostingsNotYetAppliedTo(String field, String companyName) {
-        ArrayList<JobPosting> openJobPostings = this.applicant.getOpenJobPostingsNotAppliedTo();
+        ArrayList<JobPosting> openJobPostings = this.applicant.getOpenJobPostingsNotAppliedTo(this.JAS);
         boolean noPostingsFound = true;
         for (JobPosting posting : openJobPostings) {
             // if field is null, assign value of posting.getField() to filterField so that all postings pass the filter;

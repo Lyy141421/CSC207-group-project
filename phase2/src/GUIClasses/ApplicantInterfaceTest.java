@@ -1,10 +1,10 @@
 package GUIClasses;
 
-import GUIClasses.UserInterface;
+import UIClasses.UserInterface;
 
 //import static Main.JobApplicationSystem.today;
 
-public class ApplicantInterfaceTest extends UserInterface {
+//public class ApplicantInterfaceTest extends UserInterface {
     /**
      * The general interface for an applicant
      */
@@ -149,4 +149,4 @@ public class ApplicantInterfaceTest extends UserInterface {
             }
         }
     }*/
-}
+//}

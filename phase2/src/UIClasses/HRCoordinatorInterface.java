@@ -31,7 +31,7 @@ public class HRCoordinatorInterface extends UserInterface {
     @Override
     public void run() {
         System.out.println("Welcome, " + this.HRC.getLegalName() + ".\n");
-        new HRCoordinatorJobPostingsInterface(this.HRC).viewPostingsWithNoApplicationsSubmitted(
+        new HRCoordinatorJobPostingsInterface(this.JAS, this.HRC).viewPostingsWithNoApplicationsSubmitted(
         );
         this.viewPostingsWithNoApplicationsInConsideration();
         while (true) {
@@ -118,16 +118,16 @@ public class HRCoordinatorInterface extends UserInterface {
                 new HRCoordinatorHighPriorityInterface(this.HRC).runMenu();
                 break;
             case 2: // Add job posting
-                new HRCoordinatorJobPostingsInterface(this.HRC).addJobPosting();
+                new HRCoordinatorJobPostingsInterface(this.JAS, this.HRC).addJobPosting();
                 break;
             case 3: // Update fields
-                new HRCoordinatorJobPostingsInterface(this.HRC).updateJobPostingFull();
+                new HRCoordinatorJobPostingsInterface(this.JAS, this.HRC).updateJobPostingFull();
                 break;
             case 4: // View job postings
-                new HRCoordinatorJobPostingsInterface(this.HRC).runMenu();
+                new HRCoordinatorJobPostingsInterface(this.JAS, this.HRC).runMenu();
                 break;
             case 5: // View job applications
-                new HRCoordinatorJobAppsInterface(this.HRC).runMenu();
+                new HRCoordinatorJobAppsInterface(this.JAS, this.HRC).runMenu();
                 break;
             case 6: // View previous job apps to company
                 this.viewAllJobAppsToCompany();

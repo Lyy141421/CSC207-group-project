@@ -12,7 +12,7 @@ import java.time.LocalDate;
 
 class ApplicantPanel extends JPanel {
     private LocalDate date;
-    private ApplicantInterfaceTest BackEnd;
+    //private ApplicantInterfaceTest BackEnd;
     private CardLayout masterLayout;
     private Container parent;
     private Applicant loggedUser;

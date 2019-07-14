@@ -140,7 +140,7 @@ public class DataLoaderAndStorer {
      *
      */
     private void storePreviousLoginDate() {
-        try (PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("phase1/files/PreviousLoginDate.txt")))) {
+        try (PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(dateFilePath)))) {
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             String dateString = this.JAS.getToday().format(dtf);
             out.println(dateString);

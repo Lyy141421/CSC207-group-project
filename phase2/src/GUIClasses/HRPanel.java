@@ -1,7 +1,7 @@
 package GUIClasses;
 
 
-import GUIClasses.HRCoordinatorInterface;
+//import GUIClasses.HRCoordinatorInterface;
 import Main.JobApplicationSystem;
 import UsersAndJobObjects.JobApplication;
 import UsersAndJobObjects.JobPosting;
@@ -26,6 +26,7 @@ import java.util.Date;
 //import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
 //import net.sourceforge.jdatepicker.impl.UtilDateModel;
 
+/*
 
 public class HRPanel extends JPanel { //implements ActionListener {
 
@@ -558,3 +559,4 @@ public class HRPanel extends JPanel { //implements ActionListener {
     }
 
 }
+*/
