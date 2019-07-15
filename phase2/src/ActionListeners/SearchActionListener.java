@@ -1,6 +1,5 @@
-package Actions;
+package ActionListeners;
 
-import CompanyStuff.HRCoordinator;
 import Main.User;
 
 import java.awt.event.ActionEvent;

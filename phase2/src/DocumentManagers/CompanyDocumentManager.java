@@ -1,24 +1,21 @@
-package CompanyStuff;
+package DocumentManagers;
 
+import CompanyStuff.Company;
 import DocumentManagers.DocumentManager;
 
 import java.io.File;
 import java.util.Observable;
 import java.util.Observer;
 
-public class CompanyDocumentManager extends DocumentManager implements Observer {
+public class CompanyDocumentManager extends DocumentManager<Company> implements Observer {
 
     // === Instance variables ===
     private Company company;
 
     CompanyDocumentManager(Company company) {
-        super();
+        super(company);
         this.company = company;
-    }
-
-    CompanyDocumentManager(Company company, File folder) {
-        super(folder);
-        this.company = company;
+        this.setFolder(new File(DocumentManager.INITIAL_PATH + "/companies/" + this.getObject().getName()));
     }
 
     @Override

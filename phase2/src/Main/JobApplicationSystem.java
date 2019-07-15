@@ -2,8 +2,6 @@ package Main;
 
 import CompanyStuff.Company;
 import CompanyStuff.JobPosting;
-import FileLoadingAndStoring.*;
-import Miscellaneous.ExitException;
 //import UIClasses.UserInterface;
 import ApplicantStuff.Applicant;
 
@@ -118,8 +116,7 @@ public class JobApplicationSystem {
      */
     private void applicant30Day() {
         for (Applicant app : this.userManager.getAllApplicants()) {
-            // TODO fix
-            //app.getDocumentManager().removeFilesFromAccount(this.today);
+            app.getDocumentManager().removeFilesFromAccountIfInactive(this.today);
         }
     }
 

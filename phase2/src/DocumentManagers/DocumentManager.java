@@ -1,30 +1,42 @@
 package DocumentManagers;
 
 import ApplicantStuff.JobApplicationDocument;
+import Main.User;
 
 import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class DocumentManager implements Serializable {
-    // The actual folder that contains this user's documents
+public class DocumentManager<T> implements Serializable {
+    // The initial path
+    protected static String INITIAL_PATH = "phase2/uploadedDocuments";
+
+    // The company or user that this document manager is for
+    private T object;
+    // The actual folder that contains the company's/user's documents
     private File folder;
 
     // === Constructors ===
-    public DocumentManager() {
+    public DocumentManager(T object) {
+        this.object = object;
     }
 
-    public DocumentManager(File folder) {
+    public DocumentManager(T object, File folder) {
+        this.object = object;
         this.folder = folder;
     }
 
     // === Getters ===
+    protected T getObject() {
+        return this.object;
+    }
+
     protected File getFolder() {
         return this.folder;
     }
 
     // === Setters ===
-    void setFolder(File folder) {
+    protected void setFolder(File folder) {
         this.folder = folder;
         this.folder.mkdir();
     }

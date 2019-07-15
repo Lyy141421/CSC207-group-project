@@ -1,6 +1,6 @@
 package NewGUI;
 
-import Actions.*;
+import ActionListeners.*;
 import CompanyStuff.Interviewer;
 
 import javax.swing.*;

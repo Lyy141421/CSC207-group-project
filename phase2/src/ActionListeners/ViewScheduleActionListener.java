@@ -1,22 +1,20 @@
-package Actions;
+package ActionListeners;
 
 import Main.User;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class ProfileActionListener implements ActionListener {
+public class ViewScheduleActionListener implements ActionListener {
 
-    // === Instance variables ===
     private User user;
 
-    public ProfileActionListener(User user) {
+    public ViewScheduleActionListener(User user) {
         this.user = user;
     }
 
-
+    @Override
     public void actionPerformed(ActionEvent e) {
 
     }
-
 }

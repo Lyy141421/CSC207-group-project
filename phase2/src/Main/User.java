@@ -1,8 +1,6 @@
 package Main;
 
-import DocumentManagers.DocumentManager;
 import ApplicantStuff.JobApplication;
-import DocumentManagers.UserDocumentManager;
 
 import java.io.Serializable;
 import java.time.LocalDate;

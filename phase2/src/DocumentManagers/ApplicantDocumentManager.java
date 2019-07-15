@@ -1,6 +1,9 @@
-package ApplicantStuff;
+package DocumentManagers;
 
-import DocumentManagers.UserDocumentManager;
+import ApplicantStuff.Applicant;
+import ApplicantStuff.JobApplication;
+import ApplicantStuff.JobApplicationDocument;
+import ApplicantStuff.JobApplicationManager;
 
 import java.io.File;
 import java.io.IOException;
@@ -10,29 +13,28 @@ import java.util.ArrayList;
 public class ApplicantDocumentManager extends UserDocumentManager {
 
     // === Instance variables ===
-    Applicant applicant;
+    private Applicant applicant;
 
+    // === Constructor ===
     ApplicantDocumentManager(Applicant applicant) {
         super(applicant);
         this.applicant = applicant;
-    }
-
-    ApplicantDocumentManager(Applicant applicant, File folder) {
-        super(applicant, folder);
-        this.applicant = applicant;
+        this.makeSubDirectories();
     }
 
     /**
      * Make subdirectories for this applicant.
      */
-    @Override
-    public void makeSubDirectories() {
-        File CVFolder = new File(this.getFolder().getPath() + File.pathSeparator + "CVs");
-        File CoverLetterFolder = new File(this.getFolder().getPath() + File.pathSeparator + "CoverLetters");
-        File OtherFileFolder = new File(this.getFolder().getPath() + File.pathSeparator + "Other");
+    private void makeSubDirectories() {
+        File CVFolder = new File(this.getFolder().getPath() + "/CVs");
+        File CoverLetterFolder = new File(this.getFolder().getPath() + "/coverLetters");
+        File OtherFileFolder = new File(this.getFolder().getPath() + "/other");
         try {
+            CVFolder.mkdir();
             CVFolder.createNewFile();
+            CoverLetterFolder.mkdir();
             CoverLetterFolder.createNewFile();
+            OtherFileFolder.mkdir();
             OtherFileFolder.createNewFile();
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -44,7 +46,7 @@ public class ApplicantDocumentManager extends UserDocumentManager {
      *
      * @param today Today's date.
      */
-    public void removeFilesFromAccount(LocalDate today) {
+    public void removeFilesFromAccountIfInactive(LocalDate today) {
         if (this.applicant.isInactive(today)) {
             JobApplicationManager JAM = applicant.getJobApplicationManager();
             JobApplication lastClosedJobApp = JAM.getLastClosedJobApp();

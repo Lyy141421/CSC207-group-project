@@ -2,6 +2,9 @@ package CompanyStuff;
 
 import ApplicantStuff.Applicant;
 import ApplicantStuff.JobApplication;
+import DocumentManagers.CompanyDocumentManager;
+import DocumentManagers.DocumentManager;
+import DocumentManagers.DocumentManagerFactory;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -13,17 +16,22 @@ public class Company implements Serializable {
     // The name of this company (unique identifier)
     private String name;
     // The HR Coordinators for this company
-    private ArrayList<HRCoordinator> hrCoordinators = new ArrayList<>();
+    private ArrayList<HRCoordinator> hrCoordinators;
     // The interviewers in this company
-    private HashMap<String, ArrayList<Interviewer>> fieldToInterviewers = new HashMap<>();
+    private HashMap<String, ArrayList<Interviewer>> fieldToInterviewers;
     // The job posting manager for this company
-    private JobPostingManager jobPostingManager = new JobPostingManager(this);
-
+    private JobPostingManager jobPostingManager;
+    // The document manager for this company
+    private CompanyDocumentManager documentManager;
 
     // === Public methods ===
     // === Constructors ===
     public Company(String name) {
         this.name = name;
+        this.hrCoordinators = new ArrayList<>();
+        this.fieldToInterviewers = new HashMap<>();
+        this.jobPostingManager = new JobPostingManager(this);
+        this.documentManager = (CompanyDocumentManager) new DocumentManagerFactory().createDocumentManager(this);
     }
 
     // === Getters ==
@@ -45,6 +53,10 @@ public class Company implements Serializable {
 
     public JobPostingManager getJobPostingManager() {
         return this.jobPostingManager;
+    }
+
+    public CompanyDocumentManager getDocumentManager() {
+        return this.documentManager;
     }
 
     // === Setters ===

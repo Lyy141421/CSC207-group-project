@@ -1,14 +1,15 @@
 package ApplicantStuff;
 
-import Main.JobApplicationSystem;
+import DocumentManagers.ApplicantDocumentManager;
 import DocumentManagers.DocumentManager;
+import DocumentManagers.DocumentManagerFactory;
+import Main.JobApplicationSystem;
 import CompanyStuff.Company;
 import Main.User;
 import CompanyStuff.JobPosting;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class Applicant extends User {
     /**
@@ -21,38 +22,26 @@ public class Applicant extends User {
 
     // === Instance variables ===
     // The applicant's job application manager
-    private JobApplicationManager jobApplicationManager = new JobApplicationManager();
+    private JobApplicationManager jobApplicationManager;
     // The applicant's document manager
     private ApplicantDocumentManager documentManager;
 
     // === Public methods ===
     // === Constructors ===
 
-    public Applicant() {
-    }
-
     public Applicant(String username, String password, String legalName, String email, LocalDate dateCreated) {
         super(username, password, legalName, email, dateCreated);
-        this.documentManager = new ApplicantDocumentManager(this);
-    }
-
-    public Applicant(String username, String password, String legalName, String email, LocalDate dateCreated,
-                     JobApplicationManager jobApplicationManager) {
-        super(username, password, legalName, email, dateCreated);
-        this.jobApplicationManager = jobApplicationManager;
-        this.documentManager = new ApplicantDocumentManager(this);
-    }
-
-    public Applicant(String username, String password, String legalName, String email, LocalDate dateCreated,
-                     JobApplicationManager jobApplicationManager, ApplicantDocumentManager documentManager) {
-        super(username, password, legalName, email, dateCreated);
-        this.jobApplicationManager = jobApplicationManager;
-        this.documentManager = documentManager;
+        this.jobApplicationManager = new JobApplicationManager();
+        this.documentManager = (ApplicantDocumentManager) new DocumentManagerFactory().createDocumentManager(this);
     }
 
     // === Getters ===
     public JobApplicationManager getJobApplicationManager() {
         return this.jobApplicationManager;
+    }
+
+    public DocumentManager getDocumentManager() {
+        return this.documentManager;
     }
 
     // === Other methods ===
