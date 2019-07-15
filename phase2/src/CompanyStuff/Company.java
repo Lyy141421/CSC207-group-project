@@ -59,19 +59,6 @@ public class Company implements Serializable {
         return this.documentManager;
     }
 
-    // === Setters ===
-    public void setHrCoordinators(ArrayList<HRCoordinator> hrCoordinators) {
-        this.hrCoordinators = hrCoordinators;
-    }
-
-    public void setFieldToInterviewers(HashMap<String, ArrayList<Interviewer>> fieldToInterviewers) {
-        this.fieldToInterviewers = fieldToInterviewers;
-    }
-
-    public void setJobPostingManager(JobPostingManager jobPostingManager) {
-        this.jobPostingManager = jobPostingManager;
-    }
-
     // === Other methods ===
 
     /**

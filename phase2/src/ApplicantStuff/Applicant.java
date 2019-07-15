@@ -40,7 +40,7 @@ public class Applicant extends User {
         return this.jobApplicationManager;
     }
 
-    public DocumentManager getDocumentManager() {
+    public ApplicantDocumentManager getDocumentManager() {
         return this.documentManager;
     }
 

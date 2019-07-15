@@ -26,7 +26,7 @@ public class JobApplicationDocument implements Serializable {
     JobApplicationDocument(File folder, File file) {
         this.folder = folder;
         this.file = file;
-        String filePath = this.folder.getPath() + File.pathSeparator + this.file.getName();
+        String filePath = this.folder.getPath() + "/" + this.file.getName();
         File newFileDest = new File(filePath);
         if (newFileDest.exists()) {
             this.changeFileDestination(newFileDest);
@@ -36,7 +36,7 @@ public class JobApplicationDocument implements Serializable {
 
     JobApplicationDocument(File folder, String fileType, String contents) {
         this.folder = folder;
-        String filePath = this.folder.getPath() + File.pathSeparator + fileType + ".txt";
+        String filePath = this.folder.getPath() + "/" + fileType + ".txt";
         File newFile = this.createNewFile(filePath, contents);
         if (newFile.exists()) {
             this.changeFileDestination(newFile);
