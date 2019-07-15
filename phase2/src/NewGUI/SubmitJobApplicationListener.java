@@ -1,4 +1,4 @@
-package GUIClasses;
+package NewGUI;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -9,7 +9,7 @@ public class SubmitJobApplicationListener implements ActionListener {
 
     private ArrayList<File> filesToSubmit;
 
-    public SubmitJobApplicationListener(ArrayList<File> files) {
+    SubmitJobApplicationListener(ArrayList<File> files) {
         this.filesToSubmit = files;
     }
 

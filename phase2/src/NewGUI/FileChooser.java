@@ -1,4 +1,3 @@
-package GUIClasses;
 /*
  * Copyright (c) 1995, 2008, Oracle and/or its affiliates. All rights reserved.
  *
@@ -30,6 +29,11 @@ package GUIClasses;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+/*
+ * Adapted from FileChooserDemo.java from https://docs.oracle.com/javase/tutorial/uiswing/components/filechooser.html
+ */
+
+package NewGUI;
 
 import javax.swing.*;
 import java.awt.*;
