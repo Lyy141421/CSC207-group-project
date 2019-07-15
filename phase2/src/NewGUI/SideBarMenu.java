@@ -45,31 +45,19 @@ import java.util.TreeMap;
 import javax.swing.*;
 
 
-public class SideBarMenu extends MouseAdapter {
-
-    // === Class variables ===
-    private static int CELL_WIDTH = 200;
-    private static int CELL_HEIGHT = 30;
+class SideBarMenu extends MouseAdapter {
 
     // === Instance variables ===
-    TreeMap<String, Object> menuTitles;
-    MouseAdapter mouseAdapter = new MouseAdapter1();
-
-
-    // === Main method (for testing) ===
-    public static void main(String[] args) {
-        //Schedule a job for the event-dispatching thread:
-        //creating and showing this application's GUI.
-        javax.swing.SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                createAndShowGUI();
-            }
-        });
-    }
+    private TreeMap<String, Object> menuTitles;
+    private MouseAdapter mouseAdapter = new MouseAdapter1();
+    private int cellWidth;
+    private int cellHeight;
 
     // === Constructor ===
-    SideBarMenu(TreeMap<String, Object> menuTitles) {
+    SideBarMenu(TreeMap<String, Object> menuTitles, int cellWidth, int cellHeight) {
         this.menuTitles = menuTitles;
+        this.cellWidth = cellWidth;
+        this.cellHeight = cellHeight;
     }
 
     // === Package-private methods ===
@@ -82,8 +70,11 @@ public class SideBarMenu extends MouseAdapter {
     JMenuBar createMenuBar() {
         JMenuBar menuBar = new JMenuBar();
         menuBar.setLayout(new BoxLayout(menuBar, BoxLayout.PAGE_AXIS));
+        JMenuItem title = new JMenuItem("Menu");
+        title.setBackground(Color.LIGHT_GRAY);
+        title.setOpaque(true);
+        menuBar.add(title);
         this.createMenu(menuBar, menuTitles);
-        menuBar.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1, Color.BLACK));
         return menuBar;
     }
 
@@ -96,7 +87,7 @@ public class SideBarMenu extends MouseAdapter {
      */
     private JMenuItem createMenuItem(String title, ActionListener actionListener) {
         JMenuItem menu = new JMenuItem(title);
-        menu.setPreferredSize(new Dimension(SideBarMenu.CELL_WIDTH, SideBarMenu.CELL_HEIGHT));
+        menu.setPreferredSize(new Dimension(this.cellWidth, this.cellHeight));
         menu.addActionListener(actionListener);
         menu.addMouseListener(mouseAdapter);
         return menu;
@@ -115,21 +106,12 @@ public class SideBarMenu extends MouseAdapter {
                 menu.add(this.createMenuItem(menuTitle, (ActionListener) map.get(menuTitle)));
             } else {
                 VerticalMenu popUpMenu = new VerticalMenu(menuTitle);
-                popUpMenu.setPreferredSize(new Dimension(SideBarMenu.CELL_WIDTH, SideBarMenu.CELL_HEIGHT));
+                popUpMenu.setPreferredSize(new Dimension(this.cellWidth, this.cellHeight));
                 popUpMenu.addMouseListener(mouseAdapter);
                 menu.add(popUpMenu);
                 this.createMenu(popUpMenu, map.get(menuTitle));
             }
         }
-    }
-
-
-    /**
-     * Create the GUI and show it.  For thread safety,
-     * this method should be invoked from the
-     * event-dispatching thread.
-     */
-    private static void createAndShowGUI() {
     }
 
     // === Private classes ===

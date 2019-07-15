@@ -1,17 +1,18 @@
 package Actions;
 
 import CompanyStuff.HRCoordinator;
+import Main.User;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class HRCSearchActionListener implements ActionListener {
+public class SearchActionListener implements ActionListener {
 
-    private HRCoordinator HRC;
+    private User user;
     private String searchType;
 
-    public HRCSearchActionListener(HRCoordinator HRC, String searchType) {
-        this.HRC = HRC;
+    public SearchActionListener(User user, String searchType) {
+        this.user = user;
         this.searchType = searchType;
     }
 
