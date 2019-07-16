@@ -1,7 +1,6 @@
 package DocumentManagers;
 
 import CompanyStuff.Company;
-import DocumentManagers.DocumentManager;
 
 import java.io.File;
 import java.util.Observable;
@@ -9,13 +8,16 @@ import java.util.Observer;
 
 public class CompanyDocumentManager extends DocumentManager<Company> implements Observer {
 
+    // === Class variables ===
+    public static String FOLDER = DocumentManager.INITIAL_PATH + "/companies";
+
     // === Instance variables ===
     private Company company;
 
     CompanyDocumentManager(Company company) {
         super(company);
         this.company = company;
-        this.setFolder(new File(DocumentManager.INITIAL_PATH + "/companies/" + this.getObject().getName()));
+        this.setFolder(new File(FOLDER + "/" + this.getObject().getName()));
     }
 
     @Override

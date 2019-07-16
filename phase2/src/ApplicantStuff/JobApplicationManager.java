@@ -133,7 +133,7 @@ public class JobApplicationManager implements Serializable {
      * @return a list of files submitted for this job application
      */
     public ArrayList<JobApplicationDocument> getFilesSubmittedForApplication(JobApplication jobApplication) {
-        return new ArrayList<>(Arrays.asList(jobApplication.getCoverLetter(), jobApplication.getCv()));
+        return jobApplication.getFilesSubmitted();
     }
 
     /**

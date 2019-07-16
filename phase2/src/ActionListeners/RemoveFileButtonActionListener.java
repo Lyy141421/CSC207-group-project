@@ -1,4 +1,4 @@
-package NewGUI;
+package ActionListeners;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -6,14 +6,14 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
 
-public class RemoveFileButtonListener implements ActionListener {
+public class RemoveFileButtonActionListener implements ActionListener {
 
     private JPanel panelWithButtons;
     private JButton buttonToRemove;
     private ArrayList<File> filesToSubmit;
     private File fileToRemove;
 
-    RemoveFileButtonListener(JPanel panelWithButtons, JButton buttonToRemove, ArrayList<File> filesToSubmit, File fileToRemove) {
+    public RemoveFileButtonActionListener(JPanel panelWithButtons, JButton buttonToRemove, ArrayList<File> filesToSubmit, File fileToRemove) {
         this.panelWithButtons = panelWithButtons;
         this.buttonToRemove = buttonToRemove;
         this.filesToSubmit = filesToSubmit;

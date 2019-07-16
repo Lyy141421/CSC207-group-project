@@ -1,51 +1,88 @@
 package ApplicantStuff;
 
-import CompanyStuff.Company;
+import CompanyStuff.JobPosting;
+import DocumentManagers.CompanyDocumentManager;
+import DocumentManagers.UserDocumentManager;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 
 public class JobApplicationDocument implements Serializable {
 
     // === Instance variables ===
-    // The folder under which this file is stored
-    private File folder;
     // The contents of this job application document
     private File file;
 
-    // === Public methods ===
-    // TODO
-    public void submit(Company company) {
 
+    // === Public methods ===
+
+    /**
+     * Submit this job application document to the company.
+     *
+     * @param jobPosting The job posting for which this application is being submitted.
+     * @param applicant  The applicant for which this document is being submitted.
+     */
+    // TODO fix
+    public void submit(JobPosting jobPosting, Applicant applicant) {
+        String applicantFolderInJobPostingPath = CompanyDocumentManager.FOLDER + "/" + jobPosting.getCompany().getName()
+                + "/" + jobPosting.getId() + "_" + jobPosting.getTitle() + "/" + applicant.getUsername();
+        String companyDestinationPath = applicantFolderInJobPostingPath + "/" + this.file.getName();
+        File applicantFolder = new File(applicantFolderInJobPostingPath);
+        try {
+            if (!applicantFolder.exists()) {
+                applicantFolder.mkdirs();
+                applicantFolder.createNewFile();
+            }
+            this.copyFile(this.file, companyDestinationPath);
+        } catch (IOException io) {
+            io.printStackTrace();
+        }
+    }
+
+    private void copyFile(File file, String destinationPath) {
+        if (Paths.get(destinationPath).toFile().exists()) {
+            destinationPath = this.getNewFilePath(destinationPath);
+        }
+        try {
+            Files.copy(Paths.get(file.getPath()), Paths.get(destinationPath));
+        } catch (IOException io) {
+            io.printStackTrace();
+        }
     }
 
 
     // ============================================================================================================== //
     // === Package-private methods ===
     // === Constructor ===
-    JobApplicationDocument(File folder, File file) {
-        this.folder = folder;
+    JobApplicationDocument() {
+    }  // For testing
+
+    // === Constructor for references ===
+    JobApplicationDocument(File file) {
         this.file = file;
-        String filePath = this.folder.getPath() + "/" + this.file.getName();
-        File newFileDest = new File(filePath);
-        if (newFileDest.exists()) {
-            this.changeFileDestination(newFileDest);
-        }
-        this.file.renameTo(newFileDest);
     }
 
-    JobApplicationDocument(File folder, String fileType, String contents) {
-        this.folder = folder;
-        String filePath = this.folder.getPath() + "/" + fileType + ".txt";
-        File newFile = this.createNewFile(filePath, contents);
-        if (newFile.exists()) {
-            this.changeFileDestination(newFile);
+    // === Constructors for applicants ===
+    JobApplicationDocument(File file, String fileType, Applicant applicant) {
+        File folder = new File(UserDocumentManager.FOLDER + "/" + applicant.getUsername() + "/" + fileType);
+        String filePath = folder.getPath() + "/" + file.getName();
+        this.copyFile(file, filePath);
+        this.file = new File(filePath);
+
+    }
+
+    JobApplicationDocument(String contents, String fileType, Applicant applicant) {
+        File folder = new File(UserDocumentManager.FOLDER + "/" + applicant.getUsername() + "/" + fileType);
+        String filePath = folder.getPath() + "/" + fileType + ".txt";
+        if (Paths.get(filePath).toFile().exists()) {
+            filePath = this.getNewFilePath(filePath);
         }
-        this.file = newFile;
+        this.file = this.createNewFile(filePath, contents);
     }
 
     // === Getters ===
-
     public File getFile() {
         return this.file;
     }
@@ -82,17 +119,31 @@ public class JobApplicationDocument implements Serializable {
     /**
      * Change the file destination for this file.
      *
-     * @param file The file in question.
+     * @param oldFilePath   The file path to be replaced.
      */
-    private void changeFileDestination(File file) {
-        String filePath = file.getPath();
-        String[] fileNameAndExtension = this.separateExtension(filePath);
+    private String getNewFilePath(String oldFilePath) {
+        String[] fileNameAndExtension = this.separateExtension(oldFilePath);
         int i = 1;
-        File dest = new File(fileNameAndExtension[0] + "(" + i + ")" + fileNameAndExtension[1]);
-        while (dest.exists()) {
+        String newFilePath = fileNameAndExtension[0] + "(" + i + ")" + fileNameAndExtension[1];
+        while (Paths.get(newFilePath).toFile().exists()) {
             i++;
-            dest = new File(fileNameAndExtension[0] + "(" + i + ")" + fileNameAndExtension[1]);
+            newFilePath = fileNameAndExtension[0] + "(" + i + ")" + fileNameAndExtension[1];
         }
-        file.renameTo(dest);
+        return newFilePath;
     }
+
+    public static void main(String[] args) {
+        String folderPath = "phase2/uploadedDocuments/something/else";
+        File file = new File(folderPath);
+        file.mkdirs();
+        try {
+            File newFile = new File(folderPath + "/text.txt");
+            newFile.createNewFile();
+        } catch (IOException io) {
+            io.printStackTrace();
+        }
+
+
+    }
+
 }

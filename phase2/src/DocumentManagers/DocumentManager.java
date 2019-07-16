@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 public class DocumentManager<T> implements Serializable {
     // The initial path
-    protected static String INITIAL_PATH = "phase2/uploadedDocuments";
+    static String INITIAL_PATH = "phase2/uploadedDocuments";
 
     // The company or user that this document manager is for
     private T object;
@@ -31,12 +31,12 @@ public class DocumentManager<T> implements Serializable {
         return this.object;
     }
 
-    protected File getFolder() {
+    File getFolder() {
         return this.folder;
     }
 
     // === Setters ===
-    protected void setFolder(File folder) {
+    void setFolder(File folder) {
         this.folder = folder;
         this.folder.mkdir();
     }
@@ -48,7 +48,7 @@ public class DocumentManager<T> implements Serializable {
      *
      * @param documentList The list of documents to be removed.
      */
-    protected void removeDocuments(ArrayList<JobApplicationDocument> documentList) {
+    void removeDocuments(ArrayList<JobApplicationDocument> documentList) {
         for (JobApplicationDocument document : documentList) {
             document.getFile().delete();
         }

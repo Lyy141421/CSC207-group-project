@@ -4,10 +4,13 @@ import Main.User;
 
 import java.io.File;
 
-class UserDocumentManager extends DocumentManager<User> {
+public class UserDocumentManager extends DocumentManager<User> {
+
+    // === Class variables ===
+    public static String FOLDER = DocumentManager.INITIAL_PATH + "/users";
 
     UserDocumentManager(User user) {
         super(user);
-        this.setFolder(new File(DocumentManager.INITIAL_PATH + "/users/" + this.getObject().getUsername()));
+        this.setFolder(new File(FOLDER + "/" + this.getObject().getUsername()));
     }
 }

@@ -24,10 +24,8 @@ public class JobApplication implements Serializable {
     private Applicant applicant;
     // The JobPosting that was applied for
     private JobPosting jobPosting;
-    // The file name of the CV submitted for this application
-    private JobApplicationDocument cv;
-    // The the file name of the cover letter submitted for this application
-    private JobApplicationDocument coverLetter;
+    // The files submitted for this job application
+    private ArrayList<JobApplicationDocument> filesSubmitted;
     // The status of this application
     private Status status;
     // The date this application was submitted
@@ -43,27 +41,14 @@ public class JobApplication implements Serializable {
 
     // === Constructors ===
 
-    public JobApplication(Applicant applicant, JobPosting jobPosting, JobApplicationDocument cv,
-                          JobApplicationDocument coverletter, LocalDate applicationDate) {
+    public JobApplication(Applicant applicant, JobPosting jobPosting, ArrayList<JobApplicationDocument> filesSubmitted,
+                          LocalDate applicationDate) {
         JobApplication.totalNumOfApplications++;
         this.id = JobApplication.totalNumOfApplications;
         this.applicant = applicant;
         this.jobPosting = jobPosting;
-        this.cv = cv;
-        this.coverLetter = coverletter;
+        this.filesSubmitted = filesSubmitted;
         this.status = new Status();
-        this.applicationDate = applicationDate;
-    }
-
-    public JobApplication(Applicant applicant, JobPosting jobPosting, JobApplicationDocument cv,
-                          JobApplicationDocument coverletter, Status status, LocalDate applicationDate) {
-        JobApplication.totalNumOfApplications++;
-        this.id = JobApplication.totalNumOfApplications;
-        this.applicant = applicant;
-        this.jobPosting = jobPosting;
-        this.cv = cv;
-        this.coverLetter = coverletter;
-        this.status = status;
         this.applicationDate = applicationDate;
     }
 
@@ -80,12 +65,8 @@ public class JobApplication implements Serializable {
         return this.jobPosting;
     }
 
-    public JobApplicationDocument getCv() {
-        return this.cv;
-    }
-
-    public JobApplicationDocument getCoverLetter() {
-        return this.coverLetter;
+    public ArrayList<JobApplicationDocument> getFilesSubmitted() {
+        return this.filesSubmitted;
     }
 
     public Status getStatus() {
@@ -109,27 +90,16 @@ public class JobApplication implements Serializable {
         this.jobPosting = jobPosting;
     }
 
-    public void setCv(JobApplicationDocument cv) {
-        this.cv = cv;
-    }
-
-    public void setCoverLetter(JobApplicationDocument coverLetter) {
-        this.coverLetter = coverLetter;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
-    }
-
-    public void setApplicationDate(LocalDate applicationDate) {
-        this.applicationDate = applicationDate;
-    }
-
     public void setInterviews(ArrayList<Interview> interviews) {
         this.interviews = interviews;
     }
 
     // === Other methods ===
+
+    public void addFile(JobApplicationDocument file) {
+        this.filesSubmitted.add(file);
+    }
+
 
     /**
      * Checks whether this application has been archived.
@@ -163,6 +133,15 @@ public class JobApplication implements Serializable {
     }
 
     /**
+     * Add an interview for this job application.
+     *
+     * @param interview The interview to be added.
+     */
+    public void addInterview(Interview interview) {
+        this.interviews.add(interview);
+    }
+
+    /**
      * Get a string of what an applicant should see when viewing their applications.
      *
      * @return a string of what an applicant should see when viewing their applications.
@@ -181,40 +160,9 @@ public class JobApplication implements Serializable {
         String s = "Application ID: " + this.getId() + "\n";
         s += "Applicant: " + this.getApplicant().getLegalName() + "(" + this.getApplicant().getUsername() + ")" + "\n";
         s += "Job Posting: " + this.getJobPosting().getTitle() + " -- ID: " + this.getJobPosting().getId();
-        s += "\n\nCV: \n" + this.getCv() + "\n\n";
-        s += "Cover letter: \n" + this.getCoverLetter() + "\n\n";
         s += "Status: " + this.status.getDescription() + "\n";
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         s += "Application date: " + this.getApplicationDate().format(dtf);
         return s;
-    }
-
-    // ============================================================================================================== //
-    // === Package-private methods ===
-
-    // === Constructors ===
-    JobApplication(LocalDate applicationDate) {
-        JobApplication.totalNumOfApplications++;
-        this.id = JobApplication.totalNumOfApplications;
-        this.applicationDate = applicationDate;
-    }
-
-    JobApplication(JobPosting jobPosting, LocalDate applicationDate) {
-        JobApplication.totalNumOfApplications++;
-        this.id = JobApplication.totalNumOfApplications;
-        this.jobPosting = jobPosting;
-        this.applicationDate = applicationDate;
-    }
-
-    // ============================================================================================================== //
-    // === Private methods ===
-
-    /**
-     * Add an interview for this job application.
-     *
-     * @param interview The interview to be added.
-     */
-    public void addInterview(Interview interview) {
-        this.interviews.add(interview);
     }
 }
