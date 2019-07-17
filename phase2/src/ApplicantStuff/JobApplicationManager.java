@@ -1,5 +1,6 @@
 package ApplicantStuff;
 
+import CompanyStuff.BranchJobPosting;
 import CompanyStuff.Interview;
 import CompanyStuff.JobPosting;
 import Miscellaneous.InterviewTimeComparator;
@@ -52,7 +53,7 @@ public class JobApplicationManager implements Serializable {
      *
      * @param jobPosting The job posting from which the job application is to be removed.
      */
-    public void removeJobApplication(JobPosting jobPosting) {
+    public void removeJobApplication(BranchJobPosting jobPosting) {
         JobApplication app = this.findJobApplication(jobPosting);
         this.jobApplications.remove(app);
     }
@@ -90,7 +91,7 @@ public class JobApplicationManager implements Serializable {
         if (this.getLastClosedJobApp() == null) {
             return 0;
         } else {
-            LocalDate closeDate = this.getLastClosedJobApp().getJobPosting().getCloseDate();
+            LocalDate closeDate = this.getLastClosedJobApp().getBranchJobPosting().getCloseDate();
             return Math.max(0, DAYS.between(closeDate, today));
         }
     }
@@ -154,12 +155,12 @@ public class JobApplicationManager implements Serializable {
     /**
      * Find the job application associated with this job posting.
      *
-     * @param jobPosting The job posting in question.
+     * @param posting The job posting in question.
      * @return the job application associated with this job posting.
      */
-    private JobApplication findJobApplication(JobPosting jobPosting) {
+    private JobApplication findJobApplication(BranchJobPosting posting) {
         for (JobApplication app : this.jobApplications) {
-            if (app.getJobPosting().equals(jobPosting)) {
+            if (app.getBranchJobPosting().equals(posting)) {
                 return app;
             }
         }
