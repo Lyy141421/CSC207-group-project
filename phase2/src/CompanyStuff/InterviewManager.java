@@ -24,12 +24,18 @@ public class InterviewManager implements Serializable {
     private ArrayList<JobApplication> applicationsInConsideration;
     // Map of job applications of applicants that are rejected for the job to their interviews
     private ArrayList<JobApplication> applicationsRejected;
+    // The configuration of interviews chosen for this job posting
+    // (nested array is interview description (string) and interview type (Interview))
+    private ArrayList<Object[]> interviewConfiguration;
     // The current round of interviews
-    private int currentRound;
+    private int currentRound = 0;
 
     // === Representation invariants ===
     // The list of interviews for each applicant is sorted by date.
-    // 0 <= currentRound <= 4
+    // The current round is an index in the interviewConfiguration list
+    // The Object[] in interviewConfiguration has 2 elements
+    //  - Index 0: Interview description (String)
+    //  - Index 1: Interview type (Interview) --- can only be either OneOnOneInterview() or GroupInterview()
 
     // === Public methods ===
 
@@ -47,17 +53,17 @@ public class InterviewManager implements Serializable {
         this.applicationsRejected = applicationsRejected;
     }
 
-    public InterviewManager(JobPosting jobPosting, ArrayList<JobApplication> applicationsInConsideration,
-                            ArrayList<JobApplication> applicationsRejected, int currentRound) {
-        this.jobPosting = jobPosting;
-        this.applicationsInConsideration = applicationsInConsideration;
-        this.applicationsRejected = applicationsRejected;
-        this.currentRound = currentRound;
-    }
-
     // === Getters ===
     public int getCurrentRound() {
         return this.currentRound;
+    }
+
+    public String getCurrentRoundDescription() {
+        return (String) this.interviewConfiguration.get(this.currentRound)[0];
+    }
+
+    public Interview getCurrentRoundType() {
+        return (Interview) this.interviewConfiguration.get(this.currentRound)[1];
     }
 
     public ArrayList<JobApplication> getApplicationsInConsideration() {
@@ -66,6 +72,11 @@ public class InterviewManager implements Serializable {
 
     public ArrayList<JobApplication> getApplicationsRejected() {
         return this.applicationsRejected;
+    }
+
+    // === Setters ===
+    public void setInterviewConfiguration(ArrayList<Object[]> interviewConfiguration) {
+        this.interviewConfiguration = interviewConfiguration;
     }
 
     // === Other methods ===
@@ -120,8 +131,10 @@ public class InterviewManager implements Serializable {
         if (!applicationToWithdraw.getInterviews().isEmpty()) {
             Interview interview = applicationToWithdraw.getLastInterview();
             InterviewManager IM = applicationToWithdraw.getJobPosting().getInterviewManager();
-            if (!interview.isComplete()) {
-                interview.getInterviewer().removeInterview(interview);
+            if (!interview.isComplete() && interview.getNumApplications() == 1) {
+                for (Interviewer interviewer : interview.getAllInterviewers()) {
+                    interviewer.removeInterview(interview);
+                }
             }
             if (IM != null) {
                 IM.reject(applicationToWithdraw);
@@ -194,6 +207,6 @@ public class InterviewManager implements Serializable {
      * @return true iff the maximum number of interview rounds has been completed.
      */
     private boolean isInterviewProcessOver() {
-        return this.isCurrentRoundOver() && this.currentRound == Interview.MAX_NUM_ROUNDS;
+        return this.isCurrentRoundOver() && this.currentRound == this.interviewConfiguration.size();
     }
 }

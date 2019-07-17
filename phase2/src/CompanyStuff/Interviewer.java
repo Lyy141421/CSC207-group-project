@@ -71,8 +71,9 @@ public class Interviewer extends User {
     @Override
     public JobApplication findJobAppById(int id) {
         for (Interview interview : this.interviews) {
-            if (Integer.parseInt(interview.getJobApplication().getId()) == id) {
-                return interview.getJobApplication();
+            JobApplication jobApp = interview.findJobAppById(id);
+            if (jobApp != null) {
+                return jobApp;
             }
         }
         return null;
@@ -86,7 +87,7 @@ public class Interviewer extends User {
      */
     public Interview findInterviewById(int id) {
         for (Interview interview : this.interviews) {
-            if (Integer.valueOf(interview.getId()) == id) {
+            if (interview.getId() == id) {
                 return interview;
             }
         }
@@ -113,7 +114,7 @@ public class Interviewer extends User {
      *
      * @param interview The interview to be removed.
      */
-    public void removeInterview(Interview interview) {
+    void removeInterview(Interview interview) {
         this.interviews.remove(interview);
     }
 
@@ -170,28 +171,9 @@ public class Interviewer extends User {
     public ArrayList<JobApplication> getListOfIntervieweeJobApplications() {
         ArrayList<JobApplication> jobApplications = new ArrayList<>();
         for (Interview interview : this.interviews) {
-            jobApplications.add(interview.getJobApplication());
+            jobApplications.addAll(interview.getJobApplications());
         }
         return jobApplications;
-    }
-
-    /**
-     * Record that this interview has been passed.
-     *
-     * @param interview The interview that has been conducted.
-     */
-    public void passInterview(Interview interview) {
-        interview.setPass(true);
-    }
-
-    /**
-     * Record that this interview has been failed.
-     *
-     * @param interview The interview that has been conducted.
-     */
-    public void failInterview(Interview interview) {
-        interview.setPass(false);
-        interview.getInterviewManager().reject(interview.getJobApplication());
     }
 
     // ============================================================================================================== //

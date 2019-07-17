@@ -1,7 +1,9 @@
 package ApplicantStuff;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.TreeMap;
 
 public class Status implements Serializable {
 
@@ -10,29 +12,20 @@ public class Status implements Serializable {
     private static final int ARCHIVED = -3;
     private static final int SUBMITTED = -2;
     private static final int UNDER_REVIEW = -1;
-    private static final int PHONE_INTERVIEW = 0;
-    private static final int IN_PERSON_1 = 1;
-    private static final int IN_PERSON_2 = 2;
-    private static final int IN_PERSON_3 = 3;
-    private static final int HIRED = 4;
     // Map of statuses and their identifying integers
-    private static HashMap<Integer, String> descriptions = new HashMap<Integer, String>() {{
+    private TreeMap<Integer, String> descriptions = new TreeMap<Integer, String>() {{
         put(Status.ARCHIVED, "Archived");
         put(Status.SUBMITTED, "Submitted");
         put(Status.UNDER_REVIEW, "Under review");
-        put(Status.PHONE_INTERVIEW, "Phone interview");
-        put(Status.IN_PERSON_1, "In-person interview round 1");
-        put(Status.IN_PERSON_2, "In-person interview round 2");
-        put(Status.IN_PERSON_3, "In-person interview round 3");
-        put(Status.HIRED, "Hired");
     }};
+    // The integer that represents a "Hired" status
+    private int HIRED;
 
     // === Instance variable ===
     private int value = Status.SUBMITTED;
 
     // === Constructors ===
-    public Status(int value) {
-        this.value = value;
+    Status() {
     }
 
     // === Getters ===
@@ -40,8 +33,20 @@ public class Status implements Serializable {
         return this.value;
     }
 
+    String getDescription() {
+        return this.descriptions.get(this.value);
+    }
+
     // === Setters ===
-    public void setValue(int value) {
+    public void setDescriptions(ArrayList<Object[]> interviewConfiguration) {
+        for (int i = 0; i < interviewConfiguration.size(); i++) {
+            this.descriptions.put(i, (String) interviewConfiguration.get(i)[0]);
+        }
+        this.descriptions.put(interviewConfiguration.size(), "Hired");
+        this.HIRED = interviewConfiguration.size();
+    }
+
+    private void setValue(int value) {
         this.value = value;
     }
 
@@ -58,27 +63,20 @@ public class Status implements Serializable {
      * Set this status as "Hired".
      */
     public void setHired() {
-        this.setValue(Status.HIRED);
+        this.setValue(this.HIRED);
+    }
+
+    /**
+     * Advance this status.
+     */
+    public void advanceStatus() {
+        this.value++;
     }
 
     @Override
     public String toString() {
-        return Status.descriptions.get(this.value);
+        return this.descriptions.get(this.value);
     }
-
-    // ============================================================================================================== //
-    // === Package-private methods ===
-
-    // === Constructors ===
-    Status() {
-    }
-
-    // === Getters ===
-    String getDescription() {
-        return Status.descriptions.get(this.value);
-    }
-
-    // === Other methods ===
 
     /**
      * Checks whether this status is set to hired.
@@ -86,7 +84,7 @@ public class Status implements Serializable {
      * @return true iff this status is set to hired.
      */
     boolean isHired() {
-        return this.value == Status.HIRED;
+        return this.value == this.HIRED;
     }
 
     /**
@@ -97,13 +95,5 @@ public class Status implements Serializable {
     boolean isArchived() {
         return this.value == Status.ARCHIVED;
     }
-
-    /**
-     * Advance this status.
-     */
-    public void advanceStatus() {
-        this.value++;
-    }
-
 
 }

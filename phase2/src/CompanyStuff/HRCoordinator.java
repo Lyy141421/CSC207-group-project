@@ -2,9 +2,11 @@ package CompanyStuff;
 
 import Main.User;
 import ApplicantStuff.JobApplication;
+import Miscellaneous.InterviewTime;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 public class HRCoordinator extends User {
     /**
@@ -22,7 +24,7 @@ public class HRCoordinator extends User {
     }
 
     public HRCoordinator(String username, String password, String legalName, String email, Company company,
-                         LocalDate dateCreated) throws IOException {
+                         LocalDate dateCreated) {
         super(username, password, legalName, email, dateCreated);
         this.company = company;
     }
@@ -67,11 +69,39 @@ public class HRCoordinator extends User {
     public JobApplication findJobAppById(int ID) {
         for (JobPosting jobPosting : this.company.getJobPostingManager().getJobPostings()) {
             for (JobApplication jobApplication : jobPosting.getJobApplications()) {
-                if (Integer.parseInt(jobApplication.getId()) == ID) {
+                if (jobApplication.getId() == ID) {
                     return jobApplication;
                 }
             }
         }
         return null;
+    }
+
+    /**
+     * Schedule a time for the group interview.
+     *
+     * @param interview The interview to be scheduled.
+     * @param time      The time to be scheduled.
+     * @return true iff all interviewers for this interview are available at this time.
+     */
+    public boolean scheduleGroupInterview(Interview interview, InterviewTime time) {
+        for (Interviewer interviewer : interview.getAllInterviewers()) {
+            if (!interviewer.isAvailable(time)) {
+                return false;
+            }
+        }
+        interview.setTime(time);
+        return true;
+    }
+
+    /**
+     * Choose the interview configuration for this job posting.
+     *
+     * @param jobPosting    The job posting in question.
+     * @param configuration The configuration chosen.
+     */
+    public void chooseInterviewConfiguration(JobPosting jobPosting, ArrayList<Object[]> configuration) {
+        jobPosting.createInterviewManager();
+        jobPosting.getInterviewManager().setInterviewConfiguration(configuration);
     }
 }

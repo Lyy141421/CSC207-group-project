@@ -53,8 +53,8 @@ public class JobApplication implements Serializable {
     }
 
     // === Getters ===
-    public String getId() {
-        return Integer.toString(this.id);
+    public int getId() {
+        return this.id;
     }
 
     public Applicant getApplicant() {
@@ -65,7 +65,7 @@ public class JobApplication implements Serializable {
         return this.jobPosting;
     }
 
-    public ArrayList<JobApplicationDocument> getFilesSubmitted() {
+    ArrayList<JobApplicationDocument> getFilesSubmitted() {
         return this.filesSubmitted;
     }
 
@@ -73,7 +73,7 @@ public class JobApplication implements Serializable {
         return this.status;
     }
 
-    public LocalDate getApplicationDate() {
+    private LocalDate getApplicationDate() {
         return this.applicationDate;
     }
 
