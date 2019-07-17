@@ -19,7 +19,7 @@ public class InterviewManager implements Serializable {
 
     // === Instance variables ===
     // The job posting for this interview manager
-    private JobPosting jobPosting;
+    private BranchJobPosting branchJobPosting;
     // Map of job applications still in consideration for the job to their interviews
     private ArrayList<JobApplication> applicationsInConsideration;
     // Map of job applications of applicants that are rejected for the job to their interviews
@@ -40,15 +40,15 @@ public class InterviewManager implements Serializable {
     // === Public methods ===
 
     // === Constructors ===
-    public InterviewManager(JobPosting jobPosting, ArrayList<JobApplication> applicationsInConsideration) {
-        this.jobPosting = jobPosting;
+    public InterviewManager(BranchJobPosting branchJobPosting, ArrayList<JobApplication> applicationsInConsideration) {
+        this.branchJobPosting = branchJobPosting;
         this.applicationsInConsideration = applicationsInConsideration;
         this.applicationsRejected = new ArrayList<>();
     }
 
-    public InterviewManager(JobPosting jobPosting, ArrayList<JobApplication> applicationsInConsideration,
+    public InterviewManager(BranchJobPosting branchJobPosting, ArrayList<JobApplication> applicationsInConsideration,
                             ArrayList<JobApplication> applicationsRejected) {
-        this.jobPosting = jobPosting;
+        this.branchJobPosting = branchJobPosting;
         this.applicationsInConsideration = applicationsInConsideration;
         this.applicationsRejected = applicationsRejected;
     }
@@ -87,7 +87,7 @@ public class InterviewManager implements Serializable {
      * @return the number of applications still required before completely filling all positions.
      */
     public int getNumOpenPositions() {
-        return this.jobPosting.getNumPositions() - this.applicationsInConsideration.size();
+        return this.branchJobPosting.getNumPositions() - this.applicationsInConsideration.size();
     }
 
     /**
@@ -130,7 +130,7 @@ public class InterviewManager implements Serializable {
     public void withdrawApplication(JobApplication applicationToWithdraw) {
         if (!applicationToWithdraw.getInterviews().isEmpty()) {
             Interview interview = applicationToWithdraw.getLastInterview();
-            InterviewManager IM = applicationToWithdraw.getJobPosting().getInterviewManager();
+            InterviewManager IM = applicationToWithdraw.getBranchJobPosting().getInterviewManager();
             if (!interview.isComplete() && interview.getNumApplications() == 1) {
                 for (Interviewer interviewer : interview.getAllInterviewers()) {
                     interviewer.removeInterview(interview);
@@ -151,7 +151,7 @@ public class InterviewManager implements Serializable {
      */
     public boolean isNumApplicationsUnderOrAtThreshold() {
         int jobAppsSize = this.applicationsInConsideration.size();
-        return jobAppsSize > 0 && jobAppsSize <= this.jobPosting.getNumPositions();
+        return jobAppsSize > 0 && jobAppsSize <= this.branchJobPosting.getNumPositions();
     }
 
     /**
@@ -176,7 +176,7 @@ public class InterviewManager implements Serializable {
             return InterviewManager.CLOSE_POSTING_NO_HIRE;
         } else if (this.currentRound != 0 && this.isNumApplicationsUnderOrAtThreshold()) {
             return InterviewManager.HIRE_APPLICANTS;
-        } else if (!this.jobPosting.getJobApplications().isEmpty() && !this.jobPosting.hasInterviews()) {
+        } else if (!this.branchJobPosting.getJobApplications().isEmpty() && !this.branchJobPosting.hasInterviews()) {
             // Applicants for phone interview selected but no interviews scheduled
             return InterviewManager.SCHEDULE_INTERVIEWS;
         } else if (this.isInterviewProcessOver()) {

@@ -17,7 +17,7 @@ public class MethodsTheGUICallsInHR {
      * @return the list of lists of job postings required.
      *//*
     ArrayList<ArrayList<JobPosting>> getHighPriorityAndAllJobPostings(LocalDate today) {
-        JobPostingManager JPM = this.HRC.getCompany().getJobPostingManager();
+        JobPostingManager JPM = this.HRC.getBranch().getJobPostingManager();
         ArrayList<ArrayList<JobPosting>> jobPostingsList = new ArrayList<>();
         jobPostingsList.add(JPM.getClosedJobPostingsNoApplicantsChosen(today));
         jobPostingsList.add(JPM.getJobPostingsWithRoundCompletedNotForHire(today));
@@ -51,7 +51,7 @@ public class MethodsTheGUICallsInHR {
         if (applicant == null) {
             return new ArrayList<>();
         }
-        return this.HRC.getCompany().getAllApplicationsToCompany(applicant);
+        return this.HRC.getBranch().getAllApplicationsToCompany(applicant);
     }
 
     *//**
@@ -103,7 +103,7 @@ public class MethodsTheGUICallsInHR {
      * @param jobPosting The job posting in question.
      *//*
     boolean setUpInterviews(JobPosting jobPosting) {
-        Company company = jobPosting.getCompany();
+        Branch company = jobPosting.getBranch();
         String field = jobPosting.getField();
         if (!company.hasInterviewerForField(field)) {
             return false;

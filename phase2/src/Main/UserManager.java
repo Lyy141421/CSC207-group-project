@@ -3,7 +3,7 @@ package Main;
 import ApplicantStuff.Applicant;
 import CompanyStuff.HRCoordinator;
 import CompanyStuff.Interviewer;
-import CompanyStuff.Company;
+import CompanyStuff.Branch;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -37,16 +37,16 @@ public class UserManager {
         return newApplicant;
     }
 
-    public Interviewer createInterviewer(String username, String password, String legalName, String email, Company company,
+    public Interviewer createInterviewer(String username, String password, String legalName, String email, Branch branch,
                                          String field, LocalDate dateCreated) throws IOException {
-        Interviewer newInterviewer = new Interviewer(username, password, legalName, email, company, field, dateCreated);
+        Interviewer newInterviewer = new Interviewer(username, password, legalName, email, branch, field, dateCreated);
         this.allUsers.add(newInterviewer);
         return newInterviewer;
     }
 
     public HRCoordinator createHRCoordinator(String username, String password, String legalName,
-                                             String email, Company company, LocalDate dateCreated) throws IOException {
-        HRCoordinator newHRC = new HRCoordinator(username, password, legalName, email, company, dateCreated);
+                                             String email, Branch branch, LocalDate dateCreated) throws IOException {
+        HRCoordinator newHRC = new HRCoordinator(username, password, legalName, email, branch, dateCreated);
         this.allUsers.add(newHRC);
         return newHRC;
     }

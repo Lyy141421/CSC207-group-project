@@ -1,11 +1,8 @@
 package UIClasses;
 
 import ApplicantStuff.JobApplication;
-import CompanyStuff.Company;
-import CompanyStuff.JobPosting;
-import CompanyStuff.InterviewManager;
-import CompanyStuff.JobPostingManager;
-import CompanyStuff.HRCoordinator;
+import CompanyStuff.*;
+import CompanyStuff.Branch;
 
 import java.util.ArrayList;
 
@@ -28,7 +25,7 @@ class HRCoordinatorHighPriorityInterface extends UserInterface {
      *
      */
     void runMenu() {
-        if (this.HRC.getCompany().getJobPostingManager().getJobPostings().isEmpty()) {
+        if (this.HRC.getBranch().getJobPostingManager().getJobPostings().isEmpty()) {
             System.out.println("\nThere are no job postings for this company.");
             return;
         }
@@ -104,7 +101,7 @@ class HRCoordinatorHighPriorityInterface extends UserInterface {
      * @return the job posting selected.
      */
     private ArrayList<JobPosting> displayRecentlyClosedPostings() {
-        JobPostingManager JPM = this.HRC.getCompany().getJobPostingManager();
+        JobPostingManager JPM = this.HRC.getBranch().getJobPostingManager();
         ArrayList<JobPosting> recentlyClosed = JPM.getClosedJobPostingsNoApplicantsChosen(today);
         if (recentlyClosed.isEmpty()) {
             System.out.println("\nThere are no job postings that have recently closed.");
@@ -140,7 +137,7 @@ class HRCoordinatorHighPriorityInterface extends UserInterface {
      *
      */
     private void displayPostingsThatNeedInterviewsScheduled() {
-        JobPostingManager JPM = this.HRC.getCompany().getJobPostingManager();
+        JobPostingManager JPM = this.HRC.getBranch().getJobPostingManager();
         ArrayList<JobPosting> recentlyCompletedRound = JPM.getJobPostingsWithRoundCompletedNotForHire(today);
         if (recentlyCompletedRound.isEmpty()) {
             System.out.println("\nNo job postings need to have interviews scheduled.");
@@ -159,9 +156,9 @@ class HRCoordinatorHighPriorityInterface extends UserInterface {
      * @param jobPosting The job posting in question.
      */
     private void setUpInterviewsForRound(JobPosting jobPosting) {
-        Company company = jobPosting.getCompany();
+        Branch branch = jobPosting.getBranch();
         String field = jobPosting.getField();
-        if (!company.hasInterviewerForField(field)) {
+        if (!branch.hasInterviewerForField(field)) {
             System.out.println("\nInterviews cannot be set-up for this job posting as there are no interviewers for this field.");
         } else {
             ArrayList<JobApplication> jobApps = jobPosting.getInterviewManager().getApplicationsInConsideration();
@@ -182,7 +179,7 @@ class HRCoordinatorHighPriorityInterface extends UserInterface {
      *
      */
     private void hireApplicants() {
-        JobPostingManager JPM = this.HRC.getCompany().getJobPostingManager();
+        JobPostingManager JPM = this.HRC.getBranch().getJobPostingManager();
         ArrayList<JobPosting> readyForHiring = JPM.getJobPostingsForHiring(today);
         if (readyForHiring.isEmpty()) {
             System.out.println("\nNo job postings ready for hiring.");

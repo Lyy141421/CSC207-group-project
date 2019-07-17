@@ -35,7 +35,7 @@ class HRCoordinatorJobPostingsInterface extends UserInterface {
      *
      */
     void runMenu() {
-        if (this.HRC.getCompany().getJobPostingManager().getJobPostings().isEmpty()) {
+        if (this.HRC.getBranch().getJobPostingManager().getJobPostings().isEmpty()) {
             System.out.println("\nThere are no job postings for this company.");
             return;
         }
@@ -49,7 +49,7 @@ class HRCoordinatorJobPostingsInterface extends UserInterface {
      *
      */
     void viewPostingsWithNoApplicationsSubmitted() {
-        JobPostingManager JPM = this.HRC.getCompany().getJobPostingManager();
+        JobPostingManager JPM = this.HRC.getBranch().getJobPostingManager();
         for (JobPosting jobPosting : JPM.getClosedJobPostingsNoApplicationsSubmitted(today)) {
             System.out.println("\nNo applications have been submitted for this job posting:");
             System.out.println("\n" + jobPosting);
@@ -84,11 +84,11 @@ class HRCoordinatorJobPostingsInterface extends UserInterface {
      *
      */
     void updateJobPostingFull() {
-        if (this.HRC.getCompany().getJobPostingManager().getOpenJobPostings(this.today).isEmpty()) {
+        if (this.HRC.getBranch().getJobPostingManager().getOpenJobPostings(this.today).isEmpty()) {
             System.out.println("\nThere are no open job postings to be updated.");
             return;
         }
-        JobPosting jobPosting = new HRCoordinatorInterface(this.JAS, this.HRC).getJobPosting();
+        JobPosting jobPosting = new HRCoordinatorInterface(this.JAS, this.HRC).getBranchJobPosting();
         if (jobPosting != null) {
             if (jobPosting.isClosed(this.today)) {
                 System.out.println("\nThis job posting is closed and can no longer be updated.");
@@ -125,7 +125,7 @@ class HRCoordinatorJobPostingsInterface extends UserInterface {
     private void runMenuAction(int option) {
         switch (option) {
             case 1: // Search job posting
-                new HRCoordinatorInterface(this.JAS, this.HRC).getJobPosting();
+                new HRCoordinatorInterface(this.JAS, this.HRC).getBranchJobPosting();
                 break;
             case 2: // View open job postings
                 this.displayOpenPostings();
@@ -149,7 +149,7 @@ class HRCoordinatorJobPostingsInterface extends UserInterface {
      *
      */
     private void displayOpenPostings() {
-        ArrayList<JobPosting> openJobPostings = this.HRC.getCompany().getJobPostingManager().
+        ArrayList<JobPosting> openJobPostings = this.HRC.getBranch().getJobPostingManager().
                 getOpenJobPostings(this.today);
         System.out.println("\nOpen postings: ");
         this.printList(openJobPostings);
@@ -160,7 +160,7 @@ class HRCoordinatorJobPostingsInterface extends UserInterface {
      *
      */
     private void displayClosedPostingsNotFilled() {
-        ArrayList<JobPosting> closedJobPostingsNotFilled = this.HRC.getCompany().getJobPostingManager().
+        ArrayList<JobPosting> closedJobPostingsNotFilled = this.HRC.getBranch().getJobPostingManager().
                 getClosedJobPostingsNotFilled(this.today);
         System.out.println("\nClosed postings: ");
         this.printList(closedJobPostingsNotFilled);
@@ -170,7 +170,7 @@ class HRCoordinatorJobPostingsInterface extends UserInterface {
      * View all filled postings.
      */
     private void displayFilledPostings() {
-        ArrayList<JobPosting> filledJobPostings = this.HRC.getCompany().getJobPostingManager().
+        ArrayList<JobPosting> filledJobPostings = this.HRC.getBranch().getJobPostingManager().
                 getFilledJobPostings();
         System.out.println("\nFilled postings: ");
         this.printList(filledJobPostings);
@@ -180,7 +180,7 @@ class HRCoordinatorJobPostingsInterface extends UserInterface {
      * View all postings.
      */
     private void displayAllPostings() {
-        ArrayList<JobPosting> allJobPostings = this.HRC.getCompany().getJobPostingManager().getJobPostings();
+        ArrayList<JobPosting> allJobPostings = this.HRC.getBranch().getJobPostingManager().getJobPostings();
         System.out.println("\nAll postings: ");
         this.printList(allJobPostings);
     }

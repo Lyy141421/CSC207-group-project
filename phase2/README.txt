@@ -16,15 +16,15 @@ These are the assumptions that we made:
 - Usernames are unique
 - Company names are unique
 - Each job posting can have multiple positions
-- Each company can have multiple HR Coordinators
-- Each company can have multiple interviewers, each belonging to a certain job field
+- Each branch can have multiple HR Coordinators
+- Each branch can have multiple interviewers, each belonging to a certain job field
 - Each interview is between one interviewer and one applicant
 - At every moment in time, all the interviews for a single job posting are for the same round
 
 These are some key design decisions we made:
-- An HR Coordinator does not have to sign-up to an existing company
-    - If the company is not yet registered in the system, the application adds it when HR signs up
-- An interviewer must sign-up to an existing company
+- An HR Coordinator does not have to sign-up to an existing branch
+    - If the branch is not yet registered in the system, the application adds it when HR signs up
+- An interviewer must sign-up to an existing branch
 - Job postings are considered 'open' on the same day that it is said to close
 - Applicants can submit different CV's and cover letters for each job posting they apply to
 - HR Coordinators do not explicitly match interviewers with applicants for interviews

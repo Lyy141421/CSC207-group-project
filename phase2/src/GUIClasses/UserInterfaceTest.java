@@ -61,7 +61,7 @@ class UserInterfaceTest {
         String password = inputs.get("password");
         String name = inputs.get("name");
         String email = inputs.get("email");
-        Company company = JobApplicationSystem.getCompany(inputs.get("company"));
+        Branch company = JobApplicationSystem.getBranch(inputs.get("company"));
         if(!this.checkValidEmail(email)) {
             return 1;
         } else if(company == null) {
@@ -85,7 +85,7 @@ class UserInterfaceTest {
         String password = inputs.get("password");
         String name = inputs.get("name");
         String email = inputs.get("email");
-        Company company = JobApplicationSystem.getCompany(inputs.get("company"));
+        Branch company = JobApplicationSystem.getBranch(inputs.get("company"));
         String field = "what the fuck"; //TODO: figure out what to do here
         if(!this.checkValidEmail(email)) {
             return 1;

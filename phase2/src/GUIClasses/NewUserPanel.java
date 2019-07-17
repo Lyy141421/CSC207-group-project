@@ -139,7 +139,7 @@ class NewUserPanel extends JPanel {
         intEmailEntry.setBounds(437, 43, 150, 30);
         interviewerCard.add(intEmailEntry);
 
-        JLabel intCompanyText = new JLabel("Company: ", SwingConstants.CENTER);
+        JLabel intCompanyText = new JLabel("Branch: ", SwingConstants.CENTER);
         intCompanyText.setBounds(267, 77, 150, 30);
         interviewerCard.add(intCompanyText);
 
@@ -193,7 +193,7 @@ class NewUserPanel extends JPanel {
         hrcEmailEntry.setBounds(437, 77, 150, 30);
         HRCCard.add(hrcEmailEntry);
 
-        JLabel hrcCompanyText = new JLabel("Company: ", SwingConstants.CENTER);
+        JLabel hrcCompanyText = new JLabel("Branch: ", SwingConstants.CENTER);
         hrcCompanyText.setBounds(267, 112, 150, 30);
         HRCCard.add(hrcCompanyText);
 
@@ -241,7 +241,7 @@ class NewUserPanel extends JPanel {
         emailError.setVisible(false);
         buttonPanel.add(emailError);
 
-        JLabel companyError = new JLabel("Error - Company not Found");
+        JLabel companyError = new JLabel("Error - Branch not Found");
         companyError.setBounds(522, 15, 200, 20);
         companyError.setVisible(false);
         buttonPanel.add(companyError);
@@ -313,7 +313,7 @@ class NewUserPanel extends JPanel {
                 this.postUpdater("Error - Invalid Email");
                 break;
             case 2:
-                this.postUpdater("Error - Company not Found");
+                this.postUpdater("Error - Branch not Found");
                 break;
             case 3:
                 this.success.setVisible(true);

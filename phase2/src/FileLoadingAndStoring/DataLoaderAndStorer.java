@@ -1,7 +1,7 @@
 package FileLoadingAndStoring;
 
+import CompanyStuff.Branch;
 import Main.JobApplicationSystem;
-import CompanyStuff.Company;
 import Main.User;
 
 import java.io.*;
@@ -75,7 +75,7 @@ public class DataLoaderAndStorer {
             InputStream buffer = new BufferedInputStream(file);
             ObjectInput input = new ObjectInputStream(buffer);
 
-            this.JAS.setCompanies((ArrayList<Company>) input.readObject());
+            this.JAS.setCompanies((ArrayList<Branch>) input.readObject());
             input.close();
         } catch (IOException ex) {
             ex.printStackTrace();

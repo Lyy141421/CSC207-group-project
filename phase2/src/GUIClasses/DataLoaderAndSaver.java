@@ -42,7 +42,7 @@ public class DataLoaderAndSaver {
             InputStream buffer = new BufferedInputStream(file);
             ObjectInput input = new ObjectInputStream(buffer);
 
-            JobApplicationSystem.setCompanies((ArrayList<Company>) input.readObject());
+            JobApplicationSystem.setCompanies((ArrayList<Branch>) input.readObject());
             input.close();
         } catch (IOException ex) {
             ex.printStackTrace();

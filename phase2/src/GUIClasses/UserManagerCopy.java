@@ -32,7 +32,7 @@ public class UserManagerCopy {
  * @param newUser Checks if the user being created is new/whether encryption is required
  *//*
 
-    public Interviewer createInterviewer(String username, String password, String legalName, String email, Company company,
+    public Interviewer createInterviewer(String username, String password, String legalName, String email, Branch company,
                                          String field, LocalDate dateCreated, boolean newUser) {
         if (newUser) {
             password = this.encrypt(password);
@@ -44,7 +44,7 @@ public class UserManagerCopy {
     }
 
     public HRCoordinator createHRCoordinator(String username, String password, String legalName,
-                                             String email, Company company, LocalDate dateCreated, boolean newUser) {
+                                             String email, Branch company, LocalDate dateCreated, boolean newUser) {
         if (newUser) {
             password = this.encrypt(password);
             //TODO: Write to storage

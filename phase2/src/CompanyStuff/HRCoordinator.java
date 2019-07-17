@@ -14,8 +14,8 @@ public class HRCoordinator extends User {
      */
 
     // === Instance variables ===
-    // The company that this HR Coordinator works for
-    private Company company;
+    // The branch that this HR Coordinator works for
+    private Branch branch;
 
 
     // === Public methods ===
@@ -23,20 +23,20 @@ public class HRCoordinator extends User {
     public HRCoordinator() {
     }
 
-    public HRCoordinator(String username, String password, String legalName, String email, Company company,
+    public HRCoordinator(String username, String password, String legalName, String email, Branch branch,
                          LocalDate dateCreated) {
         super(username, password, legalName, email, dateCreated);
-        this.company = company;
+        this.branch = branch;
     }
 
     // === Getters ===
-    public Company getCompany() {
-        return this.company;
+    public Branch getBranch() {
+        return this.branch;
     }
 
     // === Setters ===
-    public void setCompany(Company company) {
-        this.company = company;
+    public void setBranch(Branch branch) {
+        this.branch = branch;
     }
 
     // === Other methods ===
@@ -54,8 +54,8 @@ public class HRCoordinator extends User {
     public JobPosting addJobPosting(String jobTitle, String jobField, String jobDescription, String requirements,
                                     int numPositions, LocalDate postDate, LocalDate closeDate) {
         JobPosting jobPosting = new JobPosting(jobTitle, jobField, jobDescription, requirements,
-                numPositions, this.company, postDate, closeDate);
-        this.company.getJobPostingManager().addJobPosting(jobPosting);
+                numPositions, this.branch, postDate, closeDate);
+        this.branch.getJobPostingManager().addJobPosting(jobPosting);
         return jobPosting;
     }
 
@@ -67,8 +67,8 @@ public class HRCoordinator extends User {
      */
     @Override
     public JobApplication findJobAppById(int ID) {
-        for (JobPosting jobPosting : this.company.getJobPostingManager().getJobPostings()) {
-            for (JobApplication jobApplication : jobPosting.getJobApplications()) {
+        for (BranchJobPosting branchJobPosting : this.branch.getBranchJobPostings()) {
+            for (JobApplication jobApplication : branchJobPosting.getJobApplications()) {
                 if (jobApplication.getId() == ID) {
                     return jobApplication;
                 }

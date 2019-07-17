@@ -1,9 +1,5 @@
 package CompanyStuff;
 
-import CompanyStuff.InterviewManager;
-import CompanyStuff.JobPosting;
-import CompanyStuff.Company;
-
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -17,17 +13,17 @@ public class JobPostingManager implements Serializable {
     // A list of job postings for positions in this company.
     private ArrayList<JobPosting> jobPostings = new ArrayList<>();
     // The company that this job posting manager is for
-    private Company company;
+    private Branch company;
 
 
     // === Public methods ===
 
     // === Constructors ===
-    public JobPostingManager(Company company) {
+    public JobPostingManager(Branch company) {
         this.company = company;
     }
 
-    public JobPostingManager(ArrayList<JobPosting> jobPostings, Company company) {
+    public JobPostingManager(ArrayList<JobPosting> jobPostings, Branch company) {
         this.jobPostings = jobPostings;
         this.company = company;
     }
@@ -205,12 +201,12 @@ public class JobPostingManager implements Serializable {
     // === Package-private methods ===
 
     // === Getters ===
-    Company getCompany() {
+    Branch getCompany() {
         return this.company;
     }
 
     // === Setters ===
-    void setCompany(Company company) {
+    void setCompany(Branch company) {
         this.company = company;
     }
 }
