@@ -16,7 +16,7 @@ public class JobPosting implements Serializable {
     private String title; // The job title
     private String field; // The job field
     private String description; // The job description
-    private String requirements; // The requirements for this job posting
+    private ArrayList<String> tags; // The tags for this job posting
     private int numPositions;
     private Company company; // The company that listed this job posting
     private LocalDate postDate; // The date on which this job posting was listed
@@ -45,8 +45,12 @@ public class JobPosting implements Serializable {
         return this.description;
     }
 
-    public String getRequirements() {
-        return this.requirements;
+    public ArrayList<String> getTags() {
+        return this.tags;
+    }
+
+    public String getTagsString(){
+        return getTags().toString().replace("[", "").replace("]", "");
     }
 
     public int getNumPositions() {
@@ -90,8 +94,8 @@ public class JobPosting implements Serializable {
         this.description = description;
     }
 
-    public void setRequirements(String requirements) {
-        this.requirements = requirements;
+    public void setTags(ArrayList<String> tags) {
+        this.tags = tags;
     }
 
     public void setNumPositions(int numPositions) {
@@ -141,7 +145,7 @@ public class JobPosting implements Serializable {
                 } else if (i == 2) {
                     this.setDescription((String.valueOf(fields.get(i))));
                 } else if (i == 3) {
-                    this.setRequirements((String.valueOf(fields.get(i))));
+//                    this.setTags((String.valueOf(fields.get(i)))); Todo fix
                 }
             } else if (fields.get(i) instanceof Integer && (Integer) fields.get(i) > skipFieldKey) {
                 this.setNumPositions((Integer) fields.get(i));
@@ -149,6 +153,19 @@ public class JobPosting implements Serializable {
                 this.setCloseDate((LocalDate) fields.get(i));
             }
         }
+    }
+
+    public boolean containsTag(String tag){
+        return getTags().contains(tag);
+    }
+
+    public boolean containsTag(ArrayList<String> tags){
+        for(String t : tags){
+            if(!containsTag(t)){
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
@@ -280,7 +297,7 @@ public class JobPosting implements Serializable {
         s += "Post date: " + this.getPostDate().format(dtf) + "\n";
         s += "Close date: " + this.getCloseDate().format(dtf) + "\n";
         s += "Description: " + this.getDescription() + "\n";
-        s += "Requirements: " + this.getRequirements() + "\n";
+        s += "Tags: " + this.getTagsString() + "\n";
         s += "Company: " + this.getCompany().getName() + "\n";
         s += "Filled: " + (this.isFilled() ? "Yes" : "No"); // "Yes" if posting is filled; "No" otherwise
         return s;
@@ -290,14 +307,14 @@ public class JobPosting implements Serializable {
     // === Package-private methods ===
 
     // === Constructor ===
-    JobPosting(String title, String field, String description, String requirements, int numPositions, Company company,
+    JobPosting(String title, String field, String description, ArrayList<String> tags, int numPositions, Company company,
                LocalDate postDate, LocalDate closeDate) {
         totalNumOfPostings++;
         this.id = totalNumOfPostings;
         this.title = title;
         this.field = field;
         this.description = description;
-        this.requirements = requirements;
+        this.tags = tags;
         this.numPositions = numPositions;
         this.company = company;
         this.filled = false;
