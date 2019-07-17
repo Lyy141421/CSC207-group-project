@@ -39,7 +39,6 @@ public class BranchJobPosting extends JobPosting {
         this.closeDate = closeDate;
         this.filled = false;
         this.jobApplications = new ArrayList<>();
-        this.interviewManager = new InterviewManager();
     }
 
     // === Getters ===
