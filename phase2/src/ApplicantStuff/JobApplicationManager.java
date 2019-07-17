@@ -9,7 +9,6 @@ import Miscellaneous.CloseDateComparator;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import static java.time.temporal.ChronoUnit.DAYS;
 

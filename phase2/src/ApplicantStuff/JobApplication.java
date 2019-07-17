@@ -1,7 +1,6 @@
 package ApplicantStuff;
 
 import CompanyStuff.BranchJobPosting;
-import CompanyStuff.JobPosting;
 import CompanyStuff.Interview;
 
 import java.io.Serializable;
@@ -24,7 +23,7 @@ public class JobApplication implements Serializable {
     // The applicant for a job
     private Applicant applicant;
     // The BranchJobPosting that was applied for
-    private BranchJobPosting branchJobPosting;
+    private BranchJobPosting jobPosting;
     // The files submitted for this job application
     private ArrayList<JobApplicationDocument> filesSubmitted;
     // The status of this application
@@ -42,12 +41,12 @@ public class JobApplication implements Serializable {
 
     // === Constructors ===
 
-    public JobApplication(Applicant applicant, BranchJobPosting branchJobPosting,
+    public JobApplication(Applicant applicant, BranchJobPosting jobPosting,
                           ArrayList<JobApplicationDocument> filesSubmitted, LocalDate applicationDate) {
         JobApplication.totalNumOfApplications++;
         this.id = JobApplication.totalNumOfApplications;
         this.applicant = applicant;
-        this.branchJobPosting = branchJobPosting;
+        this.jobPosting = jobPosting;
         this.filesSubmitted = filesSubmitted;
         this.status = new Status();
         this.applicationDate = applicationDate;
@@ -62,8 +61,8 @@ public class JobApplication implements Serializable {
         return this.applicant;
     }
 
-    public JobPosting getBranchJobPosting() {
-        return this.branchJobPosting;
+    public BranchJobPosting getJobPosting() {
+        return this.jobPosting;
     }
 
     ArrayList<JobApplicationDocument> getFilesSubmitted() {
@@ -88,7 +87,7 @@ public class JobApplication implements Serializable {
     }
 
     public void setJobPosting(BranchJobPosting branchJobPosting) {
-        this.branchJobPosting = branchJobPosting;
+        this.jobPosting = branchJobPosting;
     }
 
     public void setInterviews(ArrayList<Interview> interviews) {
@@ -149,7 +148,7 @@ public class JobApplication implements Serializable {
      */
     public String toStringForApplicant() {
         String s = "Application ID: " + this.getId() + "\n";
-        s += "Job Posting: " + branchJobPosting.getTitle() + " -- ID: " + branchJobPosting.getId() + "\n";
+        s += "Job Posting: " + jobPosting.getTitle() + " -- ID: " + jobPosting.getId() + "\n";
         s += "Status: " + this.getStatus().getDescription() + "\n";
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         s += "Application date: " + this.getApplicationDate().format(dtf);
@@ -160,7 +159,7 @@ public class JobApplication implements Serializable {
     public String toString() {
         String s = "Application ID: " + this.getId() + "\n";
         s += "Applicant: " + this.getApplicant().getLegalName() + "(" + this.getApplicant().getUsername() + ")" + "\n";
-        s += "Job Posting: " + this.branchJobPosting.getTitle() + " -- ID: " + this.branchJobPosting.getId();
+        s += "Job Posting: " + this.jobPosting.getTitle() + " -- ID: " + this.jobPosting.getId();
         s += "Status: " + this.status.getDescription() + "\n";
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         s += "Application date: " + this.getApplicationDate().format(dtf);

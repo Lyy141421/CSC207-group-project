@@ -29,6 +29,8 @@ public class InterviewManager implements Serializable {
     private ArrayList<Object[]> interviewConfiguration;
     // The current round of interviews
     private int currentRound = 0;
+    // The maximum number of interview rounds
+    private int maxNumberOfRounds;
 
     // === Representation invariants ===
     // The list of interviews for each applicant is sorted by date.
@@ -58,6 +60,10 @@ public class InterviewManager implements Serializable {
         return this.currentRound;
     }
 
+    public int getMaxNumberOfRounds() {
+        return this.maxNumberOfRounds;
+    }
+
     public String getCurrentRoundDescription() {
         return (String) this.interviewConfiguration.get(this.currentRound)[0];
     }
@@ -77,6 +83,7 @@ public class InterviewManager implements Serializable {
     // === Setters ===
     public void setInterviewConfiguration(ArrayList<Object[]> interviewConfiguration) {
         this.interviewConfiguration = interviewConfiguration;
+        this.maxNumberOfRounds = interviewConfiguration.size();
     }
 
     // === Other methods ===
@@ -130,7 +137,7 @@ public class InterviewManager implements Serializable {
     public void withdrawApplication(JobApplication applicationToWithdraw) {
         if (!applicationToWithdraw.getInterviews().isEmpty()) {
             Interview interview = applicationToWithdraw.getLastInterview();
-            InterviewManager IM = applicationToWithdraw.getBranchJobPosting().getInterviewManager();
+            InterviewManager IM = applicationToWithdraw.getJobPosting().getInterviewManager();
             if (!interview.isComplete() && interview.getNumApplications() == 1) {
                 for (Interviewer interviewer : interview.getAllInterviewers()) {
                     interviewer.removeInterview(interview);
@@ -185,6 +192,37 @@ public class InterviewManager implements Serializable {
             return InterviewManager.SCHEDULE_INTERVIEWS;
         } else {
             return InterviewManager.DO_NOTHING;
+        }
+    }
+
+    /**
+     * Set up one-on-one interviews for all applications in consideration.
+     */
+    public void setUpOneOnOneInterviews() {
+        for (JobApplication jobApp : this.applicationsInConsideration) {
+            String field = this.branchJobPosting.getField();
+            Interviewer interviewer = this.branchJobPosting.getBranch().findInterviewerByField(field);
+            Interview interview = new OneOnOneInterview(jobApp, interviewer, this);
+            jobApp.addInterview(interview);
+            jobApp.getStatus().advanceStatus();
+        }
+    }
+
+    /**
+     * Set up a group interview for all applications in consideration.
+     *
+     * @param interviewCoordinator The interview coordinator selected.
+     * @param otherInterviewers    The other interviewers selected.
+     */
+    public void setUpGroupInterview(Interviewer interviewCoordinator, ArrayList<Interviewer> otherInterviewers) {
+        GroupInterview interview = new GroupInterview(this.applicationsInConsideration, interviewCoordinator,
+                otherInterviewers, this);
+        for (JobApplication jobApp : this.applicationsInConsideration) {
+            jobApp.addInterview(interview);
+            jobApp.getStatus().advanceStatus();
+        }
+        for (Interviewer interviewer : interview.getAllInterviewers()) {
+            interviewer.addInterview(interview);
         }
     }
 

@@ -1,6 +1,6 @@
 package ApplicantStuff;
 
-import CompanyStuff.Branch;
+import CompanyStuff.Company;
 import DocumentManagers.ApplicantDocumentManager;
 import DocumentManagers.DocumentManagerFactory;
 import Main.JobApplicationSystem;
@@ -96,8 +96,8 @@ public class Applicant extends User {
      */
     public ArrayList<JobPosting> getOpenJobPostingsNotAppliedTo(JobApplicationSystem JAS) {
         ArrayList<JobPosting> jobPostingsNotAppliedTo = new ArrayList<>();
-        for (Branch branch : JAS.getCompanies()) {
-            for (JobPosting posting : branch.getJobPostingManager().getOpenJobPostings(JAS.getToday()))
+        for (Company company : JAS.getCompanies()) {
+            for (JobPosting posting : company.getJobPostingManager().getOpenJobPostings(JAS.getToday()))
                 if (!this.hasAppliedTo(posting)) {
                     jobPostingsNotAppliedTo.add(posting);
                 }

@@ -1,7 +1,5 @@
 package CompanyStuff;
 
-import ApplicantStuff.Applicant;
-import ApplicantStuff.JobApplication;
 import DocumentManagers.BranchDocumentManager;
 import DocumentManagers.DocumentManagerFactory;
 
@@ -21,7 +19,7 @@ public class Branch implements Serializable {
     // The interviewers in this company
     private HashMap<String, ArrayList<Interviewer>> fieldToInterviewers;
     // The branch job postings for this branch
-    private ArrayList<BranchJobPosting> branchJobPostings;
+    private JobPostingManager jobPostingManager = new BranchJobPostingManager(this);
     // The document manager for this company
     private BranchDocumentManager documentManager;
 
@@ -55,8 +53,8 @@ public class Branch implements Serializable {
         return this.fieldToInterviewers;
     }
 
-    public ArrayList<BranchJobPosting> getBranchJobPostings() {
-        return branchJobPostings;
+    public JobPostingManager getJobPostingManager() {
+        return this.jobPostingManager;
     }
 
     public BranchDocumentManager getDocumentManager() {
@@ -65,9 +63,13 @@ public class Branch implements Serializable {
 
     // === Other methods ===
     public BranchJobPosting getBranchJobPosting(int id) {
-        for (BranchJobPosting posting : branchJobPostings) {
-            if (posting.getId() == id)
-                return posting;
+        for (JobPosting posting : this.jobPostingManager.getJobPostings()) {
+            if (posting.getId() == id) {
+                BranchJobPosting branchJobPosting = posting.getBranchJobPosting(this);
+                if (branchJobPosting != null) {
+                    return branchJobPosting;
+                }
+            }
         }
         return null;
     }
@@ -141,21 +143,5 @@ public class Branch implements Serializable {
             }
         }
         return interviewerSoFar;
-    }
-
-    /**
-     * Set up an interview for the applicant with this job application.
-     *
-     * @param round The interview round.
-     */
-    // TODO Interview factory?
-    public void setUpInterview(JobApplication jobApplication, int round) {
-        BranchJobPosting posting = jobApplication.getBranchJobPosting();
-        Interviewer interviewer = this.findInterviewerByField(jobPosting.getField());
-        Interview interview = new Interview(jobApplication, jobPosting.getInterviewManager());
-        // TODO make this action observable and notify jobApplication and interviewer
-        jobApplication.addInterview(interview);
-        interviewer.addInterview(interview);
-        jobApplication.getStatus().advanceStatus();
     }
 }

@@ -6,9 +6,14 @@ import ApplicantStuff.JobApplication;
 import java.util.ArrayList;
 
 public class Company {
-    String name;
-    ArrayList<Branch> branches;
-    JobPostingManager jobPostingManager;
+
+    // === Instance variables ===
+    // The name of this company (unique)
+    private String name;
+    // The branches in this company.
+    private ArrayList<Branch> branches;
+    // The company job posting manager
+    private JobPostingManager jobPostingManager = new CompanyJobPostingManager(this);
 
     public Company(String name) {
         this.branches = new ArrayList<>();
@@ -50,11 +55,7 @@ public class Company {
     public ArrayList<JobApplication> getAllApplicationsToCompany(Applicant applicant) {
         ArrayList<JobApplication> apps = new ArrayList<>();
         for (JobPosting jobPosting : this.getJobPostingManager().getJobPostings()) {
-            for (JobApplication jobApp : jobPosting.getJobApplications()) {
-                if (jobApp.getApplicant().equals(applicant)) {
-                    apps.add(jobApp);
-                }
-            }
+            apps.addAll(jobPosting.getJobApplications());
         }
         return apps;
     }
