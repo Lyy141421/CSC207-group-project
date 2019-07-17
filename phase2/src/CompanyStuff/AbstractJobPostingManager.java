@@ -1,18 +1,19 @@
 package CompanyStuff;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
-public abstract class JobPostingManager implements Serializable {
+public abstract class AbstractJobPostingManager implements Serializable {
     /**
      * A class that manages the job postings for each branch
      */
 
     // === Instance variables ===
-    private ArrayList<JobPosting> jobPostings;
+    private ArrayList<CompanyJobPosting> jobPostings;
 
     // === Getters ===
-    public ArrayList<JobPosting> getJobPostings() {
+    public ArrayList<CompanyJobPosting> getJobPostings() {
         return this.jobPostings;
     }
 
@@ -23,7 +24,7 @@ public abstract class JobPostingManager implements Serializable {
      *
      * @param jobPosting The job posting to be added.
      */
-    public void addJobPosting(JobPosting jobPosting) {
+    public void addJobPosting(CompanyJobPosting jobPosting) {
         this.jobPostings.add(jobPosting);
     }
 
@@ -32,7 +33,7 @@ public abstract class JobPostingManager implements Serializable {
      *
      * @param jobPosting The job posting to be removed.
      */
-    public void removeJobPosting(JobPosting jobPosting) {
+    public void removeJobPosting(CompanyJobPosting jobPosting) {
         this.jobPostings.remove(jobPosting);
     }
 
@@ -42,8 +43,8 @@ public abstract class JobPostingManager implements Serializable {
      * @param ID The id of the job posting in question.
      * @return the job posting with this ID or null if not found.
      */
-    public JobPosting getJobPosting(int ID) {
-        for (JobPosting jobPosting : this.getJobPostings()) {
+    public CompanyJobPosting getJobPosting(int ID) {
+        for (CompanyJobPosting jobPosting : this.getJobPostings()) {
             if (jobPosting.getId() == ID) {
                 return jobPosting;
             }
@@ -51,4 +52,6 @@ public abstract class JobPostingManager implements Serializable {
         return null;
 
     }
+
+    public abstract ArrayList<CompanyJobPosting> getOpenJobPostings(LocalDate today);
 }

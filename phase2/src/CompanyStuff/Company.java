@@ -13,7 +13,7 @@ public class Company {
     // The branches in this company.
     private ArrayList<Branch> branches;
     // The company job posting manager
-    private JobPostingManager jobPostingManager = new CompanyJobPostingManager(this);
+    private AbstractJobPostingManager jobPostingManager = new CompanyJobPostingManager(this);
 
     public Company(String name) {
         this.branches = new ArrayList<>();
@@ -27,7 +27,7 @@ public class Company {
         return branches;
     }
 
-    public JobPostingManager getJobPostingManager() {
+    public AbstractJobPostingManager getJobPostingManager() {
         return jobPostingManager;
     }
 
@@ -54,7 +54,7 @@ public class Company {
      */
     public ArrayList<JobApplication> getAllApplicationsToCompany(Applicant applicant) {
         ArrayList<JobApplication> apps = new ArrayList<>();
-        for (JobPosting jobPosting : this.getJobPostingManager().getJobPostings()) {
+        for (CompanyJobPosting jobPosting : this.getJobPostingManager().getJobPostings()) {
             apps.addAll(jobPosting.getJobApplications());
         }
         return apps;
@@ -67,7 +67,7 @@ public class Company {
      * @return true iff this applicant has applied to this company.
      */
     public boolean hasAppliedHere(Applicant applicant) {
-        for (JobPosting jobPosting : this.getJobPostingManager().getJobPostings()) {
+        for (CompanyJobPosting jobPosting : this.getJobPostingManager().getJobPostings()) {
             if (applicant.hasAppliedTo(jobPosting)) {
                 return true;
             }

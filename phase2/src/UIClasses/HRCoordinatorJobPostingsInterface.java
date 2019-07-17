@@ -3,7 +3,7 @@ package UIClasses;
 import CompanyStuff.BranchJobPostingManager;
 import Main.JobApplicationSystem;
 import CompanyStuff.HRCoordinator;
-import CompanyStuff.JobPosting;
+import CompanyStuff.CompanyJobPosting;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -50,7 +50,7 @@ class HRCoordinatorJobPostingsInterface extends UserInterface {
      */
     void viewPostingsWithNoApplicationsSubmitted() {
         BranchJobPostingManager JPM = this.HRC.getBranch().getJobPostingManager();
-        for (JobPosting jobPosting : JPM.getClosedJobPostingsNoApplicationsSubmitted(today)) {
+        for (CompanyJobPosting jobPosting : JPM.getClosedJobPostingsNoApplicationsSubmitted(today)) {
             System.out.println("\nNo applications have been submitted for this job posting:");
             System.out.println("\n" + jobPosting);
             System.out.println("Would you like to update its fields? ");
@@ -72,9 +72,9 @@ class HRCoordinatorJobPostingsInterface extends UserInterface {
     void addJobPosting() {
         System.out.println("\n\nComplete the following categories for adding a job posting as they appear.");
         ArrayList<Object> fields = this.getFieldsForJobPosting(false);
-        JobPosting jobPosting = new JobPosting((String) fields.get(0), (String) fields.get(1),
+        CompanyJobPosting jobPosting = new CompanyJobPosting((String) fields.get(0), (String) fields.get(1),
                 (String) fields.get(2), (String) fields.get(3));
-        JobPosting jobPosting = this.HRC.addJobPosting(jobPosting);
+        CompanyJobPosting jobPosting = this.HRC.addJobPosting(jobPosting);
         System.out.println("\nYou have successfully added '" + jobPosting.getTitle() +
                 "' (Job Posting ID: " + jobPosting.getId() + ") to the system.");
     }
@@ -88,7 +88,7 @@ class HRCoordinatorJobPostingsInterface extends UserInterface {
             System.out.println("\nThere are no open job postings to be updated.");
             return;
         }
-        JobPosting jobPosting = new HRCoordinatorInterface(this.JAS, this.HRC).getBranchJobPosting();
+        CompanyJobPosting jobPosting = new HRCoordinatorInterface(this.JAS, this.HRC).getBranchJobPosting();
         if (jobPosting != null) {
             if (jobPosting.isClosed(this.today)) {
                 System.out.println("\nThis job posting is closed and can no longer be updated.");
@@ -149,7 +149,7 @@ class HRCoordinatorJobPostingsInterface extends UserInterface {
      *
      */
     private void displayOpenPostings() {
-        ArrayList<JobPosting> openJobPostings = this.HRC.getBranch().getJobPostingManager().
+        ArrayList<CompanyJobPosting> openJobPostings = this.HRC.getBranch().getJobPostingManager().
                 getOpenJobPostings(this.today);
         System.out.println("\nOpen postings: ");
         this.printList(openJobPostings);
@@ -160,7 +160,7 @@ class HRCoordinatorJobPostingsInterface extends UserInterface {
      *
      */
     private void displayClosedPostingsNotFilled() {
-        ArrayList<JobPosting> closedJobPostingsNotFilled = this.HRC.getBranch().getJobPostingManager().
+        ArrayList<CompanyJobPosting> closedJobPostingsNotFilled = this.HRC.getBranch().getJobPostingManager().
                 getClosedJobPostingsNotFilled(this.today);
         System.out.println("\nClosed postings: ");
         this.printList(closedJobPostingsNotFilled);
@@ -170,7 +170,7 @@ class HRCoordinatorJobPostingsInterface extends UserInterface {
      * View all filled postings.
      */
     private void displayFilledPostings() {
-        ArrayList<JobPosting> filledJobPostings = this.HRC.getBranch().getJobPostingManager().
+        ArrayList<CompanyJobPosting> filledJobPostings = this.HRC.getBranch().getJobPostingManager().
                 getFilledJobPostings();
         System.out.println("\nFilled postings: ");
         this.printList(filledJobPostings);
@@ -180,7 +180,7 @@ class HRCoordinatorJobPostingsInterface extends UserInterface {
      * View all postings.
      */
     private void displayAllPostings() {
-        ArrayList<JobPosting> allJobPostings = this.HRC.getBranch().getJobPostingManager().getJobPostings();
+        ArrayList<CompanyJobPosting> allJobPostings = this.HRC.getBranch().getJobPostingManager().getJobPostings();
         System.out.println("\nAll postings: ");
         this.printList(allJobPostings);
     }
@@ -212,7 +212,7 @@ class HRCoordinatorJobPostingsInterface extends UserInterface {
      *
      * @param jobPosting The job posting to be updated.
      */
-    private void updateJobPostingFields(JobPosting jobPosting) {
+    private void updateJobPostingFields(CompanyJobPosting jobPosting) {
         System.out.println("\nComplete the following categories for updating a job posting as they appear.");
         System.out.println("Enter '" + SKIP_FIELD_KEY + "' if you do not wish to update the category and enter " +
                 SKIP_DATE_KEY + " if you do not wish to update the close date.\n");

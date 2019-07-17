@@ -1,7 +1,7 @@
 package UIClasses;
 
 import ApplicantStuff.JobApplication;
-import CompanyStuff.JobPosting;
+import CompanyStuff.CompanyJobPosting;
 import Main.JobApplicationSystem;
 import ApplicantStuff.Applicant;
 import CompanyStuff.HRCoordinator;
@@ -30,7 +30,7 @@ class HRCoordinatorJobAppsInterface extends UserInterface {
      *
      */
     void runMenu() {
-        JobPosting jobPosting = new HRCoordinatorInterface(this.JAS, this.HRC).getBranchJobPosting();
+        CompanyJobPosting jobPosting = new HRCoordinatorInterface(this.JAS, this.HRC).getBranchJobPosting();
         if (jobPosting == null || this.noItemsToViewForJobPosting(jobPosting)) {
             return;
         }
@@ -64,7 +64,7 @@ class HRCoordinatorJobAppsInterface extends UserInterface {
      * @param jobPosting Job posting in question.
      * @return true iff there are no items to view for this job posting.
      */
-    private boolean noItemsToViewForJobPosting(JobPosting jobPosting) {
+    private boolean noItemsToViewForJobPosting(CompanyJobPosting jobPosting) {
         if (jobPosting.getInterviewManager() == null) {
             System.out.println("\nJob posting is still open. No applications to view.");
             return true;
@@ -77,7 +77,7 @@ class HRCoordinatorJobAppsInterface extends UserInterface {
      *  @param jobPosting           The job posting selected.
      * @param option               The option number selected.
      */
-    private void runMenuAction(JobPosting jobPosting, int option) {
+    private void runMenuAction(CompanyJobPosting jobPosting, int option) {
         switch (option) {
             case 1: // Search job application
                 this.searchSpecificJobApplication(jobPosting);
@@ -104,7 +104,7 @@ class HRCoordinatorJobAppsInterface extends UserInterface {
      *
      * @param jobPosting           The job posting in question.
      */
-    private void searchSpecificJobApplication(JobPosting jobPosting) {
+    private void searchSpecificJobApplication(CompanyJobPosting jobPosting) {
         Applicant applicant = new HRCoordinatorInterface(this.JAS, this.HRC).searchSpecificApplicant();
         if (applicant != null) {
             JobApplication jobApp = jobPosting.findJobApplication(applicant);
@@ -121,7 +121,7 @@ class HRCoordinatorJobAppsInterface extends UserInterface {
      *
      * @param jobPosting The job posting in question.
      */
-    private void displayAppsInConsideration(JobPosting jobPosting) {
+    private void displayAppsInConsideration(CompanyJobPosting jobPosting) {
         ArrayList<JobApplication> jobAppsInConsideration = jobPosting.getInterviewManager().
                 getApplicationsInConsideration();
         System.out.println("Applications in consideration: ");
@@ -133,7 +133,7 @@ class HRCoordinatorJobAppsInterface extends UserInterface {
      *
      * @param jobPosting The job posting in question.
      */
-    private void displayAppsRejected(JobPosting jobPosting) {
+    private void displayAppsRejected(CompanyJobPosting jobPosting) {
         ArrayList<JobApplication> jobAppsRejected = jobPosting.getInterviewManager().getApplicationsRejected();
         System.out.println("Applications rejected: ");
         this.printList(jobAppsRejected);
@@ -144,7 +144,7 @@ class HRCoordinatorJobAppsInterface extends UserInterface {
      *
      * @param jobPosting The job posting in question.
      */
-    private void displayRejectedEmailList(JobPosting jobPosting) {
+    private void displayRejectedEmailList(CompanyJobPosting jobPosting) {
         ArrayList<String> emailListRejected = jobPosting.getEmailsForRejectList();
         System.out.println("Emails of rejected applicants: ");
         this.printList(emailListRejected);
@@ -155,7 +155,7 @@ class HRCoordinatorJobAppsInterface extends UserInterface {
      *
      * @param jobPosting The job posting in question.
      */
-    private void displayAllApps(JobPosting jobPosting) {
+    private void displayAllApps(CompanyJobPosting jobPosting) {
         ArrayList<JobApplication> jobApps = jobPosting.getJobApplications();
         System.out.println("All applications: ");
         this.printList(jobApps);

@@ -3,7 +3,7 @@ package CompanyStuff;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-public class CompanyJobPostingManager extends JobPostingManager {
+public class CompanyJobPostingManager extends AbstractJobPostingManager {
     /**
      * A class that manages the job postings for each branch
      */
@@ -26,9 +26,9 @@ public class CompanyJobPostingManager extends JobPostingManager {
      * @param today Today's date.
      * @return a list of open job postings for this branch.
      */
-    public ArrayList<JobPosting> getOpenJobPostings(LocalDate today) {
-        ArrayList<JobPosting> jobPostings = new ArrayList<>();
-        for (JobPosting jobPosting : this.getJobPostings()) {
+    public ArrayList<CompanyJobPosting> getOpenJobPostings(LocalDate today) {
+        ArrayList<CompanyJobPosting> jobPostings = new ArrayList<>();
+        for (CompanyJobPosting jobPosting : this.getJobPostings()) {
             if (!jobPosting.isClosed(today)) {
                 jobPostings.add(jobPosting);
             }
@@ -42,9 +42,9 @@ public class CompanyJobPostingManager extends JobPostingManager {
      * @param today Today's date.
      * @return a list of closed job postings for this branch that have not yet been filled.
      */
-    public ArrayList<JobPosting> getClosedJobPostingsNotFilled(LocalDate today) {
-        ArrayList<JobPosting> jobPostings = new ArrayList<>();
-        for (JobPosting jobPosting : this.getJobPostings()) {
+    public ArrayList<CompanyJobPosting> getClosedJobPostingsNotFilled(LocalDate today) {
+        ArrayList<CompanyJobPosting> jobPostings = new ArrayList<>();
+        for (CompanyJobPosting jobPosting : this.getJobPostings()) {
             if (!jobPosting.isFilled() && jobPosting.isClosed(today)) {
                 jobPostings.add(jobPosting);
             }
@@ -57,9 +57,9 @@ public class CompanyJobPostingManager extends JobPostingManager {
      *
      * @return a list of filled job postings at this branch.
      */
-    public ArrayList<JobPosting> getFilledJobPostings() {
-        ArrayList<JobPosting> jobPostings = new ArrayList<>();
-        for (JobPosting jobPosting : this.getJobPostings()) {
+    public ArrayList<CompanyJobPosting> getFilledJobPostings() {
+        ArrayList<CompanyJobPosting> jobPostings = new ArrayList<>();
+        for (CompanyJobPosting jobPosting : this.getJobPostings()) {
             if (jobPosting.isFilled()) {
                 jobPostings.add(jobPosting);
             }

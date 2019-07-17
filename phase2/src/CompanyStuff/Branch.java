@@ -19,7 +19,7 @@ public class Branch implements Serializable {
     // The interviewers in this company
     private HashMap<String, ArrayList<Interviewer>> fieldToInterviewers;
     // The branch job postings for this branch
-    private JobPostingManager jobPostingManager = new BranchJobPostingManager(this);
+    private AbstractJobPostingManager jobPostingManager = new BranchJobPostingManager(this);
     // The document manager for this company
     private BranchDocumentManager documentManager;
 
@@ -53,7 +53,7 @@ public class Branch implements Serializable {
         return this.fieldToInterviewers;
     }
 
-    public JobPostingManager getJobPostingManager() {
+    public AbstractJobPostingManager getJobPostingManager() {
         return this.jobPostingManager;
     }
 
@@ -63,7 +63,7 @@ public class Branch implements Serializable {
 
     // === Other methods ===
     public BranchJobPosting getBranchJobPosting(int id) {
-        for (JobPosting posting : this.jobPostingManager.getJobPostings()) {
+        for (CompanyJobPosting posting : this.jobPostingManager.getJobPostings()) {
             if (posting.getId() == id) {
                 BranchJobPosting branchJobPosting = posting.getBranchJobPosting(this);
                 if (branchJobPosting != null) {

@@ -6,7 +6,7 @@ import ApplicantStuff.JobApplication;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-public class BranchJobPosting extends JobPosting {
+public class BranchJobPosting extends CompanyJobPosting {
 
     // === Instance variables ===
     private int numPositions;
@@ -29,7 +29,7 @@ public class BranchJobPosting extends JobPosting {
         this.jobApplications = new ArrayList<>();
     }
 
-    BranchJobPosting(JobPosting jobPosting, int numPositions, Branch branch, LocalDate postDate,
+    BranchJobPosting(CompanyJobPosting jobPosting, int numPositions, Branch branch, LocalDate postDate,
                      LocalDate closeDate) {
         super(jobPosting.getTitle(), jobPosting.getField(), jobPosting.getDescription(),
                 jobPosting.getRequiredDocuments(), jobPosting.getTags(), jobPosting.getCompany());

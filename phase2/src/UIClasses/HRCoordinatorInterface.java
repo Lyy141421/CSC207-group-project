@@ -1,7 +1,7 @@
 package UIClasses;
 
 import ApplicantStuff.JobApplication;
-import CompanyStuff.JobPosting;
+import CompanyStuff.CompanyJobPosting;
 import Main.JobApplicationSystem;
 import CompanyStuff.BranchJobPostingManager;
 import Miscellaneous.ExitException;
@@ -54,9 +54,9 @@ public class HRCoordinatorInterface extends UserInterface {
      *
      * @return the job posting being searched for.
      */
-    JobPosting getJobPosting() {
+    CompanyJobPosting getJobPosting() {
         int id = this.getPositiveInteger("\nEnter the job posting ID: ");
-        JobPosting jobPosting = this.HRC.getCompany().getJobPostingManager().getJobPosting(id);
+        CompanyJobPosting jobPosting = this.HRC.getCompany().getJobPostingManager().getJobPosting(id);
         if (jobPosting == null) {
             System.out.println("\nThis job posting was not found in " + this.HRC.getCompany().getName() + ".");
             return null;
@@ -75,12 +75,12 @@ public class HRCoordinatorInterface extends UserInterface {
      */
     private void viewPostingsWithNoApplicationsInConsideration() {
         BranchJobPostingManager JPM = this.HRC.getCompany().getJobPostingManager();
-        ArrayList<JobPosting> jobPostingsNoAppsInConsideration =
+        ArrayList<CompanyJobPosting> jobPostingsNoAppsInConsideration =
                 JPM.getClosedJobPostingsNoApplicationsInConsideration(today);
         if (!jobPostingsNoAppsInConsideration.isEmpty()) {
             System.out.println("Job postings with no applications in consideration: \n");
         }
-        for (JobPosting jobPosting : jobPostingsNoAppsInConsideration) {
+        for (CompanyJobPosting jobPosting : jobPostingsNoAppsInConsideration) {
             System.out.println(jobPosting.toString());
             System.out.println("Each job posting will be automatically set to filled with number of positions 0.");
             System.out.println("You may want to consider opening other job postings with these job titles.");

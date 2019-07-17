@@ -1,11 +1,12 @@
 package ApplicantStuff;
 
+import CompanyStuff.BranchJobPosting;
 import CompanyStuff.Company;
 import DocumentManagers.ApplicantDocumentManager;
 import DocumentManagers.DocumentManagerFactory;
 import Main.JobApplicationSystem;
 import Main.User;
-import CompanyStuff.JobPosting;
+import CompanyStuff.CompanyJobPosting;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -62,7 +63,7 @@ public class Applicant extends User {
      * @param jobPosting The job that this user wants to withdraw their application from.
      * @return true iff this applicant can successfully withdraw their application; else return false
      */
-    public boolean withdrawJobApplication(LocalDate today, JobPosting jobPosting) {
+    public boolean withdrawJobApplication(LocalDate today, BranchJobPosting jobPosting) {
         if (this.hasAppliedTo(jobPosting) && !jobPosting.isFilled()) {
             if (!jobPosting.isClosed(today)) {
                 // TODO replace with notify
@@ -80,7 +81,7 @@ public class Applicant extends User {
      * @param jobPosting The job posting in question.
      * @return true iff this applicant has not applied to this job posting.
      */
-    public boolean hasAppliedTo(JobPosting jobPosting) {
+    public boolean hasAppliedTo(CompanyJobPosting jobPosting) {
         for (JobApplication jobApp : jobPosting.getJobApplications()) {
             if (jobApp.getApplicant().equals(this)) {
                 return true;
@@ -94,10 +95,10 @@ public class Applicant extends User {
      *
      * @return a list of open job postings not yet applied to.
      */
-    public ArrayList<JobPosting> getOpenJobPostingsNotAppliedTo(JobApplicationSystem JAS) {
-        ArrayList<JobPosting> jobPostingsNotAppliedTo = new ArrayList<>();
+    public ArrayList<CompanyJobPosting> getOpenJobPostingsNotAppliedTo(JobApplicationSystem JAS) {
+        ArrayList<CompanyJobPosting> jobPostingsNotAppliedTo = new ArrayList<>();
         for (Company company : JAS.getCompanies()) {
-            for (JobPosting posting : company.getJobPostingManager().getOpenJobPostings(JAS.getToday()))
+            for (CompanyJobPosting posting : company.getJobPostingManager().getOpenJobPostings(JAS.getToday()))
                 if (!this.hasAppliedTo(posting)) {
                     jobPostingsNotAppliedTo.add(posting);
                 }

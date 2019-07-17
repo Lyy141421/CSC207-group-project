@@ -3,7 +3,7 @@ package UIClasses;
 import ApplicantStuff.JobApplication;
 import CompanyStuff.Branch;
 import CompanyStuff.Interview;
-import CompanyStuff.JobPosting;
+import CompanyStuff.CompanyJobPosting;
 import ApplicantStuff.JobApplicationDocument;
 import Main.JobApplicationSystem;
 import Miscellaneous.ExitException;
@@ -172,9 +172,9 @@ public class ApplicantInterface extends UserInterface {
     }
 
     private void displayOpenJobPostingsNotYetAppliedTo(String field, String companyName) {
-        ArrayList<JobPosting> openJobPostings = this.applicant.getOpenJobPostingsNotAppliedTo(this.JAS);
+        ArrayList<CompanyJobPosting> openJobPostings = this.applicant.getOpenJobPostingsNotAppliedTo(this.JAS);
         boolean noPostingsFound = true;
-        for (JobPosting posting : openJobPostings) {
+        for (CompanyJobPosting posting : openJobPostings) {
             // if field is null, assign value of posting.getField() to filterField so that all postings pass the filter;
             // otherwise, assign value of field to filterField
             String filterField = (field == null) ? posting.getField() : field;
@@ -211,7 +211,7 @@ public class ApplicantInterface extends UserInterface {
      * @param posting The job posting that this applicant wishes to apply to.
      * @return a job application containing this applicant's chosen documents.
      */
-    private JobApplication createJobApplicationThroughFiles(JobPosting posting) {
+    private JobApplication createJobApplicationThroughFiles(CompanyJobPosting posting) {
         if (applicant.getDocumentManager().getDocuments().isEmpty()) {
             System.out.println("You have not yet uploaded any documents.");
             return null;
@@ -228,7 +228,7 @@ public class ApplicantInterface extends UserInterface {
      * @param posting The job posting that this applicant wishes to apply to.
      * @return a job application containing this applicant's entered files.
      */
-    private JobApplication createJobApplicationThroughTextEntry(JobPosting posting) {
+    private JobApplication createJobApplicationThroughTextEntry(CompanyJobPosting posting) {
         String CVContents = getInputLinesUntilDone("\nEnter the contents of your CV as a series of plain " +
                 "text lines (program will stop reading after the first empty line): ");
         String coverLetterContents = getInputLinesUntilDone("\nEnter the contents of your cover letter " +
@@ -243,7 +243,7 @@ public class ApplicantInterface extends UserInterface {
      *
      * @return the posting that the applicant wishes to apply to.
      */
-    private JobPosting getPostingForJobApplication() {
+    private CompanyJobPosting getPostingForJobApplication() {
         String companyName = getInputLine("\nEnter the name of the branch you wish to apply to: ");
         Branch branch = this.JAS.getCompany(companyName);
         if (branch == null) {
@@ -251,7 +251,7 @@ public class ApplicantInterface extends UserInterface {
             return null;
         }
         int postingId = getPositiveInteger("Enter the ID of the posting you wish to apply for: ");
-        JobPosting posting = branch.getJobPostingManager().getJobPosting(postingId);
+        CompanyJobPosting posting = branch.getJobPostingManager().getJobPosting(postingId);
         if (posting == null || posting.getCloseDate().isBefore(this.today)) {
             System.out.println("\nNo open posting was found matching ID " + postingId + ".");
         }
@@ -263,7 +263,7 @@ public class ApplicantInterface extends UserInterface {
      *
      */
     private void submitApplication() {
-        JobPosting posting = this.getPostingForJobApplication();
+        CompanyJobPosting posting = this.getPostingForJobApplication();
         if (posting == null) {
             return;
         }
@@ -353,7 +353,7 @@ public class ApplicantInterface extends UserInterface {
             System.out.println("N/A");
         }
         for (JobApplication application : applications) {
-            JobPosting posting = application.getJobPosting();
+            CompanyJobPosting posting = application.getJobPosting();
             System.out.println("\n" + posting.toString());
             System.out.println("Your status: " + application.getStatus());
         }

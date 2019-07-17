@@ -75,11 +75,11 @@ class HRCoordinatorHighPriorityInterface extends UserInterface {
      *
      */
     private void selectJobAppsForPhoneInterview() {
-        ArrayList<JobPosting> jobPostings = this.displayRecentlyClosedPostings();
+        ArrayList<CompanyJobPosting> jobPostings = this.displayRecentlyClosedPostings();
         if (jobPostings.isEmpty()) {
             return;
         }
-        JobPosting jobPosting = this.selectJobPostingForPhoneInterview(jobPostings);
+        CompanyJobPosting jobPosting = this.selectJobPostingForPhoneInterview(jobPostings);
         this.reviewApplicationsForJobPosting(jobPosting);
         ArrayList<JobApplication> jobApps = jobPosting.getJobApplications();
         System.out.println("Job applications submitted for this job posting: ");
@@ -100,9 +100,9 @@ class HRCoordinatorHighPriorityInterface extends UserInterface {
      *
      * @return the job posting selected.
      */
-    private ArrayList<JobPosting> displayRecentlyClosedPostings() {
+    private ArrayList<CompanyJobPosting> displayRecentlyClosedPostings() {
         BranchJobPostingManager JPM = this.HRC.getBranch().getJobPostingManager();
-        ArrayList<JobPosting> recentlyClosed = JPM.getClosedJobPostingsNoApplicantsChosen(today);
+        ArrayList<CompanyJobPosting> recentlyClosed = JPM.getClosedJobPostingsNoApplicantsChosen(today);
         if (recentlyClosed.isEmpty()) {
             System.out.println("\nThere are no job postings that have recently closed.");
         } else {
@@ -118,7 +118,7 @@ class HRCoordinatorHighPriorityInterface extends UserInterface {
      * @param jobPostings The list of job postings to select from.
      * @return the job posting selected.
      */
-    private JobPosting selectJobPostingForPhoneInterview(ArrayList<JobPosting> jobPostings) {
+    private CompanyJobPosting selectJobPostingForPhoneInterview(ArrayList<CompanyJobPosting> jobPostings) {
         System.out.println("\nEnter the job posting number for which you would like to select phone interview candidates.");
         int option = this.getMenuOption(jobPostings.size());
         return jobPostings.get(option - 1);
@@ -127,7 +127,7 @@ class HRCoordinatorHighPriorityInterface extends UserInterface {
     /**
      * Interface for reviewing all job applications after a job posting has closed.
      */
-    private void reviewApplicationsForJobPosting(JobPosting jobPosting) {
+    private void reviewApplicationsForJobPosting(CompanyJobPosting jobPosting) {
         jobPosting.reviewJobApplications();     // This advances the jobApp status to "under review"
         jobPosting.createInterviewManager();
     }
@@ -138,12 +138,12 @@ class HRCoordinatorHighPriorityInterface extends UserInterface {
      */
     private void displayPostingsThatNeedInterviewsScheduled() {
         BranchJobPostingManager JPM = this.HRC.getBranch().getJobPostingManager();
-        ArrayList<JobPosting> recentlyCompletedRound = JPM.getJobPostingsWithRoundCompletedNotForHire(today);
+        ArrayList<CompanyJobPosting> recentlyCompletedRound = JPM.getJobPostingsWithRoundCompletedNotForHire(today);
         if (recentlyCompletedRound.isEmpty()) {
             System.out.println("\nNo job postings need to have interviews scheduled.");
         } else {
             System.out.println("\nJob postings that need interviews scheduled: ");
-            for (JobPosting jobPosting : recentlyCompletedRound) {
+            for (CompanyJobPosting jobPosting : recentlyCompletedRound) {
                 System.out.println(jobPosting.toString());
                 this.setUpInterviewsForRound(jobPosting);
             }
@@ -155,7 +155,7 @@ class HRCoordinatorHighPriorityInterface extends UserInterface {
      *
      * @param jobPosting The job posting in question.
      */
-    private void setUpInterviewsForRound(JobPosting jobPosting) {
+    private void setUpInterviewsForRound(CompanyJobPosting jobPosting) {
         Branch branch = jobPosting.getBranch();
         String field = jobPosting.getField();
         if (!branch.hasInterviewerForField(field)) {
@@ -180,14 +180,14 @@ class HRCoordinatorHighPriorityInterface extends UserInterface {
      */
     private void hireApplicants() {
         BranchJobPostingManager JPM = this.HRC.getBranch().getJobPostingManager();
-        ArrayList<JobPosting> readyForHiring = JPM.getJobPostingsForHiring(today);
+        ArrayList<CompanyJobPosting> readyForHiring = JPM.getJobPostingsForHiring(today);
         if (readyForHiring.isEmpty()) {
             System.out.println("\nNo job postings ready for hiring.");
             return;
         }
         System.out.println("\nJob postings ready for hiring: ");
         this.printListToSelectFrom(readyForHiring);
-        JobPosting jobPosting = this.selectJobPostingForPhoneInterview(readyForHiring);
+        CompanyJobPosting jobPosting = this.selectJobPostingForPhoneInterview(readyForHiring);
         InterviewManager IM = jobPosting.getInterviewManager();
         ArrayList<JobApplication> jobApps;
         if (!IM.isNumApplicationsUnderOrAtThreshold()) {   // Number of applications greater than num of positions
@@ -231,7 +231,7 @@ class HRCoordinatorHighPriorityInterface extends UserInterface {
      * @param finalCandidates The list of final candidates after all interview rounds have been completed.
      * @return the job application(s) selected.
      */
-    private ArrayList<JobApplication> selectApplicationsForHiring(JobPosting jobPosting,
+    private ArrayList<JobApplication> selectApplicationsForHiring(CompanyJobPosting jobPosting,
                                                                   ArrayList<JobApplication> finalCandidates) {
         ArrayList<JobApplication> hires = new ArrayList<>();
         System.out.println("\nThe number of applications in consideration exceeds the number of positions available.");

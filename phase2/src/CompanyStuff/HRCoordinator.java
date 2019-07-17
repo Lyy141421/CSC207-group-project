@@ -48,7 +48,7 @@ public class HRCoordinator extends User {
      * @param postDate       The date this job posting was posted.
      * @param closeDate      The date this job posting is closed.
      */
-    public BranchJobPosting addJobPosting(JobPosting jobPosting, int numPositions,
+    public BranchJobPosting addJobPosting(CompanyJobPosting jobPosting, int numPositions,
                                           LocalDate postDate, LocalDate closeDate) {
         BranchJobPosting branchJobPosting = new BranchJobPosting(jobPosting, numPositions, this.branch, postDate,
                 closeDate);
@@ -84,8 +84,8 @@ public class HRCoordinator extends User {
      */
     @Override
     public JobApplication findJobAppById(int ID) {
-        ArrayList<JobPosting> jobPostings = this.branch.getJobPostingManager().getJobPostings();
-        for (JobPosting jobPosting : jobPostings) {
+        ArrayList<CompanyJobPosting> jobPostings = this.branch.getJobPostingManager().getJobPostings();
+        for (CompanyJobPosting jobPosting : jobPostings) {
             for (JobApplication jobApplication : jobPosting.getJobApplications()) {
                 if (jobApplication.getId() == ID) {
                     return jobApplication;

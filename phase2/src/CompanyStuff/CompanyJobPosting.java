@@ -6,7 +6,7 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-public class JobPosting extends AbstractJobPosting implements Serializable {
+public class CompanyJobPosting extends AbstractJobPosting implements Serializable {
 
     // === Instance variables ===
     private Company company; // The company that listed this job posting
@@ -14,8 +14,8 @@ public class JobPosting extends AbstractJobPosting implements Serializable {
 
 
     // === Constructor ===
-    JobPosting(String title, String field, String description, ArrayList<String> requiredDocuments,
-               ArrayList<String> tags, Company company) {
+    CompanyJobPosting(String title, String field, String description, ArrayList<String> requiredDocuments,
+                      ArrayList<String> tags, Company company) {
         super(title, field, description, requiredDocuments, tags);
         this.company = company;
     }
@@ -136,10 +136,10 @@ public class JobPosting extends AbstractJobPosting implements Serializable {
 
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof JobPosting)) {
+        if (!(obj instanceof CompanyJobPosting)) {
             return false;
         } else {
-            return (this.getId() == ((JobPosting) obj).getId());
+            return (this.getId() == ((CompanyJobPosting) obj).getId());
         }
     }
 

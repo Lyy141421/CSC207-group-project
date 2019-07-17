@@ -3,7 +3,7 @@ package CompanyStuff;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-public class BranchJobPostingManager extends JobPostingManager {
+public class BranchJobPostingManager extends AbstractJobPostingManager {
     /**
      * A class that manages the job postings for each branch
      */
@@ -26,9 +26,9 @@ public class BranchJobPostingManager extends JobPostingManager {
      * @param today Today's date.
      * @return a list of open job postings for this branch.
      */
-    public ArrayList<JobPosting> getOpenJobPostings(LocalDate today) {
-        ArrayList<JobPosting> jobPostings = new ArrayList<>();
-        for (JobPosting jobPosting : this.getJobPostings()) {
+    public ArrayList<CompanyJobPosting> getOpenJobPostings(LocalDate today) {
+        ArrayList<CompanyJobPosting> jobPostings = new ArrayList<>();
+        for (CompanyJobPosting jobPosting : this.getJobPostings()) {
             if (!((BranchJobPosting) jobPosting).isClosed(today)) {
                 jobPostings.add(jobPosting);
             }
@@ -42,9 +42,9 @@ public class BranchJobPostingManager extends JobPostingManager {
      * @param today Today's date.
      * @return a list of closed job postings for this branch that have not yet been filled.
      */
-    public ArrayList<JobPosting> getClosedJobPostingsNotFilled(LocalDate today) {
-        ArrayList<JobPosting> jobPostings = new ArrayList<>();
-        for (JobPosting jobPosting : this.getJobPostings()) {
+    public ArrayList<CompanyJobPosting> getClosedJobPostingsNotFilled(LocalDate today) {
+        ArrayList<CompanyJobPosting> jobPostings = new ArrayList<>();
+        for (CompanyJobPosting jobPosting : this.getJobPostings()) {
             if (!((BranchJobPosting) jobPosting).isFilled() && ((BranchJobPosting) jobPosting).isClosed(today)) {
                 jobPostings.add(jobPosting);
             }
@@ -58,9 +58,9 @@ public class BranchJobPostingManager extends JobPostingManager {
      * @param today Today's date.
      * @return a list of closed job postings that have not yet started the interview process.
      */
-    public ArrayList<JobPosting> getClosedJobPostingsNoApplicantsChosen(LocalDate today) {
-        ArrayList<JobPosting> jobPostings = new ArrayList<>();
-        for (JobPosting jobPosting : this.getClosedJobPostingsNotFilled(today)) {
+    public ArrayList<CompanyJobPosting> getClosedJobPostingsNoApplicantsChosen(LocalDate today) {
+        ArrayList<CompanyJobPosting> jobPostings = new ArrayList<>();
+        for (CompanyJobPosting jobPosting : this.getClosedJobPostingsNotFilled(today)) {
             if (((BranchJobPosting) jobPosting).getInterviewManager() == null) {
                 jobPostings.add(jobPosting);
             }
@@ -74,9 +74,9 @@ public class BranchJobPostingManager extends JobPostingManager {
      * @param today Today's date.
      * @return a list of job postings with no applications in consideration.
      */
-    public ArrayList<JobPosting> getClosedJobPostingsNoApplicationsInConsideration(LocalDate today) {
-        ArrayList<JobPosting> jobPostings = new ArrayList<>();
-        for (JobPosting jobPosting : this.getClosedJobPostingsNotFilled(today)) {
+    public ArrayList<CompanyJobPosting> getClosedJobPostingsNoApplicationsInConsideration(LocalDate today) {
+        ArrayList<CompanyJobPosting> jobPostings = new ArrayList<>();
+        for (CompanyJobPosting jobPosting : this.getClosedJobPostingsNotFilled(today)) {
             InterviewManager IM = ((BranchJobPosting) jobPosting).getInterviewManager();
             if (IM != null && IM.getHrTask() == InterviewManager.CLOSE_POSTING_NO_HIRE) {
                 jobPostings.add(jobPosting);
@@ -91,9 +91,9 @@ public class BranchJobPostingManager extends JobPostingManager {
      * @param today Today's date
      * @return a list of job postings with no applications.
      */
-    public ArrayList<JobPosting> getClosedJobPostingsNoApplicationsSubmitted(LocalDate today) {
-        ArrayList<JobPosting> jobPostings = new ArrayList<>();
-        for (JobPosting jobPosting : this.getClosedJobPostingsNotFilled(today)) {
+    public ArrayList<CompanyJobPosting> getClosedJobPostingsNoApplicationsSubmitted(LocalDate today) {
+        ArrayList<CompanyJobPosting> jobPostings = new ArrayList<>();
+        for (CompanyJobPosting jobPosting : this.getClosedJobPostingsNotFilled(today)) {
             if (((BranchJobPosting) jobPosting).hasNoApplicationsSubmitted()) {
                 jobPostings.add(jobPosting);
             }
@@ -106,9 +106,9 @@ public class BranchJobPostingManager extends JobPostingManager {
      *
      * @return a list of filled job postings at this branch.
      */
-    public ArrayList<JobPosting> getFilledJobPostings() {
-        ArrayList<JobPosting> jobPostings = new ArrayList<>();
-        for (JobPosting jobPosting : this.getJobPostings()) {
+    public ArrayList<CompanyJobPosting> getFilledJobPostings() {
+        ArrayList<CompanyJobPosting> jobPostings = new ArrayList<>();
+        for (CompanyJobPosting jobPosting : this.getJobPostings()) {
             if (((BranchJobPosting) jobPosting).isFilled()) {
                 jobPostings.add(jobPosting);
             }
@@ -122,9 +122,9 @@ public class BranchJobPostingManager extends JobPostingManager {
      * @param today Today's date/
      * @return a list of job postings where a current interview round is over.
      */
-    public ArrayList<JobPosting> getJobPostingsWithRoundCompletedNotForHire(LocalDate today) {
-        ArrayList<JobPosting> jobPostings = new ArrayList<>();
-        for (JobPosting jobPosting : this.getClosedJobPostingsNotFilled(today)) {
+    public ArrayList<CompanyJobPosting> getJobPostingsWithRoundCompletedNotForHire(LocalDate today) {
+        ArrayList<CompanyJobPosting> jobPostings = new ArrayList<>();
+        for (CompanyJobPosting jobPosting : this.getClosedJobPostingsNotFilled(today)) {
             if (((BranchJobPosting) jobPosting).getInterviewManager().getHrTask() == InterviewManager.SCHEDULE_INTERVIEWS) {
                 jobPostings.add(jobPosting);
             }
@@ -138,9 +138,9 @@ public class BranchJobPostingManager extends JobPostingManager {
      * @param today Today's date.
      * @return a list of job postings that are ready for the final hiring step.
      */
-    public ArrayList<JobPosting> getJobPostingsForHiring(LocalDate today) {
-        ArrayList<JobPosting> jobPostings = new ArrayList<>();
-        for (JobPosting jobPosting : this.getClosedJobPostingsNotFilled(today)) {
+    public ArrayList<CompanyJobPosting> getJobPostingsForHiring(LocalDate today) {
+        ArrayList<CompanyJobPosting> jobPostings = new ArrayList<>();
+        for (CompanyJobPosting jobPosting : this.getClosedJobPostingsNotFilled(today)) {
             if (((BranchJobPosting) jobPosting).getInterviewManager().getHrTask() == InterviewManager.HIRE_APPLICANTS) {
                 jobPostings.add(jobPosting);
             }
