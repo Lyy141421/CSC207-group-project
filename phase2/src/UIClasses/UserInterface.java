@@ -1,7 +1,7 @@
 package UIClasses;
 
 import ApplicantStuff.JobApplication;
-import CompanyStuff.Company;
+import CompanyStuff.Branch;
 import CompanyStuff.Interview;
 import Main.JobApplicationSystem;
 import Miscellaneous.ExitException;
@@ -386,15 +386,15 @@ public class UserInterface {
      */
     private User createNewHRC(String username, String password, String legalName, String email) throws IOException {
         System.out.println();
-        String companyName = this.getInputLine("Enter your company name: ");
-        Company company = this.JAS.getCompany(companyName);
-        if (company == null) {
-            company = this.JAS.createCompany(companyName);
+        String companyName = this.getInputLine("Enter your branch name: ");
+        Branch branch = this.JAS.getCompany(companyName);
+        if (branch == null) {
+            branch = this.JAS.createCompany(companyName);
         }
         System.out.println("Sign-up successful!");
-        HRCoordinator HRC = this.JAS.getUserManager().createHRCoordinator(username, password, legalName, email, company,
+        HRCoordinator HRC = this.JAS.getUserManager().createHRCoordinator(username, password, legalName, email, branch,
                 this.today);
-        company.addHRCoordinator(HRC);
+        branch.addHRCoordinator(HRC);
         return HRC;
     }
 
@@ -409,18 +409,18 @@ public class UserInterface {
      */
     private User createNewInterviewer(String username, String password, String legalName, String email) throws IOException {
         System.out.println();
-        String companyName = this.getInputLine("Enter your company name: ");
-        Company company = this.JAS.getCompany(companyName);
-        while (company == null) {
-            System.out.println("Company name not found.");
-            companyName = this.getInputLine("Enter your company name: ");
-            company = this.JAS.getCompany(companyName);
+        String companyName = this.getInputLine("Enter your branch name: ");
+        Branch branch = this.JAS.getCompany(companyName);
+        while (branch == null) {
+            System.out.println("Branch name not found.");
+            companyName = this.getInputLine("Enter your branch name: ");
+            branch = this.JAS.getCompany(companyName);
         }
         String field = this.getInputLine("Enter your field: ");
         System.out.println("Sign-up successful!");
         Interviewer interviewer = this.JAS.getUserManager().createInterviewer(username, password,
-                legalName, email, company, field, this.today);
-        company.addInterviewer(interviewer);
+                legalName, email, branch, field, this.today);
+        branch.addInterviewer(interviewer);
         return interviewer;
     }
 

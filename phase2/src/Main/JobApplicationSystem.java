@@ -1,5 +1,6 @@
 package Main;
 
+import CompanyStuff.Branch;
 import CompanyStuff.Company;
 import CompanyStuff.JobPosting;
 //import UIClasses.UserInterface;

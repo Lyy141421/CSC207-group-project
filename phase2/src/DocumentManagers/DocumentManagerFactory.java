@@ -1,15 +1,15 @@
 package DocumentManagers;
 
 import ApplicantStuff.Applicant;
-import CompanyStuff.Company;
+import CompanyStuff.Branch;
 
 public class DocumentManagerFactory {
 
     public DocumentManager createDocumentManager(Object object) {
         if (object instanceof Applicant) {
             return new ApplicantDocumentManager((Applicant) object);
-        } else if (object instanceof Company) {
-            return new CompanyDocumentManager((Company) object);
+        } else if (object instanceof Branch) {
+            return new BranchDocumentManager((Branch) object);
         }
         return null;
     }

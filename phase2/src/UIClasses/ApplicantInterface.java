@@ -1,7 +1,7 @@
 package UIClasses;
 
 import ApplicantStuff.JobApplication;
-import CompanyStuff.Company;
+import CompanyStuff.Branch;
 import CompanyStuff.Interview;
 import CompanyStuff.JobPosting;
 import ApplicantStuff.JobApplicationDocument;
@@ -92,7 +92,7 @@ public class ApplicantInterface extends UserInterface {
             System.out.println("Here are your upcoming interviews:");
             for (Interview interview : upcomingInterviews) {
                 System.out.println("Title: " + interview.getJobApplication().getJobPosting().getTitle());
-                System.out.println("Company: " + interview.getJobApplication().getJobPosting().getCompany().getName());
+                System.out.println("Branch: " + interview.getJobApplication().getJobPosting().getBranch().getName());
                 System.out.println(interview.getRoundNumberDescription(interview.getRoundNumber()));
                 System.out.println(interview.getTime());
                 System.out.println();
@@ -178,9 +178,9 @@ public class ApplicantInterface extends UserInterface {
             // if field is null, assign value of posting.getField() to filterField so that all postings pass the filter;
             // otherwise, assign value of field to filterField
             String filterField = (field == null) ? posting.getField() : field;
-            String filterCompanyName = (companyName == null) ? posting.getCompany().getName() : companyName;
+            String filterCompanyName = (companyName == null) ? posting.getBranch().getName() : companyName;
             if (filterField.equalsIgnoreCase(posting.getField())
-                    && filterCompanyName.equalsIgnoreCase(posting.getCompany().getName())) {
+                    && filterCompanyName.equalsIgnoreCase(posting.getBranch().getName())) {
                 noPostingsFound = false;
                 System.out.println("\n" + posting.toString());
             }
@@ -244,14 +244,14 @@ public class ApplicantInterface extends UserInterface {
      * @return the posting that the applicant wishes to apply to.
      */
     private JobPosting getPostingForJobApplication() {
-        String companyName = getInputLine("\nEnter the name of the company you wish to apply to: ");
-        Company company = this.JAS.getCompany(companyName);
-        if (company == null) {
-            System.out.println("\nNo company was found matching name \"" + companyName + ".");
+        String companyName = getInputLine("\nEnter the name of the branch you wish to apply to: ");
+        Branch branch = this.JAS.getCompany(companyName);
+        if (branch == null) {
+            System.out.println("\nNo branch was found matching name \"" + companyName + ".");
             return null;
         }
         int postingId = getPositiveInteger("Enter the ID of the posting you wish to apply for: ");
-        JobPosting posting = company.getJobPostingManager().getJobPosting(postingId);
+        JobPosting posting = branch.getJobPostingManager().getJobPosting(postingId);
         if (posting == null || posting.getCloseDate().isBefore(this.today)) {
             System.out.println("\nNo open posting was found matching ID " + postingId + ".");
         }

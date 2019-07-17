@@ -261,7 +261,7 @@ class ApplicantPanel extends JPanel {
             viewJobTitle.setBounds(17, 70, 150, 40);
             viewJobsAdded.add(viewJobTitle);
 
-            JLabel viewJobCompany = new JLabel(j.getCompany().getName());
+            JLabel viewJobCompany = new JLabel(j.getBranch().getName());
             viewJobCompany.setFont(new Font("Serif", Font.BOLD, 15));
             viewJobCompany.setBounds(17, 100, 150, 30);
             viewJobsAdded.add(viewJobCompany);

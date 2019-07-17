@@ -10,8 +10,8 @@ import java.util.ArrayList;
 public class Interviewer extends User {
 
     // === Instance variables ===
-    // The company that this interviewer works for
-    private Company company;
+    // The branch that this interviewer works for
+    private Branch branch;
     // The field that this interviewer works in
     private String field;
     // The list of interviews that this interviewer must undergo in chronological order
@@ -27,16 +27,16 @@ public class Interviewer extends User {
     public Interviewer() {
     }
 
-    public Interviewer(String username, String password, String legalName, String email, Company company, String field,
+    public Interviewer(String username, String password, String legalName, String email, Branch branch, String field,
                        LocalDate dateCreated) {
         super(username, password, legalName, email, dateCreated);
-        this.company = company;
+        this.branch = branch;
         this.field = field;
     }
 
     // === Getters ===
-    public Company getCompany() {
-        return this.company;
+    public Branch getBranch() {
+        return this.branch;
     }
 
     public String getField() {
@@ -52,8 +52,8 @@ public class Interviewer extends User {
         this.field = field;
     }
 
-    public void setCompany(Company company) {
-        this.company = company;
+    public void setBranch(Branch branch) {
+        this.branch = branch;
     }
 
     public void setInterviews(ArrayList<Interview> interviews) {

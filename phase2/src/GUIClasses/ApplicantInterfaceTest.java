@@ -33,9 +33,9 @@ package GUIClasses;
         ArrayList<JobPosting> ret = new ArrayList<>();
         for (JobPosting posting : openJobPostings) {
             String filterField = (field == null)? posting.getField() : field;
-            String filterCompanyName = (companyName == null)? posting.getCompany().getName() : companyName;
+            String filterCompanyName = (companyName == null)? posting.getBranch().getName() : companyName;
             if (filterField.equalsIgnoreCase(posting.getField())
-                    && filterCompanyName.equalsIgnoreCase(posting.getCompany().getName())) {
+                    && filterCompanyName.equalsIgnoreCase(posting.getBranch().getName())) {
                 ret.add(posting);
             }
         }

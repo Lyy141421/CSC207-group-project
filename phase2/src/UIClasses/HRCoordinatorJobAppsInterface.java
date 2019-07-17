@@ -30,7 +30,7 @@ class HRCoordinatorJobAppsInterface extends UserInterface {
      *
      */
     void runMenu() {
-        JobPosting jobPosting = new HRCoordinatorInterface(this.JAS, this.HRC).getJobPosting();
+        JobPosting jobPosting = new HRCoordinatorInterface(this.JAS, this.HRC).getBranchJobPosting();
         if (jobPosting == null || this.noItemsToViewForJobPosting(jobPosting)) {
             return;
         }
