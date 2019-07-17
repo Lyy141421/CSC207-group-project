@@ -172,7 +172,7 @@ public class Interview implements Serializable {
 
     // === Getter ===
     private JobPosting getJobPosting() {
-        return this.jobApplication.getJobPosting();
+        return this.jobApplication.getBranchJobPosting();
     }
 
 }

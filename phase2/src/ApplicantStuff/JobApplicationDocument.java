@@ -1,5 +1,6 @@
 package ApplicantStuff;
 
+import CompanyStuff.BranchJobPosting;
 import CompanyStuff.JobPosting;
 import DocumentManagers.BranchDocumentManager;
 import DocumentManagers.UserDocumentManager;
@@ -25,7 +26,7 @@ public class JobApplicationDocument implements Serializable {
      * @param applicant  The applicant for which this document is being submitted.
      */
     // TODO fix
-    public void submit(JobPosting jobPosting, Applicant applicant) {
+    public void submit(BranchJobPosting jobPosting, Applicant applicant) {
         String applicantFolderInJobPostingPath = BranchDocumentManager.FOLDER + "/" + jobPosting.getBranch().getName()
                 + "/" + jobPosting.getId() + "_" + jobPosting.getTitle() + "/" + applicant.getUsername();
         String companyDestinationPath = applicantFolderInJobPostingPath + "/" + this.file.getName();

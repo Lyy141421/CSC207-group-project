@@ -13,7 +13,7 @@ public class JobPosting implements Serializable {
 
     // === Instance variables ===
     private static int totalNumOfPostings; // Total number of postings created
-    private int id; // Unique identifier for this job posting
+    int id; // Unique identifier for this job posting
     private String title; // The job title
     private String field; // The job field
     private String description; // The job description

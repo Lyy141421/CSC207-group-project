@@ -79,8 +79,8 @@ public class BranchJobPostingManager implements Serializable {
      * @return true iff this applicant has applied to this company.
      */
     public boolean hasAppliedHere(Applicant applicant) {
-        for (JobPosting jobPosting : this.postings) {
-            if (applicant.hasAppliedTo(jobPosting)) {
+        for (BranchJobPosting posting : this.postings) {
+            if (applicant.hasAppliedTo(posting)) {
                 return true;
             }
         }

@@ -8,8 +8,6 @@ import java.util.ArrayList;
 
 public class BranchJobPosting extends JobPosting{
 
-    private static int totalNumOfBranchJobPostings;
-    private int id;
     private int numPositions;
     private Branch branch; // The branch that listed this job posting
     private LocalDate postDate; // The date on which this job posting was listed
@@ -20,9 +18,7 @@ public class BranchJobPosting extends JobPosting{
 
     BranchJobPosting(JobPosting posting, int numPositions, Branch branch, LocalDate postDate, LocalDate closeDate) {
         super(posting.getTitle(), posting.getField(), posting.getDescription(), posting.getTags(),
-                posting.getBranches(), branch.getCompany());
-        totalNumOfBranchJobPostings++;
-        this.id = totalNumOfBranchJobPostings;
+                branch);
         this.numPositions = numPositions;
         this.branch = branch;
         this.postDate = postDate;
@@ -32,11 +28,23 @@ public class BranchJobPosting extends JobPosting{
     }
 
     public int getId() {
-        return id;
+        return this.id;
+    }
+
+    public Branch getBranch() {
+        return branch;
     }
 
     public int getNumPositions() {
         return numPositions;
+    }
+
+    public LocalDate getCloseDate() {
+        return closeDate;
+    }
+
+    public boolean isFilled() {
+        return filled;
     }
 
     public ArrayList<JobApplication> getJobApplications() {
@@ -45,10 +53,6 @@ public class BranchJobPosting extends JobPosting{
 
     public InterviewManager getInterviewManager() {
         return interviewManager;
-    }
-
-    public boolean isFilled() {
-        return filled;
     }
 
     /**
