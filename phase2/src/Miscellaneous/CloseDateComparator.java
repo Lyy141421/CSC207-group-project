@@ -19,8 +19,8 @@ public class CloseDateComparator implements Comparator<JobApplication> {
      * or after the second interview, respectively.
      */
     public int compare(JobApplication jobApp1, JobApplication jobApp2) {
-        LocalDate date1 = jobApp1.getBranchJobPosting().getCloseDate();
-        LocalDate date2 = jobApp2.getBranchJobPosting().getCloseDate();
+        LocalDate date1 = jobApp1.getJobPosting().getCloseDate();
+        LocalDate date2 = jobApp2.getJobPosting().getCloseDate();
         if (date1.isBefore(date2)) {
             return -1;
         } else if (date1.isEqual(date2)) {
