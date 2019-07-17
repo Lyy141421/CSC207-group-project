@@ -42,18 +42,12 @@ public class HRCoordinator extends User {
     /**
      * Create and add a job posting to the system.
      *
-     * @param jobTitle       The job title.
-     * @param jobDescription The job description.
-     * @param requirements   The requirements for this job.
-     * @param numPositions   The number of positions for this job.
-     * @param postDate       The date this job posting was posted.
-     * @param closeDate      The date this job posting is closed.
+     * @param jobPosting         The job posting.
+     * @param branchJobPosting   The branch job posting.
      */
-    public JobPosting addJobPosting(String jobTitle, String jobField, String jobDescription, String requirements,
-                                    int numPositions, LocalDate postDate, LocalDate closeDate) {
-        JobPosting jobPosting = new JobPosting(jobTitle, jobField, jobDescription, requirements,
-                numPositions, this.branch, postDate, closeDate);
-        this.branch.getJobPostingManager().addJobPosting(jobPosting);
+    public JobPosting addJobPosting(JobPosting jobPosting, BranchJobPosting branchJobPosting) {
+        this.branch.getCompany().addJobPosting(jobPosting);
+        this.branch.getBranchJobPostingManager().addBranchJobPosting(branchJobPosting);
         return jobPosting;
     }
 
@@ -65,7 +59,7 @@ public class HRCoordinator extends User {
      */
     @Override
     public JobApplication findJobAppById(int ID) {
-        for (BranchJobPosting branchJobPosting : this.branch.getBranchJobPostings()) {
+        for (BranchJobPosting branchJobPosting : this.branch.getBranchJobPostingManager().getBranchJobPostings()) {
             for (JobApplication jobApplication : branchJobPosting.getJobApplications()) {
                 if (Integer.parseInt(jobApplication.getId()) == ID) {
                     return jobApplication;

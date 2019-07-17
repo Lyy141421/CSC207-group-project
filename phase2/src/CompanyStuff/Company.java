@@ -6,9 +6,9 @@ import ApplicantStuff.JobApplication;
 import java.util.ArrayList;
 
 public class Company {
-    String name;
-    ArrayList<Branch> branches;
-    JobPostingManager jobPostingManager;
+    private String name;
+    private ArrayList<Branch> branches;
+    private ArrayList<JobPosting> postings;
 
     public Company(String name) {
         this.branches = new ArrayList<>();
@@ -22,8 +22,12 @@ public class Company {
         return branches;
     }
 
-    public JobPostingManager getJobPostingManager() {
-        return jobPostingManager;
+    public ArrayList<JobPosting> getPostings() {
+        return postings;
+    }
+
+    public void addJobPosting(JobPosting posting) {
+        postings.add(posting);
     }
 
     /** Attempt to create a branch of this company with the given name and return it.
@@ -49,29 +53,13 @@ public class Company {
      */
     public ArrayList<JobApplication> getAllApplicationsToCompany(Applicant applicant) {
         ArrayList<JobApplication> apps = new ArrayList<>();
-        for (JobPosting jobPosting : this.getJobPostingManager().getJobPostings()) {
-            for (JobApplication jobApp : jobPosting.getJobApplications()) {
-                if (jobApp.getApplicant().equals(applicant)) {
-                    apps.add(jobApp);
-                }
+        for (Branch branch : branches)
+            for (BranchJobPosting posting : branch.getBranchJobPostingManager().getBranchJobPostings())
+                for (JobApplication app : posting.getJobApplications()) {
+                    if (app.getApplicant().equals(applicant))
+                        apps.add(app);
             }
-        }
         return apps;
-    }
-
-    /**
-     * Check whether this applicant has applied to this company.
-     *
-     * @param applicant The applicant in question.
-     * @return true iff this applicant has applied to this company.
-     */
-    public boolean hasAppliedHere(Applicant applicant) {
-        for (JobPosting jobPosting : this.getJobPostingManager().getJobPostings()) {
-            if (applicant.hasAppliedTo(jobPosting)) {
-                return true;
-            }
-        }
-        return false;
     }
 
     @Override

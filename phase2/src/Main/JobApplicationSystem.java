@@ -1,6 +1,7 @@
 package Main;
 
 import CompanyStuff.Branch;
+import CompanyStuff.BranchJobPosting;
 import CompanyStuff.Company;
 import CompanyStuff.JobPosting;
 //import UIClasses.UserInterface;
@@ -126,8 +127,10 @@ public class JobApplicationSystem {
      */
     private void updateAllInterviewRounds() {
         for (Company company : this.companies) {
-            for (JobPosting jobPosting : company.getJobPostingManager().getJobPostings()) {
-                jobPosting.advanceInterviewRound();
+            for (Branch branch : company.getBranches()) {
+                for (BranchJobPosting posting : branch.getBranchJobPostingManager().getBranchJobPostings()) {
+                    posting.advanceInterviewRound();
+                }
             }
         }
     }

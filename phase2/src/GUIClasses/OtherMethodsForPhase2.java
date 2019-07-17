@@ -11,7 +11,7 @@ public class OtherMethodsForPhase2 {
      *//*
     ArrayList<JobPosting> searchJobPostingByTitle(String jobTitle) {
         ArrayList<JobPosting> jobPostings = new ArrayList<>();
-        for (JobPosting jobPosting : this.getJobPostings()) {
+        for (JobPosting jobPosting : this.getBranchJobPostings()) {
             if (jobPosting.getTitle().equalsIgnoreCase(jobTitle)) {
                 jobPostings.add(jobPosting);
             }

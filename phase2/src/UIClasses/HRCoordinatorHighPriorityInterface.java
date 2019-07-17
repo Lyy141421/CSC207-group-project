@@ -101,7 +101,7 @@ class HRCoordinatorHighPriorityInterface extends UserInterface {
      * @return the job posting selected.
      */
     private ArrayList<JobPosting> displayRecentlyClosedPostings() {
-        JobPostingManager JPM = this.HRC.getBranch().getJobPostingManager();
+        BranchJobPostingManager JPM = this.HRC.getBranch().getJobPostingManager();
         ArrayList<JobPosting> recentlyClosed = JPM.getClosedJobPostingsNoApplicantsChosen(today);
         if (recentlyClosed.isEmpty()) {
             System.out.println("\nThere are no job postings that have recently closed.");
@@ -137,7 +137,7 @@ class HRCoordinatorHighPriorityInterface extends UserInterface {
      *
      */
     private void displayPostingsThatNeedInterviewsScheduled() {
-        JobPostingManager JPM = this.HRC.getBranch().getJobPostingManager();
+        BranchJobPostingManager JPM = this.HRC.getBranch().getJobPostingManager();
         ArrayList<JobPosting> recentlyCompletedRound = JPM.getJobPostingsWithRoundCompletedNotForHire(today);
         if (recentlyCompletedRound.isEmpty()) {
             System.out.println("\nNo job postings need to have interviews scheduled.");
@@ -179,7 +179,7 @@ class HRCoordinatorHighPriorityInterface extends UserInterface {
      *
      */
     private void hireApplicants() {
-        JobPostingManager JPM = this.HRC.getBranch().getJobPostingManager();
+        BranchJobPostingManager JPM = this.HRC.getBranch().getJobPostingManager();
         ArrayList<JobPosting> readyForHiring = JPM.getJobPostingsForHiring(today);
         if (readyForHiring.isEmpty()) {
             System.out.println("\nNo job postings ready for hiring.");

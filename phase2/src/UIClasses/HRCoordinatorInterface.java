@@ -3,7 +3,7 @@ package UIClasses;
 import ApplicantStuff.JobApplication;
 import CompanyStuff.JobPosting;
 import Main.JobApplicationSystem;
-import CompanyStuff.JobPostingManager;
+import CompanyStuff.BranchJobPostingManager;
 import Miscellaneous.ExitException;
 import ApplicantStuff.Applicant;
 import CompanyStuff.HRCoordinator;
@@ -74,7 +74,7 @@ public class HRCoordinatorInterface extends UserInterface {
      *
      */
     private void viewPostingsWithNoApplicationsInConsideration() {
-        JobPostingManager JPM = this.HRC.getCompany().getJobPostingManager();
+        BranchJobPostingManager JPM = this.HRC.getCompany().getJobPostingManager();
         ArrayList<JobPosting> jobPostingsNoAppsInConsideration =
                 JPM.getClosedJobPostingsNoApplicationsInConsideration(today);
         if (!jobPostingsNoAppsInConsideration.isEmpty()) {

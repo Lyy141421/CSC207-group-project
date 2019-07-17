@@ -17,12 +17,12 @@ public class MethodsTheGUICallsInHR {
      * @return the list of lists of job postings required.
      *//*
     ArrayList<ArrayList<JobPosting>> getHighPriorityAndAllJobPostings(LocalDate today) {
-        JobPostingManager JPM = this.HRC.getBranch().getJobPostingManager();
+        BranchJobPostingManager JPM = this.HRC.getBranch().getJobPostingManager();
         ArrayList<ArrayList<JobPosting>> jobPostingsList = new ArrayList<>();
         jobPostingsList.add(JPM.getClosedJobPostingsNoApplicantsChosen(today));
         jobPostingsList.add(JPM.getJobPostingsWithRoundCompletedNotForHire(today));
         jobPostingsList.add(JPM.getJobPostingsForHiring(today));
-        jobPostingsList.add(JPM.getJobPostings());
+        jobPostingsList.add(JPM.getBranchJobPostings());
         return jobPostingsList;
     }
 

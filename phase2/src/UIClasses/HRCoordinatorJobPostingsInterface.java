@@ -1,7 +1,7 @@
 package UIClasses;
 
+import CompanyStuff.BranchJobPostingManager;
 import Main.JobApplicationSystem;
-import CompanyStuff.JobPostingManager;
 import CompanyStuff.HRCoordinator;
 import CompanyStuff.JobPosting;
 
@@ -49,7 +49,7 @@ class HRCoordinatorJobPostingsInterface extends UserInterface {
      *
      */
     void viewPostingsWithNoApplicationsSubmitted() {
-        JobPostingManager JPM = this.HRC.getBranch().getJobPostingManager();
+        BranchJobPostingManager JPM = this.HRC.getBranch().getJobPostingManager();
         for (JobPosting jobPosting : JPM.getClosedJobPostingsNoApplicationsSubmitted(today)) {
             System.out.println("\nNo applications have been submitted for this job posting:");
             System.out.println("\n" + jobPosting);
@@ -72,9 +72,9 @@ class HRCoordinatorJobPostingsInterface extends UserInterface {
     void addJobPosting() {
         System.out.println("\n\nComplete the following categories for adding a job posting as they appear.");
         ArrayList<Object> fields = this.getFieldsForJobPosting(false);
-        JobPosting jobPosting = this.HRC.addJobPosting((String) fields.get(0), (String) fields.get(1),
-                (String) fields.get(2), (String) fields.get(3), (Integer) fields.get(4), this.today,
-                (LocalDate) fields.get(5));
+        JobPosting jobPosting = new JobPosting((String) fields.get(0), (String) fields.get(1),
+                (String) fields.get(2), (String) fields.get(3));
+        JobPosting jobPosting = this.HRC.addJobPosting(jobPosting);
         System.out.println("\nYou have successfully added '" + jobPosting.getTitle() +
                 "' (Job Posting ID: " + jobPosting.getId() + ") to the system.");
     }

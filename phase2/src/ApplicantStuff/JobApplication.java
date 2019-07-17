@@ -62,7 +62,7 @@ public class JobApplication implements Serializable {
         return this.applicant;
     }
 
-    public JobPosting getBranchJobPosting() {
+    public BranchJobPosting getBranchJobPosting() {
         return this.branchJobPosting;
     }
 
@@ -148,22 +148,22 @@ public class JobApplication implements Serializable {
      * @return a string of what an applicant should see when viewing their applications.
      */
     public String toStringForApplicant() {
-        String s = "Application ID: " + this.getId() + "\n";
+        String s = "Application ID: " + this.id + "\n";
         s += "Job Posting: " + branchJobPosting.getTitle() + " -- ID: " + branchJobPosting.getId() + "\n";
-        s += "Status: " + this.getStatus().getDescription() + "\n";
+        s += "Status: " + this.status.getDescription() + "\n";
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        s += "Application date: " + this.getApplicationDate().format(dtf);
+        s += "Application date: " + this.applicationDate.format(dtf);
         return s;
     }
 
     @Override
     public String toString() {
-        String s = "Application ID: " + this.getId() + "\n";
-        s += "Applicant: " + this.getApplicant().getLegalName() + "(" + this.getApplicant().getUsername() + ")" + "\n";
+        String s = "Application ID: " + this.id + "\n";
+        s += "Applicant: " + this.applicant.getLegalName() + "(" + this.applicant.getUsername() + ")" + "\n";
         s += "Job Posting: " + this.branchJobPosting.getTitle() + " -- ID: " + this.branchJobPosting.getId();
         s += "Status: " + this.status.getDescription() + "\n";
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        s += "Application date: " + this.getApplicationDate().format(dtf);
+        s += "Application date: " + this.applicationDate.format(dtf);
         return s;
     }
 }
