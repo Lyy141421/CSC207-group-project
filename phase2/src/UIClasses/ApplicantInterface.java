@@ -3,7 +3,7 @@ package UIClasses;
 import ApplicantStuff.JobApplication;
 import CompanyStuff.Branch;
 import CompanyStuff.Interview;
-import CompanyStuff.CompanyJobPosting;
+import JobPostings.CompanyJobPosting;
 import ApplicantStuff.JobApplicationDocument;
 import Main.JobApplicationSystem;
 import Miscellaneous.ExitException;

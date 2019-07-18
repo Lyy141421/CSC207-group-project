@@ -1,7 +1,7 @@
 package UIClasses;
 
 import ApplicantStuff.JobApplication;
-import CompanyStuff.CompanyJobPosting;
+import JobPostings.CompanyJobPosting;
 import Main.JobApplicationSystem;
 import ApplicantStuff.Applicant;
 import CompanyStuff.HRCoordinator;

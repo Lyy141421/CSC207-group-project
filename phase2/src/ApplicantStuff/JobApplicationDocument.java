@@ -1,6 +1,6 @@
 package ApplicantStuff;
 
-import CompanyStuff.BranchJobPosting;
+import JobPostings.BranchJobPosting;
 import DocumentManagers.CompanyDocumentManager;
 import DocumentManagers.UserDocumentManager;
 

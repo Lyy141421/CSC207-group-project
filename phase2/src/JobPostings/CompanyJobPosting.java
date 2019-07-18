@@ -1,6 +1,8 @@
-package CompanyStuff;
+package JobPostings;
 
 import ApplicantStuff.JobApplication;
+import CompanyStuff.Branch;
+import CompanyStuff.Company;
 
 import java.io.Serializable;
 import java.time.LocalDate;

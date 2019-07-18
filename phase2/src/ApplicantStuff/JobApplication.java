@@ -1,9 +1,7 @@
 package ApplicantStuff;
 
-import CompanyStuff.BranchJobPosting;
+import JobPostings.BranchJobPosting;
 import CompanyStuff.Interview;
-import Main.JobApplicationSystem;
-import Main.UserManager;
 
 import java.io.Serializable;
 import java.time.LocalDate;

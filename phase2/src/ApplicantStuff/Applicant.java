@@ -1,12 +1,12 @@
 package ApplicantStuff;
 
-import CompanyStuff.BranchJobPosting;
+import JobPostings.BranchJobPosting;
 import CompanyStuff.Company;
 import DocumentManagers.ApplicantDocumentManager;
 import DocumentManagers.DocumentManagerFactory;
 import Main.JobApplicationSystem;
 import Main.User;
-import CompanyStuff.CompanyJobPosting;
+import JobPostings.CompanyJobPosting;
 
 import java.time.LocalDate;
 import java.util.ArrayList;

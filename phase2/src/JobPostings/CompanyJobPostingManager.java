@@ -1,4 +1,6 @@
-package CompanyStuff;
+package JobPostings;
+
+import CompanyStuff.Company;
 
 import java.time.LocalDate;
 import java.util.ArrayList;

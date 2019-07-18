@@ -1,7 +1,9 @@
-package CompanyStuff;
+package JobPostings;
 
 import ApplicantStuff.Applicant;
 import ApplicantStuff.JobApplication;
+import CompanyStuff.Branch;
+import CompanyStuff.InterviewManager;
 
 import java.time.LocalDate;
 import java.util.ArrayList;

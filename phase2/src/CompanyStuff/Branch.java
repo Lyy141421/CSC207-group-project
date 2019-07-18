@@ -2,6 +2,10 @@ package CompanyStuff;
 
 import DocumentManagers.CompanyDocumentManager;
 import DocumentManagers.DocumentManagerFactory;
+import JobPostings.AbstractJobPostingManager;
+import JobPostings.BranchJobPosting;
+import JobPostings.BranchJobPostingManager;
+import JobPostings.CompanyJobPosting;
 
 import java.io.Serializable;
 import java.util.ArrayList;

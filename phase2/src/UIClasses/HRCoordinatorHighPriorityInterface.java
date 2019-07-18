@@ -3,6 +3,8 @@ package UIClasses;
 import ApplicantStuff.JobApplication;
 import CompanyStuff.*;
 import CompanyStuff.Branch;
+import JobPostings.BranchJobPostingManager;
+import JobPostings.CompanyJobPosting;
 
 import java.util.ArrayList;
 

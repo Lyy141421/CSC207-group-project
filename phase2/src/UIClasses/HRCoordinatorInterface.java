@@ -1,9 +1,9 @@
 package UIClasses;
 
 import ApplicantStuff.JobApplication;
-import CompanyStuff.CompanyJobPosting;
+import JobPostings.CompanyJobPosting;
 import Main.JobApplicationSystem;
-import CompanyStuff.BranchJobPostingManager;
+import JobPostings.BranchJobPostingManager;
 import Miscellaneous.ExitException;
 import ApplicantStuff.Applicant;
 import CompanyStuff.HRCoordinator;

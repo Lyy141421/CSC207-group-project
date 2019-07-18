@@ -1,4 +1,4 @@
-package CompanyStuff;
+package JobPostings;
 
 import java.util.ArrayList;
 

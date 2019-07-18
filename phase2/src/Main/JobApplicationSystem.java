@@ -1,8 +1,8 @@
 package Main;
 
-import CompanyStuff.BranchJobPosting;
+import JobPostings.BranchJobPosting;
 import CompanyStuff.Company;
-import CompanyStuff.CompanyJobPosting;
+import JobPostings.CompanyJobPosting;
 //import UIClasses.UserInterface;
 import ApplicantStuff.Applicant;
 

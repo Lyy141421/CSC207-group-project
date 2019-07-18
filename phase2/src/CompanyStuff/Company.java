@@ -3,6 +3,9 @@ package CompanyStuff;
 import ApplicantStuff.Applicant;
 import ApplicantStuff.JobApplication;
 import FileLoadingAndStoring.DataLoaderAndStorer;
+import JobPostings.AbstractJobPostingManager;
+import JobPostings.CompanyJobPosting;
+import JobPostings.CompanyJobPostingManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;

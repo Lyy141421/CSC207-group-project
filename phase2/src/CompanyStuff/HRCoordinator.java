@@ -1,5 +1,7 @@
 package CompanyStuff;
 
+import JobPostings.BranchJobPosting;
+import JobPostings.CompanyJobPosting;
 import Main.User;
 import ApplicantStuff.JobApplication;
 import Miscellaneous.InterviewTime;
