@@ -1,16 +1,14 @@
-package ActionListeners;
+package ActionListeners.HRActionListeners;
 
 import CompanyStuff.HRCoordinator;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class HireCandidatesActionListener implements ActionListener {
-
-    private HRCoordinator HRC;
+public class HireCandidatesActionListener extends HRActionListener {
 
     public HireCandidatesActionListener(HRCoordinator HRC) {
-        this.HRC = HRC;
+        super(HRC);
     }
 
     public void actionPerformed(ActionEvent e) {

@@ -35,8 +35,8 @@
 
 package NewGUI;
 
-import ActionListeners.RemoveFileButtonActionListener;
-import ActionListeners.SubmitDocumentListener;
+import ActionListeners.UserActionListeners.RemoveFileButtonActionListener;
+import ActionListeners.UserActionListeners.SubmitDocumentActionListener;
 
 import javax.swing.*;
 import java.awt.*;
@@ -80,7 +80,7 @@ public class FileChooser extends JPanel implements ActionListener {
         uploadButtonPanel.add(uploadButton);
 
         submitButton = new JButton("Submit");
-        submitButton.addActionListener(new SubmitDocumentListener(this.filesToSubmit));
+        submitButton.addActionListener(new SubmitDocumentActionListener(this.filesToSubmit));
 
         JPanel submitButtonPanel = new JPanel();
         submitButtonPanel.add(submitButton);

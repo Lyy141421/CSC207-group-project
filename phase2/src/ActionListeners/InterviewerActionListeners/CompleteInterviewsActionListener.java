@@ -1,16 +1,14 @@
-package ActionListeners;
+package ActionListeners.InterviewerActionListeners;
 
 import CompanyStuff.Interviewer;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class CompleteInterviewsActionListener implements ActionListener {
-
-    private Interviewer interviewer;
+public class CompleteInterviewsActionListener extends InterviewerActionListener {
 
     public CompleteInterviewsActionListener(Interviewer interviewer) {
-        this.interviewer = interviewer;
+        super(interviewer);
     }
 
     @Override

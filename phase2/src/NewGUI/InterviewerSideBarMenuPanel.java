@@ -1,6 +1,7 @@
 package NewGUI;
 
-import ActionListeners.*;
+import ActionListeners.InterviewerActionListeners.CompleteInterviewsActionListener;
+import ActionListeners.UserActionListeners.*;
 import CompanyStuff.Interviewer;
 
 import javax.swing.*;
@@ -12,7 +13,7 @@ public class InterviewerSideBarMenuPanel {
     // === Class variables ===
     private static int CELL_WIDTH = 170;
     private static int CELL_HEIGHT = 30;
-    private static int NUM_MAIN_MENU_OPTIONS = 5;
+    private static int NUM_MAIN_MENU_OPTIONS = 6;
 
     // === Instance variable ===
     private Interviewer interviewer;
@@ -41,11 +42,12 @@ public class InterviewerSideBarMenuPanel {
      */
     private TreeMap<String, Object> createFullMenu() {
         TreeMap<String, Object> fullMenu = new TreeMap<>();
-        fullMenu.put("1. Profile", new ProfileActionListener(this.interviewer));
-        fullMenu.put("2. Schedule Interviews", new ScheduleInterviewsActionListener(this.interviewer));
-        fullMenu.put("3. View schedule", new ViewScheduleActionListener(this.interviewer));
-        fullMenu.put("4. Complete Interviews", new CompleteInterviewsActionListener(this.interviewer));
-        fullMenu.put("5. View Interviewees", this.viewIntervieweesMenu());
+        fullMenu.put("1. Home", new ReturnHomeActionListener(this.interviewer));
+        fullMenu.put("2. Profile", new ProfileActionListener(this.interviewer));
+        fullMenu.put("3. Schedule Interviews", new ScheduleInterviewsActionListener(this.interviewer));
+        fullMenu.put("4. View schedule", new ViewScheduleActionListener(this.interviewer));
+        fullMenu.put("5. Complete Interviews", new CompleteInterviewsActionListener(this.interviewer));
+        fullMenu.put("6. View Interviewees", this.viewIntervieweesMenu());
         return fullMenu;
     }
 

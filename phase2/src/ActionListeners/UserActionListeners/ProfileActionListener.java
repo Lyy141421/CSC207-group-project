@@ -1,17 +1,14 @@
-package ActionListeners;
+package ActionListeners.UserActionListeners;
 
 import Main.User;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class ProfileActionListener implements ActionListener {
-
-    // === Instance variables ===
-    private User user;
+public class ProfileActionListener extends UserActionListener {
 
     public ProfileActionListener(User user) {
-        this.user = user;
+        super(user);
     }
 
 
