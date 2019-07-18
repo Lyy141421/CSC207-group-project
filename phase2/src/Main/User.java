@@ -4,11 +4,18 @@ import ApplicantStuff.JobApplication;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.Random;
 
 public abstract class User implements Serializable {
     /**
      * An account in the job application system.
      */
+
+    // === Class variables ===
+    // The password length of a random generated password
+    private static int PASSWORD_LENGTH = 8;
+    // The characters allowed in the random password
+    private static String PASSWORD_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
 
     // === Instance variables ===
     // The unique account username
@@ -26,6 +33,13 @@ public abstract class User implements Serializable {
 
     // === Constructors ===
     public User() {
+    }
+
+    public User(String email, LocalDate dateCreated) {
+        this.username = email;
+        this.password = User.generateRandomPassword();
+        this.email = email;
+        this.dateCreated = dateCreated;
     }
 
     public User(String username, String password, String legalName, String email, LocalDate dateCreated) {
@@ -77,6 +91,22 @@ public abstract class User implements Serializable {
      */
     public JobApplication findJobAppById(int ID) {
         return null;
+    }
+
+    /**
+     * Generates a random password of 8 characters.
+     *
+     * @return a random password of 8 characters.
+     * @author https://stackoverflow.com/questions/20536566/creating-a-random-string-with-a-z-and-0-9-in-java
+     */
+    private static String generateRandomPassword() {
+        StringBuilder passwordSB = new StringBuilder();
+        Random random = new Random();
+        while (passwordSB.length() < PASSWORD_LENGTH) { // length of the random string.
+            int index = (int) (random.nextFloat() * PASSWORD_CHARS.length());
+            passwordSB.append(PASSWORD_CHARS.charAt(index));
+        }
+        return passwordSB.toString();
     }
 
 

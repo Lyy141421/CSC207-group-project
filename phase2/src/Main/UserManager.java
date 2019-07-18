@@ -1,6 +1,8 @@
 package Main;
 
 import ApplicantStuff.Applicant;
+import ApplicantStuff.JobApplication;
+import ApplicantStuff.Referee;
 import CompanyStuff.HRCoordinator;
 import CompanyStuff.Interviewer;
 import CompanyStuff.Branch;
@@ -55,6 +57,12 @@ public class UserManager {
         return newHRC;
     }
 
+    public Referee createReferee(String email, LocalDate dateCreated) {
+        Referee newReferee = new Referee(email, dateCreated);
+        this.allUsers.add(newReferee);
+        return newReferee;
+    }
+
     // === User operations ===
 
     /**
@@ -74,6 +82,38 @@ public class UserManager {
     public User findUserByUsername(String username) {
         for (User user : this.allUsers) {
             if (user.getUsername().equals(username)) {
+                return user;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Add referees for this job application.
+     *
+     * @param jobApp The job application that will need reference letters.
+     * @param emails The emails of the referees that the applicant submitted.
+     */
+    public void addReferees(JobApplication jobApp, ArrayList<String> emails) {
+        for (String email : emails) {
+            Referee referee = (Referee) this.findUserByEmail(email);
+            if (referee == null) {
+                referee = this.createReferee(email, jobApp.getApplicationDate());
+            }
+            referee.addJobApplicationForReference(jobApp);
+        }
+    }
+
+
+    /**
+     * Find the user with this email.
+     *
+     * @param email The email being searched for.
+     * @return the user with the provided email or null if not found.
+     */
+    private User findUserByEmail(String email) {
+        for (User user : this.allUsers) {
+            if (user.getEmail().equals(email)) {
                 return user;
             }
         }

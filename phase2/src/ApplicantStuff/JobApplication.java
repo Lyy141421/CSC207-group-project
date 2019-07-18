@@ -2,6 +2,8 @@ package ApplicantStuff;
 
 import CompanyStuff.BranchJobPosting;
 import CompanyStuff.Interview;
+import Main.JobApplicationSystem;
+import Main.UserManager;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -73,7 +75,7 @@ public class JobApplication implements Serializable {
         return this.status;
     }
 
-    private LocalDate getApplicationDate() {
+    public LocalDate getApplicationDate() {
         return this.applicationDate;
     }
 
