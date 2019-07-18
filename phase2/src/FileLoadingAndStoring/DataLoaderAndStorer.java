@@ -21,7 +21,7 @@ public class DataLoaderAndStorer {
     private String companyFilePath;
     private String dateFilePath;
 
-    private static final String FSA_TO_CMA_FILENAME = "phase2/files/CMA_per_FSA_Centroid.json";
+    private static final String FSA_TO_CMA_FILENAME = "./CMA_per_FSA_Centroid.json";
 
     public DataLoaderAndStorer(JobApplicationSystem jobApplicationSystem, String userFilePath, String companyFilePath, String dateFilePath) {
         this.jobApplicationSystem = jobApplicationSystem;

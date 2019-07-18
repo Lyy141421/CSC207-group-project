@@ -53,7 +53,7 @@ public class FileChooser extends JPanel implements ActionListener {
     JButton submitButton;
     JPanel removeFileButtonsPanel = new JPanel();
     JFileChooser fc;
-    String uploadButtonIconPath = "phase2/images/Open16.gif";
+    String uploadButtonIconPath = "./Open16.gif";
     ArrayList<File> filesToSubmit = new ArrayList<>();
 
     public FileChooser() {

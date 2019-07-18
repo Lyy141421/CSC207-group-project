@@ -48,9 +48,9 @@ public class ApplicantDocumentManager extends UserDocumentManager {
      */
     public void removeFilesFromAccountIfInactive(LocalDate today) {
         if (this.applicant.isInactive(today)) {
-            JobApplicationManager JAM = applicant.getJobApplicationManager();
-            JobApplication lastClosedJobApp = JAM.getLastClosedJobApp();
-            ArrayList<JobApplicationDocument> documents = JAM.getFilesSubmittedForApplication(lastClosedJobApp);
+            JobApplicationManager jobApplicationManager = applicant.getJobApplicationManager();
+            JobApplication lastClosedJobApp = jobApplicationManager.getLastClosedJobApp();
+            ArrayList<JobApplicationDocument> documents = jobApplicationManager.getFilesSubmittedForApplication(lastClosedJobApp);
             this.removeDocuments(documents);
         }
     }

@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 public class DocumentManager<T> implements Serializable {
     // The initial path
-    static String INITIAL_PATH = "phase2/uploadedDocuments";
+    static String INITIAL_PATH = "./uploadedDocuments";
 
     // The company or user that this document manager is for
     private T object;

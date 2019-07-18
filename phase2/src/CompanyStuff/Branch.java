@@ -1,6 +1,6 @@
 package CompanyStuff;
 
-import DocumentManagers.BranchDocumentManager;
+import DocumentManagers.CompanyDocumentManager;
 import DocumentManagers.DocumentManagerFactory;
 
 import java.io.Serializable;
@@ -23,7 +23,7 @@ public class Branch implements Serializable {
     // The branch job postings for this branch
     private AbstractJobPostingManager jobPostingManager = new BranchJobPostingManager(this);
     // The document manager for this branch
-    private BranchDocumentManager documentManager;
+    private CompanyDocumentManager documentManager;
 
     // === Public methods ===
     // === Constructors ===
@@ -32,7 +32,7 @@ public class Branch implements Serializable {
         this.CMA = CMA;
         this.hrCoordinators = new ArrayList<>();
         this.fieldToInterviewers = new HashMap<>();
-        this.documentManager = (BranchDocumentManager) new DocumentManagerFactory().createDocumentManager(this);
+        this.documentManager = (CompanyDocumentManager) new DocumentManagerFactory().createDocumentManager(this);
     }
 
     // === Getters ==
@@ -60,7 +60,7 @@ public class Branch implements Serializable {
         return this.jobPostingManager;
     }
 
-    public BranchDocumentManager getDocumentManager() {
+    public CompanyDocumentManager getDocumentManager() {
         return this.documentManager;
     }
 

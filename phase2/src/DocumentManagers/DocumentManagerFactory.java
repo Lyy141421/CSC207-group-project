@@ -9,7 +9,7 @@ public class DocumentManagerFactory {
         if (object instanceof Applicant) {
             return new ApplicantDocumentManager((Applicant) object);
         } else if (object instanceof Branch) {
-            return new BranchDocumentManager((Branch) object);
+            return new CompanyDocumentManager((Branch) object);
         }
         return null;
     }
