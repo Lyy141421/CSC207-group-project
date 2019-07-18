@@ -41,23 +41,6 @@ public class HRCoordinator extends User {
     }
 
     // === Other methods ===
-
-    /**
-     * Create and add a job posting to the system.
-     *
-     * @param jobPosting The company job posting to which this branch job posting is to be added
-     * @param numPositions   The number of positions for this job.
-     * @param postDate       The date this job posting was posted.
-     * @param closeDate      The date this job posting is closed.
-     */
-    public BranchJobPosting addJobPosting(CompanyJobPosting jobPosting, int numPositions,
-                                          LocalDate postDate, LocalDate closeDate) {
-        BranchJobPosting branchJobPosting = new BranchJobPosting(jobPosting, numPositions, this.branch, postDate,
-                closeDate);
-        this.branch.getJobPostingManager().addJobPosting(branchJobPosting);
-        return branchJobPosting;
-    }
-
     /**
      * Create and add a job posting to the system.
      *

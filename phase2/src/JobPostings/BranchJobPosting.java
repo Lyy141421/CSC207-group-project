@@ -20,21 +20,10 @@ public class BranchJobPosting extends CompanyJobPosting {
     private InterviewManager interviewManager; // UsersAndJobObjects.Interview manager for this job posting
 
     // === Constructor ===
-    BranchJobPosting(String title, String field, String description, ArrayList<String> requiredDocuments, ArrayList<String> tags,
-                     int numPositions, Branch branch, LocalDate postDate, LocalDate closeDate) {
+    public BranchJobPosting(String title, String field, String description, ArrayList<String> requiredDocuments,
+                            ArrayList<String> tags, int numPositions, Branch branch,
+                            LocalDate postDate, LocalDate closeDate) {
         super(title, field, description, requiredDocuments, tags, branch.getCompany());
-        this.numPositions = numPositions;
-        this.branch = branch;
-        this.postDate = postDate;
-        this.closeDate = closeDate;
-        this.filled = false;
-        this.jobApplications = new ArrayList<>();
-    }
-
-    BranchJobPosting(CompanyJobPosting jobPosting, int numPositions, Branch branch, LocalDate postDate,
-                     LocalDate closeDate) {
-        super(jobPosting.getTitle(), jobPosting.getField(), jobPosting.getDescription(),
-                jobPosting.getRequiredDocuments(), jobPosting.getTags(), jobPosting.getCompany());
         this.numPositions = numPositions;
         this.branch = branch;
         this.postDate = postDate;
