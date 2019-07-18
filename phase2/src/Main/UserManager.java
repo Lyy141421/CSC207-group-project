@@ -4,10 +4,12 @@ import ApplicantStuff.Applicant;
 import CompanyStuff.HRCoordinator;
 import CompanyStuff.Interviewer;
 import CompanyStuff.Branch;
+import FileLoadingAndStoring.DataLoaderAndStorer;
 
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class UserManager {
     // Class that stores, creates and updates children of the UsersAndJobObjects.User class
@@ -30,9 +32,11 @@ public class UserManager {
     /**
      * All of the following methods create new instances of the various child classes of User
      */
-    public Applicant createApplicant(String username, String password, String legalName, String email, LocalDate dateCreated)
-            throws IOException {
-        Applicant newApplicant = new Applicant(username, password, legalName, email, dateCreated);
+    public Applicant createApplicant(String username, String password, String legalName, String email,
+                                     LocalDate dateCreated, String postalCode) {
+        HashMap<String, String> FSAToCMA = DataLoaderAndStorer.loadFSAHashMap();
+        String CMA = FSAToCMA.get(postalCode.substring(0,4));
+        Applicant newApplicant = new Applicant(username, password, legalName, email, dateCreated, CMA);
         this.allUsers.add(newApplicant);
         return newApplicant;
     }

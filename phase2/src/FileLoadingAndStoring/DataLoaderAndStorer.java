@@ -4,11 +4,17 @@ import CompanyStuff.Branch;
 import CompanyStuff.Company;
 import Main.JobApplicationSystem;
 import Main.User;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import java.io.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 
 public class DataLoaderAndStorer {
     private JobApplicationSystem JAS;
@@ -16,6 +22,7 @@ public class DataLoaderAndStorer {
     private String companyFilePath;
     private String dateFilePath;
 
+    private static final String FSA_TO_CMA_FILENAME = "phase2/files/CMA_per_FSA_Centroid.json";
 
     public DataLoaderAndStorer(JobApplicationSystem JAS, String userFilePath, String companyFilePath, String dateFilePath) {
         this.JAS = JAS;
@@ -45,6 +52,31 @@ public class DataLoaderAndStorer {
         } else {
             dateFile.createNewFile();
         }
+    }
+
+    public static HashMap<String, String> loadFSAHashMap() {
+        HashMap map = new HashMap();
+        Object obj = null;
+        JSONObject jobj = null;
+        try {
+            obj = new JSONParser().parse(new FileReader(FSA_TO_CMA_FILENAME));
+        }
+        catch (IOException | ParseException e) {
+            e.printStackTrace();
+        }
+        try {
+            jobj = new JSONObject(obj.toString());
+            Iterator iterator = jobj.keys();
+            while (iterator.hasNext()) {
+                String key = (String) iterator.next();
+                String value = jobj.getString(key);
+                map.put(key, value);
+            }
+        }
+        catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return map;
     }
 
     /**

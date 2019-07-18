@@ -21,6 +21,8 @@ public class Applicant extends User {
     private static final int INACTIVE_DAYS = 30;
 
     // === Instance variables ===
+    // The Census Metropolitan Area or Census Agglomeration that this applicant is assumed to be closest to
+    private String CMA;
     // The applicant's job application manager
     private JobApplicationManager jobApplicationManager;
     // The applicant's document manager
@@ -29,8 +31,10 @@ public class Applicant extends User {
     // === Public methods ===
     // === Constructors ===
 
-    public Applicant(String username, String password, String legalName, String email, LocalDate dateCreated) {
+    public Applicant(String username, String password, String legalName, String email, LocalDate dateCreated,
+                     String CMA) {
         super(username, password, legalName, email, dateCreated);
+        this.CMA = CMA;
         this.jobApplicationManager = new JobApplicationManager();
         this.documentManager = (ApplicantDocumentManager) new DocumentManagerFactory().createDocumentManager(this);
     }

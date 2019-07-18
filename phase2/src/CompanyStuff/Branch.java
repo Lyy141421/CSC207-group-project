@@ -12,21 +12,24 @@ public class Branch implements Serializable {
     // === Instance variables ===
     // The name of this branch
     private String name;
+    // The Census Metropolitan Area or Census Agglomeration that this branch is assumed to fall into
+    private String CMA;
     // The company that runs this branch
     private Company company;
-    // The HR Coordinators for this company
+    // The HR Coordinators for this branch
     private ArrayList<HRCoordinator> hrCoordinators;
-    // The interviewers in this company
+    // The interviewers in this branch
     private HashMap<String, ArrayList<Interviewer>> fieldToInterviewers;
     // The branch job postings for this branch
     private AbstractJobPostingManager jobPostingManager = new BranchJobPostingManager(this);
-    // The document manager for this company
+    // The document manager for this branch
     private BranchDocumentManager documentManager;
 
     // === Public methods ===
     // === Constructors ===
-    public Branch(String name) {
+    public Branch(String name, String CMA) {
         this.name = name;
+        this.CMA = CMA;
         this.hrCoordinators = new ArrayList<>();
         this.fieldToInterviewers = new HashMap<>();
         this.documentManager = (BranchDocumentManager) new DocumentManagerFactory().createDocumentManager(this);

@@ -2,8 +2,10 @@ package CompanyStuff;
 
 import ApplicantStuff.Applicant;
 import ApplicantStuff.JobApplication;
+import FileLoadingAndStoring.DataLoaderAndStorer;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Company {
 
@@ -31,19 +33,25 @@ public class Company {
         return jobPostingManager;
     }
 
-    /** Attempt to create a branch of this company with the given name and return it.
+    /**
+     * Attempt to create a branch of this company with the given name and return it.
      * Return null if name is already taken by another branch of this company.
      *
-     * @param name  The name of the branch
-     * @return  The branch created, or null if no branch was created
+     * Precondition: postalCode is a valid Canadian postal code
+     *
+     * @param name       The name of the branch
+     * @param postalCode The postal code of this branch
+     * @return           The branch created, or null if no branch was created
      */
-    Branch createBranch(String name) {
+    Branch createBranch(String name, String postalCode) {
+        HashMap<String, String> FSAToCMA = DataLoaderAndStorer.loadFSAHashMap();
+        String CMA = FSAToCMA.get(postalCode.substring(0,4));
         for (Branch branch : branches) {
             if (branch.getName().equalsIgnoreCase(name))
                 // branch by this name already exists
                 return null;
         }
-        return new Branch(name);
+        return new Branch(name, CMA);
     }
 
     /**
