@@ -2,7 +2,7 @@ package Main;
 
 import ApplicantStuff.Applicant;
 import ApplicantStuff.JobApplication;
-import ApplicantStuff.Referee;
+import ApplicantStuff.Reference;
 import CompanyStuff.HRCoordinator;
 import CompanyStuff.Interviewer;
 import CompanyStuff.Branch;
@@ -57,10 +57,10 @@ public class UserManager {
         return newHRC;
     }
 
-    public Referee createReferee(String email, LocalDate dateCreated) {
-        Referee newReferee = new Referee(email, dateCreated);
-        this.allUsers.add(newReferee);
-        return newReferee;
+    public Reference createReferee(String email, LocalDate dateCreated) {
+        Reference newReference = new Reference(email, dateCreated);
+        this.allUsers.add(newReference);
+        return newReference;
     }
 
     // === User operations ===
@@ -96,11 +96,11 @@ public class UserManager {
      */
     public void addReferees(JobApplication jobApp, ArrayList<String> emails) {
         for (String email : emails) {
-            Referee referee = (Referee) this.findUserByEmail(email);
-            if (referee == null) {
-                referee = this.createReferee(email, jobApp.getApplicationDate());
+            Reference reference = (Reference) this.findUserByEmail(email);
+            if (reference == null) {
+                reference = this.createReferee(email, jobApp.getApplicationDate());
             }
-            referee.addJobApplicationForReference(jobApp);
+            reference.addJobApplicationForReference(jobApp);
         }
     }
 

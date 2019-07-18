@@ -1,6 +1,5 @@
 package FileLoadingAndStoring;
 
-import CompanyStuff.Branch;
 import CompanyStuff.Company;
 import Main.JobApplicationSystem;
 import Main.User;
@@ -17,15 +16,15 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 public class DataLoaderAndStorer {
-    private JobApplicationSystem JAS;
+    private JobApplicationSystem jobApplicationSystem;
     private String userFilePath;
     private String companyFilePath;
     private String dateFilePath;
 
     private static final String FSA_TO_CMA_FILENAME = "phase2/files/CMA_per_FSA_Centroid.json";
 
-    public DataLoaderAndStorer(JobApplicationSystem JAS, String userFilePath, String companyFilePath, String dateFilePath) {
-        this.JAS = JAS;
+    public DataLoaderAndStorer(JobApplicationSystem jobApplicationSystem, String userFilePath, String companyFilePath, String dateFilePath) {
+        this.jobApplicationSystem = jobApplicationSystem;
         this.userFilePath = userFilePath;
         this.companyFilePath = companyFilePath;
         this.dateFilePath = dateFilePath;
@@ -90,7 +89,7 @@ public class DataLoaderAndStorer {
             InputStream buffer = new BufferedInputStream(file);
             ObjectInput input = new ObjectInputStream(buffer);
 
-            this.JAS.getUserManager().setAllUsers((ArrayList<User>) input.readObject());
+            this.jobApplicationSystem.getUserManager().setAllUsers((ArrayList<User>) input.readObject());
             input.close();
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -108,7 +107,7 @@ public class DataLoaderAndStorer {
             InputStream buffer = new BufferedInputStream(file);
             ObjectInput input = new ObjectInputStream(buffer);
 
-            this.JAS.setCompanies((ArrayList<Company>) input.readObject());
+            this.jobApplicationSystem.setCompanies((ArrayList<Company>) input.readObject());
             input.close();
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -123,7 +122,7 @@ public class DataLoaderAndStorer {
             String dateString = fileReader.readLine().trim();
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             LocalDate date = LocalDate.parse(dateString, dtf);
-            this.JAS.setPreviousLoginDate(date);
+            this.jobApplicationSystem.setPreviousLoginDate(date);
         } catch (IOException ioe) {
             ioe.printStackTrace();
         }
@@ -150,7 +149,7 @@ public class DataLoaderAndStorer {
         OutputStream buffer = new BufferedOutputStream(file);
         ObjectOutput output = new ObjectOutputStream(buffer);
 
-        output.writeObject(this.JAS.getUserManager().getAllUsers());
+        output.writeObject(this.jobApplicationSystem.getUserManager().getAllUsers());
         output.close();
     }
 
@@ -164,7 +163,7 @@ public class DataLoaderAndStorer {
         OutputStream buffer = new BufferedOutputStream(file);
         ObjectOutput output = new ObjectOutputStream(buffer);
 
-        output.writeObject(this.JAS.getCompanies());
+        output.writeObject(this.jobApplicationSystem.getCompanies());
         output.close();
     }
 
@@ -175,7 +174,7 @@ public class DataLoaderAndStorer {
     private void storePreviousLoginDate() {
         try (PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(dateFilePath)))) {
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            String dateString = this.JAS.getToday().format(dtf);
+            String dateString = this.jobApplicationSystem.getToday().format(dtf);
             out.println(dateString);
         } catch (IOException ioe) {
             ioe.printStackTrace();

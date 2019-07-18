@@ -30,8 +30,8 @@ public class InterviewerSideBarMenuPanel {
      */
     private TreeMap<String, Object> viewIntervieweesMenu() {
         TreeMap<String, Object> viewIntervieweesMenu = new TreeMap<>();
-        viewIntervieweesMenu.put("1. Search Interviewee", new SearchActionListener(this.interviewer, "Applicant"));
-        viewIntervieweesMenu.put("2. View All Interviewees", new ViewAllApplicantsActionListener(this.interviewer));
+        viewIntervieweesMenu.put("1. Search Interview", new SearchActionListener(this.interviewer, "Applicant"));
+        viewIntervieweesMenu.put("2. View All Interviews", new ViewAllApplicantsActionListener(this.interviewer));
         return viewIntervieweesMenu;
     }
 
@@ -47,7 +47,7 @@ public class InterviewerSideBarMenuPanel {
         fullMenu.put("3. Schedule Interviews", new ScheduleInterviewsActionListener(this.interviewer));
         fullMenu.put("4. View schedule", new ViewScheduleActionListener(this.interviewer));
         fullMenu.put("5. Complete Interviews", new CompleteInterviewsActionListener(this.interviewer));
-        fullMenu.put("6. View Interviewees", this.viewIntervieweesMenu());
+        fullMenu.put("6. View Incomplete Interviews", this.viewIntervieweesMenu());
         return fullMenu;
     }
 

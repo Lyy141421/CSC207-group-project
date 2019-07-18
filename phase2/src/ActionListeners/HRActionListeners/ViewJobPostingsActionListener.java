@@ -7,11 +7,11 @@ import java.awt.event.ActionListener;
 
 public class ViewJobPostingsActionListener implements ActionListener {
 
-    private HRCoordinator HRC;
+    private HRCoordinator hrCoordinator;
     private String category;
 
-    public ViewJobPostingsActionListener(HRCoordinator HRC, String category) {
-        this.HRC = HRC;
+    public ViewJobPostingsActionListener(HRCoordinator hrCoordinator, String category) {
+        this.hrCoordinator = hrCoordinator;
         this.category = category;
     }
 

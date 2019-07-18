@@ -5,14 +5,14 @@ import Main.User;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-public class Referee extends User {
+public class Reference extends User {
 
     // === Instance variables ===
     // The job applications that need references from this referee
     private ArrayList<JobApplication> jobAppsForReference;
 
     // === Constructor ===
-    public Referee(String email, LocalDate dateCreated) {
+    public Reference(String email, LocalDate dateCreated) {
         super(email, dateCreated);
         this.jobAppsForReference = new ArrayList<>();
     }

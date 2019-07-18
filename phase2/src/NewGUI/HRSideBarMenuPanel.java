@@ -21,11 +21,11 @@ public class HRSideBarMenuPanel extends JPanel {
     private static int NUM_MAIN_MENU_OPTIONS = 5;
 
     // === Instance variable ===
-    private HRCoordinator HRC;
+    private HRCoordinator hrCoordinator;
 
     // === Constructor ===
-    private HRSideBarMenuPanel(HRCoordinator HRC) {
-        this.HRC = HRC;
+    private HRSideBarMenuPanel(HRCoordinator hrCoordinator) {
+        this.hrCoordinator = hrCoordinator;
     }
 
     /**
@@ -35,8 +35,8 @@ public class HRSideBarMenuPanel extends JPanel {
      */
     private TreeMap<String, Object> createHighPriorityTasksMenu() {
         TreeMap<String, Object> highPriorityTasksMenu = new TreeMap<>();
-        highPriorityTasksMenu.put("1. Review Applications", new ReviewApplicationsActionListener(this.HRC));
-        highPriorityTasksMenu.put("2. Hire Candidates", new HireCandidatesActionListener(this.HRC));
+        highPriorityTasksMenu.put("1. Review Applications", new ReviewApplicationsActionListener(this.hrCoordinator));
+        highPriorityTasksMenu.put("2. Hire Candidates", new HireCandidatesActionListener(this.hrCoordinator));
         return highPriorityTasksMenu;
     }
 
@@ -47,10 +47,10 @@ public class HRSideBarMenuPanel extends JPanel {
      */
     private TreeMap<String, Object> createViewJobPostingsSubMenu() {
         TreeMap<String, Object> viewJobPostingsMenu = new TreeMap<>();
-        viewJobPostingsMenu.put("1. Open Job Postings", new ViewJobPostingsActionListener(this.HRC, "Open"));
-        viewJobPostingsMenu.put("2. Closed Job Postings", new ViewJobPostingsActionListener(this.HRC, "Closed"));
-        viewJobPostingsMenu.put("3. Filled Job Postings", new ViewJobPostingsActionListener(this.HRC, "Filled"));
-        viewJobPostingsMenu.put("4. All Job Postings", new ViewJobPostingsActionListener(this.HRC, "All"));
+        viewJobPostingsMenu.put("1. Open Job Postings", new ViewJobPostingsActionListener(this.hrCoordinator, "Open"));
+        viewJobPostingsMenu.put("2. Closed Job Postings", new ViewJobPostingsActionListener(this.hrCoordinator, "Closed"));
+        viewJobPostingsMenu.put("3. Filled Job Postings", new ViewJobPostingsActionListener(this.hrCoordinator, "Filled"));
+        viewJobPostingsMenu.put("4. All Job Postings", new ViewJobPostingsActionListener(this.hrCoordinator, "All"));
         return viewJobPostingsMenu;
     }
 
@@ -61,9 +61,9 @@ public class HRSideBarMenuPanel extends JPanel {
      */
     private TreeMap<String, Object> createJobPostingsMenu() {
         TreeMap<String, Object> jobPostingsMenu = new TreeMap<>();
-        jobPostingsMenu.put("1. Add Job Posting", new AddOrUpdateJobPostingActionListener("Add"));
-        jobPostingsMenu.put("2. Update Job Posting", new AddOrUpdateJobPostingActionListener("Update"));
-        jobPostingsMenu.put("3. Search Job Posting", new SearchActionListener(this.HRC, "Job posting"));
+        jobPostingsMenu.put("1. Add Job Posting", new AddOrUpdateJobPostingActionListener(this.hrCoordinator, "Add"));
+        jobPostingsMenu.put("2. Update Job Posting", new AddOrUpdateJobPostingActionListener(this.hrCoordinator, "Update"));
+        jobPostingsMenu.put("3. Search Job Posting", new SearchActionListener(this.hrCoordinator, "Job posting"));
         jobPostingsMenu.put("4. View Job Postings", this.createViewJobPostingsSubMenu());
         return jobPostingsMenu;
     }
@@ -75,11 +75,11 @@ public class HRSideBarMenuPanel extends JPanel {
      */
     private TreeMap<String, Object> createFullMenu() {
         TreeMap<String, Object> fullMenu = new TreeMap<>();
-        fullMenu.put("1. Home", new ReturnHomeActionListener(this.HRC));
-        fullMenu.put("2. Profile", new ProfileActionListener(this.HRC));
+        fullMenu.put("1. Home", new ReturnHomeActionListener(this.hrCoordinator));
+        fullMenu.put("2. Profile", new ProfileActionListener(this.hrCoordinator));
         fullMenu.put("3. High Priority Tasks", this.createHighPriorityTasksMenu());
         fullMenu.put("4. Job Postings", this.createJobPostingsMenu());
-        fullMenu.put("5. Search applicant", new SearchActionListener(this.HRC, "Applicant"));
+        fullMenu.put("5. Search applicant", new SearchActionListener(this.hrCoordinator, "Applicant"));
         return fullMenu;
     }
 
