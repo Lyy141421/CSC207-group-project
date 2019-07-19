@@ -1,5 +1,7 @@
 package Miscellaneous;
 
+import CompanyStuff.Interview;
+
 import java.time.LocalDate;
 import java.util.Comparator;
 
