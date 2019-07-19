@@ -143,8 +143,8 @@ public class JobApplication implements Serializable {
 
 
     public String getMiniDescriptionForReference() {
-        String s = "Referee: " + this.getApplicant().getLegalName() + ": \n";
-        s += "Job Posting: " + this.getJobPosting().getTitle() + "\n";
+        String s = "Referee: " + this.getApplicant().getLegalName() + "   ";
+        s += "Job Posting: " + this.getJobPosting().getTitle() + "   ";
         s += "Close Date: " + this.getJobPosting().getCloseDate().toString();
         return s;
     }

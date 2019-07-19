@@ -12,7 +12,7 @@ public class ReferenceSideBarMenuPanel {
 
     // === Class variables ===
     private static int CELL_WIDTH = 170;
-    private static int CELL_HEIGHT = 30;
+    private static int CELL_HEIGHT = 20;
     private static int NUM_MAIN_MENU_OPTIONS = 4;
 
     // === Instance variable ===
@@ -20,7 +20,7 @@ public class ReferenceSideBarMenuPanel {
 
 
     // === Constructor ===
-    private ReferenceSideBarMenuPanel(Reference reference) {
+    ReferenceSideBarMenuPanel(Reference reference) {
         this.reference = reference;
     }
 
@@ -54,7 +54,7 @@ public class ReferenceSideBarMenuPanel {
     /**
      * Create the panel with the menu bar.
      */
-    private JPanel createPanel() {
+    JPanel createPanel() {
         TreeMap<String, Object> fullMenu = this.createFullMenu();
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout());

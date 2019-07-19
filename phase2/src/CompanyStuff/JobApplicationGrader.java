@@ -46,6 +46,7 @@ public class JobApplicationGrader {
                         }
                     }
                 }
+                scanner.close();
             } catch (IOException ex) {
                 ex.printStackTrace();
             }

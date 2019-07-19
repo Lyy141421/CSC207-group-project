@@ -70,11 +70,11 @@ class SideBarMenu extends MouseAdapter {
     JMenuBar createMenuBar() {
         JMenuBar menuBar = new JMenuBar();
         menuBar.setLayout(new BoxLayout(menuBar, BoxLayout.PAGE_AXIS));
-        JMenuItem title = new JMenuItem("Menu");
-        title.setBackground(Color.LIGHT_GRAY);
-        title.setOpaque(true);
-        menuBar.add(title);
         this.createMenu(menuBar, menuTitles);
+        for (Component component : menuBar.getComponents()) {
+            this.setBackgroundAndBorder((JComponent) component);
+        }
+        this.setBackgroundAndBorder(menuBar);
         return menuBar;
     }
 
@@ -87,10 +87,16 @@ class SideBarMenu extends MouseAdapter {
      */
     private JMenuItem createMenuItem(String title, ActionListener actionListener) {
         JMenuItem menu = new JMenuItem(title);
-        menu.setPreferredSize(new Dimension(this.cellWidth, this.cellHeight));
         menu.addActionListener(actionListener);
         menu.addMouseListener(mouseAdapter);
         return menu;
+    }
+
+    private void setBackgroundAndBorder(JComponent menu) {
+        menu.setBackground(Color.LIGHT_GRAY);
+        menu.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY));
+        menu.setPreferredSize(new Dimension(this.cellWidth, this.cellHeight));
+        menu.revalidate();
     }
 
     /**
@@ -103,10 +109,10 @@ class SideBarMenu extends MouseAdapter {
         TreeMap<String, Object> map = (TreeMap<String, Object>) subMenu;
         for (String menuTitle : map.keySet()) {
             if (map.get(menuTitle) instanceof ActionListener) {
-                menu.add(this.createMenuItem(menuTitle, (ActionListener) map.get(menuTitle)));
+                JMenuItem menuItem = this.createMenuItem(menuTitle, (ActionListener) map.get(menuTitle));
+                menu.add(menuItem);
             } else {
                 VerticalMenu popUpMenu = new VerticalMenu(menuTitle);
-                popUpMenu.setPreferredSize(new Dimension(this.cellWidth, this.cellHeight));
                 popUpMenu.addMouseListener(mouseAdapter);
                 menu.add(popUpMenu);
                 this.createMenu(popUpMenu, map.get(menuTitle));
@@ -126,10 +132,6 @@ class SideBarMenu extends MouseAdapter {
         }
 
         public Dimension getMinimumSize() {
-            return getPreferredSize();
-        }
-
-        public Dimension getMaximumSize() {
             return getPreferredSize();
         }
 
