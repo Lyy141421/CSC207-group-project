@@ -47,7 +47,7 @@ import java.util.ArrayList;
 
 
 public class FileChooser extends JPanel implements ActionListener {
-    static private final String newline = "\n";
+
     static private final Color LIGHT_RED = new Color(255, 210, 210);
     JButton uploadButton;
     JButton submitButton;
@@ -61,16 +61,6 @@ public class FileChooser extends JPanel implements ActionListener {
 
         //Create a file chooser
         fc = new JFileChooser();
-
-        //Uncomment one of the following lines to try a different
-        //file selection mode.  The first allows just directories
-        //to be selected (and, at least in the Java look and feel,
-        //shown).  The second allows both files and directories
-        //to be selected.  If you leave these lines commented out,
-        //then the default mode (FILES_ONLY) will be used.
-        //
-        //fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        //fc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
 
         uploadButton = new JButton("Upload",
                 new ImageIcon(uploadButtonIconPath));

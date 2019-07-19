@@ -26,6 +26,10 @@ public class HRSideBarMenuPanel extends JPanel {
     // === Constructor ===
     private HRSideBarMenuPanel(HRCoordinator hrCoordinator) {
         this.hrCoordinator = hrCoordinator;
+        TreeMap<String, Object> fullMenu = this.createFullMenu();
+        this.setLayout(new BorderLayout());
+        this.add(new SideBarMenu(fullMenu, CELL_WIDTH, CELL_HEIGHT).createMenuBar());
+        this.setSize(CELL_WIDTH, CELL_HEIGHT * NUM_MAIN_MENU_OPTIONS);
     }
 
     /**
@@ -83,20 +87,6 @@ public class HRSideBarMenuPanel extends JPanel {
         return fullMenu;
     }
 
-
-    /**
-     * Create the panel with the menu bar.
-     */
-    private JPanel createPanel() {
-        TreeMap<String, Object> fullMenu = this.createFullMenu();
-        JPanel panel = new JPanel();
-        panel.setLayout(new BorderLayout());
-        panel.add(new SideBarMenu(fullMenu, CELL_WIDTH, CELL_HEIGHT).createMenuBar());
-        panel.setSize(CELL_WIDTH, CELL_HEIGHT * NUM_MAIN_MENU_OPTIONS);
-        return panel;
-
-    }
-
     public static void main(String[] args) {
         //Schedule a job for the event-dispatching thread:
         //creating and showing this application's GUI.
@@ -108,7 +98,7 @@ public class HRSideBarMenuPanel extends JPanel {
 
                 JPanel menuPanel = new JPanel();
                 menuPanel.setBackground(Color.WHITE); // contrasting bg
-                menuPanel.add(new HRSideBarMenuPanel(HRC).createPanel());
+                menuPanel.add(new HRSideBarMenuPanel(HRC));
 
                 Container contentPane = frame.getContentPane();
                 contentPane.setBackground(Color.WHITE); //contrasting bg

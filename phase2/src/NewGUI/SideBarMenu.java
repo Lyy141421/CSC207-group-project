@@ -113,6 +113,7 @@ class SideBarMenu extends MouseAdapter {
                 menu.add(menuItem);
             } else {
                 VerticalMenu popUpMenu = new VerticalMenu(menuTitle);
+                this.setBackgroundAndBorder(popUpMenu);
                 popUpMenu.addMouseListener(mouseAdapter);
                 menu.add(popUpMenu);
                 this.createMenu(popUpMenu, map.get(menuTitle));

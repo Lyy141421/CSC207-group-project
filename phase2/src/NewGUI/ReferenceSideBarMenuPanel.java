@@ -8,7 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.TreeMap;
 
-public class ReferenceSideBarMenuPanel {
+public class ReferenceSideBarMenuPanel extends JPanel {
 
     // === Class variables ===
     private static int CELL_WIDTH = 170;
@@ -22,6 +22,10 @@ public class ReferenceSideBarMenuPanel {
     // === Constructor ===
     ReferenceSideBarMenuPanel(Reference reference) {
         this.reference = reference;
+        TreeMap<String, Object> fullMenu = this.createFullMenu();
+        this.setLayout(new BorderLayout());
+        this.add(new SideBarMenu(fullMenu, CELL_WIDTH, CELL_HEIGHT).createMenuBar());
+        this.setSize(CELL_WIDTH, CELL_HEIGHT * NUM_MAIN_MENU_OPTIONS);
     }
 
     /**
@@ -50,16 +54,4 @@ public class ReferenceSideBarMenuPanel {
         return fullMenu;
     }
 
-
-    /**
-     * Create the panel with the menu bar.
-     */
-    JPanel createPanel() {
-        TreeMap<String, Object> fullMenu = this.createFullMenu();
-        JPanel panel = new JPanel();
-        panel.setLayout(new BorderLayout());
-        panel.add(new SideBarMenu(fullMenu, CELL_WIDTH, CELL_HEIGHT).createMenuBar());
-        panel.setSize(CELL_WIDTH, CELL_HEIGHT * NUM_MAIN_MENU_OPTIONS);
-        return panel;
-    }
 }

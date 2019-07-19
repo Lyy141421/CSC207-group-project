@@ -8,7 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.TreeMap;
 
-public class InterviewerSideBarMenuPanel {
+public class InterviewerSideBarMenuPanel extends JPanel {
 
     // === Class variables ===
     private static int CELL_WIDTH = 170;
@@ -21,7 +21,12 @@ public class InterviewerSideBarMenuPanel {
     // === Constructor ===
     private InterviewerSideBarMenuPanel(Interviewer interviewer) {
         this.interviewer = interviewer;
+        TreeMap<String, Object> fullMenu = this.createFullMenu();
+        this.setLayout(new BorderLayout());
+        this.add(new SideBarMenu(fullMenu, CELL_WIDTH, CELL_HEIGHT).createMenuBar());
+        this.setSize(CELL_WIDTH, CELL_HEIGHT * NUM_MAIN_MENU_OPTIONS);
     }
+
 
     /**
      * Create the map for the full job postings sub menu.
@@ -51,19 +56,6 @@ public class InterviewerSideBarMenuPanel {
         return fullMenu;
     }
 
-
-    /**
-     * Create the panel with the menu bar.
-     */
-    private JPanel createPanel() {
-        TreeMap<String, Object> fullMenu = this.createFullMenu();
-        JPanel panel = new JPanel();
-        panel.setLayout(new BorderLayout());
-        panel.add(new SideBarMenu(fullMenu, CELL_WIDTH, CELL_HEIGHT).createMenuBar());
-        panel.setSize(CELL_WIDTH, CELL_HEIGHT * NUM_MAIN_MENU_OPTIONS);
-        return panel;
-    }
-
     public static void main(String[] args) {
         //Schedule a job for the event-dispatching thread:
         //creating and showing this application's GUI.
@@ -75,7 +67,7 @@ public class InterviewerSideBarMenuPanel {
 
                 JPanel menuPanel = new JPanel();
                 menuPanel.setBackground(Color.WHITE); // contrasting bg
-                menuPanel.add(new InterviewerSideBarMenuPanel(interviewer).createPanel());
+                menuPanel.add(new InterviewerSideBarMenuPanel(interviewer));
 
                 Container contentPane = frame.getContentPane();
                 contentPane.setBackground(Color.WHITE); //contrasting bg

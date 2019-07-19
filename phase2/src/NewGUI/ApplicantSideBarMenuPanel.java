@@ -12,7 +12,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.TreeMap;
 
-public class ApplicantSideBarMenuPanel {
+public class ApplicantSideBarMenuPanel extends JPanel {
     // === Class variables ===
     private static int CELL_WIDTH = 170;
     private static int CELL_HEIGHT = 30;
@@ -24,6 +24,10 @@ public class ApplicantSideBarMenuPanel {
     // === Constructor ===
     private ApplicantSideBarMenuPanel(Applicant applicant) {
         this.applicant = applicant;
+        TreeMap<String, Object> fullMenu = this.createFullMenu();
+        this.setLayout(new BorderLayout());
+        this.add(new SideBarMenu(fullMenu, CELL_WIDTH, CELL_HEIGHT).createMenuBar());
+        this.setSize(CELL_WIDTH, CELL_HEIGHT * NUM_MAIN_MENU_OPTIONS);
     }
 
     /**
@@ -40,19 +44,6 @@ public class ApplicantSideBarMenuPanel {
         fullMenu.put("4. Browse Job Postings", new BrowseJobPostingsActionListener(this.applicant));
         fullMenu.put("5. Withdraw Application", new WithdrawApplicationActionListener(this.applicant));
         return fullMenu;
-    }
-
-
-    /**
-     * Create the panel with the menu bar.
-     */
-    private JPanel createPanel() {
-        TreeMap<String, Object> fullMenu = this.createFullMenu();
-        JPanel panel = new JPanel();
-        panel.setLayout(new BorderLayout());
-        panel.add(new SideBarMenu(fullMenu, CELL_WIDTH, CELL_HEIGHT).createMenuBar());
-        panel.setSize(CELL_WIDTH, CELL_HEIGHT * NUM_MAIN_MENU_OPTIONS);
-        return panel;
     }
 
 }

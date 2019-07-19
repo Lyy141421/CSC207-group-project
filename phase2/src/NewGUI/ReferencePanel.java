@@ -12,20 +12,19 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class ReferenceGUI {
+public class ReferencePanel extends JPanel {
 
     // === Instance variables ===
-    private JPanel fullPanel;
     private Reference reference;
     private JPanel cards = new JPanel(new CardLayout());
     private final String HOME = "Home";
 
-    ReferenceGUI(Reference reference) {
-        fullPanel = new JPanel(new BorderLayout());
-        fullPanel.add(new ReferenceSideBarMenuPanel(reference).createPanel(), BorderLayout.WEST);
+    ReferencePanel(Reference reference) {
+        this.setLayout(new BorderLayout());
+        this.add(new ReferenceSideBarMenuPanel(reference), BorderLayout.WEST);
         this.reference = reference;
-        cards.add(new ReferenceHomePanel(this.reference).createPanel(), HOME);
-        fullPanel.add(cards, BorderLayout.CENTER);
+        cards.add(new ReferenceHomePanel(this.reference), HOME);
+        this.add(cards, BorderLayout.CENTER);
     }
 
     public static void main(String[] args) {
@@ -42,7 +41,7 @@ public class ReferenceGUI {
         JobApplication jobApp2 = new JobApplication(applicant2, jobPosting2, new ArrayList<>(), LocalDate.now());
         reference.addJobApplicationForReference(jobApp);
         reference.addJobApplicationForReference(jobApp2);
-        frame.add(new ReferenceGUI(reference).fullPanel);
+        frame.add(new ReferencePanel(reference));
         frame.setSize(800, 600);
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
