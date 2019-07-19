@@ -69,8 +69,8 @@ public class HRCoordinator extends User {
      */
     @Override
     public JobApplication findJobAppById(int ID) {
-        ArrayList<CompanyJobPosting> jobPostings = this.branch.getJobPostingManager().getJobPostings();
-        for (CompanyJobPosting jobPosting : jobPostings) {
+        ArrayList<BranchJobPosting> jobPostings = this.branch.getJobPostingManager().getBranchJobPostings();
+        for (BranchJobPosting jobPosting : jobPostings) {
             for (JobApplication jobApplication : jobPosting.getJobApplications()) {
                 if (jobApplication.getId() == ID) {
                     return jobApplication;

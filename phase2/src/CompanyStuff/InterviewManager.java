@@ -13,10 +13,10 @@ public class InterviewManager implements Serializable {
 
     // === Class variables ===
     // Integers that represent the task the HR Coordinator needs to accomplish
-    static final int CLOSE_POSTING_NO_HIRE = -1;
+    public static final int CLOSE_POSTING_NO_HIRE = -1;
     private static final int DO_NOTHING = 0;
-    static final int SCHEDULE_INTERVIEWS = 1;
-    static final int HIRE_APPLICANTS = 2;
+    public static final int SCHEDULE_INTERVIEWS = 1;
+    public static final int HIRE_APPLICANTS = 2;
 
     // === Instance variables ===
     // The job posting for this interview manager
@@ -179,7 +179,7 @@ public class InterviewManager implements Serializable {
      *
      * @return the integer representing the task the HR Coordinator must accomplish.
      */
-    int getHrTask() {
+    public int getHrTask() {
         if (this.hasNoJobApplicationsInConsideration()) {
             return InterviewManager.CLOSE_POSTING_NO_HIRE;
         } else if (this.currentRound != 0 && this.isNumApplicationsUnderOrAtThreshold()) {

@@ -3,9 +3,7 @@ package CompanyStuff;
 import ApplicantStuff.Applicant;
 import ApplicantStuff.JobApplication;
 import FileLoadingAndStoring.DataLoaderAndStorer;
-import JobPostings.AbstractJobPostingManager;
-import JobPostings.CompanyJobPosting;
-import JobPostings.CompanyJobPostingManager;
+import JobPostings.BranchJobPosting;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,8 +15,6 @@ public class Company {
     private String name;
     // The branches in this company.
     private ArrayList<Branch> branches;
-    // The company job posting manager
-    private AbstractJobPostingManager jobPostingManager = new CompanyJobPostingManager(this);
 
     public Company(String name) {
         this.branches = new ArrayList<>();
@@ -30,10 +26,6 @@ public class Company {
 
     public ArrayList<Branch> getBranches() {
         return branches;
-    }
-
-    public AbstractJobPostingManager getJobPostingManager() {
-        return jobPostingManager;
     }
 
     /**
@@ -65,25 +57,13 @@ public class Company {
      */
     public ArrayList<JobApplication> getAllApplicationsToCompany(Applicant applicant) {
         ArrayList<JobApplication> apps = new ArrayList<>();
-        for (CompanyJobPosting jobPosting : this.getJobPostingManager().getJobPostings()) {
-            apps.addAll(jobPosting.getJobApplications());
-        }
-        return apps;
-    }
-
-    /**
-     * Check whether this applicant has applied to this company.
-     *
-     * @param applicant The applicant in question.
-     * @return true iff this applicant has applied to this company.
-     */
-    public boolean hasAppliedHere(Applicant applicant) {
-        for (CompanyJobPosting jobPosting : this.getJobPostingManager().getJobPostings()) {
-            if (applicant.hasAppliedTo(jobPosting)) {
-                return true;
+        for (Branch branch : branches) {
+            for (BranchJobPosting posting : branch.getJobPostingManager().getBranchJobPostings()) {
+                if (applicant.hasAppliedToPosting(posting))
+                    apps.add(posting.findJobApplication(applicant));
             }
         }
-        return false;
+        return apps;
     }
 
     @Override

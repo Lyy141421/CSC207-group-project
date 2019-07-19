@@ -1,9 +1,11 @@
 package ApplicantStuff;
 
+import CompanyStuff.Branch;
 import JobPostings.BranchJobPosting;
 import CompanyStuff.Company;
 import DocumentManagers.ApplicantDocumentManager;
 import DocumentManagers.DocumentManagerFactory;
+import JobPostings.BranchJobPostingManager;
 import Main.JobApplicationSystem;
 import Main.User;
 import JobPostings.CompanyJobPosting;
@@ -68,7 +70,7 @@ public class Applicant extends User {
      * @return true iff this applicant can successfully withdraw their application; else return false
      */
     public boolean withdrawJobApplication(LocalDate today, BranchJobPosting jobPosting) {
-        if (this.hasAppliedTo(jobPosting) && !jobPosting.isFilled()) {
+        if (this.hasAppliedToPosting(jobPosting) && !jobPosting.isFilled()) {
             if (!jobPosting.isClosed(today)) {
                 // TODO replace with notify -- notify job posting, interview manager (if it exists),
                 // interviewer (if interview has been scheduled), referee (if there is one)
@@ -86,7 +88,7 @@ public class Applicant extends User {
      * @param jobPosting The job posting in question.
      * @return true iff this applicant has not applied to this job posting.
      */
-    public boolean hasAppliedTo(CompanyJobPosting jobPosting) {
+    public boolean hasAppliedToPosting(BranchJobPosting jobPosting) {
         for (JobApplication jobApp : jobPosting.getJobApplications()) {
             if (jobApp.getApplicant().equals(this)) {
                 return true;
@@ -95,20 +97,28 @@ public class Applicant extends User {
         return false;
     }
 
+    public boolean hasAppliedToBranch(Branch branch) {
+        for (BranchJobPosting posting : branch.getJobPostingManager().getBranchJobPostings())
+            if (this.hasAppliedToPosting(posting))
+                return true;
+        return false;
+    }
+
     /**
      * Get a list of open job postings not yet applied to.
      *
      * @return a list of open job postings not yet applied to.
      */
-    public ArrayList<CompanyJobPosting> getOpenJobPostingsNotAppliedTo(JobApplicationSystem JAS) {
-        ArrayList<CompanyJobPosting> jobPostingsNotAppliedTo = new ArrayList<>();
-        for (Company company : JAS.getCompanies()) {
-            for (CompanyJobPosting posting : company.getJobPostingManager().getOpenJobPostings(JAS.getToday()))
-                if (!this.hasAppliedTo(posting)) {
-                    jobPostingsNotAppliedTo.add(posting);
+    public ArrayList<BranchJobPosting> getOpenJobPostingsNotAppliedTo(JobApplicationSystem JAS) {
+        ArrayList<BranchJobPosting> jobPostings = new ArrayList<>();
+        for (Company company : JAS.getCompanies())
+            for (Branch branch : company.getBranches()) {
+                BranchJobPostingManager jpm = branch.getJobPostingManager();
+                ArrayList<BranchJobPosting> openPostings = jpm.getOpenJobPostings(JAS.getToday());
+                openPostings.retainAll(jpm.getJobPostingsNotAppliedToBy(this));
+                jobPostings.addAll(openPostings);
                 }
-        }
-        return jobPostingsNotAppliedTo;
+        return jobPostings;
     }
 
 

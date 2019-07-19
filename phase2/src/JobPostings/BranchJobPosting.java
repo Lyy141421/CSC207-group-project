@@ -23,7 +23,7 @@ public class BranchJobPosting extends CompanyJobPosting {
     public BranchJobPosting(String title, String field, String description, ArrayList<String> requiredDocuments,
                             ArrayList<String> tags, int numPositions, Branch branch,
                             LocalDate postDate, LocalDate closeDate) {
-        super(title, field, description, requiredDocuments, tags, branch.getCompany());
+        super(title, field, description, requiredDocuments, tags, branch.getCompany(), branch);
         this.numPositions = numPositions;
         this.branch = branch;
         this.postDate = postDate;
