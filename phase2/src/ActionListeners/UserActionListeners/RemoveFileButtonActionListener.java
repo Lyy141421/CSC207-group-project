@@ -1,5 +1,7 @@
 package ActionListeners.UserActionListeners;
 
+import NewGUI.FileChooser;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -8,22 +10,26 @@ import java.util.ArrayList;
 
 public class RemoveFileButtonActionListener implements ActionListener {
 
-    private JPanel panelWithButtons;
+    private FileChooser fileChooser;
     private JButton buttonToRemove;
-    private ArrayList<File> filesToSubmit;
     private File fileToRemove;
 
-    public RemoveFileButtonActionListener(JPanel panelWithButtons, JButton buttonToRemove, ArrayList<File> filesToSubmit, File fileToRemove) {
-        this.panelWithButtons = panelWithButtons;
+    public RemoveFileButtonActionListener(FileChooser fileChooser, JButton buttonToRemove, File fileToRemove) {
+        this.fileChooser = fileChooser;
         this.buttonToRemove = buttonToRemove;
-        this.filesToSubmit = filesToSubmit;
         this.fileToRemove = fileToRemove;
     }
 
     public void actionPerformed(ActionEvent e) {
-        this.filesToSubmit.remove(fileToRemove);
-        this.panelWithButtons.remove(buttonToRemove);
-        this.panelWithButtons.validate();
-        this.panelWithButtons.repaint();
+        ArrayList<File> filesToSubmit = this.fileChooser.getFilesToSubmit();
+        filesToSubmit.remove(fileToRemove);
+        JPanel buttonPanel = this.fileChooser.getRemoveFileButtonsPanel();
+        buttonPanel.remove(buttonToRemove);
+        buttonPanel.validate();
+        buttonPanel.repaint();
+        this.fileChooser.getUploadButton().setEnabled(true);
+        if (filesToSubmit.size() == 0) {
+            this.fileChooser.getSubmitButton().setEnabled(false);
+        }
     }
 }

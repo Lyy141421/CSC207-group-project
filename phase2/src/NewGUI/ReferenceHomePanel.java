@@ -56,7 +56,7 @@ class ReferenceHomePanel extends JPanel {
             jobAppLabel.setHorizontalTextPosition(JLabel.CENTER);
             jobAppLabel.revalidate();
         }
-//        reminderPanel.add(jobAppPanel);
+        reminderPanel.add(jobAppPanel);
         return reminderPanel;
     }
 

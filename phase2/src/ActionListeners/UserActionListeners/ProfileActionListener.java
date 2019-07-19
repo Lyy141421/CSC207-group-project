@@ -3,7 +3,6 @@ package ActionListeners.UserActionListeners;
 import Main.User;
 
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class ProfileActionListener extends UserActionListener {
 
