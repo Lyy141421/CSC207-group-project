@@ -50,11 +50,27 @@ public class CompanyJobPosting implements Serializable {
 
     // === Getters ===
     public int getId() {
-        return id;
+        return this.id;
+    }
+
+    public String getTitle() {
+        return this.title;
     }
 
     public String getField() {
-        return field;
+        return this.field;
+    }
+
+    public String getDescription() {
+        return this.description;
+    }
+
+    public ArrayList<String> getRequiredDocuments() {
+        return this.requiredDocuments;
+    }
+
+    public ArrayList<String> getTags() {
+        return this.tags;
     }
 
     public Company getCompany() {

@@ -1,7 +1,7 @@
 package ApplicantStuff;
 
-import JobPostings.BranchJobPosting;
 import CompanyStuff.Interview;
+import JobPostings.BranchJobPosting;
 import Miscellaneous.InterviewTimeComparator;
 import Miscellaneous.CloseDateComparator;
 

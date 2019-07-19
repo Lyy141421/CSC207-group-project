@@ -1,7 +1,7 @@
 package ApplicantStuff;
 
-import JobPostings.BranchJobPosting;
 import CompanyStuff.Interview;
+import JobPostings.BranchJobPosting;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -139,6 +139,14 @@ public class JobApplication implements Serializable {
      */
     public void addInterview(Interview interview) {
         this.interviews.add(interview);
+    }
+
+
+    public String getMiniDescriptionForReference() {
+        String s = "Referee: " + this.getApplicant().getLegalName() + ": \n";
+        s += "Job Posting: " + this.getJobPosting().getTitle() + "\n";
+        s += "Close Date: " + this.getJobPosting().getCloseDate().toString();
+        return s;
     }
 
     /**

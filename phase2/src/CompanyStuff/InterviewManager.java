@@ -203,7 +203,7 @@ public class InterviewManager implements Serializable {
         for (JobApplication jobApp : this.applicationsInConsideration) {
             String field = this.branchJobPosting.getField();
             Interviewer interviewer = this.branchJobPosting.getBranch().findInterviewerByField(field);
-            Interview interview = new OneOnOneInterview(jobApp, interviewer, this);
+            Interview interview = new Interview(jobApp, interviewer, this);
             jobApp.addInterview(interview);
             jobApp.getStatus().advanceStatus();
         }
@@ -216,7 +216,7 @@ public class InterviewManager implements Serializable {
      * @param otherInterviewers    The other interviewers selected.
      */
     public void setUpGroupInterview(Interviewer interviewCoordinator, ArrayList<Interviewer> otherInterviewers) {
-        GroupInterview interview = new GroupInterview(this.applicationsInConsideration, interviewCoordinator,
+        Interview interview = new Interview(this.applicationsInConsideration, interviewCoordinator,
                 otherInterviewers, this);
         for (JobApplication jobApp : this.applicationsInConsideration) {
             jobApp.addInterview(interview);
