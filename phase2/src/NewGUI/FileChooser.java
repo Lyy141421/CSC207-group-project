@@ -80,7 +80,7 @@ public class FileChooser extends JPanel implements ActionListener {
         uploadButtonPanel.add(uploadButton);
 
         submitButton = new JButton("Submit");
-        submitButton.addActionListener(new SubmitDocumentActionListener(this.filesToSubmit));
+        //submitButton.addActionListener(new SubmitDocumentActionListener(this.filesToSubmit));
 
         JPanel submitButtonPanel = new JPanel();
         submitButtonPanel.add(submitButton);

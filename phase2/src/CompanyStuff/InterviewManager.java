@@ -13,10 +13,10 @@ public class InterviewManager implements Serializable {
 
     // === Class variables ===
     // Integers that represent the task the HR Coordinator needs to accomplish
-    static final int CLOSE_POSTING_NO_HIRE = -1;
+    public static final int CLOSE_POSTING_NO_HIRE = -1;
     private static final int DO_NOTHING = 0;
-    static final int SCHEDULE_INTERVIEWS = 1;
-    static final int HIRE_APPLICANTS = 2;
+    public static final int SCHEDULE_INTERVIEWS = 1;
+    public static final int HIRE_APPLICANTS = 2;
 
     // === Instance variables ===
     // The job posting for this interview manager
@@ -179,7 +179,7 @@ public class InterviewManager implements Serializable {
      *
      * @return the integer representing the task the HR Coordinator must accomplish.
      */
-    int getHrTask() {
+    public int getHrTask() {
         if (this.hasNoJobApplicationsInConsideration()) {
             return InterviewManager.CLOSE_POSTING_NO_HIRE;
         } else if (this.currentRound != 0 && this.isNumApplicationsUnderOrAtThreshold()) {
@@ -203,7 +203,7 @@ public class InterviewManager implements Serializable {
         for (JobApplication jobApp : this.applicationsInConsideration) {
             String field = this.branchJobPosting.getField();
             Interviewer interviewer = this.branchJobPosting.getBranch().findInterviewerByField(field);
-            Interview interview = new OneOnOneInterview(jobApp, interviewer, this);
+            Interview interview = new Interview(jobApp, interviewer, this);
             jobApp.addInterview(interview);
             jobApp.getStatus().advanceStatus();
         }
@@ -216,7 +216,7 @@ public class InterviewManager implements Serializable {
      * @param otherInterviewers    The other interviewers selected.
      */
     public void setUpGroupInterview(Interviewer interviewCoordinator, ArrayList<Interviewer> otherInterviewers) {
-        GroupInterview interview = new GroupInterview(this.applicationsInConsideration, interviewCoordinator,
+        Interview interview = new Interview(this.applicationsInConsideration, interviewCoordinator,
                 otherInterviewers, this);
         for (JobApplication jobApp : this.applicationsInConsideration) {
             jobApp.addInterview(interview);

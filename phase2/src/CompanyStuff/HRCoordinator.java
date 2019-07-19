@@ -43,42 +43,6 @@ public class HRCoordinator extends User {
     // === Other methods ===
 
     /**
-     * Create and add a job posting to the system.
-     *
-     * @param jobPosting The company job posting to which this branch job posting is to be added
-     * @param numPositions   The number of positions for this job.
-     * @param postDate       The date this job posting was posted.
-     * @param closeDate      The date this job posting is closed.
-     */
-    public BranchJobPosting addJobPosting(CompanyJobPosting jobPosting, int numPositions,
-                                          LocalDate postDate, LocalDate closeDate) {
-        BranchJobPosting branchJobPosting = new BranchJobPosting(jobPosting, numPositions, this.branch, postDate,
-                closeDate);
-        this.branch.getJobPostingManager().addJobPosting(branchJobPosting);
-        return branchJobPosting;
-    }
-
-    /**
-     * Create and add a job posting to the system.
-     *
-     * @param jobTitle          The job title.
-     * @param jobDescription    The job description.
-     * @param requiredDocuments The required documents for this job posting.
-     * @param tags              The tags for this job posting.
-     * @param numPositions      The number of positions for this job.
-     * @param postDate          The date this job posting was posted.
-     * @param closeDate         The date this job posting is closed.
-     */
-    public BranchJobPosting addJobPosting(String jobTitle, String jobField, String jobDescription,
-                                          ArrayList<String> requiredDocuments, ArrayList<String> tags, int numPositions,
-                                          LocalDate postDate, LocalDate closeDate) {
-        BranchJobPosting branchJobPosting = new BranchJobPosting(jobTitle, jobField, jobDescription, requiredDocuments,
-                tags, numPositions, this.branch, postDate, closeDate);
-        this.branch.getJobPostingManager().addJobPosting(branchJobPosting);
-        return branchJobPosting;
-    }
-
-    /**
      * Get a job application with this ID.
      *
      * @param ID The ID in question.
