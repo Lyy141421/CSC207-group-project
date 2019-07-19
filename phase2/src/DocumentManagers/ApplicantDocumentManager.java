@@ -30,11 +30,11 @@ public class ApplicantDocumentManager extends UserDocumentManager {
         File CoverLetterFolder = new File(this.getFolder().getPath() + "/coverLetters");
         File OtherFileFolder = new File(this.getFolder().getPath() + "/other");
         try {
-            CVFolder.mkdir();
+            CVFolder.mkdirs();
             CVFolder.createNewFile();
-            CoverLetterFolder.mkdir();
+            CoverLetterFolder.mkdirs();
             CoverLetterFolder.createNewFile();
-            OtherFileFolder.mkdir();
+            OtherFileFolder.mkdirs();
             OtherFileFolder.createNewFile();
         } catch (IOException ex) {
             ex.printStackTrace();

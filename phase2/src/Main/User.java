@@ -84,16 +84,6 @@ public abstract class User implements Serializable {
     // === Other methods ===
 
     /**
-     * Get the job application with this ID.
-     *
-     * @param ID The ID of the job application.
-     * @return the job application with this ID or null if not found.
-     */
-    public JobApplication findJobAppById(int ID) {
-        return null;
-    }
-
-    /**
      * Generates a random password of 8 characters.
      *
      * @return a random password of 8 characters.
@@ -108,6 +98,8 @@ public abstract class User implements Serializable {
         }
         return passwordSB.toString();
     }
+
+    public abstract String toString();
 
 
     @Override

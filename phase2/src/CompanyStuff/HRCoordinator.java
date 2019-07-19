@@ -67,7 +67,6 @@ public class HRCoordinator extends User {
      * @param ID The ID in question.
      * @return the job application with this ID or null if cannot be accessed/found.
      */
-    @Override
     public JobApplication findJobAppById(int ID) {
         ArrayList<BranchJobPosting> jobPostings = this.branch.getJobPostingManager().getBranchJobPostings();
         for (BranchJobPosting jobPosting : jobPostings) {
@@ -107,5 +106,10 @@ public class HRCoordinator extends User {
         // TODO notify applicants and interviewers of the scheduled interview time
         interview.setTime(time);
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return null;    //TODO
     }
 }

@@ -1,5 +1,6 @@
 package ActionListeners.UserActionListeners;
 
+import ActionListeners.CardLayoutPanelGetter;
 import Main.User;
 import NewGUI.ReferencePanel;
 
@@ -15,12 +16,8 @@ public class ReturnHomeActionListener extends UserActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        JMenuItem menuItem = (JMenuItem) e.getSource();
-        JMenuBar sideBarMenu = (JMenuBar) menuItem.getParent();
-        JPanel sideBarMenuPanel = (JPanel) sideBarMenu.getParent();
-        JPanel fullPanel = (JPanel) sideBarMenuPanel.getParent();
-        JPanel cards = (JPanel) fullPanel.getComponent(1);
-        CardLayout cl = (CardLayout) (cards.getLayout());
+        JPanel cards = new CardLayoutPanelGetter().getLayoutForMenuItemDirectlyOnMenuBar(e);
+        CardLayout cl = (CardLayout) cards.getLayout();
         cl.show(cards, ReferencePanel.HOME);
     }
 }

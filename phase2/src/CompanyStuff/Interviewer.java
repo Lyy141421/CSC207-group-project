@@ -68,7 +68,6 @@ public class Interviewer extends User {
      * @param id The id in question.
      * @return the job application associated with this id or null if not found.
      */
-    @Override
     public JobApplication findJobAppById(int id) {
         for (Interview interview : this.interviews) {
             JobApplication jobApp = interview.findJobAppById(id);
@@ -176,6 +175,11 @@ public class Interviewer extends User {
         return jobApplications;
     }
 
+    @Override
+    public String toString() {
+        return null; // TODO
+    }
+
     // ============================================================================================================== //
     // === Package-private methods ===
 
@@ -187,4 +191,5 @@ public class Interviewer extends User {
     void addInterview(Interview interview) {
         this.interviews.add(interview);
     }
+
 }

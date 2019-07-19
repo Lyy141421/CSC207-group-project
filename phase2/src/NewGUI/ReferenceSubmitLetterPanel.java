@@ -30,8 +30,8 @@ public class ReferenceSubmitLetterPanel extends JPanel implements ActionListener
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         JPanel pageTitle = this.createTitlePanel("Submit Reference Letter", 20);
-        JPanel selectApplicationTitle = this.createTitlePanel("Select a Job Application", 12);
-        JPanel chooseAFileTitle = this.createTitlePanel("Choose a File", 12);
+        JPanel selectApplicationTitle = this.createTitlePanel("Select a Job Application", 15);
+        JPanel chooseAFileTitle = this.createTitlePanel("Choose a File", 15);
         this.add(pageTitle);
         this.add(selectApplicationTitle);
         this.add(this.createJobApplicationListPanel());

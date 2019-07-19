@@ -18,6 +18,7 @@ public class ReferencePanel extends JPanel {
     private Reference reference;
     private JPanel cards = new JPanel(new CardLayout());
     public static final String HOME = "Home";
+    public static final String PROFILE = "Profile";
     public static final String SUBMIT_REFERENCE_LETTER = "Submit";
 
     ReferencePanel(Reference reference) {
@@ -25,6 +26,7 @@ public class ReferencePanel extends JPanel {
         this.add(new ReferenceSideBarMenuPanel(reference), BorderLayout.WEST);
         this.reference = reference;
         cards.add(new ReferenceHomePanel(this.reference), HOME);
+        cards.add(new UserProfilePanel(this.reference), PROFILE);
         cards.add(new ReferenceSubmitLetterPanel(this.reference), SUBMIT_REFERENCE_LETTER);
         this.add(cards, BorderLayout.CENTER);
     }

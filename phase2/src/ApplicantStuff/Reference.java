@@ -42,4 +42,12 @@ public class Reference extends User {
     public void removeJobApplicationForReference(JobApplication jobApp) {
         this.jobAppsForReference.remove(jobApp);
     }
+
+    @Override
+    public String toString() {
+        String s = "User type: Reference\n";
+        s += "Email: " + this.getEmail() + "\n";
+        s += "Account created: " + this.getDateCreated();
+        return s;
+    }
 }

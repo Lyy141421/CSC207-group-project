@@ -131,4 +131,9 @@ public class Applicant extends User {
     public boolean isInactive(LocalDate today) {
         return this.jobApplicationManager.getNumDaysSinceMostRecentCloseDate(today) >= Applicant.INACTIVE_DAYS;
     }
+
+    @Override
+    public String toString() {
+        return null;    //TODO
+    }
 }

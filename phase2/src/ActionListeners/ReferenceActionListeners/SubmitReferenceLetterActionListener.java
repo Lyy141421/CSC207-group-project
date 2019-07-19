@@ -1,5 +1,6 @@
 package ActionListeners.ReferenceActionListeners;
 
+import ActionListeners.CardLayoutPanelGetter;
 import ApplicantStuff.Reference;
 import NewGUI.ReferencePanel;
 
@@ -15,12 +16,8 @@ public class SubmitReferenceLetterActionListener extends ReferenceActionListener
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        JMenuItem menuItem = (JMenuItem) e.getSource();
-        JMenuBar sideBarMenu = (JMenuBar) menuItem.getParent();
-        JPanel sideBarMenuPanel = (JPanel) sideBarMenu.getParent();
-        JPanel fullPanel = (JPanel) sideBarMenuPanel.getParent();
-        JPanel cards = (JPanel) fullPanel.getComponent(1);
-        CardLayout cl = (CardLayout) (cards.getLayout());
+        JPanel cards = new CardLayoutPanelGetter().getLayoutForMenuItemDirectlyOnMenuBar(e);
+        CardLayout cl = (CardLayout) cards.getLayout();
         cl.show(cards, ReferencePanel.SUBMIT_REFERENCE_LETTER);
     }
 }
