@@ -4,6 +4,7 @@ import ApplicantStuff.JobApplication;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class JobApplicationGrader {
@@ -40,8 +41,8 @@ public class JobApplicationGrader {
                 while (scanner.hasNextLine()) {
                     String line = scanner.nextLine().toLowerCase();
                     for (String keyWordOrPhrase : this.keyWordsAndPhrases) {
-                        if (line.contains(keyWordOrPhrase.toLowerCase())) {
-                            this.grade++;
+                        for (int i = 0; (i = line.indexOf(keyWordOrPhrase, i)) != -1; i += keyWordOrPhrase.length()) {
+                            grade++;
                         }
                     }
                 }
