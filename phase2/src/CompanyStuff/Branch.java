@@ -2,7 +2,6 @@ package CompanyStuff;
 
 import DocumentManagers.CompanyDocumentManager;
 import DocumentManagers.DocumentManagerFactory;
-import JobPostings.AbstractJobPostingManager;
 import JobPostings.BranchJobPosting;
 import JobPostings.BranchJobPostingManager;
 import JobPostings.CompanyJobPosting;
@@ -24,8 +23,8 @@ public class Branch implements Serializable {
     private ArrayList<HRCoordinator> hrCoordinators;
     // The interviewers in this branch
     private HashMap<String, ArrayList<Interviewer>> fieldToInterviewers;
-    // The branch job postings for this branch
-    private AbstractJobPostingManager jobPostingManager = new BranchJobPostingManager(this);
+    // The branch job posting manager for this branch
+    private BranchJobPostingManager jobPostingManager;
     // The document manager for this branch
     private CompanyDocumentManager documentManager;
 
@@ -36,6 +35,7 @@ public class Branch implements Serializable {
         this.CMA = CMA;
         this.hrCoordinators = new ArrayList<>();
         this.fieldToInterviewers = new HashMap<>();
+        this.jobPostingManager = new BranchJobPostingManager(this);
         this.documentManager = (CompanyDocumentManager) new DocumentManagerFactory().createDocumentManager(this);
     }
 
@@ -60,7 +60,7 @@ public class Branch implements Serializable {
         return this.fieldToInterviewers;
     }
 
-    public AbstractJobPostingManager getJobPostingManager() {
+    public BranchJobPostingManager getJobPostingManager() {
         return this.jobPostingManager;
     }
 
@@ -70,13 +70,9 @@ public class Branch implements Serializable {
 
     // === Other methods ===
     public BranchJobPosting getBranchJobPosting(int id) {
-        for (CompanyJobPosting posting : this.jobPostingManager.getJobPostings()) {
-            if (posting.getId() == id) {
-                BranchJobPosting branchJobPosting = posting.getBranchJobPosting(this);
-                if (branchJobPosting != null) {
-                    return branchJobPosting;
-                }
-            }
+        for (BranchJobPosting posting : this.jobPostingManager.getBranchJobPostings()) {
+            if (posting.getId() == id)
+                return posting;
         }
         return null;
     }

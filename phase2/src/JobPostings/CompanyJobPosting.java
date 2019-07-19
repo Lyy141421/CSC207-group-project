@@ -5,17 +5,16 @@ import CompanyStuff.Branch;
 import CompanyStuff.Company;
 
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class CompanyJobPosting implements Serializable {
 
     // === Class variables ===
-    // The total number of job postings
-    private static int totalNum;
+    // The total number of CompanyJobPostings created
+    private static int totalNumOfCompanyJobPostings;
 
     // === Instance variables ===
-    // The id of the job posting
+    // The job posting id
     private int id;
     // The job posting title
     private String title;
@@ -27,22 +26,25 @@ public class CompanyJobPosting implements Serializable {
     private ArrayList<String> requiredDocuments;
     // The job posting tags
     private ArrayList<String> tags;
-    private Company company; // The company that listed this job posting
-    private ArrayList<BranchJobPosting> branchJobPostings;  // The list of branch job postings listed under this posting
+    // The company that listed this job posting
+    private Company company;
+    // The branches that list job postings corresponding to this one
+    private ArrayList<Branch> branches;
 
     // === Constructor ===
     CompanyJobPosting(String title, String field, String description, ArrayList<String> requiredDocuments,
-                      ArrayList<String> tags, Company company) {
-        CompanyJobPosting.totalNum++;
-        this.id = CompanyJobPosting.totalNum;
+                      ArrayList<String> tags, Company company, Branch branch) {
+        totalNumOfCompanyJobPostings++;
+        this.id = totalNumOfCompanyJobPostings;
         this.title = title;
         this.field = field;
         this.description = description;
         this.requiredDocuments = requiredDocuments;
         this.tags = tags;
         this.company = company;
+        this.branches = new ArrayList<>();
+        this.branches.add(branch);
     }
-
 
     // === Public methods ===
 
@@ -75,75 +77,18 @@ public class CompanyJobPosting implements Serializable {
         return this.company;
     }
 
-    public ArrayList<BranchJobPosting> getBranchJobPostings() {
-        return this.branchJobPostings;
-    }
+    public ArrayList<Branch> getBranches() {return this.branches;}
 
     // === Other methods ===
-
-    public ArrayList<JobApplication> getJobApplications() {
-        ArrayList<JobApplication> jobApps = new ArrayList<>();
-        for (BranchJobPosting branchJobPosting : this.branchJobPostings) {
-            jobApps.addAll(branchJobPosting.getJobApplications());
-        }
-        return jobApps;
-    }
-
-    public BranchJobPosting getBranchJobPosting(Branch branch) {
-        for (BranchJobPosting branchJobPosting : this.branchJobPostings) {
-            if (branchJobPosting.getBranch().equals(branch)) {
-                return branchJobPosting;
-            }
-        }
-        return null;
-    }
-
     /**
-     * Add a branch job posting.
+     * Add a branch that has decided to use this job posting.
      *
-     * @param branchJobPosting The branch job posting to be added.
+     * @param branch The branch to be added.
      */
-    public void addBranchJobPosting(BranchJobPosting branchJobPosting) {
-        this.branchJobPostings.add(branchJobPosting);
+    public void addBranch(Branch branch) {
+        this.branches.add(branch);
     }
 
-    /**
-     * Check whether this job posting is closed.
-     *
-     * @param today Today's date.
-     * @return true iff this job posting is closed, ie all the branch job postings listed are closed.
-     */
-    public boolean isClosed(LocalDate today) {
-        for (BranchJobPosting branchJobPosting : this.branchJobPostings) {
-            if (!branchJobPosting.isClosed(today)) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    /**
-     * Check whether this job posting is filled.
-     *
-     * @return true iff this job posting is filled, ie, all the branch job postings listed are filled.
-     */
-    public boolean isFilled() {
-        for (BranchJobPosting branchJobPosting : this.branchJobPostings) {
-            if (!branchJobPosting.isFilled()) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-
-//    /**
-//     * Update the fields for this job posting.
-//     *
-//     * @param skipFieldKey The key that represents if the field should not be updated.
-//     * @param skipDateKey  The key that represents if the date should not be updated.
-//     * @param fields       The list of fields to be updated.
-//     */
 //    public void updateFields(int skipFieldKey, LocalDate skipDateKey, ArrayList<Object> fields) {
 //        for (int i = 0; i < fields.size(); i++) {
 //            if (fields.get(i) instanceof String && !(fields.get(i).equals(String.valueOf(skipFieldKey)))) {
@@ -165,11 +110,11 @@ public class CompanyJobPosting implements Serializable {
 //    }
 
     public String getTagsString(){
-        return getTags().toString().replace("[", "").replace("]", "");
+        return tags.toString().replace("[", "").replace("]", "");
     }
 
     public boolean containsTag(String tag){
-        return getTags().contains(tag);
+        return tags.contains(tag);
     }
 
     public boolean containsTag(ArrayList<String> tags){
@@ -186,7 +131,7 @@ public class CompanyJobPosting implements Serializable {
         if (!(obj instanceof CompanyJobPosting)) {
             return false;
         } else {
-            return (this.getId() == ((CompanyJobPosting) obj).getId());
+            return (this.id == ((CompanyJobPosting) obj).id);
         }
     }
 
@@ -197,10 +142,10 @@ public class CompanyJobPosting implements Serializable {
      */
     @Override
     public String toString() {
-        String s = "Job ID: " + this.getId() + "\n";
-        s += "Title: " + this.getTitle() + "\n";
-        s += "Field: " + this.getField() + "\n";
-        s += "Description: " + this.getDescription() + "\n";
+        String s = "Job ID: " + this.id + "\n";
+        s += "Title: " + this.title + "\n";
+        s += "Field: " + this.field + "\n";
+        s += "Description: " + this.description + "\n";
         //s += "Branches: " + branches + "\n";
         s += "Tags: " + this.getTagsString() + "\n";
         s += "Company: " + this.company.getName() + "\n";
