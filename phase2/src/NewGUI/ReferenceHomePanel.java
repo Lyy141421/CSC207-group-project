@@ -45,19 +45,40 @@ class ReferenceHomePanel extends JPanel {
         JPanel reminderPanel = new JPanel();
         reminderPanel.setLayout(new BorderLayout());
         reminderPanel.add(this.createReminderMessagePanel(), BorderLayout.BEFORE_FIRST_LINE);
-        JPanel jobAppPanel = new JPanel();
-        jobAppPanel.setLayout(new BoxLayout(jobAppPanel, BoxLayout.Y_AXIS));
-        jobAppPanel.setBackground(Color.WHITE);
-        ArrayList<JobApplication> jobAppsThatNeedReferenceLetters = reference.getJobAppsForReference();
-        for (JobApplication jobApp : jobAppsThatNeedReferenceLetters) {
-            JLabel jobAppLabel = new JLabel(jobApp.getMiniDescriptionForReference());
-            jobAppLabel.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
-            jobAppPanel.add(jobAppLabel);
-            jobAppLabel.setHorizontalTextPosition(JLabel.CENTER);
-            jobAppLabel.revalidate();
-        }
-        reminderPanel.add(jobAppPanel);
+        reminderPanel.add(this.createJobAppTablePanel(), BorderLayout.CENTER);
         return reminderPanel;
+    }
+
+    /**
+     * Create a panel that displays a table of job applications that still need reference letters submitted.
+     *
+     * @return a panel with the table
+     * https://docs.oracle.com/javase/tutorial/uiswing/components/table.html
+     */
+    private JPanel createJobAppTablePanel() {
+        JPanel tablePanel = new JPanel(new GridLayout(1, 0));
+
+        String[] columnNames = JobApplication.categoryNamesForReference();
+
+        ArrayList<JobApplication> jobApps = this.reference.getJobAppsForReference();
+        Object[][] data = new Object[jobApps.size()][];
+
+        for (int i = 0; i < jobApps.size(); i++) {
+            data[i] = jobApps.get(i).getCategoryValuesForReference();
+        }
+
+        JTable table = new JTable(data, columnNames);
+        table.setCellSelectionEnabled(false);
+        table.setEnabled(false);
+        table.setPreferredScrollableViewportSize(new Dimension(500, 70));
+        table.setFillsViewportHeight(true);
+
+        //Create the scroll pane and add the table to it.
+        JScrollPane scrollPane = new JScrollPane(table);
+
+        //Add the scroll pane to this panel.
+        tablePanel.add(scrollPane);
+        return tablePanel;
     }
 
 }

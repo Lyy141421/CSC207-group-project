@@ -11,13 +11,13 @@ class UserProfilePanel extends JPanel {
         this.setLayout(new BorderLayout());
         JPanel userInfo = new JPanel();
         userInfo.setLayout(new BoxLayout(userInfo, BoxLayout.Y_AXIS));
+        userInfo.setBackground(Color.WHITE);
         String[] userString = user.toString().split("\n");
+        this.add(new FrequentlyUsedMethods().createTitlePanel("User Information", 20), BorderLayout.PAGE_START);
         for (String info : userString) {
             JLabel infoLabel = new JLabel(info);
             userInfo.add(infoLabel);
-            infoLabel.setHorizontalAlignment(JLabel.CENTER);
-            infoLabel.revalidate();
         }
-        this.add(userInfo, BorderLayout.CENTER); // TODO move to center
+        this.add(userInfo, BorderLayout.CENTER);    // TODO center this!!!
     }
 }
