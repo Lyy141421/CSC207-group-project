@@ -1,15 +1,114 @@
-package GUIClasses;
+package GUIClasses.HRInterface;
+
+import ApplicantStuff.JobApplication;
+import CompanyStuff.Branch;
+import GUIClasses.MethodsTheGUICallsInHR;
+import UIClasses.HRCoordinatorInterface;
+import JobPostings.*;
 
 
-//import GUIClasses.HRCoordinatorInterface;
+import javax.swing.*;
+import java.awt.*;
+import java.time.LocalDate;
+import java.util.ArrayList;
+
+abstract class HRPanel extends JPanel {
+    private MethodsTheGUICallsInHR HRInterface;
+    private LocalDate today;
+
+    private ArrayList<BranchJobPosting> prePhoneJP;
+    private ArrayList<BranchJobPosting> scheduleJP;
+    private ArrayList<BranchJobPosting> hiringJP;
+    private ArrayList<BranchJobPosting> importantJP = new ArrayList<>();
+    private ArrayList<BranchJobPosting> allJP;
+
+    private JComboBox<String> jobPostings = new JComboBox<>();
+    private DefaultComboBoxModel<String> allTitles;
+    private DefaultComboBoxModel<String> importantTitles;
+    private ArrayList<BranchJobPosting> currJPs;
+
+    private JComboBox<String> applications = new JComboBox<>();
+    private DefaultComboBoxModel<String> appTitles = new DefaultComboBoxModel<>();
+    private ArrayList<JobApplication> currApps;
+    private JPanel hireOrRejectButtons = new JPanel();
+    private JPanel phoneOrNotButtons = new JPanel();
+
+    private JButton homeButton = new JButton("Home");
+
+    HRPanel(MethodsTheGUICallsInHR HRInterface, LocalDate today) {
+        this.HRInterface = HRInterface;
+        this.today = today;
+
+        ArrayList<ArrayList<BranchJobPosting>> HRInfoList = HRInterface.getHighPriorityAndAllJobPostings(today);
+        this.prePhoneJP = HRInfoList.get(0);
+        this.scheduleJP = HRInfoList.get(1);
+        this.hiringJP = HRInfoList.get(2);
+        this.importantJP.addAll(this.prePhoneJP);
+        this.importantJP.addAll(this.scheduleJP);
+        this.importantJP.addAll(this.hiringJP);
+        this.allJP = HRInfoList.get(3);
 
 
-//import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
-//import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
-//import net.sourceforge.jdatepicker.impl.UtilDateModel;
+        /*this.setLayout(new CardLayout());
+        this.add(home(), "HOME");
+        this.add(browsePosting(), "POSTING");
+        this.add(viewApplication(), "APPLICATION");
+        this.add(searchApplicant(), "APPLICANT");
+        this.add(addPosting(), "ADDPOSTING");*/
+    }
 
+    String[] getJPTitles(ArrayList<BranchJobPosting> JPToShow) {
+        ArrayList<String> titles = new ArrayList<>();
+        for (BranchJobPosting JP : JPToShow) {
+            titles.add(JP.getId() + "-" + JP.getTitle());
+        }
+        return (String[]) titles.toArray();
+    }
+
+    private String getStatus(BranchJobPosting selectedJP) {
+        String status;
+        if (prePhoneJP.contains(selectedJP)) {
+            status = "Important: Select applicants for phone interview.\n\n";
+        } else if (scheduleJP.contains(selectedJP)) {
+            status = "Important: Schedule interviews for the next round.\n\n";
+        } else if (hiringJP.contains(selectedJP)) {
+            status = "Important: Make hiring decisions for final candidates.\n\n";
+        } else {
+            status = "Low priority.\n\n";
+        }
+
+        return status;
+    }
+
+    private ArrayList<String> getAppTitles(ArrayList<JobApplication> appsToShow) {
+        ArrayList<String> titles = new ArrayList<>();
+        for (JobApplication app : appsToShow) {
+            titles.add(app.getId() + "-" + app.getApplicant().getLegalName());
+        }
+        return titles;
+    }
+
+    private String getInfo(JobApplication app, int attributeIndex) {
+        String info;
+
+        switch (attributeIndex) {
+            case 0:
+                info = app.getOverview();
+                break;
+            case 1:
+                info = app.getCV().getContents();
+                break;
+            case 2:
+                info = app.getCoverLetter().getContents();
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + attributeIndex);
+        }
+
+        return info;
+    }
+}
 /*
-
 public class HRPanel extends JPanel { //implements ActionListener {
 
     private Container contentPane;
