@@ -4,6 +4,7 @@ import ApplicantStuff.Applicant;
 import ApplicantStuff.JobApplication;
 import FileLoadingAndStoring.DataLoaderAndStorer;
 import JobPostings.BranchJobPosting;
+import JobPostings.CompanyJobPosting;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,6 +16,8 @@ public class Company {
     private String name;
     // The branches in this company.
     private ArrayList<Branch> branches;
+    // The list of company job postings for this company
+    private ArrayList<CompanyJobPosting> companyJobPostings;
 
     public Company(String name) {
         this.branches = new ArrayList<>();
@@ -26,6 +29,14 @@ public class Company {
 
     public ArrayList<Branch> getBranches() {
         return branches;
+    }
+
+    public ArrayList<CompanyJobPosting> getCompanyJobPostings() {
+        return companyJobPostings;
+    }
+
+    public void addCompanyJobPosting(CompanyJobPosting posting) {
+        companyJobPostings.add(posting);
     }
 
     /**

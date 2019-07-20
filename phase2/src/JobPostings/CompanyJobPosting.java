@@ -14,7 +14,7 @@ public class CompanyJobPosting implements Serializable {
 
     // === Instance variables ===
     // The job posting id
-    private int id;
+    protected int id;
     // The job posting title
     private String title;
     // The job posting field
@@ -43,6 +43,7 @@ public class CompanyJobPosting implements Serializable {
         this.company = company;
         this.branches = new ArrayList<>();
         this.branches.add(branch);
+        this.company.addCompanyJobPosting(this);
     }
 
     // === Public methods ===
@@ -132,6 +133,11 @@ public class CompanyJobPosting implements Serializable {
         } else {
             return (this.id == ((CompanyJobPosting) obj).id);
         }
+    }
+
+    @Override
+    public int hashCode() {
+        return id;
     }
 
     /**
