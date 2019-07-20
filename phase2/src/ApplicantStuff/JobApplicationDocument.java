@@ -133,7 +133,7 @@ public class JobApplicationDocument implements Serializable {
     }
 
     public static void main(String[] args) {
-        String folderPath = "phase2/uploadedDocuments/something/else";
+        String folderPath = "./uploadedDocuments/something/else";
         File file = new File(folderPath);
         file.mkdirs();
         try {
