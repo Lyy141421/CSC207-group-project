@@ -29,31 +29,14 @@ public class ReferenceSubmitLetterPanel extends JPanel implements ActionListener
         this.reference = reference;
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-        JPanel pageTitle = this.createTitlePanel("Submit Reference Letter", 20);
-        JPanel selectApplicationTitle = this.createTitlePanel("Select a Job Application", 15);
-        JPanel chooseAFileTitle = this.createTitlePanel("Choose a File", 15);
+        JPanel pageTitle = new FrequentlyUsedMethods().createTitlePanel("Submit Reference Letter", 20);
+        JPanel selectApplicationTitle = new FrequentlyUsedMethods().createTitlePanel("Select a Job Application", 15);
+        JPanel chooseAFileTitle = new FrequentlyUsedMethods().createTitlePanel("Choose a File", 15);
         this.add(pageTitle);
         this.add(selectApplicationTitle);
         this.add(this.createJobApplicationListPanel());
         this.add(chooseAFileTitle);
         this.add(fileChooser);
-    }
-
-    /**
-     * Create the title panel.
-     *
-     * @param text     The actual title.
-     * @param fontSize The size of the title.
-     * @return the JPanel with this title.
-     */
-    private JPanel createTitlePanel(String text, int fontSize) {
-        JLabel pageTitle = new JLabel(text);
-        JPanel pageTitlePanel = new JPanel(new BorderLayout());
-        pageTitlePanel.add(pageTitle, BorderLayout.PAGE_START);
-        pageTitle.setFont(new Font("Century Gothic", Font.BOLD, fontSize));
-        pageTitle.setHorizontalAlignment(JLabel.CENTER);
-        pageTitle.revalidate();
-        return pageTitlePanel;
     }
 
     /**
@@ -70,7 +53,7 @@ public class ReferenceSubmitLetterPanel extends JPanel implements ActionListener
         }
         jobAppList = new JList(listModel);
         jobAppList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        jobAppList.setSelectedIndex(0);
+        jobAppList.setSelectedIndex(-1);
         jobAppList.addListSelectionListener(this);
         jobAppList.setVisibleRowCount(5);
         jobAppList.setLayoutOrientation(JList.HORIZONTAL_WRAP);
@@ -101,11 +84,11 @@ public class ReferenceSubmitLetterPanel extends JPanel implements ActionListener
     public void valueChanged(ListSelectionEvent e) {
         if (e.getValueIsAdjusting() == false) {
             if (jobAppList.getSelectedIndex() == -1) {
-                //No selection, disable fire button.
+                //No selection, disable select button.
                 selectJobAppButton.setEnabled(false);
 
             } else {
-                //Selection, enable the fire button.
+                //Selection, enable the select button.
                 selectJobAppButton.setEnabled(true);
             }
         }

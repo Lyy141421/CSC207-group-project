@@ -1,6 +1,7 @@
 package NewGUI;
 
 import ActionListeners.ReferenceActionListeners.SubmitReferenceLetterActionListener;
+import ActionListeners.ReferenceActionListeners.ViewRefereeJobPostingsActionListener;
 import ActionListeners.UserActionListeners.*;
 import ApplicantStuff.Reference;
 
@@ -11,7 +12,7 @@ import java.util.TreeMap;
 public class ReferenceSideBarMenuPanel extends JPanel {
 
     // === Class variables ===
-    private static int CELL_WIDTH = 170;
+    private static int CELL_WIDTH = 190;
     private static int CELL_HEIGHT = 20;
     private static int NUM_MAIN_MENU_OPTIONS = 4;
 
@@ -29,18 +30,6 @@ public class ReferenceSideBarMenuPanel extends JPanel {
     }
 
     /**
-     * Create the map for the full job postings sub menu.
-     *
-     * @return the map for the full job postings sub menu.
-     */
-    private TreeMap<String, Object> viewJobPostingsOfRefereesMenu() {
-        TreeMap<String, Object> viewIntervieweesMenu = new TreeMap<>();
-        viewIntervieweesMenu.put("1. Search Referee", new SearchActionListener(this.reference, "Applicant"));
-        viewIntervieweesMenu.put("2. View All Referees", new ViewAllApplicantsActionListener(this.reference));
-        return viewIntervieweesMenu;
-    }
-
-    /**
      * Create the map for the full menu.
      *
      * @return the map for the full menu.
@@ -50,7 +39,7 @@ public class ReferenceSideBarMenuPanel extends JPanel {
         fullMenu.put("1. Home", new ReturnHomeActionListener(this.reference));
         fullMenu.put("2. Profile", new ProfileActionListener(this.reference));
         fullMenu.put("3. Submit Reference Letter", new SubmitReferenceLetterActionListener(this.reference));
-        fullMenu.put("4. View Referees", this.viewJobPostingsOfRefereesMenu());
+        fullMenu.put("4. View Referee Job Postings", new ViewRefereeJobPostingsActionListener(this.reference));
         return fullMenu;
     }
 

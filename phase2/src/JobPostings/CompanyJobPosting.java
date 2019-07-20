@@ -1,6 +1,5 @@
 package JobPostings;
 
-import ApplicantStuff.JobApplication;
 import CompanyStuff.Branch;
 import CompanyStuff.Company;
 

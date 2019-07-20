@@ -7,6 +7,7 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class JobApplication implements Serializable {
     /**
@@ -147,6 +148,25 @@ public class JobApplication implements Serializable {
         s += "Job Posting: " + this.getJobPosting().getTitle() + "   ";
         s += "Close Date: " + this.getJobPosting().getCloseDate().toString();
         return s;
+    }
+
+    /**
+     * Get the job application category names for a table to be displayed in the reference GUI.
+     *
+     * @return a list of job application category names.
+     */
+    public static String[] categoryNamesForReference() {
+        return new String[]{"Referee", "Job Posting", "Close Date"};
+    }
+
+    /**
+     * Get the job application values corresponding to the categories to be displayed in the reference GUI.
+     *
+     * @return a list of values corresponding to the categories to be displayed in the reference GUI.
+     */
+    public String[] getCategoryValuesForReference() {
+        return new String[]{this.getApplicant().getLegalName(), this.getJobPosting().getTitle(),
+                this.getJobPosting().getCloseDate().toString()};
     }
 
     /**

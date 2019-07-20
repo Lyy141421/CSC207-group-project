@@ -1,5 +1,6 @@
 package ApplicantStuff;
 
+import JobPostings.BranchJobPosting;
 import Main.User;
 
 import java.time.LocalDate;
@@ -41,6 +42,20 @@ public class Reference extends User {
      */
     public void removeJobApplicationForReference(JobApplication jobApp) {
         this.jobAppsForReference.remove(jobApp);
+    }
+
+    /**
+     * Get a list of job postings that this reference's referees are applying to.
+     *
+     * @return a list of job postings that this reference's referees are applying to.
+     */
+    public ArrayList<BranchJobPosting> getJobPostingsForReference() {
+        ArrayList<BranchJobPosting> jobPostings = new ArrayList<>();
+        ArrayList<JobApplication> jobApps = this.jobAppsForReference;
+        for (JobApplication jobApp : jobApps) {
+            jobPostings.add(jobApp.getJobPosting());
+        }
+        return jobPostings;
     }
 
     @Override
