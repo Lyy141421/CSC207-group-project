@@ -174,4 +174,14 @@ public class BranchJobPosting extends CompanyJobPosting {
     void removeJobApplication(JobApplication jobApplication) {
         this.jobApplications.remove(jobApplication);
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof BranchJobPosting)) {
+            return false;
+        } else {
+            BranchJobPosting other = (BranchJobPosting) obj;
+            return (branch.getCompany().equals(other.getCompany()) && id == other.id);
+        }
+    }
 }
