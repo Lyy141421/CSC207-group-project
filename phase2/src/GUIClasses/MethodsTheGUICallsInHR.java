@@ -31,75 +31,45 @@ public class MethodsTheGUICallsInHR {
     }
 
     /**
-     * Gets a hash map of titles to branch job postings that are under review for first round of interviews.
+     * Gets an array list of branch job postings that are under review for first round of interviews.
      * @param today Today's date.
-     * @return the hash map of titles to branch job postings.
+     * @return the array list of branch job postings.
      */
-    public HashMap<String, BranchJobPosting> getJPToReview(LocalDate today) {
+    public ArrayList<BranchJobPosting> getJPToReview(LocalDate today) {
         BranchJobPostingManager JPManager = this.hr.getBranch().getJobPostingManager();
-        ArrayList<BranchJobPosting> JPToReview = JPManager.getClosedJobPostingsNoApplicantsChosen(today);
-
-        return this.getTitleToJPMap(JPToReview);
+        return JPManager.getClosedJobPostingsNoApplicantsChosen(today);
     }
 
     /**
-     * Gets a hash map of titles to branch job postings that are ready to schedule for next round of interviews.
+     * Gets an array list of branch job postings that are ready to schedule for next round of interviews.
      * @param today Today's date.
-     * @return the hash map of titles to branch job postings.
+     * @return the array list of branch job postings.
      */
-    public HashMap<String, BranchJobPosting> getJPToSchedule(LocalDate today) {
+    public ArrayList<BranchJobPosting> getJPToSchedule(LocalDate today) {
         BranchJobPostingManager JPManager = this.hr.getBranch().getJobPostingManager();
-        ArrayList<BranchJobPosting> JPToSchedule = JPManager.getJobPostingsWithRoundCompletedNotForHire(today);
-
-        return this.getTitleToJPMap(JPToSchedule);
+        return JPManager.getJobPostingsWithRoundCompletedNotForHire(today);
     }
 
     /**
-     * Gets a hash map of titles to branch job postings that are in hiring stage.
+     * Gets an array list of branch job postings that are in hiring stage.
      * @param today Today's date.
-     * @return the hash map of titles to branch job postings.
+     * @return the array list of branch job postings.
      */
-    public HashMap<String, BranchJobPosting> getJPToHire(LocalDate today) {
+    public ArrayList<BranchJobPosting> getJPToHire(LocalDate today) {
         BranchJobPostingManager JPManager = this.hr.getBranch().getJobPostingManager();
-        ArrayList<BranchJobPosting> JPToHire = JPManager.getJobPostingsForHiring(today);
-
-        return this.getTitleToJPMap(JPToHire);
+        return JPManager.getJobPostingsForHiring(today);
     }
 
     /**
-     * Gets a hash map of titles to all branch job postings.
+     * Gets an array list of all branch job postings.
      *
-     * @return the hash map of titles to branch job postings.
+     * @return the array list of all branch job postings.
      */
-    public HashMap<String, BranchJobPosting> getAllJP() {
+    public ArrayList<BranchJobPosting> getAllJP() {
         BranchJobPostingManager JPManager = this.hr.getBranch().getJobPostingManager();
-        ArrayList<BranchJobPosting> allJP = JPManager.getBranchJobPostings();
-
-        return this.getTitleToJPMap(allJP);
+        return JPManager.getBranchJobPostings();
     }
 
-    /**
-     * Gets a hash map of titles to branch job postings from a list of job postings.
-     * @param JPList a list of job postings.
-     * @return the hash map of titles to branch job postings.
-     */
-    private HashMap<String, BranchJobPosting> getTitleToJPMap(ArrayList<BranchJobPosting> JPList) {
-        HashMap<String, BranchJobPosting> titleToJPMap = new HashMap<>();
-        for (BranchJobPosting JP : JPList) {
-            titleToJPMap.put(this.toJPTitle(JP), JP);
-        }
-
-        return titleToJPMap;
-    }
-
-    /**
-     * Gets a string representation of the title of this branch job posting.
-     * @param branchJobPosting a branch job posting.
-     * @return the title to be displayed of this branch job posting.
-     */
-    private String toJPTitle(BranchJobPosting branchJobPosting) {
-        return branchJobPosting.getId() + "-" + branchJobPosting.getTitle();
-    }
 
     /**
      * Add a job posting for this company.
