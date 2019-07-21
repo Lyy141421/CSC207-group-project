@@ -1,4 +1,4 @@
-package NewGUI.ReferenceGUI;
+package NewGUI.ReferenceInterface;
 
 import ApplicantStuff.Applicant;
 import ApplicantStuff.JobApplication;

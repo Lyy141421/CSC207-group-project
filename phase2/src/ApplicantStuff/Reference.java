@@ -73,7 +73,12 @@ public class Reference extends User {
     }
 
     @Override
-    public String[] getDisplayedInformation() {
+    public String[] getDisplayedProfileCategories() {
+        return new String[]{"User Type", "Email", "Account Created"};
+    }
+
+    @Override
+    public String[] getDisplayedProfileInformation() {
         return new String[]{"Reference", this.getEmail(), this.getDateCreated().toString()};
     }
 }

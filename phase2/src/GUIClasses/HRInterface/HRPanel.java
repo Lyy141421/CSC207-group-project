@@ -1,10 +1,8 @@
 package GUIClasses.HRInterface;
 
 import ApplicantStuff.JobApplication;
-import CompanyStuff.Branch;
+import CompanyStuff.JobPostings.BranchJobPosting;
 import GUIClasses.MethodsTheGUICallsInHR;
-import UIClasses.HRCoordinatorInterface;
-import JobPostings.*;
 
 
 import javax.swing.*;

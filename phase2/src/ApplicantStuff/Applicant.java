@@ -131,8 +131,14 @@ public class Applicant extends User {
         return this.jobApplicationManager.getNumDaysSinceMostRecentCloseDate(today) >= Applicant.INACTIVE_DAYS;
     }
 
+
     @Override
-    public String[] getDisplayedInformation() {
+    public String[] getDisplayedProfileCategories() {
+        return null; // TODO
+    }
+
+    @Override
+    public String[] getDisplayedProfileInformation() {
         return null;    //TODO
     }
 }

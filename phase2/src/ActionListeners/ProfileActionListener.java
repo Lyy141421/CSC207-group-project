@@ -1,6 +1,6 @@
 package ActionListeners;
 
-import NewGUI.ReferenceGUI.ReferencePanel;
+import NewGUI.ReferenceInterface.ReferencePanel;
 
 import javax.swing.*;
 import java.awt.*;

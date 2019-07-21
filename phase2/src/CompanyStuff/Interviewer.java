@@ -177,7 +177,12 @@ public class Interviewer extends User {
     }
 
     @Override
-    public String[] getDisplayedInformation() {
+    public String[] getDisplayedProfileCategories() {
+        return null; // TODO
+    }
+
+    @Override
+    public String[] getDisplayedProfileInformation() {
         return null; // TODO
     }
 
