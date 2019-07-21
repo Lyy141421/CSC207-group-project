@@ -24,7 +24,7 @@ public class CardLayoutPanelGetter {
      * @param e The click of the submit file button.
      * @return the panel with the card layout.
      */
-    public JPanel fromSubmitFilesButton(ActionEvent e) {
+    JPanel fromSubmitFilesButton(ActionEvent e) {
         JButton submitButton = (JButton) e.getSource();
         JPanel submitButtonPanel = (JPanel) submitButton.getParent();
         JPanel fileChooserPanel = (JPanel) submitButtonPanel.getParent();

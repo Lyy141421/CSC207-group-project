@@ -1,7 +1,6 @@
 package CompanyStuff;
 
 import JobPostings.BranchJobPosting;
-import JobPostings.CompanyJobPosting;
 import Main.User;
 import ApplicantStuff.JobApplication;
 import Miscellaneous.InterviewTime;
@@ -109,7 +108,7 @@ public class HRCoordinator extends User {
     }
 
     @Override
-    public String toString() {
+    public String[] getDisplayedInformation() {
         return null;    //TODO
     }
 }

@@ -8,7 +8,6 @@ import DocumentManagers.DocumentManagerFactory;
 import JobPostings.BranchJobPostingManager;
 import Main.JobApplicationSystem;
 import Main.User;
-import JobPostings.CompanyJobPosting;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -133,7 +132,7 @@ public class Applicant extends User {
     }
 
     @Override
-    public String toString() {
+    public String[] getDisplayedInformation() {
         return null;    //TODO
     }
 }

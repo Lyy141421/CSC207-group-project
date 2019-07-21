@@ -1,6 +1,5 @@
 package Main;
 
-import ApplicantStuff.JobApplication;
 import NotificationSystem.Notification;
 import NotificationSystem.NotificationManager;
 import NotificationSystem.Observer;
@@ -40,9 +39,18 @@ public abstract class User implements Serializable, Observer {
     public User() {
     }
 
+    public User(String email, LocalDate dateCreated) {
+        this.username = email;
+        this.password = this.generateRandomPassword();
+        this.email = email;
+        this.dateCreated = dateCreated;
+    }
+
+    // TODO where is the notification manager initialized?
+    //  I am not able to use this constructor for instantiating a reference
     public User(String email, LocalDate dateCreated, NotificationManager notification_manager) {
         this.username = email;
-        this.password = User.generateRandomPassword();
+        this.password = this.generateRandomPassword();
         this.email = email;
         this.dateCreated = dateCreated;
         this.notification_manager = notification_manager;
@@ -101,7 +109,7 @@ public abstract class User implements Serializable, Observer {
      * @return a random password of 8 characters.
      * @author https://stackoverflow.com/questions/20536566/creating-a-random-string-with-a-z-and-0-9-in-java
      */
-    private static String generateRandomPassword() {
+    private String generateRandomPassword() {
         StringBuilder passwordSB = new StringBuilder();
         Random random = new Random();
         while (passwordSB.length() < PASSWORD_LENGTH) { // length of the random string.
@@ -111,7 +119,7 @@ public abstract class User implements Serializable, Observer {
         return passwordSB.toString();
     }
 
-    public abstract String toString();
+    public abstract String[] getDisplayedInformation();
 
     public void Update(Object obj){
         if(obj instanceof Notification){

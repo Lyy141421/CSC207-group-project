@@ -42,7 +42,7 @@ public class SubmitDocumentActionListener implements ActionListener {
      */
     private void updateFileStorage() {
         if (this.documentSubmitter instanceof Applicant) {
-            // TODO what if applicant submits files from their account.
+            // TODO what if applicant submits files from their account -- different action listener
             ApplicantDocumentManager applicantDocumentManager = new ApplicantDocumentManager(jobApp.getApplicant());
             ArrayList<JobApplicationDocument> jobAppDocs = applicantDocumentManager.addFilesToAccount(filesToSubmit);
             jobApp.addFiles(jobAppDocs);

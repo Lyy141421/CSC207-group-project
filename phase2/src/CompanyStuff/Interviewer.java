@@ -176,7 +176,7 @@ public class Interviewer extends User {
     }
 
     @Override
-    public String toString() {
+    public String[] getDisplayedInformation() {
         return null; // TODO
     }
 

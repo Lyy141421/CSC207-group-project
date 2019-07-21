@@ -5,6 +5,7 @@ import Main.User;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Reference extends User {
 
@@ -59,10 +60,7 @@ public class Reference extends User {
     }
 
     @Override
-    public String toString() {
-        String s = "User type: Reference\n";
-        s += "Email: " + this.getEmail() + "\n";
-        s += "Account created: " + this.getDateCreated();
-        return s;
+    public String[] getDisplayedInformation() {
+        return new String[]{"Reference", this.getEmail(), this.getDateCreated().toString()};
     }
 }

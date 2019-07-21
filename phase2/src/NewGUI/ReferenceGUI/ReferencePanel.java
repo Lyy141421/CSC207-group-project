@@ -32,6 +32,13 @@ public class ReferencePanel extends JPanel {
         this.setLayout(new BorderLayout());
         this.add(new ReferenceSideBarMenuPanel(reference), BorderLayout.WEST);
         this.reference = reference;
+        this.addCards();
+    }
+
+    /**
+     * Add the cards to the card layout panel
+     */
+    private void addCards() {
         cards.add(new ReferenceHomePanel(this.reference), HOME);
         cards.add(new UserProfilePanel(this.reference), PROFILE);
         cards.add(new ReferenceSubmitLetterPanel(this.reference), SUBMIT_REFERENCE_LETTER);
@@ -40,6 +47,11 @@ public class ReferencePanel extends JPanel {
         this.add(cards, BorderLayout.CENTER);
     }
 
+    /**
+     * Create a panel that shows a file has been successfully submitted.
+     *
+     * @return a panel with a "submission successful" message.
+     */
     private JPanel successfulSubmissionPanel() {
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout());
@@ -54,11 +66,7 @@ public class ReferencePanel extends JPanel {
      */
     public void updateCards() {
         cards.removeAll();
-        cards.add(new ReferenceHomePanel(this.reference), HOME);
-        cards.add(new UserProfilePanel(this.reference), PROFILE);
-        cards.add(new ReferenceSubmitLetterPanel(this.reference), SUBMIT_REFERENCE_LETTER);
-        cards.add(new ReferenceViewRefereeJobPostingsPanel(this.reference), VIEW_REFEREE_JOB_POSTINGS);
-        cards.add(this.successfulSubmissionPanel(), SUCCESSFUL_SUBMISSION);
+        this.addCards();
     }
 
     public static void main(String[] args) {
