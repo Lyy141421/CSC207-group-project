@@ -127,11 +127,12 @@ public class HRCoordinator extends User {
 
     @Override
     public String[] getDisplayedProfileCategories() {
-        return null; // TODO
+        return new String[]{"User Type", "Username", "Legal Name", "Email", "Company Branch", "Account Created"};
     }
 
     @Override
     public String[] getDisplayedProfileInformation() {
-        return null;    //TODO
+        return new String[]{"HR Coordinator", this.getUsername(), this.getLegalName(), this.getEmail(),
+                this.getBranch().getName(), this.getDateCreated().toString()};
     }
 }

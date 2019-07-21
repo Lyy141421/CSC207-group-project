@@ -41,6 +41,10 @@ public class Applicant extends User {
     }
 
     // === Getters ===
+    public String getCMA() {
+        return this.CMA;
+    }
+
     public JobApplicationManager getJobApplicationManager() {
         return this.jobApplicationManager;
     }
@@ -134,11 +138,12 @@ public class Applicant extends User {
 
     @Override
     public String[] getDisplayedProfileCategories() {
-        return null; // TODO
+        return new String[]{"User Type", "Username", "Legal Name", "Email", "Postal Code", "Account Created"};
     }
 
     @Override
     public String[] getDisplayedProfileInformation() {
-        return null;    //TODO
+        return new String[]{"Applicant", this.getUsername(), this.getLegalName(), this.getEmail(), this.getCMA(),
+                this.getDateCreated().toString()};
     }
 }
