@@ -10,6 +10,7 @@ import Main.JobApplicationSystem;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class MethodsTheGUICallsInHR {
 
@@ -30,18 +31,74 @@ public class MethodsTheGUICallsInHR {
     }
 
     /**
-     * Gets a list of lists of job postings that include high priority and all postings for the company.
+     * Gets a hash map of titles to branch job postings that are under review for first round of interviews.
      * @param today Today's date.
-     * @return the list of lists of job postings required.
+     * @return the hash map of titles to branch job postings.
      */
-    ArrayList<ArrayList<BranchJobPosting>> getHighPriorityAndAllJobPostings(LocalDate today) {
-        BranchJobPostingManager JPM = this.hr.getBranch().getJobPostingManager();
-        ArrayList<ArrayList<BranchJobPosting>> jobPostingsList = new ArrayList<>();
-        jobPostingsList.add(JPM.getClosedJobPostingsNoApplicantsChosen(today));
-        jobPostingsList.add(JPM.getJobPostingsWithRoundCompletedNotForHire(today));
-        jobPostingsList.add(JPM.getJobPostingsForHiring(today));
-        jobPostingsList.add(JPM.getBranchJobPostings());
-        return jobPostingsList;
+    public HashMap<String, BranchJobPosting> getJPToReview(LocalDate today) {
+        BranchJobPostingManager JPManager = this.hr.getBranch().getJobPostingManager();
+        ArrayList<BranchJobPosting> JPToReview = JPManager.getClosedJobPostingsNoApplicantsChosen(today);
+
+        return this.getTitleToJPMap(JPToReview);
+    }
+
+    /**
+     * Gets a hash map of titles to branch job postings that are ready to schedule for next round of interviews.
+     * @param today Today's date.
+     * @return the hash map of titles to branch job postings.
+     */
+    public HashMap<String, BranchJobPosting> getJPToSchedule(LocalDate today) {
+        BranchJobPostingManager JPManager = this.hr.getBranch().getJobPostingManager();
+        ArrayList<BranchJobPosting> JPToSchedule = JPManager.getJobPostingsWithRoundCompletedNotForHire(today);
+
+        return this.getTitleToJPMap(JPToSchedule);
+    }
+
+    /**
+     * Gets a hash map of titles to branch job postings that are in hiring stage.
+     * @param today Today's date.
+     * @return the hash map of titles to branch job postings.
+     */
+    public HashMap<String, BranchJobPosting> getJPToHire(LocalDate today) {
+        BranchJobPostingManager JPManager = this.hr.getBranch().getJobPostingManager();
+        ArrayList<BranchJobPosting> JPToHire = JPManager.getJobPostingsForHiring(today);
+
+        return this.getTitleToJPMap(JPToHire);
+    }
+
+    /**
+     * Gets a hash map of titles to all branch job postings.
+     *
+     * @return the hash map of titles to branch job postings.
+     */
+    public HashMap<String, BranchJobPosting> getAllJP() {
+        BranchJobPostingManager JPManager = this.hr.getBranch().getJobPostingManager();
+        ArrayList<BranchJobPosting> allJP = JPManager.getBranchJobPostings();
+
+        return this.getTitleToJPMap(allJP);
+    }
+
+    /**
+     * Gets a hash map of titles to branch job postings from a list of job postings.
+     * @param JPList a list of job postings.
+     * @return the hash map of titles to branch job postings.
+     */
+    private HashMap<String, BranchJobPosting> getTitleToJPMap(ArrayList<BranchJobPosting> JPList) {
+        HashMap<String, BranchJobPosting> titleToJPMap = new HashMap<>();
+        for (BranchJobPosting JP : JPList) {
+            titleToJPMap.put(this.toJPTitle(JP), JP);
+        }
+
+        return titleToJPMap;
+    }
+
+    /**
+     * Gets a string representation of the title of this branch job posting.
+     * @param branchJobPosting a branch job posting.
+     * @return the title to be displayed of this branch job posting.
+     */
+    private String toJPTitle(BranchJobPosting branchJobPosting) {
+        return branchJobPosting.getId() + "-" + branchJobPosting.getTitle();
     }
 
     /**
@@ -49,7 +106,7 @@ public class MethodsTheGUICallsInHR {
      * @param today  Today's date.
      * @param jobPostingFields  The fields that the user inputs.
      */
-    void addJobPosting(LocalDate today, Object[] jobPostingFields) {
+    public void addJobPosting(LocalDate today, Object[] jobPostingFields) {
         String title = (String) jobPostingFields[0];
         String field = (String) jobPostingFields[1];
         String description = (String) jobPostingFields[2];
@@ -68,7 +125,7 @@ public class MethodsTheGUICallsInHR {
      * @return a list of job applications submitted by this applicant with this username.
      */
 
-    ArrayList<JobApplication> getAllJobApplicationsToCompany(String applicantUsername) {
+    public ArrayList<JobApplication> getAllJobApplicationsToCompany(String applicantUsername) {
         Applicant applicant = (Applicant) jobAppSystem.getUserManager().findUserByUsername(applicantUsername);
         if (applicant == null) {
             return new ArrayList<>();
@@ -83,7 +140,7 @@ public class MethodsTheGUICallsInHR {
      * @param toHire Whether or not the HR Coordinator wants to hire the applicant.
      * */
 
-    boolean hireOrRejectApplication(JobApplication jobApp, boolean toHire) {
+    public boolean hireOrRejectApplication(JobApplication jobApp, boolean toHire) {
         if (toHire) {
             jobApp.getStatus().setHired();
         } else {
@@ -104,7 +161,7 @@ public class MethodsTheGUICallsInHR {
      * @param jobApplication The job application in question.
      * @return true iff this job application has been rejected.
      */
-    boolean isRejected(JobApplication jobApplication) {
+    public boolean isRejected(JobApplication jobApplication) {
         return jobApplication.getJobPosting().getInterviewManager().getApplicationsRejected().contains(jobApplication);
     }
 
@@ -114,7 +171,7 @@ public class MethodsTheGUICallsInHR {
      * @param jobApp   The job application in question.
      * @param selected Whether or not the application is selected to move on.
      */
-    void selectApplicationForPhoneInterview(JobApplication jobApp, boolean selected) {
+    public void selectApplicationForPhoneInterview(JobApplication jobApp, boolean selected) {
         if (!selected) {
             jobApp.getJobPosting().getInterviewManager().reject(jobApp);
         }
@@ -125,7 +182,7 @@ public class MethodsTheGUICallsInHR {
      *
      * @param jobPosting The job posting in question.
      */
-    boolean setUpInterviews(BranchJobPosting jobPosting) {
+    public boolean setUpInterviews(BranchJobPosting jobPosting) {
         Branch branch = jobPosting.getBranch();
         String field = jobPosting.getField();
         if (!branch.hasInterviewerForField(field)) {
