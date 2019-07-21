@@ -112,6 +112,7 @@ public class HRAddPosting extends HRPanel {
                 };
                 if (isValidInput(postingFields)) {
                     HRInterface.addJobPosting(today, postingFields);
+                    JOptionPane.showMessageDialog(containerPane, "Job posting has been added.");
                 } else {
                     JOptionPane.showMessageDialog(containerPane, "One or more fields have illegal input.");
                 }
