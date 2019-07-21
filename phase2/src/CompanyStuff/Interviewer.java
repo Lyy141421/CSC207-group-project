@@ -177,8 +177,14 @@ public class Interviewer extends User {
     }
 
     @Override
-    public String[] getDisplayedInformation() {
-        return null; // TODO
+    public String[] getDisplayedProfileCategories() {
+        return new String[]{"User Type", "Username", "Legal Name", "Email", "Company Branch", "Field", "Account Created"};
+    }
+
+    @Override
+    public String[] getDisplayedProfileInformation() {
+        return new String[]{"HR Coordinator", this.getUsername(), this.getLegalName(), this.getEmail(),
+                this.getBranch().getName(), this.getField(), this.getDateCreated().toString()};
     }
 
     // ============================================================================================================== //

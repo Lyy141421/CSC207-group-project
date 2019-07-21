@@ -195,6 +195,8 @@ public class BranchJobPosting extends CompanyJobPosting implements Observable, S
         if (interviewManager.getCurrentRound() < interviewManager.getMaxNumberOfRounds()) {
             if (interviewManager.isCurrentRoundOver()) {
                 interviewManager.advanceRound();
+                this.notifyAllObservers(new Notification("Advance to Next Round",
+                        "You have advanced to the next round in ###PLACEHOLDER###"));
             }
         }
     }
