@@ -81,7 +81,7 @@ public class ReferencePanel extends JPanel {
         new DataLoaderAndStorer(jobApplicationSystem).loadAllData();
         jobApplicationSystem.setToday(LocalDate.now());
         jobApplicationSystem.setPreviousLoginDate(LocalDate.now());
-        Reference reference = jobApplicationSystem.getUserManager().createReferee("bob@gmail.com", LocalDate.now());
+        Reference reference = jobApplicationSystem.getUserManager().createReference("bob@gmail.com", LocalDate.now());
         Company company = jobApplicationSystem.createCompany("Company");
         Branch branch = new Branch("Branch", "L4B3Z9");
         branch.setCompany(company);
