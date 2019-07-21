@@ -1,13 +1,12 @@
 package ApplicantStuff;
 
 import CompanyStuff.Interview;
-import JobPostings.BranchJobPosting;
+import CompanyStuff.JobPostings.BranchJobPosting;
 
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class JobApplication implements Serializable {
     /**

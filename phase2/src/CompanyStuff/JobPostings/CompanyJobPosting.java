@@ -1,4 +1,4 @@
-package JobPostings;
+package CompanyStuff.JobPostings;
 
 import CompanyStuff.Branch;
 import CompanyStuff.Company;

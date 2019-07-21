@@ -1,7 +1,7 @@
 package ApplicantStuff;
 
 import DocumentManagers.ApplicantDocumentManager;
-import JobPostings.BranchJobPosting;
+import CompanyStuff.JobPostings.BranchJobPosting;
 import DocumentManagers.CompanyDocumentManager;
 
 import java.io.*;

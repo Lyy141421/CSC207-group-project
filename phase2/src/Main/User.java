@@ -109,7 +109,7 @@ public abstract class User implements Serializable, Observer {
 
     public abstract String[] getDisplayedInformation();
 
-    public void Update(Object obj){
+    public void update(Object obj) {
         if(obj instanceof Notification){
             this.getNotificationManager().add((Notification)obj);
         }

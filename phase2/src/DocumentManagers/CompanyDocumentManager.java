@@ -5,7 +5,7 @@ import ApplicantStuff.JobApplication;
 import ApplicantStuff.JobApplicationDocument;
 import CompanyStuff.Branch;
 import CompanyStuff.Company;
-import JobPostings.BranchJobPosting;
+import CompanyStuff.JobPostings.BranchJobPosting;
 
 import java.io.File;
 import java.io.IOException;

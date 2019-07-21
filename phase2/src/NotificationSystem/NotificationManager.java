@@ -8,11 +8,7 @@ public class NotificationManager {
 
     // === Constructors ===
     public void NotificationManager(){
-        this.notification_list = new ArrayList<Notification>();
-    }
-
-    public void NotificationManager(ArrayList<Notification> list){
-        this.notification_list = list;
+        this.notification_list = new ArrayList<>();
     }
 
     // === Other Methods ===

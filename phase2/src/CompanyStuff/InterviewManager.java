@@ -1,7 +1,7 @@
 package CompanyStuff;
 
 import ApplicantStuff.JobApplication;
-import JobPostings.BranchJobPosting;
+import CompanyStuff.JobPostings.BranchJobPosting;
 
 import java.io.Serializable;
 import java.util.ArrayList;

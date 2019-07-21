@@ -2,6 +2,6 @@ package NotificationSystem;
 
 public interface Observer {
 
-    public void Update(Object obj);
+    public void update(Object obj);
 
 }

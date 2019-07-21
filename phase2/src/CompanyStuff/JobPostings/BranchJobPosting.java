@@ -1,4 +1,4 @@
-package JobPostings;
+package CompanyStuff.JobPostings;
 
 import ApplicantStuff.Applicant;
 import ApplicantStuff.JobApplication;
@@ -21,12 +21,12 @@ public class BranchJobPosting extends CompanyJobPosting implements Observable {
     private Branch branch; // The branch that listed this job posting
     private ArrayList<JobApplication> jobApplications; // The list of applications for this job posting
     private InterviewManager interviewManager; // UsersAndJobObjects.Interview manager for this job posting
-    private ArrayList<Observer> observer_list; // A list of observers for pushing notifications to
+    private ArrayList<Observer> observer_list = new ArrayList<>(); // A list of observers for pushing notifications to
 
     // === Constructor ===
     public BranchJobPosting(String title, String field, String description, ArrayList<String> requiredDocuments,
                             ArrayList<String> tags, int numPositions, Branch branch,
-                            LocalDate postDate, LocalDate closeDate, ArrayList<Observer> observer_list) {
+                            LocalDate postDate, LocalDate closeDate) {
         super(title, field, description, requiredDocuments, tags, branch.getCompany(), branch);
         this.numPositions = numPositions;
         this.branch = branch;
@@ -35,7 +35,6 @@ public class BranchJobPosting extends CompanyJobPosting implements Observable {
         this.filled = false;
         this.jobApplications = new ArrayList<>();
         branch.getJobPostingManager().addJobPosting(this);
-        this.observer_list = observer_list;
     }
 
     // === Getters ===
@@ -213,6 +212,6 @@ public class BranchJobPosting extends CompanyJobPosting implements Observable {
     }
 
     public void notifyObserver(Observer observer, Notification notification){
-        observer.Update(notification);
+        observer.update(notification);
     }
 }

@@ -1,14 +1,13 @@
 package ApplicantStuff;
 
 import CompanyStuff.Branch;
-import JobPostings.BranchJobPosting;
+import CompanyStuff.JobPostings.BranchJobPosting;
 import CompanyStuff.Company;
 import DocumentManagers.ApplicantDocumentManager;
 import DocumentManagers.DocumentManagerFactory;
-import JobPostings.BranchJobPostingManager;
+import CompanyStuff.JobPostings.BranchJobPostingManager;
 import Main.JobApplicationSystem;
 import Main.User;
-import NotificationSystem.NotificationManager;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -34,8 +33,8 @@ public class Applicant extends User {
     // === Constructors ===
 
     public Applicant(String username, String password, String legalName, String email, LocalDate dateCreated,
-                     String CMA, NotificationManager notificationManager) {
-        super(username, password, legalName, email, dateCreated, notificationManager);
+                     String CMA) {
+        super(username, password, legalName, email, dateCreated);
         this.CMA = CMA;
         this.jobApplicationManager = new JobApplicationManager();
         this.documentManager = new DocumentManagerFactory().getApplicantDocumentManager(this);

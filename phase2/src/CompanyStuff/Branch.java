@@ -1,10 +1,7 @@
 package CompanyStuff;
 
-import DocumentManagers.CompanyDocumentManager;
-import DocumentManagers.DocumentManagerFactory;
-import JobPostings.BranchJobPosting;
-import JobPostings.BranchJobPostingManager;
-import JobPostings.CompanyJobPosting;
+import CompanyStuff.JobPostings.BranchJobPosting;
+import CompanyStuff.JobPostings.BranchJobPostingManager;
 
 import java.io.Serializable;
 import java.util.ArrayList;

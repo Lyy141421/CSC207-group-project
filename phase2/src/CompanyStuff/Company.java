@@ -5,8 +5,8 @@ import ApplicantStuff.JobApplication;
 import DocumentManagers.CompanyDocumentManager;
 import DocumentManagers.DocumentManagerFactory;
 import FileLoadingAndStoring.DataLoaderAndStorer;
-import JobPostings.BranchJobPosting;
-import JobPostings.CompanyJobPosting;
+import CompanyStuff.JobPostings.BranchJobPosting;
+import CompanyStuff.JobPostings.CompanyJobPosting;
 
 import java.util.ArrayList;
 import java.util.HashMap;

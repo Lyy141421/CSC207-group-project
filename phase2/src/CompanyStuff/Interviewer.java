@@ -29,8 +29,8 @@ public class Interviewer extends User {
     }
 
     public Interviewer(String username, String password, String legalName, String email, Branch branch, String field,
-                       LocalDate dateCreated, NotificationManager notificationManager) {
-        super(username, password, legalName, email, dateCreated, notificationManager);
+                       LocalDate dateCreated) {
+        super(username, password, legalName, email, dateCreated);
         this.branch = branch;
         this.field = field;
     }

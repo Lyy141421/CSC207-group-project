@@ -5,8 +5,8 @@ import ApplicantStuff.JobApplication;
 import ApplicantStuff.Reference;
 import CompanyStuff.Branch;
 import CompanyStuff.Company;
-import JobPostings.BranchJobPosting;
-import JobPostings.BranchJobPostingManager;
+import CompanyStuff.JobPostings.BranchJobPosting;
+import CompanyStuff.JobPostings.BranchJobPostingManager;
 import NewGUI.FrequentlyUsedMethods;
 import NewGUI.UserProfilePanel;
 

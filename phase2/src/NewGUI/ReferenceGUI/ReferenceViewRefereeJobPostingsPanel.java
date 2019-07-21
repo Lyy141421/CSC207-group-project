@@ -2,7 +2,7 @@ package NewGUI.ReferenceGUI;
 
 import ApplicantStuff.JobApplication;
 import ApplicantStuff.Reference;
-import JobPostings.BranchJobPosting;
+import CompanyStuff.JobPostings.BranchJobPosting;
 import NewGUI.FrequentlyUsedMethods;
 
 import javax.swing.*;

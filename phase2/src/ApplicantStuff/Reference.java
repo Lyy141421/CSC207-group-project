@@ -1,11 +1,10 @@
 package ApplicantStuff;
 
-import JobPostings.BranchJobPosting;
+import CompanyStuff.JobPostings.BranchJobPosting;
 import Main.User;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class Reference extends User {
 
