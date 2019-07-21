@@ -3,6 +3,7 @@ package CompanyStuff;
 import Miscellaneous.InterviewTime;
 import Main.User;
 import ApplicantStuff.JobApplication;
+import NotificationSystem.NotificationManager;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -28,8 +29,8 @@ public class Interviewer extends User {
     }
 
     public Interviewer(String username, String password, String legalName, String email, Branch branch, String field,
-                       LocalDate dateCreated) {
-        super(username, password, legalName, email, dateCreated);
+                       LocalDate dateCreated, NotificationManager notificationManager) {
+        super(username, password, legalName, email, dateCreated, notificationManager);
         this.branch = branch;
         this.field = field;
     }
