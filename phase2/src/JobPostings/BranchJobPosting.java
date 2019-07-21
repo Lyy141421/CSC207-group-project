@@ -4,13 +4,14 @@ import ApplicantStuff.Applicant;
 import ApplicantStuff.JobApplication;
 import CompanyStuff.Branch;
 import CompanyStuff.InterviewManager;
+import NotificationSystem.Notification;
 import NotificationSystem.Observable;
 import NotificationSystem.Observer;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-public class BranchJobPosting extends CompanyJobPosting {
+public class BranchJobPosting extends CompanyJobPosting implements Observable {
 
     // === Instance variables ===
     private int numPositions;
@@ -20,11 +21,12 @@ public class BranchJobPosting extends CompanyJobPosting {
     private Branch branch; // The branch that listed this job posting
     private ArrayList<JobApplication> jobApplications; // The list of applications for this job posting
     private InterviewManager interviewManager; // UsersAndJobObjects.Interview manager for this job posting
+    private ArrayList<Observer> observer_list; // A list of observers for pushing notifications to
 
     // === Constructor ===
     public BranchJobPosting(String title, String field, String description, ArrayList<String> requiredDocuments,
                             ArrayList<String> tags, int numPositions, Branch branch,
-                            LocalDate postDate, LocalDate closeDate) {
+                            LocalDate postDate, LocalDate closeDate, ArrayList<Observer> observer_list) {
         super(title, field, description, requiredDocuments, tags, branch.getCompany(), branch);
         this.numPositions = numPositions;
         this.branch = branch;
@@ -33,6 +35,7 @@ public class BranchJobPosting extends CompanyJobPosting {
         this.filled = false;
         this.jobApplications = new ArrayList<>();
         branch.getJobPostingManager().addJobPosting(this);
+        this.observer_list = observer_list;
     }
 
     // === Getters ===
@@ -191,5 +194,25 @@ public class BranchJobPosting extends CompanyJobPosting {
             BranchJobPosting other = (BranchJobPosting) obj;
             return (branch.getCompany().equals(other.getCompany()) && id == other.id);
         }
+    }
+
+    // === Observable Methods ===
+
+    public void attach(Observer observer){
+        observer_list.add(observer);
+    }
+
+    public void detach(Observer observer){
+        observer_list.remove(observer);
+    }
+
+    public void notifyAllObservers(Notification notification){
+        for (Observer observer : observer_list){
+            notifyObserver(observer, notification);
+        }
+    }
+
+    public void notifyObserver(Observer observer, Notification notification){
+        observer.Update(notification);
     }
 }
