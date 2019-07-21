@@ -69,6 +69,10 @@ public class BranchJobPosting extends CompanyJobPosting implements Observable, S
         this.interviewManager = interviewManager;
     }
 
+    public void setFilled() {
+        this.filled = true;
+    }
+
     // === Other methods ===
 
     /**
@@ -81,13 +85,14 @@ public class BranchJobPosting extends CompanyJobPosting implements Observable, S
     }
 
     /**
-     * Check whether this job posting has closed.
+     * Check whether this job posting has closed for further applications and updates the company document manager.
      */
     public boolean isClosed(LocalDate today) {
         boolean closed = this.closeDate.isBefore(today);
         if (closed) {
             setChanged();
             notifyObservers();
+            this.createInterviewManager();
         }
         return closed;
     }
