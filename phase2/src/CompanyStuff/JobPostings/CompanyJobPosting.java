@@ -1,12 +1,13 @@
-package JobPostings;
+package CompanyStuff.JobPostings;
 
 import CompanyStuff.Branch;
 import CompanyStuff.Company;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Observable;
 
-public class CompanyJobPosting implements Serializable {
+public class CompanyJobPosting extends Observable implements Serializable {
 
     // === Class variables ===
     // The total number of CompanyJobPostings created
@@ -31,6 +32,7 @@ public class CompanyJobPosting implements Serializable {
     private ArrayList<Branch> branches;
 
     // === Constructor ===
+    // TODO why is there both the company and the branch in the constructor? Isn't company just branch.getCompany()?
     CompanyJobPosting(String title, String field, String description, ArrayList<String> requiredDocuments,
                       ArrayList<String> tags, Company company, Branch branch) {
         totalNumOfCompanyJobPostings++;

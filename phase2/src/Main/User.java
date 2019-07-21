@@ -1,12 +1,14 @@
 package Main;
 
-import ApplicantStuff.JobApplication;
+import NotificationSystem.Notification;
+import NotificationSystem.NotificationManager;
+import NotificationSystem.Observer;
 
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Random;
 
-public abstract class User implements Serializable {
+public abstract class User implements Serializable, Observer {
     /**
      * An account in the job application system.
      */
@@ -28,6 +30,8 @@ public abstract class User implements Serializable {
     private String email;
     // The date the account was created
     private LocalDate dateCreated;
+    // The Notification Manager
+    private NotificationManager notification_manager = new NotificationManager();
 
     // === Public methods ===
 
@@ -37,7 +41,7 @@ public abstract class User implements Serializable {
 
     public User(String email, LocalDate dateCreated) {
         this.username = email;
-        this.password = User.generateRandomPassword();
+        this.password = this.generateRandomPassword();
         this.email = email;
         this.dateCreated = dateCreated;
     }
@@ -72,6 +76,10 @@ public abstract class User implements Serializable {
         return this.dateCreated;
     }
 
+    public NotificationManager getNotificationManager(){
+        return this.notification_manager;
+    }
+
     // === Setters ===
     public void setUsername(String username) {
         this.username = username;
@@ -89,7 +97,7 @@ public abstract class User implements Serializable {
      * @return a random password of 8 characters.
      * @author https://stackoverflow.com/questions/20536566/creating-a-random-string-with-a-z-and-0-9-in-java
      */
-    private static String generateRandomPassword() {
+    private String generateRandomPassword() {
         StringBuilder passwordSB = new StringBuilder();
         Random random = new Random();
         while (passwordSB.length() < PASSWORD_LENGTH) { // length of the random string.
@@ -99,8 +107,14 @@ public abstract class User implements Serializable {
         return passwordSB.toString();
     }
 
-    public abstract String toString();
+    public abstract String[] getDisplayedInformation();
 
+    public void update(Object obj) {
+        if(obj instanceof Notification){
+            this.getNotificationManager().add((Notification)obj);
+        }
+
+    }
 
     @Override
     public boolean equals(Object obj) {

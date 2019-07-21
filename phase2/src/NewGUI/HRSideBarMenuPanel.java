@@ -1,16 +1,13 @@
 package NewGUI;
 
-import ActionListeners.HRActionListeners.AddOrUpdateJobPostingActionListener;
-import ActionListeners.HRActionListeners.HireCandidatesActionListener;
-import ActionListeners.HRActionListeners.ReviewApplicationsActionListener;
-import ActionListeners.UserActionListeners.ProfileActionListener;
-import ActionListeners.UserActionListeners.ReturnHomeActionListener;
-import ActionListeners.UserActionListeners.SearchActionListener;
-import ActionListeners.HRActionListeners.ViewJobPostingsActionListener;
+import ActionListeners.ProfileActionListener;
+import ActionListeners.ReturnHomeActionListener;
 import CompanyStuff.HRCoordinator;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.TreeMap;
 
 public class HRSideBarMenuPanel extends JPanel {
@@ -39,8 +36,18 @@ public class HRSideBarMenuPanel extends JPanel {
      */
     private TreeMap<String, Object> createHighPriorityTasksMenu() {
         TreeMap<String, Object> highPriorityTasksMenu = new TreeMap<>();
-        highPriorityTasksMenu.put("1. Review Applications", new ReviewApplicationsActionListener(this.hrCoordinator));
-        highPriorityTasksMenu.put("2. Hire Candidates", new HireCandidatesActionListener(this.hrCoordinator));
+        highPriorityTasksMenu.put("1. Review Applications", new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
+        highPriorityTasksMenu.put("2. Hire Candidates", new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
         return highPriorityTasksMenu;
     }
 
@@ -51,10 +58,30 @@ public class HRSideBarMenuPanel extends JPanel {
      */
     private TreeMap<String, Object> createViewJobPostingsSubMenu() {
         TreeMap<String, Object> viewJobPostingsMenu = new TreeMap<>();
-        viewJobPostingsMenu.put("1. Open Job Postings", new ViewJobPostingsActionListener(this.hrCoordinator, "Open"));
-        viewJobPostingsMenu.put("2. Closed Job Postings", new ViewJobPostingsActionListener(this.hrCoordinator, "Closed"));
-        viewJobPostingsMenu.put("3. Filled Job Postings", new ViewJobPostingsActionListener(this.hrCoordinator, "Filled"));
-        viewJobPostingsMenu.put("4. All Job Postings", new ViewJobPostingsActionListener(this.hrCoordinator, "All"));
+        viewJobPostingsMenu.put("1. Open Job Postings", new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
+        viewJobPostingsMenu.put("2. Closed Job Postings", new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
+        viewJobPostingsMenu.put("3. Filled Job Postings", new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
+        viewJobPostingsMenu.put("4. All Job Postings", new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
         return viewJobPostingsMenu;
     }
 
@@ -65,9 +92,24 @@ public class HRSideBarMenuPanel extends JPanel {
      */
     private TreeMap<String, Object> createJobPostingsMenu() {
         TreeMap<String, Object> jobPostingsMenu = new TreeMap<>();
-        jobPostingsMenu.put("1. Add Job Posting", new AddOrUpdateJobPostingActionListener(this.hrCoordinator, "Add"));
-        jobPostingsMenu.put("2. Update Job Posting", new AddOrUpdateJobPostingActionListener(this.hrCoordinator, "Update"));
-        jobPostingsMenu.put("3. Search Job Posting", new SearchActionListener(this.hrCoordinator, "Job posting"));
+        jobPostingsMenu.put("1. Add Job Posting", new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
+        jobPostingsMenu.put("2. Update Job Posting", new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
+        jobPostingsMenu.put("3. Search Job Posting", new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
         jobPostingsMenu.put("4. View Job Postings", this.createViewJobPostingsSubMenu());
         return jobPostingsMenu;
     }
@@ -79,11 +121,16 @@ public class HRSideBarMenuPanel extends JPanel {
      */
     private TreeMap<String, Object> createFullMenu() {
         TreeMap<String, Object> fullMenu = new TreeMap<>();
-        fullMenu.put("1. Home", new ReturnHomeActionListener(this.hrCoordinator));
-        fullMenu.put("2. Profile", new ProfileActionListener(this.hrCoordinator));
+        fullMenu.put("1. Home", new ReturnHomeActionListener());
+        fullMenu.put("2. Profile", new ProfileActionListener());
         fullMenu.put("3. High Priority Tasks", this.createHighPriorityTasksMenu());
         fullMenu.put("4. Job Postings", this.createJobPostingsMenu());
-        fullMenu.put("5. Search applicant", new SearchActionListener(this.hrCoordinator, "Applicant"));
+        fullMenu.put("5. Search applicant", new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
         return fullMenu;
     }
 

@@ -1,11 +1,13 @@
 package NewGUI;
 
-import ActionListeners.InterviewerActionListeners.CompleteInterviewsActionListener;
-import ActionListeners.UserActionListeners.*;
+import ActionListeners.ProfileActionListener;
+import ActionListeners.ReturnHomeActionListener;
 import CompanyStuff.Interviewer;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.TreeMap;
 
 public class InterviewerSideBarMenuPanel extends JPanel {
@@ -15,12 +17,8 @@ public class InterviewerSideBarMenuPanel extends JPanel {
     private static int CELL_HEIGHT = 30;
     private static int NUM_MAIN_MENU_OPTIONS = 6;
 
-    // === Instance variable ===
-    private Interviewer interviewer;
-
     // === Constructor ===
     private InterviewerSideBarMenuPanel(Interviewer interviewer) {
-        this.interviewer = interviewer;
         TreeMap<String, Object> fullMenu = this.createFullMenu();
         this.setLayout(new BorderLayout());
         this.add(new SideBarMenu(fullMenu, CELL_WIDTH, CELL_HEIGHT).createMenuBar());
@@ -35,8 +33,18 @@ public class InterviewerSideBarMenuPanel extends JPanel {
      */
     private TreeMap<String, Object> viewIntervieweesMenu() {
         TreeMap<String, Object> viewIntervieweesMenu = new TreeMap<>();
-        viewIntervieweesMenu.put("1. Search Interview", new SearchActionListener(this.interviewer, "Applicant"));
-        viewIntervieweesMenu.put("2. View All Interviews", new ViewAllApplicantsActionListener(this.interviewer));
+        viewIntervieweesMenu.put("1. Search Interview", new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
+        viewIntervieweesMenu.put("2. View All Interviews", new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
         return viewIntervieweesMenu;
     }
 
@@ -47,12 +55,32 @@ public class InterviewerSideBarMenuPanel extends JPanel {
      */
     private TreeMap<String, Object> createFullMenu() {
         TreeMap<String, Object> fullMenu = new TreeMap<>();
-        fullMenu.put("1. Home", new ReturnHomeActionListener(this.interviewer));
-        fullMenu.put("2. Profile", new ProfileActionListener(this.interviewer));
-        fullMenu.put("3. Schedule Interviews", new ScheduleInterviewsActionListener(this.interviewer));
-        fullMenu.put("4. View schedule", new ViewScheduleActionListener(this.interviewer));
-        fullMenu.put("5. Complete Interviews", new CompleteInterviewsActionListener(this.interviewer));
-        fullMenu.put("6. View Incomplete Interviews", this.viewIntervieweesMenu());
+        fullMenu.put("1. Home", new ReturnHomeActionListener());
+        fullMenu.put("2. Profile", new ProfileActionListener());
+        fullMenu.put("3. Schedule Interviews", new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
+        fullMenu.put("4. View schedule", new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
+        fullMenu.put("5. Complete Interviews", new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
+        fullMenu.put("6. View Incomplete Interviews", new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
         return fullMenu;
     }
 

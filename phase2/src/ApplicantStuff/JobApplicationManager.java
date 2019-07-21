@@ -1,7 +1,7 @@
 package ApplicantStuff;
 
 import CompanyStuff.Interview;
-import JobPostings.BranchJobPosting;
+import CompanyStuff.JobPostings.BranchJobPosting;
 import Miscellaneous.InterviewTimeComparator;
 import Miscellaneous.CloseDateComparator;
 
@@ -90,7 +90,7 @@ public class JobApplicationManager implements Serializable {
         if (this.getLastClosedJobApp() == null) {
             return 0;
         } else {
-            LocalDate closeDate = this.getLastClosedJobApp().getJobPosting().getCloseDate();
+            LocalDate closeDate = this.getLastClosedJobApp().getJobPosting().getApplicantCloseDate();
             return Math.max(0, DAYS.between(closeDate, today));
         }
     }

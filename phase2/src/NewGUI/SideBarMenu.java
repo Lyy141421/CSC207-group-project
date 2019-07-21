@@ -45,7 +45,7 @@ import java.util.TreeMap;
 import javax.swing.*;
 
 
-class SideBarMenu extends MouseAdapter {
+public class SideBarMenu extends MouseAdapter {
 
     // === Instance variables ===
     private TreeMap<String, Object> menuTitles;
@@ -54,7 +54,7 @@ class SideBarMenu extends MouseAdapter {
     private int cellHeight;
 
     // === Constructor ===
-    SideBarMenu(TreeMap<String, Object> menuTitles, int cellWidth, int cellHeight) {
+    public SideBarMenu(TreeMap<String, Object> menuTitles, int cellWidth, int cellHeight) {
         this.menuTitles = menuTitles;
         this.cellWidth = cellWidth;
         this.cellHeight = cellHeight;
@@ -67,7 +67,7 @@ class SideBarMenu extends MouseAdapter {
      *
      * @return a formatted menu bar.
      */
-    JMenuBar createMenuBar() {
+    public JMenuBar createMenuBar() {
         JMenuBar menuBar = new JMenuBar();
         menuBar.setLayout(new BoxLayout(menuBar, BoxLayout.PAGE_AXIS));
         this.createMenu(menuBar, menuTitles);

@@ -1,14 +1,13 @@
 package ApplicantStuff;
 
 import CompanyStuff.Branch;
-import JobPostings.BranchJobPosting;
+import CompanyStuff.JobPostings.BranchJobPosting;
 import CompanyStuff.Company;
 import DocumentManagers.ApplicantDocumentManager;
 import DocumentManagers.DocumentManagerFactory;
-import JobPostings.BranchJobPostingManager;
+import CompanyStuff.JobPostings.BranchJobPostingManager;
 import Main.JobApplicationSystem;
 import Main.User;
-import JobPostings.CompanyJobPosting;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -38,7 +37,7 @@ public class Applicant extends User {
         super(username, password, legalName, email, dateCreated);
         this.CMA = CMA;
         this.jobApplicationManager = new JobApplicationManager();
-        this.documentManager = (ApplicantDocumentManager) new DocumentManagerFactory().createDocumentManager(this);
+        this.documentManager = new DocumentManagerFactory().getApplicantDocumentManager(this);
     }
 
     // === Getters ===
@@ -58,7 +57,7 @@ public class Applicant extends User {
      * @param application The job application registered.
      */
     public void registerJobApplication(JobApplication application) {
-        //this.getDocumentManager().addDocuments(new ArrayList<>(Arrays.asList(application.getCoverLetter(), application.getCv())));
+        // TODO what to do with documents submitted
         jobApplicationManager.addJobApplication(application);
     }
 
@@ -71,7 +70,7 @@ public class Applicant extends User {
      */
     public boolean withdrawJobApplication(LocalDate today, BranchJobPosting jobPosting) {
         if (this.hasAppliedToPosting(jobPosting) && !jobPosting.isFilled()) {
-            if (!jobPosting.isClosed(today)) {
+            if (!jobPosting.isClosedForApplications(today)) {
                 // TODO replace with notify -- notify job posting, interview manager (if it exists),
                 // interviewer (if interview has been scheduled), referee (if there is one)
                 //jobPosting.removeJobApplication(jobPosting.findJobApplication(this));
@@ -133,7 +132,7 @@ public class Applicant extends User {
     }
 
     @Override
-    public String toString() {
+    public String[] getDisplayedInformation() {
         return null;    //TODO
     }
 }

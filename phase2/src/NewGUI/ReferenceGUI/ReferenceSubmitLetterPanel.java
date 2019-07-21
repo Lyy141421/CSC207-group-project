@@ -1,7 +1,9 @@
-package NewGUI;
+package NewGUI.ReferenceGUI;
 
 import ApplicantStuff.JobApplication;
 import ApplicantStuff.Reference;
+import NewGUI.FileChooser;
+import NewGUI.FrequentlyUsedMethods;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -15,27 +17,23 @@ public class ReferenceSubmitLetterPanel extends JPanel implements ActionListener
     // === Instance variables ===
     // The reference who logged in
     private Reference reference;
-    // The job application selected from the list
-    private JobApplication jobAppSelected;
     // The button for selecting a job application
     private JButton selectJobAppButton = new JButton("Select");
-    //  The list that displays the job applications that need reference letters
+    // The list that displays the job applications that need reference letters
     private JList jobAppList;
     // The file chooser for this reference
-    private FileChooser fileChooser = new FileChooser(this.reference);
+    private FileChooser fileChooser;
 
     // === Constructor ===
     ReferenceSubmitLetterPanel(Reference reference) {
         this.reference = reference;
+        this.fileChooser = new FileChooser(reference, null);    // So that the file chooser is on the panel
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-        JPanel pageTitle = new FrequentlyUsedMethods().createTitlePanel("Submit Reference Letter", 20);
-        JPanel selectApplicationTitle = new FrequentlyUsedMethods().createTitlePanel("Select a Job Application", 15);
-        JPanel chooseAFileTitle = new FrequentlyUsedMethods().createTitlePanel("Choose a File", 15);
-        this.add(pageTitle);
-        this.add(selectApplicationTitle);
+        this.add(new FrequentlyUsedMethods().createTitlePanel("Submit Reference Letter", 20));
+        this.add(new FrequentlyUsedMethods().createTitlePanel("Select a Job Application", 15));
         this.add(this.createJobApplicationListPanel());
-        this.add(chooseAFileTitle);
+        this.add(new FrequentlyUsedMethods().createTitlePanel("Choose a File", 15));
         this.add(fileChooser);
     }
 
@@ -84,12 +82,10 @@ public class ReferenceSubmitLetterPanel extends JPanel implements ActionListener
     public void valueChanged(ListSelectionEvent e) {
         if (e.getValueIsAdjusting() == false) {
             if (jobAppList.getSelectedIndex() == -1) {
-                //No selection, disable select button.
-                selectJobAppButton.setEnabled(false);
+                selectJobAppButton.setEnabled(false);   //No selection, disable select button.
 
             } else {
-                //Selection, enable the select button.
-                selectJobAppButton.setEnabled(true);
+                selectJobAppButton.setEnabled(true);    //Selection, enable the select button.
             }
         }
     }
@@ -98,7 +94,11 @@ public class ReferenceSubmitLetterPanel extends JPanel implements ActionListener
     @Override
     public void actionPerformed(ActionEvent e) {
         int selectedIndex = jobAppList.getSelectedIndex();
-        jobAppSelected = reference.getJobAppsForReference().get(selectedIndex);
+        JobApplication jobAppSelected = reference.getJobAppsForReference().get(selectedIndex);
+        this.remove(fileChooser);
+        fileChooser = new FileChooser(reference, jobAppSelected);
         fileChooser.getUploadButton().setEnabled(true);
+        this.add(fileChooser);
+        this.revalidate();
     }
 }

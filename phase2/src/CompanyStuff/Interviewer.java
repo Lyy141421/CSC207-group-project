@@ -3,6 +3,7 @@ package CompanyStuff;
 import Miscellaneous.InterviewTime;
 import Main.User;
 import ApplicantStuff.JobApplication;
+import NotificationSystem.NotificationManager;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -176,7 +177,7 @@ public class Interviewer extends User {
     }
 
     @Override
-    public String toString() {
+    public String[] getDisplayedInformation() {
         return null; // TODO
     }
 

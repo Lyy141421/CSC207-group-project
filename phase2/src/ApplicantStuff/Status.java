@@ -2,7 +2,6 @@ package ApplicantStuff;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.TreeMap;
 
 public class Status implements Serializable {
@@ -12,6 +11,7 @@ public class Status implements Serializable {
     private static final int ARCHIVED = -3;
     private static final int SUBMITTED = -2;
     private static final int UNDER_REVIEW = -1;
+    private static final int FIRST_ROUND = 0;
     // Map of statuses and their identifying integers
     private TreeMap<Integer, String> descriptions = new TreeMap<Integer, String>() {{
         put(Status.ARCHIVED, "Archived");
@@ -19,7 +19,8 @@ public class Status implements Serializable {
         put(Status.UNDER_REVIEW, "Under review");
     }};
     // The integer that represents a "Hired" status
-    private int HIRED;
+    private int hired;
+    private int lastRound;
 
     // === Instance variable ===
     private int value = Status.SUBMITTED;
@@ -43,7 +44,8 @@ public class Status implements Serializable {
             this.descriptions.put(i, (String) interviewConfiguration.get(i)[0]);
         }
         this.descriptions.put(interviewConfiguration.size(), "Hired");
-        this.HIRED = interviewConfiguration.size();
+        this.lastRound = interviewConfiguration.size() - 1;
+        this.hired = this.lastRound + 1;
     }
 
     private void setValue(int value) {
@@ -63,7 +65,7 @@ public class Status implements Serializable {
      * Set this status as "Hired".
      */
     public void setHired() {
-        this.setValue(this.HIRED);
+        this.setValue(this.hired);
     }
 
     /**
@@ -84,7 +86,7 @@ public class Status implements Serializable {
      * @return true iff this status is set to hired.
      */
     boolean isHired() {
-        return this.value == this.HIRED;
+        return this.value == this.hired;
     }
 
     /**
@@ -94,6 +96,19 @@ public class Status implements Serializable {
      */
     boolean isArchived() {
         return this.value == Status.ARCHIVED;
+    }
+
+    // Status class
+    boolean isUnderReview() {
+        return this.value == Status.UNDER_REVIEW;
+    }
+
+    boolean isOnFirstRound() {
+        return this.value == Status.FIRST_ROUND;
+    }
+
+    boolean isOnLastRound() {
+        return this.value == this.lastRound;
     }
 
 }

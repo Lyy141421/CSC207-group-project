@@ -1,13 +1,12 @@
 package ApplicantStuff;
 
 import CompanyStuff.Interview;
-import JobPostings.BranchJobPosting;
+import CompanyStuff.JobPostings.BranchJobPosting;
 
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class JobApplication implements Serializable {
     /**
@@ -31,6 +30,8 @@ public class JobApplication implements Serializable {
     private Status status;
     // The date this application was submitted
     private LocalDate applicationDate;
+    // The references that this applicant has chosen
+    private ArrayList<Reference> references = new ArrayList<>();
     // The interviews conducted for this application
     private ArrayList<Interview> interviews = new ArrayList<>();
 
@@ -66,7 +67,7 @@ public class JobApplication implements Serializable {
         return this.jobPosting;
     }
 
-    ArrayList<JobApplicationDocument> getFilesSubmitted() {
+    public ArrayList<JobApplicationDocument> getFilesSubmitted() {
         return this.filesSubmitted;
     }
 
@@ -76,6 +77,10 @@ public class JobApplication implements Serializable {
 
     public LocalDate getApplicationDate() {
         return this.applicationDate;
+    }
+
+    public ArrayList<Reference> getReferences() {
+        return this.references;
     }
 
     public ArrayList<Interview> getInterviews() {
@@ -97,8 +102,25 @@ public class JobApplication implements Serializable {
 
     // === Other methods ===
 
-    public void addFile(JobApplicationDocument file) {
-        this.filesSubmitted.add(file);
+    /**
+     * Add files to this job application.
+     *
+     * @param files The files to be submitted to the company.
+     */
+    public void addFiles(ArrayList<JobApplicationDocument> files) {
+        this.filesSubmitted.addAll(files);
+    }
+
+    /**
+     * Add references for this job application.
+     *
+     * @param referencesToAdd The references chosen by the applicant.
+     */
+    public void addReferences(ArrayList<Reference> referencesToAdd) {
+        this.references.addAll(referencesToAdd);
+        for (Reference reference : referencesToAdd) {
+            reference.addJobApplicationForReference(this);
+        }
     }
 
 
@@ -146,7 +168,7 @@ public class JobApplication implements Serializable {
     public String getMiniDescriptionForReference() {
         String s = "Referee: " + this.getApplicant().getLegalName() + "   ";
         s += "Job Posting: " + this.getJobPosting().getTitle() + "   ";
-        s += "Close Date: " + this.getJobPosting().getCloseDate().toString();
+        s += "Submission Deadline: " + this.getJobPosting().getReferenceCloseDate().toString();
         return s;
     }
 
@@ -156,7 +178,7 @@ public class JobApplication implements Serializable {
      * @return a list of job application category names.
      */
     public static String[] categoryNamesForReference() {
-        return new String[]{"Referee", "Job Posting", "Close Date"};
+        return new String[]{"Referee", "Job Posting", "Submission Deadline"};
     }
 
     /**
@@ -166,7 +188,7 @@ public class JobApplication implements Serializable {
      */
     public String[] getCategoryValuesForReference() {
         return new String[]{this.getApplicant().getLegalName(), this.getJobPosting().getTitle(),
-                this.getJobPosting().getCloseDate().toString()};
+                this.getJobPosting().getReferenceCloseDate().toString()};
     }
 
     /**

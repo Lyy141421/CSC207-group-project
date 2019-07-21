@@ -1,9 +1,8 @@
 package Main;
 
 import CompanyStuff.Branch;
-import JobPostings.BranchJobPosting;
+import CompanyStuff.JobPostings.BranchJobPosting;
 import CompanyStuff.Company;
-import JobPostings.CompanyJobPosting;
 //import UIClasses.UserInterface;
 import ApplicantStuff.Applicant;
 
@@ -24,7 +23,7 @@ public class JobApplicationSystem {
     private LocalDate previousLoginDate;
 
     // === Main method ===
-    public static void main(String[] args) throws IOException, ClassNotFoundException {
+    public static void main(String[] args) {
         //JobApplicationSystem.run();
     }
 

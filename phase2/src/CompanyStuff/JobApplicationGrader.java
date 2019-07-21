@@ -32,8 +32,8 @@ public class JobApplicationGrader {
      * this application.
      */
     private void gradeFiles() {
-        Branch branch = this.jobApplication.getJobPosting().getBranch();
-        File[] filesSubmitted = branch.getDocumentManager().getFilesForJobApplication(this.jobApplication);
+        Company company = this.jobApplication.getJobPosting().getCompany();
+        File[] filesSubmitted = company.getDocumentManager().getFilesForJobApplication(this.jobApplication);
         for (File file : filesSubmitted) {
             try {
                 Scanner scanner = new Scanner(file);
