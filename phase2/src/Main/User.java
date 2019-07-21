@@ -31,7 +31,7 @@ public abstract class User implements Serializable, Observer {
     // The date the account was created
     private LocalDate dateCreated;
     // The Notification Manager
-    private NotificationManager notification_manager;
+    private NotificationManager notification_manager = new NotificationManager();
 
     // === Public methods ===
 
@@ -46,24 +46,12 @@ public abstract class User implements Serializable, Observer {
         this.dateCreated = dateCreated;
     }
 
-    // TODO where is the notification manager initialized?
-    //  I am not able to use this constructor for instantiating a reference
-    public User(String email, LocalDate dateCreated, NotificationManager notification_manager) {
-        this.username = email;
-        this.password = this.generateRandomPassword();
-        this.email = email;
-        this.dateCreated = dateCreated;
-        this.notification_manager = notification_manager;
-    }
-
-    public User(String username, String password, String legalName, String email, LocalDate dateCreated,
-                NotificationManager notification_manager) {
+    public User(String username, String password, String legalName, String email, LocalDate dateCreated) {
         this.username = username;
         this.password = password;
         this.legalName = legalName;
         this.email = email;
         this.dateCreated = dateCreated;
-        this.notification_manager = notification_manager;
     }
 
     // === Getters ===
