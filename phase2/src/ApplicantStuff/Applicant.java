@@ -38,7 +38,7 @@ public class Applicant extends User {
         super(username, password, legalName, email, dateCreated);
         this.CMA = CMA;
         this.jobApplicationManager = new JobApplicationManager();
-        this.documentManager = (ApplicantDocumentManager) new DocumentManagerFactory().createDocumentManager(this);
+        this.documentManager = new DocumentManagerFactory().getApplicantDocumentManager(this);
     }
 
     // === Getters ===

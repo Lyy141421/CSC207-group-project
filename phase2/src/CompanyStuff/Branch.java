@@ -25,8 +25,6 @@ public class Branch implements Serializable {
     private HashMap<String, ArrayList<Interviewer>> fieldToInterviewers;
     // The branch job posting manager for this branch
     private BranchJobPostingManager jobPostingManager;
-    // The document manager for this branch
-    private CompanyDocumentManager documentManager;
 
     // === Public methods ===
     // === Constructors ===
@@ -36,7 +34,6 @@ public class Branch implements Serializable {
         this.hrCoordinators = new ArrayList<>();
         this.fieldToInterviewers = new HashMap<>();
         this.jobPostingManager = new BranchJobPostingManager(this);
-        this.documentManager = (CompanyDocumentManager) new DocumentManagerFactory().createDocumentManager(this);
     }
 
     // === Getters ==
@@ -64,8 +61,9 @@ public class Branch implements Serializable {
         return this.jobPostingManager;
     }
 
-    public CompanyDocumentManager getDocumentManager() {
-        return this.documentManager;
+    // For testing only // TODO delete when done
+    public void setCompany(Company company) {
+        this.company = company;
     }
 
     // === Other methods ===

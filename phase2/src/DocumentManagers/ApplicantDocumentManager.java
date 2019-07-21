@@ -4,41 +4,36 @@ import ApplicantStuff.Applicant;
 import ApplicantStuff.JobApplication;
 import ApplicantStuff.JobApplicationDocument;
 import ApplicantStuff.JobApplicationManager;
+import Main.User;
 
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-public class ApplicantDocumentManager extends UserDocumentManager {
+public class ApplicantDocumentManager extends DocumentManager {
 
     // === Instance variables ===
+    public static String FOLDER = DocumentManager.INITIAL_PATH + "/users";
     private Applicant applicant;
 
     // === Constructor ===
-    ApplicantDocumentManager(Applicant applicant) {
-        super(applicant);
+    public ApplicantDocumentManager(Applicant applicant) {
         this.applicant = applicant;
-        this.makeSubDirectories();
+        this.setFolder(new File(FOLDER + "/" + this.applicant.getUsername()));
     }
 
     /**
-     * Make subdirectories for this applicant.
+     * Add a list of files to this applicant's account.
+     * @param filesSubmitted    A list of files to this applicant's account.
+     * @return the job application document objects of the files submitted.
      */
-    private void makeSubDirectories() {
-        File CVFolder = new File(this.getFolder().getPath() + "/CVs");
-        File CoverLetterFolder = new File(this.getFolder().getPath() + "/coverLetters");
-        File OtherFileFolder = new File(this.getFolder().getPath() + "/other");
-        try {
-            CVFolder.mkdirs();
-            CVFolder.createNewFile();
-            CoverLetterFolder.mkdirs();
-            CoverLetterFolder.createNewFile();
-            OtherFileFolder.mkdirs();
-            OtherFileFolder.createNewFile();
-        } catch (IOException ex) {
-            ex.printStackTrace();
+    public ArrayList<JobApplicationDocument> addFilesToAccount(ArrayList<File> filesSubmitted) {
+        ArrayList<JobApplicationDocument> documentsSubmitted = new ArrayList<>();
+        for (File file : filesSubmitted) {
+            documentsSubmitted.add(new JobApplicationDocument(file, applicant.getUsername()));
         }
+        return documentsSubmitted;
     }
 
     /**

@@ -205,4 +205,11 @@ public class BranchJobPostingManager {
     void setBranch(Branch branch) {
         this.branch = branch;
     }
+
+    // For testing of observer pattern with documents
+    public void notifyJobPostingClosed(LocalDate today) {
+        for (BranchJobPosting jobPosting : this.getBranchJobPostings()) {
+            jobPosting.isClosed(today);
+        }
+    }
 }

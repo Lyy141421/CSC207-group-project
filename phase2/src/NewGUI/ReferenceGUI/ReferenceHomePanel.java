@@ -1,4 +1,4 @@
-package NewGUI;
+package NewGUI.ReferenceGUI;
 
 import ApplicantStuff.JobApplication;
 import ApplicantStuff.Reference;
@@ -10,14 +10,16 @@ import java.util.ArrayList;
 class ReferenceHomePanel extends JPanel {
 
     private Reference reference;
+    private JPanel reminderPanel;
+    private JPanel jobAppTablePanel;
+    private String[] columnNames = JobApplication.categoryNamesForReference();
 
     ReferenceHomePanel(Reference reference) {
         super(new BorderLayout());
         this.reference = reference;
         this.add(this.createWelcomePanel(), BorderLayout.BEFORE_FIRST_LINE);
-        this.revalidate();
-        this.add(this.createReminderPanel(), BorderLayout.CENTER);
-        this.revalidate();
+        this.createReminderPanel();
+        this.add(reminderPanel, BorderLayout.CENTER);
         this.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
     }
 
@@ -41,24 +43,31 @@ class ReferenceHomePanel extends JPanel {
         return reminderMessagePanel;
     }
 
-    private JPanel createReminderPanel() {
-        JPanel reminderPanel = new JPanel();
+    private void createReminderPanel() {
+        reminderPanel = new JPanel();
         reminderPanel.setLayout(new BorderLayout());
         reminderPanel.add(this.createReminderMessagePanel(), BorderLayout.BEFORE_FIRST_LINE);
-        reminderPanel.add(this.createJobAppTablePanel(), BorderLayout.CENTER);
-        return reminderPanel;
+        this.createJobAppTablePanel();
+        reminderPanel.add(jobAppTablePanel, BorderLayout.CENTER);
+    }
+
+    /**
+     * Update the table contents.
+     */
+    void updateTable() {
+        reminderPanel.remove(jobAppTablePanel);
+        this.createJobAppTablePanel();
+        reminderPanel.add(jobAppTablePanel, BorderLayout.CENTER);
+        reminderPanel.revalidate();
     }
 
     /**
      * Create a panel that displays a table of job applications that still need reference letters submitted.
      *
-     * @return a panel with the table
      * https://docs.oracle.com/javase/tutorial/uiswing/components/table.html
      */
-    private JPanel createJobAppTablePanel() {
-        JPanel tablePanel = new JPanel(new GridLayout(1, 0));
-
-        String[] columnNames = JobApplication.categoryNamesForReference();
+    private void createJobAppTablePanel() {
+        jobAppTablePanel = new JPanel(new GridLayout(1, 0));
 
         ArrayList<JobApplication> jobApps = this.reference.getJobAppsForReference();
         Object[][] data = new Object[jobApps.size()][];
@@ -67,18 +76,14 @@ class ReferenceHomePanel extends JPanel {
             data[i] = jobApps.get(i).getCategoryValuesForReference();
         }
 
-        JTable table = new JTable(data, columnNames);
-        table.setCellSelectionEnabled(false);
-        table.setEnabled(false);
-        table.setPreferredScrollableViewportSize(new Dimension(500, 70));
-        table.setFillsViewportHeight(true);
+        JTable jobAppTable = new JTable(data, columnNames);
+        jobAppTable.setCellSelectionEnabled(false);
+        jobAppTable.setEnabled(false);
+        jobAppTable.setPreferredScrollableViewportSize(new Dimension(500, 70));
+        jobAppTable.setFillsViewportHeight(true);
 
-        //Create the scroll pane and add the table to it.
-        JScrollPane scrollPane = new JScrollPane(table);
-
-        //Add the scroll pane to this panel.
-        tablePanel.add(scrollPane);
-        return tablePanel;
+        JScrollPane scrollPane = new JScrollPane(jobAppTable);
+        jobAppTablePanel.add(scrollPane);
     }
 
 }

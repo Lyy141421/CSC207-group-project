@@ -5,9 +5,9 @@ import Main.User;
 import javax.swing.*;
 import java.awt.*;
 
-class UserProfilePanel extends JPanel {
+public class UserProfilePanel extends JPanel {
 
-    UserProfilePanel(User user) {
+    public UserProfilePanel(User user) {
         this.setLayout(new BorderLayout());
         JPanel userInfo = new JPanel();
         userInfo.setLayout(new BoxLayout(userInfo, BoxLayout.Y_AXIS));

@@ -4,6 +4,8 @@ import ApplicantStuff.Applicant;
 import ApplicantStuff.JobApplication;
 import CompanyStuff.Branch;
 import CompanyStuff.InterviewManager;
+import NotificationSystem.Observable;
+import NotificationSystem.Observer;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -30,6 +32,7 @@ public class BranchJobPosting extends CompanyJobPosting {
         this.closeDate = closeDate;
         this.filled = false;
         this.jobApplications = new ArrayList<>();
+        branch.getJobPostingManager().addJobPosting(this);
     }
 
     // === Getters ===
@@ -78,7 +81,12 @@ public class BranchJobPosting extends CompanyJobPosting {
      * Check whether this job posting has closed.
      */
     public boolean isClosed(LocalDate today) {
-        return this.closeDate.isBefore(today);
+        boolean closed = this.closeDate.isBefore(today);
+        if (closed) {
+            setChanged();
+            notifyObservers();
+        }
+        return closed;
     }
 
     /**

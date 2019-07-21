@@ -6,13 +6,12 @@ import CompanyStuff.Company;
 
 public class DocumentManagerFactory {
 
-    public DocumentManager createDocumentManager(Object object) {
-        if (object instanceof Applicant) {
-            return new ApplicantDocumentManager((Applicant) object);
-        } else if (object instanceof Company) {
-            return new CompanyDocumentManager((Company) object);
-        }
-        return null;
+    public CompanyDocumentManager getCompanyDocumentManager(Object object) {
+        return new CompanyDocumentManager((Company) object);
+    }
+
+    public ApplicantDocumentManager getApplicantDocumentManager(Object object) {
+        return new ApplicantDocumentManager((Applicant) object);
     }
 
 }

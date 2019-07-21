@@ -66,7 +66,7 @@ public class JobApplication implements Serializable {
         return this.jobPosting;
     }
 
-    ArrayList<JobApplicationDocument> getFilesSubmitted() {
+    public ArrayList<JobApplicationDocument> getFilesSubmitted() {
         return this.filesSubmitted;
     }
 
@@ -97,8 +97,8 @@ public class JobApplication implements Serializable {
 
     // === Other methods ===
 
-    public void addFile(JobApplicationDocument file) {
-        this.filesSubmitted.add(file);
+    public void addFiles(ArrayList<JobApplicationDocument> files) {
+        this.filesSubmitted.addAll(files);
     }
 
 

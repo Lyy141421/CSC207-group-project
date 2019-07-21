@@ -35,9 +35,10 @@
 
 package NewGUI;
 
-import ActionListeners.UserActionListeners.RemoveFileButtonActionListener;
-import ActionListeners.UserActionListeners.SubmitDocumentActionListener;
+import ActionListeners.RemoveFileButtonActionListener;
+import ActionListeners.SubmitDocumentActionListener;
 import ApplicantStuff.Applicant;
+import ApplicantStuff.JobApplication;
 import ApplicantStuff.Reference;
 import Main.User;
 
@@ -52,9 +53,12 @@ import java.util.ArrayList;
 
 public class FileChooser extends JPanel implements ActionListener {
 
+    // === Class variables ===
     private static final int APPLICANT_MAX_NUM_FILES = 2;   // TODO must fix
     private static final int REFERENCE_MAX_NUM_FILES = 1;
     private static final Color LIGHT_RED = new Color(255, 210, 210);
+
+    // === Instance variables ===
     JButton uploadButton;
     JButton submitButton;
     JPanel removeFileButtonsPanel = new JPanel();
@@ -62,17 +66,18 @@ public class FileChooser extends JPanel implements ActionListener {
     String uploadButtonIconPath = "./Open16.gif";
     ArrayList<File> filesToSubmit = new ArrayList<>();
     User user;
+    JobApplication jobApp;
 
-    public FileChooser(User user) {
+    public FileChooser(User user, JobApplication jobApp) {
         super(new BorderLayout());
 
         this.user = user;
+        this.jobApp = jobApp;
 
         //Create a file chooser
         fc = new JFileChooser();
 
-        uploadButton = new JButton("Upload",
-                new ImageIcon(uploadButtonIconPath));
+        uploadButton = new JButton("Upload", new ImageIcon(uploadButtonIconPath));
         uploadButton.addActionListener(this);
 
         JPanel uploadButtonPanel = new JPanel();
@@ -81,38 +86,26 @@ public class FileChooser extends JPanel implements ActionListener {
 
         submitButton = new JButton("Submit");
         submitButton.setEnabled(false);
-        //submitButton.addActionListener(new SubmitDocumentActionListener(this.filesToSubmit));
+        submitButton.addActionListener(new SubmitDocumentActionListener(this.user, this.jobApp, this.filesToSubmit));
 
         JPanel submitButtonPanel = new JPanel();
         submitButtonPanel.add(submitButton);
         add(submitButtonPanel, BorderLayout.AFTER_LAST_LINE);
-
-        //Add the buttons and the log to this panel.
         add(uploadButtonPanel, BorderLayout.PAGE_START);
 
         removeFileButtonsPanel.setBackground(Color.WHITE);
         add(removeFileButtonsPanel, BorderLayout.CENTER);
     }
 
+    @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == uploadButton) {
             int returnVal = fc.showOpenDialog(FileChooser.this);
 
             if (returnVal == JFileChooser.APPROVE_OPTION) {
-                File file = fc.getSelectedFile();
-                JButton removeFileButton = new JButton("Remove " + file.getName());
-                removeFileButton.setBackground(LIGHT_RED);
-                removeFileButtonsPanel.add(removeFileButton, BorderLayout.SOUTH);
-                removeFileButtonsPanel.validate();
-                removeFileButtonsPanel.repaint();
-                removeFileButton.addActionListener(
-                        new RemoveFileButtonActionListener(this, removeFileButton, file));
-                filesToSubmit.add(file);
-                submitButton.setEnabled(true);
-                if (user instanceof Reference) {
-                    if (filesToSubmit.size() == REFERENCE_MAX_NUM_FILES) {
-                        uploadButton.setEnabled(false);
-                    }
+                this.addFileToSubmitList();
+                if (user instanceof Reference && filesToSubmit.size() == REFERENCE_MAX_NUM_FILES) {
+                    uploadButton.setEnabled(false);
                 } else if (user instanceof Applicant) {
                     if (filesToSubmit.size() == APPLICANT_MAX_NUM_FILES) {
                         uploadButton.setEnabled(false);
@@ -120,6 +113,22 @@ public class FileChooser extends JPanel implements ActionListener {
                 }
             }
         }
+    }
+
+    /**
+     * Add the file selected by the user to the list to be submitted and add the optional remove button for the file.
+     */
+    private void addFileToSubmitList() {
+        File file = fc.getSelectedFile();
+        JButton removeFileButton = new JButton("Remove " + file.getName());
+        removeFileButton.setBackground(LIGHT_RED);
+        removeFileButtonsPanel.add(removeFileButton, BorderLayout.SOUTH);
+        removeFileButtonsPanel.validate();
+        removeFileButtonsPanel.repaint();
+        removeFileButton.addActionListener(
+                new RemoveFileButtonActionListener(this, removeFileButton, file));
+        filesToSubmit.add(file);
+        submitButton.setEnabled(true);
     }
 
     // === Getters ===
@@ -137,37 +146,5 @@ public class FileChooser extends JPanel implements ActionListener {
 
     public JButton getSubmitButton() {
         return this.submitButton;
-    }
-
-
-    /**
-     * Create the GUI and show it.  For thread safety,
-     * this method should be invoked from the
-     * event dispatch thread.
-     */
-    private static void createAndShowGUI() {
-        //Create and set up the window.
-        JFrame frame = new JFrame("Submit files");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        //Add content to the window.
-        frame.add(new FileChooser(new Reference("hello@gmail.com", LocalDate.now())));
-
-        //Display the window.
-        //frame.pack();
-        frame.setSize(300, 300);
-        frame.setVisible(true);
-    }
-
-    public static void main(String[] args) {
-        //Schedule a job for the event dispatch thread:
-        //creating and showing this application's GUI.
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                //Turn off metal's use of bold fonts
-                UIManager.put("swing.boldMetal", Boolean.FALSE);
-                createAndShowGUI();
-            }
-        });
     }
 }

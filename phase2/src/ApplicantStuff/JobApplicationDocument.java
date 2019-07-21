@@ -1,8 +1,8 @@
 package ApplicantStuff;
 
+import DocumentManagers.ApplicantDocumentManager;
 import JobPostings.BranchJobPosting;
 import DocumentManagers.CompanyDocumentManager;
-import DocumentManagers.UserDocumentManager;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -17,6 +17,19 @@ public class JobApplicationDocument implements Serializable {
 
 
     // === Public methods ===
+
+    // === Constructor for references ===
+    public JobApplicationDocument(File file) {
+        this.file = file;
+    }
+
+    // === Constructors for applicants ===
+    public JobApplicationDocument(File file, String username) {
+        File folder = new File(ApplicantDocumentManager.FOLDER + "/" + username);
+        String filePath = folder.getPath() + "/" + file.getName();
+        this.copyFile(file, filePath);
+        this.file = new File(filePath);
+    }
 
     /**
      * Submit this job application document to the company.
@@ -35,10 +48,14 @@ public class JobApplicationDocument implements Serializable {
                 applicantFolder.mkdirs();
                 applicantFolder.createNewFile();
             }
-            this.copyFile(this.file, companyDestinationPath);
+            this.copyFile(companyDestinationPath);
         } catch (IOException io) {
             io.printStackTrace();
         }
+    }
+
+    public void copyFile(String destinationPath) {
+        this.copyFile(this.file, destinationPath);
     }
 
     private void copyFile(File file, String destinationPath) {
@@ -55,26 +72,10 @@ public class JobApplicationDocument implements Serializable {
 
     // ============================================================================================================== //
     // === Package-private methods ===
-    // === Constructor ===
-    JobApplicationDocument() {
-    }  // For testing
 
-    // === Constructor for references ===
-    JobApplicationDocument(File file) {
-        this.file = file;
-    }
-
-    // === Constructors for applicants ===
-    JobApplicationDocument(File file, String fileType, Applicant applicant) {
-        File folder = new File(UserDocumentManager.FOLDER + "/" + applicant.getUsername() + "/" + fileType);
-        String filePath = folder.getPath() + "/" + file.getName();
-        this.copyFile(file, filePath);
-        this.file = new File(filePath);
-
-    }
-
+    // === Constructor for applicants submitting cover letter or CV from text box ===
     JobApplicationDocument(String contents, String fileType, Applicant applicant) {
-        File folder = new File(UserDocumentManager.FOLDER + "/" + applicant.getUsername() + "/" + fileType);
+        File folder = new File(ApplicantDocumentManager.FOLDER + "/" + applicant.getUsername());
         String filePath = folder.getPath() + "/" + fileType + ".txt";
         if (Paths.get(filePath).toFile().exists()) {
             filePath = this.getNewFilePath(filePath);

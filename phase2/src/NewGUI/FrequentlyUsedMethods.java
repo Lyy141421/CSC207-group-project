@@ -14,12 +14,12 @@ public class FrequentlyUsedMethods {
      * @return the JPanel with this title.
      */
     public JPanel createTitlePanel(String text, int fontSize) {
-        JLabel pageTitle = new JLabel(text);
-        JPanel pageTitlePanel = new JPanel(new BorderLayout());
-        pageTitlePanel.add(pageTitle, BorderLayout.PAGE_START);
-        pageTitle.setFont(new Font("Century Gothic", Font.BOLD, fontSize));
-        pageTitle.setHorizontalAlignment(JLabel.CENTER);
-        pageTitle.revalidate();
-        return pageTitlePanel;
+        JLabel title = new JLabel(text);
+        JPanel titlePanel = new JPanel(new BorderLayout());
+        titlePanel.add(title, BorderLayout.PAGE_START);
+        title.setFont(new Font("Century Gothic", Font.BOLD, fontSize));
+        title.setHorizontalAlignment(JLabel.CENTER);
+        title.revalidate();
+        return titlePanel;
     }
 }
