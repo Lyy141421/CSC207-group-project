@@ -9,12 +9,15 @@ import JobPostings.*;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
 abstract class HRPanel extends JPanel {
-    private MethodsTheGUICallsInHR HRInterface;
-    private LocalDate today;
+    Container parent;
+    MethodsTheGUICallsInHR HRInterface;
+    LocalDate today;
 
     private ArrayList<BranchJobPosting> prePhoneJP;
     private ArrayList<BranchJobPosting> scheduleJP;
@@ -33,9 +36,10 @@ abstract class HRPanel extends JPanel {
     private JPanel hireOrRejectButtons = new JPanel();
     private JPanel phoneOrNotButtons = new JPanel();
 
-    private JButton homeButton = new JButton("Home");
+    JButton homeButton;
 
-    HRPanel(MethodsTheGUICallsInHR HRInterface, LocalDate today) {
+    HRPanel(Container contentPane, MethodsTheGUICallsInHR HRInterface, LocalDate today) {
+        this.parent = contentPane;
         this.HRInterface = HRInterface;
         this.today = today;
 
@@ -48,6 +52,7 @@ abstract class HRPanel extends JPanel {
         this.importantJP.addAll(this.hiringJP);
         this.allJP = HRInfoList.get(3);
 
+        this.createHomeButton();
 
         /*this.setLayout(new CardLayout());
         this.add(home(), "HOME");
@@ -55,6 +60,17 @@ abstract class HRPanel extends JPanel {
         this.add(viewApplication(), "APPLICATION");
         this.add(searchApplicant(), "APPLICANT");
         this.add(addPosting(), "ADDPOSTING");*/
+    }
+
+    private void createHomeButton() {
+        this.homeButton = new JButton("Home");
+        this.homeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                CardLayout cards = (CardLayout) parent.getLayout();
+                cards.show(parent, "HOME");
+            }
+        });
     }
 
     String[] getJPTitles(ArrayList<BranchJobPosting> JPToShow) {
