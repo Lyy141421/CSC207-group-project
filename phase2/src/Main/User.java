@@ -1,12 +1,15 @@
 package Main;
 
 import ApplicantStuff.JobApplication;
+import NotificationSystem.Notification;
+import NotificationSystem.NotificationManager;
+import NotificationSystem.Observer;
 
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Random;
 
-public abstract class User implements Serializable {
+public abstract class User implements Serializable, Observer {
     /**
      * An account in the job application system.
      */
@@ -28,6 +31,8 @@ public abstract class User implements Serializable {
     private String email;
     // The date the account was created
     private LocalDate dateCreated;
+    // The Notification Manager
+    private NotificationManager notification_manager;
 
     // === Public methods ===
 
@@ -35,19 +40,22 @@ public abstract class User implements Serializable {
     public User() {
     }
 
-    public User(String email, LocalDate dateCreated) {
+    public User(String email, LocalDate dateCreated, NotificationManager notification_manager) {
         this.username = email;
         this.password = User.generateRandomPassword();
         this.email = email;
         this.dateCreated = dateCreated;
+        this.notification_manager = notification_manager;
     }
 
-    public User(String username, String password, String legalName, String email, LocalDate dateCreated) {
+    public User(String username, String password, String legalName, String email, LocalDate dateCreated,
+                NotificationManager notification_manager) {
         this.username = username;
         this.password = password;
         this.legalName = legalName;
         this.email = email;
         this.dateCreated = dateCreated;
+        this.notification_manager = notification_manager;
     }
 
     // === Getters ===
@@ -70,6 +78,10 @@ public abstract class User implements Serializable {
 
     public LocalDate getDateCreated() {
         return this.dateCreated;
+    }
+
+    public NotificationManager getNotificationManager(){
+        return this.notification_manager;
     }
 
     // === Setters ===
@@ -101,6 +113,12 @@ public abstract class User implements Serializable {
 
     public abstract String toString();
 
+    public void Update(Object obj){
+        if(obj instanceof Notification){
+            this.getNotificationManager().add((Notification)obj);
+        }
+
+    }
 
     @Override
     public boolean equals(Object obj) {
