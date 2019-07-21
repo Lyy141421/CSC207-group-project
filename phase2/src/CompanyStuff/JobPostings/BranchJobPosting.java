@@ -8,10 +8,11 @@ import NotificationSystem.Notification;
 import NotificationSystem.Observable;
 import NotificationSystem.Observer;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-public class BranchJobPosting extends CompanyJobPosting implements Observable {
+public class BranchJobPosting extends CompanyJobPosting implements Observable, Serializable {
 
     // === Instance variables ===
     private int numPositions;
@@ -20,7 +21,7 @@ public class BranchJobPosting extends CompanyJobPosting implements Observable {
     private boolean filled; // Whether the job posting is filled
     private Branch branch; // The branch that listed this job posting
     private ArrayList<JobApplication> jobApplications; // The list of applications for this job posting
-    private InterviewManager interviewManager; // UsersAndJobObjects.Interview manager for this job posting
+    private InterviewManager interviewManager; // Interview manager for this job posting
     private ArrayList<Observer> observer_list = new ArrayList<>(); // A list of observers for pushing notifications to
 
     // === Constructor ===

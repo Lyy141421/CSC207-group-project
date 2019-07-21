@@ -1,8 +1,9 @@
 package NotificationSystem;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class NotificationManager {
+public class NotificationManager implements Serializable {
     // === Instance Variables ===
     ArrayList<Notification> notification_list;
 

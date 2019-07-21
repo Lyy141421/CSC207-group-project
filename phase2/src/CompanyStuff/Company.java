@@ -8,10 +8,11 @@ import FileLoadingAndStoring.DataLoaderAndStorer;
 import CompanyStuff.JobPostings.BranchJobPosting;
 import CompanyStuff.JobPostings.CompanyJobPosting;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Company {
+public class Company implements Serializable {
 
     // === Instance variables ===
     // The name of this company (unique)

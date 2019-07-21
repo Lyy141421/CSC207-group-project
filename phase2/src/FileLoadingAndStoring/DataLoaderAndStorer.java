@@ -17,50 +17,67 @@ import java.util.Iterator;
 
 public class DataLoaderAndStorer {
     private JobApplicationSystem jobApplicationSystem;
-    private String userFilePath;
-    private String companyFilePath;
-    private String dateFilePath;
 
-    private static final String FSA_TO_CMA_FILENAME = "./CMA_per_FSA_Centroid.json";
+    // File names of storage files
+    private static final String FILES_FOLDER_PATH = "./files";
+    private static final String USER_FILE_PATH = FILES_FOLDER_PATH + "/users.ser";
+    private static final String COMPANY_FILE_PATH = FILES_FOLDER_PATH + "/companies.ser";
+    private static final String DATE_FILE_PATH = FILES_FOLDER_PATH + "/previousLoginDate.txt";
+    private static final String FSA_TO_CMA_FILENAME = FILES_FOLDER_PATH + "/CMA_per_FSA_Centroid.json";
 
-    public DataLoaderAndStorer(JobApplicationSystem jobApplicationSystem, String userFilePath, String companyFilePath, String dateFilePath) {
+    public DataLoaderAndStorer(JobApplicationSystem jobApplicationSystem) {
         this.jobApplicationSystem = jobApplicationSystem;
-        this.userFilePath = userFilePath;
-        this.companyFilePath = companyFilePath;
-        this.dateFilePath = dateFilePath;
     }
 
-    public void loadAllData() throws ClassNotFoundException, IOException {
-        File userFile = new File(this.userFilePath);
-        if (userFile.exists()) {
-            this.loadUsers();
-        } else {
-            userFile.createNewFile();
-        }
+    /**
+     * Loads all the data into memory
+     */
+    public void loadAllData() {
+        try {
+            File filesFolder = new File(FILES_FOLDER_PATH);
+            if (!filesFolder.exists()) {
+                filesFolder.mkdir();
+                filesFolder.createNewFile();
+            }
 
-        File companyFile = new File(this.companyFilePath);
-        if (companyFile.exists()) {
-            this.loadCompanies();
-        } else {
-            companyFile.createNewFile();
-        }
+            File userFile = new File(USER_FILE_PATH);
+            if (userFile.exists()) {
+                this.loadUsers();
+            } else {
+                userFile.createNewFile();
+            }
 
-        File dateFile = new File(this.dateFilePath);
-        if (dateFile.exists()) {
-            this.loadPreviousLoginDate();
-        } else {
-            dateFile.createNewFile();
+            File companyFile = new File(COMPANY_FILE_PATH);
+            if (companyFile.exists()) {
+                this.loadCompanies();
+            } else {
+                companyFile.createNewFile();
+            }
+
+            File dateFile = new File(DATE_FILE_PATH);
+            if (dateFile.exists()) {
+                this.loadPreviousLoginDate();
+            } else {
+                dateFile.createNewFile();
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
         }
     }
 
+    /**
+     * Load the FSA hash map (for location purposes).
+     *
+     * @return the hash map loaded.
+     * // TODO the FAS hashamp should be a field in job application system
+     */
     public static HashMap<String, String> loadFSAHashMap() {
         HashMap map = new HashMap();
         Object obj = null;
-        JSONObject jobj = null;
+        JSONObject jobj;
         try {
             obj = new JSONParser().parse(new FileReader(FSA_TO_CMA_FILENAME));
-        }
-        catch (IOException | ParseException e) {
+        } catch (IOException | ParseException e) {
             e.printStackTrace();
         }
         try {
@@ -71,8 +88,7 @@ public class DataLoaderAndStorer {
                 String value = jobj.getString(key);
                 map.put(key, value);
             }
-        }
-        catch (JSONException e) {
+        } catch (JSONException e) {
             e.printStackTrace();
         }
         return map;
@@ -81,17 +97,16 @@ public class DataLoaderAndStorer {
     /**
      * Reads all users from the file.
      *
-     * @throws ClassNotFoundException
      */
-    private void loadUsers() throws ClassNotFoundException {
+    private void loadUsers() {
         try {
-            InputStream file = new FileInputStream(this.userFilePath);
+            InputStream file = new FileInputStream(USER_FILE_PATH);
             InputStream buffer = new BufferedInputStream(file);
             ObjectInput input = new ObjectInputStream(buffer);
 
             this.jobApplicationSystem.getUserManager().setAllUsers((ArrayList<User>) input.readObject());
             input.close();
-        } catch (IOException ex) {
+        } catch (IOException | ClassNotFoundException ex) {
             ex.printStackTrace();
         }
     }
@@ -99,17 +114,16 @@ public class DataLoaderAndStorer {
     /**
      * Reads all companies from the file.
      *
-     * @throws ClassNotFoundException
      */
-    private void loadCompanies() throws ClassNotFoundException {
+    private void loadCompanies() {
         try {
-            InputStream file = new FileInputStream(this.companyFilePath);
+            InputStream file = new FileInputStream(COMPANY_FILE_PATH);
             InputStream buffer = new BufferedInputStream(file);
             ObjectInput input = new ObjectInputStream(buffer);
 
             this.jobApplicationSystem.setCompanies((ArrayList<Company>) input.readObject());
             input.close();
-        } catch (IOException ex) {
+        } catch (IOException | ClassNotFoundException ex) {
             ex.printStackTrace();
         }
     }
@@ -118,22 +132,21 @@ public class DataLoaderAndStorer {
      * Loads the previous login date saved in "PreviousLoginDate.txt' in memory.
      */
     private void loadPreviousLoginDate() {
-        try (BufferedReader fileReader = new BufferedReader(new FileReader(this.dateFilePath))) {
+        try (BufferedReader fileReader = new BufferedReader(new FileReader(DATE_FILE_PATH))) {
             String dateString = fileReader.readLine().trim();
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             LocalDate date = LocalDate.parse(dateString, dtf);
             this.jobApplicationSystem.setPreviousLoginDate(date);
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
+        } catch (IOException ex) {
+            ex.printStackTrace();
         }
     }
 
     /**
      * Saves all the data to the appropriate files.
      *
-     * @throws IOException
      */
-    public void storeAllData() throws IOException {
+    public void storeAllData() {
         this.storeUsers();
         this.storeCompanies();
         this.storePreviousLoginDate();
@@ -142,29 +155,35 @@ public class DataLoaderAndStorer {
     /**
      * Saves all users to the appropriate file.
      *
-     * @throws IOException
      */
-    private void storeUsers() throws IOException {
-        OutputStream file = new FileOutputStream(this.userFilePath);
-        OutputStream buffer = new BufferedOutputStream(file);
-        ObjectOutput output = new ObjectOutputStream(buffer);
+    private void storeUsers() {
+        try {
+            OutputStream file = new FileOutputStream(USER_FILE_PATH);
+            OutputStream buffer = new BufferedOutputStream(file);
+            ObjectOutput output = new ObjectOutputStream(buffer);
 
-        output.writeObject(this.jobApplicationSystem.getUserManager().getAllUsers());
-        output.close();
+            output.writeObject(this.jobApplicationSystem.getUserManager().getAllUsers());
+            output.close();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }
 
     /**
      * Saves all companies to the appropriate file.
      *
-     * @throws IOException
      */
-    private void storeCompanies() throws IOException {
-        OutputStream file = new FileOutputStream(this.companyFilePath);
-        OutputStream buffer = new BufferedOutputStream(file);
-        ObjectOutput output = new ObjectOutputStream(buffer);
+    private void storeCompanies() {
+        try {
+            OutputStream file = new FileOutputStream(COMPANY_FILE_PATH);
+            OutputStream buffer = new BufferedOutputStream(file);
+            ObjectOutput output = new ObjectOutputStream(buffer);
 
-        output.writeObject(this.jobApplicationSystem.getCompanies());
-        output.close();
+            output.writeObject(this.jobApplicationSystem.getCompanies());
+            output.close();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }
 
     /**
@@ -172,7 +191,7 @@ public class DataLoaderAndStorer {
      *
      */
     private void storePreviousLoginDate() {
-        try (PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(dateFilePath)))) {
+        try (PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(DATE_FILE_PATH)))) {
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             String dateString = this.jobApplicationSystem.getToday().format(dtf);
             out.println(dateString);

@@ -4,10 +4,11 @@ import ApplicantStuff.Applicant;
 import CompanyStuff.Branch;
 import CompanyStuff.InterviewManager;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-public class BranchJobPostingManager {
+public class BranchJobPostingManager implements Serializable {
     /**
      * A class that manages the job postings for each branch
      */
@@ -205,7 +206,7 @@ public class BranchJobPostingManager {
         this.branch = branch;
     }
 
-    // For testing of observer pattern with documents
+    // TODO this method must be called with every change of date.
     public void notifyJobPostingClosed(LocalDate today) {
         for (BranchJobPosting jobPosting : this.getBranchJobPostings()) {
             jobPosting.isClosed(today);
