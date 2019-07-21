@@ -12,13 +12,16 @@ public class UserProfilePanel extends JPanel {
     public UserProfilePanel(User user) {
         this.user = user;
         this.setLayout(new BorderLayout());
+        JPanel title = new FrequentlyUsedMethods().createTitlePanel("User Information", 30);
+        title.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
+        this.add(title, BorderLayout.PAGE_START);
         JPanel userInfoPanel = new JPanel();
         userInfoPanel.setLayout(new GridBagLayout());
         userInfoPanel.setBackground(Color.WHITE);
         GridBagConstraints c = new GridBagConstraints();
         this.addProfileCategoryLabels(c, userInfoPanel);
         this.addProfileCategoryValues(c, userInfoPanel);
-        userInfoPanel.setBorder(BorderFactory.createEmptyBorder(100, 0, 100, 0));
+        userInfoPanel.setBorder(BorderFactory.createEmptyBorder(100, 100, 100, 100));
         this.add(userInfoPanel, BorderLayout.CENTER);
     }
 
@@ -29,15 +32,15 @@ public class UserProfilePanel extends JPanel {
      * @param mainPanel The panel where these labels are going to end up.
      */
     private void addProfileCategoryLabels(GridBagConstraints c, JPanel mainPanel) {
+        String[] categories = user.getDisplayedProfileCategories();
         c.insets = new Insets(0, 0, 20, 0);
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 0;
         c.gridy = 0;
-        mainPanel.add(new JLabel("User type: "), c);
-        c.gridy++;
-        mainPanel.add(new JLabel("Email:"), c);
-        c.gridy++;
-        mainPanel.add(new JLabel("Account created:"), c);
+        for (String category : categories) {
+            mainPanel.add(new JLabel(category + ":"), c);
+            c.gridy++;
+        }
     }
 
     /**
@@ -47,16 +50,14 @@ public class UserProfilePanel extends JPanel {
      * @param mainPanel The main panel where the profile information will be displayed.
      */
     private void addProfileCategoryValues(GridBagConstraints c, JPanel mainPanel) {
-        String[] values = user.getDisplayedInformation();
+        String[] values = user.getDisplayedProfileInformation();
         c.insets = new Insets(0, 30, 20, 0);
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 1;
         c.gridy = 0;
-        mainPanel.add(new JTextArea(values[0]), c);
-        c.gridy++;
-        JTextArea jobDescriptionContent = new JTextArea(values[1]);
-        mainPanel.add(jobDescriptionContent, c);
-        c.gridy++;
-        mainPanel.add(new JTextArea(values[2]), c);
+        for (String value : values) {
+            mainPanel.add(new JTextArea(value), c);
+            c.gridy++;
+        }
     }
 }

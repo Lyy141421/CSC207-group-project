@@ -49,13 +49,14 @@ public class HRCoordinator extends User {
      * @param tags              The tags for this job posting.
      * @param numPositions      The number of positions for this job.
      * @param postDate          The date this job posting was posted.
-     * @param closeDate         The date this job posting is closed.
+     * @param applicationCloseDate  The last day for application submissions.
+     * @param referenceCloseDate    The last day for reference letter submissions.
      */
     public BranchJobPosting addJobPosting(String jobTitle, String jobField, String jobDescription,
                                           ArrayList<String> requiredDocuments, ArrayList<String> tags, int numPositions,
-                                          LocalDate postDate, LocalDate closeDate) {
+                                          LocalDate postDate, LocalDate applicationCloseDate, LocalDate referenceCloseDate) {
         BranchJobPosting branchJobPosting = new BranchJobPosting(jobTitle, jobField, jobDescription, requiredDocuments,
-                tags, numPositions, this.branch, postDate, closeDate);
+                tags, numPositions, this.branch, postDate, applicationCloseDate, referenceCloseDate);
         this.branch.getJobPostingManager().addJobPosting(branchJobPosting);
         return branchJobPosting;
     }
@@ -85,7 +86,6 @@ public class HRCoordinator extends User {
      * @param configuration The configuration chosen.
      */
     public void chooseInterviewConfiguration(BranchJobPosting jobPosting, ArrayList<Object[]> configuration) {
-        jobPosting.createInterviewManager();
         jobPosting.getInterviewManager().setInterviewConfiguration(configuration);
     }
 
@@ -107,8 +107,32 @@ public class HRCoordinator extends User {
         return true;
     }
 
+    // HR Coordinator class
+    /*    */
+
+    /**
+     * Get the task that the HR Coordinator must accomplish for this job posting.
+     *
+     * @param jobPosting The job posting in question.
+     * @param today      Today's date.
+     * @return an integer that represents the task that the HR Coordinator must accomplish for this job posting.
+     */
+    int getTask(BranchJobPosting jobPosting, LocalDate today) {
+        if (this.branch.getJobPostingManager().getClosedJobPostingsNoApplicantsChosen(today).contains(jobPosting)) {
+            return InterviewManager.SELECT_APPS_FOR_FIRST_ROUND;
+        } else {
+            return jobPosting.getInterviewManager().getHrTask();
+        }
+    }
+
     @Override
-    public String[] getDisplayedInformation() {
-        return null;    //TODO
+    public String[] getDisplayedProfileCategories() {
+        return new String[]{"User Type", "Username", "Legal Name", "Email", "Company Branch", "Account Created"};
+    }
+
+    @Override
+    public String[] getDisplayedProfileInformation() {
+        return new String[]{"HR Coordinator", this.getUsername(), this.getLegalName(), this.getEmail(),
+                this.getBranch().getName(), this.getDateCreated().toString()};
     }
 }

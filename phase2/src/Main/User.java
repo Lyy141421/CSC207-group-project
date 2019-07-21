@@ -107,7 +107,9 @@ public abstract class User implements Serializable, Observer {
         return passwordSB.toString();
     }
 
-    public abstract String[] getDisplayedInformation();
+    public abstract String[] getDisplayedProfileCategories();
+
+    public abstract String[] getDisplayedProfileInformation();
 
     public void update(Object obj) {
         if(obj instanceof Notification){

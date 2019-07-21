@@ -1,13 +1,15 @@
 package CompanyStuff.JobPostings;
 
 import ApplicantStuff.Applicant;
+import ApplicantStuff.Reference;
 import CompanyStuff.Branch;
 import CompanyStuff.InterviewManager;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-public class BranchJobPostingManager {
+public class BranchJobPostingManager implements Serializable {
     /**
      * A class that manages the job postings for each branch
      */
@@ -53,7 +55,7 @@ public class BranchJobPostingManager {
     public ArrayList<BranchJobPosting> getOpenJobPostings(LocalDate today) {
         ArrayList<BranchJobPosting> jobPostings = new ArrayList<>();
         for (BranchJobPosting jobPosting : this.branchJobPostings) {
-            if (!(jobPosting.isClosed(today))) {
+            if (!(jobPosting.isClosedForApplications(today))) {
                 jobPostings.add(jobPosting);
             }
         }
@@ -64,12 +66,12 @@ public class BranchJobPostingManager {
      * Get a list of closed job postings for this branch that have not yet been filled.
      *
      * @param today Today's date.
-     * @return a list of closed job postings for this branch that have not yet been filled.
+     * @return a list job postings that can no longer have anything submitted for this branch that have not yet been filled.
      */
     public ArrayList<BranchJobPosting> getClosedJobPostingsNotFilled(LocalDate today) {
         ArrayList<BranchJobPosting> requestedPostings = new ArrayList<>();
         for (BranchJobPosting branchJobPosting : branchJobPostings) {
-            if ((branchJobPosting.isClosed(today)) && !(branchJobPosting.isFilled())) {
+            if ((branchJobPosting.isClosedForReferences(today)) && !(branchJobPosting.isFilled())) {
                 requestedPostings.add(branchJobPosting);
             }
         }
@@ -181,13 +183,14 @@ public class BranchJobPostingManager {
      * @param tags              The tags for this job posting.
      * @param numPositions      The number of positions for this job.
      * @param postDate          The date this job posting was posted.
-     * @param closeDate         The date this job posting is closed.
+     * @param applicationCloseDate  The last date for application submissions.
+     * @param referenceCloseDate    The last date for reference letter submissions.
      */
     public BranchJobPosting addJobPosting(String jobTitle, String jobField, String jobDescription,
                                           ArrayList<String> requiredDocuments, ArrayList<String> tags, int numPositions,
-                                          LocalDate postDate, LocalDate closeDate) {
+                                          LocalDate postDate, LocalDate applicationCloseDate, LocalDate referenceCloseDate) {
         BranchJobPosting branchJobPosting = new BranchJobPosting(jobTitle, jobField, jobDescription, requiredDocuments,
-                tags, numPositions, this.branch, postDate, closeDate);
+                tags, numPositions, this.branch, postDate, applicationCloseDate, referenceCloseDate);
         this.branch.getJobPostingManager().addJobPosting(branchJobPosting);
         return branchJobPosting;
     }
@@ -205,10 +208,35 @@ public class BranchJobPostingManager {
         this.branch = branch;
     }
 
-    // For testing of observer pattern with documents
-    public void notifyJobPostingClosed(LocalDate today) {
+    /**
+     * Update the job postings that are closed for further applications.
+     *
+     * @param today Today's date.
+     */
+    // TODO this method must be called with every change of date.
+    public void updateJobPostingsClosedForApplications(LocalDate today) {
         for (BranchJobPosting jobPosting : this.getBranchJobPostings()) {
-            jobPosting.isClosed(today);
+            jobPosting.isClosedForApplications(today);
+        }
+    }
+
+    /**
+     * Update the references of job postings that are closed for further reference letter submissions.
+     *
+     * @param today Today's date.
+     */
+    // TODO this method must be called with every change of date.
+    public void updateJobPostingsClosedForReferences(LocalDate today) {
+        for (BranchJobPosting jobPosting : this.getBranchJobPostings()) {
+            if (jobPosting.isClosedForReferences(today)) {
+                for (Reference reference : jobPosting.getAllReferences()) {
+                    // If the reference still has not yet submitted their reference letter for a job app for this job
+                    // posting, remove it from their list
+                    if (reference.getJobPostingsForReference().contains(jobPosting)) {
+                        reference.removeJobPostingForReference(jobPosting);
+                    }
+                }
+            }
         }
     }
 }

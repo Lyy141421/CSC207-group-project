@@ -15,8 +15,9 @@ public class InterviewManager implements Serializable {
     // Integers that represent the task the HR Coordinator needs to accomplish
     public static final int CLOSE_POSTING_NO_HIRE = -1;
     private static final int DO_NOTHING = 0;
-    public static final int SCHEDULE_INTERVIEWS = 1;
-    public static final int HIRE_APPLICANTS = 2;
+    static final int SELECT_APPS_FOR_FIRST_ROUND = 1;
+    public static final int SCHEDULE_INTERVIEWS = 2;
+    public static final int HIRE_APPLICANTS = 3;
 
     // === Instance variables ===
     // The job posting for this interview manager

@@ -1,15 +1,116 @@
-package GUIClasses;
+package GUIClasses.HRInterface;
+
+import ApplicantStuff.JobApplication;
+import CompanyStuff.Branch;
+import GUIClasses.MethodsTheGUICallsInHR;
+import UIClasses.HRCoordinatorInterface;
+import CompanyStuff.JobPostings.*;
 
 
-//import GUIClasses.HRCoordinatorInterface;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashMap;
 
+abstract class HRPanel extends JPanel {
+    Container parent;
+    MethodsTheGUICallsInHR HRInterface;
+    LocalDate today;
 
-//import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
-//import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
-//import net.sourceforge.jdatepicker.impl.UtilDateModel;
+    static HashMap<String, BranchJobPosting> currJPs;
+    static HashMap<String, JobApplication> currApps;
 
+    /*private JPanel hireOrRejectButtons = new JPanel();
+    private JPanel phoneOrNotButtons = new JPanel();*/
+
+    JButton homeButton;
+
+    HRPanel(Container contentPane, MethodsTheGUICallsInHR HRInterface, LocalDate today) {
+        this.parent = contentPane;
+        this.HRInterface = HRInterface;
+        this.today = today;
+
+        this.createHomeButton();
+
+        /*this.setLayout(new CardLayout());
+        this.add(home(), "HOME");
+        this.add(browsePosting(), "POSTING");
+        this.add(viewApplication(), "APPLICATION");
+        this.add(searchApplicant(), "APPLICANT");
+        this.add(addPosting(), "ADDPOSTING");*/
+    }
+
+    private void createHomeButton() {
+        this.homeButton = new JButton("Home");
+        this.homeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                CardLayout cards = (CardLayout) parent.getLayout();
+                cards.show(parent, "HOME");
+            }
+        });
+    }
+
+    /**
+     * Gets a hash map of titles to branch job postings from a list of job postings.
+     * @param JPList a list of job postings.
+     * @return the hash map of titles to branch job postings.
+     */
+    HashMap<String, BranchJobPosting> getTitleToJPMap(ArrayList<BranchJobPosting> JPList) {
+        HashMap<String, BranchJobPosting> titleToJPMap = new HashMap<>();
+        for (BranchJobPosting JP : JPList) {
+            titleToJPMap.put(this.toJPTitle(JP), JP);
+        }
+
+        return titleToJPMap;
+    }
+
+    /**
+     * Gets a string representation of the title of this branch job posting.
+     * @param branchJobPosting a branch job posting.
+     * @return the title to be displayed of this branch job posting.
+     */
+    String toJPTitle(BranchJobPosting branchJobPosting) {
+        return branchJobPosting.getId() + "-" + branchJobPosting.getTitle();
+    }
+
+    HashMap<String, JobApplication> getTitleToAppMap(ArrayList<JobApplication> appList) {
+        HashMap<String, JobApplication> titleToAppMap = new HashMap<>();
+        for (JobApplication app : appList) {
+            titleToAppMap.put(this.toAppTitles(app), app);
+        }
+
+        return titleToAppMap;
+    }
+
+    String toAppTitles(JobApplication jobApplication) {
+        return jobApplication.getId() + "-" + jobApplication.getApplicant().getLegalName();
+    }
+
+    String getInfo(JobApplication app, int attributeIndex) {
+        String info;
+
+        switch (attributeIndex) {
+            case 0:
+                info = app.getOverview();
+                break;
+            case 1:
+                info = app.getCV().getContents();
+                break;
+            case 2:
+                info = app.getCoverLetter().getContents();
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + attributeIndex);
+        }
+
+        return info;
+    }
+}
 /*
-
 public class HRPanel extends JPanel { //implements ActionListener {
 
     private Container contentPane;

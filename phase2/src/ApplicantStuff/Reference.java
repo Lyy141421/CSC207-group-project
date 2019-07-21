@@ -27,7 +27,7 @@ public class Reference extends User {
     // === Other methods ===
 
     /**
-     * Add a job application to this referee's list of job applications that they need to submit a reference for.
+     * Add a job application to this reference's list of job applications that they need to submit a reference for.
      *
      * @param jobApp The job application to be added.
      */
@@ -36,12 +36,26 @@ public class Reference extends User {
     }
 
     /**
-     * Remove a job application from this referee's list of job applications that they need to submit a reference for.
+     * Remove a job application from this reference's list of job applications that they need to submit a reference for.
      *
      * @param jobApp The job application to be removed.
      */
     public void removeJobApplicationForReference(JobApplication jobApp) {
         this.jobAppsForReference.remove(jobApp);
+    }
+
+    /**
+     * Remove the job applications for this job posting form this reference's list of job applications that still need
+     * reference letters.
+     *
+     * @param jobPosting The job posting to be removed.
+     */
+    public void removeJobPostingForReference(BranchJobPosting jobPosting) {
+        for (JobApplication jobApp : this.jobAppsForReference) {
+            if (jobApp.getJobPosting().equals(jobPosting)) {
+                this.removeJobApplicationForReference(jobApp);
+            }
+        }
     }
 
     /**
@@ -59,7 +73,12 @@ public class Reference extends User {
     }
 
     @Override
-    public String[] getDisplayedInformation() {
+    public String[] getDisplayedProfileCategories() {
+        return new String[]{"User Type", "Email", "Account Created"};
+    }
+
+    @Override
+    public String[] getDisplayedProfileInformation() {
         return new String[]{"Reference", this.getEmail(), this.getDateCreated().toString()};
     }
 }

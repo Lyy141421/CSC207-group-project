@@ -1,8 +1,9 @@
 package NotificationSystem;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
-public class Notification {
+public class Notification implements Serializable {
     // === Instance variables ===
     // The title of this Notification
     String title;

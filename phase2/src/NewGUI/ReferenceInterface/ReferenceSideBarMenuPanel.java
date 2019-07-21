@@ -1,9 +1,11 @@
-package NewGUI.ReferenceGUI;
+package NewGUI.ReferenceInterface;
 
 import ActionListeners.CardLayoutPanelGetter;
+import ActionListeners.LogoutActionListener;
 import ActionListeners.ProfileActionListener;
 import ActionListeners.ReturnHomeActionListener;
 import ApplicantStuff.Reference;
+import Main.JobApplicationSystem;
 import NewGUI.SideBarMenu;
 
 import javax.swing.*;
@@ -22,11 +24,14 @@ class ReferenceSideBarMenuPanel extends JPanel {
     // === Instance variable ===
     // The reference who logged in
     private Reference reference;
+    // The job application system being used
+    private JobApplicationSystem jobApplicationSystem;
 
 
     // === Constructor ===
-    ReferenceSideBarMenuPanel(Reference reference) {
+    ReferenceSideBarMenuPanel(Reference reference, JobApplicationSystem jobApplicationSystem) {
         this.reference = reference;
+        this.jobApplicationSystem = jobApplicationSystem;
         TreeMap<String, Object> fullMenu = this.createFullMenu();
         this.setLayout(new BorderLayout());
         this.add(new SideBarMenu(fullMenu, CELL_WIDTH, CELL_HEIGHT).createMenuBar());
@@ -58,6 +63,7 @@ class ReferenceSideBarMenuPanel extends JPanel {
                 cl.show(cards, ReferencePanel.VIEW_REFEREE_JOB_POSTINGS);
             }
         });
+        fullMenu.put("5. Logout", new LogoutActionListener(jobApplicationSystem));
         return fullMenu;
     }
 

@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class UserManager {
-    // Class that stores, creates and updates children of the UsersAndJobObjects.User class
+    // Class that stores, creates and updates children of the User class
 
     // === Instance Variables ===
     private ArrayList<User> allUsers = new ArrayList<>(); //Array in which all users are stored
@@ -57,7 +57,7 @@ public class UserManager {
         return newHRC;
     }
 
-    public Reference createReferee(String email, LocalDate dateCreated) {
+    public Reference createReference(String email, LocalDate dateCreated) {
         Reference newReference = new Reference(email, dateCreated);
         this.allUsers.add(newReference);
         return newReference;
@@ -98,7 +98,7 @@ public class UserManager {
         for (String email : emails) {
             Reference reference = (Reference) this.findUserByEmail(email);
             if (reference == null) {
-                reference = this.createReferee(email, jobApp.getApplicationDate());
+                reference = this.createReference(email, jobApp.getApplicationDate());
             }
             reference.addJobApplicationForReference(jobApp);
         }
