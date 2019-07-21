@@ -32,6 +32,15 @@ public class SubmitDocumentActionListener implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        this.updateFileStorage();
+        this.showSuccessfulSubmissionPanel(e);
+
+    }
+
+    /**
+     * Update the applicant and company folders that store job application documents.
+     */
+    private void updateFileStorage() {
         if (this.documentSubmitter instanceof Applicant) {
             // TODO what if applicant submits files from their account.
             ApplicantDocumentManager applicantDocumentManager = new ApplicantDocumentManager(jobApp.getApplicant());
@@ -45,7 +54,14 @@ public class SubmitDocumentActionListener implements ActionListener {
         CompanyDocumentManager companyDocManager = jobApp.getJobPosting().getCompany().getDocumentManager();
         companyDocManager.addFilesForJobApplication(jobApp, filesToSubmit);
 
-        // Show 'submission was successful page'
+    }
+
+    /**
+     * Switch the card to the successful submission panel.
+     *
+     * @param e The click of the submit button.
+     */
+    private void showSuccessfulSubmissionPanel(ActionEvent e) {
         JPanel cards = new CardLayoutPanelGetter().fromSubmitFilesButton(e);
         ReferencePanel referencePanel = (ReferencePanel) cards.getParent();
         referencePanel.updateCards(); // Update all the cards
