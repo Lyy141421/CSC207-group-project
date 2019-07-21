@@ -1,8 +1,10 @@
 package GUIClasses.HRInterface;
 
 import ApplicantStuff.JobApplication;
-import CompanyStuff.JobPostings.BranchJobPosting;
+import CompanyStuff.Branch;
 import GUIClasses.MethodsTheGUICallsInHR;
+import UIClasses.HRCoordinatorInterface;
+import CompanyStuff.JobPostings.*;
 
 
 import javax.swing.*;
@@ -11,28 +13,18 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 abstract class HRPanel extends JPanel {
     Container parent;
     MethodsTheGUICallsInHR HRInterface;
     LocalDate today;
 
-    private ArrayList<BranchJobPosting> prePhoneJP;
-    private ArrayList<BranchJobPosting> scheduleJP;
-    private ArrayList<BranchJobPosting> hiringJP;
-    private ArrayList<BranchJobPosting> importantJP = new ArrayList<>();
-    private ArrayList<BranchJobPosting> allJP;
+    static HashMap<String, BranchJobPosting> currJPs;
+    static HashMap<String, JobApplication> currApps;
 
-    private JComboBox<String> jobPostings = new JComboBox<>();
-    private DefaultComboBoxModel<String> allTitles;
-    private DefaultComboBoxModel<String> importantTitles;
-    private ArrayList<BranchJobPosting> currJPs;
-
-    private JComboBox<String> applications = new JComboBox<>();
-    private DefaultComboBoxModel<String> appTitles = new DefaultComboBoxModel<>();
-    private ArrayList<JobApplication> currApps;
-    private JPanel hireOrRejectButtons = new JPanel();
-    private JPanel phoneOrNotButtons = new JPanel();
+    /*private JPanel hireOrRejectButtons = new JPanel();
+    private JPanel phoneOrNotButtons = new JPanel();*/
 
     JButton homeButton;
 
@@ -40,15 +32,6 @@ abstract class HRPanel extends JPanel {
         this.parent = contentPane;
         this.HRInterface = HRInterface;
         this.today = today;
-
-        ArrayList<ArrayList<BranchJobPosting>> HRInfoList = HRInterface.getHighPriorityAndAllJobPostings(today);
-        this.prePhoneJP = HRInfoList.get(0);
-        this.scheduleJP = HRInfoList.get(1);
-        this.hiringJP = HRInfoList.get(2);
-        this.importantJP.addAll(this.prePhoneJP);
-        this.importantJP.addAll(this.scheduleJP);
-        this.importantJP.addAll(this.hiringJP);
-        this.allJP = HRInfoList.get(3);
 
         this.createHomeButton();
 
@@ -71,38 +54,43 @@ abstract class HRPanel extends JPanel {
         });
     }
 
-    String[] getJPTitles(ArrayList<BranchJobPosting> JPToShow) {
-        ArrayList<String> titles = new ArrayList<>();
-        for (BranchJobPosting JP : JPToShow) {
-            titles.add(JP.getId() + "-" + JP.getTitle());
-        }
-        return (String[]) titles.toArray();
-    }
-
-    private String getStatus(BranchJobPosting selectedJP) {
-        String status;
-        if (prePhoneJP.contains(selectedJP)) {
-            status = "Important: Select applicants for phone interview.\n\n";
-        } else if (scheduleJP.contains(selectedJP)) {
-            status = "Important: Schedule interviews for the next round.\n\n";
-        } else if (hiringJP.contains(selectedJP)) {
-            status = "Important: Make hiring decisions for final candidates.\n\n";
-        } else {
-            status = "Low priority.\n\n";
+    /**
+     * Gets a hash map of titles to branch job postings from a list of job postings.
+     * @param JPList a list of job postings.
+     * @return the hash map of titles to branch job postings.
+     */
+    HashMap<String, BranchJobPosting> getTitleToJPMap(ArrayList<BranchJobPosting> JPList) {
+        HashMap<String, BranchJobPosting> titleToJPMap = new HashMap<>();
+        for (BranchJobPosting JP : JPList) {
+            titleToJPMap.put(this.toJPTitle(JP), JP);
         }
 
-        return status;
+        return titleToJPMap;
     }
 
-    private ArrayList<String> getAppTitles(ArrayList<JobApplication> appsToShow) {
-        ArrayList<String> titles = new ArrayList<>();
-        for (JobApplication app : appsToShow) {
-            titles.add(app.getId() + "-" + app.getApplicant().getLegalName());
+    /**
+     * Gets a string representation of the title of this branch job posting.
+     * @param branchJobPosting a branch job posting.
+     * @return the title to be displayed of this branch job posting.
+     */
+    String toJPTitle(BranchJobPosting branchJobPosting) {
+        return branchJobPosting.getId() + "-" + branchJobPosting.getTitle();
+    }
+
+    HashMap<String, JobApplication> getTitleToAppMap(ArrayList<JobApplication> appList) {
+        HashMap<String, JobApplication> titleToAppMap = new HashMap<>();
+        for (JobApplication app : appList) {
+            titleToAppMap.put(this.toAppTitles(app), app);
         }
-        return titles;
+
+        return titleToAppMap;
     }
 
-    private String getInfo(JobApplication app, int attributeIndex) {
+    String toAppTitles(JobApplication jobApplication) {
+        return jobApplication.getId() + "-" + jobApplication.getApplicant().getLegalName();
+    }
+
+    String getInfo(JobApplication app, int attributeIndex) {
         String info;
 
         switch (attributeIndex) {
