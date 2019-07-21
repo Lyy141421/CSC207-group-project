@@ -52,7 +52,7 @@ public class ReferencePanel extends JPanel {
     /**
      * Update the cards after a reference letter submission.
      */
-    public void update() {
+    public void updateCards() {
         cards.removeAll();
         cards.add(new ReferenceHomePanel(this.reference), HOME);
         cards.add(new UserProfilePanel(this.reference), PROFILE);

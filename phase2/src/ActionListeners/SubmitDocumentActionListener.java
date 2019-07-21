@@ -48,7 +48,7 @@ public class SubmitDocumentActionListener implements ActionListener {
         // Show 'submission was successful page'
         JPanel cards = new CardLayoutPanelGetter().fromSubmitFilesButton(e);
         ReferencePanel referencePanel = (ReferencePanel) cards.getParent();
-        referencePanel.update(jobApp); // Update the list/table where the job application was displayed.
+        referencePanel.updateCards(); // Update all the cards
         CardLayout cl = (CardLayout) cards.getLayout();
         cl.show(cards, ReferencePanel.SUCCESSFUL_SUBMISSION);
     }
