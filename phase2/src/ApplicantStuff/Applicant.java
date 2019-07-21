@@ -57,7 +57,7 @@ public class Applicant extends User {
      * @param application The job application registered.
      */
     public void registerJobApplication(JobApplication application) {
-        //this.getDocumentManager().addDocuments(new ArrayList<>(Arrays.asList(application.getCoverLetter(), application.getCv())));
+        // TODO what to do with documents submitted
         jobApplicationManager.addJobApplication(application);
     }
 
@@ -70,7 +70,7 @@ public class Applicant extends User {
      */
     public boolean withdrawJobApplication(LocalDate today, BranchJobPosting jobPosting) {
         if (this.hasAppliedToPosting(jobPosting) && !jobPosting.isFilled()) {
-            if (!jobPosting.isClosed(today)) {
+            if (!jobPosting.isClosedForApplications(today)) {
                 // TODO replace with notify -- notify job posting, interview manager (if it exists),
                 // interviewer (if interview has been scheduled), referee (if there is one)
                 //jobPosting.removeJobApplication(jobPosting.findJobApplication(this));

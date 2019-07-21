@@ -118,7 +118,7 @@ public class ReferenceViewRefereeJobPostingsPanel extends JPanel implements List
         c.gridy++;
         mainPanel.add(new JTextArea(jobPosting.getBranch().getName()), c);
         c.gridy++;
-        mainPanel.add(new JTextArea(jobPosting.getCloseDate().toString()), c);
+        mainPanel.add(new JTextArea(jobPosting.getApplicantCloseDate().toString()), c);
     }
 
     // For the list selection listener

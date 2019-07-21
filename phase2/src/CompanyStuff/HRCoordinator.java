@@ -49,13 +49,14 @@ public class HRCoordinator extends User {
      * @param tags              The tags for this job posting.
      * @param numPositions      The number of positions for this job.
      * @param postDate          The date this job posting was posted.
-     * @param closeDate         The date this job posting is closed.
+     * @param applicationCloseDate  The last day for application submissions.
+     * @param referenceCloseDate    The last day for reference letter submissions.
      */
     public BranchJobPosting addJobPosting(String jobTitle, String jobField, String jobDescription,
                                           ArrayList<String> requiredDocuments, ArrayList<String> tags, int numPositions,
-                                          LocalDate postDate, LocalDate closeDate) {
+                                          LocalDate postDate, LocalDate applicationCloseDate, LocalDate referenceCloseDate) {
         BranchJobPosting branchJobPosting = new BranchJobPosting(jobTitle, jobField, jobDescription, requiredDocuments,
-                tags, numPositions, this.branch, postDate, closeDate);
+                tags, numPositions, this.branch, postDate, applicationCloseDate, referenceCloseDate);
         this.branch.getJobPostingManager().addJobPosting(branchJobPosting);
         return branchJobPosting;
     }

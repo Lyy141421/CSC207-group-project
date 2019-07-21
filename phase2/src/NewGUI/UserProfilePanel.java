@@ -12,13 +12,16 @@ public class UserProfilePanel extends JPanel {
     public UserProfilePanel(User user) {
         this.user = user;
         this.setLayout(new BorderLayout());
+        JPanel title = new FrequentlyUsedMethods().createTitlePanel("User Information", 30);
+        title.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
+        this.add(title, BorderLayout.PAGE_START);
         JPanel userInfoPanel = new JPanel();
         userInfoPanel.setLayout(new GridBagLayout());
         userInfoPanel.setBackground(Color.WHITE);
         GridBagConstraints c = new GridBagConstraints();
         this.addProfileCategoryLabels(c, userInfoPanel);
         this.addProfileCategoryValues(c, userInfoPanel);
-        userInfoPanel.setBorder(BorderFactory.createEmptyBorder(100, 0, 100, 0));
+        userInfoPanel.setBorder(BorderFactory.createEmptyBorder(100, 100, 100, 100));
         this.add(userInfoPanel, BorderLayout.CENTER);
     }
 

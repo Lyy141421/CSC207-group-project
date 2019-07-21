@@ -2,6 +2,7 @@ package CompanyStuff.JobPostings;
 
 import ApplicantStuff.Applicant;
 import ApplicantStuff.JobApplication;
+import ApplicantStuff.Reference;
 import CompanyStuff.Branch;
 import CompanyStuff.InterviewManager;
 import NotificationSystem.Notification;
@@ -17,7 +18,8 @@ public class BranchJobPosting extends CompanyJobPosting implements Observable, S
     // === Instance variables ===
     private int numPositions;
     private LocalDate postDate; // The date on which this job posting was listed
-    private LocalDate closeDate; // The date on which this job posting is closed
+    private LocalDate applicantCloseDate; // The date on which this job posting is closed for further applications
+    private LocalDate referenceCloseDate;  //   The date on which this job posting is closed for reference letter submission
     private boolean filled; // Whether the job posting is filled
     private Branch branch; // The branch that listed this job posting
     private ArrayList<JobApplication> jobApplications; // The list of applications for this job posting
@@ -27,12 +29,13 @@ public class BranchJobPosting extends CompanyJobPosting implements Observable, S
     // === Constructor ===
     public BranchJobPosting(String title, String field, String description, ArrayList<String> requiredDocuments,
                             ArrayList<String> tags, int numPositions, Branch branch,
-                            LocalDate postDate, LocalDate closeDate) {
+                            LocalDate postDate, LocalDate applicantCloseDate, LocalDate referenceCloseDate) {
         super(title, field, description, requiredDocuments, tags, branch.getCompany(), branch);
         this.numPositions = numPositions;
         this.branch = branch;
         this.postDate = postDate;
-        this.closeDate = closeDate;
+        this.applicantCloseDate = applicantCloseDate;
+        this.referenceCloseDate = referenceCloseDate;
         this.filled = false;
         this.jobApplications = new ArrayList<>();
         branch.getJobPostingManager().addJobPosting(this);
@@ -55,8 +58,12 @@ public class BranchJobPosting extends CompanyJobPosting implements Observable, S
         return this.interviewManager;
     }
 
-    public LocalDate getCloseDate() {
-        return this.closeDate;
+    public LocalDate getApplicantCloseDate() {
+        return this.applicantCloseDate;
+    }
+
+    public LocalDate getReferenceCloseDate() {
+        return this.referenceCloseDate;
     }
 
     public boolean isFilled() {
@@ -86,15 +93,39 @@ public class BranchJobPosting extends CompanyJobPosting implements Observable, S
 
     /**
      * Check whether this job posting has closed for further applications and updates the company document manager.
+     * @param today Today's date.
+     * @return true iff the application submission date has passed.
      */
-    public boolean isClosed(LocalDate today) {
-        boolean closed = this.closeDate.isBefore(today);
+    public boolean isClosedForApplications(LocalDate today) {
+        boolean closed = this.applicantCloseDate.isBefore(today);
         if (closed) {
             setChanged();
             notifyObservers();
-            this.createInterviewManager();
         }
         return closed;
+    }
+
+    /**
+     * Check whether this job posting has closed for reference letter submission.
+     *
+     * @param today Today's date.
+     * @return true iff the reference letter submission date has passed.
+     */
+    public boolean isClosedForReferences(LocalDate today) {
+        return this.referenceCloseDate.isBefore(today);
+    }
+
+    /**
+     * Get all the references for this job posting.
+     *
+     * @return a list of all the references for this job posting.
+     */
+    ArrayList<Reference> getAllReferences() {
+        ArrayList<Reference> references = new ArrayList<>();
+        for (JobApplication jobApp : this.jobApplications) {
+            references.addAll(jobApp.getReferences());
+        }
+        return references;
     }
 
     /**

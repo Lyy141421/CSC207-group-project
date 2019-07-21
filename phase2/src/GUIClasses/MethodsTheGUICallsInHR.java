@@ -56,8 +56,10 @@ public class MethodsTheGUICallsInHR {
         ArrayList<String> requirements = (ArrayList<String>) jobPostingFields[3];
         ArrayList<String> tags = (ArrayList<String>) jobPostingFields[4];
         int numPositions = (Integer) jobPostingFields[5];
-        LocalDate closeDate = (LocalDate) jobPostingFields[6];
-        this.hr.addJobPosting(title, field, description, requirements, tags, numPositions, today, closeDate);
+        LocalDate applicationCloseDate = (LocalDate) jobPostingFields[6];
+        LocalDate referenceCloseDate = (LocalDate) jobPostingFields[7];
+        this.hr.addJobPosting(title, field, description, requirements, tags, numPositions, today, applicationCloseDate,
+                referenceCloseDate);
     }
 
     /**
