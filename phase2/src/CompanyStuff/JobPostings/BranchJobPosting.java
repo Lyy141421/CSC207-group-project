@@ -237,7 +237,9 @@ public class BranchJobPosting extends CompanyJobPosting implements Observable, S
     // === Observable Methods ===
 
     public void attach(Observer observer){
-        observer_list.add(observer);
+        if (!observer_list.contains(observer)) {
+            observer_list.add(observer);
+        }
     }
 
     public void detach(Observer observer){
