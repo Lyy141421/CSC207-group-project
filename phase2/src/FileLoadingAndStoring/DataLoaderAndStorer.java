@@ -23,7 +23,7 @@ public class DataLoaderAndStorer {
     private static final String USER_FILE_PATH = FILES_FOLDER_PATH + "/users.ser";
     private static final String COMPANY_FILE_PATH = FILES_FOLDER_PATH + "/companies.ser";
     private static final String DATE_FILE_PATH = FILES_FOLDER_PATH + "/previousLoginDate.txt";
-    private static final String FSA_TO_CMA_FILENAME = FILES_FOLDER_PATH + "/CMA_per_FSA_Centroid.json";
+    private static final String FSA_TO_CMA_PATH = FILES_FOLDER_PATH + "/CMA_per_FSA_Centroid.json";
 
     public DataLoaderAndStorer(JobApplicationSystem jobApplicationSystem) {
         this.jobApplicationSystem = jobApplicationSystem;
@@ -76,7 +76,7 @@ public class DataLoaderAndStorer {
         Object obj = null;
         JSONObject jobj;
         try {
-            obj = new JSONParser().parse(new FileReader(FSA_TO_CMA_FILENAME));
+            obj = new JSONParser().parse(new FileReader(FSA_TO_CMA_PATH));
         } catch (IOException | ParseException e) {
             e.printStackTrace();
         }

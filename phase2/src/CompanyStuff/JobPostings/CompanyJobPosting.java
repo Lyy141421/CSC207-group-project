@@ -32,8 +32,7 @@ public class CompanyJobPosting extends Observable implements Serializable {
     private ArrayList<Branch> branches;
 
     // === Constructor ===
-    // TODO why is there both the company and the branch in the constructor? Isn't company just branch.getCompany()?
-    CompanyJobPosting(String title, String field, String description, ArrayList<String> requiredDocuments,
+    public CompanyJobPosting(String title, String field, String description, ArrayList<String> requiredDocuments,
                       ArrayList<String> tags, Company company, Branch branch) {
         totalNumOfCompanyJobPostings++;
         this.id = totalNumOfCompanyJobPostings;

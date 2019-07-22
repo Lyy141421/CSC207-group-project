@@ -114,7 +114,7 @@ public class HRViewPosting extends HRPanel{
                 currApps = getTitleToAppMap(appsUnderSelectedJP);
                 //Todo: add the currApps titles to JList in view application panel
 
-                ((CardLayout) parent.getLayout()).show(parent, "APPLICATION");
+                ((CardLayout) parent.getLayout()).show(parent, APPLICATION);
             }
         });
 

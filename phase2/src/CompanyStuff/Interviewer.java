@@ -32,6 +32,7 @@ public class Interviewer extends User {
         super(username, password, legalName, email, dateCreated);
         this.branch = branch;
         this.field = field;
+        branch.addInterviewer(this);
     }
 
     // === Getters ===

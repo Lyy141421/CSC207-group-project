@@ -29,6 +29,13 @@ public class BranchJobPostingManager implements Serializable {
         this.branchJobPostings = new ArrayList<>();
     }
 
+    public BranchJobPosting getBranchJobPosting(int id) {
+        for (BranchJobPosting posting : branchJobPostings)
+            if (posting.id == id)
+                return posting;
+        return null;
+    }
+
     public ArrayList<BranchJobPosting> getBranchJobPostings() {
         return branchJobPostings;
     }
