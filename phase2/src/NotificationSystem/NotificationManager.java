@@ -5,9 +5,11 @@ import java.util.ArrayList;
 
 public class NotificationManager implements Serializable {
     // === Instance Variables ===
+
     ArrayList<Notification> notification_list;
 
     // === Constructors ===
+
     public NotificationManager(){
         this.notification_list = new ArrayList<>();
     }
