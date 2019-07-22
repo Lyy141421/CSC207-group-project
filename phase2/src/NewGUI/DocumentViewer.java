@@ -48,18 +48,21 @@ import javax.swing.event.ListSelectionListener;
 public class DocumentViewer extends JPanel implements ListSelectionListener, ActionListener {
 
     // === Instance variables ===
-    private JLabel label = new JLabel("Select a file to open:");
-    private JList list;
-    private JButton openButton = new JButton("Open");
-    private String[] fileNames;
-    private File[] files;
+    private JList list; // The list of file names that the user can choose from.
+    private JButton openButton = new JButton("Open");   // The button which when clicked, will open the selected file
+    private String[] fileNames; // The file names of files that this user can view.
+    private File[] files;   // The files that this user can view
 
+    // === Representation Invariant ===
+    // The elements in fileNames and files correspond to each other (ie, fileNames[0] is the file name of files[0])
 
+    // === Constructor ===
     public DocumentViewer(String[] fileNames, File[] files) {
         this.fileNames = fileNames;
         this.files = files;
 
         this.setLayout(new BorderLayout());
+        JLabel label = new JLabel("Select a file to open:");
         label.setHorizontalAlignment(JLabel.CENTER);
         label.setBorder(BorderFactory.createEmptyBorder(30, 0, 0, 0));
         this.add(label, BorderLayout.NORTH);
