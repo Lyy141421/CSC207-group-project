@@ -49,4 +49,13 @@ public class ApplicantDocumentManager extends DocumentManager {
             this.removeDocuments(documents);
         }
     }
+
+    /**
+     * Get a nested list of file names and and file objects of files in this applicant's account.
+     *
+     * @return a nested list of file names and file objects of files in this applicant's account.
+     */
+    public Object[][] getListOfFileNamesAndFiles() {
+        return new Object[][]{this.getFolder().list(), this.getFolder().listFiles()};
+    }
 }
