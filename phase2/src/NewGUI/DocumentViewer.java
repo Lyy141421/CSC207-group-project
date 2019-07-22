@@ -31,10 +31,6 @@
 
 package NewGUI;
 
-import ApplicantStuff.Applicant;
-import FileLoadingAndStoring.DataLoaderAndStorer;
-import Main.JobApplicationSystem;
-
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -45,7 +41,7 @@ import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-public class DocumentViewer extends JPanel implements ListSelectionListener, ActionListener {
+public class DocumentViewer extends JPanel {
 
     // === Instance variables ===
     private JList list; // The list of file names that the user can choose from.
@@ -77,20 +73,35 @@ public class DocumentViewer extends JPanel implements ListSelectionListener, Act
      */
     private void createOpenButtonPanel() {
         JPanel openButtonPanel = new JPanel();
-        openButton.addActionListener(this);
         openButton.setEnabled(false);
         openButton.setSize(50, 20);
         openButtonPanel.add(openButton);
         openButtonPanel.setBorder(BorderFactory.createEmptyBorder(30, 0, 30, 0));
+        openButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    Desktop.getDesktop().open(files[list.getSelectedIndex()]);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
         this.add(openButtonPanel, BorderLayout.PAGE_END);
     }
-
 
     private void createListPanel() {
         list = new JList(this.fileNames);
         list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         list.setSelectedIndex(-1);
-        list.addListSelectionListener(this);
+        list.addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                if (list.getSelectedIndex() != -1) {
+                    openButton.setEnabled(true);
+                }
+            }
+        });
 
         JPanel listPanel = new JPanel();
         listPanel.add(new JScrollPane(list));
@@ -98,23 +109,6 @@ public class DocumentViewer extends JPanel implements ListSelectionListener, Act
         this.add(listPanel, BorderLayout.CENTER);
     }
 
-    // List listener
-    @Override
-    public void valueChanged(ListSelectionEvent e) {
-        if (list.getSelectedIndex() != -1) {
-            openButton.setEnabled(true);
-        }
-    }
-
-    // Action listener of button
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        try {
-            Desktop.getDesktop().open(files[list.getSelectedIndex()]);
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-    }
 
     /**
      * Create the GUI and show it.  For thread safety,
@@ -122,13 +116,10 @@ public class DocumentViewer extends JPanel implements ListSelectionListener, Act
      * event-dispatching thread.
      */
     private static void createAndShowGUI() {
-        JobApplicationSystem jobApplicationSystem = new JobApplicationSystem();
-        new DataLoaderAndStorer(jobApplicationSystem).loadAllData();
-        Applicant applicant = jobApplicationSystem.getUserManager().getAllApplicants().get(0);
         //Create and set up the window.
         JFrame frame = new JFrame("SplitPaneDemo");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        DocumentViewer documentViewer = new DocumentViewer(applicant.getDocumentManager().getFolder());
+        DocumentViewer documentViewer = new DocumentViewer(new File("./uploadedDocuments/companies/Company/Branch/1_title/username"));
         frame.getContentPane().add(documentViewer);
 
         //Display the window.
