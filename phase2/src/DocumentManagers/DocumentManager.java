@@ -1,7 +1,6 @@
 package DocumentManagers;
 
 import ApplicantStuff.JobApplicationDocument;
-import Main.User;
 
 import java.io.File;
 import java.io.Serializable;
@@ -20,7 +19,7 @@ public class DocumentManager implements Serializable {
     }
 
     // === Getters ===
-    File getFolder() {
+    public File getFolder() {
         return this.folder;
     }
 

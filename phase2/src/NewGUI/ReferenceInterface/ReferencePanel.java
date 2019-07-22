@@ -91,7 +91,8 @@ public class ReferencePanel extends JPanel {
                 new ArrayList<>(Arrays.asList("CV", "Cover Letter", "Reference Letter")), new ArrayList<>(), 1, branch, LocalDate.of(2019, 7, 19), LocalDate.of(2019, 7, 19), LocalDate.now());
         JobApplication jobApp = new JobApplication(applicant, jobPosting, new ArrayList<>(), LocalDate.of(2019, 7, 19));
         JobApplicationDocument doc = new JobApplicationDocument(new File("./sample.txt"), applicant.getUsername());
-        jobApp.addFiles(new ArrayList<>(Arrays.asList(doc)));
+        JobApplicationDocument doc2 = new JobApplicationDocument(new File("./sample.txt"), applicant.getUsername());
+        jobApp.addFiles(new ArrayList<>(Arrays.asList(doc, doc2)));
         Applicant applicant2 = jobApplicationSystem.getUserManager().createApplicant("username2", "password", "Legal Name2", "email@gmail.com", LocalDate.of(2019, 7, 19), "L4B4P8");
         BranchJobPosting jobPosting2 = new BranchJobPosting("title2", "field", "description",
                 new ArrayList<>(Arrays.asList("CV", "Cover Letter", "Reference Letter")), new ArrayList<>(), 1, branch, LocalDate.of(2019, 7, 20), LocalDate.of(2019, 7, 20), LocalDate.now());

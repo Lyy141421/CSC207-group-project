@@ -76,6 +76,7 @@ public class FileChooser extends JPanel implements ActionListener {
 
         //Create a file chooser
         fc = new JFileChooser();
+        fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
 
         uploadButton = new JButton("Upload", new ImageIcon(uploadButtonIconPath));
         uploadButton.addActionListener(this);
