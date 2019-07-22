@@ -38,18 +38,25 @@ public class HRViewPosting extends HRPanel{
 
         JSplitPane splitDisplay = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
         splitDisplay.setDividerLocation(250);
-        this.setJList(splitDisplay);
+        this.setJobPostingList(splitDisplay);
         this.setInfoBox(splitDisplay);
 
         JPanel buttons = new JPanel(new FlowLayout());
         buttons.add(this.createScheduleButton());
         buttons.add(this.createViewAppButton());
         buttons.add(this.homeButton);
+        //TODO: when page first loaded, first item is automatically displayed, but not SELECTED for itemListener to pick up.
 
+        this.add(splitDisplay, BorderLayout.CENTER);
+        this.add(buttons, BorderLayout.SOUTH);
+
+        this.setListSelectionListener();
+    }
+
+    private void setListSelectionListener() {
         this.jobPostingList.addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
-                //TODO: adapt previous itemListener to listSelectionListener
                 String selectedTitle = jobPostingList.getSelectedValue();
                 BranchJobPosting selectedJP = currJPs.get(selectedTitle);
                 info.setText(getStatus(selectedTitle) + selectedJP.toString());
@@ -60,11 +67,6 @@ public class HRViewPosting extends HRPanel{
                 }
             }
         });
-
-        //TODO: when page first loaded, first item is automatically displayed, but not SELECTED for itemListener to pick up.
-
-        this.add(splitDisplay, BorderLayout.CENTER);
-        this.add(buttons, BorderLayout.SOUTH);
     }
 
     private JButton createScheduleButton () {
@@ -87,12 +89,10 @@ public class HRViewPosting extends HRPanel{
         return scheduleButton;
     }
 
-    private void setJList (JSplitPane splitDisplay) {
-        jobPostingList = new JList<>();
-        //Todo: add content to JList
+    private void setJobPostingList (JSplitPane splitDisplay) {
+        jobPostingList = new JList<>(currJPs.keySet().toArray(new String[currJPs.size()]));
         jobPostingList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
         jobPostingList.setLayoutOrientation(JList.VERTICAL);
-
         splitDisplay.setLeftComponent(new JScrollPane(jobPostingList));
     }
 
