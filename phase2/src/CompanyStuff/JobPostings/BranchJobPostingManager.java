@@ -4,6 +4,7 @@ import ApplicantStuff.Applicant;
 import ApplicantStuff.Reference;
 import CompanyStuff.Branch;
 import CompanyStuff.InterviewManager;
+import DocumentManagers.CompanyDocumentManager;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -26,6 +27,13 @@ public class BranchJobPostingManager implements Serializable {
     public BranchJobPostingManager(Branch branch) {
         this.branch = branch;
         this.branchJobPostings = new ArrayList<>();
+    }
+
+    public BranchJobPosting getBranchJobPosting(int id) {
+        for (BranchJobPosting posting : branchJobPostings)
+            if (posting.id == id)
+                return posting;
+        return null;
     }
 
     public ArrayList<BranchJobPosting> getBranchJobPostings() {
@@ -79,12 +87,13 @@ public class BranchJobPostingManager implements Serializable {
     }
 
     /**
-     * Get a list of job postings for this branch that have recently closed and have not yet been reviewed for interviews.
+     * Get a list of job postings for this branch that have recently closed for applications, ie, they do not have an
+     * interview manager.
      *
      * @param today Today's date.
-     * @return a list of closed job postings that have not yet started the interview process.
+     * @return a list of recently closed job postings for applicants.
      */
-    public ArrayList<BranchJobPosting> getClosedJobPostingsNoApplicantsChosen(LocalDate today) {
+    public ArrayList<BranchJobPosting> getJobPostingsRecentlyClosedForApplications(LocalDate today) {
         ArrayList<BranchJobPosting> jobPostings = new ArrayList<>();
         for (BranchJobPosting jobPosting : this.getClosedJobPostingsNotFilled(today)) {
             if (jobPosting.getInterviewManager() == null) {
@@ -93,6 +102,25 @@ public class BranchJobPostingManager implements Serializable {
         }
         return jobPostings;
     }
+
+    /**
+     * Get a list of job postings for this branch that have recently closed for reference letters, ie, they do not have
+     * an interview configuration set up.
+     *
+     * @param today Today's date.
+     * @return a list of recently closed job postings for references.
+     */
+    public ArrayList<BranchJobPosting> getJobPostingsRecentlyClosedForReferences(LocalDate today) {
+        ArrayList<BranchJobPosting> jobPostings = new ArrayList<>();
+        for (BranchJobPosting jobPosting : this.getClosedJobPostingsNotFilled(today)) {
+            if (jobPosting.getInterviewManager().getInterviewConfiguration().isEmpty()) {
+                jobPostings.add(jobPosting);
+            }
+        }
+        return jobPostings;
+    }
+
+    // TODO separating choosing the interview configuration from the selection of applicants for the first round?
 
     /**
      * Get a list of job postings with no applications in consideration.
@@ -209,14 +237,20 @@ public class BranchJobPostingManager implements Serializable {
     }
 
     /**
-     * Update the job postings that are closed for further applications.
+     * Update the job postings that are closed for further applications and create an interview manager.
      *
      * @param today Today's date.
      */
-    // TODO this method must be called with every change of date.
+    // TODO this method must be called after the user enters the date and before program launches
     public void updateJobPostingsClosedForApplications(LocalDate today) {
-        for (BranchJobPosting jobPosting : this.getBranchJobPostings()) {
-            jobPosting.isClosedForApplications(today);
+        CompanyDocumentManager companyDocManager = this.getBranch().getCompany().getDocumentManager();
+        for (BranchJobPosting jobPosting : this.getJobPostingsRecentlyClosedForApplications(today)) {
+            if (jobPosting.isClosedForApplications(today) && !companyDocManager.applicationDocumentsTransferred(jobPosting)) {
+                companyDocManager.transferApplicationDocuments(jobPosting);
+                // Creates an interview manager so that if applicant withdraws their application from this point on,
+                // they are automatically rejected.
+                jobPosting.createInterviewManager(today);
+            }
         }
     }
 
@@ -225,9 +259,9 @@ public class BranchJobPostingManager implements Serializable {
      *
      * @param today Today's date.
      */
-    // TODO this method must be called with every change of date.
+    // TODO this method must be called after the user enters the date and before program launches
     public void updateJobPostingsClosedForReferences(LocalDate today) {
-        for (BranchJobPosting jobPosting : this.getBranchJobPostings()) {
+        for (BranchJobPosting jobPosting : this.getJobPostingsRecentlyClosedForReferences(today)) {
             if (jobPosting.isClosedForReferences(today)) {
                 for (Reference reference : jobPosting.getAllReferences()) {
                     // If the reference still has not yet submitted their reference letter for a job app for this job

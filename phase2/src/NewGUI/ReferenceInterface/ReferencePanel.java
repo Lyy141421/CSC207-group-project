@@ -83,7 +83,7 @@ public class ReferencePanel extends JPanel {
         jobApplicationSystem.setPreviousLoginDate(LocalDate.now());
         Reference reference = jobApplicationSystem.getUserManager().createReference("bob@gmail.com", LocalDate.now());
         Company company = jobApplicationSystem.createCompany("Company");
-        Branch branch = new Branch("Branch", "L4B3Z9");
+        Branch branch = new Branch("Branch", "L4B3Z9", company);
         branch.setCompany(company);
         company.addBranch(branch);
         Applicant applicant = jobApplicationSystem.getUserManager().createApplicant("username", "password", "Legal Name", "email@gmail.com", LocalDate.now(), "L4B4P8");
@@ -99,8 +99,6 @@ public class ReferencePanel extends JPanel {
         JobApplication jobApp2 = new JobApplication(applicant2, jobPosting2, new ArrayList<>(), LocalDate.of(2019, 7, 19));
         jobPosting.addJobApplication(jobApp);
         jobPosting2.addJobApplication(jobApp2);
-        jobPosting.addObserver(company.getDocumentManager());
-        jobPosting2.addObserver(company.getDocumentManager());
         reference.addJobApplicationForReference(jobApp);
         reference.addJobApplicationForReference(jobApp2);
         BranchJobPostingManager branchJobPostingManager = branch.getJobPostingManager();

@@ -10,10 +10,8 @@ import CompanyStuff.JobPostings.BranchJobPosting;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Observable;
-import java.util.Observer;
 
-public class CompanyDocumentManager extends DocumentManager implements Observer {
+public class CompanyDocumentManager extends DocumentManager {
 
     // === Class variables ===
     public static String FOLDER = DocumentManager.INITIAL_PATH + "/companies";
@@ -150,9 +148,22 @@ public class CompanyDocumentManager extends DocumentManager implements Observer 
         }
     }
 
-    @Override
-    public void update(Observable o, Object arg) {
-        BranchJobPosting branchJobPosting = (BranchJobPosting) o;
+    /**
+     * Check whether documents have already been transferred for this job posting.
+     *
+     * @param jobPosting The job posting in question.
+     * @return true iff documents have already been transferred for this job posting.
+     */
+    public boolean applicationDocumentsTransferred(BranchJobPosting jobPosting) {
+        return this.getFolderForJobPosting(jobPosting).exists();
+    }
+
+    /**
+     * Make documents submitted for applications to this job posting to be visible to the branch.
+     *
+     * @param branchJobPosting The job posting that has recently closed for further applications.
+     */
+    public void transferApplicationDocuments(BranchJobPosting branchJobPosting) {
         File jobPostingFolder = this.createBranchJobPostingFolder(branchJobPosting);
         ArrayList<JobApplication> jobApps = branchJobPosting.getJobApplications();
         for (JobApplication jobApp : jobApps) {

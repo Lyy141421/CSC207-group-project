@@ -123,6 +123,18 @@ public class JobApplication implements Serializable {
         }
     }
 
+    /**
+     * Remove this job application from all the references' lists.
+     * This is called when an application is withdrawn before the reference close date.
+     */
+    public void removeAppFromAllReferences() {
+        for (Reference reference : this.getReferences()) {
+            if (reference.getJobAppsForReference().contains(this)) {
+                reference.removeJobApplicationForReference(this);
+            }
+        }
+    }
+
 
     /**
      * Checks whether this application has been archived.
