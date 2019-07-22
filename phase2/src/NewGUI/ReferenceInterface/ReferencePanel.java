@@ -99,8 +99,6 @@ public class ReferencePanel extends JPanel {
         JobApplication jobApp2 = new JobApplication(applicant2, jobPosting2, new ArrayList<>(), LocalDate.of(2019, 7, 19));
         jobPosting.addJobApplication(jobApp);
         jobPosting2.addJobApplication(jobApp2);
-        jobPosting.addObserver(company.getDocumentManager());
-        jobPosting2.addObserver(company.getDocumentManager());
         reference.addJobApplicationForReference(jobApp);
         reference.addJobApplicationForReference(jobApp2);
         BranchJobPostingManager branchJobPostingManager = branch.getJobPostingManager();

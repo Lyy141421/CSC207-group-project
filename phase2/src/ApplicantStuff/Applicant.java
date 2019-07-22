@@ -8,6 +8,7 @@ import DocumentManagers.DocumentManagerFactory;
 import CompanyStuff.JobPostings.BranchJobPostingManager;
 import Main.JobApplicationSystem;
 import Main.User;
+import NotificationSystem.Observable;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -56,12 +57,11 @@ public class Applicant extends User {
     // === Other methods ===
 
     /**
-     * Register this job application for this applicant.
+     * Register this job application for this applicant. Note: This is done prior to file submission.
      *
      * @param application The job application registered.
      */
     public void registerJobApplication(JobApplication application) {
-        // TODO what to do with documents submitted
         jobApplicationManager.addJobApplication(application);
     }
 
@@ -73,13 +73,16 @@ public class Applicant extends User {
      * @return true iff this applicant can successfully withdraw their application; else return false
      */
     public boolean withdrawJobApplication(LocalDate today, BranchJobPosting jobPosting) {
+        JobApplication jobApp = jobPosting.findJobApplication(this);
         if (this.hasAppliedToPosting(jobPosting) && !jobPosting.isFilled()) {
-            if (!jobPosting.isClosedForApplications(today)) {
-                // TODO replace with notify -- notify job posting, interview manager (if it exists),
-                // interviewer (if interview has been scheduled), referee (if there is one)
-                //jobPosting.removeJobApplication(jobPosting.findJobApplication(this));
+            if (!jobPosting.isClosedForApplications(today)) {   // Company still does not have access to application
+                jobPosting.removeJobApplication(jobApp);
             }
-            this.jobApplicationManager.removeJobApplication(jobPosting);
+            if (!jobPosting.isClosedForReferences(today)) { // Company has access to application, but before interview selection
+                jobApp.removeAppFromAllReferences();    // Cancel reference letter submissions
+            }
+            jobPosting.getInterviewManager().withdrawApplication(jobApp);   // Update application from the company end
+            this.jobApplicationManager.removeJobApplication(jobPosting);    // Remove this application from applicant end
             return true;
         }
         return false;

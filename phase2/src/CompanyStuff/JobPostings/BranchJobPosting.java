@@ -5,6 +5,7 @@ import ApplicantStuff.JobApplication;
 import ApplicantStuff.Reference;
 import CompanyStuff.Branch;
 import CompanyStuff.InterviewManager;
+import DocumentManagers.CompanyDocumentManager;
 import NotificationSystem.Notification;
 import NotificationSystem.Observable;
 import NotificationSystem.Observer;
@@ -92,17 +93,12 @@ public class BranchJobPosting extends CompanyJobPosting implements Observable, S
     }
 
     /**
-     * Check whether this job posting has closed for further applications and updates the company document manager.
+     * Check whether this job posting has closed for further applications.
      * @param today Today's date.
      * @return true iff the application submission date has passed.
      */
     public boolean isClosedForApplications(LocalDate today) {
-        boolean closed = this.applicantCloseDate.isBefore(today);
-        if (closed) {
-            setChanged();
-            notifyObservers();
-        }
-        return closed;
+        return this.applicantCloseDate.isBefore(today);
     }
 
     /**
@@ -162,12 +158,15 @@ public class BranchJobPosting extends CompanyJobPosting implements Observable, S
     }
 
     /**
-     * Create an interview manager for this job posting.
+     * Create an interview manager for this job posting after this branch posting has been closed for further applications.
+     * @param today Today's date.
      */
-    public void createInterviewManager() {
-        InterviewManager interviewManager = new InterviewManager(this,
-                (ArrayList<JobApplication>) this.getJobApplications().clone());
-        this.setInterviewManager(interviewManager);
+    public void createInterviewManager(LocalDate today) {
+        if (this.isClosedForApplications(today) && this.interviewManager == null) {
+            InterviewManager interviewManager = new InterviewManager(this,
+                    (ArrayList<JobApplication>) this.getJobApplications().clone());
+            this.setInterviewManager(interviewManager);
+        }
     }
 
     /**
@@ -220,7 +219,7 @@ public class BranchJobPosting extends CompanyJobPosting implements Observable, S
      *
      * @param jobApplication The job application to be removed.
      */
-    void removeJobApplication(JobApplication jobApplication) {
+    public void removeJobApplication(JobApplication jobApplication) {
         this.jobApplications.remove(jobApplication);
     }
 
