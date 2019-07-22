@@ -115,7 +115,7 @@ public class JobApplicationSystem {
     /**
      * Methods that removes the files from one's account if user has not been active for at least 30 days.
      */
-    private void applicant30Day() {
+    private void applicant30Day() {//todo remove
         for (Applicant app : this.userManager.getAllApplicants()) {
             app.getDocumentManager().removeFilesFromAccountIfInactive(this.today);
         }

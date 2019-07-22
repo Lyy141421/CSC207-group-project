@@ -15,7 +15,7 @@ public class Notification implements Serializable {
     // === Constructors ===
 
     public Notification(String title, String message) {
-        this.date = LocalDate.now();
+        this.date = LocalDate.now();//todo change
         this.title = title;
         this.message = message;
     }
