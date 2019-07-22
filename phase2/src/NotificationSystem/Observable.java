@@ -27,4 +27,9 @@ public interface Observable {
      */
     void notifyObserver(Observer observer, Notification notification);
 
+    /**
+     * A method to internally change the structure of the observer list
+     */
+    void updateObserverList();
+
 }
