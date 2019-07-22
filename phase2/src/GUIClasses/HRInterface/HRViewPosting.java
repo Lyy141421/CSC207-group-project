@@ -26,8 +26,8 @@ public class HRViewPosting extends HRPanel{
     private HashMap<String, BranchJobPosting> importantJP = new HashMap<>();
     private HashMap<String, BranchJobPosting> allJP;
 
-    private JList<String> jobPostingList = new JList<>();
     private JTextArea info;
+    private JButton scheduleButton;
 
 
     HRViewPosting(Container contentPane, MethodsTheGUICallsInHR HRInterface, LocalDate today) {
@@ -54,9 +54,9 @@ public class HRViewPosting extends HRPanel{
                 BranchJobPosting selectedJP = currJPs.get(selectedTitle);
                 info.setText(getStatus(selectedTitle) + selectedJP.toString());
                 if (scheduleJP.containsKey(selectedTitle)) {
-                    scheduleInterview.setEnabled(false);
+                    scheduleButton.setEnabled(false);
                 } else {
-                    scheduleInterview.setEnabled(true);
+                    scheduleButton.setEnabled(true);
                 }
             }
         });
@@ -68,8 +68,8 @@ public class HRViewPosting extends HRPanel{
     }
 
     private JButton createScheduleButton () {
-        JButton scheduleButton = new JButton("Schedule");
-        scheduleButton.addActionListener(new ActionListener() {
+        this.scheduleButton = new JButton("Schedule");
+        this.scheduleButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String selectedTitle = jobPostingList.getSelectedValue();
@@ -88,7 +88,7 @@ public class HRViewPosting extends HRPanel{
     }
 
     private void setJList (JSplitPane splitDisplay) {
-        JList<String> jobPostingList = new JList<>();
+        jobPostingList = new JList<>();
         //Todo: add content to JList
         jobPostingList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
         jobPostingList.setLayoutOrientation(JList.VERTICAL);
