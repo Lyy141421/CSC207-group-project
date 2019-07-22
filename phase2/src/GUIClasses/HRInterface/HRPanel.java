@@ -22,6 +22,8 @@ abstract class HRPanel extends JPanel {
 
     static HashMap<String, BranchJobPosting> currJPs;
     static HashMap<String, JobApplication> currApps;
+    static JList<String> jobPostingList = new JList<>();
+    static JList<String> applicationList = new JList<>();
 
     /*private JPanel hireOrRejectButtons = new JPanel();
     private JPanel phoneOrNotButtons = new JPanel();*/
@@ -88,26 +90,6 @@ abstract class HRPanel extends JPanel {
 
     String toAppTitles(JobApplication jobApplication) {
         return jobApplication.getId() + "-" + jobApplication.getApplicant().getLegalName();
-    }
-
-    String getInfo(JobApplication app, int attributeIndex) {
-        String info;
-
-        switch (attributeIndex) {
-            case 0:
-                info = app.getOverview();
-                break;
-            case 1:
-                info = app.getCV().getContents();
-                break;
-            case 2:
-                info = app.getCoverLetter().getContents();
-                break;
-            default:
-                throw new IllegalStateException("Unexpected value: " + attributeIndex);
-        }
-
-        return info;
     }
 }
 /*
