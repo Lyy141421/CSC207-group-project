@@ -8,7 +8,7 @@ public class NotificationManager implements Serializable {
     ArrayList<Notification> notification_list;
 
     // === Constructors ===
-    public void NotificationManager(){
+    public NotificationManager(){
         this.notification_list = new ArrayList<>();
     }
 

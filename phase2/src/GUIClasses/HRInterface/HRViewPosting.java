@@ -27,6 +27,7 @@ public class HRViewPosting extends HRPanel{
     private HashMap<String, BranchJobPosting> allJP;
 
     private JList<String> jobPostingList = new JList<>();
+    private JTextArea info;
 
 
     HRViewPosting(Container contentPane, MethodsTheGUICallsInHR HRInterface, LocalDate today) {
@@ -49,24 +50,16 @@ public class HRViewPosting extends HRPanel{
             @Override
             public void valueChanged(ListSelectionEvent e) {
                 //TODO: adapt previous itemListener to listSelectionListener
-            }
-        });
-
-                /*(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                if (e.getStateChange() == ItemEvent.SELECTED) {
-                    int selectedIndex = jobPostings.getSelectedIndex();
-                    JobPosting selectedJP = currJPs.get(selectedIndex);
-                    info.setText(getStatus(selectedJP) + selectedJP.toString());
-                    if (scheduleJP.contains(selectedJP)) {
-                        scheduleInterview.setEnabled(false);
-                    } else {
-                        scheduleInterview.setEnabled(true);
-                    }
+                String selectedTitle = jobPostingList.getSelectedValue();
+                BranchJobPosting selectedJP = currJPs.get(selectedTitle);
+                info.setText(getStatus(selectedTitle) + selectedJP.toString());
+                if (scheduleJP.containsKey(selectedTitle)) {
+                    scheduleInterview.setEnabled(false);
+                } else {
+                    scheduleInterview.setEnabled(true);
                 }
             }
-        });*/
+        });
 
         //TODO: when page first loaded, first item is automatically displayed, but not SELECTED for itemListener to pick up.
 
@@ -104,11 +97,11 @@ public class HRViewPosting extends HRPanel{
     }
 
     private void setInfoBox (JSplitPane splitDisplay) {
-        JTextArea info = new JTextArea("Select a job posting to view information.");
-        info.setEditable(false);
-        info.setBorder(new EtchedBorder(EtchedBorder.LOWERED));
+        this.info = new JTextArea("Select a job posting to view information.");
+        this.info.setEditable(false);
+        this.info.setBorder(new EtchedBorder(EtchedBorder.LOWERED));
 
-        splitDisplay.setRightComponent(new JScrollPane(info));
+        splitDisplay.setRightComponent(new JScrollPane(this.info));
     }
 
     private JButton createViewAppButton () {
