@@ -50,6 +50,7 @@ public class DocumentViewer extends JPanel implements ListSelectionListener, Act
     // === Instance variables ===
     private JList list; // The list of file names that the user can choose from.
     private JButton openButton = new JButton("Open");   // The button which when clicked, will open the selected file
+    private File folder;    // The folder in which are files that this user can view.
     private String[] fileNames; // The file names of files that this user can view.
     private File[] files;   // The files that this user can view
 
@@ -57,9 +58,9 @@ public class DocumentViewer extends JPanel implements ListSelectionListener, Act
     // The elements in fileNames and files correspond to each other (ie, fileNames[0] is the file name of files[0])
 
     // === Constructor ===
-    public DocumentViewer(String[] fileNames, File[] files) {
-        this.fileNames = fileNames;
-        this.files = files;
+    public DocumentViewer(File folder) {
+        this.fileNames = folder.list();
+        this.files = folder.listFiles();
 
         this.setLayout(new BorderLayout());
         JLabel label = new JLabel("Select a file to open:");
@@ -124,12 +125,10 @@ public class DocumentViewer extends JPanel implements ListSelectionListener, Act
         JobApplicationSystem jobApplicationSystem = new JobApplicationSystem();
         new DataLoaderAndStorer(jobApplicationSystem).loadAllData();
         Applicant applicant = jobApplicationSystem.getUserManager().getAllApplicants().get(0);
-        String[] fileNames = (String[]) applicant.getDocumentManager().getListOfFileNamesAndFiles()[0];
-        File[] files = (File[]) applicant.getDocumentManager().getListOfFileNamesAndFiles()[1];
         //Create and set up the window.
         JFrame frame = new JFrame("SplitPaneDemo");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        DocumentViewer documentViewer = new DocumentViewer(fileNames, files);
+        DocumentViewer documentViewer = new DocumentViewer(applicant.getDocumentManager().getFolder());
         frame.getContentPane().add(documentViewer);
 
         //Display the window.
