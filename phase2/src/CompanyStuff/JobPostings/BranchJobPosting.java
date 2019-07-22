@@ -247,6 +247,7 @@ public class BranchJobPosting extends CompanyJobPosting implements Observable, S
     }
 
     public void notifyAllObservers(Notification notification){
+        updateObserverList();
         for (Observer observer : observer_list){
             notifyObserver(observer, notification);
         }
@@ -254,5 +255,13 @@ public class BranchJobPosting extends CompanyJobPosting implements Observable, S
 
     public void notifyObserver(Observer observer, Notification notification){
         observer.update(notification);
+    }
+
+    public void updateObserverList(){
+        ArrayList<Observer> observer_l = new ArrayList<>();
+        for (JobApplication job_application : this.interviewManager.getApplicationsInConsideration()){
+            observer_l.add(job_application.getApplicant());
+        }
+        this.observer_list = observer_l;
     }
 }
