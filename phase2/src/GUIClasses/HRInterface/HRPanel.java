@@ -20,6 +20,14 @@ abstract class HRPanel extends JPanel {
     MethodsTheGUICallsInHR HRInterface;
     LocalDate today;
 
+    //=====Constants=====
+    static String HOME = "HOME";
+    static String POSTING = "POSTING";
+    static String APPLICATION = "APPLICATION";
+    static String SEARCH = "SEARCH";
+    static String ADD_POSTING = "ADDPOSTING";
+
+
     static HashMap<String, BranchJobPosting> currJPs;
     static HashMap<String, JobApplication> currApps;
     static JList<String> jobPostingList = new JList<>();
@@ -36,13 +44,6 @@ abstract class HRPanel extends JPanel {
         this.today = today;
 
         this.createHomeButton();
-
-        /*this.setLayout(new CardLayout());
-        this.add(home(), "HOME");
-        this.add(browsePosting(), "POSTING");
-        this.add(viewApplication(), "APPLICATION");
-        this.add(searchApplicant(), "APPLICANT");
-        this.add(addPosting(), "ADDPOSTING");*/
     }
 
     private void createHomeButton() {
@@ -50,8 +51,7 @@ abstract class HRPanel extends JPanel {
         this.homeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                CardLayout cards = (CardLayout) parent.getLayout();
-                cards.show(parent, "HOME");
+                ((CardLayout) parent.getLayout()).show(parent, HOME);
             }
         });
     }
