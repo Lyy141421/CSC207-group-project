@@ -115,12 +115,12 @@ public class Applicant extends User {
      *
      * @return a list of open job postings not yet applied to.
      */
-    public ArrayList<BranchJobPosting> getOpenJobPostingsNotAppliedTo(JobApplicationSystem JAS) {
+    public ArrayList<BranchJobPosting> getOpenJobPostingsNotAppliedTo(JobApplicationSystem jobAppSystem) {
         ArrayList<BranchJobPosting> jobPostings = new ArrayList<>();
-        for (Company company : JAS.getCompanies())
+        for (Company company : jobAppSystem.getCompanies())
             for (Branch branch : company.getBranches()) {
                 BranchJobPostingManager jpm = branch.getJobPostingManager();
-                ArrayList<BranchJobPosting> openPostings = jpm.getOpenJobPostings(JAS.getToday());
+                ArrayList<BranchJobPosting> openPostings = jpm.getOpenJobPostings(jobAppSystem.getToday());
                 openPostings.retainAll(jpm.getJobPostingsNotAppliedToBy(this));
                 jobPostings.addAll(openPostings);
                 }
