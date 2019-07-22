@@ -137,14 +137,15 @@ public class InterviewManager implements Serializable {
     public void withdrawApplication(JobApplication applicationToWithdraw) {
         if (!applicationToWithdraw.getInterviews().isEmpty()) {
             Interview interview = applicationToWithdraw.getLastInterview();
+            interview.removeApplication(applicationToWithdraw);
             // If it is a group interview and there are still people left, do not withdraw
-            if (!interview.isComplete() && interview.getNumApplications() == 1) {
+            if (interview.getJobApplications().isEmpty()) {
                 for (Interviewer interviewer : interview.getAllInterviewers()) {
                     interviewer.removeInterview(interview);
                 }
             }
-            this.reject(applicationToWithdraw);
         }
+        this.reject(applicationToWithdraw);
     }
 
     /**

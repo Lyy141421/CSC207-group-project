@@ -23,7 +23,7 @@ public class JobApplicationDocument implements Serializable {
         this.file = file;
     }
 
-    // === Constructors for applicants ===
+    // === Constructors for applicants submitting a file ===
     public JobApplicationDocument(File file, String username) {
         File folder = new File(ApplicantDocumentManager.FOLDER + "/" + username);
         String filePath = folder.getPath() + "/" + file.getName();
@@ -31,27 +31,19 @@ public class JobApplicationDocument implements Serializable {
         this.file = new File(filePath);
     }
 
-    /**
-     * Submit this job application document to the company.
-     *
-     * @param jobPosting The job posting for which this application is being submitted.
-     * @param applicant  The applicant for which this document is being submitted.
-     */
-    // TODO fix
-    public void submit(BranchJobPosting jobPosting, Applicant applicant) {
-        String applicantFolderInJobPostingPath = CompanyDocumentManager.FOLDER + "/" + jobPosting.getBranch().getName()
-                + "/" + jobPosting.getId() + "_" + jobPosting.getTitle() + "/" + applicant.getUsername();
-        String companyDestinationPath = applicantFolderInJobPostingPath + "/" + this.file.getName();
-        File applicantFolder = new File(applicantFolderInJobPostingPath);
-        try {
-            if (!applicantFolder.exists()) {
-                applicantFolder.mkdirs();
-                applicantFolder.createNewFile();
-            }
-            this.copyFile(companyDestinationPath);
-        } catch (IOException io) {
-            io.printStackTrace();
+    // === Constructor for applicants submitting cover letter or CV from text box ===
+    JobApplicationDocument(String contents, String fileType, Applicant applicant) {
+        File folder = new File(ApplicantDocumentManager.FOLDER + "/" + applicant.getUsername());
+        String filePath = folder.getPath() + "/" + fileType + ".txt";
+        if (Paths.get(filePath).toFile().exists()) {
+            filePath = this.getNewFilePath(filePath);
         }
+        this.file = this.createNewFile(filePath, contents);
+    }
+
+    // === Getters ===
+    public File getFile() {
+        return this.file;
     }
 
     public void copyFile(String destinationPath) {
@@ -73,27 +65,22 @@ public class JobApplicationDocument implements Serializable {
     // ============================================================================================================== //
     // === Package-private methods ===
 
-    // === Constructor for applicants submitting cover letter or CV from text box ===
-    JobApplicationDocument(String contents, String fileType, Applicant applicant) {
-        File folder = new File(ApplicantDocumentManager.FOLDER + "/" + applicant.getUsername());
-        String filePath = folder.getPath() + "/" + fileType + ".txt";
-        if (Paths.get(filePath).toFile().exists()) {
-            filePath = this.getNewFilePath(filePath);
-        }
-        this.file = this.createNewFile(filePath, contents);
-    }
-
-    // === Getters ===
-    public File getFile() {
-        return this.file;
-    }
-
     // === Setters ===
     void setFile(File newFile) {
         this.file = newFile;
     }
 
-    // === Other methods ===
+
+    // === Private methods ===
+
+    /**
+     * Creates a new text file at this file path with these contents. To be called when applicant writes CV/cover letter
+     * from a text box
+     *
+     * @param filePath The file path of this file.
+     * @param contents The contents of this file.
+     * @return the new file created.
+     */
     private File createNewFile(String filePath, String contents) {
         File newFile = new File(filePath);
         try {
@@ -120,7 +107,7 @@ public class JobApplicationDocument implements Serializable {
     /**
      * Change the file destination for this file.
      *
-     * @param oldFilePath   The file path to be replaced.
+     * @param oldFilePath The file path to be replaced.
      */
     private String getNewFilePath(String oldFilePath) {
         String[] fileNameAndExtension = this.separateExtension(oldFilePath);
@@ -132,19 +119,4 @@ public class JobApplicationDocument implements Serializable {
         }
         return newFilePath;
     }
-
-    public static void main(String[] args) {
-        String folderPath = "./uploadedDocuments/something/else";
-        File file = new File(folderPath);
-        file.mkdirs();
-        try {
-            File newFile = new File(folderPath + "/text.txt");
-            newFile.createNewFile();
-        } catch (IOException io) {
-            io.printStackTrace();
-        }
-
-
-    }
-
 }

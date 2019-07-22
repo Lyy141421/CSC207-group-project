@@ -115,7 +115,7 @@ public class Interview {
     }
 
     // === Other methods ===
-    void setResults(HashMap<JobApplication, Boolean> jobAppToResult) {
+    public void setResults(HashMap<JobApplication, Boolean> jobAppToResult) {
         for (JobApplication jobApp : jobAppToResult.keySet()) {
             boolean result = jobAppToResult.get(jobApp);
             this.jobApplicationsToResult.replace(jobApp, result);
@@ -147,15 +147,6 @@ public class Interview {
     }
 
     /**
-     * Get the number of applications involved in this interview.
-     *
-     * @return the number of applications involved in this interview.
-     */
-    public int getNumApplications() {
-        return this.jobApplicationsToResult.size();
-    }
-
-    /**
      * Get all the interviewers involved in this interview.
      *
      * @return the number of interviewers involved in this interview.
@@ -167,6 +158,15 @@ public class Interview {
             interviewerListCopy.add(interviewer);
         }
         return interviewerListCopy;
+    }
+
+    /**
+     * Remove this application from this interview.
+     *
+     * @param jobApp The job application to be removed.
+     */
+    public void removeApplication(JobApplication jobApp) {
+        this.jobApplicationsToResult.remove(jobApp);
     }
 
     public JobApplication findJobAppById(int id) {

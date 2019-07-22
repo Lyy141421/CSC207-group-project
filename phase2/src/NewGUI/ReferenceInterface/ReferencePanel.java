@@ -97,10 +97,8 @@ public class ReferencePanel extends JPanel {
         BranchJobPosting jobPosting2 = new BranchJobPosting("title2", "field", "description",
                 new ArrayList<>(Arrays.asList("CV", "Cover Letter", "Reference Letter")), new ArrayList<>(), 1, branch, LocalDate.of(2019, 7, 20), LocalDate.of(2019, 7, 20), LocalDate.now());
         JobApplication jobApp2 = new JobApplication(applicant2, jobPosting2, new ArrayList<>(), LocalDate.of(2019, 7, 19));
-        jobPosting.addJobApplication(jobApp);
-        jobPosting2.addJobApplication(jobApp2);
-        reference.addJobApplicationForReference(jobApp);
-        reference.addJobApplicationForReference(jobApp2);
+        reference.addJobApplication(jobApp);
+        reference.addJobApplication(jobApp2);
         BranchJobPostingManager branchJobPostingManager = branch.getJobPostingManager();
         branchJobPostingManager.updateJobPostingsClosedForApplications(LocalDate.now());
         frame.add(new ReferencePanel(reference, jobApplicationSystem));

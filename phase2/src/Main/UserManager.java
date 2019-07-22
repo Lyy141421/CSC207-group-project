@@ -100,7 +100,7 @@ public class UserManager {
             if (reference == null) {
                 reference = this.createReference(email, jobApp.getApplicationDate());
             }
-            reference.addJobApplicationForReference(jobApp);
+            reference.addJobApplication(jobApp);
         }
     }
 

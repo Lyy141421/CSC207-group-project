@@ -32,6 +32,7 @@ public class Branch implements Serializable {
         this.hrCoordinators = new ArrayList<>();
         this.fieldToInterviewers = new HashMap<>();
         this.jobPostingManager = new BranchJobPostingManager(this);
+        company.addBranch(this);
     }
 
     // === Getters ==

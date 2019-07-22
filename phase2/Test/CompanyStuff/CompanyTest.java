@@ -1,3 +1,5 @@
+package CompanyStuff;
+
 import ApplicantStuff.Applicant;
 import ApplicantStuff.JobApplication;
 import CompanyStuff.Branch;
@@ -59,7 +61,6 @@ class CompanyTest {
         Applicant applicant = new Applicant("dudebro7", "ABC", "DudeBro Smith",
                 "dudebro@gmail.com", LocalDate.now(), "Toronto");
         JobApplication application1 = new JobApplication(applicant, branchJobPosting1, new ArrayList<>(), LocalDate.now());
-        branchJobPosting1.addJobApplication(application1);
         Branch branch2 = company.createBranch("South Branch", "N9G0A3");
         HRCoordinator hrc2 = new HRCoordinator("boris", "ABC", "Boris Businessman",
                 "boris@gmail.com", branch2, LocalDate.now());
@@ -68,7 +69,6 @@ class CompanyTest {
                 LocalDate.now().plusDays(3), LocalDate.now().plusDays(3));
         JobApplication application2 = new JobApplication(applicant, branchJobPosting2, new ArrayList<>(),
                 LocalDate.now().plusDays(1));
-        branchJobPosting2.addJobApplication(application2);
         assert company.getAllApplicationsToCompany(applicant).size() == 2;
         assert company.getAllApplicationsToCompany(applicant).contains(application1);
         assert company.getAllApplicationsToCompany(applicant).contains(application2);

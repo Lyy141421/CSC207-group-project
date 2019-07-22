@@ -51,7 +51,11 @@ public class Company implements Serializable {
         return this.documentManager;
     }
 
-    // For testing purposes // TODO to delete after
+    /**
+     * Add a folder for this branch.
+     *
+     * @param branch The branch to be added.
+     */
     public void addBranch(Branch branch) {
         this.branches.add(branch);
         this.getDocumentManager().createBranchFolder(branch);

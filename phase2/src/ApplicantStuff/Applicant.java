@@ -57,15 +57,6 @@ public class Applicant extends User {
     // === Other methods ===
 
     /**
-     * Register this job application for this applicant. Note: This is done prior to file submission.
-     *
-     * @param application The job application registered.
-     */
-    public void registerJobApplication(JobApplication application) {
-        jobApplicationManager.addJobApplication(application);
-    }
-
-    /**
      * Remove this applicant's application for this job.
      *
      * @param today      Today's date.
@@ -77,11 +68,13 @@ public class Applicant extends User {
         if (this.hasAppliedToPosting(jobPosting) && !jobPosting.isFilled()) {
             if (!jobPosting.isClosedForApplications(today)) {   // Company still does not have access to application
                 jobPosting.removeJobApplication(jobApp);
+            } else {    // Company has access to application
+                jobPosting.getInterviewManager().withdrawApplication(jobApp);   // Update application from the company end
             }
-            if (!jobPosting.isClosedForReferences(today)) { // Company has access to application, but before interview selection
+            if (!jobPosting.isClosedForReferences(today)) {
+                // Company has access to application, but reference letters may not all be submitted
                 jobApp.removeAppFromAllReferences();    // Cancel reference letter submissions
             }
-            jobPosting.getInterviewManager().withdrawApplication(jobApp);   // Update application from the company end
             this.jobApplicationManager.removeJobApplication(jobPosting);    // Remove this application from applicant end
             return true;
         }
@@ -103,6 +96,7 @@ public class Applicant extends User {
         return false;
     }
 
+    // TODO what is this for?
     public boolean hasAppliedToBranch(Branch branch) {
         for (BranchJobPosting posting : branch.getJobPostingManager().getBranchJobPostings())
             if (this.hasAppliedToPosting(posting))

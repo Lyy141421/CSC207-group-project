@@ -27,10 +27,6 @@ public class JobApplicationManager extends Observable implements Serializable {
     public JobApplicationManager() {
     }
 
-    public JobApplicationManager(ArrayList<JobApplication> jobApplications) {
-        this.jobApplications = jobApplications;
-    }
-
     // === Getters ===
     public ArrayList<JobApplication> getJobApplications() {
         return this.jobApplications;

@@ -95,8 +95,8 @@ public class BranchJobPostingManager implements Serializable {
      */
     public ArrayList<BranchJobPosting> getJobPostingsRecentlyClosedForApplications(LocalDate today) {
         ArrayList<BranchJobPosting> jobPostings = new ArrayList<>();
-        for (BranchJobPosting jobPosting : this.getClosedJobPostingsNotFilled(today)) {
-            if (jobPosting.getInterviewManager() == null) {
+        for (BranchJobPosting jobPosting : this.getBranchJobPostings()) {
+            if (jobPosting.isClosedForApplications(today) && jobPosting.getInterviewManager() == null) {
                 jobPostings.add(jobPosting);
             }
         }
@@ -112,8 +112,8 @@ public class BranchJobPostingManager implements Serializable {
      */
     public ArrayList<BranchJobPosting> getJobPostingsRecentlyClosedForReferences(LocalDate today) {
         ArrayList<BranchJobPosting> jobPostings = new ArrayList<>();
-        for (BranchJobPosting jobPosting : this.getClosedJobPostingsNotFilled(today)) {
-            if (jobPosting.getInterviewManager().getInterviewConfiguration().isEmpty()) {
+        for (BranchJobPosting jobPosting : this.getBranchJobPostings()) {
+            if (jobPosting.isClosedForReferences(today) && jobPosting.getInterviewManager().getInterviewConfiguration().isEmpty()) {
                 jobPostings.add(jobPosting);
             }
         }
@@ -245,11 +245,11 @@ public class BranchJobPostingManager implements Serializable {
     public void updateJobPostingsClosedForApplications(LocalDate today) {
         CompanyDocumentManager companyDocManager = this.getBranch().getCompany().getDocumentManager();
         for (BranchJobPosting jobPosting : this.getJobPostingsRecentlyClosedForApplications(today)) {
-            if (jobPosting.isClosedForApplications(today) && !companyDocManager.applicationDocumentsTransferred(jobPosting)) {
+            // Creates an interview manager so that if applicant withdraws their application from this point on,
+            // they are automatically rejected.
+            jobPosting.createInterviewManager();
+            if (!companyDocManager.applicationDocumentsTransferred(jobPosting)) {
                 companyDocManager.transferApplicationDocuments(jobPosting);
-                // Creates an interview manager so that if applicant withdraws their application from this point on,
-                // they are automatically rejected.
-                jobPosting.createInterviewManager(today);
             }
         }
     }
@@ -266,9 +266,7 @@ public class BranchJobPostingManager implements Serializable {
                 for (Reference reference : jobPosting.getAllReferences()) {
                     // If the reference still has not yet submitted their reference letter for a job app for this job
                     // posting, remove it from their list
-                    if (reference.getJobPostingsForReference().contains(jobPosting)) {
-                        reference.removeJobPostingForReference(jobPosting);
-                    }
+                    reference.removeJobPosting(jobPosting);
                 }
             }
         }

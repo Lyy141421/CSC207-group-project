@@ -24,7 +24,11 @@ public class BranchJobPosting extends CompanyJobPosting implements Observable, S
     private Branch branch; // The branch that listed this job posting
     private ArrayList<JobApplication> jobApplications; // The list of applications for this job posting
     private InterviewManager interviewManager; // Interview manager for this job posting
-    private ArrayList<Observer> observer_list = new ArrayList<>(); // A list of observers for pushing notifications to
+    private ArrayList<Observer> observer_list = new ArrayList<>(); // A list of observers for pushing notifications
+
+
+    // === Representation invariants ===
+    // References can only submit reference letters after the applicant close date and before the reference close date
 
     // === Constructor ===
     public BranchJobPosting(String title, String field, String description, ArrayList<String> requiredDocuments,
@@ -158,14 +162,11 @@ public class BranchJobPosting extends CompanyJobPosting implements Observable, S
 
     /**
      * Create an interview manager for this job posting after this branch posting has been closed for further applications.
-     * @param today Today's date.
      */
-    public void createInterviewManager(LocalDate today) {
-        if (this.isClosedForApplications(today) && this.interviewManager == null) {
-            InterviewManager interviewManager = new InterviewManager(this,
-                    (ArrayList<JobApplication>) this.getJobApplications().clone());
-            this.setInterviewManager(interviewManager);
-        }
+    public void createInterviewManager() {
+        InterviewManager interviewManager = new InterviewManager(this,
+                (ArrayList<JobApplication>) this.getJobApplications().clone());
+        this.setInterviewManager(interviewManager);
     }
 
     /**
