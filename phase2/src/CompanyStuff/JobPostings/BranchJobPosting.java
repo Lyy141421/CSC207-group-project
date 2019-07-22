@@ -5,7 +5,6 @@ import ApplicantStuff.JobApplication;
 import ApplicantStuff.Reference;
 import CompanyStuff.Branch;
 import CompanyStuff.InterviewManager;
-import DocumentManagers.CompanyDocumentManager;
 import NotificationSystem.Notification;
 import NotificationSystem.Observable;
 import NotificationSystem.Observer;

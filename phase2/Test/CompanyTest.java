@@ -1,21 +1,21 @@
-package CompanyStuff;
-
 import ApplicantStuff.Applicant;
 import ApplicantStuff.JobApplication;
+import CompanyStuff.Branch;
+import CompanyStuff.Company;
+import CompanyStuff.HRCoordinator;
 import CompanyStuff.JobPostings.BranchJobPosting;
 import DocumentManagers.CompanyDocumentManager;
+import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-public class CompanyTest {
-    public static void main (String[] args) {
-        testConstructor();
-        testCreateBranch();
-        testGetAllApplicationsToCompany();
-        testEquals();
-    }
-    static void testConstructor() {
+import static org.junit.jupiter.api.Assertions.*;
+
+class CompanyTest {
+
+    @Test
+    void testConstructor() {
         Company company = new Company("HoraceCorp");
         assert company.getName().equalsIgnoreCase("HoraceCorp");
         assert company.getBranches().isEmpty();
@@ -23,7 +23,20 @@ public class CompanyTest {
         assert company.getDocumentManager() instanceof CompanyDocumentManager;
     }
 
-    static void testCreateBranch() {
+    @Test
+    void testAddCompanyJobPosting() {
+    }
+
+    @Test
+    void testGetDocumentManager() {
+    }
+
+    @Test
+    void testAddBranch() {
+    }
+
+    @Test
+    void testCreateBranch() {
         Company company = new Company("HoraceCorp");
         Branch branch = company.createBranch("HQ", "M5S2E8");
         assert company.getBranches().contains(branch);
@@ -32,7 +45,8 @@ public class CompanyTest {
         assert branch.getCompany().equals(company);
     }
 
-    static void testGetAllApplicationsToCompany() {
+    @Test
+    void testGetAllApplicationsToCompany() {
         // NOTE: do NOT use this as an example of how to properly create branches/companies/HRC;
         // I am doing the bare minimum to make this test work
         Company company = new Company("HoraceCorp");
@@ -60,7 +74,8 @@ public class CompanyTest {
         assert company.getAllApplicationsToCompany(applicant).contains(application2);
     }
 
-    static void testEquals() {
+    @Test
+    void equals() {
         Company company1 = new Company("HoraceCorp");
         Company company2 = new Company("HORACECORP");
         assert company1.equals(company2);
