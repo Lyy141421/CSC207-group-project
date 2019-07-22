@@ -75,7 +75,9 @@ public class Company implements Serializable {
                 // branch by this name already exists
                 return null;
         }
-        return new Branch(name, CMA);
+        Branch newBranch = new Branch(name, CMA, this);
+        branches.add(newBranch);
+        return newBranch;
     }
 
     /**

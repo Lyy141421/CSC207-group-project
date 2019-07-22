@@ -25,9 +25,10 @@ public class Branch implements Serializable {
 
     // === Public methods ===
     // === Constructors ===
-    public Branch(String name, String CMA) {
+    public Branch(String name, String CMA, Company company) {
         this.name = name;
         this.CMA = CMA;
+        this.company = company;
         this.hrCoordinators = new ArrayList<>();
         this.fieldToInterviewers = new HashMap<>();
         this.jobPostingManager = new BranchJobPostingManager(this);
@@ -40,6 +41,10 @@ public class Branch implements Serializable {
 
     public String getName() {
         return this.name;
+    }
+
+    public String getCMA() {
+        return CMA;
     }
 
     public Company getCompany() {

@@ -230,7 +230,7 @@ public class BranchJobPosting extends CompanyJobPosting implements Observable, S
             return false;
         } else {
             BranchJobPosting other = (BranchJobPosting) obj;
-            return (branch.getCompany().equals(other.getCompany()) && id == other.id);
+            return (branch.equals(other.branch) && id == other.id);
         }
     }
 

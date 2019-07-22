@@ -1,6 +1,7 @@
 package CompanyStuff;
 
 import CompanyStuff.JobPostings.BranchJobPosting;
+import CompanyStuff.JobPostings.CompanyJobPosting;
 import Main.User;
 import ApplicantStuff.JobApplication;
 import Miscellaneous.InterviewTime;
@@ -27,6 +28,7 @@ public class HRCoordinator extends User {
                          LocalDate dateCreated) {
         super(username, password, legalName, email, dateCreated);
         this.branch = branch;
+        branch.addHRCoordinator(this);
     }
 
     // === Getters ===
@@ -55,8 +57,20 @@ public class HRCoordinator extends User {
     public BranchJobPosting addJobPosting(String jobTitle, String jobField, String jobDescription,
                                           ArrayList<String> requiredDocuments, ArrayList<String> tags, int numPositions,
                                           LocalDate postDate, LocalDate applicationCloseDate, LocalDate referenceCloseDate) {
+        CompanyJobPosting companyJobPosting = new CompanyJobPosting(jobTitle, jobField, jobDescription, requiredDocuments,
+                tags, this.branch.getCompany(), this.branch);
+        this.branch.getCompany().addCompanyJobPosting(companyJobPosting);
         BranchJobPosting branchJobPosting = new BranchJobPosting(jobTitle, jobField, jobDescription, requiredDocuments,
                 tags, numPositions, this.branch, postDate, applicationCloseDate, referenceCloseDate);
+        this.branch.getJobPostingManager().addJobPosting(branchJobPosting);
+        return branchJobPosting;
+    }
+
+    public BranchJobPosting implementJobPosting(CompanyJobPosting companyJobPosting, int numPositions, LocalDate postDate,
+                                                LocalDate applicationCloseDate, LocalDate referenceCloseDate) {
+        BranchJobPosting branchJobPosting = new BranchJobPosting(companyJobPosting.getTitle(), companyJobPosting.getField(),
+                companyJobPosting.getDescription(), companyJobPosting.getRequiredDocuments(), companyJobPosting.getTags(),
+                numPositions, this.branch, postDate, applicationCloseDate, referenceCloseDate);
         this.branch.getJobPostingManager().addJobPosting(branchJobPosting);
         return branchJobPosting;
     }
