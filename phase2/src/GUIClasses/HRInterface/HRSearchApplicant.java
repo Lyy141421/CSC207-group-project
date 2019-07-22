@@ -43,7 +43,7 @@ public class HRSearchApplicant extends HRPanel{
                 } else {
                     currApps = getTitleToAppMap(apps);
                     //Todo: clear exiting JList and add new titles
-                    ((CardLayout) parent.getLayout()).show(parent, "APPLICATION");
+                    ((CardLayout) parent.getLayout()).show(parent, APPLICATION);
                 }
             }
         });
