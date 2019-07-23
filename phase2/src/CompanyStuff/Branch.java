@@ -136,7 +136,7 @@ public class Branch implements Serializable {
      * @param jobField The job field of the interviewer to be found.
      * @return the interviewer with the least amount of interviews in this field.
      */
-    Interviewer findInterviewerByField(String jobField) {
+    public Interviewer findInterviewerByField(String jobField) {
         Interviewer interviewerSoFar = this.fieldToInterviewers.get(jobField).get(0);
         int minNumberOfInterviews = interviewerSoFar.getInterviews().size();
         for (Interviewer interviewer : this.fieldToInterviewers.get(jobField)) {
