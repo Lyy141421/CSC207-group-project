@@ -30,10 +30,12 @@ public class Status implements Serializable, Observable {
     // === Instance variable ===
     private int value = Status.SUBMITTED;
     private ArrayList<Observer> observer_list = new ArrayList<>(); //A list of observers to this status
+    private JobApplication jobApplication;
 
     // === Constructors ===
-    Status(Observer observer) {
+    Status(Observer observer, JobApplication jobApplication) {
         this.attach(observer);
+        this.jobApplication = jobApplication;
     }
 
     // === Getters ===
@@ -74,7 +76,7 @@ public class Status implements Serializable, Observable {
     public void setHired() {
         this.setValue(this.hired);
         notifyAllObservers(new Notification("Hired!!",
-                "You have been hired at "+ "###PlaceHolder###" +", make sure to check your email"));
+                "You have been hired at "+ this.jobApplication.getJobPosting().getBranch().getName() +", make sure to check your email"));
     }
 
     /**
