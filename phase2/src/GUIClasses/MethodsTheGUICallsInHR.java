@@ -37,7 +37,7 @@ public class MethodsTheGUICallsInHR {
      */
     public ArrayList<BranchJobPosting> getJPToReview(LocalDate today) {
         BranchJobPostingManager JPManager = this.hr.getBranch().getJobPostingManager();
-        return JPManager.getClosedJobPostingsNoApplicantsChosen(today);
+        return JPManager.getJobPostingsRecentlyClosedForReferences(today);
     }
 
     /**
