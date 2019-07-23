@@ -7,7 +7,7 @@ import ApplicantStuff.Reference;
 import DocumentManagers.ApplicantDocumentManager;
 import DocumentManagers.CompanyDocumentManager;
 import Main.User;
-import NewGUI.ReferenceInterface.ReferencePanel;
+import GUIClasses.ReferenceInterface.ReferencePanel;
 
 import javax.swing.*;
 import java.awt.*;

@@ -1,8 +1,10 @@
-package NewGUI;
+package GUIClasses.InterviewerInterface;
 
+import ActionListeners.LogoutActionListener;
 import ActionListeners.ProfileActionListener;
 import ActionListeners.ReturnHomeActionListener;
-import CompanyStuff.Interviewer;
+import Main.JobApplicationSystem;
+import GUIClasses.CommonUserGUI.SideBarMenu;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,8 +19,13 @@ public class InterviewerSideBarMenuPanel extends JPanel {
     private static int CELL_HEIGHT = 30;
     private static int NUM_MAIN_MENU_OPTIONS = 6;
 
+    // === Instance variables ===
+    private JobApplicationSystem jobAppSystem;
+
     // === Constructor ===
-    private InterviewerSideBarMenuPanel(Interviewer interviewer) {
+    InterviewerSideBarMenuPanel(JobApplicationSystem jobAppSystem) {
+        this.jobAppSystem = jobAppSystem;
+
         TreeMap<String, Object> fullMenu = this.createFullMenu();
         this.setLayout(new BorderLayout());
         this.add(new SideBarMenu(fullMenu, CELL_WIDTH, CELL_HEIGHT).createMenuBar());
@@ -26,27 +33,27 @@ public class InterviewerSideBarMenuPanel extends JPanel {
     }
 
 
-    /**
-     * Create the map for the full job postings sub menu.
-     *
-     * @return the map for the full job postings sub menu.
-     */
-    private TreeMap<String, Object> viewIntervieweesMenu() {
-        TreeMap<String, Object> viewIntervieweesMenu = new TreeMap<>();
-        viewIntervieweesMenu.put("1. Search Interview", new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
-            }
-        });
-        viewIntervieweesMenu.put("2. View All Interviews", new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
-            }
-        });
-        return viewIntervieweesMenu;
-    }
+//    /**
+//     * Create the map for the full job postings sub menu.
+//     *
+//     * @return the map for the full job postings sub menu.
+//     */
+//    private TreeMap<String, Object> viewIntervieweesMenu() {
+//        TreeMap<String, Object> viewIntervieweesMenu = new TreeMap<>();
+//        viewIntervieweesMenu.put("1. Search Interview", new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//
+//            }
+//        });
+//        viewIntervieweesMenu.put("2. View All Interviews", new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//
+//            }
+//        });
+//        return viewIntervieweesMenu;
+//    }
 
     /**
      * Create the map for the full menu.
@@ -57,30 +64,24 @@ public class InterviewerSideBarMenuPanel extends JPanel {
         TreeMap<String, Object> fullMenu = new TreeMap<>();
         fullMenu.put("1. Home", new ReturnHomeActionListener());
         fullMenu.put("2. Profile", new ProfileActionListener());
-        fullMenu.put("3. Schedule Interviews", new ActionListener() {
+        fullMenu.put("3. Schedule One-on-One Interviews", new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
 
             }
         });
-        fullMenu.put("4. View schedule", new ActionListener() {
+        fullMenu.put("4. Complete Interviews", new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            }
+        });
+        fullMenu.put("5. View Interviewees", new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
 
             }
         });
-        fullMenu.put("5. Complete Interviews", new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
-            }
-        });
-        fullMenu.put("6. View Incomplete Interviews", new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
-            }
-        });
+        fullMenu.put("6. Logout", new LogoutActionListener(jobAppSystem));
         return fullMenu;
     }
 
@@ -89,13 +90,14 @@ public class InterviewerSideBarMenuPanel extends JPanel {
         //creating and showing this application's GUI.
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                Interviewer interviewer = new Interviewer();
+                JobApplicationSystem jobAppSystem = new JobApplicationSystem();
+
                 JFrame frame = new JFrame("Interviewer Home Page");
                 frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
                 JPanel menuPanel = new JPanel();
                 menuPanel.setBackground(Color.WHITE); // contrasting bg
-                menuPanel.add(new InterviewerSideBarMenuPanel(interviewer));
+                menuPanel.add(new InterviewerSideBarMenuPanel(jobAppSystem));
 
                 Container contentPane = frame.getContentPane();
                 contentPane.setBackground(Color.WHITE); //contrasting bg

@@ -1,4 +1,4 @@
-package NewGUI.ReferenceInterface;
+package GUIClasses.ReferenceInterface;
 
 import ApplicantStuff.Applicant;
 import ApplicantStuff.JobApplication;
@@ -10,8 +10,8 @@ import CompanyStuff.JobPostings.BranchJobPosting;
 import CompanyStuff.JobPostings.BranchJobPostingManager;
 import FileLoadingAndStoring.DataLoaderAndStorer;
 import Main.JobApplicationSystem;
-import NewGUI.FrequentlyUsedMethods;
-import NewGUI.UserProfilePanel;
+import GUIClasses.CommonUserGUI.FrequentlyUsedMethods;
+import GUIClasses.CommonUserGUI.UserProfilePanel;
 
 import javax.swing.*;
 import java.awt.*;

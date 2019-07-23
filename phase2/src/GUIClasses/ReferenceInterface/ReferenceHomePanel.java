@@ -1,8 +1,8 @@
-package NewGUI.ReferenceInterface;
+package GUIClasses.ReferenceInterface;
 
 import ApplicantStuff.JobApplication;
 import ApplicantStuff.Reference;
-import NewGUI.FrequentlyUsedMethods;
+import GUIClasses.CommonUserGUI.FrequentlyUsedMethods;
 
 import javax.swing.*;
 import java.awt.*;

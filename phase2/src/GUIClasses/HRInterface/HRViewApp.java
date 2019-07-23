@@ -1,10 +1,9 @@
 package GUIClasses.HRInterface;
 
 import ApplicantStuff.JobApplication;
-import CompanyStuff.JobPostings.BranchJobPosting;
 import DocumentManagers.CompanyDocumentManager;
 import GUIClasses.MethodsTheGUICallsInHR;
-import NewGUI.DocumentViewer;
+import GUIClasses.CommonUserGUI.DocumentViewer;
 
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
@@ -12,7 +11,6 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class HRViewApp extends HRPanel {

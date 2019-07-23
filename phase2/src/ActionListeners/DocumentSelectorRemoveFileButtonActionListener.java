@@ -1,6 +1,6 @@
 package ActionListeners;
 
-import NewGUI.DocumentSelector;
+import GUIClasses.CommonUserGUI.DocumentSelector;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

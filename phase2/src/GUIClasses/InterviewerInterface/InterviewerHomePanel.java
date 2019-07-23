@@ -1,11 +1,11 @@
-package NewGUI.InterviewerInterface;
+package GUIClasses.InterviewerInterface;
 
 import CompanyStuff.Branch;
 import CompanyStuff.Company;
 import CompanyStuff.Interview;
 import CompanyStuff.Interviewer;
 import Main.JobApplicationSystem;
-import NewGUI.FrequentlyUsedMethods;
+import GUIClasses.CommonUserGUI.FrequentlyUsedMethods;
 
 import javax.swing.*;
 import java.awt.*;
@@ -89,7 +89,7 @@ public class InterviewerHomePanel extends JPanel {
     }
 
     private JPanel createScheduleTablePanel() {
-        ArrayList<Interview> scheduledInterviews = this.interviewer.getScheduledUpcomingInterviews();
+        ArrayList<Interview> scheduledInterviews = this.interviewer.getScheduledUpcomingInterviews(jobAppSystem.getToday());
         Object[][] data = new Object[scheduledInterviews.size()][];
 
         for (int i = 0; i < scheduledInterviews.size(); i++) {

@@ -1,12 +1,11 @@
-package NewGUI.ReferenceInterface;
+package GUIClasses.ReferenceInterface;
 
 import ActionListeners.CardLayoutPanelGetter;
 import ActionListeners.LogoutActionListener;
 import ActionListeners.ProfileActionListener;
 import ActionListeners.ReturnHomeActionListener;
-import ApplicantStuff.Reference;
 import Main.JobApplicationSystem;
-import NewGUI.SideBarMenu;
+import GUIClasses.CommonUserGUI.SideBarMenu;
 
 import javax.swing.*;
 import java.awt.*;

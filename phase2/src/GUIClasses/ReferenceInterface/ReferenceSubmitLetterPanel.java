@@ -1,9 +1,9 @@
-package NewGUI.ReferenceInterface;
+package GUIClasses.ReferenceInterface;
 
 import ApplicantStuff.JobApplication;
 import ApplicantStuff.Reference;
-import NewGUI.FileChooser;
-import NewGUI.FrequentlyUsedMethods;
+import GUIClasses.CommonUserGUI.FileChooser;
+import GUIClasses.CommonUserGUI.FrequentlyUsedMethods;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
