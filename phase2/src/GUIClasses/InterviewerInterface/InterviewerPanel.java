@@ -1,4 +1,4 @@
-package GUIClasses;
+package GUIClasses.InterviewerInterface;
 
 import javax.swing.*;
 
@@ -7,7 +7,8 @@ import javax.swing.*;
 //import net.sourceforge.jdatepicker.impl.UtilDateModel;
 
 
-public class InterviewerPanel extends JPanel { //implements ActionListener {
+abstract class InterviewerPanel extends JPanel {
+
 
     /*private Container contentPane;
     private InterviewerInterface interviewerInterface;
