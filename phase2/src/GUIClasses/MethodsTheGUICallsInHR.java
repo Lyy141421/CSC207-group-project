@@ -23,6 +23,10 @@ public class MethodsTheGUICallsInHR {
         this.hr = hr;
     }
 
+    public HRCoordinator getHR() {
+        return this.hr;
+    }
+
     /**
      * * Get the task that the HR Coordinator must accomplish at this moment for this job posting.
      */

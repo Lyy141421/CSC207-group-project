@@ -1,13 +1,49 @@
-package GUIClasses;
+package GUIClasses.InterviewerInterface;
+
+import CompanyStuff.Interview;
+import GUIClasses.MethodsTheGUICallsInInterviewer;
+import UIClasses.InterviewerInterface;
 
 import javax.swing.*;
+import java.awt.*;
+import java.time.LocalDate;
+import java.util.ArrayList;
 
 //import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
 //import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
 //import net.sourceforge.jdatepicker.impl.UtilDateModel;
 
 
-public class InterviewerPanel extends JPanel { //implements ActionListener {
+abstract class InterviewerPanel extends JPanel {
+
+    private Container parent;
+    private MethodsTheGUICallsInInterviewer interviewerInterface;
+    private LocalDate today;
+
+    InterviewerPanel(Container contentPane, MethodsTheGUICallsInInterviewer interviewerInterface, LocalDate today) {
+        this.parent = contentPane;
+        this.interviewerInterface = interviewerInterface;
+        this.today = today;
+    }
+
+    ArrayList<String> getInterviewTitles(ArrayList<Interview> interviews) {
+        ArrayList<String> titles = new ArrayList<>();
+        for (Interview interview : interviews) {
+            titles.add(interview.getId() + "-" + interview.getTime().toString() + " " +
+                    interview.getApplicant().getLegalName());
+        }
+
+        return titles;
+    }
+
+    String[] getIdAndApplicants(ArrayList<Interview> interviews) {
+        ArrayList<String> titles = new ArrayList<>();
+        for (Interview interview : interviews) {
+            titles.add(interview.getId() + "-" + interview.getApplicant().getLegalName());
+        }
+
+        return (String[]) titles.toArray();
+    }
 
     /*private Container contentPane;
     private InterviewerInterface interviewerInterface;

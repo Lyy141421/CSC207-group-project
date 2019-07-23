@@ -1,10 +1,15 @@
 package ApplicantStuff;
 
+import NotificationSystem.Notification;
+import NotificationSystem.Observable;
+import NotificationSystem.Observer;
+import jdk.jshell.spi.ExecutionControl;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.TreeMap;
 
-public class Status implements Serializable {
+public class Status implements Serializable, Observable {
 
     // === Class variables ===
     // Job application statuses as constants
@@ -24,9 +29,13 @@ public class Status implements Serializable {
 
     // === Instance variable ===
     private int value = Status.SUBMITTED;
+    private ArrayList<Observer> observer_list = new ArrayList<>(); //A list of observers to this status
+    private JobApplication jobApplication;
 
     // === Constructors ===
-    Status() {
+    Status(Observer observer, JobApplication jobApplication) {
+        this.attach(observer);
+        this.jobApplication = jobApplication;
     }
 
     // === Getters ===
@@ -66,6 +75,8 @@ public class Status implements Serializable {
      */
     public void setHired() {
         this.setValue(this.hired);
+        notifyAllObservers(new Notification("Hired!!",
+                "You have been hired at "+ this.jobApplication.getJobPosting().getBranch().getName() +", make sure to check your email"));
     }
 
     /**
@@ -110,5 +121,49 @@ public class Status implements Serializable {
     boolean isOnLastRound() {
         return this.value == this.lastRound;
     }
+
+    // Observable Classes
+
+    /**
+     * Adding an observer to the notification recipient list
+     */
+    public void attach(Observer observer){
+        if (!observer_list.contains(observer)) {
+            observer_list.add(observer);
+        }
+    }
+
+    /**
+     * Removing an observer from the notification recipient list
+     */
+    public void detach(Observer observer){
+        observer_list.remove(observer);
+    }
+
+    /**
+     * Sending a notification to all observers
+     *
+     * @param notification - The notification to be sent
+     */
+    public void notifyAllObservers(Notification notification){updateObserverList();
+        for (Observer observer : observer_list) {
+            notifyObserver(observer, notification);
+        }
+    }
+
+    /**
+     *Sending a notification to a particular observer
+     *
+     * @param observer - The observer receiving the notification
+     * @param notification - The notification to be sent
+     */
+    public void notifyObserver(Observer observer, Notification notification){
+        observer.update(notification);
+    }
+
+    /**
+     * A method to internally change the structure of the observer list
+     */
+    public void updateObserverList(){ }
 
 }
