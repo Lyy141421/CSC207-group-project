@@ -1,56 +1,82 @@
 package GUIClasses;
 
+import ApplicantStuff.JobApplication;
+import CompanyStuff.Interview;
+import CompanyStuff.Interviewer;
+import Miscellaneous.InterviewTime;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashMap;
+
 public class MethodsTheGUICallsInInterviewer {
     // === Methods for GUI to call ===
     // InterviewerInterface class
-    /*
+
+    private Interviewer interviewer;
+
+    MethodsTheGUICallsInInterviewer(Interviewer interviewer) {
+        this.interviewer = interviewer;
+    }
+
+    /**
+     * Get a list of interviews that are incomplete.
+     *
+     * @param today Today's date.
+     * @return a list of interviews that are incomplete.
      */
-/**
- * Get a list of list of interviews for this interviewer by date.
- * @param today Today's date.
- * @return a list of lists of interviews for this interviewer by date.
- *//*
-
-    ArrayList<ArrayList<Interview>> getInterviewsBeforeOnAndAfterToday(LocalDate today) {
-        return this.interviewer.getInterviewsBeforeOnAndAfterDate(today);
+    ArrayList<Interview> getIncompleteInterviews(LocalDate today) {
+        return this.interviewer.getIncompleteInterviews(today);
     }
 
-    */
-/**
- * Set this interview as pass or fail.
- * @param pass  Whether or not the applicant passed this interview.
- *//*
-
-    void passOrFailInterview(Interview interview, boolean pass) {
-        if (pass) {
-            this.interviewer.passInterview(interview);
-        }
-        else {
-            this.interviewer.failInterview(interview);
-        }
+    /**
+     * Get a list of interviews that need scheduling.
+     *
+     * @return a list of interviews that need scheduling.
+     */
+    ArrayList<Interview> getInterviewsThatNeedScheduling() {
+        return this.interviewer.getUnscheduledInterviews();
     }
 
-    */
-/**
- * Store interview notes for this interview.
- * @param interview The interview for which the notes are written.
- * @param notes The notes taken during the interview.
- *//*
-
-    void storeInterviewNotes(Interview interview, String notes) {
-        interview.setInterviewNotes(notes);
+    /**
+     * Set this interview as pass or fail for each applicant.
+     *
+     * @param interview      The interview in question/
+     * @param jobAppToResult The hash map of job application to result(boolean pass/fail) for this interview.
+     */
+    void setInterviewResults(Interview interview, HashMap<JobApplication, Boolean> jobAppToResult) {
+        interview.setResults(jobAppToResult);
     }
 
-    */
-/**
- * Schedule this interview on this date and time slot.
- *
- * @param interview The interview to be scheduled.
- * @param date      The date chosen.
- * @param timeSlot  The time slot chosen.
- * @return true iff this interview can be scheduled on this date and at this time.
- *//*
+    /**
+     * Store interview notes for this interview by the interview coordinator.
+     *
+     * @param interview The interview for which the notes are written.
+     * @param notes     The notes taken during the interview.
+     */
+    void storeInterviewCoordinatorNotes(Interview interview, String notes) {
+        interview.setInterviewCoordinatorNotes(notes);
+    }
 
+    /**
+     * Store interview notes for this interview by a secondary interviewer.
+     *
+     * @param interview   The interview in question.
+     * @param interviewer The interviewer who wrote notes.
+     * @param notes       The notes the interviewer wrote for this interview.
+     */
+    void storeOtherInterviewerNotes(Interview interview, Interviewer interviewer, String notes) {
+        interview.setOtherInterviewNotes(interviewer, notes);
+    }
+
+    /**
+     * Schedule this one-on-one interview on this date and time slot.
+     *
+     * @param interview The interview to be scheduled.
+     * @param date      The date chosen.
+     * @param timeSlot  The time slot chosen.
+     * @return true iff this interview can be scheduled on this date and at this time.
+     */
     boolean scheduleInterview(Interview interview, LocalDate date, int timeSlot) {
         InterviewTime interviewTime = new InterviewTime(date, timeSlot);
         if (interviewer.isAvailable(interviewTime)) {
@@ -61,104 +87,4 @@ public class MethodsTheGUICallsInInterviewer {
         }
 
     }
-
-    */
-/**
- * Get a list of unscheduled interviews for this interviewer.
- *
- * @return a list of unscheduled interviews for this interviewer.
- *//*
-
-    ArrayList<Interview> getUnscheduledInterviews() {
-        return this.interviewer.getUnscheduledInterviews();
-    }
-*/
-    // Job application class
-    /*    *//**
-     * Get a string of the overview of this job application, including id, applicant name, job posting, status,
-     * and application date.
-     *
-     * @return a string of the overview of this job application.
-     *//*
-    public String getOverview() {
-        String s = "Application ID: " + this.getId() + "\n";
-        s += "Applicant: " + this.getApplicant().getLegalName() + "(" + this.getApplicant().getUsername() + ")" + "\n";
-        s += "Job Posting: " + this.getJobPosting().getTitle() + " -- ID: " + this.getJobPosting().getId();
-        s += "Status: " + this.status.getDescription() + "\n";
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-mm-dd");
-        s += "Application date: " + this.getApplicationDate().format(dtf);
-
-        return s;
-    }*/
-
-    // Interviewer class
-    /**
-     * Get a string representation of this interviewer's up-coming schedule.
-     *
-     * @return a string representation of this interviewer's schedule
-     *//*
-    public String getScheduleString() {
-        if (this.interviews.isEmpty()) {
-            return null;
-        }
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        String s = "";
-        InterviewTime interviewTime = this.interviews.get(0).getTime();
-        s += interviewTime.getDate().format(dtf) + ": ";
-        for (Interview interview : this.interviews) {
-            if (!interview.getTime().isOnSameDate(interviewTime)) {
-                s = s.substring(0, s.length() - 2); // Remove extra comma and space from previous ling
-                s += "\n" + interview.getTime().getDate().format(dtf) + ": ";
-            }
-            s += new InterviewTime().getTimeSlotCorrespondingToInt(interview.getTime().getTimeSlot()) + ", ";
-        }
-        return s.substring(0, s.length() - 2); // Remove extra comma and space
-    }*/
-
-    // Interviewer class
-    /**
-     * Get a list of interviews scheduled for this date.
-     *
-     * @param date The date in question.
-     * @return a list of interviews scheduled for this date.
-     *//*
-    public ArrayList<ArrayList<Interview>> getInterviewsBeforeOnAndAfterDate(LocalDate date) {
-        ArrayList<Interview> interviewsBefore = new ArrayList<>();
-        ArrayList<Interview> interviewsToday = new ArrayList<>();
-        ArrayList<Interview> interviewsAfter = new ArrayList<>();
-        for (Interview interview : this.interviews) {
-            if (interview.isBeforeDate(date)) {
-                interviewsBefore.add(interview);
-            }
-            else if (interview.isOnDate(date)) {
-                interviewsToday.add(interview);
-            }
-            else {
-                interviewsAfter.add(interview);
-            }
-        }
-        return new ArrayList<>(Arrays.asList(interviewsBefore, interviewsToday, interviewsAfter));
-    }*/
-
-    // Interview class
-    /**
-     * Check whether this interview is scheduled on this date.
-     * @param date  The date in question.
-     * @return true iff this interview is scheduled on this date.
-     *//*
-    boolean isOnDate(LocalDate date) {
-        return this.getTime().getDate().isEqual(date);
-    }*/
-
-    // InterviewTime class
-    /**
-     * Check whether these two interview times occur on the same date.
-     *
-     * @param otherTime The other time in question.
-     * @return true iff these two times have the same date.
-     *//*
-    public boolean isOnSameDate(InterviewTime otherTime) {
-        return this.date.isEqual(otherTime.getDate());
-    }*/
-
 }

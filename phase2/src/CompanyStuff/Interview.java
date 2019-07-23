@@ -118,6 +118,14 @@ public class Interview {
         this.time = time;
     }
 
+    public void setInterviewCoordinatorNotes(String notes) {
+        this.interviewCoordinatorToNotes.replace(this.getInterviewCoordinator(), notes);
+    }
+
+    public void setOtherInterviewNotes(Interviewer interviewer, String notes) {
+        this.otherInterviewersToNotes.replace(interviewer, notes);
+    }
+
     // === Other methods ===
     public void setResults(HashMap<JobApplication, Boolean> jobAppToResult) {
         for (JobApplication jobApp : jobAppToResult.keySet()) {
