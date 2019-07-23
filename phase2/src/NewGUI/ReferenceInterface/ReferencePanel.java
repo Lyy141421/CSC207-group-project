@@ -24,7 +24,6 @@ public class ReferencePanel extends JPanel {
 
     // === Instance variables ===
     private Reference reference;
-    private JobApplicationSystem jobApplicationSystem;
     private JPanel cards = new JPanel(new CardLayout());
     public static final String HOME = "Home";
     public static final String PROFILE = "Profile";
@@ -35,9 +34,8 @@ public class ReferencePanel extends JPanel {
     // === Constructor ===
     ReferencePanel(Reference reference, JobApplicationSystem jobApplicationSystem) {
         this.reference = reference;
-        this.jobApplicationSystem = jobApplicationSystem;
         this.setLayout(new BorderLayout());
-        this.add(new ReferenceSideBarMenuPanel(reference, jobApplicationSystem), BorderLayout.WEST);
+        this.add(new ReferenceSideBarMenuPanel(jobApplicationSystem), BorderLayout.WEST);
         this.addCards();
     }
 

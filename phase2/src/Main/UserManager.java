@@ -44,14 +44,14 @@ public class UserManager {
     }
 
     public Interviewer createInterviewer(String username, String password, String legalName, String email, Branch branch,
-                                         String field, LocalDate dateCreated) throws IOException {
+                                         String field, LocalDate dateCreated) {
         Interviewer newInterviewer = new Interviewer(username, password, legalName, email, branch, field, dateCreated);
         this.allUsers.add(newInterviewer);
         return newInterviewer;
     }
 
     public HRCoordinator createHRCoordinator(String username, String password, String legalName,
-                                             String email, Branch branch, LocalDate dateCreated) throws IOException {
+                                             String email, Branch branch, LocalDate dateCreated) {
         HRCoordinator newHRC = new HRCoordinator(username, password, legalName, email, branch, dateCreated);
         this.allUsers.add(newHRC);
         return newHRC;

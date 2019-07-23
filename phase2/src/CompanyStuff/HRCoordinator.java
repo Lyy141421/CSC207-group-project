@@ -99,7 +99,7 @@ public class HRCoordinator extends User {
      * @param jobPosting    The job posting in question.
      * @param configuration The configuration chosen.
      */
-    public void chooseInterviewConfiguration(BranchJobPosting jobPosting, ArrayList<Object[]> configuration) {
+    public void chooseInterviewConfiguration(BranchJobPosting jobPosting, ArrayList<String[]> configuration) {
         jobPosting.getInterviewManager().setInterviewConfiguration(configuration);
     }
 

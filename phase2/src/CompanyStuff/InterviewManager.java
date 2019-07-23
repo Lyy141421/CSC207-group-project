@@ -16,8 +16,9 @@ public class InterviewManager implements Serializable {
     public static final int CLOSE_POSTING_NO_HIRE = -1;
     private static final int DO_NOTHING = 0;
     static final int SELECT_APPS_FOR_FIRST_ROUND = 1;
-    public static final int SCHEDULE_INTERVIEWS = 2;
-    public static final int HIRE_APPLICANTS = 3;
+    static final int SET_INTERVIEW_CONFIGURATION = 2;
+    public static final int SCHEDULE_GROUP_INTERVIEWS = 3;
+    public static final int HIRE_APPLICANTS = 4;
 
     // === Instance variables ===
     // The job posting for this interview manager
@@ -27,8 +28,8 @@ public class InterviewManager implements Serializable {
     // Map of job applications of applicants that are rejected for the job to their interviews
     private ArrayList<JobApplication> applicationsRejected;
     // The configuration of interviews chosen for this job posting
-    // (nested array is interview description (string) and interview type (Interview))
-    private ArrayList<Object[]> interviewConfiguration;
+    // (nested array is interview description and interview type
+    private ArrayList<String[]> interviewConfiguration;
     // The current round of interviews
     private int currentRound = 0;
     // The maximum number of interview rounds
@@ -39,7 +40,7 @@ public class InterviewManager implements Serializable {
     // The current round is an index in the interviewConfiguration list
     // The Object[] in interviewConfiguration has 2 elements
     //  - Index 0: Interview description (String)
-    //  - Index 1: Interview type (Interview) --- can only be either OneOnOneInterview() or GroupInterview()
+    //  - Index 1: Interview type (String) -- "One-on-One" or "Group"
 
     // === Public methods ===
 
@@ -61,15 +62,15 @@ public class InterviewManager implements Serializable {
     }
 
     public String getCurrentRoundDescription() {
-        return (String) this.interviewConfiguration.get(this.currentRound)[0];
+        return this.interviewConfiguration.get(this.currentRound)[0];
     }
 
-    public ArrayList<Object[]> getInterviewConfiguration() {
+    public String getCurrentRoundType() {
+        return this.interviewConfiguration.get(this.currentRound)[1];
+    }
+
+    public ArrayList<String[]> getInterviewConfiguration() {
         return this.interviewConfiguration;
-    }
-
-    public Interview getCurrentRoundType() {
-        return (Interview) this.interviewConfiguration.get(this.currentRound)[1];
     }
 
     public ArrayList<JobApplication> getApplicationsInConsideration() {
@@ -81,7 +82,7 @@ public class InterviewManager implements Serializable {
     }
 
     // === Setters ===
-    public void setInterviewConfiguration(ArrayList<Object[]> interviewConfiguration) {
+    public void setInterviewConfiguration(ArrayList<String[]> interviewConfiguration) {
         this.interviewConfiguration = interviewConfiguration;
         this.maxNumberOfRounds = interviewConfiguration.size();
     }
@@ -110,6 +111,15 @@ public class InterviewManager implements Serializable {
             }
         }
         return false;
+    }
+
+    /**
+     * Checks whether the next round of interviews is a group interview.
+     *
+     * @return true iff the next interview round is a group interview.
+     */
+    public boolean isNextRoundGroupInterview() {
+        return this.interviewConfiguration.get(this.currentRound + 1)[1].equals(Interview.GROUP);
     }
 
     /**
@@ -182,13 +192,13 @@ public class InterviewManager implements Serializable {
             return InterviewManager.CLOSE_POSTING_NO_HIRE;
         } else if (this.currentRound != 0 && this.isNumApplicationsUnderOrAtThreshold()) {
             return InterviewManager.HIRE_APPLICANTS;
-        } else if (!this.branchJobPosting.getJobApplications().isEmpty() && !this.branchJobPosting.hasInterviews()) {
-            // Applicants for phone interview selected but no interviews scheduled
-            return InterviewManager.SCHEDULE_INTERVIEWS;
+        } else if (!this.branchJobPosting.getJobApplications().isEmpty() && this.interviewConfiguration.isEmpty()) {
+            // Applicants for first round of interviews selected but no interview configuration decided
+            return InterviewManager.SET_INTERVIEW_CONFIGURATION;
         } else if (this.isInterviewProcessOver()) {
             return InterviewManager.HIRE_APPLICANTS;
-        } else if (this.isCurrentRoundOver()) {
-            return InterviewManager.SCHEDULE_INTERVIEWS;
+        } else if (this.isCurrentRoundOver() && this.isNextRoundGroupInterview()) {
+            return InterviewManager.SCHEDULE_GROUP_INTERVIEWS;
         } else {
             return InterviewManager.DO_NOTHING;
         }

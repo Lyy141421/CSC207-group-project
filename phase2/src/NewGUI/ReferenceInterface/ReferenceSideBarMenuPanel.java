@@ -22,15 +22,12 @@ class ReferenceSideBarMenuPanel extends JPanel {
     private static int NUM_MAIN_MENU_OPTIONS = 4;
 
     // === Instance variable ===
-    // The reference who logged in
-    private Reference reference;
     // The job application system being used
     private JobApplicationSystem jobApplicationSystem;
 
 
     // === Constructor ===
-    ReferenceSideBarMenuPanel(Reference reference, JobApplicationSystem jobApplicationSystem) {
-        this.reference = reference;
+    ReferenceSideBarMenuPanel(JobApplicationSystem jobApplicationSystem) {
         this.jobApplicationSystem = jobApplicationSystem;
         TreeMap<String, Object> fullMenu = this.createFullMenu();
         this.setLayout(new BorderLayout());

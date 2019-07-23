@@ -12,6 +12,9 @@ public class Interview {
     // === Class variables ===
     // The total number of interviews conducted
     private static int totalNumOfInterviews;
+    // The interview types allowed
+    static String ONE_ON_ONE = "One-on-One";
+    static String GROUP = "Group";
 
     // === Instance variables ===
     // The unique identifier for this interview
@@ -33,9 +36,6 @@ public class Interview {
     // ID >= 1
 
     // === Constructor ===
-    Interview() {
-    }
-
     Interview(JobApplication jobApplication, Interviewer interviewer, InterviewManager interviewManager) {
         Interview.totalNumOfInterviews++;
         this.id = Interview.totalNumOfInterviews;
@@ -96,12 +96,16 @@ public class Interview {
         return this.jobApplicationsToResult;
     }
 
-    public Collection<JobApplication> getJobApplications() {
-        return this.jobApplicationsToResult.keySet();
+    public ArrayList<JobApplication> getJobApplications() {
+        ArrayList<JobApplication> jobApps = new ArrayList<>();
+        jobApps.addAll(this.jobApplicationsToResult.keySet());
+        return jobApps;
     }
 
-    public Collection<Interviewer> getOtherInterviewers() {
-        return this.otherInterviewersToNotes.keySet();
+    public ArrayList<Interviewer> getOtherInterviewers() {
+        ArrayList<Interviewer> interviewers = new ArrayList<>();
+        interviewers.addAll(this.otherInterviewersToNotes.keySet());
+        return interviewers;
     }
 
     public HashMap<Interviewer, String> getOtherInterviewersToNotes() {
@@ -176,6 +180,27 @@ public class Interview {
             }
         }
         return null;
+    }
+
+    public static String[] getCategoryNamesForInterviewerUnscheduled() {
+        return new String[]{"Interviewee", "Job Posting"};
+    }
+
+    public String[] getCategoryValuesForInterviewerUnscheduled() {
+        JobApplication jobApp = this.getJobApplications().get(0);
+        return new String[]{jobApp.getApplicant().getLegalName(), jobApp.getJobPosting().getTitle()};
+    }
+
+    public static String[] getCategoryNamesForInterviewerScheduled() {
+        return new String[]{"Job Posting", "Interview Type", "Interview Description", "Interview Coordinator",
+                "Interview Time"};
+    }
+
+    public String[] getCategoryValuesForInterviewerScheduled() {
+        JobApplication jobApp = this.getJobApplications().get(0);
+        return new String[]{jobApp.getJobPosting().getTitle(), this.getInterviewManager().getCurrentRoundType(),
+                this.getInterviewManager().getCurrentRoundType(), this.getInterviewCoordinator().getLegalName(),
+                this.getTime().toString()};
     }
 
     // ============================================================================================================== //

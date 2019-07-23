@@ -2,6 +2,7 @@ package NewGUI.ReferenceInterface;
 
 import ApplicantStuff.JobApplication;
 import ApplicantStuff.Reference;
+import NewGUI.FrequentlyUsedMethods;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,16 +11,13 @@ import java.util.ArrayList;
 class ReferenceHomePanel extends JPanel {
 
     private Reference reference;
-    private JPanel reminderPanel;
-    private JPanel jobAppTablePanel;
-    private String[] columnNames = JobApplication.categoryNamesForReference();
 
     ReferenceHomePanel(Reference reference) {
-        super(new BorderLayout());
         this.reference = reference;
+
+        this.setLayout(new BorderLayout());
         this.add(this.createWelcomePanel(), BorderLayout.BEFORE_FIRST_LINE);
-        this.createReminderPanel();
-        this.add(reminderPanel, BorderLayout.CENTER);
+        this.add(this.createReminderPanel(), BorderLayout.CENTER);
         this.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
     }
 
@@ -33,32 +31,13 @@ class ReferenceHomePanel extends JPanel {
         return welcomePanel;
     }
 
-    private JPanel createReminderMessagePanel() {
-        JPanel reminderMessagePanel = new JPanel();
-        reminderMessagePanel.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
-        JLabel reminderMessage = new JLabel("Reference letters that still need to be submitted: ");
-        reminderMessagePanel.add(reminderMessage);
-        reminderMessage.setHorizontalAlignment(JLabel.CENTER);
-        reminderMessage.revalidate();
-        return reminderMessagePanel;
-    }
-
-    private void createReminderPanel() {
-        reminderPanel = new JPanel();
+    private JPanel createReminderPanel() {
+        JPanel reminderPanel = new JPanel();
         reminderPanel.setLayout(new BorderLayout());
-        reminderPanel.add(this.createReminderMessagePanel(), BorderLayout.BEFORE_FIRST_LINE);
-        this.createJobAppTablePanel();
-        reminderPanel.add(jobAppTablePanel, BorderLayout.CENTER);
-    }
-
-    /**
-     * Update the table contents.
-     */
-    void updateTable() {
-        reminderPanel.remove(jobAppTablePanel);
-        this.createJobAppTablePanel();
-        reminderPanel.add(jobAppTablePanel, BorderLayout.CENTER);
-        reminderPanel.revalidate();
+        reminderPanel.add(new FrequentlyUsedMethods().createTitlePanel(
+                "Reference letters that still need to be submitted: ", 20), BorderLayout.BEFORE_FIRST_LINE);
+        reminderPanel.add(this.createJobAppTablePanel(), BorderLayout.CENTER);
+        return reminderPanel;
     }
 
     /**
@@ -66,8 +45,8 @@ class ReferenceHomePanel extends JPanel {
      *
      * https://docs.oracle.com/javase/tutorial/uiswing/components/table.html
      */
-    private void createJobAppTablePanel() {
-        jobAppTablePanel = new JPanel(new GridLayout(1, 0));
+    private JPanel createJobAppTablePanel() {
+        JPanel jobAppTablePanel = new JPanel(new GridLayout(1, 0));
 
         ArrayList<JobApplication> jobApps = this.reference.getJobAppsForReference();
         Object[][] data = new Object[jobApps.size()][];
@@ -76,7 +55,7 @@ class ReferenceHomePanel extends JPanel {
             data[i] = jobApps.get(i).getCategoryValuesForReference();
         }
 
-        JTable jobAppTable = new JTable(data, columnNames);
+        JTable jobAppTable = new JTable(data, JobApplication.categoryNamesForReference());
         jobAppTable.setCellSelectionEnabled(false);
         jobAppTable.setEnabled(false);
         jobAppTable.setPreferredScrollableViewportSize(new Dimension(500, 70));
@@ -84,6 +63,7 @@ class ReferenceHomePanel extends JPanel {
 
         JScrollPane scrollPane = new JScrollPane(jobAppTable);
         jobAppTablePanel.add(scrollPane);
+        return jobAppTablePanel;
     }
 
 }
