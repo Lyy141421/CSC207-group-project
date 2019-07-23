@@ -14,14 +14,14 @@ import java.util.ArrayList;
 public class CompanyDocumentManager extends DocumentManager {
 
     // === Class variables ===
-    public static String FOLDER = DocumentManager.INITIAL_PATH + "/companies";
+    public static String FOLDER_PATH = DocumentManager.INITIAL_PATH + "/companies";
 
     // === Instance variables ===
     private Company company;
 
     CompanyDocumentManager(Company company) {
         this.company = company;
-        this.setFolder(new File(FOLDER + "/" + this.company.getName()));
+        this.setFolder(new File(FOLDER_PATH + "/" + this.company.getName()));
         for (Branch branch : company.getBranches()) {
             this.createBranchSubDirectories(branch);
         }

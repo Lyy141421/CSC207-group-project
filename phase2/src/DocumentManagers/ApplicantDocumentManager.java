@@ -4,23 +4,36 @@ import ApplicantStuff.Applicant;
 import ApplicantStuff.JobApplication;
 import ApplicantStuff.JobApplicationDocument;
 import ApplicantStuff.JobApplicationManager;
-import Main.User;
 
 import java.io.File;
-import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class ApplicantDocumentManager extends DocumentManager {
 
     // === Instance variables ===
-    public static String FOLDER = DocumentManager.INITIAL_PATH + "/users";
+    public static String FOLDER_PATH = DocumentManager.INITIAL_PATH + "/users";
     private Applicant applicant;
 
     // === Constructor ===
     public ApplicantDocumentManager(Applicant applicant) {
         this.applicant = applicant;
-        this.setFolder(new File(FOLDER + "/" + this.applicant.getUsername()));
+        this.setFolder(new File(FOLDER_PATH + "/" + this.applicant.getUsername()));
+    }
+
+    /**
+     * Check whether this account contains this file.
+     *
+     * @param file The file in question.
+     * @return true iff this user document folder contains this file.
+     */
+    public boolean containsFile(File file) {
+        for (File fileInAccount : this.getFolder().listFiles()) {
+            if (file.equals(fileInAccount)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

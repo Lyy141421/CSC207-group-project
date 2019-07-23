@@ -36,7 +36,7 @@
 package NewGUI;
 
 import ActionListeners.RemoveFileButtonActionListener;
-import ActionListeners.SubmitDocumentActionListener;
+import ActionListeners.SubmitDocumentsActionListener;
 import ApplicantStuff.Applicant;
 import ApplicantStuff.JobApplication;
 import ApplicantStuff.Reference;
@@ -47,7 +47,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.time.LocalDate;
 import java.util.ArrayList;
 
 
@@ -87,7 +86,7 @@ public class FileChooser extends JPanel implements ActionListener {
 
         submitButton = new JButton("Submit");
         submitButton.setEnabled(false);
-        submitButton.addActionListener(new SubmitDocumentActionListener(this.user, this.jobApp, this.filesToSubmit));
+        submitButton.addActionListener(new SubmitDocumentsActionListener(this.user, this.jobApp, this.filesToSubmit));
 
         JPanel submitButtonPanel = new JPanel();
         submitButtonPanel.add(submitButton);
