@@ -1,11 +1,13 @@
 package GUIClasses.InterviewerInterface;
 
+import CompanyStuff.Interview;
 import GUIClasses.MethodsTheGUICallsInInterviewer;
 import UIClasses.InterviewerInterface;
 
 import javax.swing.*;
 import java.awt.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 //import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
 //import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
@@ -22,9 +24,27 @@ abstract class InterviewerPanel extends JPanel {
         this.parent = contentPane;
         this.interviewerInterface = interviewerInterface;
         this.today = today;
-
-
     }
+
+    ArrayList<String> getInterviewTitles(ArrayList<Interview> interviews) {
+        ArrayList<String> titles = new ArrayList<>();
+        for (Interview interview : interviews) {
+            titles.add(interview.getId() + "-" + interview.getTime().toString() + " " +
+                    interview.getApplicant().getLegalName());
+        }
+
+        return titles;
+    }
+
+    String[] getIdAndApplicants(ArrayList<Interview> interviews) {
+        ArrayList<String> titles = new ArrayList<>();
+        for (Interview interview : interviews) {
+            titles.add(interview.getId() + "-" + interview.getApplicant().getLegalName());
+        }
+
+        return (String[]) titles.toArray();
+    }
+
     /*private Container contentPane;
     private InterviewerInterface interviewerInterface;
     private LocalDate today;
