@@ -11,37 +11,48 @@ import java.time.LocalDate;
 
 public class HRHome extends HRPanel {
 
+    GridBagConstraints c;
+
+    private JButton logoutButton;
+
     HRHome(Container contentPane, MethodsTheGUICallsInHR HRInterface, LocalDate today) {
         super(contentPane, HRInterface, today);
 
         this.setLayout(new GridBagLayout());
-        GridBagConstraints c = new GridBagConstraints();
+        this.c = new GridBagConstraints();
 
         JButton toDo = new JButton("To-Do");
-        c.gridx = 0;
-        c.gridy = 0;
-        this.add(toDo, c);
+        this.c.gridx = 0;
+        this.c.gridy = 0;
+        this.add(toDo, this.c);
 
-        JPanel manual = new JPanel();
-        manual.setLayout(new BoxLayout(manual, BoxLayout.Y_AXIS));
-        manual.setBorder(new EtchedBorder(EtchedBorder.LOWERED));
+        this.addMenu();
 
-        manual.add(this.createBrowseButton());
-        manual.add(this.createAddButton());
-        manual.add(this.createSearchButton());
+        this.logoutButton = new JButton("Logout");
+        this.c.gridx = 2;
+        this.c.gridy = 2;
+        this.c.gridwidth = 1;
+        this.c.insets = new Insets(20, 100, 0, 0);
+        this.add(logoutButton, this.c);
+    }
 
-        c.gridx = 1;
-        c.gridy = 1;
-        c.gridwidth = 2;
-        this.add(manual, c);
+    JButton getLogoutButton() {
+        return this.logoutButton;
+    }
 
-        JButton logout = new JButton("Logout");
+    private void addMenu() {
+        JPanel menu = new JPanel();
+        menu.setLayout(new BoxLayout(menu, BoxLayout.Y_AXIS));
+        menu.setBorder(new EtchedBorder(EtchedBorder.LOWERED));
 
-        c.gridx = 2;
-        c.gridy = 2;
-        c.gridwidth = 1;
-        c.insets = new Insets(20, 100, 0, 0);
-        this.add(logout, c);
+        menu.add(this.createBrowseButton());
+        menu.add(this.createAddButton());
+        menu.add(this.createSearchButton());
+
+        this.c.gridx = 1;
+        this.c.gridy = 1;
+        this.c.gridwidth = 2;
+        this.add(menu, this.c);
     }
 
     private JButton createBrowseButton() {
