@@ -3,7 +3,6 @@ package CompanyStuff;
 import Miscellaneous.InterviewTime;
 import Main.User;
 import ApplicantStuff.JobApplication;
-import NotificationSystem.NotificationManager;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -33,6 +32,7 @@ public class Interviewer extends User {
         super(username, password, legalName, email, dateCreated);
         this.branch = branch;
         this.field = field;
+        branch.addInterviewer(this);
     }
 
     // === Getters ===

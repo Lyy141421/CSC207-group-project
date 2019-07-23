@@ -24,7 +24,11 @@ public class BranchJobPosting extends CompanyJobPosting implements Observable, S
     private Branch branch; // The branch that listed this job posting
     private ArrayList<JobApplication> jobApplications; // The list of applications for this job posting
     private InterviewManager interviewManager; // Interview manager for this job posting
-    private ArrayList<Observer> observer_list = new ArrayList<>(); // A list of observers for pushing notifications to
+    private ArrayList<Observer> observer_list = new ArrayList<>(); // A list of observers for pushing notifications
+
+
+    // === Representation invariants ===
+    // References can only submit reference letters after the applicant close date and before the reference close date
 
     // === Constructor ===
     public BranchJobPosting(String title, String field, String description, ArrayList<String> requiredDocuments,
@@ -92,17 +96,12 @@ public class BranchJobPosting extends CompanyJobPosting implements Observable, S
     }
 
     /**
-     * Check whether this job posting has closed for further applications and updates the company document manager.
+     * Check whether this job posting has closed for further applications.
      * @param today Today's date.
      * @return true iff the application submission date has passed.
      */
     public boolean isClosedForApplications(LocalDate today) {
-        boolean closed = this.applicantCloseDate.isBefore(today);
-        if (closed) {
-            setChanged();
-            notifyObservers();
-        }
-        return closed;
+        return this.applicantCloseDate.isBefore(today);
     }
 
     /**
@@ -162,7 +161,7 @@ public class BranchJobPosting extends CompanyJobPosting implements Observable, S
     }
 
     /**
-     * Create an interview manager for this job posting.
+     * Create an interview manager for this job posting after this branch posting has been closed for further applications.
      */
     public void createInterviewManager() {
         InterviewManager interviewManager = new InterviewManager(this,
@@ -220,7 +219,7 @@ public class BranchJobPosting extends CompanyJobPosting implements Observable, S
      *
      * @param jobApplication The job application to be removed.
      */
-    void removeJobApplication(JobApplication jobApplication) {
+    public void removeJobApplication(JobApplication jobApplication) {
         this.jobApplications.remove(jobApplication);
     }
 
@@ -230,14 +229,16 @@ public class BranchJobPosting extends CompanyJobPosting implements Observable, S
             return false;
         } else {
             BranchJobPosting other = (BranchJobPosting) obj;
-            return (branch.getCompany().equals(other.getCompany()) && id == other.id);
+            return (branch.equals(other.branch) && id == other.id);
         }
     }
 
     // === Observable Methods ===
 
     public void attach(Observer observer){
-        observer_list.add(observer);
+        if (!observer_list.contains(observer)) {
+            observer_list.add(observer);
+        }
     }
 
     public void detach(Observer observer){
@@ -245,6 +246,7 @@ public class BranchJobPosting extends CompanyJobPosting implements Observable, S
     }
 
     public void notifyAllObservers(Notification notification){
+        updateObserverList();
         for (Observer observer : observer_list){
             notifyObserver(observer, notification);
         }
@@ -252,5 +254,13 @@ public class BranchJobPosting extends CompanyJobPosting implements Observable, S
 
     public void notifyObserver(Observer observer, Notification notification){
         observer.update(notification);
+    }
+
+    public void updateObserverList(){
+        ArrayList<Observer> observer_l = new ArrayList<>();
+        for (JobApplication job_application : this.interviewManager.getApplicationsInConsideration()){
+            observer_l.add(job_application.getApplicant());
+        }
+        this.observer_list = observer_l;
     }
 }

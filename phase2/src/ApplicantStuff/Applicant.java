@@ -8,6 +8,7 @@ import DocumentManagers.DocumentManagerFactory;
 import CompanyStuff.JobPostings.BranchJobPostingManager;
 import Main.JobApplicationSystem;
 import Main.User;
+import NotificationSystem.Observable;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -56,16 +57,6 @@ public class Applicant extends User {
     // === Other methods ===
 
     /**
-     * Register this job application for this applicant.
-     *
-     * @param application The job application registered.
-     */
-    public void registerJobApplication(JobApplication application) {
-        // TODO what to do with documents submitted
-        jobApplicationManager.addJobApplication(application);
-    }
-
-    /**
      * Remove this applicant's application for this job.
      *
      * @param today      Today's date.
@@ -73,13 +64,18 @@ public class Applicant extends User {
      * @return true iff this applicant can successfully withdraw their application; else return false
      */
     public boolean withdrawJobApplication(LocalDate today, BranchJobPosting jobPosting) {
+        JobApplication jobApp = jobPosting.findJobApplication(this);
         if (this.hasAppliedToPosting(jobPosting) && !jobPosting.isFilled()) {
-            if (!jobPosting.isClosedForApplications(today)) {
-                // TODO replace with notify -- notify job posting, interview manager (if it exists),
-                // interviewer (if interview has been scheduled), referee (if there is one)
-                //jobPosting.removeJobApplication(jobPosting.findJobApplication(this));
+            if (!jobPosting.isClosedForApplications(today)) {   // Company still does not have access to application
+                jobPosting.removeJobApplication(jobApp);
+            } else {    // Company has access to application
+                jobPosting.getInterviewManager().withdrawApplication(jobApp);   // Update application from the company end
             }
-            this.jobApplicationManager.removeJobApplication(jobPosting);
+            if (!jobPosting.isClosedForReferences(today)) {
+                // Company has access to application, but reference letters may not all be submitted
+                jobApp.removeAppFromAllReferences();    // Cancel reference letter submissions
+            }
+            this.jobApplicationManager.removeJobApplication(jobPosting);    // Remove this application from applicant end
             return true;
         }
         return false;
@@ -100,6 +96,7 @@ public class Applicant extends User {
         return false;
     }
 
+    // TODO what is this for?
     public boolean hasAppliedToBranch(Branch branch) {
         for (BranchJobPosting posting : branch.getJobPostingManager().getBranchJobPostings())
             if (this.hasAppliedToPosting(posting))
@@ -112,12 +109,12 @@ public class Applicant extends User {
      *
      * @return a list of open job postings not yet applied to.
      */
-    public ArrayList<BranchJobPosting> getOpenJobPostingsNotAppliedTo(JobApplicationSystem JAS) {
+    public ArrayList<BranchJobPosting> getOpenJobPostingsNotAppliedTo(JobApplicationSystem jobAppSystem) {
         ArrayList<BranchJobPosting> jobPostings = new ArrayList<>();
-        for (Company company : JAS.getCompanies())
+        for (Company company : jobAppSystem.getCompanies())
             for (Branch branch : company.getBranches()) {
                 BranchJobPostingManager jpm = branch.getJobPostingManager();
-                ArrayList<BranchJobPosting> openPostings = jpm.getOpenJobPostings(JAS.getToday());
+                ArrayList<BranchJobPosting> openPostings = jpm.getOpenJobPostings(jobAppSystem.getToday());
                 openPostings.retainAll(jpm.getJobPostingsNotAppliedToBy(this));
                 jobPostings.addAll(openPostings);
                 }

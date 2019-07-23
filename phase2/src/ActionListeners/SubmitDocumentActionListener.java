@@ -49,7 +49,7 @@ public class SubmitDocumentActionListener implements ActionListener {
         } else {
             // Remove job application from reference's list
             Reference reference = (Reference) this.documentSubmitter;
-            reference.removeJobApplicationForReference(jobApp);
+            reference.removeJobApplication(jobApp);
         }
         CompanyDocumentManager companyDocManager = jobApp.getJobPosting().getCompany().getDocumentManager();
         companyDocManager.addFilesForJobApplication(jobApp, filesToSubmit);

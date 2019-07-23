@@ -31,7 +31,7 @@ public class Reference extends User {
      *
      * @param jobApp The job application to be added.
      */
-    public void addJobApplicationForReference(JobApplication jobApp) {
+    public void addJobApplication(JobApplication jobApp) {
         this.jobAppsForReference.add(jobApp);
     }
 
@@ -40,7 +40,7 @@ public class Reference extends User {
      *
      * @param jobApp The job application to be removed.
      */
-    public void removeJobApplicationForReference(JobApplication jobApp) {
+    public void removeJobApplication(JobApplication jobApp) {
         this.jobAppsForReference.remove(jobApp);
     }
 
@@ -50,10 +50,10 @@ public class Reference extends User {
      *
      * @param jobPosting The job posting to be removed.
      */
-    public void removeJobPostingForReference(BranchJobPosting jobPosting) {
-        for (JobApplication jobApp : this.jobAppsForReference) {
+    public void removeJobPosting(BranchJobPosting jobPosting) {
+        for (JobApplication jobApp : (ArrayList<JobApplication>) this.jobAppsForReference.clone()) {
             if (jobApp.getJobPosting().equals(jobPosting)) {
-                this.removeJobApplicationForReference(jobApp);
+                this.removeJobApplication(jobApp);
             }
         }
     }
@@ -63,7 +63,7 @@ public class Reference extends User {
      *
      * @return a list of job postings that this reference's referees are applying to.
      */
-    public ArrayList<BranchJobPosting> getJobPostingsForReference() {
+    public ArrayList<BranchJobPosting> getJobPostings() {
         ArrayList<BranchJobPosting> jobPostings = new ArrayList<>();
         ArrayList<JobApplication> jobApps = this.jobAppsForReference;
         for (JobApplication jobApp : jobApps) {

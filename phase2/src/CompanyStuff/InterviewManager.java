@@ -48,13 +48,7 @@ public class InterviewManager implements Serializable {
         this.branchJobPosting = branchJobPosting;
         this.applicationsInConsideration = applicationsInConsideration;
         this.applicationsRejected = new ArrayList<>();
-    }
-
-    public InterviewManager(BranchJobPosting branchJobPosting, ArrayList<JobApplication> applicationsInConsideration,
-                            ArrayList<JobApplication> applicationsRejected) {
-        this.branchJobPosting = branchJobPosting;
-        this.applicationsInConsideration = applicationsInConsideration;
-        this.applicationsRejected = applicationsRejected;
+        this.interviewConfiguration = new ArrayList<>();
     }
 
     // === Getters ===
@@ -68,6 +62,10 @@ public class InterviewManager implements Serializable {
 
     public String getCurrentRoundDescription() {
         return (String) this.interviewConfiguration.get(this.currentRound)[0];
+    }
+
+    public ArrayList<Object[]> getInterviewConfiguration() {
+        return this.interviewConfiguration;
     }
 
     public Interview getCurrentRoundType() {
@@ -139,16 +137,15 @@ public class InterviewManager implements Serializable {
     public void withdrawApplication(JobApplication applicationToWithdraw) {
         if (!applicationToWithdraw.getInterviews().isEmpty()) {
             Interview interview = applicationToWithdraw.getLastInterview();
-            InterviewManager IM = applicationToWithdraw.getJobPosting().getInterviewManager();
-            if (!interview.isComplete() && interview.getNumApplications() == 1) {
+            interview.removeApplication(applicationToWithdraw);
+            // If it is a group interview and there are still people left, do not withdraw
+            if (interview.getJobApplications().isEmpty()) {
                 for (Interviewer interviewer : interview.getAllInterviewers()) {
                     interviewer.removeInterview(interview);
                 }
             }
-            if (IM != null) {
-                IM.reject(applicationToWithdraw);
-            }
         }
+        this.reject(applicationToWithdraw);
     }
 
     /**

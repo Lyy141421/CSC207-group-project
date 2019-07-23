@@ -9,10 +9,11 @@ import Miscellaneous.CloseDateComparator;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Observable;
 
 import static java.time.temporal.ChronoUnit.DAYS;
 
-public class JobApplicationManager implements Serializable {
+public class JobApplicationManager extends Observable implements Serializable {
 
     // === Instance variables ===
     // List of job applications submitted sorted chronologically by close date
@@ -24,10 +25,6 @@ public class JobApplicationManager implements Serializable {
 
     // === Constructors ===
     public JobApplicationManager() {
-    }
-
-    public JobApplicationManager(ArrayList<JobApplication> jobApplications) {
-        this.jobApplications = jobApplications;
     }
 
     // === Getters ===

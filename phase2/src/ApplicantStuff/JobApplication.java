@@ -27,7 +27,7 @@ public class JobApplication implements Serializable {
     // The files submitted for this job application
     private ArrayList<JobApplicationDocument> filesSubmitted;
     // The status of this application
-    private Status status;
+    private Status status = new Status();
     // The date this application was submitted
     private LocalDate applicationDate;
     // The references that this applicant has chosen
@@ -50,8 +50,9 @@ public class JobApplication implements Serializable {
         this.applicant = applicant;
         this.jobPosting = jobPosting;
         this.filesSubmitted = filesSubmitted;
-        this.status = new Status();
         this.applicationDate = applicationDate;
+        this.jobPosting.addJobApplication(this);
+        applicant.getJobApplicationManager().addJobApplication(this);
     }
 
     // === Getters ===
@@ -87,19 +88,6 @@ public class JobApplication implements Serializable {
         return this.interviews;
     }
 
-    // === Setters ===
-    public void setApplicant(Applicant applicant) {
-        this.applicant = applicant;
-    }
-
-    public void setJobPosting(BranchJobPosting branchJobPosting) {
-        this.jobPosting = branchJobPosting;
-    }
-
-    public void setInterviews(ArrayList<Interview> interviews) {
-        this.interviews = interviews;
-    }
-
     // === Other methods ===
 
     /**
@@ -119,7 +107,19 @@ public class JobApplication implements Serializable {
     public void addReferences(ArrayList<Reference> referencesToAdd) {
         this.references.addAll(referencesToAdd);
         for (Reference reference : referencesToAdd) {
-            reference.addJobApplicationForReference(this);
+            reference.addJobApplication(this);
+        }
+    }
+
+    /**
+     * Remove this job application from all the references' lists.
+     * This is called when an application is withdrawn before the reference close date.
+     */
+    public void removeAppFromAllReferences() {
+        for (Reference reference : this.getReferences()) {
+            if (reference.getJobAppsForReference().contains(this)) {
+                reference.removeJobApplication(this);
+            }
         }
     }
 

@@ -29,7 +29,7 @@ public class ReferenceViewRefereeJobPostingsPanel extends JPanel implements List
         this.add(new FrequentlyUsedMethods().createTitlePanel(
                 "View the Job Postings That Your Referees Have Applied To", 20), BorderLayout.PAGE_START);
         this.add(this.createJobApplicationListPanel(), BorderLayout.WEST);
-        for (BranchJobPosting jobPosting : this.reference.getJobPostingsForReference()) {
+        for (BranchJobPosting jobPosting : this.reference.getJobPostings()) {
             String key = jobPosting.getTitle() + jobPosting.getId();
             jobPostingCards.add(this.createJobPostingPanel(jobPosting), key);
         }
@@ -127,7 +127,7 @@ public class ReferenceViewRefereeJobPostingsPanel extends JPanel implements List
         if (e.getValueIsAdjusting() == false) {
             if (jobAppList.getSelectedIndex() != -1) {
                 int selectedIndex = jobAppList.getSelectedIndex();
-                ArrayList<BranchJobPosting> refereeJobPostings = this.reference.getJobPostingsForReference();
+                ArrayList<BranchJobPosting> refereeJobPostings = this.reference.getJobPostings();
                 BranchJobPosting jobPostingToDisplay = refereeJobPostings.get(selectedIndex);
                 String key = jobPostingToDisplay.getTitle() + jobPostingToDisplay.getId();
                 ((CardLayout) jobPostingCards.getLayout()).show(jobPostingCards, key);
