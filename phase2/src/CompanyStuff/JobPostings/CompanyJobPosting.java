@@ -142,9 +142,9 @@ public class CompanyJobPosting extends Observable implements Serializable {
     }
 
     /**
-     * Get a string representation of this job posting for standard input.
+     * Get a string representation of this job posting.
      *
-     * @return a string representation of this job posting for standard input.
+     * @return a string representation of this job posting.
      */
     @Override
     public String toString() {
