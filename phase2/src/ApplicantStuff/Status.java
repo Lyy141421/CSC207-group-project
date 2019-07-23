@@ -29,9 +29,11 @@ public class Status implements Serializable, Observable {
 
     // === Instance variable ===
     private int value = Status.SUBMITTED;
+    private ArrayList<Observer> observer_list = new ArrayList<>(); //A list of observers to this status
 
     // === Constructors ===
-    Status() {
+    Status(Observer observer) {
+        this.attach(observer);
     }
 
     // === Getters ===
