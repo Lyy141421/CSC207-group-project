@@ -19,6 +19,8 @@ public class HRViewApp extends HRPanel {
     private String CV = "CV";
     private String COVER_LETTER = "Cover letter";
 
+    HashMap<String, JobApplication> currApps;
+
     private JList<String> applicationList = new JList<>();
     private JTabbedPane infoPane;
     private JTextArea overview;
@@ -26,8 +28,9 @@ public class HRViewApp extends HRPanel {
     private JTextArea coverLetter;
 
 
-    HRViewApp(Container contentPane, MethodsTheGUICallsInHR HRInterface, LocalDate today) {
+    HRViewApp(Container contentPane, MethodsTheGUICallsInHR HRInterface, LocalDate today, HashMap<String, JobApplication> currApps) {
         super(contentPane, HRInterface, today);
+        this.currApps = currApps;
 
         this.setLayout(new BorderLayout());
 
@@ -47,12 +50,12 @@ public class HRViewApp extends HRPanel {
 
     void reload () {
         this.applicationList.removeAll();
-        this.applicationList.setListData(currApps.keySet().toArray(new String[currApps.size()]));
+        this.applicationList.setListData(this.currApps.keySet().toArray(new String[this.currApps.size()]));
         //TODO: change buttons based on job posting selected
     }
 
     private void setApplicationList (JSplitPane splitDisplay) {
-        this.applicationList.setListData(currApps.keySet().toArray(new String[currApps.size()]));
+        this.applicationList.setListData(this.currApps.keySet().toArray(new String[this.currApps.size()]));
         this.applicationList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
         this.applicationList.setLayoutOrientation(JList.VERTICAL);
 

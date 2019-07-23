@@ -1,5 +1,7 @@
 package GUIClasses.HRInterface;
 
+import ApplicantStuff.JobApplication;
+import CompanyStuff.JobPostings.BranchJobPosting;
 import GUIClasses.MethodsTheGUICallsInHR;
 
 import javax.swing.*;
@@ -7,6 +9,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
+import java.util.HashMap;
 
 public class HRMain extends JPanel {
 
@@ -16,9 +19,11 @@ public class HRMain extends JPanel {
 
     HRHome homePanel;
     HRViewPosting viewPostingPanel;
-    HRViewApp viewAppPanel;
     HRSearchApplicant searchPanel;
     HRAddPosting addPostingPanel;
+
+    HashMap<String, BranchJobPosting> currJPs = new HashMap<>();
+    HashMap<String, JobApplication> currApps = new HashMap<>();
 
     private HRMain (Container contentPane, MethodsTheGUICallsInHR HRInterface, LocalDate today) {
         this.setLayout(new CardLayout());
@@ -35,9 +40,9 @@ public class HRMain extends JPanel {
     private void addPanels() {
         this.add(this.homePanel = new HRHome(this, this.HRInterface, this.today), HRPanel.HOME);
         this.add(this.viewPostingPanel = new HRViewPosting(this, this.HRInterface, this.today), HRPanel.POSTING);
-        this.add(this.viewAppPanel = new HRViewApp(this, this.HRInterface, this.today), HRPanel.APPLICATION);
         this.add(this.searchPanel = new HRSearchApplicant(this, this.HRInterface, this.today), HRPanel.SEARCH);
         this.add(this.addPostingPanel = new HRAddPosting(this, this.HRInterface, this.today), HRPanel.ADD_POSTING);
+        this.add(new HRViewApp(this, this.HRInterface, this.today, new HashMap<>()));
     }
 
     //=====panel switch methods=====
@@ -53,5 +58,12 @@ public class HRMain extends JPanel {
         });
     }
 
-
+    private void setToDoAction () {
+        this.homePanel.getToDoButton().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                currJPs = viewPostingPanel.getImportantJP();
+            }
+        });
+    }
 }

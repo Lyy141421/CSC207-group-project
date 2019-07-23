@@ -26,6 +26,8 @@ public class HRViewPosting extends HRPanel{
     private HashMap<String, BranchJobPosting> importantJP = new HashMap<>();
     private HashMap<String, BranchJobPosting> allJP;
 
+    HashMap<String, BranchJobPosting> currJPs;
+
     private JTextArea info;
     private JButton scheduleButton;
     private JList<String> jobPostingList = new JList<>();
@@ -57,6 +59,10 @@ public class HRViewPosting extends HRPanel{
     void reload() {
         this.jobPostingList.removeAll();
         this.jobPostingList.setListData(currJPs.keySet().toArray(new String[currJPs.size()]));
+    }
+
+    public HashMap<String, BranchJobPosting> getImportantJP() {
+        return this.importantJP;
     }
 
     private void setListSelectionListener() {
@@ -117,7 +123,9 @@ public class HRViewPosting extends HRPanel{
             public void actionPerformed(ActionEvent e) {
                 BranchJobPosting selectedJP = currJPs.get(jobPostingList.getSelectedValue());
                 ArrayList<JobApplication> appsUnderSelectedJP = selectedJP.getJobApplications();
-                currApps = getTitleToAppMap(appsUnderSelectedJP);
+                HRViewApp appPanel = new HRViewApp(parent, HRInterface, today, getTitleToAppMap(appsUnderSelectedJP));
+                parent.remove(4);
+                parent.add(appPanel, APPLICATION);
                 ((CardLayout) parent.getLayout()).show(parent, APPLICATION);
             }
         });

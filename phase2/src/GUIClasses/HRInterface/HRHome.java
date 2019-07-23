@@ -14,6 +14,10 @@ public class HRHome extends HRPanel {
     GridBagConstraints c;
 
     private JButton logoutButton;
+    private JButton searchButton;
+    private JButton browseButton;
+    private JButton addButton;
+    private JButton toDoButton;
 
     HRHome(Container contentPane, MethodsTheGUICallsInHR HRInterface, LocalDate today) {
         super(contentPane, HRInterface, today);
@@ -21,11 +25,14 @@ public class HRHome extends HRPanel {
         this.setLayout(new GridBagLayout());
         this.c = new GridBagConstraints();
 
-        JButton toDo = new JButton("To-Do");
+        this.toDoButton = new JButton("To-Do");
         this.c.gridx = 0;
         this.c.gridy = 0;
-        this.add(toDo, this.c);
+        this.add(toDoButton, this.c);
 
+        this.createBrowseButton();
+        this.createAddButton();
+        this.createSearchButton();
         this.addMenu();
 
         this.logoutButton = new JButton("Logout");
@@ -44,14 +51,30 @@ public class HRHome extends HRPanel {
         return this.logoutButton;
     }
 
+    JButton getSearchButton() {
+        return this.searchButton;
+    }
+
+    JButton getBrowseButton() {
+        return this.browseButton;
+    }
+
+    JButton getAddButton() {
+        return this.addButton;
+    }
+
+    JButton getToDoButton() {
+        return this.toDoButton;
+    }
+
     private void addMenu() {
         JPanel menu = new JPanel();
         menu.setLayout(new BoxLayout(menu, BoxLayout.Y_AXIS));
         menu.setBorder(new EtchedBorder(EtchedBorder.LOWERED));
 
-        menu.add(this.createBrowseButton());
-        menu.add(this.createAddButton());
-        menu.add(this.createSearchButton());
+        menu.add(this.browseButton);
+        menu.add(this.addButton);
+        menu.add(this.searchButton);
 
         this.c.gridx = 1;
         this.c.gridy = 1;
@@ -59,43 +82,37 @@ public class HRHome extends HRPanel {
         this.add(menu, this.c);
     }
 
-    private JButton createBrowseButton() {
-        JButton browsePosting = new JButton("Browse all job postings");
-        browsePosting.setAlignmentX(Component.CENTER_ALIGNMENT);
-        browsePosting.addActionListener(new ActionListener() {
+    private void createBrowseButton() {
+        this.browseButton = new JButton("Browse all job postings");
+        this.browseButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        this.browseButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 //TODO: insert allJP to currJP and change jobPostingList content
                 ((CardLayout) parent.getLayout()).show(parent, POSTING);
             }
         });
-
-        return browsePosting;
     }
 
-    private JButton createSearchButton() {
-        JButton searchApplicant = new JButton("Search applicant");
-        searchApplicant.setAlignmentX(Component.CENTER_ALIGNMENT);
-        searchApplicant.addActionListener(new ActionListener() {
+    private void createSearchButton() {
+        this.searchButton = new JButton("Search applicant");
+        this.searchButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        this.searchButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 ((CardLayout) parent.getLayout()).show(parent, SEARCH);
             }
         });
-
-        return searchApplicant;
     }
 
-    private JButton createAddButton() {
-        JButton addPosting = new JButton("Add job posting");
-        addPosting.setAlignmentX(Component.CENTER_ALIGNMENT);
-        addPosting.addActionListener(new ActionListener() {
+    private void createAddButton() {
+        this.addButton = new JButton("Add job posting");
+        this.addButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        this.addButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 ((CardLayout) parent.getLayout()).show(parent, ADD_POSTING);
             }
         });
-
-        return addPosting;
     }
 }

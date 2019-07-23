@@ -27,9 +27,6 @@ abstract class HRPanel extends JPanel {
     static String SEARCH = "SEARCH";
     static String ADD_POSTING = "ADDPOSTING";
 
-    HashMap<String, BranchJobPosting> currJPs;
-    HashMap<String, JobApplication> currApps;
-
     JButton homeButton;
 
 
