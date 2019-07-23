@@ -89,7 +89,7 @@ public class InterviewerHomePanel extends JPanel {
     }
 
     private JPanel createScheduleTablePanel() {
-        ArrayList<Interview> scheduledInterviews = this.interviewer.getScheduledInterviews();
+        ArrayList<Interview> scheduledInterviews = this.interviewer.getScheduledUpcomingInterviews();
         Object[][] data = new Object[scheduledInterviews.size()][];
 
         for (int i = 0; i < scheduledInterviews.size(); i++) {

@@ -101,12 +101,28 @@ public class Interviewer extends User {
      * @return true iff this interviewer is available at this time.
      */
     public boolean isAvailable(InterviewTime interviewTime) {
-        for (Interview interview : this.getScheduledInterviews()) {
+        for (Interview interview : this.getInterviewsOnDate(interviewTime.getDate())) {
             if (interview.getTime().equals(interviewTime)) {
                 return false;
             }
         }
         return true;
+    }
+
+    /**
+     * Get interviews on this date.
+     *
+     * @param date The date in question.
+     * @return the interviews that occur on this date.
+     */
+    private ArrayList<Interview> getInterviewsOnDate(LocalDate date) {
+        ArrayList<Interview> interviewsOnDate = new ArrayList<>();
+        for (Interview interview : this.interviews) {
+            if (interview.getTime().getDate().isEqual(date)) {
+                interviewsOnDate.add(interview);
+            }
+        }
+        return interviewsOnDate;
     }
 
     /**
@@ -126,7 +142,7 @@ public class Interviewer extends User {
     public ArrayList<Interview> getUnscheduledInterviews() {
         ArrayList<Interview> unscheduledInterviews = new ArrayList<>();
         for (Interview interview : this.interviews) {
-            if (interview.getTime() == null) {
+            if (!interview.isScheduled()) {
                 unscheduledInterviews.add(interview);
             }
         }
@@ -135,13 +151,13 @@ public class Interviewer extends User {
 
     /**
      * Get a list of scheduled interviews for this interviewer.
-     *
+     * @param today Today's date.
      * @return a list of scheduled interviews for this interviewer.
      */
-    public ArrayList<Interview> getScheduledInterviews() {
+    public ArrayList<Interview> getScheduledUpcomingInterviews(LocalDate today) {
         ArrayList<Interview> scheduledInterviews = new ArrayList<>();
         for (Interview interview : this.interviews) {
-            if (!this.getUnscheduledInterviews().contains(interview)) {
+            if (!interview.isComplete() && !interview.getTime().getDate().isBefore(today)) {
                 scheduledInterviews.add(interview);
             }
         }

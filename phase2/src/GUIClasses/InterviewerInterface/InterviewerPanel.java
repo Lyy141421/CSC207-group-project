@@ -2,7 +2,6 @@ package GUIClasses.InterviewerInterface;
 
 import CompanyStuff.Interview;
 import GUIClasses.MethodsTheGUICallsInInterviewer;
-import UIClasses.InterviewerInterface;
 
 import javax.swing.*;
 import java.awt.*;
@@ -29,8 +28,7 @@ abstract class InterviewerPanel extends JPanel {
     ArrayList<String> getInterviewTitles(ArrayList<Interview> interviews) {
         ArrayList<String> titles = new ArrayList<>();
         for (Interview interview : interviews) {
-            titles.add(interview.getId() + "-" + interview.getTime().toString() + " " +
-                    interview.getApplicant().getLegalName());
+            titles.add(interview.getId() + "-" + interview.getTime().toString() + " " + interview.getIntervieweeNames());
         }
 
         return titles;
@@ -39,7 +37,7 @@ abstract class InterviewerPanel extends JPanel {
     String[] getIdAndApplicants(ArrayList<Interview> interviews) {
         ArrayList<String> titles = new ArrayList<>();
         for (Interview interview : interviews) {
-            titles.add(interview.getId() + "-" + interview.getApplicant().getLegalName());
+            titles.add(interview.getId() + "-" + interview.getIntervieweeNames());
         }
 
         return (String[]) titles.toArray();

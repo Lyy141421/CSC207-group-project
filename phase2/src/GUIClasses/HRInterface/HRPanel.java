@@ -1,9 +1,7 @@
 package GUIClasses.HRInterface;
 
 import ApplicantStuff.JobApplication;
-import CompanyStuff.Branch;
 import GUIClasses.MethodsTheGUICallsInHR;
-import UIClasses.HRCoordinatorInterface;
 import CompanyStuff.JobPostings.*;
 
 

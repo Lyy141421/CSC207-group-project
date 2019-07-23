@@ -4,7 +4,6 @@ import ApplicantStuff.JobApplication;
 import Miscellaneous.InterviewTime;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 
 public class Interview {
@@ -127,11 +126,39 @@ public class Interview {
     }
 
     // === Other methods ===
+
+    /**
+     * Set the results for all the job applications in this interview at once.
+     *
+     * @param jobAppToResult The hash map of job applications to results.
+     */
     public void setResults(HashMap<JobApplication, Boolean> jobAppToResult) {
         for (JobApplication jobApp : jobAppToResult.keySet()) {
             boolean result = jobAppToResult.get(jobApp);
             this.jobApplicationsToResult.replace(jobApp, result);
         }
+    }
+
+    /**
+     * Set the result for this one application.
+     *
+     * @param jobApp The job application in question.
+     * @param result The result (pass/fail)
+     */
+    public void setResult(JobApplication jobApp, Boolean result) {
+        this.getJobApplicationsToResult().replace(jobApp, result);
+    }
+
+    /**
+     * Gets all the notes for this interview.
+     *
+     * @return a list of all the notes for this interview.
+     */
+    public ArrayList<String> getAllNotes() {
+        ArrayList<String> allNotes = new ArrayList<>();
+        allNotes.add(this.interviewCoordinatorToNotes.get(this.getInterviewCoordinator()));
+        allNotes.addAll(this.otherInterviewersToNotes.values());
+        return allNotes;
     }
 
     /**
@@ -156,6 +183,15 @@ public class Interview {
             }
         }
         return true;
+    }
+
+    /**
+     * Check whether this interview is scheduled.
+     *
+     * @return
+     */
+    public boolean isScheduled() {
+        return this.time != null;
     }
 
     /**
@@ -188,6 +224,20 @@ public class Interview {
             }
         }
         return null;
+    }
+
+    /**
+     * Get the names of the interviewees for this interview.
+     *
+     * @return a string of names of interviewees for this interview.
+     */
+    public String getIntervieweeNames() {
+        String applicantNames = "";
+        for (JobApplication jobApp : this.getJobApplications()) {
+            applicantNames += jobApp.getApplicant().getLegalName() + ", ";
+        }
+        applicantNames = applicantNames.substring(0, applicantNames.length() - 2);
+        return applicantNames;
     }
 
     public static String[] getCategoryNamesForInterviewerUnscheduled() {

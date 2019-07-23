@@ -179,7 +179,7 @@ public class BranchJobPostingManager implements Serializable {
     public ArrayList<BranchJobPosting> getJobPostingsWithRoundCompletedNotForHire(LocalDate today) {
         ArrayList<BranchJobPosting> jobPostings = new ArrayList<>();
         for (BranchJobPosting jobPosting : this.getClosedJobPostingsNotFilled(today)) {
-            if (jobPosting.getInterviewManager().getHrTask() == InterviewManager.SCHEDULE_INTERVIEWS) {
+            if (jobPosting.getInterviewManager().getHrTask() == InterviewManager.SCHEDULE_GROUP_INTERVIEWS) {
                 jobPostings.add(jobPosting);
             }
         }

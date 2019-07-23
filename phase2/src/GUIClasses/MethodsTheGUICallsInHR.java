@@ -18,7 +18,7 @@ public class MethodsTheGUICallsInHR {
     private JobApplicationSystem jobAppSystem;
     private HRCoordinator hr;
 
-    MethodsTheGUICallsInHR(JobApplicationSystem jobAppSystem, HRCoordinator hr) {
+    public MethodsTheGUICallsInHR(JobApplicationSystem jobAppSystem, HRCoordinator hr) {
         this.jobAppSystem = jobAppSystem;
         this.hr = hr;
     }

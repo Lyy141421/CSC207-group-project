@@ -19,13 +19,17 @@ public class MethodsTheGUICallsInInterviewer {
         this.interviewer = interviewer;
     }
 
+    public Interviewer getInterviewer() {
+        return this.interviewer;
+    }
+
     /**
      * Get a list of interviews that are incomplete.
      *
      * @param today Today's date.
      * @return a list of interviews that are incomplete.
      */
-    ArrayList<Interview> getIncompleteInterviews(LocalDate today) {
+    public ArrayList<Interview> getIncompleteInterviews(LocalDate today) {
         return this.interviewer.getIncompleteInterviews(today);
     }
 
@@ -34,14 +38,23 @@ public class MethodsTheGUICallsInInterviewer {
      *
      * @return a list of interviews that need scheduling.
      */
-    ArrayList<Interview> getInterviewsThatNeedScheduling() {
+    public ArrayList<Interview> getInterviewsThatNeedScheduling() {
         return this.interviewer.getUnscheduledInterviews();
+    }
+
+    /**
+     * Get a list of upcoming interviews.
+     *
+     * @return a list of upcoming interviews.
+     */
+    public ArrayList<Interview> getScheduledUpcomingInterviews() {
+        return this.interviewer.getScheduledUpcomingInterviews();
     }
 
     /**
      * Set this interview as pass or fail for each applicant.
      *
-     * @param interview      The interview in question/
+     * @param interview      The interview in question.
      * @param jobAppToResult The hash map of job application to result(boolean pass/fail) for this interview.
      */
     void setInterviewResults(Interview interview, HashMap<JobApplication, Boolean> jobAppToResult) {
@@ -49,24 +62,21 @@ public class MethodsTheGUICallsInInterviewer {
     }
 
     /**
-     * Store interview notes for this interview by the interview coordinator.
-     *
-     * @param interview The interview for which the notes are written.
-     * @param notes     The notes taken during the interview.
+     * Set this interview as pass or fail for one applicant.
+     * @param interview The interview in question.
+     * @param jobApp    The job application to be passed/failed.
+     * @param result    The result of this interview (pass/fail)
      */
-    void storeInterviewCoordinatorNotes(Interview interview, String notes) {
-        interview.setInterviewCoordinatorNotes(notes);
+    public void setInterviewResult(Interview interview, JobApplication jobApp, boolean result) {
+        interview.setResult(jobApp, result);
     }
 
-    /**
-     * Store interview notes for this interview by a secondary interviewer.
-     *
-     * @param interview   The interview in question.
-     * @param interviewer The interviewer who wrote notes.
-     * @param notes       The notes the interviewer wrote for this interview.
-     */
-    void storeOtherInterviewerNotes(Interview interview, Interviewer interviewer, String notes) {
-        interview.setOtherInterviewNotes(interviewer, notes);
+    public void storeInterviewNotes(Interview interview, Interviewer interviewer, String notes) {
+        if (interview.getInterviewCoordinator().equals(interviewer)) {
+            interview.setInterviewCoordinatorNotes(notes);
+        } else {
+            interview.setOtherInterviewNotes(interviewer, notes);
+        }
     }
 
     /**

@@ -1,8 +1,12 @@
 package GUIClasses.HRInterface;
 
 import ApplicantStuff.JobApplication;
+import CompanyStuff.Branch;
+import CompanyStuff.Company;
+import CompanyStuff.HRCoordinator;
 import CompanyStuff.JobPostings.BranchJobPosting;
 import GUIClasses.MethodsTheGUICallsInHR;
+import Main.JobApplicationSystem;
 
 import javax.swing.*;
 import java.awt.*;
@@ -89,5 +93,17 @@ public class HRMain extends JPanel {
                 cardLayout.show(mainPanel, HRPanel.POSTING);
             }
         });
+    }
+
+    public static void main(String[] args) {
+        JFrame frame = new JFrame("HR Main");
+        JobApplicationSystem jobAppSystem = new JobApplicationSystem();
+        jobAppSystem.setToday(LocalDate.now());
+        Company company = jobAppSystem.createCompany("Company");
+        Branch branch = company.createBranch("Branch", "L4B4P8");
+        HRCoordinator hrc = jobAppSystem.getUserManager().createHRCoordinator("hr", "password", "name", "email", branch, LocalDate.now());
+        frame.add(new HRMain(frame.getContentPane(), new MethodsTheGUICallsInHR(jobAppSystem, hrc), jobAppSystem.getToday()));
+        frame.setVisible(true);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 }

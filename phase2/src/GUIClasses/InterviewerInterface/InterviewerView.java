@@ -27,11 +27,9 @@ public class InterviewerView extends InterviewerPanel {
     InterviewerView(Container contentPane, MethodsTheGUICallsInInterviewer interviewerInterface, LocalDate today) {
         super(contentPane, interviewerInterface, today);
 
-        ArrayList<ArrayList<Interview>> interviews = interviewerInterface.getInterviewsBeforeOnAndAfterToday(today);
-        this.pastInterviews = interviews.get(0);
-        this.futureInterviews = interviews.get(1);
-        this.futureInterviews.addAll(interviews.get(2));
-        this.interviewsToBeScheduled = interviewerInterface.getUnscheduledInterviews();
+        this.pastInterviews = interviewerInterface.getIncompleteInterviews(today);
+        this.futureInterviews = interviewerInterface.getScheduledUpcomingInterviews();
+        this.interviewsToBeScheduled = interviewerInterface.getInterviewsThatNeedScheduling();
         this.currList = this.futureInterviews;
 
         this.setLayout(new BorderLayout());
@@ -47,7 +45,7 @@ public class InterviewerView extends InterviewerPanel {
         ButtonGroup showContent = new ButtonGroup();
         showContent.add(incomplete);
         showContent.add(complete);
-        JList<String> viewable = new JList<>(new String[]{"Overview", "Notes", "CV", "Cover letter"});
+        JList<String> viewable = new JList<>(new String[]{"Overview", "Notes", "CV", "Cover letter"});  // TODO replace with document viewer
 
         select.add(incomplete);
         select.add(complete);
@@ -127,11 +125,11 @@ public class InterviewerView extends InterviewerPanel {
                 int selectedIndex = interviews.getSelectedIndex();
                 Interview interview = currList.get(selectedIndex);
                 if (viewable.getSelectedIndex() == 1) {
-                    interviewerInterface.storeInterviewNotes(interview, info.getText());
+                    interviewerInterface.storeInterviewNotes(interview, interviewerInterface.getInterviewer(), info.getText());
                 } else {
-                    interviewerInterface.storeInterviewNotes(interview, temporaryNotes);
+                    interviewerInterface.storeInterviewNotes(interview, interviewerInterface.getInterviewer(), temporaryNotes);
                 }
-                interviewerInterface.passOrFailInterview(interview, advance.isSelected());
+                interviewerInterface.setInterviewResult(interview, advance.isSelected());   // TODO job application is a parameter
 
                 // Clear temporarily stored notes
                 temporaryNotes = "";
@@ -149,10 +147,10 @@ public class InterviewerView extends InterviewerPanel {
     private void setInfo(Interview interview, int attributeIndex, JTextArea info) {
         switch (attributeIndex) {
             case 0:
-                info.setText(interview.getOverview());
+                info.setText(interview.getOverview());      //TODO rewrite methods?
                 break;
             case 1:
-                info.setText(interview.getInterviewNotes());
+                info.setText(interview.getInterviewNotes());    // TODO must specify the interviewer or all
                 if (interview.isComplete()) {
                     info.setEditable(true);
                 } else {
@@ -160,9 +158,11 @@ public class InterviewerView extends InterviewerPanel {
                 }
                 break;
             case 2:
+                // TODO must modify for job application to result hash map
                 info.setText(interview.getJobApplication().getCV().getContents());
                 break;
             case 3:
+                // TODO must modify for job application to result hash map
                 info.setText(interview.getJobApplication().getCoverLetter().getContents());
                 break;
             default:
