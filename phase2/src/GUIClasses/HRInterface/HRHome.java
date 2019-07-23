@@ -13,7 +13,7 @@ public class HRHome extends HRPanel {
 
     GridBagConstraints c;
 
-    JButton logoutButton;
+    private JButton logoutButton;
 
     HRHome(Container contentPane, MethodsTheGUICallsInHR HRInterface, LocalDate today) {
         super(contentPane, HRInterface, today);
