@@ -235,16 +235,27 @@ public class BranchJobPosting extends CompanyJobPosting implements Observable, S
 
     // === Observable Methods ===
 
+    /**
+     * Adding an observer to the notification recipient list
+     */
     public void attach(Observer observer){
         if (!observer_list.contains(observer)) {
             observer_list.add(observer);
         }
     }
 
+    /**
+     * Removing an observer from the notification recipient list
+     */
     public void detach(Observer observer){
         observer_list.remove(observer);
     }
 
+    /**
+     * Sending a notification to all observers
+     *
+     * @param notification - The notification to be sent
+     */
     public void notifyAllObservers(Notification notification){
         updateObserverList();
         for (Observer observer : observer_list){
@@ -252,10 +263,19 @@ public class BranchJobPosting extends CompanyJobPosting implements Observable, S
         }
     }
 
+    /**
+     *Sending a notification to a particular observer
+     *
+     * @param observer - The observer receiving the notification
+     * @param notification - The notification to be sent
+     */
     public void notifyObserver(Observer observer, Notification notification){
         observer.update(notification);
     }
 
+    /**
+     * A method to internally change the structure of the observer list
+     */
     public void updateObserverList(){
         for (JobApplication job_application : this.interviewManager.getApplicationsInConsideration()){
             this.attach(job_application.getApplicant());
