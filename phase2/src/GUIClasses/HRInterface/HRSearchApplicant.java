@@ -9,10 +9,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class HRSearchApplicant extends HRPanel{
 
     private JTextField nameInput;
+
+    HashMap<String, JobApplication> currApps;
 
     HRSearchApplicant(Container contentPane, MethodsTheGUICallsInHR HRInterface, LocalDate today) {
         super(contentPane, HRInterface, today);
@@ -32,6 +35,10 @@ public class HRSearchApplicant extends HRPanel{
         this.add(this.homeButton, BorderLayout.SOUTH);
     }
 
+    void reload() {
+
+    }
+
     private JButton createSearchButton () {
         JButton searchButton = new JButton("Search");
         searchButton.addActionListener(new ActionListener() {
@@ -41,8 +48,9 @@ public class HRSearchApplicant extends HRPanel{
                 if (apps.isEmpty()) {
                     JOptionPane.showMessageDialog(parent, "The applicant cannot be found.");
                 } else {
-                    currApps = getTitleToAppMap(apps);
-                    //Todo: clear exiting JList and add new titles
+                    HRViewApp appPanel = new HRViewApp(parent, HRInterface, today, getTitleToAppMap(apps));
+                    parent.remove(4);
+                    parent.add(appPanel, APPLICATION);
                     ((CardLayout) parent.getLayout()).show(parent, APPLICATION);
                 }
             }

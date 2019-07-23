@@ -26,8 +26,11 @@ public class HRViewPosting extends HRPanel{
     private HashMap<String, BranchJobPosting> importantJP = new HashMap<>();
     private HashMap<String, BranchJobPosting> allJP;
 
+    HashMap<String, BranchJobPosting> currJPs;
+
     private JTextArea info;
     private JButton scheduleButton;
+    private JList<String> jobPostingList = new JList<>();
 
 
     HRViewPosting(Container contentPane, MethodsTheGUICallsInHR HRInterface, LocalDate today) {
@@ -51,6 +54,23 @@ public class HRViewPosting extends HRPanel{
         this.add(buttons, BorderLayout.SOUTH);
 
         this.setListSelectionListener();
+    }
+
+    void reload() {
+        this.jobPostingList.removeAll();
+        this.jobPostingList.setListData(currJPs.keySet().toArray(new String[currJPs.size()]));
+    }
+
+    public HashMap<String, BranchJobPosting> getImportantJP() {
+        return this.importantJP;
+    }
+
+    public HashMap<String, BranchJobPosting> getAllJP() {
+        return this.allJP;
+    }
+
+    public void setCurrJPs(HashMap<String, BranchJobPosting> currJPs) {
+        this.currJPs = currJPs;
     }
 
     private void setListSelectionListener() {
@@ -90,10 +110,10 @@ public class HRViewPosting extends HRPanel{
     }
 
     private void setJobPostingList (JSplitPane splitDisplay) {
-        jobPostingList = new JList<>(currJPs.keySet().toArray(new String[currJPs.size()]));
-        jobPostingList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
-        jobPostingList.setLayoutOrientation(JList.VERTICAL);
-        splitDisplay.setLeftComponent(new JScrollPane(jobPostingList));
+        this.jobPostingList.setListData(currJPs.keySet().toArray(new String[currJPs.size()]));
+        this.jobPostingList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+        this.jobPostingList.setLayoutOrientation(JList.VERTICAL);
+        splitDisplay.setLeftComponent(new JScrollPane(this.jobPostingList));
     }
 
     private void setInfoBox (JSplitPane splitDisplay) {
@@ -111,9 +131,9 @@ public class HRViewPosting extends HRPanel{
             public void actionPerformed(ActionEvent e) {
                 BranchJobPosting selectedJP = currJPs.get(jobPostingList.getSelectedValue());
                 ArrayList<JobApplication> appsUnderSelectedJP = selectedJP.getJobApplications();
-                currApps = getTitleToAppMap(appsUnderSelectedJP);
-                //Todo: add the currApps titles to JList in view application panel
-
+                HRViewApp appPanel = new HRViewApp(parent, HRInterface, today, getTitleToAppMap(appsUnderSelectedJP));
+                parent.remove(4);
+                parent.add(appPanel, APPLICATION);
                 ((CardLayout) parent.getLayout()).show(parent, APPLICATION);
             }
         });
