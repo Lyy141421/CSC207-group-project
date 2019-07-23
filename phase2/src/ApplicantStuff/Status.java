@@ -3,7 +3,6 @@ package ApplicantStuff;
 import NotificationSystem.Notification;
 import NotificationSystem.Observable;
 import NotificationSystem.Observer;
-import jdk.jshell.spi.ExecutionControl;
 
 import java.io.Serializable;
 import java.util.ArrayList;

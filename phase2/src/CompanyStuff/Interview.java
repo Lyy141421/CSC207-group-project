@@ -12,8 +12,8 @@ public class Interview {
     // The total number of interviews conducted
     private static int totalNumOfInterviews;
     // The interview types allowed
-    static String ONE_ON_ONE = "One-on-One";
-    static String GROUP = "Group";
+    public static String ONE_ON_ONE = "One-on-One";
+    public static String GROUP = "Group";
 
     // === Instance variables ===
     // The unique identifier for this interview
@@ -26,16 +26,14 @@ public class Interview {
     private HashMap<Interviewer, String> otherInterviewersToNotes = new HashMap<>();
     // The date and time of this interview
     private InterviewTime time;
-    // Interview round
-    private int roundNumber;
-    // InterviewManager of the job posting this interview is held for
-    private InterviewManager interviewManager;
+    // Interview type and description
+    private String[] interviewTypeAndDescription;
 
     // === Representation invariants ===
     // ID >= 1
 
     // === Constructor ===
-    Interview(JobApplication jobApplication, Interviewer interviewer, InterviewManager interviewManager) {
+    public Interview(JobApplication jobApplication, Interviewer interviewer) {
         Interview.totalNumOfInterviews++;
         this.id = Interview.totalNumOfInterviews;
         this.jobApplicationsToResult = new HashMap<JobApplication, Boolean>() {{
@@ -44,12 +42,14 @@ public class Interview {
         this.interviewCoordinatorToNotes = new HashMap<Interviewer, String>() {{
             put(interviewer, null);
         }};
-        this.interviewManager = interviewManager;
-        this.roundNumber = this.interviewManager.getCurrentRound();
+        this.interviewTypeAndDescription = jobApplication.getJobPosting().getInterviewManager().
+                getCurrentRoundTypeAndDescription();
+        interviewer.addInterview(this);
+        jobApplication.addInterview(this);
     }
 
     Interview(ArrayList<JobApplication> jobApplications, Interviewer interviewCoordinator,
-              ArrayList<Interviewer> otherInterviewers, InterviewManager interviewManager) {
+              ArrayList<Interviewer> otherInterviewers) {
         Interview.totalNumOfInterviews++;
         this.id = Interview.totalNumOfInterviews;
         this.setJobApplications(jobApplications);
@@ -57,14 +57,32 @@ public class Interview {
             put(interviewCoordinator, null);
         }};
         this.setOtherInterviewersToNotes(otherInterviewers);
-        this.interviewManager = interviewManager;
-        this.roundNumber = this.interviewManager.getCurrentRound();
+        this.interviewTypeAndDescription = jobApplications.get(0).getJobPosting().getInterviewManager().
+                getCurrentRoundTypeAndDescription();
+        this.addInterviewForInterviewers();
+        this.addInterviewForJobApplications();
+    }
+
+    private void addInterviewForInterviewers() {
+        for (Interviewer interviewer : this.getAllInterviewers()) {
+            interviewer.addInterview(this);
+        }
+    }
+
+    private void addInterviewForJobApplications() {
+        for (JobApplication jobApp : this.getJobApplications()) {
+            jobApp.addInterview(this);
+        }
     }
 
     // === Public methods ===
     // === Getters ===
     public int getId() {
         return this.id;
+    }
+
+    public String[] getInterviewTypeAndDescription() {
+        return this.interviewTypeAndDescription;
     }
 
     public HashMap<Interviewer, String> getInterviewCoordinatorToNotes() {
@@ -81,14 +99,6 @@ public class Interview {
 
     public InterviewTime getTime() {
         return this.time;
-    }
-
-    public int getRoundNumber() {
-        return this.roundNumber;
-    }
-
-    InterviewManager getInterviewManager() {
-        return this.interviewManager;
     }
 
     public HashMap<JobApplication, Boolean> getJobApplicationsToResult() {
@@ -256,8 +266,8 @@ public class Interview {
 
     public String[] getCategoryValuesForInterviewerScheduled() {
         JobApplication jobApp = this.getJobApplications().get(0);
-        return new String[]{jobApp.getJobPosting().getTitle(), this.getInterviewManager().getCurrentRoundType(),
-                this.getInterviewManager().getCurrentRoundType(), this.getInterviewCoordinator().getLegalName(),
+        return new String[]{jobApp.getJobPosting().getTitle(), this.getInterviewTypeAndDescription()[0],
+                this.getInterviewTypeAndDescription()[1], this.getInterviewCoordinator().getLegalName(),
                 this.getTime().toString()};
     }
 

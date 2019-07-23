@@ -2,11 +2,8 @@ package CompanyStuff;
 
 import ApplicantStuff.Applicant;
 import ApplicantStuff.JobApplication;
-import CompanyStuff.Branch;
-import CompanyStuff.Company;
-import CompanyStuff.HRCoordinator;
 import CompanyStuff.JobPostings.BranchJobPosting;
-import DocumentManagers.CompanyDocumentManager;
+import DocumentManagers.DocumentManager;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
@@ -19,10 +16,10 @@ class CompanyTest {
     @Test
     void testConstructor() {
         Company company = new Company("HoraceCorp");
-        assert company.getName().equalsIgnoreCase("HoraceCorp");
-        assert company.getBranches().isEmpty();
-        assert company.getCompanyJobPostings().isEmpty();
-        assert company.getDocumentManager() instanceof CompanyDocumentManager;
+        assertTrue(company.getName().equalsIgnoreCase("HoraceCorp"));
+        assertTrue(company.getBranches().isEmpty());
+        assertTrue(company.getCompanyJobPostings().isEmpty());
+        assertTrue(company.getDocumentManager() instanceof DocumentManager);
     }
 
     @Test
@@ -41,10 +38,10 @@ class CompanyTest {
     void testCreateBranch() {
         Company company = new Company("HoraceCorp");
         Branch branch = company.createBranch("HQ", "M5S2E8");
-        assert company.getBranches().contains(branch);
-        assert branch.getName().equalsIgnoreCase("HQ");
-        assert branch.getCMA().equalsIgnoreCase("Toronto");
-        assert branch.getCompany().equals(company);
+        assertTrue(company.getBranches().contains(branch));
+        assertTrue(branch.getName().equalsIgnoreCase("HQ"));
+        assertTrue(branch.getCMA().equalsIgnoreCase("Toronto"));
+        assertEquals(branch.getCompany(), company);
     }
 
     @Test
@@ -60,24 +57,24 @@ class CompanyTest {
                 LocalDate.now().plusDays(3));
         Applicant applicant = new Applicant("dudebro7", "ABC", "DudeBro Smith",
                 "dudebro@gmail.com", LocalDate.now(), "Toronto");
-        JobApplication application1 = new JobApplication(applicant, branchJobPosting1, new ArrayList<>(), LocalDate.now());
+        JobApplication application1 = new JobApplication(applicant, branchJobPosting1, LocalDate.now());
         Branch branch2 = company.createBranch("South Branch", "N9G0A3");
         HRCoordinator hrc2 = new HRCoordinator("boris", "ABC", "Boris Businessman",
                 "boris@gmail.com", branch2, LocalDate.now());
         BranchJobPosting branchJobPosting2 = hrc2.addJobPosting("Best Job", "HR",
                 "This is a better job.", new ArrayList<>(), new ArrayList<>(), 1, LocalDate.now(),
                 LocalDate.now().plusDays(3), LocalDate.now().plusDays(3));
-        JobApplication application2 = new JobApplication(applicant, branchJobPosting2, new ArrayList<>(),
+        JobApplication application2 = new JobApplication(applicant, branchJobPosting2,
                 LocalDate.now().plusDays(1));
-        assert company.getAllApplicationsToCompany(applicant).size() == 2;
-        assert company.getAllApplicationsToCompany(applicant).contains(application1);
-        assert company.getAllApplicationsToCompany(applicant).contains(application2);
+        assertEquals(2, company.getAllApplicationsToCompany(applicant).size());
+        assertTrue(company.getAllApplicationsToCompany(applicant).contains(application1));
+        assertTrue(company.getAllApplicationsToCompany(applicant).contains(application2));
     }
 
     @Test
     void equals() {
         Company company1 = new Company("HoraceCorp");
         Company company2 = new Company("HORACECORP");
-        assert company1.equals(company2);
+        assertEquals(company1, company2);
     }
 }

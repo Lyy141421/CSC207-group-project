@@ -27,7 +27,7 @@ class ApplicantTest {
     Applicant createApplicantWithOneApplicationAndOneReference() {
         Applicant applicant = this.createApplicant("jsmith");
         BranchJobPosting jobPosting = this.createJobPosting();
-        JobApplication jobApp = new JobApplication(applicant, jobPosting, new ArrayList<>(), LocalDate.of(2019, 7, 21));
+        JobApplication jobApp = new JobApplication(applicant, jobPosting, LocalDate.of(2019, 7, 21));
         Reference reference = new Reference("bob@gmail.com", LocalDate.of(2019, 8, 1));
         jobApp.addReferences(new ArrayList<>(Arrays.asList(reference)));
         return applicant;
@@ -40,7 +40,7 @@ class ApplicantTest {
         ArrayList<Applicant> applicants = new ArrayList<>(Arrays.asList(applicant1, applicant2, applicant3));
         BranchJobPosting jobPosting = this.createJobPosting();
         for (Applicant applicant : applicants) {
-            JobApplication jobApp = new JobApplication(applicant, jobPosting, new ArrayList<>(), LocalDate.of(2019, 7, 21));
+            JobApplication jobApp = new JobApplication(applicant, jobPosting, LocalDate.of(2019, 7, 21));
             Reference reference = new Reference("bob@gmail.com", LocalDate.of(2019, 8, 1));
             jobApp.addReferences(new ArrayList<>(Arrays.asList(reference)));
         }
@@ -110,7 +110,7 @@ class ApplicantTest {
                 new ArrayList<>(Arrays.asList("CV", "Cover Letter", "Reference Letter")), new ArrayList<>(), 1, branch, LocalDate.of(2019, 7, 30), LocalDate.of(2019, 8, 10), LocalDate.now());
         assertTrue(applicant.getJobApplicationManager().getJobApplications().isEmpty());
         assertTrue(jobPosting.getJobApplications().isEmpty());
-        JobApplication jobApp = new JobApplication(applicant, jobPosting, new ArrayList<>(), LocalDate.of(2019, 7, 21));
+        JobApplication jobApp = new JobApplication(applicant, jobPosting, LocalDate.of(2019, 7, 21));
         assertEquals(1, applicant.getJobApplicationManager().getJobApplications().size());
         assertEquals(1, jobApp.getJobPosting().getJobApplications().size());
     }
@@ -189,6 +189,9 @@ class ApplicantTest {
         jobPosting.getBranch().getJobPostingManager().updateJobPostingsClosedForReferences(LocalDate.of(2019, 8, 11));
         Interviewer interviewer = new Interviewer("Interviewer", "password", "Legal Name", "email", jobPosting.getBranch(), "field", LocalDate.of(2019, 7, 10));
         jobPosting.getBranch().addInterviewer(interviewer);
+        ArrayList<String[]> interviewConfiguration = new ArrayList<>();
+        interviewConfiguration.add(new String[]{Interview.ONE_ON_ONE, "Phone interview"});
+        jobPosting.getInterviewManager().setInterviewConfiguration(interviewConfiguration);
         jobPosting.getInterviewManager().setUpOneOnOneInterviews();
         applicant.withdrawJobApplication(LocalDate.of(2019, 8, 11), jobPosting);
 
@@ -207,6 +210,9 @@ class ApplicantTest {
         jobPosting.getBranch().getJobPostingManager().updateJobPostingsClosedForReferences(LocalDate.of(2019, 8, 11));
         Interviewer interviewer = new Interviewer("Interviewer", "password", "Legal Name", "email", jobPosting.getBranch(), "field", LocalDate.of(2019, 7, 10));
         jobPosting.getBranch().addInterviewer(interviewer);
+        ArrayList<String[]> interviewConfiguration = new ArrayList<>();
+        interviewConfiguration.add(new String[]{Interview.ONE_ON_ONE, "Phone interview"});
+        jobPosting.getInterviewManager().setInterviewConfiguration(interviewConfiguration);
         jobPosting.getInterviewManager().setUpOneOnOneInterviews();
         Interview interview = jobPosting.getInterviewManager().getApplicationsInConsideration().get(0).getLastInterview();
         interview.setTime(new InterviewTime(LocalDate.of(2019, 8, 11), 3));
@@ -231,6 +237,9 @@ class ApplicantTest {
         jobPosting.getBranch().addInterviewer(interviewer1);
         jobPosting.getBranch().addInterviewer(interviewer2);
         jobPosting.getBranch().addInterviewer(interviewer3);
+        ArrayList<String[]> interviewConfiguration = new ArrayList<>();
+        interviewConfiguration.add(new String[]{Interview.GROUP, "In-person"});
+        jobPosting.getInterviewManager().setInterviewConfiguration(interviewConfiguration);
         jobPosting.getInterviewManager().setUpGroupInterview(interviewer1, new ArrayList<>(Arrays.asList(interviewer2, interviewer3)));
         Interview interview = jobPosting.getInterviewManager().getApplicationsInConsideration().get(0).getLastInterview();
         interview.setTime(new InterviewTime(LocalDate.of(2019, 8, 13), 3));
@@ -253,6 +262,9 @@ class ApplicantTest {
         BranchJobPosting jobPosting = applicant.getJobApplicationManager().getJobApplications().get(0).getJobPosting();
         jobPosting.getBranch().getJobPostingManager().updateJobPostingsClosedForApplications(LocalDate.of(2019, 7, 31));
         jobPosting.getBranch().getJobPostingManager().updateJobPostingsClosedForReferences(LocalDate.of(2019, 8, 11));
+        ArrayList<String[]> interviewConfiguration = new ArrayList<>();
+        interviewConfiguration.add(new String[]{Interview.GROUP, "In-person"});
+        jobPosting.getInterviewManager().setInterviewConfiguration(interviewConfiguration);
         Interviewer interviewer1 = new Interviewer("Interviewer1", "password", "Legal Name", "email", jobPosting.getBranch(), "field", LocalDate.of(2019, 7, 10));
         Interviewer interviewer2 = new Interviewer("Interviewer2", "password", "Legal Name", "email", jobPosting.getBranch(), "field", LocalDate.of(2019, 7, 10));
         Interviewer interviewer3 = new Interviewer("Interviewer3", "password", "Legal Name", "email", jobPosting.getBranch(), "field", LocalDate.of(2019, 7, 10));
@@ -291,6 +303,9 @@ class ApplicantTest {
         jobPosting.getBranch().addInterviewer(interviewer1);
         jobPosting.getBranch().addInterviewer(interviewer2);
         jobPosting.getBranch().addInterviewer(interviewer3);
+        ArrayList<String[]> interviewConfiguration = new ArrayList<>();
+        interviewConfiguration.add(new String[]{Interview.GROUP, "In-person"});
+        jobPosting.getInterviewManager().setInterviewConfiguration(interviewConfiguration);
         jobPosting.getInterviewManager().setUpGroupInterview(interviewer1, new ArrayList<>(Arrays.asList(interviewer2, interviewer3)));
         Interview interview = jobPosting.getInterviewManager().getApplicationsInConsideration().get(0).getLastInterview();
         interview.setTime(new InterviewTime(LocalDate.of(2019, 8, 13), 3));
@@ -316,6 +331,9 @@ class ApplicantTest {
         BranchJobPosting jobPosting = applicant1.getJobApplicationManager().getJobApplications().get(0).getJobPosting();
         jobPosting.getBranch().getJobPostingManager().updateJobPostingsClosedForApplications(LocalDate.of(2019, 7, 31));
         jobPosting.getBranch().getJobPostingManager().updateJobPostingsClosedForReferences(LocalDate.of(2019, 8, 11));
+        ArrayList<String[]> interviewConfiguration = new ArrayList<>();
+        interviewConfiguration.add(new String[]{Interview.GROUP, "In-person interview"});
+        jobPosting.getInterviewManager().setInterviewConfiguration(interviewConfiguration);
         JobApplication jobApp1 = jobPosting.getJobApplications().get(0);
         JobApplication jobApp2 = jobPosting.getJobApplications().get(1);
         JobApplication jobApp3 = jobPosting.getJobApplications().get(2);
@@ -359,6 +377,9 @@ class ApplicantTest {
         jobPosting.getBranch().addInterviewer(interviewer1);
         jobPosting.getBranch().addInterviewer(interviewer2);
         jobPosting.getBranch().addInterviewer(interviewer3);
+        ArrayList<String[]> interviewConfiguration = new ArrayList<>();
+        interviewConfiguration.add(new String[]{Interview.GROUP, "In-person"});
+        jobPosting.getInterviewManager().setInterviewConfiguration(interviewConfiguration);
         jobPosting.getInterviewManager().setUpGroupInterview(interviewer1, new ArrayList<>(Arrays.asList(interviewer2, interviewer3)));
         Interview interview = jobPosting.getInterviewManager().getApplicationsInConsideration().get(0).getLastInterview();
         interview.setTime(new InterviewTime(LocalDate.of(2019, 8, 13), 3));
@@ -433,7 +454,7 @@ class ApplicantTest {
         BranchJobPosting jobPosting = new BranchJobPosting("Title", "field", "descriptionhujedk",
                 new ArrayList<>(Arrays.asList("CV", "Cover Letter", "Reference Letter")), new ArrayList<>(),
                 1, branch, LocalDate.of(2019, 7, 15), LocalDate.of(2019, 7, 30), LocalDate.of(2019, 8, 10));
-        new JobApplication(applicant, jobPosting, new ArrayList<>(), LocalDate.of(2019, 7, 28));
+        new JobApplication(applicant, jobPosting, LocalDate.of(2019, 7, 28));
         assertTrue(applicant.getOpenJobPostingsNotAppliedTo(jas).isEmpty());
     }
 
@@ -457,7 +478,7 @@ class ApplicantTest {
         Applicant applicant = this.createApplicant("jsmith");
         BranchJobPosting jobPosting =
                 jas.getCompanies().get(0).getBranches().get(0).getJobPostingManager().getBranchJobPostings().get(0);
-        new JobApplication(applicant, jobPosting, new ArrayList<>(), LocalDate.of(2019, 7, 28));
+        new JobApplication(applicant, jobPosting, LocalDate.of(2019, 7, 28));
         assertEquals(1, applicant.getOpenJobPostingsNotAppliedTo(jas).size());
     }
 
@@ -470,8 +491,8 @@ class ApplicantTest {
                 jas.getCompanies().get(0).getBranches().get(0).getJobPostingManager().getBranchJobPostings().get(0);
         BranchJobPosting jobPosting2 =
                 jas.getCompanies().get(0).getBranches().get(0).getJobPostingManager().getBranchJobPostings().get(1);
-        new JobApplication(applicant, jobPosting, new ArrayList<>(), LocalDate.of(2019, 7, 28));
-        new JobApplication(applicant, jobPosting2, new ArrayList<>(), LocalDate.of(2019, 7, 28));
+        new JobApplication(applicant, jobPosting, LocalDate.of(2019, 7, 28));
+        new JobApplication(applicant, jobPosting2, LocalDate.of(2019, 7, 28));
         assertTrue(applicant.getOpenJobPostingsNotAppliedTo(jas).isEmpty());
     }
 
@@ -516,8 +537,8 @@ class ApplicantTest {
                 jas.getCompanies().get(0).getBranches().get(0).getJobPostingManager().getBranchJobPostings().get(0);
         BranchJobPosting jobPosting2 =
                 jas.getCompanies().get(0).getBranches().get(0).getJobPostingManager().getBranchJobPostings().get(1);
-        new JobApplication(applicant, jobPosting, new ArrayList<>(), LocalDate.of(2019, 7, 28));
-        new JobApplication(applicant, jobPosting2, new ArrayList<>(), LocalDate.of(2019, 7, 28));
+        new JobApplication(applicant, jobPosting, LocalDate.of(2019, 7, 28));
+        new JobApplication(applicant, jobPosting2, LocalDate.of(2019, 7, 28));
         assertFalse(applicant.isInactive(jas.getToday()));
     }
 
@@ -530,8 +551,8 @@ class ApplicantTest {
                 jas.getCompanies().get(0).getBranches().get(0).getJobPostingManager().getBranchJobPostings().get(0);
         BranchJobPosting jobPosting2 =
                 jas.getCompanies().get(0).getBranches().get(0).getJobPostingManager().getBranchJobPostings().get(1);
-        new JobApplication(applicant, jobPosting, new ArrayList<>(), LocalDate.of(2019, 7, 28));
-        new JobApplication(applicant, jobPosting2, new ArrayList<>(), LocalDate.of(2019, 7, 28));
+        new JobApplication(applicant, jobPosting, LocalDate.of(2019, 7, 28));
+        new JobApplication(applicant, jobPosting2, LocalDate.of(2019, 7, 28));
         assertFalse(applicant.isInactive(jas.getToday()));
     }
 
@@ -544,8 +565,8 @@ class ApplicantTest {
                 jas.getCompanies().get(0).getBranches().get(0).getJobPostingManager().getBranchJobPostings().get(0);
         BranchJobPosting jobPosting2 =
                 jas.getCompanies().get(0).getBranches().get(0).getJobPostingManager().getBranchJobPostings().get(1);
-        new JobApplication(applicant, jobPosting, new ArrayList<>(), LocalDate.of(2019, 7, 28));
-        new JobApplication(applicant, jobPosting2, new ArrayList<>(), LocalDate.of(2019, 7, 28));
+        new JobApplication(applicant, jobPosting, LocalDate.of(2019, 7, 28));
+        new JobApplication(applicant, jobPosting2, LocalDate.of(2019, 7, 28));
         assertFalse(applicant.isInactive(jas.getToday()));
     }
 
@@ -558,8 +579,8 @@ class ApplicantTest {
                 jas.getCompanies().get(0).getBranches().get(0).getJobPostingManager().getBranchJobPostings().get(0);
         BranchJobPosting jobPosting2 =
                 jas.getCompanies().get(0).getBranches().get(0).getJobPostingManager().getBranchJobPostings().get(1);
-        new JobApplication(applicant, jobPosting, new ArrayList<>(), LocalDate.of(2019, 7, 28));
-        new JobApplication(applicant, jobPosting2, new ArrayList<>(), LocalDate.of(2019, 7, 28));
+        new JobApplication(applicant, jobPosting, LocalDate.of(2019, 7, 28));
+        new JobApplication(applicant, jobPosting2, LocalDate.of(2019, 7, 28));
         assertTrue(applicant.isInactive(jas.getToday()));
     }
 
@@ -572,8 +593,8 @@ class ApplicantTest {
                 jas.getCompanies().get(0).getBranches().get(0).getJobPostingManager().getBranchJobPostings().get(0);
         BranchJobPosting jobPosting2 =
                 jas.getCompanies().get(0).getBranches().get(0).getJobPostingManager().getBranchJobPostings().get(1);
-        new JobApplication(applicant, jobPosting, new ArrayList<>(), LocalDate.of(2019, 7, 28));
-        new JobApplication(applicant, jobPosting2, new ArrayList<>(), LocalDate.of(2019, 7, 28));
+        new JobApplication(applicant, jobPosting, LocalDate.of(2019, 7, 28));
+        new JobApplication(applicant, jobPosting2, LocalDate.of(2019, 7, 28));
         assertTrue(applicant.isInactive(jas.getToday()));
     }
 }

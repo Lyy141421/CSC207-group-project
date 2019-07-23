@@ -1,10 +1,14 @@
 package CompanyStuff;
 
-import CompanyStuff.Branch;
+import ApplicantStuff.Applicant;
+import ApplicantStuff.JobApplication;
+import CompanyStuff.JobPostings.BranchJobPosting;
 import CompanyStuff.JobPostings.BranchJobPostingManager;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class BranchTest {
 
@@ -43,12 +47,24 @@ public class BranchTest {
                 branch, "HR", LocalDate.now());
         Interviewer interviewer2 = new Interviewer("anne", "ABC", "Anne Mann", "anne@gmail.com",
                 branch, "HR", LocalDate.now());
-        Interview interview1 = new Interview();
-        Interview interview2 = new Interview();
-        Interview interview3 = new Interview();
-        interviewer1.addInterview(interview1);
-        interviewer2.addInterview(interview2);
-        interviewer2.addInterview(interview3);
+
+        Applicant applicant = new Applicant("jsmith", "password", "John Smith",
+                "john_smith@gmail.com", LocalDate.of(2019, 7, 20), "L4B3Z9");
+
+        BranchJobPosting jobPosting = new BranchJobPosting("Title", "field", "descriptionhujedk",
+                new ArrayList<>(Arrays.asList("CV", "Cover Letter", "Reference Letter")), new ArrayList<>(),
+                1, branch, LocalDate.of(2019, 7, 15), LocalDate.of(2019, 7, 30), LocalDate.of(2019, 8, 10));
+        jobPosting.createInterviewManager();
+        ArrayList<String[]> interviewConfiguration = new ArrayList<>();
+        interviewConfiguration.add(new String[]{Interview.ONE_ON_ONE, "Phone interview"});
+        interviewConfiguration.add(new String[]{Interview.ONE_ON_ONE, "In-person"});
+        interviewConfiguration.add(new String[]{Interview.ONE_ON_ONE, "In-person"});
+        jobPosting.getInterviewManager().setInterviewConfiguration(interviewConfiguration);
+        JobApplication jobApp = new JobApplication(applicant, jobPosting, LocalDate.of(2019, 7, 21));
+
+        new Interview(jobApp, interviewer1);
+        new Interview(jobApp, interviewer2);
+        new Interview(jobApp, interviewer2);
         assert branch.findInterviewerByField("HR").equals(interviewer1);
     }
 }

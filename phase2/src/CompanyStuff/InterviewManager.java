@@ -28,7 +28,6 @@ public class InterviewManager implements Serializable {
     // Map of job applications of applicants that are rejected for the job to their interviews
     private ArrayList<JobApplication> applicationsRejected;
     // The configuration of interviews chosen for this job posting
-    // (nested array is interview description and interview type
     private ArrayList<String[]> interviewConfiguration;
     // The current round of interviews
     private int currentRound = 0;
@@ -39,8 +38,8 @@ public class InterviewManager implements Serializable {
     // The list of interviews for each applicant is sorted by date.
     // The current round is an index in the interviewConfiguration list
     // The Object[] in interviewConfiguration has 2 elements
-    //  - Index 0: Interview description (String)
-    //  - Index 1: Interview type (String) -- "One-on-One" or "Group"
+    //  - Index 0: Interview type (String) -- "One-on-One" or "Group"
+    //  - Index 1: Interview description (String)
 
     // === Public methods ===
 
@@ -61,12 +60,8 @@ public class InterviewManager implements Serializable {
         return this.maxNumberOfRounds;
     }
 
-    public String getCurrentRoundDescription() {
-        return this.interviewConfiguration.get(this.currentRound)[0];
-    }
-
-    public String getCurrentRoundType() {
-        return this.interviewConfiguration.get(this.currentRound)[1];
+    public String[] getCurrentRoundTypeAndDescription() {
+        return this.interviewConfiguration.get(this.currentRound);
     }
 
     public ArrayList<String[]> getInterviewConfiguration() {
@@ -211,8 +206,7 @@ public class InterviewManager implements Serializable {
         for (JobApplication jobApp : this.applicationsInConsideration) {
             String field = this.branchJobPosting.getField();
             Interviewer interviewer = this.branchJobPosting.getBranch().findInterviewerByField(field);
-            Interview interview = new Interview(jobApp, interviewer, this);
-            jobApp.addInterview(interview);
+            new Interview(jobApp, interviewer);
             jobApp.getStatus().advanceStatus();
         }
     }
@@ -224,14 +218,10 @@ public class InterviewManager implements Serializable {
      * @param otherInterviewers    The other interviewers selected.
      */
     public void setUpGroupInterview(Interviewer interviewCoordinator, ArrayList<Interviewer> otherInterviewers) {
-        Interview interview = new Interview(this.applicationsInConsideration, interviewCoordinator,
-                otherInterviewers, this);
+        new Interview(this.applicationsInConsideration, interviewCoordinator,
+                otherInterviewers);
         for (JobApplication jobApp : this.applicationsInConsideration) {
-            jobApp.addInterview(interview);
             jobApp.getStatus().advanceStatus();
-        }
-        for (Interviewer interviewer : interview.getAllInterviewers()) {
-            interviewer.addInterview(interview);
         }
     }
 

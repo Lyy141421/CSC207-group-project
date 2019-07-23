@@ -25,7 +25,7 @@ public class JobApplication implements Serializable {
     // The BranchJobPosting that was applied for
     private BranchJobPosting jobPosting;
     // The files submitted for this job application
-    private ArrayList<JobApplicationDocument> filesSubmitted;
+    private ArrayList<JobApplicationDocument> filesSubmitted = new ArrayList<>();
     // The status of this application
     private Status status = new Status(this.getApplicant(), this);
     // The date this application was submitted
@@ -43,13 +43,11 @@ public class JobApplication implements Serializable {
 
     // === Constructors ===
 
-    public JobApplication(Applicant applicant, BranchJobPosting jobPosting,
-                          ArrayList<JobApplicationDocument> filesSubmitted, LocalDate applicationDate) {
+    public JobApplication(Applicant applicant, BranchJobPosting jobPosting, LocalDate applicationDate) {
         JobApplication.totalNumOfApplications++;
         this.id = JobApplication.totalNumOfApplications;
         this.applicant = applicant;
         this.jobPosting = jobPosting;
-        this.filesSubmitted = filesSubmitted;
         this.applicationDate = applicationDate;
         this.jobPosting.addJobApplication(this);
         applicant.getJobApplicationManager().addJobApplication(this);

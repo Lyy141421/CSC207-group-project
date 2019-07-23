@@ -159,10 +159,12 @@ public class InterviewerView extends InterviewerPanel {
                 break;
             case 2:
                 // TODO must modify for job application to result hash map
+                // TODO must modify for document viewer
                 info.setText(interview.getJobApplication().getCV().getContents());
                 break;
             case 3:
                 // TODO must modify for job application to result hash map
+                // TODO must modify for document viewer
                 info.setText(interview.getJobApplication().getCoverLetter().getContents());
                 break;
             default:
