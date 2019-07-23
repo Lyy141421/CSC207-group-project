@@ -33,80 +33,27 @@ package NewGUI;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import javax.swing.*;
 
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 
-public class DocumentViewer extends JPanel {
-
-    // === Instance variables ===
-    private JList list; // The list of file names that the user can choose from.
-    private JButton openButton = new JButton("Open");   // The button which when clicked, will open the selected file
-    private File folder;    // The folder in which are files that this user can view.
-    private String[] fileNames; // The file names of files that this user can view.
-    private File[] files;   // The files that this user can view
-
-    // === Representation Invariant ===
-    // The elements in fileNames and files correspond to each other (ie, fileNames[0] is the file name of files[0])
+public class DocumentViewer extends AbstractDocumentUser {
 
     // === Constructor ===
     public DocumentViewer(File folder) {
-        this.fileNames = folder.list();
-        this.files = folder.listFiles();
-
-        this.setLayout(new BorderLayout());
-        JLabel label = new JLabel("Select a file to open:");
-        label.setHorizontalAlignment(JLabel.CENTER);
-        label.setBorder(BorderFactory.createEmptyBorder(30, 0, 0, 0));
-        this.add(label, BorderLayout.NORTH);
-
-        this.createListPanel();
-        this.createOpenButtonPanel();
+        super(folder);
+        this.setButton("Open");
+        this.setPanelTitle("Select a file to open");
     }
 
-    /**
-     * Create the panel with the open button.
-     */
-    private void createOpenButtonPanel() {
-        JPanel openButtonPanel = new JPanel();
-        openButton.setEnabled(false);
-        openButton.setSize(50, 20);
-        openButtonPanel.add(openButton);
-        openButtonPanel.setBorder(BorderFactory.createEmptyBorder(30, 0, 30, 0));
-        openButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    Desktop.getDesktop().open(files[list.getSelectedIndex()]);
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
-            }
-        });
-        this.add(openButtonPanel, BorderLayout.PAGE_END);
-    }
-
-    private void createListPanel() {
-        list = new JList(this.fileNames);
-        list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        list.setSelectedIndex(-1);
-        list.addListSelectionListener(new ListSelectionListener() {
-            @Override
-            public void valueChanged(ListSelectionEvent e) {
-                if (list.getSelectedIndex() != -1) {
-                    openButton.setEnabled(true);
-                }
-            }
-        });
-
-        JPanel listPanel = new JPanel();
-        listPanel.add(new JScrollPane(list));
-        listPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
-        this.add(listPanel, BorderLayout.CENTER);
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        try {
+            Desktop.getDesktop().open(this.getFiles()[this.getList().getSelectedIndex()]);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }
 
 

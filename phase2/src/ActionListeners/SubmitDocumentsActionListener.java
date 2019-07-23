@@ -16,7 +16,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
 
-public class SubmitDocumentActionListener implements ActionListener {
+public class SubmitDocumentsActionListener implements ActionListener {
 
     private User documentSubmitter;
     private JobApplication jobApp;
@@ -24,7 +24,7 @@ public class SubmitDocumentActionListener implements ActionListener {
 
     // TODO this requires that after the applicant chooses the job to apply to, it automatically creates a job
     // application object so that choosing files will work
-    public SubmitDocumentActionListener(User documentSubmitter, JobApplication jobApp, ArrayList<File> files) {
+    public SubmitDocumentsActionListener(User documentSubmitter, JobApplication jobApp, ArrayList<File> files) {
         this.documentSubmitter = documentSubmitter;
         this.jobApp = jobApp;
         this.filesToSubmit = files;
@@ -42,9 +42,14 @@ public class SubmitDocumentActionListener implements ActionListener {
      */
     private void updateFileStorage() {
         if (this.documentSubmitter instanceof Applicant) {
-            // TODO what if applicant submits files from their account -- different action listener
             ApplicantDocumentManager applicantDocumentManager = new ApplicantDocumentManager(jobApp.getApplicant());
-            ArrayList<JobApplicationDocument> jobAppDocs = applicantDocumentManager.addFilesToAccount(filesToSubmit);
+            ArrayList<File> filesNotFromAccount = new ArrayList<>();
+            for (File file : filesToSubmit) {
+                if (!applicantDocumentManager.containsFile(file)) {
+                    filesNotFromAccount.add(file);
+                }
+            }
+            ArrayList<JobApplicationDocument> jobAppDocs = applicantDocumentManager.addFilesToAccount(filesNotFromAccount);
             jobApp.addFiles(jobAppDocs);
         } else {
             // Remove job application from reference's list
@@ -53,7 +58,6 @@ public class SubmitDocumentActionListener implements ActionListener {
         }
         CompanyDocumentManager companyDocManager = jobApp.getJobPosting().getCompany().getDocumentManager();
         companyDocManager.addFilesForJobApplication(jobApp, filesToSubmit);
-
     }
 
     /**

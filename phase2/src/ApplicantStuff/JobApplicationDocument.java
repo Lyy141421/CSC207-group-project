@@ -1,8 +1,6 @@
 package ApplicantStuff;
 
 import DocumentManagers.ApplicantDocumentManager;
-import CompanyStuff.JobPostings.BranchJobPosting;
-import DocumentManagers.CompanyDocumentManager;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -21,24 +19,27 @@ public class JobApplicationDocument implements Serializable {
     // === Constructor for references ===
     public JobApplicationDocument(File file) {
         this.file = file;
+        this.file.setReadOnly();
     }
 
     // === Constructors for applicants submitting a file ===
     public JobApplicationDocument(File file, String username) {
-        File folder = new File(ApplicantDocumentManager.FOLDER + "/" + username);
+        File folder = new File(ApplicantDocumentManager.FOLDER_PATH + "/" + username);
         String filePath = folder.getPath() + "/" + file.getName();
         this.copyFile(file, filePath);
         this.file = new File(filePath);
+        this.file.setReadOnly();
     }
 
     // === Constructor for applicants submitting cover letter or CV from text box ===
     JobApplicationDocument(String contents, String fileType, Applicant applicant) {
-        File folder = new File(ApplicantDocumentManager.FOLDER + "/" + applicant.getUsername());
+        File folder = new File(ApplicantDocumentManager.FOLDER_PATH + "/" + applicant.getUsername());
         String filePath = folder.getPath() + "/" + fileType + ".txt";
         if (Paths.get(filePath).toFile().exists()) {
             filePath = this.getNewFilePath(filePath);
         }
         this.file = this.createNewFile(filePath, contents);
+        this.file.setReadOnly();
     }
 
     // === Getters ===
