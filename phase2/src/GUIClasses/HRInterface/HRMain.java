@@ -17,6 +17,9 @@ public class HRMain extends JPanel {
     MethodsTheGUICallsInHR HRInterface;
     LocalDate today;
 
+    Container mainPanel = this;
+    CardLayout cardLayout = new CardLayout();
+
     HRHome homePanel;
     HRViewPosting viewPostingPanel;
     HRSearchApplicant searchPanel;
@@ -26,7 +29,7 @@ public class HRMain extends JPanel {
     HashMap<String, JobApplication> currApps = new HashMap<>();
 
     private HRMain (Container contentPane, MethodsTheGUICallsInHR HRInterface, LocalDate today) {
-        this.setLayout(new CardLayout());
+        this.setLayout(this.cardLayout);
 
         this.contentPane = contentPane;
         this.HRInterface = HRInterface;
@@ -34,15 +37,23 @@ public class HRMain extends JPanel {
 
         this.addPanels();
 
-        this.setLogoutAction();
+        this.setPanelSwitchActions();
     }
+    
+    //=====Add component methods=====
 
     private void addPanels() {
-        this.add(this.homePanel = new HRHome(this, this.HRInterface, this.today), HRPanel.HOME);
-        this.add(this.viewPostingPanel = new HRViewPosting(this, this.HRInterface, this.today), HRPanel.POSTING);
-        this.add(this.searchPanel = new HRSearchApplicant(this, this.HRInterface, this.today), HRPanel.SEARCH);
-        this.add(this.addPostingPanel = new HRAddPosting(this, this.HRInterface, this.today), HRPanel.ADD_POSTING);
-        this.add(new HRViewApp(this, this.HRInterface, this.today, new HashMap<>()));
+        this.add(this.homePanel = new HRHome(this, this.HRInterface, this.today), HRPanel.HOME, 0);
+        this.add(this.viewPostingPanel = new HRViewPosting(this, this.HRInterface, this.today), HRPanel.POSTING, 1);
+        this.add(this.searchPanel = new HRSearchApplicant(this, this.HRInterface, this.today), HRPanel.SEARCH, 2);
+        this.add(this.addPostingPanel = new HRAddPosting(this, this.HRInterface, this.today), HRPanel.ADD_POSTING, 3);
+        this.add(new HRViewApp(this, this.HRInterface, this.today, new HashMap<>()), HRPanel.APPLICATION, 4);
+    }
+
+    private void setPanelSwitchActions() {
+        this.setLogoutAction();
+        this.setToDoAction();
+        this.setBrowseAction();
     }
 
     //=====panel switch methods=====
@@ -62,7 +73,20 @@ public class HRMain extends JPanel {
         this.homePanel.getToDoButton().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                currJPs = viewPostingPanel.getImportantJP();
+                viewPostingPanel.setCurrJPs(viewPostingPanel.getImportantJP());
+                viewPostingPanel.reload();
+                cardLayout.show(mainPanel, HRPanel.POSTING);
+            }
+        });
+    }
+
+    private void setBrowseAction () {
+        this.homePanel.getBrowseButton().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                viewPostingPanel.setCurrJPs(viewPostingPanel.getAllJP());
+                viewPostingPanel.reload();
+                cardLayout.show(mainPanel, HRPanel.POSTING);
             }
         });
     }

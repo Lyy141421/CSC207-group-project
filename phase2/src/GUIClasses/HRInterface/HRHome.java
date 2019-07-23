@@ -51,16 +51,8 @@ public class HRHome extends HRPanel {
         return this.logoutButton;
     }
 
-    JButton getSearchButton() {
-        return this.searchButton;
-    }
-
     JButton getBrowseButton() {
         return this.browseButton;
-    }
-
-    JButton getAddButton() {
-        return this.addButton;
     }
 
     JButton getToDoButton() {

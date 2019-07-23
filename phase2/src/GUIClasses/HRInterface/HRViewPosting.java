@@ -65,6 +65,14 @@ public class HRViewPosting extends HRPanel{
         return this.importantJP;
     }
 
+    public HashMap<String, BranchJobPosting> getAllJP() {
+        return this.allJP;
+    }
+
+    public void setCurrJPs(HashMap<String, BranchJobPosting> currJPs) {
+        this.currJPs = currJPs;
+    }
+
     private void setListSelectionListener() {
         this.jobPostingList.addListSelectionListener(new ListSelectionListener() {
             @Override
