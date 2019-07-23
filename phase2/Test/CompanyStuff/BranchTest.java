@@ -17,7 +17,7 @@ public class BranchTest {
         Company company = new Company("HoraceCorp");
         Branch branch = new Branch("HQ", "Toronto", company);
         assert branch.getName().equalsIgnoreCase("HQ");
-        assert branch.getCMA().equalsIgnoreCase("Toronto");
+        assert branch.getCma().equalsIgnoreCase("Toronto");
         assert branch.getCompany().equals(company);
         assert branch.getHrCoordinators().isEmpty();
         assert branch.getFieldToInterviewers().isEmpty();

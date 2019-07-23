@@ -13,7 +13,7 @@ public class Branch implements Serializable {
     // The name of this branch
     private String name;
     // The Census Metropolitan Area or Census Agglomeration that this branch is assumed to fall into
-    private String CMA;
+    private String cma;
     // The company that runs this branch
     private Company company;
     // The HR Coordinators for this branch
@@ -25,9 +25,9 @@ public class Branch implements Serializable {
 
     // === Public methods ===
     // === Constructors ===
-    public Branch(String name, String CMA, Company company) {
+    public Branch(String name, String cma, Company company) {
         this.name = name;
-        this.CMA = CMA;
+        this.cma = cma;
         this.company = company;
         this.hrCoordinators = new ArrayList<>();
         this.fieldToInterviewers = new HashMap<>();
@@ -44,8 +44,8 @@ public class Branch implements Serializable {
         return this.name;
     }
 
-    public String getCMA() {
-        return CMA;
+    public String getCma() {
+        return cma;
     }
 
     public Company getCompany() {

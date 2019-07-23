@@ -10,8 +10,8 @@ import java.util.Observable;
 public class CompanyJobPosting extends Observable implements Serializable {
 
     // === Class variables ===
-    // The total number of CompanyJobPostings created
-    private static int totalNumOfCompanyJobPostings;
+    // The total number of job postings created
+    private static int totalNumOfJobPostings;
 
     // === Instance variables ===
     // The job posting id
@@ -34,8 +34,8 @@ public class CompanyJobPosting extends Observable implements Serializable {
     // === Constructor ===
     public CompanyJobPosting(String title, String field, String description, ArrayList<String> requiredDocuments,
                       ArrayList<String> tags, Company company, Branch branch) {
-        totalNumOfCompanyJobPostings++;
-        this.id = totalNumOfCompanyJobPostings;
+        totalNumOfJobPostings++;
+        this.id = totalNumOfJobPostings;
         this.title = title;
         this.field = field;
         this.description = description;

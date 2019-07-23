@@ -62,6 +62,10 @@ public class BranchJobPosting extends CompanyJobPosting implements Observable, S
         return this.interviewManager;
     }
 
+    public LocalDate getPostDate() {
+        return postDate;
+    }
+
     public LocalDate getApplicantCloseDate() {
         return this.applicantCloseDate;
     }
@@ -87,7 +91,7 @@ public class BranchJobPosting extends CompanyJobPosting implements Observable, S
     // === Other methods ===
 
     /**
-     * Check whether this job postings has had any applications submitted.
+     * Check whether this job posting has had any applications submitted.
      *
      * @return true iff this job posting has at least one application submitted.
      */
@@ -163,6 +167,7 @@ public class BranchJobPosting extends CompanyJobPosting implements Observable, S
     /**
      * Create an interview manager for this job posting after this branch posting has been closed for further applications.
      */
+    // TODO: why does this need a cloned list
     public void createInterviewManager() {
         InterviewManager interviewManager = new InterviewManager(this,
                 (ArrayList<JobApplication>) this.getJobApplications().clone());
@@ -229,7 +234,7 @@ public class BranchJobPosting extends CompanyJobPosting implements Observable, S
             return false;
         } else {
             BranchJobPosting other = (BranchJobPosting) obj;
-            return (branch.equals(other.branch) && id == other.id);
+            return id == other.id;
         }
     }
 

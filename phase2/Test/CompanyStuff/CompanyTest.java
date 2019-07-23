@@ -40,7 +40,7 @@ class CompanyTest {
         Branch branch = company.createBranch("HQ", "M5S2E8");
         assertTrue(company.getBranches().contains(branch));
         assertTrue(branch.getName().equalsIgnoreCase("HQ"));
-        assertTrue(branch.getCMA().equalsIgnoreCase("Toronto"));
+        assertTrue(branch.getCma().equalsIgnoreCase("Toronto"));
         assertEquals(branch.getCompany(), company);
     }
 
@@ -54,7 +54,7 @@ class CompanyTest {
                 "horace@gmail.com", branch1, LocalDate.now());
         BranchJobPosting branchJobPosting1 = hrc1.addJobPosting("Test Job", "HR", "This is a job.",
                 new ArrayList<>(), new ArrayList<>(), 1, LocalDate.now(), LocalDate.now().plusDays(3),
-                LocalDate.now().plusDays(3));
+                LocalDate.now().plusDays(4));
         Applicant applicant = new Applicant("dudebro7", "ABC", "DudeBro Smith",
                 "dudebro@gmail.com", LocalDate.now(), "Toronto");
         JobApplication application1 = new JobApplication(applicant, branchJobPosting1, LocalDate.now());
@@ -63,7 +63,7 @@ class CompanyTest {
                 "boris@gmail.com", branch2, LocalDate.now());
         BranchJobPosting branchJobPosting2 = hrc2.addJobPosting("Best Job", "HR",
                 "This is a better job.", new ArrayList<>(), new ArrayList<>(), 1, LocalDate.now(),
-                LocalDate.now().plusDays(3), LocalDate.now().plusDays(3));
+                LocalDate.now().plusDays(3), LocalDate.now().plusDays(4));
         JobApplication application2 = new JobApplication(applicant, branchJobPosting2,
                 LocalDate.now().plusDays(1));
         assertEquals(2, company.getAllApplicationsToCompany(applicant).size());
