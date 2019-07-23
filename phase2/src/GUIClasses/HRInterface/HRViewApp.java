@@ -19,9 +19,7 @@ public class HRViewApp extends HRPanel {
     private String CV = "CV";
     private String COVER_LETTER = "Cover letter";
 
-    private JPanel hireOrRejectButtons = new JPanel();
-    private JPanel phoneOrNotButtons = new JPanel();
-
+    private JList<String> applicationList = new JList<>();
     private JTabbedPane infoPane;
     private JTextArea overview;
     private JTextArea cv;
@@ -47,13 +45,18 @@ public class HRViewApp extends HRPanel {
         this.setListSelectionListener();
     }
 
-    private void setApplicationList (JSplitPane splitDisplay) {
-        JList<String> applicationList = new JList<>();
-        //Todo: add content to JList
-        applicationList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
-        applicationList.setLayoutOrientation(JList.VERTICAL);
+    void reload () {
+        this.applicationList.removeAll();
+        this.applicationList.setListData(currApps.keySet().toArray(new String[currApps.size()]));
+        //TODO: change buttons based on job posting selected
+    }
 
-        splitDisplay.setLeftComponent(new JScrollPane(applicationList));
+    private void setApplicationList (JSplitPane splitDisplay) {
+        this.applicationList.setListData(currApps.keySet().toArray(new String[currApps.size()]));
+        this.applicationList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+        this.applicationList.setLayoutOrientation(JList.VERTICAL);
+
+        splitDisplay.setLeftComponent(new JScrollPane(this.applicationList));
     }
 
     private void setListSelectionListener() {
@@ -90,8 +93,9 @@ public class HRViewApp extends HRPanel {
 
         switch (attributeName) {
             case OVERVIEW:
-                info = app.getOverview();
+                info = app.toString();
                 break;
+                //TODO: replace with documentViewer panel.
             case CV:
                 info = app.getCV().getContents();
                 break;
@@ -119,102 +123,7 @@ public class HRViewApp extends HRPanel {
         return select;
     }
 
-
-    /*JRadioButton hire = new JRadioButton("Hire");
-    hire.setSelected(true);
-    JRadioButton reject = new JRadioButton("Reject");
-    ButtonGroup hireOrReject = new ButtonGroup();
-    hireOrReject.add(hire);
-    hireOrReject.add(reject);
-    hireOrRejectButtons.add(hire);
-    hireOrRejectButtons.add(reject);
-    JButton confirm1 = new JButton("Confirm");
-    hireOrRejectButtons.add(confirm1);
-    confirm1.addActionListener(new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            int selectedIndex = applications.getSelectedIndex();
-            JobApplication selectedApp = currApps.get(selectedIndex);
-            boolean filled = HRInterface.hireOrRejectApplication(selectedApp, hire.isSelected());
-            if (filled) {
-                appTitles.removeAllElements();
-                hiringJP.remove(selectedApp.getJobPosting());
-                importantJP.remove(selectedApp.getJobPosting());
-                for (JobApplication jobApp : currApps) {
-                    if (!(HRInterface.isRejected(jobApp) || jobApp.isHired())) {
-                        HRInterface.hireOrRejectApplication(jobApp, false);
-                    }
-                }
-                JOptionPane.showMessageDialog(applicationPanel, "All positions for this job has been filled");
-            }
-        }
-    });
-
-        phoneOrNotButtons.setLayout(new BoxLayout(phoneOrNotButtons, BoxLayout.Y_AXIS));
-    JRadioButton phone = new JRadioButton("Select for phone Interview");
-        phone.setSelected(true);
-    JRadioButton noPhone = new JRadioButton("Reject");
-    ButtonGroup phoneOrNot = new ButtonGroup();
-        phoneOrNot.add(phone);
-        phoneOrNot.add(noPhone);
-        phoneOrNotButtons.add(phone);
-        phoneOrNotButtons.add(noPhone);
-    JButton confirm2 = new JButton("Confirm");
-        phoneOrNotButtons.add(confirm2);
-        confirm2.addActionListener(new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            int selectedIndex = applications.getSelectedIndex();
-            JobApplication selectedApp = currApps.get(selectedIndex);
-            HRInterface.selectApplicationForPhoneInterview(selectedApp, phone.isSelected());
-            if (isPhoneSetup()) {
-                appTitles.removeAllElements();
-                prePhoneJP.remove(selectedApp.getJobPosting());
-                scheduleJP.add(selectedApp.getJobPosting());
-                JOptionPane.showMessageDialog(applicationPanel, "All applications have been processed. Please proceed to schedule interviews.");
-            }
-        }
-    });
-
-    JButton home = new JButton("Home");
-        home.addActionListener(this);
-
-    JSplitPane display = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, new JScrollPane(viewable), new JScrollPane(info));
-        display.setDividerLocation(250);
-
-
-
-        applications.addItemListener(new ItemListener() {
-        @Override
-        public void itemStateChanged(ItemEvent e) {
-            if (e.getStateChange() == ItemEvent.SELECTED) {
-                JobApplication selectedApp = currApps.get(applications.getSelectedIndex());
-                info.setText(getInfo(selectedApp, viewable.getSelectedIndex()));
-                if (selectedApp.isInPerson3() && !HRInterface.isRejected(selectedApp)) {
-                    hireOrRejectButtons.setVisible(true);
-                    phoneOrNotButtons.setVisible(false);
-                } else if (selectedApp.isUnderReview() && !HRInterface.isRejected(selectedApp)) {
-                    hireOrRejectButtons.setVisible(false);
-                    phoneOrNotButtons.setVisible(true);
-                } else {
-                    hireOrRejectButtons.setVisible(false);
-                    phoneOrNotButtons.setVisible(false);
-                }
-            }
-        }
-    });
-
-        buttons.add(hireOrRejectButtons);
-        buttons.add(phoneOrNotButtons);
-        buttons.add(home);
-
-        applicationPanel.add(applications, BorderLayout.NORTH);
-        applicationPanel.add(display, BorderLayout.CENTER);
-        applicationPanel.add(buttons, BorderLayout.SOUTH);
-
-        return applicationPanel;
-}
-
+    /*
     private boolean isPhoneSetup() {
         boolean isSetup = true;
         for (JobApplication jobApps : currApps) {

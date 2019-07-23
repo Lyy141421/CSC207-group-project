@@ -32,6 +32,10 @@ public class HRSearchApplicant extends HRPanel{
         this.add(this.homeButton, BorderLayout.SOUTH);
     }
 
+    void reload() {
+
+    }
+
     private JButton createSearchButton () {
         JButton searchButton = new JButton("Search");
         searchButton.addActionListener(new ActionListener() {

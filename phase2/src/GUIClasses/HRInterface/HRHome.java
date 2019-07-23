@@ -36,6 +36,10 @@ public class HRHome extends HRPanel {
         this.add(logoutButton, this.c);
     }
 
+    void reload() {
+        //TODO: update to-do button
+    }
+
     JButton getLogoutButton() {
         return this.logoutButton;
     }

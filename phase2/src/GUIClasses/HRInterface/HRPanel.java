@@ -27,16 +27,11 @@ abstract class HRPanel extends JPanel {
     static String SEARCH = "SEARCH";
     static String ADD_POSTING = "ADDPOSTING";
 
-
-    static HashMap<String, BranchJobPosting> currJPs;
-    static HashMap<String, JobApplication> currApps;
-    static JList<String> jobPostingList = new JList<>();
-    static JList<String> applicationList = new JList<>();
-
-    /*private JPanel hireOrRejectButtons = new JPanel();
-    private JPanel phoneOrNotButtons = new JPanel();*/
+    HashMap<String, BranchJobPosting> currJPs;
+    HashMap<String, JobApplication> currApps;
 
     JButton homeButton;
+
 
     HRPanel(Container contentPane, MethodsTheGUICallsInHR HRInterface, LocalDate today) {
         this.parent = contentPane;
@@ -45,6 +40,8 @@ abstract class HRPanel extends JPanel {
 
         this.createHomeButton();
     }
+
+    abstract void reload();
 
     private void createHomeButton() {
         this.homeButton = new JButton("Home");

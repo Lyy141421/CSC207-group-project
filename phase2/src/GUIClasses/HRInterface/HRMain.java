@@ -28,6 +28,8 @@ public class HRMain extends JPanel {
         this.today = today;
 
         this.addPanels();
+
+        this.setLogoutAction();
     }
 
     private void addPanels() {
@@ -37,6 +39,8 @@ public class HRMain extends JPanel {
         this.add(this.searchPanel = new HRSearchApplicant(this, this.HRInterface, this.today), HRPanel.SEARCH);
         this.add(this.addPostingPanel = new HRAddPosting(this, this.HRInterface, this.today), HRPanel.ADD_POSTING);
     }
+
+    //=====panel switch methods=====
 
     private void setLogoutAction () {
         this.homePanel.getLogoutButton().addActionListener(new ActionListener() {
@@ -48,6 +52,6 @@ public class HRMain extends JPanel {
             }
         });
     }
-    
+
 
 }
