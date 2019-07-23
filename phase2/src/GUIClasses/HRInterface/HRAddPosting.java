@@ -35,6 +35,10 @@ public class HRAddPosting extends HRPanel {
         this.addButtons();
     }
 
+    void reload() {
+        //TODO: erase content of everything in entryBoxes
+    }
+
     private void addLabelToPanel(JComponent component) {
         c.gridy++;
         this.add(component, this.c);

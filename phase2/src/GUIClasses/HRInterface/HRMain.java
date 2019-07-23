@@ -39,7 +39,7 @@ public class HRMain extends JPanel {
 
         this.setPanelSwitchActions();
     }
-    
+
     //=====Add component methods=====
 
     private void addPanels() {

@@ -46,6 +46,7 @@ abstract class HRPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 ((CardLayout) parent.getLayout()).show(parent, HOME);
+                //TODO: update todo on home panel
             }
         });
     }
