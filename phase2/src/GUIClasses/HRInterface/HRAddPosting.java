@@ -20,72 +20,73 @@ import java.util.List;
 public class HRAddPosting extends HRPanel {
 
     JPanel containerPane = this;
+    GridBagConstraints c;
     List<JComponent> entryBoxes = new ArrayList();
 
     HRAddPosting(Container contentPane, MethodsTheGUICallsInHR HRInterface, LocalDate today) {
         super(contentPane, HRInterface, today);
 
         this.setLayout(new GridBagLayout());
-        GridBagConstraints c = new GridBagConstraints();
-        c.insets = new Insets(1, 0, 1, 0);
+        this.c = new GridBagConstraints();
+        this.c.insets = new Insets(1, 0, 1, 0);
 
-        this.addAllLabels(c);
-        this.addAllFields(c);
-        this.addButtons(c);
+        this.addAllLabels();
+        this.addAllFields();
+        this.addButtons();
     }
 
-    private void addLabelToPanel(JComponent component, GridBagConstraints c) {
+    private void addLabelToPanel(JComponent component) {
         c.gridy++;
-        this.add(component, c);
+        this.add(component, this.c);
     }
 
-    private void addFieldToPanel (JComponent component, GridBagConstraints c) {
-        addLabelToPanel(component, c);
+    private void addFieldToPanel (JComponent component) {
+        addLabelToPanel(component);
         this.entryBoxes.add(component);
     }
 
-    private void addAllLabels (GridBagConstraints c) {
-        c.gridx = 0;
-        c.gridy = -1;
+    private void addAllLabels () {
+        this.c.gridx = 0;
+        this.c.gridy = -1;
         JLabel jobTitle = new JLabel("Job title");
-        this.addLabelToPanel(jobTitle, c);
+        this.addLabelToPanel(jobTitle);
         JLabel jobField = new JLabel("Job field");
-        this.addLabelToPanel(jobField, c);
+        this.addLabelToPanel(jobField);
         JLabel jobDescription = new JLabel("Job description");
-        this.addLabelToPanel(jobDescription, c);
+        this.addLabelToPanel(jobDescription);
         JLabel requirements = new JLabel("Requirements");
-        this.addLabelToPanel(requirements, c);
+        this.addLabelToPanel(requirements);
         JLabel numPositions = new JLabel("Number of positions");
-        this.addLabelToPanel(numPositions, c);
+        this.addLabelToPanel(numPositions);
         JLabel closeDate = new JLabel("Close date");
-        this.addLabelToPanel(closeDate, c);
+        this.addLabelToPanel(closeDate);
     }
 
-    private void addAllFields (GridBagConstraints c) {
-        c.gridx = 1;
-        c.gridy = -1;
+    private void addAllFields () {
+        this.c.gridx = 1;
+        this.c.gridy = -1;
         JTextField jobTitleInput = new JTextField(30);
-        this.addFieldToPanel(jobTitleInput, c);
+        this.addFieldToPanel(jobTitleInput);
         JTextField jobFieldInput = new JTextField(30);
-        this.addFieldToPanel(jobFieldInput, c);
+        this.addFieldToPanel(jobFieldInput);
         JTextArea jobDescriptionInput = new JTextArea(4, 30);
-        this.addFieldToPanel(jobDescriptionInput, c);
+        this.addFieldToPanel(jobDescriptionInput);
         JTextArea requirementsInput = new JTextArea(4, 30);
-        this.addFieldToPanel(requirementsInput, c);
-        this.addDatePicker(c);
-        this.addNumOfPositionField(c);
+        this.addFieldToPanel(requirementsInput);
+        this.addDatePicker();
+        this.addNumOfPositionField();
     }
 
-    private void addDatePicker(GridBagConstraints c) {
+    private void addDatePicker() {
         UtilDateModel dateModel = new UtilDateModel();
         dateModel.setDate(today.getYear(), today.getMonthValue() - 1, today.getDayOfMonth());
         dateModel.setSelected(true);
         JDatePanelImpl datePanel = new JDatePanelImpl(dateModel);
         JDatePickerImpl closeDateInput = new JDatePickerImpl(datePanel);
-        this.addFieldToPanel(closeDateInput, c);
+        this.addFieldToPanel(closeDateInput);
     }
 
-    private void addNumOfPositionField (GridBagConstraints c) {
+    private void addNumOfPositionField () {
         NumberFormatter formatter = new NumberFormatter(NumberFormat.getInstance());
         formatter.setValueClass(Integer.class);
         formatter.setMinimum(0);
@@ -94,7 +95,7 @@ public class HRAddPosting extends HRPanel {
         JFormattedTextField numPositionsInput = new JFormattedTextField(formatter);
         numPositionsInput.setValue(1);
         numPositionsInput.setColumns(30);
-        this.addFieldToPanel(numPositionsInput, c);
+        this.addFieldToPanel(numPositionsInput);
     }
 
     private JButton createSubmitButton() {
@@ -121,14 +122,14 @@ public class HRAddPosting extends HRPanel {
         return submit;
     }
 
-    private void addButtons (GridBagConstraints c) {
+    private void addButtons () {
         JPanel buttons = new JPanel(new FlowLayout());
         JButton submit = this.createSubmitButton();
 
         buttons.add(submit);
         buttons.add(this.homeButton);
 
-        this.addLabelToPanel(buttons, c);
+        this.addLabelToPanel(buttons);
     }
 
     private boolean isValidInput(Object[] fields) {
