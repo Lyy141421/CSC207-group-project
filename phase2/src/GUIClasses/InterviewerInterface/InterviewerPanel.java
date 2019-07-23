@@ -1,6 +1,11 @@
 package GUIClasses.InterviewerInterface;
 
+import GUIClasses.MethodsTheGUICallsInInterviewer;
+import UIClasses.InterviewerInterface;
+
 import javax.swing.*;
+import java.awt.*;
+import java.time.LocalDate;
 
 //import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
 //import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
@@ -9,7 +14,17 @@ import javax.swing.*;
 
 abstract class InterviewerPanel extends JPanel {
 
+    private Container parent;
+    private MethodsTheGUICallsInInterviewer interviewerInterface;
+    private LocalDate today;
 
+    InterviewerPanel(Container contentPane, MethodsTheGUICallsInInterviewer interviewerInterface, LocalDate today) {
+        this.parent = contentPane;
+        this.interviewerInterface = interviewerInterface;
+        this.today = today;
+
+
+    }
     /*private Container contentPane;
     private InterviewerInterface interviewerInterface;
     private LocalDate today;
