@@ -73,6 +73,8 @@ public class Status implements Serializable, Observable {
      */
     public void setHired() {
         this.setValue(this.hired);
+        notifyAllObservers(new Notification("Hired!!",
+                "You have been hired at "+ "###PlaceHolder###" +", make sure to check your email"));
     }
 
     /**
