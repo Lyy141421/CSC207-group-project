@@ -2,7 +2,9 @@ package GUIClasses.HRInterface;
 
 import ApplicantStuff.JobApplication;
 import CompanyStuff.JobPostings.BranchJobPosting;
+import DocumentManagers.CompanyDocumentManager;
 import GUIClasses.MethodsTheGUICallsInHR;
+import NewGUI.DocumentViewer;
 
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
@@ -16,16 +18,14 @@ import java.util.HashMap;
 public class HRViewApp extends HRPanel {
 
     private String OVERVIEW = "Overview";
-    private String CV = "CV";
-    private String COVER_LETTER = "Cover letter";
+    private String FILE = "View Files";
 
     HashMap<String, JobApplication> currApps;
 
     private JList<String> applicationList = new JList<>();
     private JTabbedPane infoPane;
     private JTextArea overview;
-    private JTextArea cv;
-    private JTextArea coverLetter;
+    private JPanel documentViewer;
 
 
     HRViewApp(Container contentPane, MethodsTheGUICallsInHR HRInterface, LocalDate today, HashMap<String, JobApplication> currApps) {
@@ -68,48 +68,34 @@ public class HRViewApp extends HRPanel {
             public void valueChanged(ListSelectionEvent e) {
                 String selectedTitle = applicationList.getSelectedValue();
                 JobApplication selectedApp = currApps.get(selectedTitle);
-                overview.setText(getInfo(selectedApp, OVERVIEW));
-                cv.setText(getInfo(selectedApp, CV));
-                coverLetter.setText(getInfo(selectedApp, COVER_LETTER));
+                overview.setText(selectedApp.toString());
+                documentViewer.removeAll();
+                documentViewer.add(createDocumentViewer(selectedApp));
             }
         });
     }
 
     private void setInfoPane (JSplitPane splitDisplay) {
         this.infoPane = new JTabbedPane();
-        this.infoPane.addTab(this.OVERVIEW, makeInfoTab("Select an application to view Overview.", this.overview));
-        this.infoPane.addTab(this.CV, makeInfoTab("Select an application to view CV.", this.cv));
-        this.infoPane.addTab(this.COVER_LETTER, makeInfoTab("Select an application to view cover letter", this.coverLetter));
+        this.infoPane.addTab(this.OVERVIEW, makeOverviewTab("Select an application to view overview."));
+        this.documentViewer = new JPanel();
+        this.infoPane.addTab(this.FILE, this.documentViewer);
 
         splitDisplay.setRightComponent(this.infoPane);
     }
 
-    private JComponent makeInfoTab (String text, JTextArea info) {
-        info = new JTextArea(text);
-        info.setEditable(false);
-        info.setBorder(new EtchedBorder(EtchedBorder.LOWERED));
-        return new JScrollPane(info);
+    private JPanel createDocumentViewer(JobApplication selectedApp) {
+        CompanyDocumentManager CDM = new CompanyDocumentManager(this.HRInterface.getHR().getBranch().getCompany());
+        DocumentViewer DV = new DocumentViewer(CDM.getFolderForJobApplication(selectedApp));
+
+        return DV;
     }
 
-    private String getInfo(JobApplication app, String attributeName) {
-        String info;
-
-        switch (attributeName) {
-            case OVERVIEW:
-                info = app.toString();
-                break;
-                //TODO: replace with documentViewer panel.
-            case CV:
-                info = app.getCV().getContents();
-                break;
-            case COVER_LETTER:
-                info = app.getCoverLetter().getContents();
-                break;
-            default:
-                throw new IllegalStateException("Unexpected value: " + attributeName);
-        }
-
-        return info;
+    private JComponent makeOverviewTab (String text) {
+        this.overview = new JTextArea(text);
+        this.overview.setEditable(false);
+        this.overview.setBorder(new EtchedBorder(EtchedBorder.LOWERED));
+        return new JScrollPane(this.overview);
     }
 
     private JButton createHireButton() {

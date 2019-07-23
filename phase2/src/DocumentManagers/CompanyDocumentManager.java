@@ -19,7 +19,7 @@ public class CompanyDocumentManager extends DocumentManager {
     // === Instance variables ===
     private Company company;
 
-    CompanyDocumentManager(Company company) {
+    public CompanyDocumentManager(Company company) {
         this.company = company;
         this.setFolder(new File(FOLDER_PATH + "/" + this.company.getName()));
         for (Branch branch : company.getBranches()) {
@@ -111,7 +111,7 @@ public class CompanyDocumentManager extends DocumentManager {
      * @param jobApplication    The job application in question.
      * @return the folder that holds this job application's submitted documents.
      */
-    private File getFolderForJobApplication(JobApplication jobApplication) {
+    public File getFolderForJobApplication(JobApplication jobApplication) {
         BranchJobPosting jobPosting = jobApplication.getJobPosting();
         File jobPostingFolder = this.getFolderForJobPosting(jobPosting);
         File[] userFolders = jobPostingFolder.listFiles();
