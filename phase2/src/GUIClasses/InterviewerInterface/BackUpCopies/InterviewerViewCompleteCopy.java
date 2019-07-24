@@ -4,34 +4,31 @@ import CompanyStuff.Interview;
 import GUIClasses.MethodsTheGUICallsInInterviewer;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
 import java.util.HashMap;
 
-public class InterviewerViewComplete extends InterviewerView {
+public class InterviewerViewCompleteCopy extends InterviewerView {
 
     JTextArea notes;
 
-    InterviewerViewComplete(MethodsTheGUICallsInInterviewer interviewerInterface) {
-        super(interviewerInterface);
-        this.setLayout(new BorderLayout());
+    InterviewerViewCompleteCopy(Container contentPane, MethodsTheGUICallsInInterviewer interviewerInterface, LocalDate today) {
+        super(contentPane, interviewerInterface, today);
 
         this.createNoteTab();
-        this.add(super.splitDisplay);
-        this.add(createSaveButton(), BorderLayout.PAGE_END);
+        this.add(createSaveButton());
     }
 
     @Override
     HashMap<String, Interview> getInterviewMap() {
-        return getTitleToInterviewMap(interviewerInterface.getIncompleteInterviewsAlreadyOccurred());
+        return getTitleToInterviewMap(interviewerInterface.getAllIncompleteInterviews(today));
     }
 
     void createNoteTab() {
         this.notes = new JTextArea("Please enter interview notes");
-        this.infoPane.addTab("Write notes", new JScrollPane(notes));
+        this.infoPane.addTab("Notes", new JScrollPane(notes));
     }
 
     JButton createSaveButton() {

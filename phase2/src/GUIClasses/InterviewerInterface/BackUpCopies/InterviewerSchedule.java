@@ -75,9 +75,9 @@ public class InterviewerSchedule extends InterviewerPanel {
                     if (canSchedule) {
                         interviews.remove(selectedIndex);
                         //TODO: update InterviewerViewComplete
-                        scheduleInterviews.remove(selectedIndex);
-                        futureInterviews.add(interview);
-                        incompleteTitles.addElement(getInterviewTitles(new ArrayList<Interview>(Arrays.asList(interview))).get(0));
+//                        scheduleInterviews.remove(selectedIndex);
+//                        futureInterviews.add(interview);
+//                        incompleteTitles.addElement(getInterviewTitles(new ArrayList<Interview>(Arrays.asList(interview))).get(0));
                         JOptionPane.showMessageDialog(contentPane, "You have successfully scheduled an interview.");
                     } else {
                         JOptionPane.showMessageDialog(contentPane, "Unable to book the interview at the selected date and time.");

@@ -16,18 +16,16 @@ import java.util.ArrayList;
 public class InterviewerHomePanel extends InterviewerPanel {
 
     // === Instance variables ===
+    // ===
 
-    InterviewerHomePanel(Container contentPane, MethodsTheGUICallsInInterviewer interviewerInterface, LocalDate today) {
-        super(contentPane, interviewerInterface, today);
+    InterviewerHomePanel(MethodsTheGUICallsInInterviewer interviewerInterface) {
+        super(interviewerInterface);
 
         this.setLayout(new BorderLayout());
         this.add(this.createWelcomePanel(), BorderLayout.BEFORE_FIRST_LINE);
-        this.createSchedulingReminderPanel();
         this.add(this.createSchedulePanel(), BorderLayout.CENTER);
         JPanel remindersPanel = new JPanel();
         remindersPanel.setLayout(new BoxLayout(remindersPanel, BoxLayout.X_AXIS));
-        remindersPanel.add(this.createSchedulingReminderPanel());
-        remindersPanel.add(Box.createRigidArea(new Dimension(30, 0)));
         remindersPanel.add(this.createIncompleteInterviewsPanel());
         this.add(remindersPanel, BorderLayout.SOUTH);
         this.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
@@ -41,15 +39,6 @@ public class InterviewerHomePanel extends InterviewerPanel {
         welcomeMessage.setHorizontalAlignment(JLabel.CENTER);
         welcomeMessage.revalidate();
         return welcomePanel;
-    }
-
-    private JPanel createSchedulingReminderPanel() {
-        JPanel reminderPanel = new JPanel();
-        reminderPanel.setLayout(new BorderLayout());
-        reminderPanel.add(new FrequentlyUsedMethods().createTitlePanel(
-                "One-on-One interviews that need scheduling:", 17), BorderLayout.BEFORE_FIRST_LINE);
-        reminderPanel.add(this.createInterviewsToScheduleTablePanel(), BorderLayout.CENTER);
-        return reminderPanel;
     }
 
     private JPanel createTablePanel(String[] categoryNames, Object[][] data) {
@@ -66,17 +55,6 @@ public class InterviewerHomePanel extends InterviewerPanel {
         return tablePanel;
     }
 
-    private JPanel createInterviewsToScheduleTablePanel() {
-        ArrayList<Interview> unscheduledInterviews = this.interviewerInterface.getInterviewsThatNeedScheduling();
-        Object[][] data = new Object[unscheduledInterviews.size()][];
-
-        for (int i = 0; i < unscheduledInterviews.size(); i++) {
-            data[i] = unscheduledInterviews.get(i).getCategoryValuesForInterviewerUnscheduled();
-        }
-
-        return this.createTablePanel(Interview.getCategoryNamesForInterviewerUnscheduled(), data);
-    }
-
     private JPanel createSchedulePanel() {
         JPanel schedulePanel = new JPanel();
         schedulePanel.setLayout(new BorderLayout());
@@ -87,7 +65,7 @@ public class InterviewerHomePanel extends InterviewerPanel {
     }
 
     private JPanel createScheduleTablePanel() {
-        ArrayList<Interview> scheduledInterviews = this.interviewerInterface.getScheduledUpcomingInterviews(this.today);
+        ArrayList<Interview> scheduledInterviews = this.interviewerInterface.getScheduledUpcomingInterviews();
         Object[][] data = new Object[scheduledInterviews.size()][];
 
         for (int i = 0; i < scheduledInterviews.size(); i++) {
@@ -107,7 +85,7 @@ public class InterviewerHomePanel extends InterviewerPanel {
     }
 
     private JPanel createIncompleteInterviewsTablePanel() {
-        ArrayList<Interview> incompleteInterviews = this.interviewerInterface.getIncompleteInterviewsAsCoordinator(this.today);
+        ArrayList<Interview> incompleteInterviews = this.interviewerInterface.getIncompleteInterviewsAsCoordinator();
         Object[][] data = new Object[incompleteInterviews.size()][];
 
         for (int i = 0; i < incompleteInterviews.size(); i++) {
@@ -127,8 +105,8 @@ public class InterviewerHomePanel extends InterviewerPanel {
         branch.setCompany(company);
         company.addBranch(branch);
         Interviewer interviewer = jobApplicationSystem.getUserManager().createInterviewer("username", "password", "Legal Name", "email@gmail.com", branch, "Field", LocalDate.now());
-        MethodsTheGUICallsInInterviewer interviewerInterface = new MethodsTheGUICallsInInterviewer(interviewer);
-        JPanel panel = new InterviewerHomePanel(frame.getContentPane(), interviewerInterface, jobApplicationSystem.getToday());
+        MethodsTheGUICallsInInterviewer interviewerInterface = new MethodsTheGUICallsInInterviewer(jobApplicationSystem, interviewer);
+        JPanel panel = new InterviewerHomePanel(interviewerInterface);
         frame.add(panel);
         frame.setSize(800, 600);
         frame.setVisible(true);

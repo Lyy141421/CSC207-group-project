@@ -8,8 +8,10 @@ import java.util.ArrayList;
 import java.util.Observable;
 
 public class CompanyJobPosting extends Observable implements Serializable {
+    // TODO is this the right observable? this is java.util not notification system
 
     // === Class variables ===
+    static final long serialVersionUID = 1L;
     // The total number of job postings created
     private static int totalNumOfJobPostings;
 
@@ -90,26 +92,6 @@ public class CompanyJobPosting extends Observable implements Serializable {
         this.branches.add(branch);
     }
 
-//    public void updateFields(int skipFieldKey, LocalDate skipDateKey, ArrayList<Object> fields) {
-//        for (int i = 0; i < fields.size(); i++) {
-//            if (fields.get(i) instanceof String && !(fields.get(i).equals(String.valueOf(skipFieldKey)))) {
-//                if (i == 0) {
-//                    this.setTitle((String.valueOf(fields.get(i))));
-//                } else if (i == 1) {
-//                    this.setField((String.valueOf(fields.get(i))));
-//                } else if (i == 2) {
-//                    this.setDescription((String.valueOf(fields.get(i))));
-//                } else if (i == 3) {
-////                    this.setTags((String.valueOf(fields.get(i)))); Todo fix
-//                }
-//            } else if (fields.get(i) instanceof Integer && (Integer) fields.get(i) > skipFieldKey) {
-//                this.setNumPositions((Integer) fields.get(i));
-//            } else if (fields.get(i) instanceof LocalDate && !((LocalDate) fields.get(i)).isEqual(skipDateKey)) {
-//                this.setCloseDate((LocalDate) fields.get(i));
-//            }
-//        }
-//    }
-
     public String getTagsString(){
         return tags.toString().replace("[", "").replace("]", "");
     }
@@ -152,7 +134,7 @@ public class CompanyJobPosting extends Observable implements Serializable {
         s += "Title: " + this.title + "\n";
         s += "Field: " + this.field + "\n";
         s += "Description: " + this.description + "\n";
-        //s += "Branches: " + branches + "\n";
+//        s += "Branches: " + branches + "\n";
         s += "Tags: " + this.getTagsString() + "\n";
         s += "Company: " + this.company.getName() + "\n";
         return s;

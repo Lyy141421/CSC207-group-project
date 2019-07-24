@@ -192,7 +192,7 @@ class ApplicantTest {
         ArrayList<String[]> interviewConfiguration = new ArrayList<>();
         interviewConfiguration.add(new String[]{Interview.ONE_ON_ONE, "Phone interview"});
         jobPosting.getInterviewManager().setInterviewConfiguration(interviewConfiguration);
-        jobPosting.getInterviewManager().setUpOneOnOneInterviews();
+        jobPosting.getInterviewManager().setUpOneOnOneInterviews(LocalDate.of(2019, 8, 11));
         applicant.withdrawJobApplication(LocalDate.of(2019, 8, 11), jobPosting);
 
         assertTrue(applicant.getJobApplicationManager().getJobApplications().isEmpty());
@@ -213,10 +213,8 @@ class ApplicantTest {
         ArrayList<String[]> interviewConfiguration = new ArrayList<>();
         interviewConfiguration.add(new String[]{Interview.ONE_ON_ONE, "Phone interview"});
         jobPosting.getInterviewManager().setInterviewConfiguration(interviewConfiguration);
-        jobPosting.getInterviewManager().setUpOneOnOneInterviews();
-        Interview interview = jobPosting.getInterviewManager().getApplicationsInConsideration().get(0).getLastInterview();
-        interview.setTime(new InterviewTime(LocalDate.of(2019, 8, 11), 3));
-        applicant.withdrawJobApplication(LocalDate.of(2019, 8, 11), jobPosting);
+        jobPosting.getInterviewManager().setUpOneOnOneInterviews(LocalDate.of(2019, 8, 11));
+        applicant.withdrawJobApplication(LocalDate.of(2019, 8, 18), jobPosting);
 
         assertTrue(applicant.getJobApplicationManager().getJobApplications().isEmpty());
         assertEquals(1, jobPosting.getJobApplications().size());

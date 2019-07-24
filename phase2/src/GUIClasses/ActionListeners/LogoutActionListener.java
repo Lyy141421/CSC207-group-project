@@ -23,6 +23,7 @@ public class LogoutActionListener implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         new DataLoaderAndStorer(jobApplicationSystem).storeAllData();
-        masterLayout.show(parent, "LOGIN");
+        System.exit(0);
+        // masterLayout.show(parent, "LOGIN");
     }
 }

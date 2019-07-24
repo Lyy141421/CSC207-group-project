@@ -15,6 +15,9 @@ public class BranchJobPostingManager implements Serializable {
      * A class that manages the job postings for each branch
      */
 
+    // === Class variables ===
+    static final long serialVersionUID = 1L;
+
     // === Instance variables ===
     // The branch that this job posting manager is for
     private Branch branch;

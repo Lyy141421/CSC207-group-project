@@ -9,6 +9,8 @@ import CompanyStuff.Company;
 import CompanyStuff.JobPostings.BranchJobPosting;
 import CompanyStuff.JobPostings.BranchJobPostingManager;
 import FileLoadingAndStoring.DataLoaderAndStorer;
+import GUIClasses.ActionListeners.LogoutActionListener;
+import GUIClasses.CommonUserGUI.UserPanel;
 import Main.JobApplicationSystem;
 import GUIClasses.CommonUserGUI.FrequentlyUsedMethods;
 import GUIClasses.CommonUserGUI.UserProfilePanel;
@@ -20,22 +22,20 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class ReferencePanel extends JPanel {
+public class ReferencePanel extends UserPanel {
 
     // === Instance variables ===
     private Reference reference;
     private JPanel cards = new JPanel(new CardLayout());
-    public static final String HOME = "Home";
-    public static final String PROFILE = "Profile";
     static final String SUBMIT_REFERENCE_LETTER = "Submit";
     static final String VIEW_REFEREE_JOB_POSTINGS = "View Referee Job Postings";
     public static final String SUCCESSFUL_SUBMISSION = "Successful Submission";
 
     // === Constructor ===
-    public ReferencePanel(String username, JobApplicationSystem jobApplicationSystem, Container parent, CardLayout masterLayout) {
+    public ReferencePanel(String username, JobApplicationSystem jobApplicationSystem, LogoutActionListener logoutActionListener) {
         this.reference = (Reference) jobApplicationSystem.getUserManager().findUserByUsername(username);
         this.setLayout(new BorderLayout());
-        this.add(new ReferenceSideBarMenuPanel(parent, masterLayout, jobApplicationSystem), BorderLayout.WEST);
+        this.add(new ReferenceSideBarMenuPanel(logoutActionListener), BorderLayout.WEST);
         this.addCards();
     }
 
@@ -43,8 +43,8 @@ public class ReferencePanel extends JPanel {
      * Add the cards to the card layout panel
      */
     private void addCards() {
-        cards.add(new ReferenceHomePanel(this.reference), HOME);
-        cards.add(new UserProfilePanel(this.reference), PROFILE);
+        cards.add(new ReferenceHomePanel(this.reference), UserPanel.HOME);
+        cards.add(new UserProfilePanel(this.reference), UserPanel.PROFILE);
         cards.add(new ReferenceSubmitLetterPanel(this.reference), SUBMIT_REFERENCE_LETTER);
         cards.add(new ReferenceViewRefereeJobPostingsPanel(this.reference), VIEW_REFEREE_JOB_POSTINGS);
         cards.add(this.successfulSubmissionPanel(), SUCCESSFUL_SUBMISSION);
@@ -99,7 +99,8 @@ public class ReferencePanel extends JPanel {
         reference.addJobApplication(jobApp2);
         BranchJobPostingManager branchJobPostingManager = branch.getJobPostingManager();
         branchJobPostingManager.updateJobPostingsClosedForApplications(LocalDate.now());
-        frame.add(new ReferencePanel(reference.getUsername(), jobApplicationSystem, new Container(), new CardLayout()));
+        LogoutActionListener logoutActionListener = new LogoutActionListener(new Container(), new CardLayout(), jobApplicationSystem);
+        frame.add(new ReferencePanel(reference.getUsername(), jobApplicationSystem, logoutActionListener));
         frame.setSize(800, 600);
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

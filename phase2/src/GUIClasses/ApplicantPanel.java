@@ -1,3 +1,4 @@
+/*
 package GUIClasses;
 
 import ApplicantStuff.Applicant;
@@ -18,9 +19,11 @@ import java.awt.event.MouseEvent;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
+*/
 /**
  * JPanel containing all of the GUI needed for Applicant users functionality
- */
+ *//*
+
 
 class ApplicantPanel extends JPanel {
     private JobApplicationSystem jobAppSystem;
@@ -52,9 +55,11 @@ class ApplicantPanel extends JPanel {
         }
     }
 
-    /**
-     * Builds and returns the basic start panel; what the applicant sees on login
-     */
+    */
+/**
+ * Builds and returns the basic start panel; what the applicant sees on login
+ *//*
+
 
     private JPanel buildStartPanel() {
         JPanel applicantStart = new JPanel(new GridLayout(3, 1));
@@ -69,9 +74,11 @@ class ApplicantPanel extends JPanel {
         return applicantStart;
     }
 
-    /**
-     * Helpers to build Applicant start panel
-     */
+    */
+/**
+ * Helpers to build Applicant start panel
+ *//*
+
     private JPanel buildStartForm() {
         JPanel startForm = new JPanel(null);
 
@@ -200,10 +207,12 @@ class ApplicantPanel extends JPanel {
         return welcomeLabels;
     }
 
-    /**
-     * Builds the panel which displays all jobs the applicant can apply to.
-     * @param jobPostings postings the applicant has NOT applied to
-     */
+    */
+/**
+ * Builds the panel which displays all jobs the applicant can apply to.
+ * @param jobPostings postings the applicant has NOT applied to
+ *//*
+
     private JPanel buildViewJobs(ArrayList<JobPosting> jobPostings) {
         JPanel viewJobs = new JPanel(new GridLayout(1, 3));
 
@@ -234,9 +243,11 @@ class ApplicantPanel extends JPanel {
         return viewJobs;
     }
 
-    /**
-     * Builds the panel which allows navigation when viewing jobs
-     */
+    */
+/**
+ * Builds the panel which allows navigation when viewing jobs
+ *//*
+
     private JPanel buildViewJobs0(ArrayList<CompanyJobPosting> jobPostings) {
         JPanel viewJobsList = new JPanel(null);
 
@@ -261,9 +272,11 @@ class ApplicantPanel extends JPanel {
         return viewJobsList;
     }
 
-    /**
-     * Builds and returns the panel which contains all job titles, company and descriptions
-     */
+    */
+/**
+ * Builds and returns the panel which contains all job titles, company and descriptions
+ *//*
+
     private JPanel buildViewJobs1(ArrayList<CompanyJobPosting> jobPostings) {
         JPanel viewJobs1 = new JPanel(new CardLayout());
 
@@ -291,9 +304,11 @@ class ApplicantPanel extends JPanel {
         return viewJobs1;
     }
 
-    /**
-     * Returns the panel containing the remainder of the details for each job posting
-     */
+    */
+/**
+ * Returns the panel containing the remainder of the details for each job posting
+ *//*
+
     private JPanel buildViewJobs2(ArrayList<CompanyJobPosting> jobpostings) {
         JPanel viewJobs2 = new JPanel(new CardLayout());
 
@@ -336,9 +351,11 @@ class ApplicantPanel extends JPanel {
         return viewJobs2;
     }
 
-    /**
-     * Builds the document submission panel for a job posting
-     */
+    */
+/**
+ * Builds the document submission panel for a job posting
+ *//*
+
     private JPanel buildDocApply(BranchJobPosting posting) {
         JPanel formEntry = new JPanel(null);
 
@@ -378,9 +395,11 @@ class ApplicantPanel extends JPanel {
         return formEntry;
     }
 
-    /**
-     * Builds the panel which displays current applications
-*/
+    */
+/**
+ * Builds the panel which displays current applications
+ *//*
+
     private JPanel buildViewApps(ArrayList<JobPosting> jobPostings, ArrayList<JobApplication> applications) {
         JPanel viewApps = new JPanel(new GridLayout(1, 3));
 
@@ -411,9 +430,11 @@ class ApplicantPanel extends JPanel {
         return viewApps;
     }
 
-    /**
-     * Builds status and withdraw aspect of view applications
-     */
+    */
+/**
+ * Builds status and withdraw aspect of view applications
+ *//*
+
     private JPanel buildViewApps0(ArrayList<JobApplication> applications) {
         JPanel viewApps = new JPanel(new CardLayout());
 
@@ -438,9 +459,11 @@ class ApplicantPanel extends JPanel {
         return viewApps;
     }
 
-    /**
-     * Builds reminder dialog if the applicant has an interview on "today"
-     */
+    */
+/**
+ * Builds reminder dialog if the applicant has an interview on "today"
+ *//*
+
     private JDialog buildReminder() {
         JDialog d = new JDialog(new JFrame() , "Reminder", true);
         d.setLayout( new FlowLayout() );
@@ -459,9 +482,11 @@ class ApplicantPanel extends JPanel {
         return d;
     }
 
-    /**
-     * Builds dialog after attempting to withdraw an application
-     */
+    */
+/**
+ * Builds dialog after attempting to withdraw an application
+ *//*
+
     private JDialog buildWithdrawWindow(boolean success) {
         JDialog d = new JDialog(new JFrame(), "Withdraw Status", true);
         String text;
@@ -484,9 +509,11 @@ class ApplicantPanel extends JPanel {
         return d;
     }
 
-    /**
-     * Builds account history
-     */
+    */
+/**
+ * Builds account history
+ *//*
+
     private JPanel buildHistory() {
         JPanel viewHistory = new JPanel(null);
 
@@ -517,10 +544,12 @@ class ApplicantPanel extends JPanel {
         return viewHistory;
     }
 
-    /**
-     * Takes a list of postings and converts them to Name - ID form for card/navigation purposes
-     * @param jobPostings the postings in question
-     */
+    */
+/**
+ * Takes a list of postings and converts them to Name - ID form for card/navigation purposes
+ * @param jobPostings the postings in question
+ *//*
+
     private String[] getListNames(ArrayList<BranchJobPosting> jobPostings) {
         int len = jobPostings.size();
         String[] ret = new String[len];
@@ -532,16 +561,20 @@ class ApplicantPanel extends JPanel {
         return ret;
     }
 
-    /**
-     * Resets the search bar to its "default" value
-     */
+    */
+/**
+ * Resets the search bar to its "default" value
+ *//*
+
     private void resetSearch() {
         this.searchBar.setText("Looking for a job?");
     }
 
-    /**
-     * Because nested methods
-     */
+    */
+/**
+ * Because nested methods
+ *//*
+
     private ApplicantPanel getThis() {
         return this;
     }
@@ -555,3 +588,4 @@ class ApplicantPanel extends JPanel {
         tester.setSize(854, 480); tester.setVisible(true); tester.setResizable(false);
     }
 }
+*/

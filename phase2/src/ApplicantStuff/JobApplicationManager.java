@@ -15,6 +15,9 @@ import static java.time.temporal.ChronoUnit.DAYS;
 
 public class JobApplicationManager extends Observable implements Serializable {
 
+    // === Class variables ===
+    static final long serialVersionUID = 1L;
+
     // === Instance variables ===
     // List of job applications submitted sorted chronologically by close date
     private ArrayList<JobApplication> jobApplications = new ArrayList<>();

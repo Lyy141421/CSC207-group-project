@@ -13,7 +13,7 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-public class BranchJobPosting extends CompanyJobPosting implements Observable, Serializable {
+public class BranchJobPosting extends CompanyJobPosting implements Observable {
 
     // === Instance variables ===
     private int numPositions;

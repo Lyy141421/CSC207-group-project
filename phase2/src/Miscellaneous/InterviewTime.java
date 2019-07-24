@@ -1,15 +1,17 @@
 package Miscellaneous;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class InterviewTime {
+public class InterviewTime implements Serializable {
     /**
      * The time and date for an interview.
      */
 
     // === Class variables ===
+    static final long serialVersionUID = 1L;
     // Time slots
     public static ArrayList<String> timeSlots = new ArrayList<>(Arrays.asList("9-10 am", "10-11 am", "1-2 pm", "2-3 pm",
             "3-4 pm", "4-5 pm"));

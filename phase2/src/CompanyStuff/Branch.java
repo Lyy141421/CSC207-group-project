@@ -9,6 +9,9 @@ import java.util.HashMap;
 
 public class Branch implements Serializable {
 
+    // === Class variables ===
+    static final long serialVersionUID = 1L;
+
     // === Instance variables ===
     // The name of this branch
     private String name;
@@ -56,7 +59,7 @@ public class Branch implements Serializable {
         return this.hrCoordinators;
     }
 
-    HashMap<String, ArrayList<Interviewer>> getFieldToInterviewers() {
+    public HashMap<String, ArrayList<Interviewer>> getFieldToInterviewers() {
         return this.fieldToInterviewers;
     }
 

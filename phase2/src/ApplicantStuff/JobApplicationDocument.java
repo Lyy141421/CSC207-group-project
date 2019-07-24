@@ -9,6 +9,9 @@ import java.nio.file.Paths;
 
 public class JobApplicationDocument implements Serializable {
 
+    // === Class variables ===
+    static final long serialVersionUID = 1L;
+
     // === Instance variables ===
     // The contents of this job application document
     private File file;

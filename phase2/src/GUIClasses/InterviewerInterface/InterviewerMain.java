@@ -1,136 +1,71 @@
 package GUIClasses.InterviewerInterface;
 
-import ApplicantStuff.Applicant;
-import ApplicantStuff.JobApplication;
 import CompanyStuff.Branch;
-import CompanyStuff.Company;
 import CompanyStuff.Interview;
 import CompanyStuff.Interviewer;
 import CompanyStuff.JobPostings.BranchJobPosting;
+import FileLoadingAndStoring.DataLoaderAndStorer;
+import GUIClasses.ActionListeners.LogoutActionListener;
+import GUIClasses.CommonUserGUI.UserPanel;
+import GUIClasses.CommonUserGUI.UserProfilePanel;
 import GUIClasses.MethodsTheGUICallsInInterviewer;
 import Main.JobApplicationSystem;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 
-public class InterviewerMain extends JPanel {
+public class InterviewerMain extends UserPanel {
 
-    Container contentPane;
+    // === Class variables ===
+    static String ADD_NOTES = "ADD_NOTES";
+    static String INCOMPLETE = "INCOMPLETE";
+    static String COORDINATOR = "COORDINATOR";
+
     MethodsTheGUICallsInInterviewer interviewerInterface;
-    LocalDate today;
 
-    Container mainPanel = this;
     CardLayout cardLayout = new CardLayout();
+    JPanel cards = new JPanel();
 
-    InterviewerHome homePanel;
-    InterviewerView viewIncompletePanel;
-    InterviewerViewComplete viewCompletePanel;
-    InterviewerCoordinatorView coordinatorViewPanel;
-    InterviewerSchedule schedulePanel;
-
-    private InterviewerMain (Container contentPane, MethodsTheGUICallsInInterviewer interviewerInterface, LocalDate today) {
-        this.setLayout(this.cardLayout);
-
-        this.contentPane = contentPane;
+    private InterviewerMain(MethodsTheGUICallsInInterviewer interviewerInterface, LocalDate today,
+                            LogoutActionListener logoutActionListener) {
         this.interviewerInterface = interviewerInterface;
-        this.today = today;
 
-        this.addPanels();
-        this.setActions();
+        this.setLayout(new BorderLayout());
+        this.add(new InterviewerSideBarMenuPanel(logoutActionListener), BorderLayout.WEST);
+        this.cards.setLayout(this.cardLayout);
+
+        this.addCards();
     }
 
-    private void addPanels() {
-        this.add(this.homePanel = new InterviewerHome(this, this.interviewerInterface, this.today), InterviewerPanel.HOME);
-        this.add(this.viewIncompletePanel = new InterviewerView(this, this.interviewerInterface, this.today), InterviewerPanel.INCOMPLETE);
-        //TODO: might want to combine the following two since they differ in one function only.
-        this.add(this.viewCompletePanel = new InterviewerViewComplete(this, this.interviewerInterface, this.today), InterviewerPanel.COMPLETE);
-        this.add(this.coordinatorViewPanel = new InterviewerCoordinatorView(this, this.interviewerInterface, this.today), InterviewerPanel.COORDINATOR);
-        this.add(this.schedulePanel = new InterviewerSchedule(this, this.interviewerInterface, this.today), InterviewerPanel.SCHEDULE);
-    }
-
-    private void setActions() {
-        this.setViewCompleteAction();
-        this.setViewIncompleteAction();
-        this.setViewCoordinatorAction();
-        this.setScheduleAction();
-        this.setLogoutAction();
-    }
-
-    private void setViewCompleteAction() {
-        this.homePanel.getViewCompleteButton().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                viewCompletePanel.reload();
-                cardLayout.show(mainPanel, InterviewerPanel.COMPLETE);
-            }
-        });
-    }
-
-    private void setViewIncompleteAction() {
-        this.homePanel.getViewIncompleteButton().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                viewIncompletePanel.reload();
-                cardLayout.show(mainPanel, InterviewerPanel.INCOMPLETE);
-            }
-        });
-    }
-
-    private void setViewCoordinatorAction() {
-        this.homePanel.getViewCoordinatorButton().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                coordinatorViewPanel.reload();
-                cardLayout.show(mainPanel, InterviewerPanel.COORDINATOR);
-            }
-        });
-    }
-
-    private void setScheduleAction() {
-        this.homePanel.getScheduleButton().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                schedulePanel.reload();
-                cardLayout.show(mainPanel, InterviewerPanel.SCHEDULE);
-            }
-        });
-    }
-
-    private void setLogoutAction() {
-        this.homePanel.getLogoutButton().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                //TODO: save data
-                ((CardLayout) contentPane.getLayout()).show(contentPane, "LOGIN");
-            }
-        });
+    private void addCards() {
+        cards.add(new InterviewerHomePanel(this.interviewerInterface), InterviewerMain.HOME);
+        cards.add(new UserProfilePanel(this.interviewerInterface.getInterviewer()), InterviewerMain.PROFILE);
+        cards.add(new InterviewerView(this.interviewerInterface), InterviewerMain.INCOMPLETE);
+        cards.add(new InterviewerViewComplete(this.interviewerInterface), InterviewerMain.ADD_NOTES);
+        cards.add(new InterviewerCoordinatorView(this.interviewerInterface), InterviewerMain.COORDINATOR);
+        this.add(cards, BorderLayout.CENTER);
     }
 
     public static void main(String[] args) {
+        // Must run the main method in reference panel first to instantiate the job posting, applicant and application
+
         JobApplicationSystem jobApplicationSystem = new JobApplicationSystem();
-        Applicant applicant = new Applicant("jsmith", "password", "John Smith",
-                "john_smith@gmail.com", LocalDate.of(2019, 7, 20), "L4B3Z9");
-        Company company = new Company("Company");
-        Branch branch = new Branch("Branch", "L4B3Z9", company);
-        BranchJobPosting jobPosting = new BranchJobPosting("Title", "field", "descriptionhujedk",
-                new ArrayList<>(Arrays.asList("CV", "Cover Letter", "Reference Letter")), new ArrayList<>(), 1, branch, LocalDate.of(2019, 7, 15), LocalDate.of(2019, 7, 30), LocalDate.of(2019, 8, 10));
-        new JobApplication(applicant, jobPosting, LocalDate.of(2019, 7, 21));
+        new DataLoaderAndStorer(jobApplicationSystem).loadAllData();
+        Branch branch = jobApplicationSystem.getCompanies().get(0).getBranches().get(0);
         branch.getJobPostingManager().updateJobPostingsClosedForApplications(LocalDate.of(2019, 7, 31));
         branch.getJobPostingManager().updateJobPostingsClosedForReferences(LocalDate.of(2019, 8, 11));
-        Interviewer interviewer = new Interviewer("Interviewer", "password", "Legal Name", "email", jobPosting.getBranch(), "field", LocalDate.of(2019, 7, 10));
-        jobPosting.getBranch().addInterviewer(interviewer);
+        Interviewer interviewer = new Interviewer("Interviewer", "password", "Bobby", "email", branch, "field", LocalDate.of(2019, 7, 10));
         ArrayList<String[]> interviewConfiguration = new ArrayList<>();
         interviewConfiguration.add(new String[]{Interview.ONE_ON_ONE, "Phone interview"});
+        BranchJobPosting jobPosting = branch.getJobPostingManager().getBranchJobPostings().get(0);
         jobPosting.getInterviewManager().setInterviewConfiguration(interviewConfiguration);
-        jobPosting.getInterviewManager().setUpOneOnOneInterviews();
-
+        jobPosting.getInterviewManager().setUpOneOnOneInterviews(LocalDate.of(2019, 8, 11));
+        jobApplicationSystem.setToday(LocalDate.of(2019, 8, 20));
+        LogoutActionListener logoutActionListener = new LogoutActionListener(new Container(), new CardLayout(), jobApplicationSystem);
         JFrame frame = new JFrame();
-        frame.add(new InterviewerMain(frame.getContentPane(), new MethodsTheGUICallsInInterviewer(interviewer), LocalDate.now()));
+        frame.add(new InterviewerMain(new MethodsTheGUICallsInInterviewer(jobApplicationSystem, interviewer), LocalDate.of(2019, 8, 13), logoutActionListener));
         frame.setSize(500, 500);
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

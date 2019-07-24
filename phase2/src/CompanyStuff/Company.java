@@ -14,6 +14,9 @@ import java.util.HashMap;
 
 public class Company implements Serializable {
 
+    // === Class variables ===
+    static final long serialVersionUID = 1L;
+
     // === Instance variables ===
     // The name of this company (unique)
     private String name;
