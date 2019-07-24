@@ -17,10 +17,12 @@ import java.util.HashMap;
 
 public class InterviewerViewComplete extends InterviewerView {
 
-    private String temporaryNotes = "";
+    private JTextArea notes;
 
     InterviewerViewComplete(Container contentPane, MethodsTheGUICallsInInterviewer interviewerInterface, LocalDate today) {
         super(contentPane, interviewerInterface, today);
+
+        this.createNoteTab();
     }
 
     @Override
@@ -28,7 +30,12 @@ public class InterviewerViewComplete extends InterviewerView {
         return getTitleToInterviewMap(interviewerInterface.getIncompleteInterviews(today));
     }
 
-    //TODO: add notes, save notes, advance/fail
+    //TODO: save notes, advance/fail
+
+    private void createNoteTab() {
+        this.notes = new JTextArea("Please enter interview notes");
+        this.infoPane.addTab("Notes", new JScrollPane(notes));
+    }
 /*
         this.pastInterviews = getTitleToInterviewMap(interviewerInterface.getIncompleteInterviews(today));
 

@@ -27,7 +27,7 @@ abstract class InterviewerPanel extends JPanel {
     MethodsTheGUICallsInInterviewer interviewerInterface;
     LocalDate today;
 
-    private JButton homeButton;
+    JButton homeButton;
 
     InterviewerPanel(Container contentPane, MethodsTheGUICallsInInterviewer interviewerInterface, LocalDate today) {
         this.parent = contentPane;

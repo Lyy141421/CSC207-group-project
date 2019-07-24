@@ -15,15 +15,15 @@ import java.util.HashMap;
 
 public class InterviewerView extends InterviewerPanel {
 
-    private String OVERVIEW = "Overview";
-    private String FILE = "View Files";
+    String OVERVIEW = "Overview";
+    String FILE = "View Files";
 
-    private HashMap<String, Interview> interviews;
+    HashMap<String, Interview> interviews;
 
-    private JList<String> interviewList;
-    private JTabbedPane infoPane;
-    private JTextArea overview;
-    private JPanel documentViewer;
+    JList<String> interviewList;
+    JTabbedPane infoPane;
+    JTextArea overview;
+    JPanel documentViewer;
 
     InterviewerView(Container contentPane, MethodsTheGUICallsInInterviewer interviewerInterface, LocalDate today) {
         super(contentPane, interviewerInterface, today);
@@ -47,7 +47,7 @@ public class InterviewerView extends InterviewerPanel {
         return getTitleToInterviewMap(interviewerInterface.getScheduledUpcomingInterviews());
     }
 
-    private void setInterviewList(JSplitPane splitPane) {
+    void setInterviewList(JSplitPane splitPane) {
         this.interviewList = new JList<>();
         this.interviewList.setListData(interviews.keySet().toArray(new String[interviews.size()]));
         this.interviewList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
@@ -56,7 +56,7 @@ public class InterviewerView extends InterviewerPanel {
         splitPane.setLeftComponent(new JScrollPane(this.interviewList));
     }
 
-    private void setInfoPane (JSplitPane splitDisplay) {
+    void setInfoPane (JSplitPane splitDisplay) {
         this.infoPane = new JTabbedPane();
         this.infoPane.addTab(this.OVERVIEW, makeOverviewTab("Select an interview to view overview."));
         this.documentViewer = new JPanel();
@@ -65,7 +65,7 @@ public class InterviewerView extends InterviewerPanel {
         splitDisplay.setRightComponent(this.infoPane);
     }
 
-    private JPanel createDocumentViewer(Interview interview) {
+    JPanel createDocumentViewer(Interview interview) {
         CompanyDocumentManager CDM = new CompanyDocumentManager(this.interviewerInterface.getInterviewer().getBranch().getCompany());
         //TODO: need to adapt to multiple applicant in interview
         DocumentViewer DV = new DocumentViewer(CDM.getFolderForJobApplication(selectedInterview));
@@ -73,7 +73,7 @@ public class InterviewerView extends InterviewerPanel {
         return DV;
     }
 
-    private JComponent makeOverviewTab (String text) {
+    JComponent makeOverviewTab (String text) {
         this.overview = new JTextArea(text);
         this.overview.setEditable(false);
         this.overview.setBorder(new EtchedBorder(EtchedBorder.LOWERED));
@@ -81,7 +81,7 @@ public class InterviewerView extends InterviewerPanel {
         return new JScrollPane(this.overview);
     }
 
-    private void setListSelectionListener() {
+    void setListSelectionListener() {
         this.interviewList.addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
