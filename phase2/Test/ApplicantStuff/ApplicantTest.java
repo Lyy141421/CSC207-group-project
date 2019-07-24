@@ -17,6 +17,16 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ApplicantTest {
 
+    Company company1 = new Company("Company");
+    Branch branch1A = company1.createBranch("Branch", "Toronto");
+    Branch branch1B = company1.createBranch("Branch2", "Toronto");
+    HRCoordinator hrc = new HRCoordinator("horace", "ABC", "Horace Businessman",
+            "horace@gmail.com", branch1A, LocalDate.of(2019, 7, 15));
+    Company company2 = new Company("Company2");
+    Branch branch2A = company2.createBranch("Branch2", "Toronto");
+    HRCoordinator hrc2 = new HRCoordinator("boris", "ABC", "Boris Businessman",
+            "boris@gmail.com", branch2A, LocalDate.of(2019, 7, 15));
+
     Applicant createApplicant(String name) {
         return new Applicant(name, "password", "John Smith",
                 "john_smith@gmail.com", LocalDate.of(2019, 7, 20), "Toronto");
@@ -46,36 +56,31 @@ class ApplicantTest {
     }
 
     BranchJobPosting createJobPosting() {
-        Company company = new Company("Company");
-        Branch branch = new Branch("Branch", "Toronto", company);
-        return new BranchJobPosting("Title", "field", "descriptionhujedk",
-                new ArrayList<>(Arrays.asList("CV", "Cover Letter", "Reference Letter")), new ArrayList<>(), 1, branch, LocalDate.of(2019, 7, 15), LocalDate.of(2019, 7, 30), LocalDate.of(2019, 8, 10));
+        return hrc.addJobPosting("Title", "field", "descriptionhujedk",
+                new ArrayList<>(Arrays.asList("CV", "Cover Letter", "Reference Letter")), new ArrayList<>(), 1,
+                LocalDate.of(2019, 7, 15), LocalDate.of(2019, 7, 30),
+                LocalDate.of(2019, 8, 10));
     }
 
     BranchJobPosting createJobPosting2() {
-        Company company = new Company("Company2");
-        Branch branch = new Branch("Branch2", "Toronto", company);
-        return new BranchJobPosting("Title2", "field", "descriptionhujedk",
-                new ArrayList<>(Arrays.asList("CV", "Cover Letter", "Reference Letter")), new ArrayList<>(), 1, branch, LocalDate.of(2019, 7, 15), LocalDate.of(2019, 7, 30), LocalDate.of(2019, 8, 10));
-    }
-
-    Branch createNewBranchSameCompany() {
-        Company company = this.createJobPosting().getCompany();
-        return new Branch("Branch2", "Toronto", company);
+        return hrc2.addJobPosting("Title2", "field", "descriptionhujedk",
+                new ArrayList<>(Arrays.asList("CV", "Cover Letter", "Reference Letter")), new ArrayList<>(), 1,
+                LocalDate.of(2019, 7, 15), LocalDate.of(2019, 7, 30),
+                LocalDate.of(2019, 8, 10));
     }
 
     BranchJobPosting createNewJobPostingSameBranch() {
-        Branch branch = this.createJobPosting().getBranch();
-        return new BranchJobPosting("Title2", "field", "descriptionhujedk",
-                new ArrayList<>(Arrays.asList("CV", "Cover Letter", "Reference Letter")), new ArrayList<>(), 1, branch, LocalDate.of(2019, 7, 15), LocalDate.of(2019, 7, 30), LocalDate.of(2019, 8, 10));
+        return hrc.addJobPosting("Title2", "field", "descriptionhujedk",
+                new ArrayList<>(Arrays.asList("CV", "Cover Letter", "Reference Letter")), new ArrayList<>(), 1,
+                LocalDate.of(2019, 7, 15), LocalDate.of(2019, 7, 30),
+                LocalDate.of(2019, 8, 10));
     }
 
     JobApplicationSystem createJobApplicationSystemWith2OpenJobPostings() {
         JobApplicationSystem jas = new JobApplicationSystem();
         jas.setToday(LocalDate.of(2019, 7, 28));
-        Applicant applicant = this.createApplicant("jsmith");
         Company company = jas.createCompany("Company");
-        Branch branch = new Branch("Branch", "Toronto", company);
+        Branch branch = company.createBranch("Branch", "Toronto");
         HRCoordinator hrc = new HRCoordinator("horace", "ABC", "Horace Businessman",
                 "horace@gmail.com", branch, LocalDate.of(2019, 7, 15));
         hrc.addJobPosting("Title", "field", "descriptionhujedk",
@@ -424,9 +429,9 @@ class ApplicantTest {
         Applicant applicant = this.createApplicantWithOneApplicationAndOneReference();
         Branch branch = applicant.getJobApplicationManager().getJobApplications().get(0).getJobPosting().getBranch();
 
-        assertFalse(applicant.hasAppliedToBranch(this.createJobPosting2().getBranch()));
-        assertFalse(applicant.hasAppliedToBranch(this.createNewBranchSameCompany()));
-        assertTrue(applicant.hasAppliedToBranch(branch));
+        assertFalse(applicant.hasAppliedToBranch(this.branch2A));
+        assertFalse(applicant.hasAppliedToBranch(this.branch1B));
+        assertTrue(applicant.hasAppliedToBranch(this.branch1A));
     }
 
     @Test
