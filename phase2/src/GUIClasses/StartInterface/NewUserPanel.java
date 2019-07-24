@@ -1,5 +1,7 @@
 package GUIClasses.StartInterface;
 
+import Main.JobApplicationSystem;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -16,7 +18,7 @@ public class NewUserPanel extends JPanel {
     private Container parent;
     private String newUsername;
 
-    public NewUserPanel(Container parent, CardLayout masterLayout) {
+    public NewUserPanel(Container parent, CardLayout masterLayout, JobApplicationSystem jobApplicationSystem) {
         this.parent = parent;
         this.masterLayout = masterLayout;
         this.setLayout(new GridLayout(3, 1));
@@ -37,7 +39,7 @@ public class NewUserPanel extends JPanel {
         JPanel buttons = this.buildButtons(selector.getSelector(), success);
 
         this.add(selector); this.add(forms); this.add(buttons);
-        this.BackEnd = new LoginBackend();
+        this.BackEnd = new LoginBackend(jobApplicationSystem);
     }
 
     /**
@@ -230,6 +232,6 @@ public class NewUserPanel extends JPanel {
         JFrame show = new JFrame();
         show.setVisible(true);
         show.setSize(854, 480);
-        show.add(new NewUserPanel(new Container(), new CardLayout()));
+        show.add(new NewUserPanel(new Container(), new CardLayout(), new JobApplicationSystem()));
     }
 }

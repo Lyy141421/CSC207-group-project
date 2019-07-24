@@ -30,8 +30,7 @@ public class LoginMain extends JPanel {
     public LoginMain(NewUserPanel newUserRef, Container parent, CardLayout masterLayout, JobApplicationSystem jobAppSystem) {
         this.parent = parent;
         this.masterLayout = masterLayout;
-        this.mainframe = (MainFrame)this.parent.getParent().
-                getParent().getParent();
+        this.mainframe = (MainFrame) this.parent.getParent().getParent().getParent();
         this.newUserRef = newUserRef;
         this.setLayout(null);
         this.addTextItems();
