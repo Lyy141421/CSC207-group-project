@@ -35,6 +35,8 @@ abstract class InterviewerPanel extends JPanel {
         this.today = today;
     }
 
+    abstract void reload();
+
     HashMap<String, Interview> getTitleToInterviewMap(ArrayList<Interview> interviewList) {
         HashMap<String, Interview> titleToInterviewMap = new HashMap<>();
         for (Interview interview: interviewList) {

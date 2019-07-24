@@ -39,9 +39,13 @@ public class InterviewerSchedule extends InterviewerPanel {
         this.add(this.interviewToScheduleList, BorderLayout.WEST);
     }
 
+    void reload() {
+        this.interviewToScheduleList.setListData(interviewsToBeScheduled.keySet().toArray(new String[interviewsToBeScheduled.size()]));
+    }
+
     private void setInterviewList() {
         this.interviewToScheduleList = new JList<>();
-        //TODO: content of JList
+        this.interviewToScheduleList.setListData(interviewsToBeScheduled.keySet().toArray(new String[interviewsToBeScheduled.size()]));
         this.interviewToScheduleList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
         this.interviewToScheduleList.setLayoutOrientation(JList.VERTICAL);
     }

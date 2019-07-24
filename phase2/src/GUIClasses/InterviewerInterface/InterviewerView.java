@@ -38,6 +38,11 @@ public class InterviewerView extends InterviewerPanel {
         this.setListSelectionListener();
     }
 
+    void reload() {
+        //TODO: reload display panels;
+        this.interviewList.setListData(interviews.keySet().toArray(new String[interviews.size()]));
+    }
+
     HashMap<String, Interview> getInterviewMap() {
         return getTitleToInterviewMap(interviewerInterface.getScheduledUpcomingInterviews());
     }
