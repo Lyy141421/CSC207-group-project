@@ -35,8 +35,8 @@ public class JobApplicationDocument implements Serializable {
     }
 
     // === Constructor for applicants submitting cover letter or CV from text box ===
-    JobApplicationDocument(String contents, String fileType, Applicant applicant) {
-        File folder = new File(ApplicantDocumentManager.FOLDER_PATH + "/" + applicant.getUsername());
+    JobApplicationDocument(String contents, String fileType, String username) {
+        File folder = new File(ApplicantDocumentManager.FOLDER_PATH + "/" + username);
         String filePath = folder.getPath() + "/" + fileType + ".txt";
         if (Paths.get(filePath).toFile().exists()) {
             filePath = this.getNewFilePath(filePath);
@@ -69,12 +69,6 @@ public class JobApplicationDocument implements Serializable {
     // ============================================================================================================== //
     // === Package-private methods ===
 
-    // === Setters ===
-    void setFile(File newFile) {
-        this.file = newFile;
-    }
-
-
     // === Private methods ===
 
     /**
@@ -85,12 +79,14 @@ public class JobApplicationDocument implements Serializable {
      * @param contents The contents of this file.
      * @return the new file created.
      */
-    private File createNewFile(String filePath, String contents) {
+    // TODO make private after testing
+    File createNewFile(String filePath, String contents) {
         File newFile = new File(filePath);
         try {
             newFile.createNewFile();
             PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(filePath)));
-            out.println(contents);
+            out.print(contents);
+            out.close();
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -103,7 +99,8 @@ public class JobApplicationDocument implements Serializable {
      * @param filePath The file path being stripped.
      * @return an array of the filename (without extension) and the extension,
      */
-    private String[] separateExtension(String filePath) {
+    // TODO make private after testing
+    String[] separateExtension(String filePath) {
         int indexOfLastDot = filePath.lastIndexOf(".");
         return new String[]{filePath.substring(0, indexOfLastDot), filePath.substring(indexOfLastDot)};
     }
@@ -113,7 +110,8 @@ public class JobApplicationDocument implements Serializable {
      *
      * @param oldFilePath The file path to be replaced.
      */
-    private String getNewFilePath(String oldFilePath) {
+    // TODO make private after testing
+    String getNewFilePath(String oldFilePath) {
         String[] fileNameAndExtension = this.separateExtension(oldFilePath);
         int i = 1;
         String newFilePath = fileNameAndExtension[0] + "(" + i + ")" + fileNameAndExtension[1];

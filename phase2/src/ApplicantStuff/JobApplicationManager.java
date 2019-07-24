@@ -9,7 +9,6 @@ import Miscellaneous.CloseDateComparator;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Observable;
 
 import static java.time.temporal.ChronoUnit.DAYS;
 
@@ -17,12 +16,12 @@ public class JobApplicationManager implements Serializable {
 
     // === Class variables ===
     static final long serialVersionUID = 1L;
+    // Number of days before an interview when the interview is considered "upcoming"
+    private static final int UPCOMING_DAYS = 7;
 
     // === Instance variables ===
     // List of job applications submitted sorted chronologically by close date
     private ArrayList<JobApplication> jobApplications = new ArrayList<>();
-    // Number of days before an interview when the interview is considered "upcoming"
-    private static final int upcomingDays = 7;
 
     // === Public methods ===
 
@@ -60,7 +59,7 @@ public class JobApplicationManager implements Serializable {
     /**
      * Get the list of interviews considered "upcoming" for this applicant.
      *
-     * @return the list of interviews considered "upcoming" for this applicant, based on upcomingDays.
+     * @return the list of interviews considered "upcoming" for this applicant, based on UPCOMING_DAYS.
      */
     public ArrayList<Interview> getUpcomingInterviews(LocalDate today) {
         ArrayList<Interview> upcomingInterviews = new ArrayList<>();
@@ -71,7 +70,7 @@ public class JobApplicationManager implements Serializable {
                 }
                 LocalDate interviewDate = interview.getTime().getDate();
                 if (interviewDate.isEqual(today) || (interviewDate.isAfter(today) &&
-                        today.plusDays(upcomingDays + 1).isAfter(interviewDate))) {
+                        today.plusDays(UPCOMING_DAYS + 1).isAfter(interviewDate))) {
                     upcomingInterviews.add(interview);
                 }
             }
