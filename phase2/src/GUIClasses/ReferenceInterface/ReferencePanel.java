@@ -23,6 +23,7 @@ import java.util.Arrays;
 public class ReferencePanel extends JPanel {
 
     // === Instance variables ===
+    private Container contentPane;
     private Reference reference;
     private JPanel cards = new JPanel(new CardLayout());
     public static final String HOME = "Home";
@@ -32,7 +33,8 @@ public class ReferencePanel extends JPanel {
     public static final String SUCCESSFUL_SUBMISSION = "Successful Submission";
 
     // === Constructor ===
-    ReferencePanel(Reference reference, JobApplicationSystem jobApplicationSystem) {
+    ReferencePanel(Container contentPane, Reference reference, JobApplicationSystem jobApplicationSystem) {
+        this.contentPane = contentPane;
         this.reference = reference;
         this.setLayout(new BorderLayout());
         this.add(new ReferenceSideBarMenuPanel(jobApplicationSystem), BorderLayout.WEST);

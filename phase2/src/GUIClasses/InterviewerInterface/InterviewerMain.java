@@ -1,12 +1,22 @@
 package GUIClasses.InterviewerInterface;
 
+import ApplicantStuff.Applicant;
+import ApplicantStuff.JobApplication;
+import CompanyStuff.Branch;
+import CompanyStuff.Company;
+import CompanyStuff.Interview;
+import CompanyStuff.Interviewer;
+import CompanyStuff.JobPostings.BranchJobPosting;
 import GUIClasses.MethodsTheGUICallsInInterviewer;
+import Main.JobApplicationSystem;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class InterviewerMain extends JPanel {
 
@@ -99,5 +109,30 @@ public class InterviewerMain extends JPanel {
                 ((CardLayout) contentPane.getLayout()).show(contentPane, "LOGIN");
             }
         });
+    }
+
+    public static void main(String[] args) {
+        JobApplicationSystem jobApplicationSystem = new JobApplicationSystem();
+        Applicant applicant = new Applicant("jsmith", "password", "John Smith",
+                "john_smith@gmail.com", LocalDate.of(2019, 7, 20), "L4B3Z9");
+        Company company = new Company("Company");
+        Branch branch = new Branch("Branch", "L4B3Z9", company);
+        BranchJobPosting jobPosting = new BranchJobPosting("Title", "field", "descriptionhujedk",
+                new ArrayList<>(Arrays.asList("CV", "Cover Letter", "Reference Letter")), new ArrayList<>(), 1, branch, LocalDate.of(2019, 7, 15), LocalDate.of(2019, 7, 30), LocalDate.of(2019, 8, 10));
+        new JobApplication(applicant, jobPosting, LocalDate.of(2019, 7, 21));
+        branch.getJobPostingManager().updateJobPostingsClosedForApplications(LocalDate.of(2019, 7, 31));
+        branch.getJobPostingManager().updateJobPostingsClosedForReferences(LocalDate.of(2019, 8, 11));
+        Interviewer interviewer = new Interviewer("Interviewer", "password", "Legal Name", "email", jobPosting.getBranch(), "field", LocalDate.of(2019, 7, 10));
+        jobPosting.getBranch().addInterviewer(interviewer);
+        ArrayList<String[]> interviewConfiguration = new ArrayList<>();
+        interviewConfiguration.add(new String[]{Interview.ONE_ON_ONE, "Phone interview"});
+        jobPosting.getInterviewManager().setInterviewConfiguration(interviewConfiguration);
+        jobPosting.getInterviewManager().setUpOneOnOneInterviews();
+
+        JFrame frame = new JFrame();
+        frame.add(new InterviewerMain(frame.getContentPane(), new MethodsTheGUICallsInInterviewer(interviewer), LocalDate.now()));
+        frame.setSize(500, 500);
+        frame.setVisible(true);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 }

@@ -15,7 +15,7 @@ public class MethodsTheGUICallsInInterviewer {
 
     private Interviewer interviewer;
 
-    MethodsTheGUICallsInInterviewer(Interviewer interviewer) {
+    public MethodsTheGUICallsInInterviewer(Interviewer interviewer) {
         this.interviewer = interviewer;
     }
 
@@ -29,8 +29,18 @@ public class MethodsTheGUICallsInInterviewer {
      * @param today Today's date.
      * @return a list of interviews that are incomplete.
      */
-    public ArrayList<Interview> getIncompleteInterviews(LocalDate today) {
+    public ArrayList<Interview> getAllIncompleteInterviews(LocalDate today) {
         return this.interviewer.getIncompleteInterviews(today);
+    }
+
+    /**
+     * Get a list of interviews that are incomplete for which this interviewer is a coordinator.
+     *
+     * @param today Today's date.
+     * @return a list of interviews that are incomplete for which this interviewer is a coordinator.
+     */
+    public ArrayList<Interview> getIncompleteInterviewsAsCoordinator(LocalDate today) {
+        return this.interviewer.getIncompleteInterviewsAsCoordinator(today);
     }
 
     /**
@@ -87,7 +97,7 @@ public class MethodsTheGUICallsInInterviewer {
      * @param timeSlot  The time slot chosen.
      * @return true iff this interview can be scheduled on this date and at this time.
      */
-    boolean scheduleInterview(Interview interview, LocalDate date, int timeSlot) {
+    public boolean scheduleInterview(Interview interview, LocalDate date, int timeSlot) {
         InterviewTime interviewTime = new InterviewTime(date, timeSlot);
         if (interviewer.isAvailable(interviewTime)) {
             interview.setTime(interviewTime);

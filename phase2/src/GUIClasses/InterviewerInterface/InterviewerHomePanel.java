@@ -4,6 +4,7 @@ import CompanyStuff.Branch;
 import CompanyStuff.Company;
 import CompanyStuff.Interview;
 import CompanyStuff.Interviewer;
+import GUIClasses.MethodsTheGUICallsInInterviewer;
 import Main.JobApplicationSystem;
 import GUIClasses.CommonUserGUI.FrequentlyUsedMethods;
 
@@ -12,15 +13,12 @@ import java.awt.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-public class InterviewerHomePanel extends JPanel {
+public class InterviewerHomePanel extends InterviewerPanel {
 
     // === Instance variables ===
-    private Interviewer interviewer;
-    private JobApplicationSystem jobAppSystem;
 
-    InterviewerHomePanel(Interviewer interviewer, JobApplicationSystem jobAppSystem) {
-        this.interviewer = interviewer;
-        this.jobAppSystem = jobAppSystem;
+    InterviewerHomePanel(Container contentPane, MethodsTheGUICallsInInterviewer interviewerInterface, LocalDate today) {
+        super(contentPane, interviewerInterface, today);
 
         this.setLayout(new BorderLayout());
         this.add(this.createWelcomePanel(), BorderLayout.BEFORE_FIRST_LINE);
@@ -37,7 +35,7 @@ public class InterviewerHomePanel extends JPanel {
 
     private JPanel createWelcomePanel() {
         JPanel welcomePanel = new JPanel();
-        JLabel welcomeMessage = new JLabel("Welcome " + this.interviewer.getLegalName());
+        JLabel welcomeMessage = new JLabel("Welcome " + this.interviewerInterface.getInterviewer().getLegalName());
         welcomeMessage.setFont(new Font("Century Gothic", Font.BOLD, 20));
         welcomePanel.add(welcomeMessage);
         welcomeMessage.setHorizontalAlignment(JLabel.CENTER);
@@ -69,7 +67,7 @@ public class InterviewerHomePanel extends JPanel {
     }
 
     private JPanel createInterviewsToScheduleTablePanel() {
-        ArrayList<Interview> unscheduledInterviews = this.interviewer.getUnscheduledInterviews();
+        ArrayList<Interview> unscheduledInterviews = this.interviewerInterface.getInterviewsThatNeedScheduling();
         Object[][] data = new Object[unscheduledInterviews.size()][];
 
         for (int i = 0; i < unscheduledInterviews.size(); i++) {
@@ -89,7 +87,7 @@ public class InterviewerHomePanel extends JPanel {
     }
 
     private JPanel createScheduleTablePanel() {
-        ArrayList<Interview> scheduledInterviews = this.interviewer.getScheduledUpcomingInterviews(jobAppSystem.getToday());
+        ArrayList<Interview> scheduledInterviews = this.interviewerInterface.getScheduledUpcomingInterviews(this.today);
         Object[][] data = new Object[scheduledInterviews.size()][];
 
         for (int i = 0; i < scheduledInterviews.size(); i++) {
@@ -109,7 +107,7 @@ public class InterviewerHomePanel extends JPanel {
     }
 
     private JPanel createIncompleteInterviewsTablePanel() {
-        ArrayList<Interview> incompleteInterviews = this.interviewer.getIncompleteInterviews(jobAppSystem.getToday());
+        ArrayList<Interview> incompleteInterviews = this.interviewerInterface.getIncompleteInterviewsAsCoordinator(this.today);
         Object[][] data = new Object[incompleteInterviews.size()][];
 
         for (int i = 0; i < incompleteInterviews.size(); i++) {
@@ -129,8 +127,8 @@ public class InterviewerHomePanel extends JPanel {
         branch.setCompany(company);
         company.addBranch(branch);
         Interviewer interviewer = jobApplicationSystem.getUserManager().createInterviewer("username", "password", "Legal Name", "email@gmail.com", branch, "Field", LocalDate.now());
-
-        JPanel panel = new InterviewerHomePanel(interviewer, jobApplicationSystem);
+        MethodsTheGUICallsInInterviewer interviewerInterface = new MethodsTheGUICallsInInterviewer(interviewer);
+        JPanel panel = new InterviewerHomePanel(frame.getContentPane(), interviewerInterface, jobApplicationSystem.getToday());
         frame.add(panel);
         frame.setSize(800, 600);
         frame.setVisible(true);

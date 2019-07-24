@@ -1,5 +1,6 @@
 package GUIClasses.InterviewerInterface;
 
+import ApplicantStuff.JobApplication;
 import CompanyStuff.Interview;
 import DocumentManagers.CompanyDocumentManager;
 import GUIClasses.CommonUserGUI.DocumentViewer;
@@ -21,6 +22,8 @@ public class InterviewerView extends InterviewerPanel {
     JTabbedPane infoPane;
     JTextArea overview;
     JPanel documentViewer;
+    JobApplication jobAppSelected;
+    JList applicantList;
 
     InterviewerView(Container contentPane, MethodsTheGUICallsInInterviewer interviewerInterface, LocalDate today) {
         super(contentPane, interviewerInterface, today);
@@ -41,7 +44,7 @@ public class InterviewerView extends InterviewerPanel {
     }
 
     HashMap<String, Interview> getInterviewMap() {
-        return getTitleToInterviewMap(interviewerInterface.getScheduledUpcomingInterviews());
+        return getTitleToInterviewMap(interviewerInterface.getScheduledUpcomingInterviews(today));
     }
 
     void setInterviewList(JSplitPane splitPane) {
@@ -62,12 +65,33 @@ public class InterviewerView extends InterviewerPanel {
         splitDisplay.setRightComponent(this.infoPane);
     }
 
-    JPanel createDocumentViewer(Interview interview) {
-        CompanyDocumentManager CDM = new CompanyDocumentManager(this.interviewerInterface.getInterviewer().getBranch().getCompany());
-        //TODO: need to adapt to multiple applicant in interview
-        DocumentViewer DV = new DocumentViewer(CDM.getFolderForJobApplication(selectedInterview));
+    JPanel createDocumentViewer() {
+        CompanyDocumentManager cdm = new CompanyDocumentManager(this.interviewerInterface.getInterviewer().getBranch().getCompany());
+        return new DocumentViewer(cdm.getFolderForJobApplication(jobAppSelected));
+    }
 
-        return DV;
+    JPanel createApplicantListPanel(Interview interview) {
+        JPanel applicantListPanel = new JPanel();
+        DefaultListModel listModel = new DefaultListModel();
+        for (JobApplication jobApp : interview.getJobApplications()) {
+            listModel.addElement(jobApp.getApplicant().getLegalName());
+        }
+        applicantList = new JList(listModel);
+        applicantList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        applicantList.setSelectedIndex(-1);
+        applicantList.setLayoutOrientation(JList.VERTICAL);
+        applicantList.addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                if (!e.getValueIsAdjusting()) {
+                    if (applicantList.getSelectedIndex() != -1) {
+                        jobAppSelected = interview.getJobApplications().get(applicantList.getSelectedIndex());
+                    }
+                }
+            }
+        });
+        applicantListPanel.add(applicantList);
+        return applicantListPanel;
     }
 
     JComponent makeOverviewTab (String text) {
@@ -86,8 +110,8 @@ public class InterviewerView extends InterviewerPanel {
                 Interview selectedInterview = interviews.get(selectedTitle);
                 overview.setText(selectedInterview.toString());
                 documentViewer.removeAll();
-                //TODO: adapt this to multiple applications under one interview
-                documentViewer.add(createDocumentViewer(selectedInterview.getJobApplications()));
+                documentViewer.add(createApplicantListPanel(selectedInterview));
+                documentViewer.add(createDocumentViewer());
             }
         });
     }

@@ -15,9 +15,7 @@ public class InterviewerCoordinatorView extends InterviewerViewComplete{
 
     @Override
     HashMap<String, Interview> getInterviewMap() {
-        //TODO: might want to change the arrayList retrieved here to specifically interviews where this
-        // interviewer is the coordinator.
-        return getTitleToInterviewMap(interviewerInterface.getIncompleteInterviews(today));
+        return getTitleToInterviewMap(interviewerInterface.getIncompleteInterviewsAsCoordinator(today));
     }
 
     //TODO: pass/fail. Refer to HRInterface.SelectionFrame(in progress)

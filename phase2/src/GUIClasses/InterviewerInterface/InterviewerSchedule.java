@@ -1,8 +1,8 @@
 package GUIClasses.InterviewerInterface;
 
-import ApplicantStuff.JobApplication;
 import CompanyStuff.Interview;
 import GUIClasses.MethodsTheGUICallsInInterviewer;
+import Miscellaneous.InterviewTime;
 import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
 import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
 import net.sourceforge.jdatepicker.impl.UtilDateModel;
@@ -16,7 +16,6 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.HashMap;
 
 public class InterviewerSchedule extends InterviewerPanel {
 
@@ -49,8 +48,7 @@ public class InterviewerSchedule extends InterviewerPanel {
 
     private void createSetTimePanel() {
         JPanel setTime = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        JComboBox<String> timeSlot = new JComboBox<>(new String[]{"9-10 am", "10-11 am", "1-2 pm", "2-3 pm", "3-4 pm",
-                "4-5 pm"});
+        JComboBox<String> timeSlot = new JComboBox<>(InterviewTime.timeSlots.toArray(new String[InterviewTime.timeSlots.size()]));
         UtilDateModel dateModel = new UtilDateModel();
         JDatePanelImpl datePanel = new JDatePanelImpl(dateModel);
         JDatePickerImpl interviewDate = new JDatePickerImpl(datePanel);

@@ -4,15 +4,10 @@ import CompanyStuff.Interview;
 import GUIClasses.MethodsTheGUICallsInInterviewer;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class InterviewerViewComplete extends InterviewerView {
@@ -28,7 +23,7 @@ public class InterviewerViewComplete extends InterviewerView {
 
     @Override
     HashMap<String, Interview> getInterviewMap() {
-        return getTitleToInterviewMap(interviewerInterface.getIncompleteInterviews(today));
+        return getTitleToInterviewMap(interviewerInterface.getAllIncompleteInterviews(today));
     }
 
     void createNoteTab() {
@@ -49,8 +44,9 @@ public class InterviewerViewComplete extends InterviewerView {
 
         return saveButton;
     }
+
 /*
-        this.pastInterviews = getTitleToInterviewMap(interviewerInterface.getIncompleteInterviews(today));
+        this.pastInterviews = getTitleToInterviewMap(interviewerInterface.getAllIncompleteInterviews(today));
 
         this.setLayout(new BorderLayout());
         JPanel select = new JPanel();

@@ -179,7 +179,7 @@ public class Interviewer extends User {
 
     /**
      * Get a list of incomplete interviews for this interviewer.
-     *
+     * @param today Today's date.
      * @return a list of incomplete interviews for this interviewer.
      */
     public ArrayList<Interview> getIncompleteInterviews(LocalDate today) {
@@ -190,6 +190,22 @@ public class Interviewer extends User {
             }
         }
         return incompleteInterviews;
+    }
+
+    /**
+     * Get a list of incomplete interviews for which this interviewer is a coordinator.
+     *
+     * @param today Today's date.
+     * @return a list fo incomplete interviews for which this interviewer is a coordinator.
+     */
+    public ArrayList<Interview> getIncompleteInterviewsAsCoordinator(LocalDate today) {
+        ArrayList<Interview> interviews = new ArrayList<>();
+        for (Interview interview : this.getIncompleteInterviews(today)) {
+            if (interview.getInterviewCoordinator().equals(this)) {
+                interviews.add(interview);
+            }
+        }
+        return interviews;
     }
 
     /**

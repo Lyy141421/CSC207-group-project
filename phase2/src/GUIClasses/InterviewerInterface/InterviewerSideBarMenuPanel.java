@@ -21,39 +21,18 @@ public class InterviewerSideBarMenuPanel extends JPanel {
 
     // === Instance variables ===
     private JobApplicationSystem jobAppSystem;
+    private Container contentPane;
 
     // === Constructor ===
-    InterviewerSideBarMenuPanel(JobApplicationSystem jobAppSystem) {
+    InterviewerSideBarMenuPanel(JobApplicationSystem jobAppSystem, Container contentPane) {
         this.jobAppSystem = jobAppSystem;
+        this.contentPane = contentPane;
 
         TreeMap<String, Object> fullMenu = this.createFullMenu();
         this.setLayout(new BorderLayout());
         this.add(new SideBarMenu(fullMenu, CELL_WIDTH, CELL_HEIGHT).createMenuBar());
         this.setSize(CELL_WIDTH, CELL_HEIGHT * NUM_MAIN_MENU_OPTIONS);
     }
-
-
-//    /**
-//     * Create the map for the full job postings sub menu.
-//     *
-//     * @return the map for the full job postings sub menu.
-//     */
-//    private TreeMap<String, Object> viewIntervieweesMenu() {
-//        TreeMap<String, Object> viewIntervieweesMenu = new TreeMap<>();
-//        viewIntervieweesMenu.put("1. Search Interview", new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//
-//            }
-//        });
-//        viewIntervieweesMenu.put("2. View All Interviews", new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//
-//            }
-//        });
-//        return viewIntervieweesMenu;
-//    }
 
     /**
      * Create the map for the full menu.
@@ -81,7 +60,7 @@ public class InterviewerSideBarMenuPanel extends JPanel {
 
             }
         });
-        fullMenu.put("6. Logout", new LogoutActionListener(jobAppSystem));
+        fullMenu.put("6. Logout", new LogoutActionListener(jobAppSystem, contentPane));
         return fullMenu;
     }
 
@@ -97,7 +76,7 @@ public class InterviewerSideBarMenuPanel extends JPanel {
 
                 JPanel menuPanel = new JPanel();
                 menuPanel.setBackground(Color.WHITE); // contrasting bg
-                menuPanel.add(new InterviewerSideBarMenuPanel(jobAppSystem));
+                menuPanel.add(new InterviewerSideBarMenuPanel(jobAppSystem, frame.getContentPane()));
 
                 Container contentPane = frame.getContentPane();
                 contentPane.setBackground(Color.WHITE); //contrasting bg
