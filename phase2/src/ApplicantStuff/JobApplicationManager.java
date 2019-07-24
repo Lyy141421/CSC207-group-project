@@ -13,7 +13,7 @@ import java.util.Observable;
 
 import static java.time.temporal.ChronoUnit.DAYS;
 
-public class JobApplicationManager extends Observable implements Serializable {
+public class JobApplicationManager implements Serializable {
 
     // === Class variables ===
     static final long serialVersionUID = 1L;
