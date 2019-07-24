@@ -8,7 +8,6 @@ import DocumentManagers.DocumentManagerFactory;
 import CompanyStuff.JobPostings.BranchJobPostingManager;
 import Main.JobApplicationSystem;
 import Main.User;
-import NotificationSystem.Observable;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -24,7 +23,7 @@ public class Applicant extends User {
 
     // === Instance variables ===
     // The Census Metropolitan Area or Census Agglomeration that this applicant is assumed to be closest to
-    private String CMA;
+    private String cma;
     // The applicant's job application manager
     private JobApplicationManager jobApplicationManager;
     // The applicant's document manager
@@ -34,16 +33,16 @@ public class Applicant extends User {
     // === Constructors ===
 
     public Applicant(String username, String password, String legalName, String email, LocalDate dateCreated,
-                     String CMA) {
+                     String cma) {
         super(username, password, legalName, email, dateCreated);
-        this.CMA = CMA;
+        this.cma = cma;
         this.jobApplicationManager = new JobApplicationManager();
         this.documentManager = new DocumentManagerFactory().getApplicantDocumentManager(this);
     }
 
     // === Getters ===
-    public String getCMA() {
-        return this.CMA;
+    public String getCma() {
+        return this.cma;
     }
 
     public JobApplicationManager getJobApplicationManager() {
@@ -140,7 +139,7 @@ public class Applicant extends User {
 
     @Override
     public String[] getDisplayedProfileInformation() {
-        return new String[]{"Applicant", this.getUsername(), this.getLegalName(), this.getEmail(), this.getCMA(),
+        return new String[]{"Applicant", this.getUsername(), this.getLegalName(), this.getEmail(), this.getCma(),
                 this.getDateCreated().toString()};
     }
 }

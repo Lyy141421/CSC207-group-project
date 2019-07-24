@@ -90,8 +90,8 @@ class ApplicantTest {
     @Test
     void testConstructor() {
         Applicant applicant = this.createApplicant("jsmith");
-        assertEquals("L4B3Z9", applicant.getCMA());
-        assertNotEquals("l4b3z9", applicant.getCMA());  // TODO Does capitalization count?
+        assertEquals("L4B3Z9", applicant.getCma());
+        assertNotEquals("l4b3z9", applicant.getCma());  // TODO Does capitalization count?
         assertNotNull(applicant.getJobApplicationManager());
         assertTrue(applicant.getJobApplicationManager() instanceof JobApplicationManager);
         assertTrue(applicant.getJobApplicationManager().getJobApplications().isEmpty());
