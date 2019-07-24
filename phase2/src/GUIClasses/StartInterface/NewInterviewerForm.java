@@ -28,6 +28,8 @@ class NewInterviewerForm extends JPanel {
         intCompanyEntry.setBounds(437, 112, 150, 30);
         this.add(intCompanyEntry);
 
+        // TODO how to handle branch?
+
         JTextField intNameEntry = new JTextField();
         intNameEntry.setName("name");
         intNameEntry.setBounds(437, 43, 150, 30);

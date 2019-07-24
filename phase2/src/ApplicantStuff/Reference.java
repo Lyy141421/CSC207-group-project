@@ -8,6 +8,9 @@ import java.util.ArrayList;
 
 public class Reference extends User {
 
+    // === Class variables ===
+    static final long serialVersionUID = 1L;
+
     // === Instance variables ===
     // The job applications that need references from this referee
     private ArrayList<JobApplication> jobAppsForReference;

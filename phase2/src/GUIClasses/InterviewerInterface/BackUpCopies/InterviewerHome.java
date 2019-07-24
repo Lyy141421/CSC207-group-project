@@ -11,7 +11,7 @@ public class InterviewerHome extends InterviewerPanel {
     JButton viewCompleteButton;
     JButton viewIncompleteButton;
     JButton viewCoordinatorButton;
-    JButton scheduleButton;
+//    JButton scheduleButton;
     JButton logoutButton;
 
     InterviewerHome(Container contentPane, MethodsTheGUICallsInInterviewer interviewerInterface, LocalDate today) {
@@ -23,14 +23,14 @@ public class InterviewerHome extends InterviewerPanel {
         this.viewCompleteButton = new JButton("View completed interviews");
         this.viewIncompleteButton = new JButton("View future interviews");
         this.viewCoordinatorButton = new JButton("View interviews as coordinator");
-        this.scheduleButton = new JButton("Schedule interview");
+//        this.scheduleButton = new JButton("Schedule interview");
         this.logoutButton = new JButton("Logout");
         //TODO: actionListeners
 
         this.add(viewCompleteButton);
         this.add(viewIncompleteButton);
         this.add(viewCoordinatorButton);
-        this.add(scheduleButton);
+//        this.add(scheduleButton);
         this.add(logoutButton);
     }
 
@@ -50,9 +50,9 @@ public class InterviewerHome extends InterviewerPanel {
         return this.viewCoordinatorButton;
     }
 
-    JButton getScheduleButton() {
-        return this.scheduleButton;
-    }
+//    JButton getScheduleButton() {
+//        return this.scheduleButton;
+//    }
 
     JButton getLogoutButton() {
         return this.logoutButton;

@@ -65,7 +65,7 @@ public class CompanyDocumentManager extends DocumentManager {
         File branchFolder = new File(this.getFolder().getPath() + "/" + branch.getName());
         File jobPostingFolder = new File(branchFolder.getPath() + "/" + branchJobPosting.getId() + "_" +
                 branchJobPosting.getTitle());
-        jobPostingFolder.mkdir();
+        jobPostingFolder.mkdirs();
         try {
             jobPostingFolder.createNewFile();
         } catch (IOException ex) {
@@ -97,7 +97,7 @@ public class CompanyDocumentManager extends DocumentManager {
     private File createApplicationFolder(File jobPostingFolder, JobApplication jobApp) {
         Applicant applicant = jobApp.getApplicant();
         File applicationFolder = new File(jobPostingFolder.getPath() + "/" + applicant.getUsername());
-        applicationFolder.mkdir();
+        applicationFolder.mkdirs();
         try {
             applicationFolder.createNewFile();
         } catch (IOException ex) {

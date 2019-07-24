@@ -14,6 +14,9 @@ public class HRCoordinator extends User {
      * An account for an HR Coordinator.
      */
 
+    // === Class variables ===
+    static final long serialVersionUID = 1L;
+
     // === Instance variables ===
     // The branch that this HR Coordinator works for
     private Branch branch;
@@ -116,27 +119,8 @@ public class HRCoordinator extends User {
                 return false;
             }
         }
-        // TODO notify applicants and interviewers of the scheduled interview time
         interview.setTime(time);
         return true;
-    }
-
-    // HR Coordinator class
-    /*    */
-
-    /**
-     * Get the task that the HR Coordinator must accomplish for this job posting.
-     *
-     * @param jobPosting The job posting in question.
-     * @param today      Today's date.
-     * @return an integer that represents the task that the HR Coordinator must accomplish for this job posting.
-     */
-    int getTask(BranchJobPosting jobPosting, LocalDate today) {
-        if (this.branch.getJobPostingManager().getJobPostingsRecentlyClosedForApplications(today).contains(jobPosting)) {
-            return InterviewManager.SELECT_APPS_FOR_FIRST_ROUND;
-        } else {
-            return jobPosting.getInterviewManager().getHrTask();
-        }
     }
 
     @Override

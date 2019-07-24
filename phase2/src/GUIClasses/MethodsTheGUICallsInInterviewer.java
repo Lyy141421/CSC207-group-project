@@ -3,9 +3,9 @@ package GUIClasses;
 import ApplicantStuff.JobApplication;
 import CompanyStuff.Interview;
 import CompanyStuff.Interviewer;
-import Miscellaneous.InterviewTime;
+import Main.JobApplicationSystem;
 
-import java.time.LocalDate;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -14,9 +14,11 @@ public class MethodsTheGUICallsInInterviewer {
     // InterviewerInterface class
 
     private Interviewer interviewer;
+    private JobApplicationSystem jobAppSystem;
 
-    MethodsTheGUICallsInInterviewer(Interviewer interviewer) {
+    public MethodsTheGUICallsInInterviewer(JobApplicationSystem jobAppSystem, Interviewer interviewer) {
         this.interviewer = interviewer;
+        this.jobAppSystem = jobAppSystem;
     }
 
     public Interviewer getInterviewer() {
@@ -26,29 +28,45 @@ public class MethodsTheGUICallsInInterviewer {
     /**
      * Get a list of interviews that are incomplete.
      *
-     * @param today Today's date.
      * @return a list of interviews that are incomplete.
      */
-    public ArrayList<Interview> getIncompleteInterviews(LocalDate today) {
-        return this.interviewer.getIncompleteInterviews(today);
+    public ArrayList<Interview> getAllIncompleteInterviews() {
+        return this.interviewer.getAllIncompleteInterviews();
+    }
+
+    public ArrayList<Interview> getIncompleteInterviewsAlreadyOccurredNotCoordinator() {
+        return this.interviewer.getIncompleteInterviewsAlreadyOccurredNotAsCoordinator(this.jobAppSystem.getToday());
+    }
+
+    public File getFolderForJobApplication(JobApplication jobApp) {
+        return this.interviewer.getBranch().getCompany().getDocumentManager().getFolderForJobApplication(jobApp);
     }
 
     /**
-     * Get a list of interviews that need scheduling.
+     * Get a list of interviews that are incomplete for which this interviewer is a coordinator.
      *
-     * @return a list of interviews that need scheduling.
+     * @return a list of interviews that are incomplete for which this interviewer is a coordinator.
      */
-    public ArrayList<Interview> getInterviewsThatNeedScheduling() {
-        return this.interviewer.getUnscheduledInterviews();
+    public ArrayList<Interview> getIncompleteInterviewsAlreadyOccurredAsCoordinator() {
+        return this.interviewer.getIncompleteInterviewsAlreadyOccuredAsCoordinator(this.jobAppSystem.getToday());
     }
+
+//    /**
+//     * Get a list of interviews that need scheduling.
+//     *
+//     * @return a list of interviews that need scheduling.
+//     */
+//    public ArrayList<Interview> getInterviewsThatNeedScheduling() {
+//        return this.interviewer.getUnscheduledInterviews();
+//    }
 
     /**
      * Get a list of upcoming interviews.
      *
      * @return a list of upcoming interviews.
      */
-    public ArrayList<Interview> getScheduledUpcomingInterviews(LocalDate today) {
-        return this.interviewer.getScheduledUpcomingInterviews(today);
+    public ArrayList<Interview> getScheduledUpcomingInterviews() {
+        return this.interviewer.getScheduledUpcomingInterviews(this.jobAppSystem.getToday());
     }
 
     /**
@@ -79,22 +97,29 @@ public class MethodsTheGUICallsInInterviewer {
         }
     }
 
-    /**
-     * Schedule this one-on-one interview on this date and time slot.
-     *
-     * @param interview The interview to be scheduled.
-     * @param date      The date chosen.
-     * @param timeSlot  The time slot chosen.
-     * @return true iff this interview can be scheduled on this date and at this time.
-     */
-    boolean scheduleInterview(Interview interview, LocalDate date, int timeSlot) {
-        InterviewTime interviewTime = new InterviewTime(date, timeSlot);
-        if (interviewer.isAvailable(interviewTime)) {
-            interview.setTime(interviewTime);
-            return true;
-        } else {
-            return false;
-        }
-
+    public HashMap<Interviewer, String> getInterviewerToNotes(Interview interview) {
+        HashMap<Interviewer, String> interviewerToNotes = new HashMap<>();
+        interviewerToNotes.putAll(interview.getInterviewCoordinatorToNotes());
+        interviewerToNotes.putAll(interview.getOtherInterviewersToNotes());
+        return interviewerToNotes;
     }
+
+//    /**
+//     * Schedule this one-on-one interview on this date and time slot.
+//     *
+//     * @param interview The interview to be scheduled.
+//     * @param date      The date chosen.
+//     * @param timeSlot  The time slot chosen.
+//     * @return true iff this interview can be scheduled on this date and at this time.
+//     */
+//    public boolean scheduleInterview(Interview interview, LocalDate date, int timeSlot) {
+//        InterviewTime interviewTime = new InterviewTime(date, timeSlot);
+//        if (interviewer.isAvailable(interviewTime)) {
+//            interview.setTime(interviewTime);
+//            return true;
+//        } else {
+//            return false;
+//        }
+//
+//    }
 }

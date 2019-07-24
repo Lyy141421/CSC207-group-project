@@ -1,9 +1,9 @@
 package GUIClasses.ReferenceInterface;
 
-import ActionListeners.CardLayoutPanelGetter;
-import ActionListeners.LogoutActionListener;
-import ActionListeners.ProfileActionListener;
-import ActionListeners.ReturnHomeActionListener;
+import GUIClasses.ActionListeners.CardLayoutPanelGetter;
+import GUIClasses.ActionListeners.LogoutActionListener;
+import GUIClasses.ActionListeners.ProfileActionListener;
+import GUIClasses.ActionListeners.ReturnHomeActionListener;
 import Main.JobApplicationSystem;
 import GUIClasses.CommonUserGUI.SideBarMenu;
 
@@ -21,13 +21,12 @@ class ReferenceSideBarMenuPanel extends JPanel {
     private static int NUM_MAIN_MENU_OPTIONS = 4;
 
     // === Instance variable ===
-    // The job application system being used
-    private JobApplicationSystem jobApplicationSystem;
+    private LogoutActionListener logoutActionListener;
 
 
     // === Constructor ===
-    ReferenceSideBarMenuPanel(JobApplicationSystem jobApplicationSystem) {
-        this.jobApplicationSystem = jobApplicationSystem;
+    ReferenceSideBarMenuPanel(LogoutActionListener logoutActionListener) {
+        this.logoutActionListener = logoutActionListener;
         TreeMap<String, Object> fullMenu = this.createFullMenu();
         this.setLayout(new BorderLayout());
         this.add(new SideBarMenu(fullMenu, CELL_WIDTH, CELL_HEIGHT).createMenuBar());
@@ -59,7 +58,7 @@ class ReferenceSideBarMenuPanel extends JPanel {
                 cl.show(cards, ReferencePanel.VIEW_REFEREE_JOB_POSTINGS);
             }
         });
-        fullMenu.put("5. Logout", new LogoutActionListener(jobApplicationSystem));
+        fullMenu.put("5. Logout", logoutActionListener);
         return fullMenu;
     }
 

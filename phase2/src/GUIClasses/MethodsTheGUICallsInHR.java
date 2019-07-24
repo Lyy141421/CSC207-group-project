@@ -4,13 +4,13 @@ import ApplicantStuff.Applicant;
 import ApplicantStuff.JobApplication;
 import CompanyStuff.Branch;
 import CompanyStuff.HRCoordinator;
+import CompanyStuff.Interviewer;
 import CompanyStuff.JobPostings.BranchJobPosting;
 import CompanyStuff.JobPostings.BranchJobPostingManager;
 import Main.JobApplicationSystem;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class MethodsTheGUICallsInHR {
 
@@ -39,9 +39,9 @@ public class MethodsTheGUICallsInHR {
      * @param today Today's date.
      * @return the array list of branch job postings.
      */
-    public ArrayList<BranchJobPosting> getJPToReview(LocalDate today) {
+    public ArrayList<BranchJobPosting> getJPToReview() {
         BranchJobPostingManager JPManager = this.hr.getBranch().getJobPostingManager();
-        return JPManager.getJobPostingsRecentlyClosedForReferences(today);
+        return JPManager.getJobPostingsRecentlyClosedForReferences(this.jobAppSystem.getToday());
     }
 
     /**
@@ -49,9 +49,9 @@ public class MethodsTheGUICallsInHR {
      * @param today Today's date.
      * @return the array list of branch job postings.
      */
-    public ArrayList<BranchJobPosting> getJPToSchedule(LocalDate today) {
+    public ArrayList<BranchJobPosting> getJPToSchedule() {
         BranchJobPostingManager JPManager = this.hr.getBranch().getJobPostingManager();
-        return JPManager.getJobPostingsWithRoundCompletedNotForHire(today);
+        return JPManager.getJobPostingsThatNeedGroupInterviewsScheduled(this.jobAppSystem.getToday());
     }
 
     /**
@@ -59,9 +59,9 @@ public class MethodsTheGUICallsInHR {
      * @param today Today's date.
      * @return the array list of branch job postings.
      */
-    public ArrayList<BranchJobPosting> getJPToHire(LocalDate today) {
+    public ArrayList<BranchJobPosting> getJPToHire() {
         BranchJobPostingManager JPManager = this.hr.getBranch().getJobPostingManager();
-        return JPManager.getJobPostingsForHiring(today);
+        return JPManager.getJobPostingsForHiring(this.jobAppSystem.getToday());
     }
 
     /**
@@ -80,7 +80,7 @@ public class MethodsTheGUICallsInHR {
      * @param today  Today's date.
      * @param jobPostingFields  The fields that the user inputs.
      */
-    public void addJobPosting(LocalDate today, Object[] jobPostingFields) {
+    public void addJobPosting(Object[] jobPostingFields) {
         String title = (String) jobPostingFields[0];
         String field = (String) jobPostingFields[1];
         String description = (String) jobPostingFields[2];
@@ -89,7 +89,7 @@ public class MethodsTheGUICallsInHR {
         int numPositions = (Integer) jobPostingFields[5];
         LocalDate applicationCloseDate = (LocalDate) jobPostingFields[6];
         LocalDate referenceCloseDate = (LocalDate) jobPostingFields[7];
-        this.hr.addJobPosting(title, field, description, requirements, tags, numPositions, today, applicationCloseDate,
+        this.hr.addJobPosting(title, field, description, requirements, tags, numPositions, jobAppSystem.getToday(), applicationCloseDate,
                 referenceCloseDate);
     }
 
@@ -151,20 +151,20 @@ public class MethodsTheGUICallsInHR {
         }
     }
 
+    public ArrayList<Interviewer> getInterviewersInField(BranchJobPosting jobPosting) {
+        return this.hr.getBranch().getFieldToInterviewers().get(jobPosting.getField());
+    }
+
     /**
      * Set up interviews for this job posting.
      *
      * @param jobPosting The job posting in question.
+     * @param interviewCoordinator The interview coordinator selected
+     * @param otherInterviewers The other interviewers selected
      */
-    public boolean setUpInterviews(BranchJobPosting jobPosting) {
-        Branch branch = jobPosting.getBranch();
-        String field = jobPosting.getField();
-        if (!branch.hasInterviewerForField(field)) {
-            return false;
-        } else {
-            jobPosting.getInterviewManager().setUpOneOnOneInterviews();
-            return true;
-        }
+    public void setUpGroupInterviews(BranchJobPosting jobPosting, Interviewer interviewCoordinator,
+                                     ArrayList<Interviewer> otherInterviewers) {
+        jobPosting.getInterviewManager().setUpGroupInterview(interviewCoordinator, otherInterviewers);
     }
 
 }

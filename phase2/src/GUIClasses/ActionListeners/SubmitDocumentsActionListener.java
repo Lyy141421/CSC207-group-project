@@ -1,4 +1,4 @@
-package ActionListeners;
+package GUIClasses.ActionListeners;
 
 import ApplicantStuff.Applicant;
 import ApplicantStuff.JobApplication;

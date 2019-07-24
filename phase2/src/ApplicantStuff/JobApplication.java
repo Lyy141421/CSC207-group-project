@@ -14,6 +14,7 @@ public class JobApplication implements Serializable {
      */
 
     // === Class variables ===
+    static final long serialVersionUID = 1L;
     // Total number of applications in the system
     private static int totalNumOfApplications;
 

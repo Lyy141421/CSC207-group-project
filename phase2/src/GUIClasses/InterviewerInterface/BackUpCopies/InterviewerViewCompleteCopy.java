@@ -7,67 +7,43 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.LocalDate;
 import java.util.HashMap;
 
-public class InterviewerViewComplete extends InterviewerView {
+public class InterviewerViewCompleteCopy extends InterviewerView {
 
-    JPanel notesPanel = new JPanel();
     JTextArea notes;
 
-    InterviewerViewComplete(MethodsTheGUICallsInInterviewer interviewerInterface) {
-        super(interviewerInterface);
-        this.setLayout(new BorderLayout());
+    InterviewerViewCompleteCopy(Container contentPane, MethodsTheGUICallsInInterviewer interviewerInterface, LocalDate today) {
+        super(contentPane, interviewerInterface, today);
 
-        this.add(super.splitDisplay);
-        this.setWriteNotesTab("Please enter interview notes");
-        this.infoPane.addTab("Write notes", this.notesPanel);
+        this.createNoteTab();
+        this.add(createSaveButton());
     }
 
     @Override
     HashMap<String, Interview> getInterviewMap() {
-        return getTitleToInterviewMap(interviewerInterface.getIncompleteInterviewsAlreadyOccurredNotCoordinator());
+        return getTitleToInterviewMap(interviewerInterface.getAllIncompleteInterviews(today));
     }
 
-    void setWriteNotesTab(String text) {
-        notesPanel.setLayout(new BoxLayout(notesPanel, BoxLayout.Y_AXIS));
-        this.notes = new JTextArea(text);
-        notesPanel.add(new JScrollPane(notes));
-        notesPanel.add(Box.createRigidArea(new Dimension(0, 20)));
-        notesPanel.add(this.createSaveButtonPanel());
+    void createNoteTab() {
+        this.notes = new JTextArea("Please enter interview notes");
+        this.infoPane.addTab("Notes", new JScrollPane(notes));
     }
 
-    private JPanel createSaveButtonPanel() {
-        JPanel saveButtonPanel = new JPanel();
+    JButton createSaveButton() {
         JButton saveButton = new JButton("Save notes");
-        saveButtonPanel.add(saveButton);
         saveButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String note = notes.getText();
                 Interview selectedInterview = interviews.get(interviewList.getSelectedValue());
                 interviewerInterface.storeInterviewNotes(selectedInterview, interviewerInterface.getInterviewer(), note);
-                InterviewerViewComplete.super.reload();
-                refreshTabs();
             }
         });
 
-        return saveButtonPanel;
+        return saveButton;
     }
-
-    @Override
-    void loadTabContents(Interview selectedInterview) {
-        super.loadTabContents(selectedInterview);
-        this.notesPanel.removeAll();
-        this.setWriteNotesTab(notes.getText());
-    }
-
-    @Override
-    void refreshTabs() {
-        super.refreshTabs();
-        this.notesPanel.removeAll();
-    }
-
-
 
 /*
         this.pastInterviews = getTitleToInterviewMap(interviewerInterface.getAllIncompleteInterviews(today));

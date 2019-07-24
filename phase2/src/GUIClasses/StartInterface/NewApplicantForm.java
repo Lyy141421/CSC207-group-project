@@ -27,6 +27,11 @@ class NewApplicantForm extends JPanel {
         appEmailEntry.setName("email");
         appEmailEntry.setBounds(437, 110, 150, 30);
         this.add(appEmailEntry);
+
+        JTextField postalCodeEntry = new JTextField();
+        postalCodeEntry.setName("postalCode");
+        postalCodeEntry.setBounds(437, 160, 150, 30);
+        this.add(postalCodeEntry);
     }
 
     private void addText(){
@@ -41,5 +46,9 @@ class NewApplicantForm extends JPanel {
         JLabel appEmailText = new JLabel("Email Address: ", SwingConstants.CENTER);
         appEmailText.setBounds(267, 110, 150, 30);
         this.add(appEmailText);
+
+        JLabel postalCodeText = new JLabel("Postal Code: ", SwingConstants.CENTER);
+        postalCodeText.setBounds(267, 160, 150, 30);
+        this.add(postalCodeText);
     }
 }

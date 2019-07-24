@@ -1,35 +1,54 @@
-package GUIClasses.InterviewerInterface;
+package GUIClasses.InterviewerInterface.BackUpCopies;
 
 import CompanyStuff.Interview;
 import GUIClasses.MethodsTheGUICallsInInterviewer;
 
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+//import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
+//import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
+//import net.sourceforge.jdatepicker.impl.UtilDateModel;
 
-abstract class InterviewerPanel extends JPanel {
 
+abstract class InterviewerPanelCopy extends JPanel {
+
+    static String HOME = "HOME";
+    static String COMPLETE = "COMPLETE";
+    static String INCOMPLETE = "INCOMPLETE";
+    static String COORDINATOR = "COORDINATOR";
+    static String SCHEDULE = "SCHEDULE";
+
+    Container parent;
     MethodsTheGUICallsInInterviewer interviewerInterface;
+    LocalDate today;
 
     HashMap<String, Interview> interviews;
 
     JList<String> interviewList;
+    JButton homeButton;
 
-    InterviewerPanel(MethodsTheGUICallsInInterviewer interviewerInterface) {
+    InterviewerPanelCopy(Container contentPane, MethodsTheGUICallsInInterviewer interviewerInterface, LocalDate today) {
+        this.parent = contentPane;
         this.interviewerInterface = interviewerInterface;
+        this.today = today;
     }
 
     void reload() {
         this.interviewList.setListData(interviews.keySet().toArray(new String[interviews.size()]));
-        this.interviewList.setSelectedIndex(-1);
-    }
+    };
 
     HashMap<String, Interview> getTitleToInterviewMap(ArrayList<Interview> interviewList) {
         HashMap<String, Interview> titleToInterviewMap = new HashMap<>();
         for (Interview interview: interviewList) {
             titleToInterviewMap.put(this.toInterviewTitle(interview), interview);
         }
+
         return titleToInterviewMap;
     }
 
@@ -50,6 +69,16 @@ abstract class InterviewerPanel extends JPanel {
         return interview.getId() + "-" + interview.getIntervieweeNames();
     }
 
+    private void createHomeButton() {
+        this.homeButton = new JButton("Home");
+        this.homeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ((CardLayout) parent.getLayout()).show(parent, HOME);
+                //TODO: update todo on home panel
+            }
+        });
+    }
 
     /*private Container contentPane;
     private InterviewerInterface interviewerInterface;
@@ -66,6 +95,25 @@ abstract class InterviewerPanel extends JPanel {
     private DefaultComboBoxModel<String> completeTitles;
     private JList<String> scheduleInterviews;
 
+    InterviewerPanel(Container contentPane, InterviewerInterface interviewerInterface, LocalDate today) {
+        this.contentPane = contentPane;
+        this.interviewerInterface = interviewerInterface;
+        this.today = today;
+        ArrayList<ArrayList<Interview>> interviews = interviewerInterface.getInterviewsBeforeOnAndAfterToday(today);
+        this.pastInterviews = interviews.get(0);
+        this.futureInterviews = interviews.get(1);
+        this.futureInterviews.addAll(interviews.get(2));
+        this.interviewsToBeScheduled = interviewerInterface.getUnscheduledInterviews();
+        this.currList = this.futureInterviews;
+
+        this.incompleteTitles = new DefaultComboBoxModel<>((String[]) getInterviewTitles(this.futureInterviews).toArray());
+        this.completeTitles = new DefaultComboBoxModel<>((String[]) getInterviewTitles(this.pastInterviews).toArray());
+
+        this.setLayout(new CardLayout());
+        this.add(home(), "HOME");
+        this.add(viewInterviews(), "VIEW");
+        this.add(scheduleInterviews(), "SCHEDULE");
+    }
 
     private JPanel home() {
         JPanel homePanel = new JPanel();

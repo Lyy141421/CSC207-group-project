@@ -104,15 +104,13 @@ class JobApplicationTest {
         jobPosting.getInterviewManager().setInterviewConfiguration(interviewConfiguration);
         Interviewer interviewer = new Interviewer("Interviewer", "password", "Legal Name", "email", jobPosting.getBranch(), "field", LocalDate.of(2019, 7, 10));
         jobPosting.getBranch().addInterviewer(interviewer);
-        jobPosting.getInterviewManager().setUpOneOnOneInterviews();
+        jobPosting.getInterviewManager().setUpOneOnOneInterviews(LocalDate.of(2019, 8, 11));
         Interview interview = jobPosting.getInterviewManager().getApplicationsInConsideration().get(0).getLastInterview();
-        interview.setTime(new InterviewTime(LocalDate.of(2019, 8, 13), 3));
         interview.setResult(jobApp, true);
-        jobPosting.getInterviewManager().setUpOneOnOneInterviews();
+        jobPosting.getInterviewManager().setUpOneOnOneInterviews(LocalDate.of(2019, 8, 20));
         Interview interview2 = jobPosting.getInterviewManager().getApplicationsInConsideration().get(0).getLastInterview();
-        interview2.setTime(new InterviewTime(LocalDate.of(2019, 8, 13), 3));
         interview2.setResult(jobApp, true);
-        jobPosting.getInterviewManager().setUpOneOnOneInterviews();
+        jobPosting.getInterviewManager().setUpOneOnOneInterviews(LocalDate.of(2019, 8, 29));
         Interview interview3 = jobPosting.getInterviewManager().getApplicationsInConsideration().get(0).getLastInterview();
         interview3.setTime(new InterviewTime(LocalDate.of(2019, 9, 13), 3));
         interview3.setResult(jobApp, true);

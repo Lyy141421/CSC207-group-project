@@ -35,8 +35,8 @@
 
 package GUIClasses.CommonUserGUI;
 
-import ActionListeners.FileChooserRemoveFileButtonActionListener;
-import ActionListeners.SubmitDocumentsActionListener;
+import GUIClasses.ActionListeners.FileChooserRemoveFileButtonActionListener;
+import GUIClasses.ActionListeners.SubmitDocumentsActionListener;
 import ApplicantStuff.Applicant;
 import ApplicantStuff.JobApplication;
 import ApplicantStuff.Reference;

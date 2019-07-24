@@ -1,8 +1,6 @@
 package NewGUI.InterviewerInterface;
 
 import CompanyStuff.Interviewer;
-import GUIClasses.InterviewerInterface.InterviewerHomePanel;
-import GUIClasses.InterviewerInterface.InterviewerSideBarMenuPanel;
 import Main.JobApplicationSystem;
 import GUIClasses.CommonUserGUI.FrequentlyUsedMethods;
 import GUIClasses.CommonUserGUI.UserProfilePanel;
@@ -27,17 +25,16 @@ public class InterviewerPanel extends JPanel {
         this.interviewer = interviewer;
         this.jobApplicationSystem = jobApplicationSystem;
         this.setLayout(new BorderLayout());
-        this.add(new InterviewerSideBarMenuPanel(), BorderLayout.WEST);
+        this.add(new InterviewerSideBarMenuPanel(jobApplicationSystem), BorderLayout.WEST);
         this.addCards();
     }
 
-    /**
-     * Add the cards to the card layout panel
+    /** Add the cards to the card layout panel
      */
     private void addCards() {
         cards.add(new InterviewerHomePanel(this.interviewer, jobApplicationSystem), HOME);
         cards.add(new UserProfilePanel(this.interviewer), PROFILE);
-//        cards.add(new InterviewerScheduleInterviewsPanel(this.interviewer), SCHEDULE_INTERVIEWS);
+        cards.add(new InterviewerScheduleInterviewsPanel(this.interviewer, jobApplicationSystem.getToday()), SCHEDULE_INTERVIEWS);
 //        cards.add(new InterviewerCompleteInterviewsPanel(this.interviewer), COMPLETE_INTERVIEWS);
 //        cards.add(new InterviewerViewIntervieweesPanel(this.interviewer), VIEW_INTERVIEWEES);
 //        cards.add(this.successfulSubmissionPanel(), SUCCESSFUL_SUBMISSION);

@@ -4,36 +4,51 @@ import ApplicantStuff.JobApplication;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Scanner;
 
 public class JobApplicationGrader {
 
+    // TODO make this better
+
     // === Instance variable ===
-    private JobApplication jobApplication;
     private ArrayList<String> keyWordsAndPhrases;
+    private HashMap<JobApplication, Integer> jobAppToGrade;
     private int grade;
 
     // === Constructor ===
-    JobApplicationGrader(JobApplication jobApplication, ArrayList<String> keyWordsAndPhrases) {
-        this.jobApplication = jobApplication;
+    JobApplicationGrader(ArrayList<JobApplication> jobApps, ArrayList<String> keyWordsAndPhrases) {
         this.keyWordsAndPhrases = keyWordsAndPhrases;
+
+        for (JobApplication jobApp : jobApps) {
+            jobAppToGrade.put(jobApp, 0);
+        }
     }
 
     // === Getter ===
 
-    int getGrade() {
-        return this.grade;
+    int getGrade(JobApplication jobApp) {
+        return this.jobAppToGrade.get(jobApp);
     }
+
 
     // === Other methods ===
 
+    public void gradeAllJobApps() {
+        for (JobApplication jobApp : this.jobAppToGrade.keySet()) {
+            this.jobAppToGrade.replace(jobApp, this.gradeJobApplication(jobApp));
+        }
+    }
+
     /**
-     * Grade this job application based on the number of occurrences of keyWordsAndPhrases in the files submitted with
-     * this application.
+     * Grade this job application based on the number of occurrences of items in keyWordsAndPhrases in the files
+     * submitted with this application.
+     * @param jobApplication    The job application to be graded
+     * @return the grade received
      */
-    private void gradeFiles() {
-        Company company = this.jobApplication.getJobPosting().getCompany();
-        File[] filesSubmitted = company.getDocumentManager().getFilesForJobApplication(this.jobApplication);
+    private int gradeJobApplication(JobApplication jobApplication) {
+        Company company = jobApplication.getJobPosting().getCompany();
+        File[] filesSubmitted = company.getDocumentManager().getFilesForJobApplication(jobApplication);
         for (File file : filesSubmitted) {
             try {
                 Scanner scanner = new Scanner(file);
@@ -50,6 +65,8 @@ public class JobApplicationGrader {
                 ex.printStackTrace();
             }
         }
+        return grade;
     }
+
 
 }

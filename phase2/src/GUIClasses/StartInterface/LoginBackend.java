@@ -1,6 +1,8 @@
 package GUIClasses.StartInterface;
 
+import ApplicantStuff.JobApplication;
 import CompanyStuff.Branch;
+import CompanyStuff.Company;
 import Main.JobApplicationSystem;
 
 import javax.swing.*;
@@ -11,12 +13,23 @@ import java.util.HashMap;
 class LoginBackend {
     /**
      * The general user interface
-     * TODO: due to refractoring all the static getters and saving is broken, find a way to fix ASAP
      */
 
+    // === Instance variables ===
+    JobApplicationSystem jobAppSystem;
+
     // === Constructors ===
-    LoginBackend() {
+    LoginBackend(JobApplicationSystem jobAppSystem) {
+        this.jobAppSystem = jobAppSystem;
     }
+
+    // === Getter ===
+
+    public JobApplicationSystem getJobAppSystem() {
+        return this.jobAppSystem;
+    }
+
+
     // === Private methods ===
 
     /**
@@ -44,14 +57,14 @@ class LoginBackend {
         String password = inputs.get("password");
         String name = inputs.get("name");
         String email = inputs.get("email");
+        String postalCode = inputs.get("postalCode");   // TODO edit inputs
         if(!this.checkValidEmail(email)) {
             return 1;
         } else if (name.equals("") || password.equals("")) {
             return 0;
         } else {
-            JobApplicationSystem.getUserManager().createApplicant(
-                    username, password, name, email, LocalDate.now(), true);
-            //TODO: saving
+            jobAppSystem.getUserManager().createApplicant(
+                    username, password, name, email, LocalDate.now(), postalCode);
             return 3;
         }
     }
@@ -65,7 +78,8 @@ class LoginBackend {
         String password = inputs.get("password");
         String name = inputs.get("name");
         String email = inputs.get("email");
-        Branch company = JobApplicationSystem.getCompany(inputs.get("company"));
+        Company company = jobAppSystem.getCompany(inputs.get("company"));
+        Branch branch = company.getBranch(inputs.get("branch"));
         if(!this.checkValidEmail(email)) {
             return 1;
         } else if(company == null) {
@@ -73,9 +87,8 @@ class LoginBackend {
         } else if(name.equals("") || password.equals("")) {
             return 0;
         } else {
-            JobApplicationSystem.getUserManager().createHRCoordinator(
-                    username, password, name, email, company, LocalDate.now(), true);
-            //TODO saving
+            jobAppSystem.getUserManager().createHRCoordinator(
+                    username, password, name, email, branch, LocalDate.now());
             return 3;
         }
     }
@@ -89,7 +102,8 @@ class LoginBackend {
         String password = inputs.get("password");
         String name = inputs.get("name");
         String email = inputs.get("email");
-        Branch company = JobApplicationSystem.getCompany(inputs.get("company"));
+        Company company = jobAppSystem.getCompany(inputs.get("company"));
+        Branch branch = company.getBranch(inputs.get("branch"));
         String field = "what the fuck"; //TODO: figure out what to do here
         if(!this.checkValidEmail(email)) {
             return 1;
@@ -98,9 +112,8 @@ class LoginBackend {
         } else if(company == null) {
             return 2;
         } else {
-            JobApplicationSystem.getUserManager().createInterviewer(
-                    username, password, name, email, company, field, LocalDate.now(), true);
-            //TODO: saving
+            jobAppSystem.getUserManager().createInterviewer(
+                    username, password, name, email, branch, field, LocalDate.now());
             return 3;
         }
     }
@@ -140,18 +153,17 @@ class LoginBackend {
      * @return 0 - blank field, 1 - no user exists, 2 - successful login, 3 - wrong pass
      */
     int login(String username, String password) {
-        if (JobApplicationSystem.getUserManager().findUserByUsername(username) == null) {
+        if (jobAppSystem.getUserManager().findUserByUsername(username) == null) {
             return 1;
         } else if (username.equals("") || password.equals("")) {
             return 0;
         }
         else {
-            if(JobApplicationSystem.getUserManager().passwordCorrect(username, password)) {
+            if (jobAppSystem.getUserManager().passwordCorrect(username, password)) {
                 return 2;
             } else {
                 return 3;
             }
         }
-        return 3;
     }
 }
