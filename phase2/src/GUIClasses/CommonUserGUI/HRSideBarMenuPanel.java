@@ -1,7 +1,7 @@
 package GUIClasses.CommonUserGUI;
 
-import ActionListeners.ProfileActionListener;
-import ActionListeners.ReturnHomeActionListener;
+import GUIClasses.ActionListeners.ProfileActionListener;
+import GUIClasses.ActionListeners.ReturnHomeActionListener;
 import CompanyStuff.HRCoordinator;
 
 import javax.swing.*;

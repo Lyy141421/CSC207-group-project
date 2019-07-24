@@ -1,8 +1,8 @@
 package GUIClasses.CommonUserGUI;
 
-import ActionListeners.ViewUploadedDocumentsActionListener;
-import ActionListeners.ProfileActionListener;
-import ActionListeners.ReturnHomeActionListener;
+import GUIClasses.ActionListeners.ViewUploadedDocumentsActionListener;
+import GUIClasses.ActionListeners.ProfileActionListener;
+import GUIClasses.ActionListeners.ReturnHomeActionListener;
 import ApplicantStuff.Applicant;
 
 import javax.swing.*;

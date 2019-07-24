@@ -10,7 +10,6 @@ import Main.JobApplicationSystem;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class MethodsTheGUICallsInHR {
 
@@ -51,7 +50,7 @@ public class MethodsTheGUICallsInHR {
      */
     public ArrayList<BranchJobPosting> getJPToSchedule(LocalDate today) {
         BranchJobPostingManager JPManager = this.hr.getBranch().getJobPostingManager();
-        return JPManager.getJobPostingsWithRoundCompletedNotForHire(today);
+        return JPManager.getJobPostingsThatNeedGroupInterviewsScheduled(today);
     }
 
     /**

@@ -1,4 +1,4 @@
-package ActionListeners;
+package GUIClasses.ActionListeners;
 
 import FileLoadingAndStoring.DataLoaderAndStorer;
 import Main.JobApplicationSystem;

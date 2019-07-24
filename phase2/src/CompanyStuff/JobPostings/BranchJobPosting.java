@@ -24,7 +24,7 @@ public class BranchJobPosting extends CompanyJobPosting implements Observable, S
     private Branch branch; // The branch that listed this job posting
     private ArrayList<JobApplication> jobApplications; // The list of applications for this job posting
     private InterviewManager interviewManager; // Interview manager for this job posting
-    private ArrayList<Observer> observer_list = new ArrayList<>(); // A list of observers for pushing notifications
+    private ArrayList<Observer> observerList = new ArrayList<>(); // A list of observers for pushing notifications
 
 
     // === Representation invariants ===
@@ -244,8 +244,8 @@ public class BranchJobPosting extends CompanyJobPosting implements Observable, S
      * Adding an observer to the notification recipient list
      */
     public void attach(Observer observer){
-        if (!observer_list.contains(observer)) {
-            observer_list.add(observer);
+        if (!observerList.contains(observer)) {
+            observerList.add(observer);
         }
     }
 
@@ -253,7 +253,7 @@ public class BranchJobPosting extends CompanyJobPosting implements Observable, S
      * Removing an observer from the notification recipient list
      */
     public void detach(Observer observer){
-        observer_list.remove(observer);
+        observerList.remove(observer);
     }
 
     /**
@@ -263,7 +263,7 @@ public class BranchJobPosting extends CompanyJobPosting implements Observable, S
      */
     public void notifyAllObservers(Notification notification){
         updateObserverList();
-        for (Observer observer : observer_list){
+        for (Observer observer : observerList) {
             notifyObserver(observer, notification);
         }
     }

@@ -1,9 +1,9 @@
 package GUIClasses.ReferenceInterface;
 
-import ActionListeners.CardLayoutPanelGetter;
-import ActionListeners.LogoutActionListener;
-import ActionListeners.ProfileActionListener;
-import ActionListeners.ReturnHomeActionListener;
+import GUIClasses.ActionListeners.CardLayoutPanelGetter;
+import GUIClasses.ActionListeners.LogoutActionListener;
+import GUIClasses.ActionListeners.ProfileActionListener;
+import GUIClasses.ActionListeners.ReturnHomeActionListener;
 import Main.JobApplicationSystem;
 import GUIClasses.CommonUserGUI.SideBarMenu;
 

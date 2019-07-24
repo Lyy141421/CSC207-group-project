@@ -44,7 +44,7 @@ public class BranchJobPostingManager implements Serializable {
         this.branchJobPostings.add(posting);
     }
 
-    public ArrayList<BranchJobPosting> getJobPostingsNotAppliedToBy(Applicant applicant) {
+    public ArrayList<BranchJobPosting> getJobPostingsNotAppliedToByApplicant(Applicant applicant) {
         ArrayList<BranchJobPosting> requestedPostings = new ArrayList<>();
         for (BranchJobPosting posting : branchJobPostings) {
             if (!(applicant.hasAppliedToPosting(posting)))
@@ -78,7 +78,7 @@ public class BranchJobPostingManager implements Serializable {
      */
     public ArrayList<BranchJobPosting> getClosedJobPostingsNotFilled(LocalDate today) {
         ArrayList<BranchJobPosting> requestedPostings = new ArrayList<>();
-        for (BranchJobPosting branchJobPosting : branchJobPostings) {
+        for (BranchJobPosting branchJobPosting : this.branchJobPostings) {
             if ((branchJobPosting.isClosedForReferences(today)) && !(branchJobPosting.isFilled())) {
                 requestedPostings.add(branchJobPosting);
             }
@@ -104,23 +104,38 @@ public class BranchJobPostingManager implements Serializable {
     }
 
     /**
-     * Get a list of job postings for this branch that have recently closed for reference letters, ie, they do not have
-     * an interview configuration set up.
+     * Get a list of job postings for this branch that have recently closed for reference letters, ie, applicants still
+     * need to be chosen for the first round.
      *
      * @param today Today's date.
      * @return a list of recently closed job postings for references.
      */
     public ArrayList<BranchJobPosting> getJobPostingsRecentlyClosedForReferences(LocalDate today) {
         ArrayList<BranchJobPosting> jobPostings = new ArrayList<>();
-        for (BranchJobPosting jobPosting : this.getBranchJobPostings()) {
-            if (jobPosting.isClosedForReferences(today) && jobPosting.getInterviewManager().getInterviewConfiguration().isEmpty()) {
+        for (BranchJobPosting jobPosting : this.getClosedJobPostingsNotFilled(today)) {
+            if (jobPosting.getInterviewManager().getHrTask() == InterviewManager.SELECT_APPS_FOR_FIRST_ROUND) {
                 jobPostings.add(jobPosting);
             }
         }
         return jobPostings;
     }
 
-    // TODO separating choosing the interview configuration from the selection of applicants for the first round?
+    /**
+     * Get job postings that need interview configurations set up.
+     *
+     * @param today Today's date.
+     * @return the list of job postings that need interview configurations set up.
+     */
+    public ArrayList<BranchJobPosting> getJobPostingsThatNeedInterviewProcessConfigured(LocalDate today) {
+        ArrayList<BranchJobPosting> jobPostings = new ArrayList<>();
+        for (BranchJobPosting jobPosting : this.getClosedJobPostingsNotFilled(today)) {
+            InterviewManager interviewManager = jobPosting.getInterviewManager();
+            if (interviewManager.getHrTask() == InterviewManager.SET_INTERVIEW_CONFIGURATION) {
+                jobPostings.add(jobPosting);
+            }
+        }
+        return jobPostings;
+    }
 
     /**
      * Get a list of job postings with no applications in consideration.
@@ -131,8 +146,8 @@ public class BranchJobPostingManager implements Serializable {
     public ArrayList<BranchJobPosting> getClosedJobPostingsNoApplicationsInConsideration(LocalDate today) {
         ArrayList<BranchJobPosting> jobPostings = new ArrayList<>();
         for (BranchJobPosting jobPosting : this.getClosedJobPostingsNotFilled(today)) {
-            InterviewManager IM = jobPosting.getInterviewManager();
-            if (IM != null && IM.getHrTask() == InterviewManager.CLOSE_POSTING_NO_HIRE) {
+            InterviewManager interviewManager = jobPosting.getInterviewManager();
+            if (interviewManager.getHrTask() == InterviewManager.CLOSE_POSTING_NO_HIRE) {
                 jobPostings.add(jobPosting);
             }
         }
@@ -176,7 +191,7 @@ public class BranchJobPostingManager implements Serializable {
      * @param today Today's date/
      * @return a list of job postings where a current interview round is over.
      */
-    public ArrayList<BranchJobPosting> getJobPostingsWithRoundCompletedNotForHire(LocalDate today) {
+    public ArrayList<BranchJobPosting> getJobPostingsThatNeedGroupInterviewsScheduled(LocalDate today) {
         ArrayList<BranchJobPosting> jobPostings = new ArrayList<>();
         for (BranchJobPosting jobPosting : this.getClosedJobPostingsNotFilled(today)) {
             if (jobPosting.getInterviewManager().getHrTask() == InterviewManager.SCHEDULE_GROUP_INTERVIEWS) {
