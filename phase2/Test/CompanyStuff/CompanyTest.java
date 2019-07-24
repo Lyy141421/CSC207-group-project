@@ -40,7 +40,7 @@ class CompanyTest {
         Branch branch = company.createBranch("HQ", "M5S2E8");
         assertTrue(company.getBranches().contains(branch));
         assertTrue(branch.getName().equalsIgnoreCase("HQ"));
-        assertTrue(branch.getCma().equalsIgnoreCase("Toronto"));
+        assert branch.getCma().equalsIgnoreCase("Toronto");
         assertEquals(branch.getCompany(), company);
     }
 
