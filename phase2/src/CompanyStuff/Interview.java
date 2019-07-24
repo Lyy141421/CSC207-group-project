@@ -271,6 +271,13 @@ public class Interview {
                 this.getTime().toString()};
     }
 
+    public String getMiniDescriptionForInterviewer() {
+        JobApplication jobApp = this.getJobApplications().get(0);
+        String s = "Job Posting: " + jobApp.getJobPosting().getTitle() + "  ";
+        s += "Interview Description: " + this.getInterviewTypeAndDescription()[1] + "   ";
+        return s;
+    }
+
     // ============================================================================================================== //
     // === Private methods ===
 

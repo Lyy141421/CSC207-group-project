@@ -189,11 +189,11 @@ public class InterviewManager implements Serializable {
             return InterviewManager.HIRE_APPLICANTS;
         } else if (!this.branchJobPosting.getJobApplications().isEmpty() && this.interviewConfiguration.isEmpty()) {
             // Applicants for first round of interviews selected but no interview configuration decided
-            return InterviewManager.SET_INTERVIEW_CONFIGURATION;
+            return InterviewManager.SET_INTERVIEW_CONFIGURATION;    // TODO implications
         } else if (this.isInterviewProcessOver()) {
             return InterviewManager.HIRE_APPLICANTS;
         } else if (this.isCurrentRoundOver() && this.isNextRoundGroupInterview()) {
-            return InterviewManager.SCHEDULE_GROUP_INTERVIEWS;
+            return InterviewManager.SCHEDULE_GROUP_INTERVIEWS;      // TODO implications
         } else {
             return InterviewManager.DO_NOTHING;
         }

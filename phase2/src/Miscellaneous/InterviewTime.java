@@ -11,7 +11,7 @@ public class InterviewTime {
 
     // === Class variables ===
     // Time slots
-    private static ArrayList<String> timeSlots = new ArrayList<>(Arrays.asList("9-10 am", "10-11 am", "1-2 pm", "2-3 pm",
+    public static ArrayList<String> timeSlots = new ArrayList<>(Arrays.asList("9-10 am", "10-11 am", "1-2 pm", "2-3 pm",
             "3-4 pm", "4-5 pm"));
 
     // === Instance variables ===

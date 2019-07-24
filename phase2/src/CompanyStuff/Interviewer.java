@@ -109,6 +109,19 @@ public class Interviewer extends User {
         return true;
     }
 
+    public boolean isAvailable(LocalDate date) {
+        return this.getInterviewsOnDate(date).size() < InterviewTime.timeSlots.size();
+    }
+
+    public ArrayList<String> getTimeSlotsAvailableOnDate(LocalDate date) {
+        ArrayList<Interview> interviewsOnDate = this.getInterviewsOnDate(date);
+        ArrayList<String> timeSlots = InterviewTime.timeSlots;
+        for (Interview interview : interviewsOnDate) {
+            timeSlots.remove(interview.getTime().getTimeSlotsString());
+        }
+        return timeSlots;
+    }
+
     /**
      * Get interviews on this date.
      *
@@ -117,7 +130,7 @@ public class Interviewer extends User {
      */
     private ArrayList<Interview> getInterviewsOnDate(LocalDate date) {
         ArrayList<Interview> interviewsOnDate = new ArrayList<>();
-        for (Interview interview : this.interviews) {
+        for (Interview interview : this.getScheduledUpcomingInterviews(date)) {
             if (interview.getTime().getDate().isEqual(date)) {
                 interviewsOnDate.add(interview);
             }
@@ -157,7 +170,7 @@ public class Interviewer extends User {
     public ArrayList<Interview> getScheduledUpcomingInterviews(LocalDate today) {
         ArrayList<Interview> scheduledInterviews = new ArrayList<>();
         for (Interview interview : this.interviews) {
-            if (!interview.isComplete() && !interview.getTime().getDate().isBefore(today)) {
+            if (interview.getTime() != null && !interview.isComplete() && !interview.getTime().getDate().isBefore(today)) {
                 scheduledInterviews.add(interview);
             }
         }
@@ -172,7 +185,7 @@ public class Interviewer extends User {
     public ArrayList<Interview> getIncompleteInterviews(LocalDate today) {
         ArrayList<Interview> incompleteInterviews = new ArrayList<>();
         for (Interview interview : this.interviews) {
-            if (!interview.isComplete() && interview.getTime().getDate().isBefore(today)) {
+            if (interview.getTime() != null && !interview.isComplete() && interview.getTime().getDate().isBefore(today)) {
                 incompleteInterviews.add(interview);
             }
         }

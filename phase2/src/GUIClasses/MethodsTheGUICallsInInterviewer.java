@@ -47,8 +47,8 @@ public class MethodsTheGUICallsInInterviewer {
      *
      * @return a list of upcoming interviews.
      */
-    public ArrayList<Interview> getScheduledUpcomingInterviews() {
-        return this.interviewer.getScheduledUpcomingInterviews();
+    public ArrayList<Interview> getScheduledUpcomingInterviews(LocalDate today) {
+        return this.interviewer.getScheduledUpcomingInterviews(today);
     }
 
     /**

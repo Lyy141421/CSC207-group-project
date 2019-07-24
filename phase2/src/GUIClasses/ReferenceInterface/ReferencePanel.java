@@ -87,14 +87,14 @@ public class ReferencePanel extends JPanel {
         Applicant applicant = jobApplicationSystem.getUserManager().createApplicant("username", "password", "Legal Name", "email@gmail.com", LocalDate.now(), "L4B4P8");
         BranchJobPosting jobPosting = new BranchJobPosting("title", "field", "descriptionhujedkfnvsgrhjegskamkagjrwuiladkvmkajgirwouskvmzkjgiskdzvn,mkngs\niznvjgsirklzngjslitw4gsijlkznjsirtwtrsigjlzknvmJDEI0   IPUOwrahektdznmv\nlpox-98uy7gufhvnb tmwkeafoisCXU*yygchbvn    4mk2RWFsvzx\nwgudkngrhadkjn\nwhaegkjsc\ngwaeihfkncMZ<ghaecsknm,z\n",
                 new ArrayList<>(Arrays.asList("CV", "Cover Letter", "Reference Letter")), new ArrayList<>(), 1, branch, LocalDate.of(2019, 7, 19), LocalDate.of(2019, 7, 19), LocalDate.now());
-        JobApplication jobApp = new JobApplication(applicant, jobPosting, new ArrayList<>(), LocalDate.of(2019, 7, 19));
+        JobApplication jobApp = new JobApplication(applicant, jobPosting, LocalDate.of(2019, 7, 19));
         JobApplicationDocument doc = new JobApplicationDocument(new File("./sample.txt"), applicant.getUsername());
         JobApplicationDocument doc2 = new JobApplicationDocument(new File("./sample.txt"), applicant.getUsername());
         jobApp.addFiles(new ArrayList<>(Arrays.asList(doc, doc2)));
         Applicant applicant2 = jobApplicationSystem.getUserManager().createApplicant("username2", "password", "Legal Name2", "email@gmail.com", LocalDate.of(2019, 7, 19), "L4B4P8");
         BranchJobPosting jobPosting2 = new BranchJobPosting("title2", "field", "description",
                 new ArrayList<>(Arrays.asList("CV", "Cover Letter", "Reference Letter")), new ArrayList<>(), 1, branch, LocalDate.of(2019, 7, 20), LocalDate.of(2019, 7, 20), LocalDate.now());
-        JobApplication jobApp2 = new JobApplication(applicant2, jobPosting2, new ArrayList<>(), LocalDate.of(2019, 7, 19));
+        JobApplication jobApp2 = new JobApplication(applicant2, jobPosting2, LocalDate.of(2019, 7, 19));
         reference.addJobApplication(jobApp);
         reference.addJobApplication(jobApp2);
         BranchJobPostingManager branchJobPostingManager = branch.getJobPostingManager();
