@@ -45,7 +45,6 @@ public class BranchJobPosting extends CompanyJobPosting implements Observable {
         this.referenceCloseDate = referenceCloseDate;
         this.filled = false;
         this.jobApplications = new ArrayList<>();
-        branch.getJobPostingManager().addJobPosting(this);
     }
 
     // === Getters ===

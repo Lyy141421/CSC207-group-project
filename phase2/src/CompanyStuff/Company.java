@@ -75,14 +75,14 @@ public class Company implements Serializable {
      * @return           The branch created, or null if no branch was created
      */
     public Branch createBranch(String name, String postalCode) {
-        HashMap<String, String> FSAToCMA = DataLoaderAndStorer.loadFSAHashMap();
-        String CMA = FSAToCMA.get(postalCode.substring(0,4));
+        HashMap<String, String> fsaHashMap = DataLoaderAndStorer.loadFSAHashMap();
+        String cma = fsaHashMap.get(postalCode.substring(0,3).toUpperCase());
         for (Branch branch : branches) {
             if (branch.getName().equalsIgnoreCase(name))
                 // branch by this name already exists
                 return null;
         }
-        Branch newBranch = new Branch(name, CMA, this);
+        Branch newBranch = new Branch(name, cma, this);
         branches.add(newBranch);
         return newBranch;
     }
