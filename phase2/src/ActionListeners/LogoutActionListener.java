@@ -9,17 +9,20 @@ import java.awt.event.ActionListener;
 
 public class LogoutActionListener implements ActionListener {
 
+    // === Instance variables ===
+    private Container parent;
+    private CardLayout masterLayout;
     private JobApplicationSystem jobApplicationSystem;
-    private Container contentPane;
 
-    public LogoutActionListener(JobApplicationSystem jobApplicationSystem, Container contentPane) {
+    public LogoutActionListener(Container parent, CardLayout masterLayout, JobApplicationSystem jobApplicationSystem) {
+        this.parent = parent;
+        this.masterLayout = masterLayout;
         this.jobApplicationSystem = jobApplicationSystem;
-        this.contentPane = contentPane;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         new DataLoaderAndStorer(jobApplicationSystem).storeAllData();
-        ((CardLayout) contentPane.getLayout()).show(contentPane, "LOGIN");
+        masterLayout.show(parent, "LOGIN");
     }
 }

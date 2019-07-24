@@ -1,29 +1,42 @@
 package GUIClasses;
 
 import ApplicantStuff.Applicant;
+import ApplicantStuff.JobApplication;
+import CompanyStuff.JobPostings.BranchJobPosting;
+import CompanyStuff.JobPostings.CompanyJobPosting;
+import FileLoadingAndStoring.DataLoaderAndStorer;
+import Main.JobApplicationSystem;
 
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 /**
  * JPanel containing all of the GUI needed for Applicant users functionality
  */
 
 class ApplicantPanel extends JPanel {
+    private JobApplicationSystem jobAppSystem;
     private LocalDate date;
-    //private ApplicantInterfaceTest BackEnd;
+    private ApplicantInterfaceTest backend;
     private CardLayout masterLayout;
     private Container parent;
     private Applicant loggedUser;
     private JTextField searchBar;
 
-   /* ApplicantPanel(String username, LocalDate date, Container parent, CardLayout masterLayout) {
+    public ApplicantPanel(String username, JobApplicationSystem jobAppSystem, Container parent, CardLayout masterLayout) {
         super(new CardLayout());
 
-        this.loggedUser = (Applicant)JobApplicationSystem.getUserManager().findUserByUsername(username);
-        this.date = date;
-        this.BackEnd = new ApplicantInterfaceTest(this.loggedUser);
+        this.loggedUser = (Applicant) jobAppSystem.getUserManager().findUserByUsername(username);
+        this.date = jobAppSystem.getToday();
+        this.backend = new ApplicantInterfaceTest(this.loggedUser);
         this.parent = parent;
         this.masterLayout = masterLayout;
 
@@ -34,14 +47,15 @@ class ApplicantPanel extends JPanel {
         this.add(applicantStart, "applicantStart");
         this.add(history, "accountHistory");
 
-        if(BackEnd.checkUpcomingInterviews(date)) {
+        if (backend.checkUpcomingInterviews(date)) {
             this.add(this.buildReminder());
         }
     }
 
-    *//**
+    /**
      * Builds and returns the basic start panel; what the applicant sees on login
-     *//*
+     */
+
     private JPanel buildStartPanel() {
         JPanel applicantStart = new JPanel(new GridLayout(3, 1));
 
@@ -55,9 +69,9 @@ class ApplicantPanel extends JPanel {
         return applicantStart;
     }
 
-    *//**
+    /**
      * Helpers to build Applicant start panel
-     *//*
+     */
     private JPanel buildStartForm() {
         JPanel startForm = new JPanel(null);
 
@@ -76,14 +90,14 @@ class ApplicantPanel extends JPanel {
         fieldButton.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
                 if(infoEntry.getText().equals("") || infoEntry.getText().equals("Looking for a job?")) {
-                    ArrayList<JobPosting> postings = BackEnd.findApplicablePostings
+                    ArrayList<CompanyJobPosting> postings = backend.findApplicablePostings
                             (date, null, null);
                     JPanel newPanel = buildViewJobs(postings);
                     add(newPanel, "viewJobs");
                     ((CardLayout)getLayout()).show(getThis(), "viewJobs");
                     resetSearch();
                 } else {
-                    ArrayList<JobPosting> postings = BackEnd.findApplicablePostings
+                    ArrayList<CompanyJobPosting> postings = backend.findApplicablePostings
                             (date, infoEntry.getText(), null);
                     JPanel newPanel = buildViewJobs(postings);
                     add(newPanel, "viewJobs");
@@ -99,14 +113,14 @@ class ApplicantPanel extends JPanel {
         companyButton.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
                 if(infoEntry.getText().equals("") || infoEntry.getText().equals("Looking for a job?")) {
-                    ArrayList<JobPosting> postings = BackEnd.findApplicablePostings
+                    ArrayList<JobPosting> postings = backend.findApplicablePostings
                             (date, null, null);
                     JPanel newPanel = buildViewJobs(postings);
                     add(newPanel, "viewJobs");
                     ((CardLayout)getLayout()).show(getThis(), "viewJobs");
                     resetSearch();
                 } else {
-                    ArrayList<JobPosting> postings = BackEnd.findApplicablePostings
+                    ArrayList<JobPosting> postings = backend.findApplicablePostings
                             (date, null, infoEntry.getText());
                     JPanel newPanel = buildViewJobs(postings);
                     add(newPanel, "viewJobs");
@@ -129,7 +143,7 @@ class ApplicantPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 masterLayout.show(parent, "LOGIN");
-                JobApplicationSystem.mainEnd();
+                new DataLoaderAndStorer(jobAppSystem);
             }
         });
         startTitle.add(logOut);
@@ -153,7 +167,7 @@ class ApplicantPanel extends JPanel {
         viewApps.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JPanel viewApps = buildViewApps(BackEnd.helperPostings(), BackEnd.getApps());
+                JPanel viewApps = buildViewApps(backend.helperPostings(), backend.getApps());
                 getThis().add(viewApps, "viewApps");
                 ((CardLayout)(getThis().getLayout())).show(getThis(), "viewApps");
             }
@@ -186,10 +200,10 @@ class ApplicantPanel extends JPanel {
         return welcomeLabels;
     }
 
-    *//**
+    /**
      * Builds the panel which displays all jobs the applicant can apply to.
      * @param jobPostings postings the applicant has NOT applied to
-     *//*
+     */
     private JPanel buildViewJobs(ArrayList<JobPosting> jobPostings) {
         JPanel viewJobs = new JPanel(new GridLayout(1, 3));
 
@@ -220,10 +234,10 @@ class ApplicantPanel extends JPanel {
         return viewJobs;
     }
 
-    *//**
+    /**
      * Builds the panel which allows navigation when viewing jobs
-     *//*
-    private JPanel buildViewJobs0(ArrayList<JobPosting> jobPostings) {
+     */
+    private JPanel buildViewJobs0(ArrayList<CompanyJobPosting> jobPostings) {
         JPanel viewJobsList = new JPanel(null);
 
         String[] jobTitleArray = this.getListNames(jobPostings);
@@ -247,13 +261,13 @@ class ApplicantPanel extends JPanel {
         return viewJobsList;
     }
 
-    *//**
+    /**
      * Builds and returns the panel which contains all job titles, company and descriptions
-     *//*
-    private JPanel buildViewJobs1(ArrayList<JobPosting> jobPostings) {
+     */
+    private JPanel buildViewJobs1(ArrayList<CompanyJobPosting> jobPostings) {
         JPanel viewJobs1 = new JPanel(new CardLayout());
 
-        for(JobPosting j : jobPostings) {
+        for (CompanyJobPosting j : jobPostings) {
             JPanel viewJobsAdded = new JPanel(null);
 
             JLabel viewJobTitle = new JLabel(j.getTitle());
@@ -261,7 +275,7 @@ class ApplicantPanel extends JPanel {
             viewJobTitle.setBounds(17, 70, 150, 40);
             viewJobsAdded.add(viewJobTitle);
 
-            JLabel viewJobCompany = new JLabel(j.getBranch().getName());
+            JLabel viewJobCompany = new JLabel(j.getCompany().getName());
             viewJobCompany.setFont(new Font("Serif", Font.BOLD, 15));
             viewJobCompany.setBounds(17, 100, 150, 30);
             viewJobsAdded.add(viewJobCompany);
@@ -277,13 +291,13 @@ class ApplicantPanel extends JPanel {
         return viewJobs1;
     }
 
-    *//**
+    /**
      * Returns the panel containing the remainder of the details for each job posting
-     *//*
-    private JPanel buildViewJobs2(ArrayList<JobPosting> jobpostings) {
+     */
+    private JPanel buildViewJobs2(ArrayList<CompanyJobPosting> jobpostings) {
         JPanel viewJobs2 = new JPanel(new CardLayout());
 
-        for(JobPosting j : jobpostings) {
+        for (CompanyJobPosting j : jobpostings) {
             JPanel viewJobsAdded2 = new JPanel(null);
 
             JLabel viewJobReqs = new JLabel("Requirements: " + j.getRequirements());
@@ -322,10 +336,10 @@ class ApplicantPanel extends JPanel {
         return viewJobs2;
     }
 
-    *//**
+    /**
      * Builds the document submission panel for a job posting
-     *//*
-    private JPanel buildDocApply(JobPosting posting) {
+     */
+    private JPanel buildDocApply(BranchJobPosting posting) {
         JPanel formEntry = new JPanel(null);
 
         JLabel titleText = new JLabel("Document Submission");
@@ -350,7 +364,7 @@ class ApplicantPanel extends JPanel {
         submit.setBounds(387, 400, 80, 30);
         submit.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                JobApplication app = BackEnd.createAppThroughInput(resumeArea.getText(), coverArea.getText(), posting);
+                JobApplication app = backend.createAppThroughInput(resumeArea.getText(), coverArea.getText(), posting);
                 posting.addJobApplication(app);
                 loggedUser.registerJobApplication(app);
                 ((CardLayout)getLayout()).show(getThis(), "applicantStart");
@@ -364,9 +378,9 @@ class ApplicantPanel extends JPanel {
         return formEntry;
     }
 
-    *//**
+    /**
      * Builds the panel which displays current applications
-     *//*
+*/
     private JPanel buildViewApps(ArrayList<JobPosting> jobPostings, ArrayList<JobApplication> applications) {
         JPanel viewApps = new JPanel(new GridLayout(1, 3));
 
@@ -397,9 +411,9 @@ class ApplicantPanel extends JPanel {
         return viewApps;
     }
 
-    *//**
+    /**
      * Builds status and withdraw aspect of view applications
-     *//*
+     */
     private JPanel buildViewApps0(ArrayList<JobApplication> applications) {
         JPanel viewApps = new JPanel(new CardLayout());
 
@@ -414,7 +428,7 @@ class ApplicantPanel extends JPanel {
             applyForJob.setBounds(45, 300, 100, 20);
             applyForJob.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    boolean success = BackEnd.withdrawApp(app);
+                    boolean success = backend.withdrawApp(app);
                     getThis().buildWithdrawWindow(success);
                 }
             } );
@@ -424,9 +438,9 @@ class ApplicantPanel extends JPanel {
         return viewApps;
     }
 
-    *//**
+    /**
      * Builds reminder dialog if the applicant has an interview on "today"
-     *//*
+     */
     private JDialog buildReminder() {
         JDialog d = new JDialog(new JFrame() , "Reminder", true);
         d.setLayout( new FlowLayout() );
@@ -445,9 +459,9 @@ class ApplicantPanel extends JPanel {
         return d;
     }
 
-    *//**
+    /**
      * Builds dialog after attempting to withdraw an application
-     *//*
+     */
     private JDialog buildWithdrawWindow(boolean success) {
         JDialog d = new JDialog(new JFrame(), "Withdraw Status", true);
         String text;
@@ -470,9 +484,9 @@ class ApplicantPanel extends JPanel {
         return d;
     }
 
-    *//**
+    /**
      * Builds account history
-     *//*
+     */
     private JPanel buildHistory() {
         JPanel viewHistory = new JPanel(null);
 
@@ -489,12 +503,12 @@ class ApplicantPanel extends JPanel {
         infoBox.setBounds(100, 50, 400, 20);
         viewHistory.add(infoBox);
 
-        JLabel daysSince = new JLabel(BackEnd.daysSince(date));
+        JLabel daysSince = new JLabel(backend.daysSince(date));
         daysSince.setBounds(100, 70, 400, 20);
         viewHistory.add(daysSince);
 
         if(!daysSince.getText().equals("You have not yet submitted any job applications.")) {
-            JLabel appHistory = new JLabel(BackEnd.oldApps());
+            JLabel appHistory = new JLabel(backend.oldApps());
             appHistory.setVerticalAlignment(SwingConstants.TOP);
             appHistory.setBounds(100, 90, 400, 350);
             viewHistory.add(appHistory);
@@ -503,11 +517,11 @@ class ApplicantPanel extends JPanel {
         return viewHistory;
     }
 
-    *//**
+    /**
      * Takes a list of postings and converts them to Name - ID form for card/navigation purposes
      * @param jobPostings the postings in question
-     *//*
-    private String[] getListNames(ArrayList<JobPosting> jobPostings) {
+     */
+    private String[] getListNames(ArrayList<BranchJobPosting> jobPostings) {
         int len = jobPostings.size();
         String[] ret = new String[len];
 
@@ -518,24 +532,26 @@ class ApplicantPanel extends JPanel {
         return ret;
     }
 
-    *//**
+    /**
      * Resets the search bar to its "default" value
-     *//*
+     */
     private void resetSearch() {
         this.searchBar.setText("Looking for a job?");
     }
 
-    *//**
+    /**
      * Because nested methods
-     *//*
+     */
     private ApplicantPanel getThis() {
         return this;
     }
 
     public static void main(String[] args) {
         JFrame tester = new JFrame("Interface Test");
-        ApplicantPanel test = new ApplicantPanel("i dont exist", LocalDate.now(),
+        JobApplicationSystem jobAppSystem = new JobApplicationSystem();
+        jobAppSystem.setToday(LocalDate.now());
+        ApplicantPanel test = new ApplicantPanel("i dont exist", jobAppSystem,
                 new Container(), new CardLayout()); tester.add(test);
         tester.setSize(854, 480); tester.setVisible(true); tester.setResizable(false);
-    }*/
+    }
 }

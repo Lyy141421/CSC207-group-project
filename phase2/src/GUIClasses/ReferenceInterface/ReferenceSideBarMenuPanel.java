@@ -21,12 +21,16 @@ class ReferenceSideBarMenuPanel extends JPanel {
     private static int NUM_MAIN_MENU_OPTIONS = 4;
 
     // === Instance variable ===
+    private Container parent;
+    private CardLayout masterLayout;
     // The job application system being used
     private JobApplicationSystem jobApplicationSystem;
 
 
     // === Constructor ===
-    ReferenceSideBarMenuPanel(JobApplicationSystem jobApplicationSystem) {
+    ReferenceSideBarMenuPanel(Container parent, CardLayout masterLayout, JobApplicationSystem jobApplicationSystem) {
+        this.parent = parent;
+        this.masterLayout = masterLayout;
         this.jobApplicationSystem = jobApplicationSystem;
         TreeMap<String, Object> fullMenu = this.createFullMenu();
         this.setLayout(new BorderLayout());
@@ -59,7 +63,7 @@ class ReferenceSideBarMenuPanel extends JPanel {
                 cl.show(cards, ReferencePanel.VIEW_REFEREE_JOB_POSTINGS);
             }
         });
-        fullMenu.put("5. Logout", new LogoutActionListener(jobApplicationSystem));
+        fullMenu.put("5. Logout", new LogoutActionListener(parent, masterLayout, jobApplicationSystem));
         return fullMenu;
     }
 

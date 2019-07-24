@@ -23,7 +23,6 @@ import java.util.Arrays;
 public class ReferencePanel extends JPanel {
 
     // === Instance variables ===
-    private Container contentPane;
     private Reference reference;
     private JPanel cards = new JPanel(new CardLayout());
     public static final String HOME = "Home";
@@ -33,11 +32,10 @@ public class ReferencePanel extends JPanel {
     public static final String SUCCESSFUL_SUBMISSION = "Successful Submission";
 
     // === Constructor ===
-    ReferencePanel(Container contentPane, Reference reference, JobApplicationSystem jobApplicationSystem) {
-        this.contentPane = contentPane;
-        this.reference = reference;
+    public ReferencePanel(String username, JobApplicationSystem jobApplicationSystem, Container parent, CardLayout masterLayout) {
+        this.reference = (Reference) jobApplicationSystem.getUserManager().findUserByUsername(username);
         this.setLayout(new BorderLayout());
-        this.add(new ReferenceSideBarMenuPanel(jobApplicationSystem), BorderLayout.WEST);
+        this.add(new ReferenceSideBarMenuPanel(parent, masterLayout, jobApplicationSystem), BorderLayout.WEST);
         this.addCards();
     }
 
@@ -101,7 +99,7 @@ public class ReferencePanel extends JPanel {
         reference.addJobApplication(jobApp2);
         BranchJobPostingManager branchJobPostingManager = branch.getJobPostingManager();
         branchJobPostingManager.updateJobPostingsClosedForApplications(LocalDate.now());
-        frame.add(new ReferencePanel(reference, jobApplicationSystem));
+        frame.add(new ReferencePanel(reference.getUsername(), jobApplicationSystem, new Container(), new CardLayout()));
         frame.setSize(800, 600);
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

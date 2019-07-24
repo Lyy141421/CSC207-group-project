@@ -84,6 +84,15 @@ public class Company implements Serializable {
         return newBranch;
     }
 
+    public Branch getBranch(String name) {
+        for (Branch branch : this.getBranches()) {
+            if (branch.getName().equals(name)) {
+                return branch;
+            }
+        }
+        return null;
+    }
+
     /**
      * View all applications this applicant has submitted for job postings in this company.
      *

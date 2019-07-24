@@ -5,6 +5,7 @@ import CompanyStuff.HRCoordinator;
 import CompanyStuff.Interviewer;
 import GUIClasses.ApplicantPanel;
 import GUIClasses.MainFrame;
+import GUIClasses.ReferenceInterface.ReferencePanel;
 import Main.JobApplicationSystem;
 import Main.User;
 
@@ -20,13 +21,13 @@ import java.time.LocalDate;
  */
 
 public class LoginMain extends JPanel {
-    private LoginBackend BackEnd;
+    private LoginBackend backend;
     private CardLayout masterLayout;
     private Container parent;
     private MainFrame mainframe;
     private NewUserPanel newUserRef;
 
-    public LoginMain(NewUserPanel newUserRef, Container parent, CardLayout masterLayout) {
+    public LoginMain(NewUserPanel newUserRef, Container parent, CardLayout masterLayout, JobApplicationSystem jobAppSystem) {
         this.parent = parent;
         this.masterLayout = masterLayout;
         this.mainframe = (MainFrame)this.parent.getParent().
@@ -35,7 +36,7 @@ public class LoginMain extends JPanel {
         this.setLayout(null);
         this.addTextItems();
         this.addEntryItems();
-        this.BackEnd = new LoginBackend();
+        this.backend = new LoginBackend(jobAppSystem);
     }
 
     /**
@@ -203,7 +204,7 @@ public class LoginMain extends JPanel {
      * Cases: 0 - blank field, 1 - no user exists, 2 - successful login, 3 - wrong pass
      */
     private void login(JTextField userNameEntry, JPasswordField passwordEntry) {
-        int result = BackEnd.login(userNameEntry.getText(), new String(passwordEntry.getPassword()));
+        int result = backend.login(userNameEntry.getText(), new String(passwordEntry.getPassword()));
         switch(result) {
             case 1: this.showCreateNew();
                     this.hidePassError();
@@ -231,7 +232,7 @@ public class LoginMain extends JPanel {
      * Attempts a login through the GUI
      */
     private void GUILogin(String username) {
-        User user = JobApplicationSystem.getUserManager().findUserByUsername(username);
+        User user = this.backend.getJobAppSystem().getUserManager().findUserByUsername(username);
         if(user instanceof Applicant) {
             ApplicantPanel newAppPanel = new ApplicantPanel(username, LocalDate.now(), parent, masterLayout);
             //TODO: get date
@@ -242,7 +243,9 @@ public class LoginMain extends JPanel {
         } else if(user instanceof Interviewer) {
             //TODO: Handle
         } else { //Reference
-            //TODO: Handle
+            ReferencePanel newRefPanel = new ReferencePanel(username, this.backend.getJobAppSystem(), parent, masterLayout);
+            this.parent.add(newRefPanel, "REFERENCE");
+            this.masterLayout.show(parent, "REFERENCE");
         }
         this.newUserRef.setNewUsername(null);
     }
