@@ -29,9 +29,6 @@ public class HRMain extends JPanel {
     HRSearchApplicant searchPanel;
     HRAddPosting addPostingPanel;
 
-    HashMap<String, BranchJobPosting> currJPs = new HashMap<>();
-    HashMap<String, JobApplication> currApps = new HashMap<>();
-
     private HRMain (Container contentPane, MethodsTheGUICallsInHR HRInterface, LocalDate today) {
         this.setLayout(this.cardLayout);
 

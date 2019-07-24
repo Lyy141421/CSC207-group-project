@@ -5,8 +5,11 @@ import GUIClasses.MethodsTheGUICallsInInterviewer;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 //import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
 //import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
@@ -15,9 +18,16 @@ import java.util.ArrayList;
 
 abstract class InterviewerPanel extends JPanel {
 
-    private Container parent;
-    private MethodsTheGUICallsInInterviewer interviewerInterface;
-    private LocalDate today;
+    static String HOME = "HOME";
+    static String COMPLETE = "COMPLETE";
+    static String INCOMPLETE = "INCOMPLETE";
+    static String SCHEDULE = "SCHEDULE";
+
+    Container parent;
+    MethodsTheGUICallsInInterviewer interviewerInterface;
+    LocalDate today;
+
+    private JButton homeButton;
 
     InterviewerPanel(Container contentPane, MethodsTheGUICallsInInterviewer interviewerInterface, LocalDate today) {
         this.parent = contentPane;
@@ -25,22 +35,41 @@ abstract class InterviewerPanel extends JPanel {
         this.today = today;
     }
 
-    ArrayList<String> getInterviewTitles(ArrayList<Interview> interviews) {
-        ArrayList<String> titles = new ArrayList<>();
-        for (Interview interview : interviews) {
-            titles.add(interview.getId() + "-" + interview.getTime().toString() + " " + interview.getIntervieweeNames());
+    HashMap<String, Interview> getTitleToInterviewMap(ArrayList<Interview> interviewList) {
+        HashMap<String, Interview> titleToInterviewMap = new HashMap<>();
+        for (Interview interview: interviewList) {
+            titleToInterviewMap.put(this.toInterviewTitle(interview), interview);
         }
 
-        return titles;
+        return titleToInterviewMap;
     }
 
-    String[] getIdAndApplicants(ArrayList<Interview> interviews) {
-        ArrayList<String> titles = new ArrayList<>();
-        for (Interview interview : interviews) {
-            titles.add(interview.getId() + "-" + interview.getIntervieweeNames());
+    String toInterviewTitle(Interview interview) {
+        return interview.getId() + "-" + interview.getTime().toString() + " " + interview.getIntervieweeNames();
+    }
+
+    HashMap<String, Interview> getApplicantToInterviewMap(ArrayList<Interview> interviewList) {
+        HashMap<String, Interview> applicantToInterviewMap = new HashMap<>();
+        for (Interview interview: interviewList) {
+            applicantToInterviewMap.put(this.toIdAndApplicants(interview), interview);
         }
 
-        return (String[]) titles.toArray();
+        return applicantToInterviewMap;
+    }
+
+    String toIdAndApplicants(Interview interview) {
+        return interview.getId() + "-" + interview.getIntervieweeNames();
+    }
+
+    private void createHomeButton() {
+        this.homeButton = new JButton("Home");
+        this.homeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ((CardLayout) parent.getLayout()).show(parent, HOME);
+                //TODO: update todo on home panel
+            }
+        });
     }
 
     /*private Container contentPane;
