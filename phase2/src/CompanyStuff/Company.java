@@ -76,7 +76,7 @@ public class Company implements Serializable {
      */
     public Branch createBranch(String name, String postalCode) {
         HashMap<String, String> fsaHashMap = DataLoaderAndStorer.loadFSAHashMap();
-        String cma = fsaHashMap.get(postalCode.substring(0,3));
+        String cma = fsaHashMap.get(postalCode.substring(0,3).toUpperCase());
         for (Branch branch : branches) {
             if (branch.getName().equalsIgnoreCase(name))
                 // branch by this name already exists

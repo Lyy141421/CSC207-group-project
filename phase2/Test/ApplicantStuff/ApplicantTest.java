@@ -1,15 +1,13 @@
 package ApplicantStuff;
 
-import CompanyStuff.Branch;
-import CompanyStuff.Company;
-import CompanyStuff.Interview;
-import CompanyStuff.Interviewer;
+import CompanyStuff.*;
 import CompanyStuff.JobPostings.BranchJobPosting;
 import DocumentManagers.ApplicantDocumentManager;
 import Main.JobApplicationSystem;
 import Miscellaneous.InterviewTime;
 import org.junit.jupiter.api.Test;
 
+import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,7 +19,7 @@ class ApplicantTest {
 
     Applicant createApplicant(String name) {
         return new Applicant(name, "password", "John Smith",
-                "john_smith@gmail.com", LocalDate.of(2019, 7, 20), "L4B3Z9");
+                "john_smith@gmail.com", LocalDate.of(2019, 7, 20), "Toronto");
     }
 
     Applicant createApplicantWithOneApplicationAndOneReference() {
@@ -49,21 +47,21 @@ class ApplicantTest {
 
     BranchJobPosting createJobPosting() {
         Company company = new Company("Company");
-        Branch branch = new Branch("Branch", "L4B3Z9", company);
+        Branch branch = new Branch("Branch", "Toronto", company);
         return new BranchJobPosting("Title", "field", "descriptionhujedk",
                 new ArrayList<>(Arrays.asList("CV", "Cover Letter", "Reference Letter")), new ArrayList<>(), 1, branch, LocalDate.of(2019, 7, 15), LocalDate.of(2019, 7, 30), LocalDate.of(2019, 8, 10));
     }
 
     BranchJobPosting createJobPosting2() {
         Company company = new Company("Company2");
-        Branch branch = new Branch("Branch2", "L4B3Z9", company);
+        Branch branch = new Branch("Branch2", "Toronto", company);
         return new BranchJobPosting("Title2", "field", "descriptionhujedk",
                 new ArrayList<>(Arrays.asList("CV", "Cover Letter", "Reference Letter")), new ArrayList<>(), 1, branch, LocalDate.of(2019, 7, 15), LocalDate.of(2019, 7, 30), LocalDate.of(2019, 8, 10));
     }
 
     Branch createNewBranchSameCompany() {
         Company company = this.createJobPosting().getCompany();
-        return new Branch("Branch2", "L4B3Z9", company);
+        return new Branch("Branch2", "Toronto", company);
     }
 
     BranchJobPosting createNewJobPostingSameBranch() {
@@ -77,21 +75,24 @@ class ApplicantTest {
         jas.setToday(LocalDate.of(2019, 7, 28));
         Applicant applicant = this.createApplicant("jsmith");
         Company company = jas.createCompany("Company");
-        Branch branch = new Branch("Branch", "L4B3Z9", company);
-        new BranchJobPosting("Title", "field", "descriptionhujedk",
+        Branch branch = new Branch("Branch", "Toronto", company);
+        HRCoordinator hrc = new HRCoordinator("horace", "ABC", "Horace Businessman",
+                "horace@gmail.com", branch, LocalDate.of(2019, 7, 15));
+        hrc.addJobPosting("Title", "field", "descriptionhujedk",
                 new ArrayList<>(Arrays.asList("CV", "Cover Letter", "Reference Letter")), new ArrayList<>(),
-                1, branch, LocalDate.of(2019, 7, 15), LocalDate.of(2019, 7, 30), LocalDate.of(2019, 8, 10));
-        new BranchJobPosting("Title2", "field", "descriptionhujedk",
+                1, LocalDate.of(2019, 7, 15), LocalDate.of(2019, 7, 30),
+                LocalDate.of(2019, 8, 10));
+        hrc.addJobPosting("Title2", "field", "descriptionhujedk",
                 new ArrayList<>(Arrays.asList("CV", "Cover Letter", "Reference Letter")), new ArrayList<>(),
-                1, branch, LocalDate.of(2019, 7, 15), LocalDate.of(2019, 8, 30), LocalDate.of(2019, 8, 31));
+                1, LocalDate.of(2019, 7, 15),
+                LocalDate.of(2019, 8, 30), LocalDate.of(2019, 8, 31));
         return jas;
     }
 
     @Test
     void testConstructor() {
         Applicant applicant = this.createApplicant("jsmith");
-        assertEquals("L4B3Z9", applicant.getCma());
-        assertNotEquals("l4b3z9", applicant.getCma());  // TODO Does capitalization count?
+        assertEquals("Toronto", applicant.getCma());
         assertNotNull(applicant.getJobApplicationManager());
         assertTrue(applicant.getJobApplicationManager() instanceof JobApplicationManager);
         assertTrue(applicant.getJobApplicationManager().getJobApplications().isEmpty());
@@ -105,7 +106,7 @@ class ApplicantTest {
     void testRegisterJobApplication() {
         Applicant applicant = this.createApplicant("jsmith");
         Company company = new Company("Company");
-        Branch branch = new Branch("Branch", "L4B3Z9", company);
+        Branch branch = new Branch("Branch", "Toronto", company);
         BranchJobPosting jobPosting = new BranchJobPosting("Title", "field", "descriptionhujedk",
                 new ArrayList<>(Arrays.asList("CV", "Cover Letter", "Reference Letter")), new ArrayList<>(), 1, branch, LocalDate.of(2019, 7, 30), LocalDate.of(2019, 8, 10), LocalDate.now());
         assertTrue(applicant.getJobApplicationManager().getJobApplications().isEmpty());
@@ -434,7 +435,7 @@ class ApplicantTest {
         jas.setToday(LocalDate.of(2019, 7, 31));
         Applicant applicant = this.createApplicant("jsmith");
         Company company = jas.createCompany("Company");
-        Branch branch = new Branch("Branch", "L4B3Z9", company);
+        Branch branch = new Branch("Branch", "Toronto", company);
         new BranchJobPosting("Title", "field", "descriptionhujedk",
                 new ArrayList<>(Arrays.asList("CV", "Cover Letter", "Reference Letter")), new ArrayList<>(),
                 1, branch, LocalDate.of(2019, 7, 15), LocalDate.of(2019, 7, 30), LocalDate.of(2019, 8, 10));
@@ -448,7 +449,7 @@ class ApplicantTest {
         jas.setToday(LocalDate.of(2019, 7, 28));
         Applicant applicant = this.createApplicant("jsmith");
         Company company = jas.createCompany("Company");
-        Branch branch = new Branch("Branch", "L4B3Z9", company);
+        Branch branch = new Branch("Branch", "Toronto", company);
         BranchJobPosting jobPosting = new BranchJobPosting("Title", "field", "descriptionhujedk",
                 new ArrayList<>(Arrays.asList("CV", "Cover Letter", "Reference Letter")), new ArrayList<>(),
                 1, branch, LocalDate.of(2019, 7, 15), LocalDate.of(2019, 7, 30), LocalDate.of(2019, 8, 10));
@@ -462,10 +463,12 @@ class ApplicantTest {
         jas.setToday(LocalDate.of(2019, 7, 28));
         Applicant applicant = this.createApplicant("jsmith");
         Company company = jas.createCompany("Company");
-        Branch branch = new Branch("Branch", "L4B3Z9", company);
-        BranchJobPosting jobPosting = new BranchJobPosting("Title", "field", "descriptionhujedk",
+        Branch branch = company.createBranch("Branch", "Toronto");
+        HRCoordinator hrc = new HRCoordinator("horace", "ABC", "Horace Businessman",
+                "horace@gmail.com", branch, LocalDate.of(2019, 7, 15));
+        BranchJobPosting jobPosting = hrc.addJobPosting("Title", "field", "descriptionhujedk",
                 new ArrayList<>(Arrays.asList("CV", "Cover Letter", "Reference Letter")), new ArrayList<>(),
-                1, branch, LocalDate.of(2019, 7, 15), LocalDate.of(2019, 7, 30), LocalDate.of(2019, 8, 10));
+                1, LocalDate.of(2019, 7, 15), LocalDate.of(2019, 7, 30), LocalDate.of(2019, 8, 10));
         assertEquals(1, applicant.getOpenJobPostingsNotAppliedTo(jas).size());
     }
 
