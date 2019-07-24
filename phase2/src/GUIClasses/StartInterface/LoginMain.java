@@ -2,6 +2,7 @@ package GUIClasses.StartInterface;
 
 import ApplicantStuff.Applicant;
 import CompanyStuff.HRCoordinator;
+import CompanyStuff.Interviewer;
 import GUIClasses.ApplicantPanel;
 import GUIClasses.MainFrame;
 import Main.JobApplicationSystem;
@@ -238,7 +239,9 @@ public class LoginMain extends JPanel {
             this.masterLayout.show(parent, "APPLICANT");
         } else if(user instanceof HRCoordinator) {
             //TODO: Handle
-        } else { //Interviewer
+        } else if(user instanceof Interviewer) {
+            //TODO: Handle
+        } else { //Reference
             //TODO: Handle
         }
         this.newUserRef.setNewUsername(null);
