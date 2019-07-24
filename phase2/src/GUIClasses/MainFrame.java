@@ -4,6 +4,8 @@ package GUIClasses;
 //import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
 //import net.sourceforge.jdatepicker.impl.UtilDateModel;
 
+import GUIClasses.StartInterface.NewUserPanel;
+
 import javax.swing.*;
 import java.awt.*;
 import java.time.LocalDate;
@@ -60,9 +62,9 @@ public class MainFrame extends JFrame {
     private void addCards () {
         //this.add(this.homePanel);
         // We need to be careful with when these cards get constructed, in case it's missing arguments to run methods
-        this.add(new LoginPanel(this.getContentPane(), this.layoutManager), "LOGIN");
-        this.newUserRef = new NewUserPanel(this.getContentPane(), this.layoutManager);
-        this.add(this.newUserRef, "NEWUSER");
+        NewUserPanel newUserRef = new NewUserPanel(this.getContentPane(), this.layoutManager);
+        this.add(newUserRef, "NEWUSER");
+        this.add(new LoginMain(this.getContentPane(), this.layoutManager, newUserRef), "LOGIN");
         // got User object from login/signup
         //interface = new InterfaceFactory.create(User)
         //if User instanceOf ...
