@@ -253,7 +253,7 @@ public class LoginMain extends JPanel {
     private void createUser(String username) {
         this.hideCreateNew();
         this.hidePassError();
-//        this.mainframe.newUserRef.setNewUsername(username);
+        this.newUserRef.setNewUsername(username);
         this.masterLayout.show(parent, "NEWUSER");
     }
 }
