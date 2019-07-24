@@ -1,5 +1,6 @@
 package GUIClasses.InterviewerInterface;
 
+import ApplicantStuff.JobApplication;
 import CompanyStuff.Interview;
 import GUIClasses.MethodsTheGUICallsInInterviewer;
 import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
@@ -15,38 +16,67 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 
 public class InterviewerSchedule extends InterviewerPanel {
 
     private Container contentPane;
 
-    private JList<String> interviewToScheduleList;
+    private ArrayList<JComponent> entryBox = new ArrayList<>();
+
 
     InterviewerSchedule(Container contentPane, MethodsTheGUICallsInInterviewer interviewerInterface, LocalDate today){
         super(contentPane, interviewerInterface, today);
+        this.interviews = getApplicantToInterviewMap(interviewerInterface.getInterviewsThatNeedScheduling());
 
         this.setLayout(new BorderLayout());
-        JPanel setTime = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        this.setInterviewList();
+        this.createSetTimePanel();
 
-        this.interviewToScheduleList = new JList<>(getIdAndApplicants(interviewsToBeScheduled));
-        this.interviewToScheduleList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
-        this.interviewToScheduleList.setLayoutOrientation(JList.VERTICAL);
+        this.add(this.interviewList, BorderLayout.WEST);
+    }
+
+    void reload() {
+        this.interviewList.setListData(interviews.keySet().toArray(new String[interviews.size()]));
+    }
+
+    private void setInterviewList() {
+        this.interviewList = new JList<>();
+        this.interviewList.setListData(interviews.keySet().toArray(new String[interviews.size()]));
+        this.interviewList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+        this.interviewList.setLayoutOrientation(JList.VERTICAL);
+    }
+
+    private void createSetTimePanel() {
+        JPanel setTime = new JPanel(new FlowLayout(FlowLayout.CENTER));
         JComboBox<String> timeSlot = new JComboBox<>(new String[]{"9-10 am", "10-11 am", "1-2 pm", "2-3 pm", "3-4 pm",
                 "4-5 pm"});
         UtilDateModel dateModel = new UtilDateModel();
         JDatePanelImpl datePanel = new JDatePanelImpl(dateModel);
         JDatePickerImpl interviewDate = new JDatePickerImpl(datePanel);
-        JButton schedule = new JButton("Confirm");
+        this.entryBox.add(timeSlot);
+        this.entryBox.add(interviewDate);
+
+        setTime.add(interviewDate);
+        setTime.add(timeSlot);
+        setTime.add(createScheduleButton());
+
+        this.add(setTime, BorderLayout.CENTER);
+    }
+
+    private JButton createScheduleButton() {
+        JButton schedule = new JButton("Schedule");
         schedule.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                LocalDate date = ((Date) interviewDate.getModel().getValue()).toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                LocalDate date = ((Date) ((JDatePanelImpl) entryBox.get(1)).getModel().getValue()).toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
                 int selectedIndex = interviewList.getSelectedIndex();
-                Interview interview = interviewsToBeScheduled.get(selectedIndex);
+                Interview interview = interviews.get(selectedIndex);
                 if (date.isAfter(today)) {
-                    boolean canSchedule = interviewerInterface.scheduleInterview(interview, date, timeSlot.getSelectedIndex());
+                    boolean canSchedule = interviewerInterface.scheduleInterview(interview, date, ((JComboBox) entryBox.get(0)).getSelectedIndex());
                     if (canSchedule) {
-                        interviewsToBeScheduled.remove(selectedIndex);
+                        interviews.remove(selectedIndex);
+                        //TODO: update InterviewerViewComplete
                         scheduleInterviews.remove(selectedIndex);
                         futureInterviews.add(interview);
                         incompleteTitles.addElement(getInterviewTitles(new ArrayList<Interview>(Arrays.asList(interview))).get(0));
@@ -59,16 +89,7 @@ public class InterviewerSchedule extends InterviewerPanel {
                 }
             }
         });
-        JButton home = new JButton("Home");
-        //TODO: home action listener
 
-        setTime.add(interviewDate);
-        setTime.add(timeSlot);
-        setTime.add(schedule);
-
-        this.add(this.interviewToScheduleList, BorderLayout.WEST);
-        this.add(setTime, BorderLayout.CENTER);
-        this.add(home, BorderLayout.SOUTH);
-
+        return schedule;
     }
 }
