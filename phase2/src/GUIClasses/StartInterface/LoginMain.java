@@ -3,7 +3,7 @@ package GUIClasses.StartInterface;
 import ApplicantStuff.Applicant;
 import CompanyStuff.HRCoordinator;
 import CompanyStuff.Interviewer;
-import GUIClasses.ApplicantPanel;
+import GUIClasses.ApplicantInterface.ApplicantMain;
 import GUIClasses.MainFrame;
 import GUIClasses.ReferenceInterface.ReferencePanel;
 import Main.JobApplicationSystem;
@@ -233,7 +233,7 @@ public class LoginMain extends JPanel {
     private void GUILogin(String username) {
         User user = this.backend.getJobAppSystem().getUserManager().findUserByUsername(username);
         if(user instanceof Applicant) {
-            ApplicantPanel newAppPanel = new ApplicantPanel(username, LocalDate.now(), parent, masterLayout);
+            ApplicantMain newAppPanel = new ApplicantMain((Applicant)user);
             //TODO: get date
             this.parent.add(newAppPanel, "APPLICANT");
             this.masterLayout.show(parent, "APPLICANT");
