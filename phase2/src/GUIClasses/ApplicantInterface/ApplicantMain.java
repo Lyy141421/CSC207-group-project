@@ -33,7 +33,7 @@ public class ApplicantMain extends JPanel {
      */
     private JPanel getApplicantCards(Applicant applicant) {
         JPanel ret = new JPanel(new CardLayout());
-        ret.add(new ApplicantBrowsePostings(applicant), "BROWSE");
+        ret.add(new ApplicantBrowsePostings(applicant), "POSTINGS");
         ret.add(new ApplicantViewProfile(applicant), "PROFILE");
         ret.add(new ApplicantDocuments(applicant), "DOCUMENTS");
         ret.add(new ApplicantSchedule(applicant), "SCHEDULE");
