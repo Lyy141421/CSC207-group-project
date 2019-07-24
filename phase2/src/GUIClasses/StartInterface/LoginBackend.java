@@ -1,25 +1,29 @@
-package GUIClasses;
+package GUIClasses.StartInterface;
 
-class UserInterfaceTest {
+import CompanyStuff.Branch;
+import Main.JobApplicationSystem;
+
+import javax.swing.*;
+import java.awt.*;
+import java.time.LocalDate;
+import java.util.HashMap;
+
+class LoginBackend {
     /**
      * The general user interface
+     * TODO: due to refractoring all the static getters and saving is broken, find a way to fix ASAP
      */
 
-    /*// === Constructors ===
-    UserInterfaceTest() {
+    // === Constructors ===
+    LoginBackend() {
     }
-
-    // === Inherited methods ===
-    void run(LocalDate today) {
-    }
-
     // === Private methods ===
 
-    *//**
+    /**
      * Get an e-mail address as input from the user. E-mail address must be in valid format.
      *
      * @return the e-mail address inputted by the user.
-     *//*
+     */
 
     private boolean checkValidEmail(String email) {
         if (!email.contains("@") || email.charAt(0) == '@')
@@ -31,10 +35,10 @@ class UserInterfaceTest {
         }
     }
 
-    *//**
+    /**
      * Create a new Applicant.
      * @return 0 - blank entry, 1 - bad email, 2 - bad company, 3 - success
-     *//*
+     */
     int createNewApplicant(HashMap<String, String> inputs) {
         String username = inputs.get("username");
         String password = inputs.get("password");
@@ -47,21 +51,21 @@ class UserInterfaceTest {
         } else {
             JobApplicationSystem.getUserManager().createApplicant(
                     username, password, name, email, LocalDate.now(), true);
-            JobApplicationSystem.mainEnd();
+            //TODO: saving
             return 3;
         }
     }
 
-    *//**
+    /**
      * Create a new HR Coordinator.
      * @return 0 - blank entry, 1 - bad email, 2 - bad company, 3 - success
-     *//*
+     */
     int createNewHRC(HashMap<String, String> inputs) {
         String username = inputs.get("username");
         String password = inputs.get("password");
         String name = inputs.get("name");
         String email = inputs.get("email");
-        Branch company = JobApplicationSystem.getBranch(inputs.get("company"));
+        Branch company = JobApplicationSystem.getCompany(inputs.get("company"));
         if(!this.checkValidEmail(email)) {
             return 1;
         } else if(company == null) {
@@ -71,21 +75,21 @@ class UserInterfaceTest {
         } else {
             JobApplicationSystem.getUserManager().createHRCoordinator(
                     username, password, name, email, company, LocalDate.now(), true);
-            JobApplicationSystem.mainEnd();
+            //TODO saving
             return 3;
         }
     }
 
-    *//**
+    /**
      * Create a new interviewer.
      * @return 0 - blank entry, 1 - bad email, 2 - bad company, 3 - success
-     *//*
+     */
     int createNewInterviewer(HashMap<String, String> inputs) {
         String username = inputs.get("username");
         String password = inputs.get("password");
         String name = inputs.get("name");
         String email = inputs.get("email");
-        Branch company = JobApplicationSystem.getBranch(inputs.get("company"));
+        Branch company = JobApplicationSystem.getCompany(inputs.get("company"));
         String field = "what the fuck"; //TODO: figure out what to do here
         if(!this.checkValidEmail(email)) {
             return 1;
@@ -96,14 +100,14 @@ class UserInterfaceTest {
         } else {
             JobApplicationSystem.getUserManager().createInterviewer(
                     username, password, name, email, company, field, LocalDate.now(), true);
-            JobApplicationSystem.mainEnd();
+            //TODO: saving
             return 3;
         }
     }
 
-    *//**
+    /**
      * Collects user input data from the different forms, so that a new account may be created
-     *//*
+     */
     HashMap<String, String> getInputs(Component[] items, String newUsername) {
         HashMap<String, String> ret = new HashMap<>();
         ret.put("username", newUsername);
@@ -131,10 +135,10 @@ class UserInterfaceTest {
         return ret;
     }
 
-    *//**
+    /**
      * Determine status of the login
      * @return 0 - blank field, 1 - no user exists, 2 - successful login, 3 - wrong pass
-     *//*
+     */
     int login(String username, String password) {
         if (JobApplicationSystem.getUserManager().findUserByUsername(username) == null) {
             return 1;
@@ -148,5 +152,6 @@ class UserInterfaceTest {
                 return 3;
             }
         }
-    }*/
+        return 3;
+    }
 }

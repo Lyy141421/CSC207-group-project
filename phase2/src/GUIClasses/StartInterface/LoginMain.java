@@ -1,36 +1,47 @@
-package GUIClasses;
+package GUIClasses.StartInterface;
 
-//import GUIClasses.UserInterfaceTest;
+import ApplicantStuff.Applicant;
+import CompanyStuff.HRCoordinator;
+import CompanyStuff.Interviewer;
+import GUIClasses.ApplicantPanel;
+import GUIClasses.MainFrame;
+import Main.JobApplicationSystem;
+import Main.User;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.time.LocalDate;
 
 /**
  * REMEMBER:
- * Along with NewUserPanel, LoginPanel is one of the mandatory cards that should be present in MainFrame.
+ * Along with NewUserPanel, LoginMain is one of the mandatory cards that should be present in NewGUI.MainFrame.
  */
 
-class LoginPanel extends JPanel {
-    private UserInterfaceTest BackEnd;
+public class LoginMain extends JPanel {
+    private LoginBackend BackEnd;
     private CardLayout masterLayout;
     private Container parent;
     private MainFrame mainframe;
+    private NewUserPanel newUserRef;
 
-    /*LoginPanel(Container parent, CardLayout masterLayout) {
+    public LoginMain(NewUserPanel newUserRef, Container parent, CardLayout masterLayout) {
         this.parent = parent;
         this.masterLayout = masterLayout;
         this.mainframe = (MainFrame)this.parent.getParent().
                 getParent().getParent();
+        this.newUserRef = newUserRef;
         this.setLayout(null);
         this.addTextItems();
         this.addEntryItems();
-        this.BackEnd = new UserInterfaceTest();
+        this.BackEnd = new LoginBackend();
     }
 
-    *//**
+    /**
      * Adds the text items required for the login screen.
      * Note "Incorrect password" warning and "User not found" are hidden by default.
-     *//*
+     */
     private void addTextItems() {
         JLabel welcomeLabel = new JLabel("CSC207 Summer 2019 Job Application System", SwingConstants.CENTER);
         welcomeLabel.setFont(new Font("Serif", Font.PLAIN, 30));
@@ -58,10 +69,10 @@ class LoginPanel extends JPanel {
         this.add(createNewText); this.add(wrongPass); this.add(blankEntry);
     }
 
-    *//**
+    /**
      * Adds the interactive items necessary for the login screen.
      * Note "Create New User" button is hidden by default.
-     *//*
+     */
     private void addEntryItems() {
         JTextField userNameEntry = new JTextField();
         userNameEntry.setBounds(427, 220, 100, 30);
@@ -91,9 +102,9 @@ class LoginPanel extends JPanel {
         this.add(createNewButton);
     }
 
-    *//**
+    /**
      * Shows prompt to create new account
-     *//*
+     */
     private void showCreateNew() {
         Component[] components = this.getComponents();
         for(Component c : components) {
@@ -109,9 +120,9 @@ class LoginPanel extends JPanel {
         }
     }
 
-    *//**
+    /**
      * Hides prompt to create a new user
-     *//*
+     */
     private void hideCreateNew() {
         Component[] components = this.getComponents();
         for(Component c : components) {
@@ -127,9 +138,9 @@ class LoginPanel extends JPanel {
         }
     }
 
-    *//**
+    /**
      * Shows wrong pass warning
-     *//*
+     */
     private void showPassError() {
         Component[] components = this.getComponents();
         for(Component c : components) {
@@ -142,9 +153,9 @@ class LoginPanel extends JPanel {
         }
     }
 
-    *//**
+    /**
      * Hides wrong pass warning
-     *//*
+     */
     private void hidePassError() {
         Component[] components = this.getComponents();
         for(Component c : components) {
@@ -157,9 +168,9 @@ class LoginPanel extends JPanel {
         }
     }
 
-    *//**
+    /**
      * Shows blank field warning
-     *//*
+     */
     private void showBlankField() {
         Component[] components = this.getComponents();
         for(Component c : components) {
@@ -172,9 +183,9 @@ class LoginPanel extends JPanel {
         }
     }
 
-    *//**
+    /**
      * Hides blank field warning
-     *//*
+     */
     private void hideBlankField() {
         Component[] components = this.getComponents();
         for(Component c : components) {
@@ -187,10 +198,10 @@ class LoginPanel extends JPanel {
         }
     }
 
-    *//**
+    /**
      * attempts login with the provided information
      * Cases: 0 - blank field, 1 - no user exists, 2 - successful login, 3 - wrong pass
-     *//*
+     */
     private void login(JTextField userNameEntry, JPasswordField passwordEntry) {
         int result = BackEnd.login(userNameEntry.getText(), new String(passwordEntry.getPassword()));
         switch(result) {
@@ -216,6 +227,9 @@ class LoginPanel extends JPanel {
         }
     }
 
+    /**
+     * Attempts a login through the GUI
+     */
     private void GUILogin(String username) {
         User user = JobApplicationSystem.getUserManager().findUserByUsername(username);
         if(user instanceof Applicant) {
@@ -225,19 +239,21 @@ class LoginPanel extends JPanel {
             this.masterLayout.show(parent, "APPLICANT");
         } else if(user instanceof HRCoordinator) {
             //TODO: Handle
-        } else { //Interviewer
+        } else if(user instanceof Interviewer) {
+            //TODO: Handle
+        } else { //Reference
             //TODO: Handle
         }
-        this.mainframe.newUserRef.setNewUsername(null);
+        this.newUserRef.setNewUsername(null);
     }
 
-    *//**
+    /**
      * passes user to the existing create user class, and requests card change
-     *//*
+     */
     private void createUser(String username) {
         this.hideCreateNew();
         this.hidePassError();
-        this.mainframe.newUserRef.setNewUsername(username);
+        this.newUserRef.setNewUsername(username);
         this.masterLayout.show(parent, "NEWUSER");
-    }*/
+    }
 }
