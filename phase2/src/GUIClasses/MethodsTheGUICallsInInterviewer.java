@@ -34,8 +34,8 @@ public class MethodsTheGUICallsInInterviewer {
         return this.interviewer.getAllIncompleteInterviews();
     }
 
-    public ArrayList<Interview> getIncompleteInterviewsAlreadyOccurred() {
-        return this.interviewer.getIncompleteInterviewsAlreadyOccurred(this.jobAppSystem.getToday());
+    public ArrayList<Interview> getIncompleteInterviewsAlreadyOccurredNotCoordinator() {
+        return this.interviewer.getIncompleteInterviewsAlreadyOccurredNotAsCoordinator(this.jobAppSystem.getToday());
     }
 
     public File getFolderForJobApplication(JobApplication jobApp) {
@@ -47,8 +47,8 @@ public class MethodsTheGUICallsInInterviewer {
      *
      * @return a list of interviews that are incomplete for which this interviewer is a coordinator.
      */
-    public ArrayList<Interview> getIncompleteInterviewsAsCoordinator() {
-        return this.interviewer.getIncompleteInterviewsAsCoordinator(this.jobAppSystem.getToday());
+    public ArrayList<Interview> getIncompleteInterviewsAlreadyOccurredAsCoordinator() {
+        return this.interviewer.getIncompleteInterviewsAlreadyOccuredAsCoordinator(this.jobAppSystem.getToday());
     }
 
 //    /**

@@ -18,6 +18,7 @@ public class Applicant extends User {
      */
 
     // === Class variables ===
+    static final long serialVersionUID = 1L;
     // Number of days passed for user account to be deemed inActive
     private static final int INACTIVE_DAYS = 30;
 

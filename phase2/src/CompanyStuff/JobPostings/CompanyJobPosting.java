@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Observable;
 
 public class CompanyJobPosting extends Observable implements Serializable {
-    // TODO is this the right observable? this is java.util not notification system
 
     // === Class variables ===
     static final long serialVersionUID = 1L;

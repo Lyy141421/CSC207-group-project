@@ -22,7 +22,8 @@ abstract class InterviewerPanel extends JPanel {
 
     void reload() {
         this.interviewList.setListData(interviews.keySet().toArray(new String[interviews.size()]));
-    };
+        this.interviewList.setSelectedIndex(-1);
+    }
 
     HashMap<String, Interview> getTitleToInterviewMap(ArrayList<Interview> interviewList) {
         HashMap<String, Interview> titleToInterviewMap = new HashMap<>();

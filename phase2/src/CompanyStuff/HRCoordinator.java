@@ -14,6 +14,9 @@ public class HRCoordinator extends User {
      * An account for an HR Coordinator.
      */
 
+    // === Class variables ===
+    static final long serialVersionUID = 1L;
+
     // === Instance variables ===
     // The branch that this HR Coordinator works for
     private Branch branch;

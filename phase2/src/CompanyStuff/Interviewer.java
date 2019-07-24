@@ -9,6 +9,9 @@ import java.util.ArrayList;
 
 public class Interviewer extends User {
 
+    // === Class variables ===
+    static final long serialVersionUID = 1L;
+
     // === Instance variables ===
     // The branch that this interviewer works for
     private Branch branch;
@@ -233,10 +236,26 @@ public class Interviewer extends User {
      * @param today Today's date.
      * @return a list fo incomplete interviews for which this interviewer is a coordinator.
      */
-    public ArrayList<Interview> getIncompleteInterviewsAsCoordinator(LocalDate today) {
+    public ArrayList<Interview> getIncompleteInterviewsAlreadyOccuredAsCoordinator(LocalDate today) {
         ArrayList<Interview> interviews = new ArrayList<>();
         for (Interview interview : this.getIncompleteInterviewsAlreadyOccurred(today)) {
             if (interview.getInterviewCoordinator().equals(this)) {
+                interviews.add(interview);
+            }
+        }
+        return interviews;
+    }
+
+    /**
+     * Get a list of incomplete interviews for which this interviewer is not a coordinator.
+     *
+     * @param today Today's date.
+     * @return a list fo incomplete interviews for which this interviewer is not a coordinator.
+     */
+    public ArrayList<Interview> getIncompleteInterviewsAlreadyOccurredNotAsCoordinator(LocalDate today) {
+        ArrayList<Interview> interviews = new ArrayList<>();
+        for (Interview interview : this.getIncompleteInterviewsAlreadyOccurred(today)) {
+            if (!interview.getInterviewCoordinator().equals(this)) {
                 interviews.add(interview);
             }
         }

@@ -85,7 +85,7 @@ public class InterviewerHomePanel extends InterviewerPanel {
     }
 
     private JPanel createIncompleteInterviewsTablePanel() {
-        ArrayList<Interview> incompleteInterviews = this.interviewerInterface.getIncompleteInterviewsAsCoordinator();
+        ArrayList<Interview> incompleteInterviews = this.interviewerInterface.getIncompleteInterviewsAlreadyOccurredAsCoordinator();
         Object[][] data = new Object[incompleteInterviews.size()][];
 
         for (int i = 0; i < incompleteInterviews.size(); i++) {

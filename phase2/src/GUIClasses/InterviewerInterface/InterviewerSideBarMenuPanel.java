@@ -57,7 +57,7 @@ public class InterviewerSideBarMenuPanel extends JPanel {
                 cl.show(cards, InterviewerMain.ADD_NOTES);
             }
         });
-        fullMenu.put("5. Set Interview Results", new ActionListener() {
+        fullMenu.put("5. Complete Interviews", new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JPanel cards = new CardLayoutPanelGetter().fromMenuItemDirectlyOnMenuBar(e);

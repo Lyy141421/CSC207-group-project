@@ -15,6 +15,9 @@ import java.util.ArrayList;
 
 public class BranchJobPosting extends CompanyJobPosting implements Observable {
 
+    // === Class variables ===
+    static final long serialVersionUID = 1L;
+
     // === Instance variables ===
     private int numPositions;
     private LocalDate postDate; // The date on which this job posting was listed
