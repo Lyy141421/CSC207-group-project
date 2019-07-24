@@ -20,6 +20,7 @@ public class InterviewerMain extends JPanel {
     InterviewerHome homePanel;
     InterviewerView viewIncompletePanel;
     InterviewerViewComplete viewCompletePanel;
+    InterviewerCoordinatorView coordinatorViewPanel;
     InterviewerSchedule schedulePanel;
 
     private InterviewerMain (Container contentPane, MethodsTheGUICallsInInterviewer interviewerInterface, LocalDate today) {
@@ -36,13 +37,16 @@ public class InterviewerMain extends JPanel {
     private void addPanels() {
         this.add(this.homePanel = new InterviewerHome(this, this.interviewerInterface, this.today), InterviewerPanel.HOME);
         this.add(this.viewIncompletePanel = new InterviewerView(this, this.interviewerInterface, this.today), InterviewerPanel.INCOMPLETE);
+        //TODO: might want to combine the following two since they differ in one function only.
         this.add(this.viewCompletePanel = new InterviewerViewComplete(this, this.interviewerInterface, this.today), InterviewerPanel.COMPLETE);
+        this.add(this.coordinatorViewPanel = new InterviewerCoordinatorView(this, this.interviewerInterface, this.today), InterviewerPanel.COORDINATOR);
         this.add(this.schedulePanel = new InterviewerSchedule(this, this.interviewerInterface, this.today), InterviewerPanel.SCHEDULE);
     }
 
     private void setActions() {
         this.setViewCompleteAction();
         this.setViewIncompleteAction();
+        this.setViewCoordinatorAction();
         this.setScheduleAction();
         this.setLogoutAction();
     }
@@ -63,6 +67,16 @@ public class InterviewerMain extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 viewIncompletePanel.reload();
                 cardLayout.show(mainPanel, InterviewerPanel.INCOMPLETE);
+            }
+        });
+    }
+
+    private void setViewCoordinatorAction() {
+        this.homePanel.getViewCoordinatorButton().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                coordinatorViewPanel.reload();
+                cardLayout.show(mainPanel, InterviewerPanel.COORDINATOR);
             }
         });
     }

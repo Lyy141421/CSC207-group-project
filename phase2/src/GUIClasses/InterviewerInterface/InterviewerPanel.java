@@ -21,12 +21,16 @@ abstract class InterviewerPanel extends JPanel {
     static String HOME = "HOME";
     static String COMPLETE = "COMPLETE";
     static String INCOMPLETE = "INCOMPLETE";
+    static String COORDINATOR = "COORDINATOR";
     static String SCHEDULE = "SCHEDULE";
 
     Container parent;
     MethodsTheGUICallsInInterviewer interviewerInterface;
     LocalDate today;
 
+    HashMap<String, Interview> interviews;
+
+    JList<String> interviewList;
     JButton homeButton;
 
     InterviewerPanel(Container contentPane, MethodsTheGUICallsInInterviewer interviewerInterface, LocalDate today) {
@@ -35,7 +39,9 @@ abstract class InterviewerPanel extends JPanel {
         this.today = today;
     }
 
-    abstract void reload();
+    void reload() {
+        this.interviewList.setListData(interviews.keySet().toArray(new String[interviews.size()]));
+    };
 
     HashMap<String, Interview> getTitleToInterviewMap(ArrayList<Interview> interviewList) {
         HashMap<String, Interview> titleToInterviewMap = new HashMap<>();

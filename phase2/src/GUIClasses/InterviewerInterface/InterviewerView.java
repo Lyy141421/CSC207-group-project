@@ -18,9 +18,6 @@ public class InterviewerView extends InterviewerPanel {
     String OVERVIEW = "Overview";
     String FILE = "View Files";
 
-    HashMap<String, Interview> interviews;
-
-    JList<String> interviewList;
     JTabbedPane infoPane;
     JTextArea overview;
     JPanel documentViewer;

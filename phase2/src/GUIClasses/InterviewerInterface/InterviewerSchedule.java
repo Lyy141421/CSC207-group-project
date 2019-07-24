@@ -22,32 +22,29 @@ public class InterviewerSchedule extends InterviewerPanel {
 
     private Container contentPane;
 
-    private HashMap<String, Interview> interviewsToBeScheduled;
     private ArrayList<JComponent> entryBox = new ArrayList<>();
-
-    private JList<String> interviewToScheduleList;
 
 
     InterviewerSchedule(Container contentPane, MethodsTheGUICallsInInterviewer interviewerInterface, LocalDate today){
         super(contentPane, interviewerInterface, today);
-        this.interviewsToBeScheduled = getApplicantToInterviewMap(interviewerInterface.getInterviewsThatNeedScheduling());
+        this.interviews = getApplicantToInterviewMap(interviewerInterface.getInterviewsThatNeedScheduling());
 
         this.setLayout(new BorderLayout());
         this.setInterviewList();
         this.createSetTimePanel();
 
-        this.add(this.interviewToScheduleList, BorderLayout.WEST);
+        this.add(this.interviewList, BorderLayout.WEST);
     }
 
     void reload() {
-        this.interviewToScheduleList.setListData(interviewsToBeScheduled.keySet().toArray(new String[interviewsToBeScheduled.size()]));
+        this.interviewList.setListData(interviews.keySet().toArray(new String[interviews.size()]));
     }
 
     private void setInterviewList() {
-        this.interviewToScheduleList = new JList<>();
-        this.interviewToScheduleList.setListData(interviewsToBeScheduled.keySet().toArray(new String[interviewsToBeScheduled.size()]));
-        this.interviewToScheduleList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
-        this.interviewToScheduleList.setLayoutOrientation(JList.VERTICAL);
+        this.interviewList = new JList<>();
+        this.interviewList.setListData(interviews.keySet().toArray(new String[interviews.size()]));
+        this.interviewList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+        this.interviewList.setLayoutOrientation(JList.VERTICAL);
     }
 
     private void createSetTimePanel() {
@@ -73,12 +70,12 @@ public class InterviewerSchedule extends InterviewerPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 LocalDate date = ((Date) ((JDatePanelImpl) entryBox.get(1)).getModel().getValue()).toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-                int selectedIndex = interviewToScheduleList.getSelectedIndex();
-                Interview interview = interviewsToBeScheduled.get(selectedIndex);
+                int selectedIndex = interviewList.getSelectedIndex();
+                Interview interview = interviews.get(selectedIndex);
                 if (date.isAfter(today)) {
                     boolean canSchedule = interviewerInterface.scheduleInterview(interview, date, ((JComboBox) entryBox.get(0)).getSelectedIndex());
                     if (canSchedule) {
-                        interviewsToBeScheduled.remove(selectedIndex);
+                        interviews.remove(selectedIndex);
                         //TODO: update InterviewerViewComplete
                         scheduleInterviews.remove(selectedIndex);
                         futureInterviews.add(interview);
