@@ -11,6 +11,7 @@ import java.util.TreeMap;
 public class Status implements Serializable, Observable {
 
     // === Class variables ===
+    static final long serialVersionUID = 1L;
     // Job application statuses as constants
     private static final int ARCHIVED = -3;
     private static final int SUBMITTED = -2;

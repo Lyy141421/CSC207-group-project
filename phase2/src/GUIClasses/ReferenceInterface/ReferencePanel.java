@@ -9,6 +9,8 @@ import CompanyStuff.Company;
 import CompanyStuff.JobPostings.BranchJobPosting;
 import CompanyStuff.JobPostings.BranchJobPostingManager;
 import FileLoadingAndStoring.DataLoaderAndStorer;
+import GUIClasses.ActionListeners.LogoutActionListener;
+import GUIClasses.CommonUserGUI.UserPanel;
 import Main.JobApplicationSystem;
 import GUIClasses.CommonUserGUI.FrequentlyUsedMethods;
 import GUIClasses.CommonUserGUI.UserProfilePanel;
@@ -20,22 +22,20 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class ReferencePanel extends JPanel {
+public class ReferencePanel extends UserPanel {
 
     // === Instance variables ===
     private Reference reference;
     private JPanel cards = new JPanel(new CardLayout());
-    public static final String HOME = "Home";
-    public static final String PROFILE = "Profile";
     static final String SUBMIT_REFERENCE_LETTER = "Submit";
     static final String VIEW_REFEREE_JOB_POSTINGS = "View Referee Job Postings";
     public static final String SUCCESSFUL_SUBMISSION = "Successful Submission";
 
     // === Constructor ===
-    ReferencePanel(Reference reference, JobApplicationSystem jobApplicationSystem) {
-        this.reference = reference;
+    public ReferencePanel(String username, JobApplicationSystem jobApplicationSystem, LogoutActionListener logoutActionListener) {
+        this.reference = (Reference) jobApplicationSystem.getUserManager().findUserByUsername(username);
         this.setLayout(new BorderLayout());
-        this.add(new ReferenceSideBarMenuPanel(jobApplicationSystem), BorderLayout.WEST);
+        this.add(new ReferenceSideBarMenuPanel(logoutActionListener), BorderLayout.WEST);
         this.addCards();
     }
 
@@ -43,8 +43,8 @@ public class ReferencePanel extends JPanel {
      * Add the cards to the card layout panel
      */
     private void addCards() {
-        cards.add(new ReferenceHomePanel(this.reference), HOME);
-        cards.add(new UserProfilePanel(this.reference), PROFILE);
+        cards.add(new ReferenceHomePanel(this.reference), UserPanel.HOME);
+        cards.add(new UserProfilePanel(this.reference), UserPanel.PROFILE);
         cards.add(new ReferenceSubmitLetterPanel(this.reference), SUBMIT_REFERENCE_LETTER);
         cards.add(new ReferenceViewRefereeJobPostingsPanel(this.reference), VIEW_REFEREE_JOB_POSTINGS);
         cards.add(this.successfulSubmissionPanel(), SUCCESSFUL_SUBMISSION);
@@ -87,19 +87,20 @@ public class ReferencePanel extends JPanel {
         Applicant applicant = jobApplicationSystem.getUserManager().createApplicant("username", "password", "Legal Name", "email@gmail.com", LocalDate.now(), "L4B4P8");
         BranchJobPosting jobPosting = new BranchJobPosting("title", "field", "descriptionhujedkfnvsgrhjegskamkagjrwuiladkvmkajgirwouskvmzkjgiskdzvn,mkngs\niznvjgsirklzngjslitw4gsijlkznjsirtwtrsigjlzknvmJDEI0   IPUOwrahektdznmv\nlpox-98uy7gufhvnb tmwkeafoisCXU*yygchbvn    4mk2RWFsvzx\nwgudkngrhadkjn\nwhaegkjsc\ngwaeihfkncMZ<ghaecsknm,z\n",
                 new ArrayList<>(Arrays.asList("CV", "Cover Letter", "Reference Letter")), new ArrayList<>(), 1, branch, LocalDate.of(2019, 7, 19), LocalDate.of(2019, 7, 19), LocalDate.now());
-        JobApplication jobApp = new JobApplication(applicant, jobPosting, new ArrayList<>(), LocalDate.of(2019, 7, 19));
+        JobApplication jobApp = new JobApplication(applicant, jobPosting, LocalDate.of(2019, 7, 19));
         JobApplicationDocument doc = new JobApplicationDocument(new File("./sample.txt"), applicant.getUsername());
         JobApplicationDocument doc2 = new JobApplicationDocument(new File("./sample.txt"), applicant.getUsername());
         jobApp.addFiles(new ArrayList<>(Arrays.asList(doc, doc2)));
         Applicant applicant2 = jobApplicationSystem.getUserManager().createApplicant("username2", "password", "Legal Name2", "email@gmail.com", LocalDate.of(2019, 7, 19), "L4B4P8");
         BranchJobPosting jobPosting2 = new BranchJobPosting("title2", "field", "description",
                 new ArrayList<>(Arrays.asList("CV", "Cover Letter", "Reference Letter")), new ArrayList<>(), 1, branch, LocalDate.of(2019, 7, 20), LocalDate.of(2019, 7, 20), LocalDate.now());
-        JobApplication jobApp2 = new JobApplication(applicant2, jobPosting2, new ArrayList<>(), LocalDate.of(2019, 7, 19));
+        JobApplication jobApp2 = new JobApplication(applicant2, jobPosting2, LocalDate.of(2019, 7, 19));
         reference.addJobApplication(jobApp);
         reference.addJobApplication(jobApp2);
         BranchJobPostingManager branchJobPostingManager = branch.getJobPostingManager();
         branchJobPostingManager.updateJobPostingsClosedForApplications(LocalDate.now());
-        frame.add(new ReferencePanel(reference, jobApplicationSystem));
+        LogoutActionListener logoutActionListener = new LogoutActionListener(new Container(), new CardLayout(), jobApplicationSystem);
+        frame.add(new ReferencePanel(reference.getUsername(), jobApplicationSystem, logoutActionListener));
         frame.setSize(800, 600);
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

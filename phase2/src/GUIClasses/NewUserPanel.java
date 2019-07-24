@@ -10,13 +10,13 @@ import java.awt.*;
  * Along with LoginPanel, NewUserPanel is one of the mandatory cards that should be present in MainFrame.
  */
 
-class NewUserPanel extends JPanel {
+/*class NewUserPanel extends JPanel {
     private UserInterfaceTest BackEnd;
     private CardLayout masterLayout;
     private Container parent;
     private JComboBox mainSelector;
     private String newUsername;
-    private JDialog success;
+    private JDialog success;*/
 
     /*NewUserPanel(Container parent, CardLayout masterLayout) {
         this.parent = parent;
@@ -376,4 +376,4 @@ class NewUserPanel extends JPanel {
     void setNewUsername(String username) {
         this.newUsername = username;
     }*/
-}
+//}

@@ -64,6 +64,22 @@ public class Interviewer extends User {
     // === Other methods ===
 
     /**
+     * Get the earliest time available one week from today when the interviewer is available.
+     *
+     * @param today   Today's date.
+     * @param numDays The number of days from today when interviews can be scheduled for.
+     * @return the earliest time available one week from today when the interviewer is available.
+     */
+    public InterviewTime getEarliestTimeAvailableNumDaysAfterToday(LocalDate today, int numDays) {
+        LocalDate date = today.plusDays(numDays);
+        while (!this.isAvailable(date)) {
+            date = date.plusDays(1);
+        }
+        String earliestTimeSlot = this.getTimeSlotsAvailableOnDate(date).get(0);
+        return new InterviewTime(date, InterviewTime.timeSlots.indexOf(earliestTimeSlot));
+    }
+
+    /**
      * Find the job application with this id from the list of job applications that this interviewer can view.
      *
      * @param id The id in question.
@@ -109,6 +125,24 @@ public class Interviewer extends User {
         return true;
     }
 
+    public boolean isAvailable(LocalDate date) {
+        return this.getInterviewsOnDate(date).size() < InterviewTime.timeSlots.size();
+    }
+
+    /**
+     * Get a list of time slots for which this interviewer is available on this date.
+     * @param date  Today's date.
+     * @return a list of time slots available on this date.
+     */
+    public ArrayList<String> getTimeSlotsAvailableOnDate(LocalDate date) {
+        ArrayList<Interview> interviewsOnDate = this.getInterviewsOnDate(date);
+        ArrayList<String> timeSlots = (ArrayList<String>) InterviewTime.timeSlots.clone();
+        for (Interview interview : interviewsOnDate) {
+            timeSlots.remove(interview.getTime().getTimeSlotsString());
+        }
+        return timeSlots;
+    }
+
     /**
      * Get interviews on this date.
      *
@@ -117,7 +151,7 @@ public class Interviewer extends User {
      */
     private ArrayList<Interview> getInterviewsOnDate(LocalDate date) {
         ArrayList<Interview> interviewsOnDate = new ArrayList<>();
-        for (Interview interview : this.interviews) {
+        for (Interview interview : this.getScheduledUpcomingInterviews(date)) {
             if (interview.getTime().getDate().isEqual(date)) {
                 interviewsOnDate.add(interview);
             }
@@ -157,7 +191,7 @@ public class Interviewer extends User {
     public ArrayList<Interview> getScheduledUpcomingInterviews(LocalDate today) {
         ArrayList<Interview> scheduledInterviews = new ArrayList<>();
         for (Interview interview : this.interviews) {
-            if (!interview.isComplete() && !interview.getTime().getDate().isBefore(today)) {
+            if (interview.getTime() != null && !interview.isComplete() && !interview.getTime().getDate().isBefore(today)) {
                 scheduledInterviews.add(interview);
             }
         }
@@ -166,17 +200,47 @@ public class Interviewer extends User {
 
     /**
      * Get a list of incomplete interviews for this interviewer.
-     *
      * @return a list of incomplete interviews for this interviewer.
      */
-    public ArrayList<Interview> getIncompleteInterviews(LocalDate today) {
+    public ArrayList<Interview> getAllIncompleteInterviews() {
         ArrayList<Interview> incompleteInterviews = new ArrayList<>();
         for (Interview interview : this.interviews) {
-            if (!interview.isComplete() && interview.getTime().getDate().isBefore(today)) {
+            if (interview.getTime() != null && !interview.isComplete()) {
                 incompleteInterviews.add(interview);
             }
         }
         return incompleteInterviews;
+    }
+
+    /**
+     * Get a list of incomplete interviews for this interviewer that have already occurred.
+     * @param today Today's date.
+     * @return a list of incomplete interviews for this interviewer.
+     */
+    public ArrayList<Interview> getIncompleteInterviewsAlreadyOccurred(LocalDate today) {
+        ArrayList<Interview> incompleteInterviews = new ArrayList<>();
+        for (Interview interview : this.getAllIncompleteInterviews()) {
+            if (interview.getTime().getDate().isBefore(today)) {
+                incompleteInterviews.add(interview);
+            }
+        }
+        return incompleteInterviews;
+    }
+
+    /**
+     * Get a list of incomplete interviews for which this interviewer is a coordinator.
+     *
+     * @param today Today's date.
+     * @return a list fo incomplete interviews for which this interviewer is a coordinator.
+     */
+    public ArrayList<Interview> getIncompleteInterviewsAsCoordinator(LocalDate today) {
+        ArrayList<Interview> interviews = new ArrayList<>();
+        for (Interview interview : this.getIncompleteInterviewsAlreadyOccurred(today)) {
+            if (interview.getInterviewCoordinator().equals(this)) {
+                interviews.add(interview);
+            }
+        }
+        return interviews;
     }
 
     /**
@@ -199,7 +263,7 @@ public class Interviewer extends User {
 
     @Override
     public String[] getDisplayedProfileInformation() {
-        return new String[]{"HR Coordinator", this.getUsername(), this.getLegalName(), this.getEmail(),
+        return new String[]{"Interviewer", this.getUsername(), this.getLegalName(), this.getEmail(),
                 this.getBranch().getName(), this.getField(), this.getDateCreated().toString()};
     }
 

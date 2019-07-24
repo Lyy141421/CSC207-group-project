@@ -1,4 +1,4 @@
-package ActionListeners;
+package GUIClasses.ActionListeners;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

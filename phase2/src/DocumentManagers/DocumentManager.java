@@ -7,9 +7,13 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 public class DocumentManager implements Serializable {
+
+    // === Class variables ===
+    static final long serialVersionUID = 1L;
     // The initial path
     static String INITIAL_PATH = "./uploadedDocuments";
 
+    // === Instance variables ===
     // The actual folder that contains the company's/user's documents
     private File folder;
 

@@ -14,6 +14,9 @@ import java.util.HashMap;
 
 public class Company implements Serializable {
 
+    // === Class variables ===
+    static final long serialVersionUID = 1L;
+
     // === Instance variables ===
     // The name of this company (unique)
     private String name;
@@ -82,6 +85,15 @@ public class Company implements Serializable {
         Branch newBranch = new Branch(name, CMA, this);
         branches.add(newBranch);
         return newBranch;
+    }
+
+    public Branch getBranch(String name) {
+        for (Branch branch : this.getBranches()) {
+            if (branch.getName().equals(name)) {
+                return branch;
+            }
+        }
+        return null;
     }
 
     /**

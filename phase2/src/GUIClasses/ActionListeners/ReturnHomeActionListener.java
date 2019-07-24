@@ -1,5 +1,6 @@
-package ActionListeners;
+package GUIClasses.ActionListeners;
 
+import GUIClasses.CommonUserGUI.UserPanel;
 import GUIClasses.ReferenceInterface.ReferencePanel;
 
 import javax.swing.*;
@@ -16,6 +17,6 @@ public class ReturnHomeActionListener implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         JPanel cards = new CardLayoutPanelGetter().fromMenuItemDirectlyOnMenuBar(e);
         CardLayout cl = (CardLayout) cards.getLayout();
-        cl.show(cards, ReferencePanel.HOME);
+        cl.show(cards, UserPanel.HOME);
     }
 }

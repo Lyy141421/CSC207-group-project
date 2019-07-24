@@ -114,7 +114,7 @@ public class Applicant extends User {
             for (Branch branch : company.getBranches()) {
                 BranchJobPostingManager jpm = branch.getJobPostingManager();
                 ArrayList<BranchJobPosting> openPostings = jpm.getOpenJobPostings(jobAppSystem.getToday());
-                openPostings.retainAll(jpm.getJobPostingsNotAppliedToBy(this));
+                openPostings.retainAll(jpm.getJobPostingsNotAppliedToByApplicant(this));
                 jobPostings.addAll(openPostings);
                 }
         return jobPostings;

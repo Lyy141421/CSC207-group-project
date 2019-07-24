@@ -1,6 +1,6 @@
 package GUIClasses.CommonUserGUI;
 
-import ActionListeners.DocumentSelectorRemoveFileButtonActionListener;
+import GUIClasses.ActionListeners.DocumentSelectorRemoveFileButtonActionListener;
 
 import javax.swing.*;
 import java.awt.*;

@@ -3,12 +3,14 @@ package CompanyStuff;
 import ApplicantStuff.JobApplication;
 import Miscellaneous.InterviewTime;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Interview {
+public class Interview implements Serializable {
 
     // === Class variables ===
+    static final long serialVersionUID = 1L;
     // The total number of interviews conducted
     private static int totalNumOfInterviews;
     // The interview types allowed
@@ -269,6 +271,37 @@ public class Interview {
         return new String[]{jobApp.getJobPosting().getTitle(), this.getInterviewTypeAndDescription()[0],
                 this.getInterviewTypeAndDescription()[1], this.getInterviewCoordinator().getLegalName(),
                 this.getTime().toString()};
+    }
+
+    public String getMiniDescriptionForInterviewer() {
+        JobApplication jobApp = this.getJobApplications().get(0);
+        String s = "Job Posting: " + jobApp.getJobPosting().getTitle() + "  ";
+        s += "Interview Description: " + this.getInterviewTypeAndDescription()[1] + "   ";
+        return s;
+    }
+
+    public String getOtherInterviewersNames() {
+        String s = "";
+        for (Interviewer interviewer : this.getOtherInterviewers()) {
+            s += interviewer.getLegalName() + ", ";
+        }
+        s = s.substring(0, s.length() - 2);
+        return s;
+    }
+
+    @Override
+    public String toString() {
+        String s = "Interview ID: " + this.getId() + "\n";
+        s += "Job Posting: " + this.getJobApplications().get(0).getJobPosting().getTitle() + "\n";
+        s += "Interview Type: " + this.getInterviewTypeAndDescription()[0] + "\n";
+        s += "Interview Description: " + this.getInterviewTypeAndDescription()[1] + "\n";
+        s += "Interview Coordinator: " + this.getInterviewCoordinator().getLegalName() + "\n";
+        if (!this.getOtherInterviewers().isEmpty()) {
+            s += "Secondary Interviewers: " + this.getOtherInterviewersNames() + "\n";
+        }
+        s += "Interviewees: " + this.getIntervieweeNames() + "\n";
+        s += "Interview Time: " + this.getTime();
+        return s;
     }
 
     // ============================================================================================================== //

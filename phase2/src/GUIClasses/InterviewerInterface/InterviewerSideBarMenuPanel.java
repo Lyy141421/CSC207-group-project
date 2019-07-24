@@ -1,8 +1,9 @@
 package GUIClasses.InterviewerInterface;
 
-import ActionListeners.LogoutActionListener;
-import ActionListeners.ProfileActionListener;
-import ActionListeners.ReturnHomeActionListener;
+import GUIClasses.ActionListeners.CardLayoutPanelGetter;
+import GUIClasses.ActionListeners.LogoutActionListener;
+import GUIClasses.ActionListeners.ProfileActionListener;
+import GUIClasses.ActionListeners.ReturnHomeActionListener;
 import Main.JobApplicationSystem;
 import GUIClasses.CommonUserGUI.SideBarMenu;
 
@@ -20,40 +21,16 @@ public class InterviewerSideBarMenuPanel extends JPanel {
     private static int NUM_MAIN_MENU_OPTIONS = 6;
 
     // === Instance variables ===
-    private JobApplicationSystem jobAppSystem;
+    private LogoutActionListener logoutActionListener;
 
     // === Constructor ===
-    InterviewerSideBarMenuPanel(JobApplicationSystem jobAppSystem) {
-        this.jobAppSystem = jobAppSystem;
-
+    InterviewerSideBarMenuPanel(LogoutActionListener logoutActionListener) {
+        this.logoutActionListener = logoutActionListener;
         TreeMap<String, Object> fullMenu = this.createFullMenu();
         this.setLayout(new BorderLayout());
         this.add(new SideBarMenu(fullMenu, CELL_WIDTH, CELL_HEIGHT).createMenuBar());
         this.setSize(CELL_WIDTH, CELL_HEIGHT * NUM_MAIN_MENU_OPTIONS);
     }
-
-
-//    /**
-//     * Create the map for the full job postings sub menu.
-//     *
-//     * @return the map for the full job postings sub menu.
-//     */
-//    private TreeMap<String, Object> viewIntervieweesMenu() {
-//        TreeMap<String, Object> viewIntervieweesMenu = new TreeMap<>();
-//        viewIntervieweesMenu.put("1. Search Interview", new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//
-//            }
-//        });
-//        viewIntervieweesMenu.put("2. View All Interviews", new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//
-//            }
-//        });
-//        return viewIntervieweesMenu;
-//    }
 
     /**
      * Create the map for the full menu.
@@ -64,24 +41,31 @@ public class InterviewerSideBarMenuPanel extends JPanel {
         TreeMap<String, Object> fullMenu = new TreeMap<>();
         fullMenu.put("1. Home", new ReturnHomeActionListener());
         fullMenu.put("2. Profile", new ProfileActionListener());
-        fullMenu.put("3. Schedule One-on-One Interviews", new ActionListener() {
+        fullMenu.put("3. View Interviewees", new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                JPanel cards = new CardLayoutPanelGetter().fromMenuItemDirectlyOnMenuBar(e);
+                CardLayout cl = (CardLayout) cards.getLayout();
+                cl.show(cards, InterviewerMain.INCOMPLETE);
             }
         });
-        fullMenu.put("4. Complete Interviews", new ActionListener() {
+        fullMenu.put("4. Add Interview Notes", new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                JPanel cards = new CardLayoutPanelGetter().fromMenuItemDirectlyOnMenuBar(e);
+                CardLayout cl = (CardLayout) cards.getLayout();
+                cl.show(cards, InterviewerMain.ADD_NOTES);
             }
         });
-        fullMenu.put("5. View Interviewees", new ActionListener() {
+        fullMenu.put("5. Set Interview Results", new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                JPanel cards = new CardLayoutPanelGetter().fromMenuItemDirectlyOnMenuBar(e);
+                CardLayout cl = (CardLayout) cards.getLayout();
+                cl.show(cards, InterviewerMain.COORDINATOR);
             }
         });
-        fullMenu.put("6. Logout", new LogoutActionListener(jobAppSystem));
+        fullMenu.put("6. Logout", logoutActionListener);
         return fullMenu;
     }
 
@@ -91,13 +75,15 @@ public class InterviewerSideBarMenuPanel extends JPanel {
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 JobApplicationSystem jobAppSystem = new JobApplicationSystem();
+                LogoutActionListener logoutActionListener = new LogoutActionListener(new Container(),
+                        new CardLayout(), jobAppSystem);
 
                 JFrame frame = new JFrame("Interviewer Home Page");
                 frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
                 JPanel menuPanel = new JPanel();
                 menuPanel.setBackground(Color.WHITE); // contrasting bg
-                menuPanel.add(new InterviewerSideBarMenuPanel(jobAppSystem));
+                menuPanel.add(new InterviewerSideBarMenuPanel(logoutActionListener));
 
                 Container contentPane = frame.getContentPane();
                 contentPane.setBackground(Color.WHITE); //contrasting bg

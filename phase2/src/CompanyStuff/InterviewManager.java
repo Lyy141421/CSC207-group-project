@@ -2,8 +2,10 @@ package CompanyStuff;
 
 import ApplicantStuff.JobApplication;
 import CompanyStuff.JobPostings.BranchJobPosting;
+import Miscellaneous.InterviewTime;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class InterviewManager implements Serializable {
@@ -12,13 +14,16 @@ public class InterviewManager implements Serializable {
      */
 
     // === Class variables ===
+    static final long serialVersionUID = 1L;
     // Integers that represent the task the HR Coordinator needs to accomplish
     public static final int CLOSE_POSTING_NO_HIRE = -1;
     private static final int DO_NOTHING = 0;
-    static final int SELECT_APPS_FOR_FIRST_ROUND = 1;
-    static final int SET_INTERVIEW_CONFIGURATION = 2;
+    public static final int SELECT_APPS_FOR_FIRST_ROUND = 1;
+    public static final int SET_INTERVIEW_CONFIGURATION = 2;
     public static final int SCHEDULE_GROUP_INTERVIEWS = 3;
     public static final int HIRE_APPLICANTS = 4;
+    // The minimum number of days between interview scheduling and the interview taking place
+    static final int MIN_NUM_DAYS_BETWEEN_SCHEDULING_AND_INTERVIEW = 7;
 
     // === Instance variables ===
     // The job posting for this interview manager
@@ -33,6 +38,8 @@ public class InterviewManager implements Serializable {
     private int currentRound = 0;
     // The maximum number of interview rounds
     private int maxNumberOfRounds;
+    // Whether or not the applicants have been weeded out before the first round of interviews
+    private boolean chosenApplicantsForFirstRound = false;
 
     // === Representation invariants ===
     // The list of interviews for each applicant is sorted by date.
@@ -62,6 +69,10 @@ public class InterviewManager implements Serializable {
 
     public String[] getCurrentRoundTypeAndDescription() {
         return this.interviewConfiguration.get(this.currentRound);
+    }
+
+    public boolean hasChosenApplicantsForFirstRound() {
+        return this.chosenApplicantsForFirstRound;
     }
 
     public ArrayList<String[]> getInterviewConfiguration() {
@@ -185,11 +196,12 @@ public class InterviewManager implements Serializable {
     public int getHrTask() {
         if (this.hasNoJobApplicationsInConsideration()) {
             return InterviewManager.CLOSE_POSTING_NO_HIRE;
+        } else if (!this.hasChosenApplicantsForFirstRound()) {
+            return InterviewManager.SELECT_APPS_FOR_FIRST_ROUND;
+        } else if (this.interviewConfiguration.isEmpty()) {
+            return InterviewManager.SET_INTERVIEW_CONFIGURATION;
         } else if (this.currentRound != 0 && this.isNumApplicationsUnderOrAtThreshold()) {
             return InterviewManager.HIRE_APPLICANTS;
-        } else if (!this.branchJobPosting.getJobApplications().isEmpty() && this.interviewConfiguration.isEmpty()) {
-            // Applicants for first round of interviews selected but no interview configuration decided
-            return InterviewManager.SET_INTERVIEW_CONFIGURATION;
         } else if (this.isInterviewProcessOver()) {
             return InterviewManager.HIRE_APPLICANTS;
         } else if (this.isCurrentRoundOver() && this.isNextRoundGroupInterview()) {
@@ -202,11 +214,14 @@ public class InterviewManager implements Serializable {
     /**
      * Set up one-on-one interviews for all applications in consideration.
      */
-    public void setUpOneOnOneInterviews() {
+    public void setUpOneOnOneInterviews(LocalDate today) {
         for (JobApplication jobApp : this.applicationsInConsideration) {
             String field = this.branchJobPosting.getField();
             Interviewer interviewer = this.branchJobPosting.getBranch().findInterviewerByField(field);
-            new Interview(jobApp, interviewer);
+            Interview interview = new Interview(jobApp, interviewer);
+            InterviewTime interviewTime = interviewer.getEarliestTimeAvailableNumDaysAfterToday(today,
+                    MIN_NUM_DAYS_BETWEEN_SCHEDULING_AND_INTERVIEW);
+            interview.setTime(interviewTime);
             jobApp.getStatus().advanceStatus();
         }
     }

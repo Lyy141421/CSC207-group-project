@@ -1,19 +1,21 @@
-package GUIClasses;
+//package GUIClasses;
 
 //import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
 //import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
 //import net.sourceforge.jdatepicker.impl.UtilDateModel;
 
-import javax.swing.*;
-import java.awt.*;
-import java.time.LocalDate;
+//import GUIClasses.StartInterface.NewUserPanel;
 
-public class MainFrame extends JFrame {
-
-    LocalDate today;
-    private CardLayout layoutManager = new CardLayout();
-    //private JPanel homePanel;
-    NewUserPanel newUserRef;
+//import javax.swing.*;
+//import java.awt.*;
+//import java.time.LocalDate;
+//
+//public class MainFrame extends JFrame {
+//
+//    LocalDate today;
+//    private CardLayout layoutManager = new CardLayout();
+//    //private JPanel homePanel;
+//    NewUserPanel newUserRef;
 
     /*public MainFrame (LocalDate today) {
         super("GET A JOB");
@@ -60,9 +62,9 @@ public class MainFrame extends JFrame {
     private void addCards () {
         //this.add(this.homePanel);
         // We need to be careful with when these cards get constructed, in case it's missing arguments to run methods
-        this.add(new LoginPanel(this.getContentPane(), this.layoutManager), "LOGIN");
-        this.newUserRef = new NewUserPanel(this.getContentPane(), this.layoutManager);
-        this.add(this.newUserRef, "NEWUSER");
+        NewUserPanel newUserRef = new NewUserPanel(this.getContentPane(), this.layoutManager);
+        this.add(newUserRef, "NEWUSER");
+        this.add(new LoginMain(this.getContentPane(), this.layoutManager, newUserRef), "LOGIN");
         // got User object from login/signup
         //interface = new InterfaceFactory.create(User)
         //if User instanceOf ...
@@ -75,4 +77,4 @@ public class MainFrame extends JFrame {
     public static void main(String[] args) {
         MainFrame test = new MainFrame();
     }*/
-}
+//}

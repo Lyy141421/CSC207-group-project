@@ -14,6 +14,7 @@ public abstract class User implements Serializable, Observer {
      */
 
     // === Class variables ===
+    static final long serialVersionUID = 1L;
     // The password length of a random generated password
     private static int PASSWORD_LENGTH = 8;
     // The characters allowed in the random password
