@@ -1,3 +1,13 @@
+package CompanyStuff.JobPostings;
+
+import CompanyStuff.Branch;
+import CompanyStuff.Company;
+import CompanyStuff.Interviewer;
+import NotificationSystem.NotificationManager;
+import org.junit.jupiter.api.Test;
+
+import java.time.LocalDate;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class InterviewerTest {
@@ -8,10 +18,10 @@ class InterviewerTest {
 
     Interviewer createInterviewer (String username){
         return new Interviewer(username, "ABC123", username + "'s Real Name", username + "@gmail.com", branch_a,
-                "Sales", LocalDate.of(2019, 7, 29))
+                "Sales", LocalDate.of(2019, 7, 29));
     }
 
-    @test
+    @Test
     void testConstructor() {
         Interviewer interviewer = this.createInterviewer("Phillip");
 
@@ -24,7 +34,7 @@ class InterviewerTest {
         assertTrue(interviewer.getNotificationManager() instanceof NotificationManager);
         assertEquals(interviewer.getBranch().getName(), "BranchName");
         assertEquals(interviewer.getBranch().getCma(), "Skiff Lake");
-        assertEquals(interviewer.getField().getCma(), "Sales");
+        assertEquals(interviewer.getField(), "Sales");
     }
 
 
