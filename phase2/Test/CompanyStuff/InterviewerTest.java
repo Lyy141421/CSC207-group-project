@@ -1,10 +1,14 @@
 package CompanyStuff;
 
+import ApplicantStuff.Applicant;
+import ApplicantStuff.JobApplication;
+import CompanyStuff.JobPostings.BranchJobPosting;
 import NotificationSystem.Notification;
 import NotificationSystem.NotificationManager;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -13,6 +17,10 @@ class InterviewerTest {
     Company company_a = new Company("company_a");
     Branch branch_a = company_a.createBranch("BranchName", "Skiff Lake");
 
+
+    Branch createBranch (String name){
+        return company_a.createBranch(name, "Skiff Lake");
+    }
 
     Interviewer createInterviewer (String username){
         return new Interviewer(username, "ABC123", username + "'s Real Name", username + "@gmail.com", branch_a,
@@ -129,26 +137,47 @@ class InterviewerTest {
 
     @Test
     void getBranch() {
+        Interviewer interviewer = this.createInterviewer("Phillip");
+        assertTrue(interviewer.getBranch() instanceof Branch);
+        assertEquals(interviewer.getBranch().getName(), "BranchName");
     }
 
     @Test
     void getField() {
+        Interviewer interviewer = this.createInterviewer("Phillip");
+        assertEquals(interviewer.getField(), "Sales");
     }
 
     @Test
     void getInterviews() {
+        Interviewer interviewer = this.createInterviewer("Phillip");
+        assertTrue(interviewer.getInterviews() instanceof ArrayList);
     }
 
     @Test
     void setField() {
+        Interviewer interviewer = this.createInterviewer("Phillip");
+        interviewer.setField("Quality Assurance");
+        assertEquals(interviewer.getField(), "Quality Assurance");
     }
 
     @Test
     void setBranch() {
+        Interviewer interviewer = this.createInterviewer("Phillip");
+        interviewer.setBranch(createBranch("Branch 2.0"));
+        assertEquals(interviewer.getBranch().getName(), "Branch 2.0");
     }
 
     @Test
     void setInterviews() {
+        Interviewer interviewer = this.createInterviewer("Phillip");
+        ArrayList<Interview> lst = new ArrayList<>();
+        lst.add(new Interview(
+                new JobApplication(new Applicant("","","","", LocalDate.now(), ""),
+                new BranchJobPosting("","","",new ArrayList<>(), new ArrayList<>(),1,branch_a, LocalDate.of(2020,1,1), LocalDate.of(2020,1,1), LocalDate.of(2020,1,1)),
+                LocalDate.of(2020,1,1)), interviewer));
+        interviewer.setInterviews(lst);
+        assertTrue(interviewer.getInterviews().size() == 0);
     }
 
     @Test
