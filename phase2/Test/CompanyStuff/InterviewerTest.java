@@ -88,14 +88,35 @@ class InterviewerTest {
 
     @Test
     void update() {
+        Interviewer interviewer = this.createInterviewer("Phillip");
+        interviewer.update(new Notification("TestN", "TestN text"));
+        assertTrue(interviewer.getNotificationManager().getNotifications().size() == 1);
+        interviewer.update(5);
+        assertTrue(interviewer.getNotificationManager().getNotifications().size() == 0);
+    }
+
+    @Test
+    void getAllNotifications() {
+        Interviewer interviewer = this.createInterviewer("Phillip");
+        interviewer.update(new Notification("TestN", "TestN text"));
+        interviewer.update(new Notification("TestN2", "TestN text2"));
+        assertTrue(interviewer.getAllNotifications().size() == 2);
     }
 
     @Test
     void addNotification() {
+        Interviewer interviewer = this.createInterviewer("Phillip");
+        interviewer.addNotification(new Notification("TestN", "TestN text"));
+        assertTrue(interviewer.getNotificationManager().getNotifications().size() == 1);
     }
 
     @Test
     void removeNotification() {
+        Interviewer interviewer = this.createInterviewer("Phillip");
+        Notification notification = new Notification("TestN", "TestN text");
+        interviewer.addNotification(notification);
+        interviewer.removeNotification(notification);
+        assertTrue(interviewer.getNotificationManager().getNotifications().size() == 1);
     }
 
     @Test
