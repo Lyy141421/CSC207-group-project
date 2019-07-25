@@ -102,17 +102,18 @@ class JobApplicationTest {
         interviewConfiguration.add(new String[]{Interview.ONE_ON_ONE, "In-person"});
         interviewConfiguration.add(new String[]{Interview.ONE_ON_ONE, "In-person"});
         jobPosting.getInterviewManager().setInterviewConfiguration(interviewConfiguration);
-        Interviewer interviewer = new Interviewer("Interviewer", "password", "Legal Name", "email", jobPosting.getBranch(), "field", LocalDate.of(2019, 7, 10));
-        jobPosting.getBranch().addInterviewer(interviewer);
-        jobPosting.getInterviewManager().setUpOneOnOneInterviews(LocalDate.of(2019, 8, 11));
+        new Interviewer("Interviewer", "password", "Legal Name", "email", jobPosting.getBranch(), "field", LocalDate.of(2019, 7, 10));
+        jobPosting.getInterviewManager().setUpOneOnOneInterviews();
         Interview interview = jobPosting.getInterviewManager().getApplicationsInConsideration().get(0).getLastInterview();
+        interview.setTime(new InterviewTime(LocalDate.of(2019, 8, 11), InterviewTime.ELEVEN_AM_TO_NOON));
         interview.setResult(jobApp, true);
-        jobPosting.getInterviewManager().setUpOneOnOneInterviews(LocalDate.of(2019, 8, 20));
+        jobPosting.getInterviewManager().setUpOneOnOneInterviews();
         Interview interview2 = jobPosting.getInterviewManager().getApplicationsInConsideration().get(0).getLastInterview();
+        interview.setTime(new InterviewTime(LocalDate.of(2019, 8, 20), InterviewTime.ELEVEN_AM_TO_NOON));
         interview2.setResult(jobApp, true);
-        jobPosting.getInterviewManager().setUpOneOnOneInterviews(LocalDate.of(2019, 8, 29));
+        jobPosting.getInterviewManager().setUpOneOnOneInterviews();
         Interview interview3 = jobPosting.getInterviewManager().getApplicationsInConsideration().get(0).getLastInterview();
-        interview3.setTime(new InterviewTime(LocalDate.of(2019, 9, 13), 3));
+        interview3.setTime(new InterviewTime(LocalDate.of(2019, 9, 13), InterviewTime.ELEVEN_AM_TO_NOON));
         interview3.setResult(jobApp, true);
 
         assertNotNull(jobApp.getLastInterview());

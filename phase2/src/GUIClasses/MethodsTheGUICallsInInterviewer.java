@@ -4,8 +4,10 @@ import ApplicantStuff.JobApplication;
 import CompanyStuff.Interview;
 import CompanyStuff.Interviewer;
 import Main.JobApplicationSystem;
+import Miscellaneous.InterviewTime;
 
 import java.io.File;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -23,6 +25,15 @@ public class MethodsTheGUICallsInInterviewer {
 
     public Interviewer getInterviewer() {
         return this.interviewer;
+    }
+
+    public boolean isAfterToday(LocalDate date) {
+        return date.isAfter(this.jobAppSystem.getToday());
+    }
+
+    public int[] getTomorrow() {
+        LocalDate tomorrow = jobAppSystem.getToday().plusDays(1);
+        return new int[]{tomorrow.getYear(), tomorrow.getMonthValue(), tomorrow.getDayOfMonth()};
     }
 
     /**
@@ -51,14 +62,14 @@ public class MethodsTheGUICallsInInterviewer {
         return this.interviewer.getIncompleteInterviewsAlreadyOccuredAsCoordinator(this.jobAppSystem.getToday());
     }
 
-//    /**
-//     * Get a list of interviews that need scheduling.
-//     *
-//     * @return a list of interviews that need scheduling.
-//     */
-//    public ArrayList<Interview> getInterviewsThatNeedScheduling() {
-//        return this.interviewer.getUnscheduledInterviews();
-//    }
+    /**
+     * Get a list of interviews that need scheduling.
+     *
+     * @return a list of interviews that need scheduling.
+     */
+    public ArrayList<Interview> getInterviewsThatNeedScheduling() {
+        return this.interviewer.getUnscheduledInterviews();
+    }
 
     /**
      * Get a list of upcoming interviews.
@@ -104,22 +115,23 @@ public class MethodsTheGUICallsInInterviewer {
         return interviewerToNotes;
     }
 
-//    /**
-//     * Schedule this one-on-one interview on this date and time slot.
-//     *
-//     * @param interview The interview to be scheduled.
-//     * @param date      The date chosen.
-//     * @param timeSlot  The time slot chosen.
-//     * @return true iff this interview can be scheduled on this date and at this time.
-//     */
-//    public boolean scheduleInterview(Interview interview, LocalDate date, int timeSlot) {
-//        InterviewTime interviewTime = new InterviewTime(date, timeSlot);
-//        if (interviewer.isAvailable(interviewTime)) {
-//            interview.setTime(interviewTime);
-//            return true;
-//        } else {
-//            return false;
-//        }
-//
-//    }
+    public String[] getAvailableTimes(LocalDate date) {
+        ArrayList<String> timeSlots = this.interviewer.getTimeSlotsAvailableOnDate(date);
+        return timeSlots.toArray(new String[timeSlots.size()]);
+    }
+
+    /**
+     * Schedule this one-on-one interview on this date and time slot.
+     *
+     * @param interview The interview to be scheduled.
+     * @param date      The date chosen.
+     * @param timeSlot  The time slot chosen.
+     * @return true iff this interview can be scheduled on this date and at this time.
+     * is invalid, ie, it's before today's date.
+     * Precondition: the date is after today's date.
+     */
+    public boolean scheduleInterview(Interview interview, LocalDate date, String timeSlot) {
+        InterviewTime interviewTime = new InterviewTime(date, timeSlot);
+        return this.interviewer.scheduleInterview(interview, interviewTime);
+    }
 }

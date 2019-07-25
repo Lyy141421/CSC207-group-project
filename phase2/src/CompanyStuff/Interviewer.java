@@ -6,6 +6,8 @@ import ApplicantStuff.JobApplication;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class Interviewer extends User {
 
@@ -73,13 +75,13 @@ public class Interviewer extends User {
      * @param numDays The number of days from today when interviews can be scheduled for.
      * @return the earliest time available one week from today when the interviewer is available.
      */
-    public InterviewTime getEarliestTimeAvailableNumDaysAfterToday(LocalDate today, int numDays) {
+    public InterviewTime getEarliestTimeAvailableForNewInterview(LocalDate today, int numDays) {
         LocalDate date = today.plusDays(numDays);
         while (!this.isAvailable(date)) {
             date = date.plusDays(1);
         }
         String earliestTimeSlot = this.getTimeSlotsAvailableOnDate(date).get(0);
-        return new InterviewTime(date, InterviewTime.timeSlots.indexOf(earliestTimeSlot));
+        return new InterviewTime(date, earliestTimeSlot);
     }
 
     /**
@@ -93,21 +95,6 @@ public class Interviewer extends User {
             JobApplication jobApp = interview.findJobAppById(id);
             if (jobApp != null) {
                 return jobApp;
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Find the interview with this id from the interviews that this interviewer has access to.
-     *
-     * @param id The id in question
-     * @return the interview associated with this id or null if not found.
-     */
-    public Interview findInterviewById(int id) {
-        for (Interview interview : this.interviews) {
-            if (interview.getId() == id) {
-                return interview;
             }
         }
         return null;
@@ -131,6 +118,77 @@ public class Interviewer extends User {
     public boolean isAvailable(LocalDate date) {
         return this.getInterviewsOnDate(date).size() < InterviewTime.timeSlots.size();
     }
+
+    /**
+     * Get the first date that this interviewer is available on or after the date specified.
+     *
+     * @param date The date in question.
+     * @return the first date that this interviewer is available on or after the date specified.
+     */
+    public LocalDate getFirstDateAvailableOnOrAfterDate(LocalDate date) {
+        LocalDate availableDate = date;
+        while (!this.isAvailable(availableDate)) {
+            availableDate.plusDays(1);
+        }
+        return availableDate;
+    }
+
+    /**
+     * Get a list of time slots that are filled on this date.
+     *
+     * @param date The date in question.
+     * @return a list of time slots that are filled on this date.
+     */
+    public ArrayList<String> getTimeSlotsFilledOnDate(LocalDate date) {
+        ArrayList<String> timeSlots = (ArrayList<String>) InterviewTime.timeSlots.clone();
+        timeSlots.removeAll(this.getTimeSlotsAvailableOnDate(date));
+        return timeSlots;
+    }
+
+//    *
+//     * Get a map of this interviewer's schedule.
+//     * @return  a map of this interviewer's schedule.
+//
+//    public HashMap<LocalDate, ArrayList<String>> getScheduleMapFromDateOnwards(LocalDate date) {
+//        HashMap<LocalDate, ArrayList<String>> scheduleMap = new HashMap<>();
+//        int indexOfFirstInterviewOnOrAfterDate = this.interviews.indexOf(this.findFirstInterviewOnOrAfterDate(date, this.interviews));
+//        for (Interview interview : this.interviews.subList(indexOfFirstInterviewOnOrAfterDate, this.interviews.size())) {
+//            if (!scheduleMap.containsKey(interview.getTime().getDate())) {
+//                scheduleMap.put(interview.getTime().getDate(), new ArrayList<>());
+//            }
+//            scheduleMap.get(interview.getTime().getDate()).add(interview.getTime().getTimeSlot());
+//        }
+//        return scheduleMap;
+//    }
+//
+//    *
+//     * Find the first interview for this interview that is on or after the specified date using a binary search algorithm.
+//     * @param date          The earliest date such that a new interview can be scheduled.
+//     * @param interviews    The interviews that are being searched over.
+//     * @return  the first interview on or after the date specified or null otherwise.
+//
+//    private Interview findFirstInterviewOnOrAfterDate(LocalDate date, List<Interview> interviews) {
+//        if (interviews.size() > 1) {
+//            int midIndex = this.interviews.size() / 2;
+//            Interview interview = this.interviews.get(midIndex);
+//            if (interview.getTime().getDate().isBefore(date)) {
+//                // search in second half of list
+//                return this.findFirstInterviewOnOrAfterDate(date, this.interviews.subList(midIndex, this.interviews.size()));
+//            } else {
+//                // search in first half of interview list
+//                return this.findFirstInterviewOnOrAfterDate(date, this.interviews.subList(0, midIndex));
+//            }
+//        } else if (interviews.size() == 1){
+//            if (interviews.get(0).getTime().getDate().isBefore(date)) {
+//                return null;
+//            } else {
+//                return interviews.get(0);
+//            }
+//        } else {
+//            // No interviews set-up
+//            return null;
+//        }
+//    }
 
     /**
      * Get a list of time slots for which this interviewer is available on this date.
@@ -169,6 +227,21 @@ public class Interviewer extends User {
      */
     void removeInterview(Interview interview) {
         this.interviews.remove(interview);
+    }
+
+    /**
+     * Set up an interview time for this interview.
+     *
+     * @param interview     The interview that needs to be scheduled.
+     * @param interviewTime The interview time chosen.
+     * @return true iff this interview can be scheduled at this time.
+     */
+    public boolean scheduleInterview(Interview interview, InterviewTime interviewTime) {
+        if (this.isAvailable(interviewTime)) {
+            interview.setTime(interviewTime);
+            return true;
+        }
+        return false;
     }
 
     /**

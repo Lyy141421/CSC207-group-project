@@ -19,6 +19,7 @@ import java.util.ArrayList;
 public class InterviewerMain extends UserPanel {
 
     // === Class variables ===
+    static String SCHEDULE = "SCHEDULE";
     static String ADD_NOTES = "ADD_NOTES";
     static String INCOMPLETE = "INCOMPLETE";
     static String COORDINATOR = "COORDINATOR";
@@ -42,6 +43,7 @@ public class InterviewerMain extends UserPanel {
     private void addCards() {
         cards.add(new InterviewerHomePanel(this.interviewerInterface), InterviewerMain.HOME);
         cards.add(new UserProfilePanel(this.interviewerInterface.getInterviewer()), InterviewerMain.PROFILE);
+        cards.add(new InterviewerSchedule(this.interviewerInterface), InterviewerMain.SCHEDULE);
         cards.add(new InterviewerView(this.interviewerInterface), InterviewerMain.INCOMPLETE);
         cards.add(new InterviewerViewComplete(this.interviewerInterface), InterviewerMain.ADD_NOTES);
         cards.add(new InterviewerCoordinatorView(this.interviewerInterface), InterviewerMain.COORDINATOR);
@@ -61,7 +63,7 @@ public class InterviewerMain extends UserPanel {
         interviewConfiguration.add(new String[]{Interview.ONE_ON_ONE, "Phone interview"});
         BranchJobPosting jobPosting = branch.getJobPostingManager().getBranchJobPostings().get(0);
         jobPosting.getInterviewManager().setInterviewConfiguration(interviewConfiguration);
-        jobPosting.getInterviewManager().setUpOneOnOneInterviews(LocalDate.of(2019, 8, 11));
+        jobPosting.getInterviewManager().setUpOneOnOneInterviews();
         jobApplicationSystem.setToday(LocalDate.of(2019, 8, 20));
         LogoutActionListener logoutActionListener = new LogoutActionListener(new Container(), new CardLayout(), jobApplicationSystem);
         JFrame frame = new JFrame();

@@ -41,7 +41,15 @@ public class InterviewerSideBarMenuPanel extends JPanel {
         TreeMap<String, Object> fullMenu = new TreeMap<>();
         fullMenu.put("1. Home", new ReturnHomeActionListener());
         fullMenu.put("2. Profile", new ProfileActionListener());
-        fullMenu.put("3. View Interviewees", new ActionListener() {
+        fullMenu.put("3. Schedule Interviews", new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JPanel cards = new CardLayoutPanelGetter().fromMenuItemDirectlyOnMenuBar(e);
+                CardLayout cl = (CardLayout) cards.getLayout();
+                cl.show(cards, InterviewerMain.SCHEDULE);
+            }
+        });
+        fullMenu.put("4. View Interviewees", new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JPanel cards = new CardLayoutPanelGetter().fromMenuItemDirectlyOnMenuBar(e);
@@ -49,7 +57,7 @@ public class InterviewerSideBarMenuPanel extends JPanel {
                 cl.show(cards, InterviewerMain.INCOMPLETE);
             }
         });
-        fullMenu.put("4. Add Interview Notes", new ActionListener() {
+        fullMenu.put("5. Add Interview Notes", new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JPanel cards = new CardLayoutPanelGetter().fromMenuItemDirectlyOnMenuBar(e);
@@ -57,7 +65,7 @@ public class InterviewerSideBarMenuPanel extends JPanel {
                 cl.show(cards, InterviewerMain.ADD_NOTES);
             }
         });
-        fullMenu.put("5. Complete Interviews", new ActionListener() {
+        fullMenu.put("6. Complete Interviews", new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JPanel cards = new CardLayoutPanelGetter().fromMenuItemDirectlyOnMenuBar(e);
@@ -65,7 +73,7 @@ public class InterviewerSideBarMenuPanel extends JPanel {
                 cl.show(cards, InterviewerMain.COORDINATOR);
             }
         });
-        fullMenu.put("6. Logout", logoutActionListener);
+        fullMenu.put("7. Logout", logoutActionListener);
         return fullMenu;
     }
 

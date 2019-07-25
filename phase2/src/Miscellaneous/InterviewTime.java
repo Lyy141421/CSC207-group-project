@@ -12,22 +12,35 @@ public class InterviewTime implements Serializable {
 
     // === Class variables ===
     static final long serialVersionUID = 1L;
-    // Time slots
-    public static ArrayList<String> timeSlots = new ArrayList<>(Arrays.asList("9-10 am", "10-11 am", "1-2 pm", "2-3 pm",
-            "3-4 pm", "4-5 pm"));
+    // Possible interview times
+    public static String NINE_TO_TEN_AM = "9-10 am";
+    public static String TEN_TO_ELEVEN_AM = "10-11 am";
+    public static String ELEVEN_AM_TO_NOON = "11 am - 12 pm";
+    public static String NOON_TO_ONE_PM = "12-1 pm";
+    public static String ONE_TO_TWO_PM = "1-2 pm";
+    public static String TWO_TO_THREE_PM = "2-3 pm";
+    public static String THREE_TO_FOUR_PM = "3-4 pm";
+    public static String FOUR_TO_FIVE_PM = "4-5 pm";
+    // A list of string representations of the time slots
+    public static ArrayList<String> timeSlots = new ArrayList<>(Arrays.asList(NINE_TO_TEN_AM, TEN_TO_ELEVEN_AM, ELEVEN_AM_TO_NOON,
+            NOON_TO_ONE_PM, ONE_TO_TWO_PM, TWO_TO_THREE_PM, THREE_TO_FOUR_PM, FOUR_TO_FIVE_PM));
+
 
     // === Instance variables ===
     // The date of this interview
     private LocalDate date;
     // The time slot for this interview
-    private int timeSlot;
+    private String timeSlot;
+
+    // === Representation invariants ===
+    // timeSlot of one of the string options in the timeSlots list.
 
     // === Public methods ===
     // === Constructors ===
     public InterviewTime() {
     }
 
-    public InterviewTime(LocalDate date, int timeSlot) {
+    public InterviewTime(LocalDate date, String timeSlot) {
         this.date = date;
         this.timeSlot = timeSlot;
     }
@@ -37,7 +50,7 @@ public class InterviewTime implements Serializable {
         return this.date;
     }
 
-    public int getTimeSlot() {
+    public String getTimeSlot() {
         return this.timeSlot;
     }
 
@@ -58,7 +71,7 @@ public class InterviewTime implements Serializable {
 
     @Override
     public String toString() {
-        return date + " at " + getTimeSlotCorrespondingToInt(timeSlot);
+        return date + " at " + timeSlot;
     }
 
     @Override
@@ -67,33 +80,13 @@ public class InterviewTime implements Serializable {
             return false;
         } else {
             InterviewTime otherTime = (InterviewTime) obj;
-            return (date.equals(otherTime.getDate()) && timeSlot == otherTime.getTimeSlot());
+            return (date.equals(otherTime.getDate()) && timeSlot.equals(otherTime.getTimeSlot()));
         }
     }
 
     @Override
     public int hashCode() {
-        return timeSlot;
+        return InterviewTime.timeSlots.indexOf(timeSlot);
     }
 
-    // ============================================================================================================== //
-    // === Package-private ===
-
-    // === Setters ===
-    void setDate(LocalDate date) {
-        this.date = date;
-    }
-
-    // ============================================================================================================== //
-    // === Private methods ===
-
-    /**
-     * Get the time slot string corresponding to the int that represents it.
-     *
-     * @param timeSlot The timeslot integer.
-     * @return the string that the integer represents.
-     */
-    private String getTimeSlotCorrespondingToInt(int timeSlot) {
-        return InterviewTime.timeSlots.get(timeSlot);
-    }
 }

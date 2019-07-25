@@ -36,7 +36,6 @@ public class MethodsTheGUICallsInHR {
 
     /**
      * Gets an array list of branch job postings that are under review for first round of interviews.
-     * @param today Today's date.
      * @return the array list of branch job postings.
      */
     public ArrayList<BranchJobPosting> getJPToReview() {
@@ -46,7 +45,6 @@ public class MethodsTheGUICallsInHR {
 
     /**
      * Gets an array list of branch job postings that are ready to schedule for next round of interviews.
-     * @param today Today's date.
      * @return the array list of branch job postings.
      */
     public ArrayList<BranchJobPosting> getJPToSchedule() {
@@ -56,7 +54,6 @@ public class MethodsTheGUICallsInHR {
 
     /**
      * Gets an array list of branch job postings that are in hiring stage.
-     * @param today Today's date.
      * @return the array list of branch job postings.
      */
     public ArrayList<BranchJobPosting> getJPToHire() {
@@ -77,7 +74,6 @@ public class MethodsTheGUICallsInHR {
 
     /**
      * Add a job posting for this company.
-     * @param today  Today's date.
      * @param jobPostingFields  The fields that the user inputs.
      */
     public void addJobPosting(Object[] jobPostingFields) {
@@ -163,8 +159,9 @@ public class MethodsTheGUICallsInHR {
      * @param otherInterviewers The other interviewers selected
      */
     public void setUpGroupInterviews(BranchJobPosting jobPosting, Interviewer interviewCoordinator,
-                                     ArrayList<Interviewer> otherInterviewers) {
-        jobPosting.getInterviewManager().setUpGroupInterview(interviewCoordinator, otherInterviewers);
+                                     ArrayList<Interviewer> otherInterviewers, int minNumDaysNotice) {
+        jobPosting.getInterviewManager().setUpGroupInterview(interviewCoordinator, otherInterviewers,
+                jobAppSystem.getToday(), minNumDaysNotice);
     }
 
 }

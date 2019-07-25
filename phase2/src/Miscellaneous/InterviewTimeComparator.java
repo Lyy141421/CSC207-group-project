@@ -20,13 +20,13 @@ public class InterviewTimeComparator implements Comparator<Interview> {
      */
     public int compare(Interview interview1, Interview interview2) {
         LocalDate date1 = interview1.getTime().getDate();
-        int timeSlot1 = interview1.getTime().getTimeSlot();
+        String timeSlot1 = interview1.getTime().getTimeSlot();
         LocalDate date2 = interview2.getTime().getDate();
-        int timeSlot2 = interview2.getTime().getTimeSlot();
+        String timeSlot2 = interview2.getTime().getTimeSlot();
         if (date1.isBefore(date2)) {
             return -1;
         } else if (date1.isEqual(date2)) {
-            return timeSlot1 - timeSlot2;
+            return InterviewTime.timeSlots.indexOf(timeSlot1) - InterviewTime.timeSlots.indexOf(timeSlot2);
         } else {
             return 1;
         }

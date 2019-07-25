@@ -194,11 +194,10 @@ class ApplicantTest {
         jobPosting.getBranch().getJobPostingManager().updateJobPostingsClosedForApplications(LocalDate.of(2019, 7, 31));
         jobPosting.getBranch().getJobPostingManager().updateJobPostingsClosedForReferences(LocalDate.of(2019, 8, 11));
         Interviewer interviewer = new Interviewer("Interviewer", "password", "Legal Name", "email", jobPosting.getBranch(), "field", LocalDate.of(2019, 7, 10));
-        jobPosting.getBranch().addInterviewer(interviewer);
         ArrayList<String[]> interviewConfiguration = new ArrayList<>();
         interviewConfiguration.add(new String[]{Interview.ONE_ON_ONE, "Phone interview"});
         jobPosting.getInterviewManager().setInterviewConfiguration(interviewConfiguration);
-        jobPosting.getInterviewManager().setUpOneOnOneInterviews(LocalDate.of(2019, 8, 11));
+        jobPosting.getInterviewManager().setUpOneOnOneInterviews();
         applicant.withdrawJobApplication(LocalDate.of(2019, 8, 11), jobPosting);
 
         assertTrue(applicant.getJobApplicationManager().getJobApplications().isEmpty());
@@ -215,11 +214,12 @@ class ApplicantTest {
         jobPosting.getBranch().getJobPostingManager().updateJobPostingsClosedForApplications(LocalDate.of(2019, 7, 31));
         jobPosting.getBranch().getJobPostingManager().updateJobPostingsClosedForReferences(LocalDate.of(2019, 8, 11));
         Interviewer interviewer = new Interviewer("Interviewer", "password", "Legal Name", "email", jobPosting.getBranch(), "field", LocalDate.of(2019, 7, 10));
-        jobPosting.getBranch().addInterviewer(interviewer);
         ArrayList<String[]> interviewConfiguration = new ArrayList<>();
         interviewConfiguration.add(new String[]{Interview.ONE_ON_ONE, "Phone interview"});
         jobPosting.getInterviewManager().setInterviewConfiguration(interviewConfiguration);
-        jobPosting.getInterviewManager().setUpOneOnOneInterviews(LocalDate.of(2019, 8, 11));
+        jobPosting.getInterviewManager().setUpOneOnOneInterviews();
+        Interview interview = interviewer.getInterviews().get(0);
+        interview.setTime(new InterviewTime(LocalDate.of(2019, 8, 17), InterviewTime.FOUR_TO_FIVE_PM));
         applicant.withdrawJobApplication(LocalDate.of(2019, 8, 18), jobPosting);
 
         assertTrue(applicant.getJobApplicationManager().getJobApplications().isEmpty());
@@ -238,15 +238,12 @@ class ApplicantTest {
         Interviewer interviewer1 = new Interviewer("Interviewer1", "password", "Legal Name", "email", jobPosting.getBranch(), "field", LocalDate.of(2019, 7, 10));
         Interviewer interviewer2 = new Interviewer("Interviewer2", "password", "Legal Name", "email", jobPosting.getBranch(), "field", LocalDate.of(2019, 7, 10));
         Interviewer interviewer3 = new Interviewer("Interviewer3", "password", "Legal Name", "email", jobPosting.getBranch(), "field", LocalDate.of(2019, 7, 10));
-        jobPosting.getBranch().addInterviewer(interviewer1);
-        jobPosting.getBranch().addInterviewer(interviewer2);
-        jobPosting.getBranch().addInterviewer(interviewer3);
         ArrayList<String[]> interviewConfiguration = new ArrayList<>();
         interviewConfiguration.add(new String[]{Interview.GROUP, "In-person"});
         jobPosting.getInterviewManager().setInterviewConfiguration(interviewConfiguration);
-        jobPosting.getInterviewManager().setUpGroupInterview(interviewer1, new ArrayList<>(Arrays.asList(interviewer2, interviewer3)));
+        jobPosting.getInterviewManager().setUpGroupInterview(interviewer1, new ArrayList<>(Arrays.asList(interviewer2, interviewer3)),
+                LocalDate.of(2019, 8, 13), 3);
         Interview interview = jobPosting.getInterviewManager().getApplicationsInConsideration().get(0).getLastInterview();
-        interview.setTime(new InterviewTime(LocalDate.of(2019, 8, 13), 3));
 
         assertTrue(applicant.withdrawJobApplication(LocalDate.of(2019, 8, 14), jobPosting));
         assertTrue(applicant.getJobApplicationManager().getJobApplications().isEmpty());
@@ -272,12 +269,8 @@ class ApplicantTest {
         Interviewer interviewer1 = new Interviewer("Interviewer1", "password", "Legal Name", "email", jobPosting.getBranch(), "field", LocalDate.of(2019, 7, 10));
         Interviewer interviewer2 = new Interviewer("Interviewer2", "password", "Legal Name", "email", jobPosting.getBranch(), "field", LocalDate.of(2019, 7, 10));
         Interviewer interviewer3 = new Interviewer("Interviewer3", "password", "Legal Name", "email", jobPosting.getBranch(), "field", LocalDate.of(2019, 7, 10));
-        jobPosting.getBranch().addInterviewer(interviewer1);
-        jobPosting.getBranch().addInterviewer(interviewer2);
-        jobPosting.getBranch().addInterviewer(interviewer3);
-        jobPosting.getInterviewManager().setUpGroupInterview(interviewer1, new ArrayList<>(Arrays.asList(interviewer2, interviewer3)));
+        jobPosting.getInterviewManager().setUpGroupInterview(interviewer1, new ArrayList<>(Arrays.asList(interviewer2, interviewer3)), LocalDate.of(2019, 8, 13), 2);
         Interview interview = jobPosting.getInterviewManager().getApplicationsInConsideration().get(0).getLastInterview();
-        interview.setTime(new InterviewTime(LocalDate.of(2019, 8, 13), 3));
         JobApplication jobApp = jobPosting.getJobApplications().get(0);
         interview.setResults(new HashMap<JobApplication, Boolean>() {{
             put(jobApp, true);
@@ -304,15 +297,11 @@ class ApplicantTest {
         Interviewer interviewer1 = new Interviewer("Interviewer1", "password", "Legal Name", "email", jobPosting.getBranch(), "field", LocalDate.of(2019, 7, 10));
         Interviewer interviewer2 = new Interviewer("Interviewer2", "password", "Legal Name", "email", jobPosting.getBranch(), "field", LocalDate.of(2019, 7, 10));
         Interviewer interviewer3 = new Interviewer("Interviewer3", "password", "Legal Name", "email", jobPosting.getBranch(), "field", LocalDate.of(2019, 7, 10));
-        jobPosting.getBranch().addInterviewer(interviewer1);
-        jobPosting.getBranch().addInterviewer(interviewer2);
-        jobPosting.getBranch().addInterviewer(interviewer3);
         ArrayList<String[]> interviewConfiguration = new ArrayList<>();
         interviewConfiguration.add(new String[]{Interview.GROUP, "In-person"});
         jobPosting.getInterviewManager().setInterviewConfiguration(interviewConfiguration);
-        jobPosting.getInterviewManager().setUpGroupInterview(interviewer1, new ArrayList<>(Arrays.asList(interviewer2, interviewer3)));
+        jobPosting.getInterviewManager().setUpGroupInterview(interviewer1, new ArrayList<>(Arrays.asList(interviewer2, interviewer3)), LocalDate.of(2019, 8, 13), 2);
         Interview interview = jobPosting.getInterviewManager().getApplicationsInConsideration().get(0).getLastInterview();
-        interview.setTime(new InterviewTime(LocalDate.of(2019, 8, 13), 3));
         applicant1.withdrawJobApplication(LocalDate.of(2019, 8, 13), jobPosting);
 
         assertTrue(applicant1.getJobApplicationManager().getJobApplications().isEmpty());
@@ -344,12 +333,7 @@ class ApplicantTest {
         Interviewer interviewer1 = new Interviewer("Interviewer1", "password", "Legal Name", "email", jobPosting.getBranch(), "field", LocalDate.of(2019, 7, 10));
         Interviewer interviewer2 = new Interviewer("Interviewer2", "password", "Legal Name", "email", jobPosting.getBranch(), "field", LocalDate.of(2019, 7, 10));
         Interviewer interviewer3 = new Interviewer("Interviewer3", "password", "Legal Name", "email", jobPosting.getBranch(), "field", LocalDate.of(2019, 7, 10));
-        jobPosting.getBranch().addInterviewer(interviewer1);
-        jobPosting.getBranch().addInterviewer(interviewer2);
-        jobPosting.getBranch().addInterviewer(interviewer3);
-        jobPosting.getInterviewManager().setUpGroupInterview(interviewer1, new ArrayList<>(Arrays.asList(interviewer2, interviewer3)));
-        Interview interview = jobPosting.getInterviewManager().getApplicationsInConsideration().get(0).getLastInterview();
-        interview.setTime(new InterviewTime(LocalDate.of(2019, 8, 13), 3));
+        jobPosting.getInterviewManager().setUpGroupInterview(interviewer1, new ArrayList<>(Arrays.asList(interviewer2, interviewer3)), LocalDate.of(2019, 8, 13), 2);
         applicant1.withdrawJobApplication(LocalDate.of(2019, 8, 12), jobPosting);
         applicant2.withdrawJobApplication(LocalDate.of(2019, 8, 13), jobPosting);
 
@@ -378,15 +362,11 @@ class ApplicantTest {
         Interviewer interviewer1 = new Interviewer("Interviewer1", "password", "Legal Name", "email", jobPosting.getBranch(), "field", LocalDate.of(2019, 7, 10));
         Interviewer interviewer2 = new Interviewer("Interviewer2", "password", "Legal Name", "email", jobPosting.getBranch(), "field", LocalDate.of(2019, 7, 10));
         Interviewer interviewer3 = new Interviewer("Interviewer3", "password", "Legal Name", "email", jobPosting.getBranch(), "field", LocalDate.of(2019, 7, 10));
-        jobPosting.getBranch().addInterviewer(interviewer1);
-        jobPosting.getBranch().addInterviewer(interviewer2);
-        jobPosting.getBranch().addInterviewer(interviewer3);
         ArrayList<String[]> interviewConfiguration = new ArrayList<>();
         interviewConfiguration.add(new String[]{Interview.GROUP, "In-person"});
         jobPosting.getInterviewManager().setInterviewConfiguration(interviewConfiguration);
-        jobPosting.getInterviewManager().setUpGroupInterview(interviewer1, new ArrayList<>(Arrays.asList(interviewer2, interviewer3)));
+        jobPosting.getInterviewManager().setUpGroupInterview(interviewer1, new ArrayList<>(Arrays.asList(interviewer2, interviewer3)), LocalDate.of(2019, 8, 13), 2);
         Interview interview = jobPosting.getInterviewManager().getApplicationsInConsideration().get(0).getLastInterview();
-        interview.setTime(new InterviewTime(LocalDate.of(2019, 8, 13), 3));
 
         assertTrue(applicant1.withdrawJobApplication(LocalDate.of(2019, 8, 12), jobPosting));
         assertTrue(applicant2.withdrawJobApplication(LocalDate.of(2019, 8, 13), jobPosting));

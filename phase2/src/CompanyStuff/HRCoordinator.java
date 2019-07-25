@@ -106,23 +106,6 @@ public class HRCoordinator extends User {
         jobPosting.getInterviewManager().setInterviewConfiguration(configuration);
     }
 
-    /**
-     * Schedule a time for the group interview.
-     *
-     * @param interview The interview to be scheduled.
-     * @param time      The time to be scheduled.
-     * @return true iff all interviewers for this interview are available at this time.
-     */
-    public boolean scheduleGroupInterview(Interview interview, InterviewTime time) {
-        for (Interviewer interviewer : interview.getAllInterviewers()) {
-            if (!interviewer.isAvailable(time)) {
-                return false;
-            }
-        }
-        interview.setTime(time);
-        return true;
-    }
-
     @Override
     public String[] getDisplayedProfileCategories() {
         return new String[]{"User Type", "Username", "Legal Name", "Email", "Company Branch", "Account Created"};

@@ -22,8 +22,6 @@ public class InterviewManager implements Serializable {
     public static final int SET_INTERVIEW_CONFIGURATION = 2;
     public static final int SCHEDULE_GROUP_INTERVIEWS = 3;
     public static final int HIRE_APPLICANTS = 4;
-    // The minimum number of days between interview scheduling and the interview taking place
-    static final int MIN_NUM_DAYS_BETWEEN_SCHEDULING_AND_INTERVIEW = 7;
 
     // === Instance variables ===
     // The job posting for this interview manager
@@ -213,16 +211,13 @@ public class InterviewManager implements Serializable {
 
     /**
      * Set up one-on-one interviews for all applications in consideration.
+     * Note: Interviewer would set the date/time
      */
-    public void setUpOneOnOneInterviews(LocalDate today) {
+    public void setUpOneOnOneInterviews() {
         for (JobApplication jobApp : this.applicationsInConsideration) {
             String field = this.branchJobPosting.getField();
             Interviewer interviewer = this.branchJobPosting.getBranch().findInterviewerByField(field);
-            Interview interview = new Interview(jobApp, interviewer);
-            InterviewTime interviewTime = interviewer.getEarliestTimeAvailableNumDaysAfterToday(today,
-                    MIN_NUM_DAYS_BETWEEN_SCHEDULING_AND_INTERVIEW);
-            interview.setTime(interviewTime);
-            jobApp.getStatus().advanceStatus();
+            new Interview(jobApp, interviewer);
         }
     }
 
@@ -232,9 +227,13 @@ public class InterviewManager implements Serializable {
      * @param interviewCoordinator The interview coordinator selected.
      * @param otherInterviewers    The other interviewers selected.
      */
-    public void setUpGroupInterview(Interviewer interviewCoordinator, ArrayList<Interviewer> otherInterviewers) {
-        new Interview(this.applicationsInConsideration, interviewCoordinator,
+    public void setUpGroupInterview(Interviewer interviewCoordinator, ArrayList<Interviewer> otherInterviewers,
+                                    LocalDate today, int minNumDaysNotice) {
+        Interview interview = new Interview(this.applicationsInConsideration, interviewCoordinator,
                 otherInterviewers);
+        ArrayList<Interviewer> allInterviewers = interview.getAllInterviewers();
+        InterviewTime interviewTime = this.getEarliestTimeAvailableForAllInterviewers(allInterviewers, today.plusDays(minNumDaysNotice));
+        interview.setTime(interviewTime);
         for (JobApplication jobApp : this.applicationsInConsideration) {
             jobApp.getStatus().advanceStatus();
         }
@@ -243,6 +242,33 @@ public class InterviewManager implements Serializable {
     // ============================================================================================================== //
     // === Private methods ===
     // === Other methods ===
+
+    /**
+     * Get the earliest interviewTime available for all these interviewers from this date forward.
+     *
+     * @param allInterviewers The interviewers participating in a group interview.
+     * @param earliestDate    The earliest date that this group interview can be scheduled.
+     * @return the earliest InterviewTime when all these interviewers are available.
+     */
+    // TODO THIS METHOD REQUIRES A LOT OF TESTING!!!!!!
+    private InterviewTime getEarliestTimeAvailableForAllInterviewers(ArrayList<Interviewer> allInterviewers,
+                                                                     LocalDate earliestDate) {
+        Interviewer interviewer1 = allInterviewers.get(0);
+        LocalDate dateAvailable = interviewer1.getFirstDateAvailableOnOrAfterDate(earliestDate);
+        ArrayList<String> timeSlotsAvailableForInterviewer1 = interviewer1.getTimeSlotsAvailableOnDate(dateAvailable);
+        int i = 1;
+        while (!timeSlotsAvailableForInterviewer1.isEmpty() && i < allInterviewers.size()) {
+            ArrayList<String> timeSlotsFilledForInterviewer = allInterviewers.get(i).getTimeSlotsFilledOnDate(dateAvailable);
+            timeSlotsAvailableForInterviewer1.removeAll(timeSlotsFilledForInterviewer);
+            i++;
+        }
+        if (timeSlotsAvailableForInterviewer1.isEmpty()) {
+            return this.getEarliestTimeAvailableForAllInterviewers(allInterviewers, earliestDate.plusDays(1));
+        } else {
+            String timeSlot = timeSlotsAvailableForInterviewer1.get(0);
+            return new InterviewTime(dateAvailable, timeSlot);
+        }
+    }
 
     /**
      * Check whether there are any applications in consideration.
