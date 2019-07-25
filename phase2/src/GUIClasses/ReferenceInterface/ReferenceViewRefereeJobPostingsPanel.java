@@ -1,6 +1,5 @@
 package GUIClasses.ReferenceInterface;
 
-import ApplicantStuff.JobApplication;
 import ApplicantStuff.Reference;
 import CompanyStuff.JobPostings.BranchJobPosting;
 import GUIClasses.CommonUserGUI.FrequentlyUsedMethods;
@@ -11,15 +10,22 @@ import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class ReferenceViewRefereeJobPostingsPanel extends JPanel implements ListSelectionListener {
+public class ReferenceViewRefereeJobPostingsPanel extends JPanel {
+
+    // === Class variables ===
+    // The key for the prompt card
+    private static String PROMPT = "PROMPT";
 
     // === Instance variables ===
     // The reference who logged in
     private Reference reference;
+    // The split pane
+    private JSplitPane splitPane;
     // The list that displays the job applications that need reference letters
-    private JList jobAppList;
+    private JList jobPostingList;
     // The panel that displays the job posting information
     private JPanel jobPostingCards = new JPanel(new CardLayout());
+
 
     // === Constructor ===
     ReferenceViewRefereeJobPostingsPanel(Reference reference) {
@@ -28,40 +34,75 @@ public class ReferenceViewRefereeJobPostingsPanel extends JPanel implements List
         this.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         this.add(new FrequentlyUsedMethods().createTitlePanel(
                 "View the Job Postings That Your Referees Have Applied To", 20), BorderLayout.PAGE_START);
-        this.add(this.createJobApplicationListPanel(), BorderLayout.WEST);
-        for (BranchJobPosting jobPosting : this.reference.getJobPostings()) {
-            String key = jobPosting.getTitle() + jobPosting.getId();
-            jobPostingCards.add(this.createJobPostingPanel(jobPosting), key);
-        }
-        this.add(this.jobPostingCards, BorderLayout.CENTER);
+        splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+        splitPane.setDividerLocation(300);
+        splitPane.setRightComponent(jobPostingCards);
+        this.setJobPostingList(splitPane);
+        this.setJobPostingCards(splitPane);
+        this.setListSelectionListener();
+        this.add(splitPane);
     }
 
 
     // === Private methods ===
 
     /**
-     * Create a list panel with all the job applications that this reference needs to write a reference for.
-     *
-     * @return the panel with this list.
+     * Set the list of referees to choose from
+     * @param splitPane The split pane on which this list is going to be shown
      */
-    private JPanel createJobApplicationListPanel() {
-        JPanel jobAppListPanel = new JPanel();
-        jobAppListPanel.setLayout(new BorderLayout());
-        JLabel listTitle = new JLabel("Select a referee:");
-        jobAppListPanel.add(listTitle, BorderLayout.PAGE_START);
-        DefaultListModel listModel = new DefaultListModel();
-        for (JobApplication jobApp : reference.getJobAppsForReference()) {
-            listModel.addElement(jobApp.getApplicant().getLegalName());
+    private void setJobPostingList(JSplitPane splitPane) {
+        this.jobPostingList = new JList<>();
+        this.jobPostingList.setListData(reference.getJobPostingNameList());
+        this.jobPostingList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+        this.jobPostingList.setLayoutOrientation(JList.VERTICAL);
+        splitPane.setLeftComponent(new JScrollPane(this.jobPostingList));
+    }
+
+    /**
+     * Set the list selection listener for choosing the referee.
+     */
+    private void setListSelectionListener() {
+        this.jobPostingList.addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                if (jobPostingList.getSelectedIndex() != -1) {
+                    int selectedIndex = jobPostingList.getSelectedIndex();
+                    ((CardLayout) jobPostingCards.getLayout()).show(jobPostingCards, String.valueOf(selectedIndex));
+                } else {
+                    ((CardLayout) jobPostingCards.getLayout()).show(jobPostingCards, PROMPT);
+                }
+            }
+        });
+    }
+
+    /**
+     * Create the prompt card that is defaulted to show on the right side of the split pane.
+     *
+     * @return the prompt panel created.
+     */
+    private JPanel createPromptCard() {
+        JPanel promptCard = new JPanel();
+        promptCard.setLayout(new BorderLayout());
+        JLabel promptText = new JLabel("Select a job posting to view");
+        promptText.setFont(new Font("Century Gothic", Font.BOLD, 15));
+        promptText.setHorizontalAlignment(SwingConstants.CENTER);
+        promptCard.add(promptText, BorderLayout.CENTER);
+        return promptCard;
+    }
+
+    /**
+     * Set the job posting cards that are displayed when a referee is chosen from the list.
+     *
+     * @param splitPane The split pane on which this list is going to be shown.
+     */
+    private void setJobPostingCards(JSplitPane splitPane) {
+        jobPostingCards.add(this.createPromptCard(), PROMPT);
+        int index = 0;
+        for (BranchJobPosting jobPosting : this.reference.getJobPostings()) {
+            jobPostingCards.add(this.createJobPostingPanel(jobPosting), String.valueOf(index));
+            index++;
         }
-        jobAppList = new JList(listModel);
-        jobAppList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        jobAppList.setSelectedIndex(0);
-        jobAppList.addListSelectionListener(this);
-        jobAppList.setVisibleRowCount(5);
-        jobAppList.setLayoutOrientation(JList.HORIZONTAL_WRAP);
-        JScrollPane listScrollPane = new JScrollPane(jobAppList);
-        jobAppListPanel.add(listScrollPane, BorderLayout.CENTER);
-        return jobAppListPanel;
+        splitPane.setRightComponent(jobPostingCards);
     }
 
     /**
@@ -111,28 +152,21 @@ public class ReferenceViewRefereeJobPostingsPanel extends JPanel implements List
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 1;
         c.gridy = 0;
-        mainPanel.add(new JTextArea(jobPosting.getTitle()), c);
+        JTextArea titleName = new JTextArea(jobPosting.getTitle());
+        titleName.setEditable(false);
+        mainPanel.add(titleName, c);
         c.gridy++;
         JTextArea jobDescriptionContent = new JTextArea(jobPosting.getDescription());
+        jobDescriptionContent.setEditable(false);
         mainPanel.add(jobDescriptionContent, c);
         c.gridy++;
-        mainPanel.add(new JTextArea(jobPosting.getBranch().getName()), c);
+        JTextArea branchName = new JTextArea(jobPosting.getBranch().getName());
+        branchName.setEditable(false);
+        mainPanel.add(branchName, c);
         c.gridy++;
-        mainPanel.add(new JTextArea(jobPosting.getApplicantCloseDate().toString()), c);
-    }
-
-    // For the list selection listener
-    @Override
-    public void valueChanged(ListSelectionEvent e) {
-        if (e.getValueIsAdjusting() == false) {
-            if (jobAppList.getSelectedIndex() != -1) {
-                int selectedIndex = jobAppList.getSelectedIndex();
-                ArrayList<BranchJobPosting> refereeJobPostings = this.reference.getJobPostings();
-                BranchJobPosting jobPostingToDisplay = refereeJobPostings.get(selectedIndex);
-                String key = jobPostingToDisplay.getTitle() + jobPostingToDisplay.getId();
-                ((CardLayout) jobPostingCards.getLayout()).show(jobPostingCards, key);
-            }
-        }
+        JTextArea referenceCloseDate = new JTextArea(jobPosting.getReferenceCloseDate().toString());
+        referenceCloseDate.setEditable(false);
+        mainPanel.add(referenceCloseDate, c);
     }
 
 }

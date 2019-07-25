@@ -75,6 +75,19 @@ public class Reference extends User {
         return jobPostings;
     }
 
+    /**
+     * Get an array of job posting names and ids.
+     *
+     * @return an array of job posting names and ids that this person's referees have applied to.
+     */
+    public String[] getJobPostingNameList() {
+        ArrayList<String> jobPostingNamesAndIds = new ArrayList<>();
+        for (BranchJobPosting branchJobPosting : this.getJobPostings()) {
+            jobPostingNamesAndIds.add("ID: " + branchJobPosting.getId() + " - " + branchJobPosting.getTitle());
+        }
+        return jobPostingNamesAndIds.toArray(new String[jobPostingNamesAndIds.size()]);
+    }
+
     @Override
     public String[] getDisplayedProfileCategories() {
         return new String[]{"User Type", "Email", "Account Created"};
