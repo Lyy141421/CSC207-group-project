@@ -115,7 +115,7 @@ public abstract class User implements Serializable, Observer {
 
     public void update(Object obj) {
         if(obj instanceof Notification){
-            this.getNotificationManager().add((Notification)obj);
+            this.addNotification((Notification)obj);
         }
     }
 
