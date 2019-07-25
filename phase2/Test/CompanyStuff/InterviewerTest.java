@@ -1,5 +1,6 @@
 package CompanyStuff;
 
+import NotificationSystem.Notification;
 import NotificationSystem.NotificationManager;
 import org.junit.jupiter.api.Test;
 
@@ -36,34 +37,53 @@ class InterviewerTest {
 
     @Test
     void getUsername() {
+        Interviewer interviewer = this.createInterviewer("Phillip");
+        assertEquals(interviewer.getUsername(), "Phillip");
     }
 
     @Test
     void getPassword() {
+        Interviewer interviewer = this.createInterviewer("Phillip");
+        assertEquals(interviewer.getPassword(), "ABC123");
     }
 
     @Test
     void getLegalName() {
+        Interviewer interviewer = this.createInterviewer("Phillip");
+        assertEquals(interviewer.getLegalName(), "Phillip's Real Name");
     }
 
     @Test
     void getEmail() {
+        Interviewer interviewer = this.createInterviewer("Phillip");
+        assertEquals(interviewer.getEmail(), "Phillip@gmail.com");
     }
 
     @Test
     void getDateCreated() {
+        Interviewer interviewer = this.createInterviewer("Phillip");
+        assertEquals(interviewer.getDateCreated(), LocalDate.of(2019, 7, 29));
     }
 
     @Test
     void getNotificationManager() {
+        Interviewer interviewer = this.createInterviewer("Phillip");
+        assertTrue(interviewer.getNotificationManager() instanceof NotificationManager);
+        assertTrue(interviewer.getNotificationManager().getNotifications().size() == 0);
     }
 
     @Test
     void setUsername() {
+        Interviewer interviewer = this.createInterviewer("Phillip");
+        interviewer.setUsername("Not Phillip");
+        assertEquals(interviewer.getUsername(), "Not Phillip");
     }
 
     @Test
     void setEmail() {
+        Interviewer interviewer = this.createInterviewer("Phillip");
+        interviewer.setEmail("Phillip.Soetebeer@gmail.com");
+        assertEquals(interviewer.getEmail(), "Phillip.Soetebeer@gmail.com");
     }
 
     @Test
@@ -186,20 +206,3 @@ class InterviewerTest {
     void addInterview() {
     }
 }
-//    void testConstructor() {
-//        Interviewer interviewer = this.createInterviewer("Phillip");
-//
-//        assertEquals(interviewer.getUsername(), "Phillip");
-//        assertEquals(interviewer.getPassword(), "ABC123");
-//        assertEquals(interviewer.getLegalName(), "Phillip's Real Name");
-//        assertEquals(interviewer.getEmail(), "Phillip@gmail.com");
-//        assertEquals(interviewer.getDateCreated(), LocalDate.of(2019, 7, 29));
-//
-//        assertTrue(interviewer.getNotificationManager() instanceof NotificationManager);
-//        assertEquals(interviewer.getBranch().getName(), "BranchName");
-//        assertEquals(interviewer.getBranch().getCma(), "Skiff Lake");
-//        assertEquals(interviewer.getField().getCma(), "Sales");
-//    }
-//
-//
-//}
