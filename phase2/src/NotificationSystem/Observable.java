@@ -12,7 +12,7 @@ public abstract class Observable {
     /**
      * Adding an observer to the notification recipient list
      */
-    void attach(Observer observer){
+    protected void attach(Observer observer){
         if (!observer_list.contains(observer)) {
             observer_list.add(observer);
         }
@@ -21,7 +21,7 @@ public abstract class Observable {
     /**
      * Removing an observer from the notification recipient list
      */
-    void detach(Observer observer){
+    protected void detach(Observer observer){
         observer_list.remove(observer);
     }
 
@@ -30,7 +30,7 @@ public abstract class Observable {
      *
      * @param notification - The notification to be sent
      */
-    void notifyAllObservers(Notification notification){
+    protected void notifyAllObservers(Notification notification){
         updateObserverList();
         for (Observer observer : observer_list) {
             notifyObserver(observer, notification);
@@ -43,13 +43,13 @@ public abstract class Observable {
      * @param observer - The observer receiving the notification
      * @param notification - The notification to be sent
      */
-    void notifyObserver(Observer observer, Notification notification){
+    protected void notifyObserver(Observer observer, Notification notification){
         observer.update(notification);
     }
 
     /**
      * A method to internally change the structure of the observer list
      */
-    void updateObserverList(){ }
+    protected void updateObserverList() { }
 
 }
