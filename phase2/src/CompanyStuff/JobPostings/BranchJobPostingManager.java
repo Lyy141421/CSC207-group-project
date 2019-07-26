@@ -34,7 +34,7 @@ public class BranchJobPostingManager implements Serializable {
 
     public BranchJobPosting getBranchJobPosting(int id) {
         for (BranchJobPosting posting : branchJobPostings)
-            if (posting.id == id)
+            if (posting.getId() == id)
                 return posting;
         return null;
     }

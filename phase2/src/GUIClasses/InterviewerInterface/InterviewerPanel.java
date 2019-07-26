@@ -14,15 +14,17 @@ abstract class InterviewerPanel extends JPanel {
 
     HashMap<String, Interview> interviews;
 
-    JList<String> interviewList;
+    JList<String> interviewList = new JList<>();
 
     InterviewerPanel(MethodsTheGUICallsInInterviewer interviewerInterface) {
         this.interviewerInterface = interviewerInterface;
     }
 
-    void reload() {
+    void setInterviewList() {
         this.interviewList.setListData(interviews.keySet().toArray(new String[interviews.size()]));
         this.interviewList.setSelectedIndex(-1);
+        this.interviewList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+        this.interviewList.setLayoutOrientation(JList.VERTICAL);
     }
 
     HashMap<String, Interview> getTitleToInterviewMap(ArrayList<Interview> interviewList) {
@@ -34,17 +36,21 @@ abstract class InterviewerPanel extends JPanel {
     }
 
     String toInterviewTitle(Interview interview) {
-        return interview.getId() + "-" + interview.getTime().toString() + " " + interview.getIntervieweeNames();
-    }
-
-    HashMap<String, Interview> getApplicantToInterviewMap(ArrayList<Interview> interviewList) {
-        HashMap<String, Interview> applicantToInterviewMap = new HashMap<>();
-        for (Interview interview: interviewList) {
-            applicantToInterviewMap.put(this.toIdAndApplicants(interview), interview);
+        String interviewTimeString = "";
+        if (interview.getTime() != null) {
+            interviewTimeString = interview.getTime().toString();
         }
-
-        return applicantToInterviewMap;
+        return interview.getId() + "-" + interviewTimeString + " " + interview.getIntervieweeNames();
     }
+
+//    HashMap<String, Interview> getApplicantToInterviewMap(ArrayList<Interview> interviewList) {
+//        HashMap<String, Interview> applicantToInterviewMap = new HashMap<>();
+//        for (Interview interview: interviewList) {
+//            applicantToInterviewMap.put(this.toIdAndApplicants(interview), interview);
+//        }
+//
+//        return applicantToInterviewMap;
+//    }
 
     String toIdAndApplicants(Interview interview) {
         return interview.getId() + "-" + interview.getIntervieweeNames();

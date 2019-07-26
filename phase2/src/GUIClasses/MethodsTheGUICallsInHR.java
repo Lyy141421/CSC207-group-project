@@ -125,6 +125,19 @@ public class MethodsTheGUICallsInHR {
         return true;
     }
 
+    public boolean hireApplications(ArrayList<JobApplication> jobAppsToHire) {
+        for (JobApplication jobApp : jobAppsToHire) {
+            jobApp.getStatus().setHired();
+        }
+        BranchJobPosting jobPosting = jobAppsToHire.get(0).getJobPosting();
+        jobPosting.setFilled();
+        jobPosting.getInterviewManager().archiveRejected();
+        if (jobPosting.getInterviewManager().getNumOpenPositions() > 0) {
+            return false;
+        }
+        return true;
+    }
+
     /* *
      * Checks whether this job application has been rejected.
      *
@@ -136,12 +149,12 @@ public class MethodsTheGUICallsInHR {
     }
 
     /**
-     * Choose whether this application moves on for phone interviews.
+     * Choose whether this application moves on for the first round.
      *
      * @param jobApp   The job application in question.
      * @param selected Whether or not the application is selected to move on.
      */
-    public void selectApplicationForPhoneInterview(JobApplication jobApp, boolean selected) {
+    public void selectApplicationForFirstRound(JobApplication jobApp, boolean selected) {
         if (!selected) {
             jobApp.getJobPosting().getInterviewManager().reject(jobApp);
         }

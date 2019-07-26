@@ -2,8 +2,8 @@ package GUIClasses.InterviewerInterface;
 
 import CompanyStuff.Interview;
 import GUIClasses.CommonUserGUI.FrequentlyUsedMethods;
+import GUIClasses.CommonUserGUI.UserPanel;
 import GUIClasses.MethodsTheGUICallsInInterviewer;
-import Miscellaneous.InterviewTime;
 import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
 import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
 import net.sourceforge.jdatepicker.impl.UtilDateModel;
@@ -15,18 +15,16 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Date;
 
-public class InterviewerSchedule extends InterviewerPanel {
+class InterviewerSchedule extends InterviewerPanel {
 
     private static String PROMPT = "PROMPT";
-    private static String SET_TIME = "SET_TIME";
+    private static String SET_DATETIME = "SET_DATETIME";
 
     private JSplitPane splitDisplay;
     private JPanel scheduleDateTimeCards;
     private JPanel scheduleDateTimePanel = new JPanel();
-    private JDatePanelImpl datePanel;
+    private JDatePickerImpl datePicker;
     private JButton selectDateButton;
     private JComboBox<String> selectTimeBox;
 
@@ -36,45 +34,35 @@ public class InterviewerSchedule extends InterviewerPanel {
 
     InterviewerSchedule(MethodsTheGUICallsInInterviewer interviewerInterface) {
         super(interviewerInterface);
-        this.interviews = getApplicantToInterviewMap(interviewerInterface.getInterviewsThatNeedScheduling());
+        this.interviews = getTitleToInterviewMap(interviewerInterface.getInterviewsThatNeedScheduling());
 
         this.setLayout(new BorderLayout());
         JPanel title = new FrequentlyUsedMethods().createTitlePanel("Schedule Interviews", 20);
         this.add(title, BorderLayout.PAGE_START);
         splitDisplay = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-        splitDisplay.setDividerLocation(250);
+        splitDisplay.setDividerLocation(200);
         this.setInterviewList(splitDisplay);
-        this.setScheduleTimeCards();
-        this.setListSelectionListener();
+        this.setInterviewListSelectionListener();
+        this.setScheduleDateTimeCards();
         this.add(splitDisplay, BorderLayout.CENTER);
-
-        this.setScheduleTimePanel();
-    }
-
-    void reload() {
-        this.interviewList.setListData(interviews.keySet().toArray(new String[interviews.size()]));
     }
 
     private void setInterviewList(JSplitPane splitDisplay) {
-        this.interviewList = new JList<>();
-        this.interviewList.setListData(interviews.keySet().toArray(new String[interviews.size()]));
-        this.interviewList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
-        this.interviewList.setLayoutOrientation(JList.VERTICAL);
+        super.setInterviewList();
         splitDisplay.setLeftComponent(this.interviewList);
     }
 
     /**
-     * Set the list selection listener for choosing the referee.
+     * Set the list selection listener for choosing the interview.
      */
-    private void setListSelectionListener() {
+    private void setInterviewListSelectionListener() {
         this.interviewList.addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
-                if (interviewList.getSelectedIndex() != -1) {
-                    int selectedIndex = interviewList.getSelectedIndex();
-                    interviewSelected = interviews.get(selectedIndex);
-                    setScheduleTimePanel();
-                    ((CardLayout) scheduleDateTimeCards.getLayout()).show(scheduleDateTimeCards, SET_TIME);
+                if (!interviewList.getValueIsAdjusting() && interviewList.getSelectedIndex() != -1) {
+                    String selectedTitle = interviewList.getSelectedValue();
+                    interviewSelected = interviews.get(selectedTitle);
+                    ((CardLayout) scheduleDateTimeCards.getLayout()).show(scheduleDateTimeCards, SET_DATETIME);
                 } else {
                     ((CardLayout) scheduleDateTimeCards.getLayout()).show(scheduleDateTimeCards, PROMPT);
                 }
@@ -97,60 +85,74 @@ public class InterviewerSchedule extends InterviewerPanel {
         return promptCard;
     }
 
-    private void setScheduleTimeCards() {
+    private void setScheduleDateTimeCards() {
         scheduleDateTimeCards = new JPanel(new CardLayout());
         scheduleDateTimeCards.add(this.createPromptCard(), PROMPT);
-        scheduleDateTimeCards.add(this.scheduleDateTimePanel, SET_TIME);
-
+        scheduleDateTimePanel.add(createSelectDatePanel());
+        scheduleDateTimeCards.add(this.scheduleDateTimePanel, SET_DATETIME);
+        splitDisplay.setRightComponent(scheduleDateTimeCards);
     }
 
-    private void setScheduleTimePanel() {
-        scheduleDateTimePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        UtilDateModel dateModel = new UtilDateModel();
-        datePanel = new JDatePanelImpl(dateModel);
-        JDatePickerImpl interviewDate = new JDatePickerImpl(datePanel);
+    private JPanel createSelectDatePanel() {
+        JPanel selectDatePanel = new JPanel(new FlowLayout(FlowLayout.CENTER)); // may want to change to border layout
         int[] tomorrow = this.interviewerInterface.getTomorrow();
-        dateModel.setDate(tomorrow[0], tomorrow[1], tomorrow[2]);
-        scheduleDateTimePanel.add(interviewDate);
-        scheduleDateTimePanel.add(this.createDateButtonPanel());
-
-        splitDisplay.setRightComponent(scheduleDateTimePanel);
+        UtilDateModel dateModel = new UtilDateModel();
+        dateModel.setDate(tomorrow[0], tomorrow[1] - 1, tomorrow[2]);
+        JDatePanelImpl datePanel = new JDatePanelImpl(dateModel);
+        datePicker = new JDatePickerImpl(datePanel);
+        selectDatePanel.add(datePicker);
+        selectDatePanel.add(this.createDateButtonPanel());
+        return selectDatePanel;
     }
 
     private JPanel createDateButtonPanel() {
         selectDateButton = new JButton("Select date");
         JPanel buttonPanel = new JPanel();
         buttonPanel.add(selectDateButton);
+        this.setScheduleDateActionListener();
         return buttonPanel;
     }
 
-    private void setSelectTimeBox(LocalDate date) {
+    private JPanel createSelectTimePanel(LocalDate date) {
+        JPanel selectTimePanel = new JPanel();
         selectTimeBox = new JComboBox<>(this.interviewerInterface.getAvailableTimes(date));
-        scheduleDateTimePanel.add(selectTimeBox);
+        selectTimePanel.add(selectTimeBox);
+        return selectTimePanel;
     }
 
     private void setScheduleDateActionListener() {
         selectDateButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                dateSelected = ((Date) ((JDatePanelImpl) datePanel).getModel().getValue()).toInstant().
-                        atZone(ZoneId.systemDefault()).toLocalDate();
-                if (interviewerInterface.isAfterToday(dateSelected)) {
-                    setSelectTimeBox(dateSelected);
-                    scheduleDateTimePanel.add(createScheduleButton());
+                int year = datePicker.getModel().getYear();
+                int month = datePicker.getModel().getMonth() + 1;
+                int day = datePicker.getModel().getDay() + 1;
+                dateSelected = LocalDate.of(year, month, day);
+                if (interviewerInterface.dateSelectedIsAfterToday(dateSelected)) {
+                    if (interviewerInterface.getAvailableTimes(dateSelected).length == 0) {
+                        JOptionPane.showMessageDialog(scheduleDateTimePanel, "You have no time slots available on this date.");
+                    } else {
+                        scheduleDateTimePanel.add(createSelectTimePanel(dateSelected), BorderLayout.CENTER);
+                        scheduleDateTimePanel.add(createScheduleButtonPanel(), BorderLayout.AFTER_LAST_LINE);
+                        scheduleDateTimePanel.revalidate();
+                    }
                 } else {
                     JOptionPane.showMessageDialog(scheduleDateTimePanel, "Please choose a date after today.");
-                    // Check if this works
-                    // May need the content pane
                 }
             }
         });
     }
 
 
+    private JPanel createScheduleButtonPanel() {
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.add(this.createScheduleButton());
+        return buttonPanel;
+    }
+
     private JButton createScheduleButton() {
-        JButton schedule = new JButton("Schedule");
-        schedule.addActionListener(new ActionListener() {
+        JButton scheduleButton = new JButton("Schedule");
+        scheduleButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String timeSlotString = selectTimeBox.getItemAt(selectTimeBox.getSelectedIndex());
@@ -158,16 +160,21 @@ public class InterviewerSchedule extends InterviewerPanel {
                         timeSlotString);
                 if (canSchedule) {
                     JOptionPane.showMessageDialog(scheduleDateTimePanel, "You have successfully scheduled an interview.");
+                    refresh();
                 } else {
                     JOptionPane.showMessageDialog(scheduleDateTimePanel, "You are unavailable at this date and time.");
-                    refresh();
                 }
             }
         });
-        return schedule;
+        return scheduleButton;
     }
 
     private void refresh() {
+        ((UserPanel) this.getParent().getParent()).resetCards();
 
+//        this.interviews.remove(this.interviewList.getSelectedValue());
+//        this.interviewList.remove(this.interviewList.getSelectedIndex());
+//        this.setInterviewList();
+//        ((CardLayout) scheduleDateTimeCards.getLayout()).show(scheduleDateTimeCards, PROMPT);
     }
 }

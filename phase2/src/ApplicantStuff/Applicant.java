@@ -67,9 +67,9 @@ public class Applicant extends User {
         JobApplication jobApp = jobPosting.findJobApplication(this);
         if (this.hasAppliedToPosting(jobPosting) && !jobPosting.isFilled()) {
             if (!jobPosting.isClosedForApplications(today)) {   // Company still does not have access to application
-                jobPosting.removeJobApplication(jobApp);
+                jobPosting.removeJobApplication(jobApp);    // TODO observer design pattern?
             } else {    // Company has access to application
-                jobPosting.getInterviewManager().withdrawApplication(jobApp);   // Update application from the company end
+                jobPosting.getInterviewManager().updateForApplicationWithdrawal(jobApp);   // Update application from the company end
             }
             if (!jobPosting.isClosedForReferences(today)) {
                 // Company has access to application, but reference letters may not all be submitted

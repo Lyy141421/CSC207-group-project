@@ -40,14 +40,19 @@ public class InterviewerMain extends UserPanel {
         this.addCards();
     }
 
-    private void addCards() {
+    public void addCards() {
         cards.add(new InterviewerHomePanel(this.interviewerInterface), InterviewerMain.HOME);
         cards.add(new UserProfilePanel(this.interviewerInterface.getInterviewer()), InterviewerMain.PROFILE);
         cards.add(new InterviewerSchedule(this.interviewerInterface), InterviewerMain.SCHEDULE);
-        cards.add(new InterviewerView(this.interviewerInterface), InterviewerMain.INCOMPLETE);
-        cards.add(new InterviewerViewComplete(this.interviewerInterface), InterviewerMain.ADD_NOTES);
-        cards.add(new InterviewerCoordinatorView(this.interviewerInterface), InterviewerMain.COORDINATOR);
+        cards.add(new InterviewerViewOnly(this.interviewerInterface), InterviewerMain.INCOMPLETE);
+        cards.add(new InterviewerViewAndWriteNotes(this.interviewerInterface), InterviewerMain.ADD_NOTES);
+        cards.add(new InterviewerCoordinatorViewAndSelect(this.interviewerInterface), InterviewerMain.COORDINATOR);
         this.add(cards, BorderLayout.CENTER);
+    }
+
+    public void resetCards() {
+        cards.removeAll();
+        this.addCards();
     }
 
     public static void main(String[] args) {

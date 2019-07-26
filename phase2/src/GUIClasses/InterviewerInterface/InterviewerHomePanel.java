@@ -15,18 +15,17 @@ import java.util.ArrayList;
 
 public class InterviewerHomePanel extends InterviewerPanel {
 
-    // === Instance variables ===
-    // ===
-
     InterviewerHomePanel(MethodsTheGUICallsInInterviewer interviewerInterface) {
         super(interviewerInterface);
 
         this.setLayout(new BorderLayout());
         this.add(this.createWelcomePanel(), BorderLayout.BEFORE_FIRST_LINE);
-        this.add(this.createSchedulePanel(), BorderLayout.CENTER);
+        this.add(this.createUpcomingInterviewsPanel(), BorderLayout.CENTER);
         JPanel remindersPanel = new JPanel();
         remindersPanel.setLayout(new BoxLayout(remindersPanel, BoxLayout.X_AXIS));
         remindersPanel.add(this.createIncompleteInterviewsPanel());
+        remindersPanel.add(Box.createRigidArea(new Dimension(20, 0)));
+        remindersPanel.add(this.createInterviewsToSchedulePanel());
         this.add(remindersPanel, BorderLayout.SOUTH);
         this.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
     }
@@ -55,16 +54,36 @@ public class InterviewerHomePanel extends InterviewerPanel {
         return tablePanel;
     }
 
-    private JPanel createSchedulePanel() {
+    private JPanel createInterviewsToSchedulePanel() {
+        JPanel schedulePanel = new JPanel();
+        schedulePanel.setLayout(new BorderLayout());
+        schedulePanel.add(new FrequentlyUsedMethods().createTitlePanel(
+                "One-on-One interviews to schedule", 17), BorderLayout.BEFORE_FIRST_LINE);
+        schedulePanel.add(this.createInterviewsToScheduleTablePanel(), BorderLayout.CENTER);
+        return schedulePanel;
+    }
+
+    private JPanel createInterviewsToScheduleTablePanel() {
+        ArrayList<Interview> unscheduledInterviews = this.interviewerInterface.getInterviewsThatNeedScheduling();
+        Object[][] data = new Object[unscheduledInterviews.size()][];
+
+        for (int i = 0; i < unscheduledInterviews.size(); i++) {
+            data[i] = unscheduledInterviews.get(i).getCategoryValuesForInterviewerUnscheduled();
+        }
+
+        return this.createTablePanel(Interview.getCategoryNamesForInterviewerUnscheduled(), data);
+    }
+
+    private JPanel createUpcomingInterviewsPanel() {
         JPanel schedulePanel = new JPanel();
         schedulePanel.setLayout(new BorderLayout());
         schedulePanel.add(new FrequentlyUsedMethods().createTitlePanel(
                 "Upcoming interviews:", 17), BorderLayout.BEFORE_FIRST_LINE);
-        schedulePanel.add(this.createScheduleTablePanel(), BorderLayout.CENTER);
+        schedulePanel.add(this.createUpcomingInterviewsTablePanel(), BorderLayout.CENTER);
         return schedulePanel;
     }
 
-    private JPanel createScheduleTablePanel() {
+    private JPanel createUpcomingInterviewsTablePanel() {
         ArrayList<Interview> scheduledInterviews = this.interviewerInterface.getScheduledUpcomingInterviews();
         Object[][] data = new Object[scheduledInterviews.size()][];
 

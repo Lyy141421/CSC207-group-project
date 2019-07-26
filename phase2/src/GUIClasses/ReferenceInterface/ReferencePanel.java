@@ -6,13 +6,13 @@ import ApplicantStuff.JobApplicationDocument;
 import ApplicantStuff.Reference;
 import CompanyStuff.Branch;
 import CompanyStuff.Company;
+import CompanyStuff.HRCoordinator;
 import CompanyStuff.JobPostings.BranchJobPosting;
 import CompanyStuff.JobPostings.BranchJobPostingManager;
 import FileLoadingAndStoring.DataLoaderAndStorer;
 import GUIClasses.ActionListeners.LogoutActionListener;
 import GUIClasses.CommonUserGUI.UserPanel;
 import Main.JobApplicationSystem;
-import GUIClasses.CommonUserGUI.FrequentlyUsedMethods;
 import GUIClasses.CommonUserGUI.UserProfilePanel;
 
 import javax.swing.*;
@@ -29,10 +29,9 @@ public class ReferencePanel extends UserPanel {
     private JPanel cards = new JPanel(new CardLayout());
     static final String SUBMIT_REFERENCE_LETTER = "Submit";
     static final String VIEW_REFEREE_JOB_POSTINGS = "View Referee Job Postings";
-    public static final String SUCCESSFUL_SUBMISSION = "Successful Submission";
 
     // === Constructor ===
-    public ReferencePanel(String username, JobApplicationSystem jobApplicationSystem, LogoutActionListener logoutActionListener) {
+    ReferencePanel(String username, JobApplicationSystem jobApplicationSystem, LogoutActionListener logoutActionListener) {
         this.reference = (Reference) jobApplicationSystem.getUserManager().findUserByUsername(username);
         this.setLayout(new BorderLayout());
         this.add(new ReferenceSideBarMenuPanel(logoutActionListener), BorderLayout.WEST);
@@ -42,33 +41,18 @@ public class ReferencePanel extends UserPanel {
     /**
      * Add the cards to the card layout panel
      */
-    private void addCards() {
+    public void addCards() {
         cards.add(new ReferenceHomePanel(this.reference), UserPanel.HOME);
         cards.add(new UserProfilePanel(this.reference), UserPanel.PROFILE);
         cards.add(new ReferenceSubmitLetterPanel(this.reference), SUBMIT_REFERENCE_LETTER);
         cards.add(new ReferenceViewRefereeJobPostingsPanel(this.reference), VIEW_REFEREE_JOB_POSTINGS);
-        cards.add(this.successfulSubmissionPanel(), SUCCESSFUL_SUBMISSION);
         this.add(cards, BorderLayout.CENTER);
-    }
-
-    /**
-     * Create a panel that shows a file has been successfully submitted.
-     *
-     * @return a panel with a "submission successful" message.
-     */
-    private JPanel successfulSubmissionPanel() {
-        JPanel panel = new JPanel();
-        panel.setLayout(new BorderLayout());
-        JPanel message = new FrequentlyUsedMethods().createTitlePanel("Submission Successful!", 40);
-        message.setBorder(BorderFactory.createEmptyBorder(100, 0, 100, 0));
-        panel.add(message, BorderLayout.CENTER);
-        return panel;
     }
 
     /**
      * Update the cards after a reference letter submission.
      */
-    public void updateCards() {
+    public void resetCards() {
         cards.removeAll();
         this.addCards();
     }
@@ -77,23 +61,24 @@ public class ReferencePanel extends UserPanel {
         JFrame frame = new JFrame("Reference Home Page");
         JobApplicationSystem jobApplicationSystem = new JobApplicationSystem();
         new DataLoaderAndStorer(jobApplicationSystem).loadAllData();
-        jobApplicationSystem.setToday(LocalDate.now());
-        jobApplicationSystem.setPreviousLoginDate(LocalDate.now());
-        Reference reference = jobApplicationSystem.getUserManager().createReference("bob@gmail.com", LocalDate.now());
+        jobApplicationSystem.setToday(LocalDate.of(2019, 7, 19));
+        jobApplicationSystem.setPreviousLoginDate(LocalDate.of(2019, 7, 19));
+        Reference reference = jobApplicationSystem.getUserManager().createReference("bob@gmail.com", LocalDate.of(2019, 7, 19));
         Company company = jobApplicationSystem.createCompany("Company");
         Branch branch = new Branch("Branch", "L4B3Z9", company);
         branch.setCompany(company);
         company.addBranch(branch);
         Applicant applicant = jobApplicationSystem.getUserManager().createApplicant("username", "password", "Legal Name", "email@gmail.com", LocalDate.now(), "L4B4P8");
-        BranchJobPosting jobPosting = new BranchJobPosting("title", "field", "descriptionhujedkfnvsgrhjegskamkagjrwuiladkvmkajgirwouskvmzkjgiskdzvn,mkngs\niznvjgsirklzngjslitw4gsijlkznjsirtwtrsigjlzknvmJDEI0   IPUOwrahektdznmv\nlpox-98uy7gufhvnb tmwkeafoisCXU*yygchbvn    4mk2RWFsvzx\nwgudkngrhadkjn\nwhaegkjsc\ngwaeihfkncMZ<ghaecsknm,z\n",
-                new ArrayList<>(Arrays.asList("CV", "Cover Letter", "Reference Letter")), new ArrayList<>(), 1, branch, LocalDate.of(2019, 7, 19), LocalDate.of(2019, 7, 19), LocalDate.now());
-        JobApplication jobApp = new JobApplication(applicant, jobPosting, LocalDate.of(2019, 7, 19));
+        HRCoordinator hrc = new HRCoordinator("HR", "password", "HRC", "email@gmail.com", branch, LocalDate.of(2019, 7, 19));
+        BranchJobPosting jobPosting = hrc.addJobPosting("title", "field", "descriptionhujedkfnvsgrhjegskamkagjrwuiladkvmkajgirwouskvmzkjgiskdzvn,mkngs\niznvjgsirklzngjslitw4gsijlkznjsirtwtrsigjlzknvmJDEI0   IPUOwrahektdznmv\nlpox-98uy7gufhvnb tmwkeafoisCXU*yygchbvn    4mk2RWFsvzx\nwgudkngrhadkjn\nwhaegkjsc\ngwaeihfkncMZ<ghaecsknm,z\n",
+                new ArrayList<>(Arrays.asList("CV", "Cover Letter", "Reference Letter")), new ArrayList<>(), 1, LocalDate.of(2019, 7, 19), LocalDate.of(2019, 7, 19), LocalDate.now());
+        JobApplication jobApp = new JobApplication(applicant, jobPosting, LocalDate.now());
         JobApplicationDocument doc = new JobApplicationDocument(new File("./sample.txt"), applicant.getUsername());
         JobApplicationDocument doc2 = new JobApplicationDocument(new File("./sample.txt"), applicant.getUsername());
         jobApp.addFiles(new ArrayList<>(Arrays.asList(doc, doc2)));
         Applicant applicant2 = jobApplicationSystem.getUserManager().createApplicant("username2", "password", "Legal Name2", "email@gmail.com", LocalDate.of(2019, 7, 19), "L4B4P8");
-        BranchJobPosting jobPosting2 = new BranchJobPosting("title2", "field", "description",
-                new ArrayList<>(Arrays.asList("CV", "Cover Letter", "Reference Letter")), new ArrayList<>(), 1, branch, LocalDate.of(2019, 7, 20), LocalDate.of(2019, 7, 20), LocalDate.now());
+        BranchJobPosting jobPosting2 = hrc.addJobPosting("title2", "field", "description",
+                new ArrayList<>(Arrays.asList("CV", "Cover Letter", "Reference Letter")), new ArrayList<>(), 1, LocalDate.of(2019, 7, 20), LocalDate.of(2019, 7, 20), LocalDate.now());
         JobApplication jobApp2 = new JobApplication(applicant2, jobPosting2, LocalDate.of(2019, 7, 19));
         reference.addJobApplication(jobApp);
         reference.addJobApplication(jobApp2);

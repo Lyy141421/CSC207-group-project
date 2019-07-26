@@ -300,7 +300,12 @@ public class Interview implements Serializable {
             s += "Secondary Interviewers: " + this.getOtherInterviewersNames() + "\n";
         }
         s += "Interviewees: " + this.getIntervieweeNames() + "\n";
-        s += "Interview Time: " + this.getTime();
+        s += "Interview Time: ";
+        if (this.getTime() != null) {
+            s += this.getTime();
+        } else {
+            s += "TBD";
+        }
         return s;
     }
 

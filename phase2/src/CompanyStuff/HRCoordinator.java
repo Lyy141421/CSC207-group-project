@@ -3,8 +3,6 @@ package CompanyStuff;
 import CompanyStuff.JobPostings.BranchJobPosting;
 import CompanyStuff.JobPostings.CompanyJobPosting;
 import Main.User;
-import ApplicantStuff.JobApplication;
-import Miscellaneous.InterviewTime;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -76,24 +74,6 @@ public class HRCoordinator extends User {
                 numPositions, this.branch, postDate, applicationCloseDate, referenceCloseDate);
         this.branch.getJobPostingManager().addJobPosting(branchJobPosting);
         return branchJobPosting;
-    }
-
-    /**
-     * Get a job application with this ID.
-     *
-     * @param ID The ID in question.
-     * @return the job application with this ID or null if cannot be accessed/found.
-     */
-    public JobApplication findJobAppById(int ID) {
-        ArrayList<BranchJobPosting> jobPostings = this.branch.getJobPostingManager().getBranchJobPostings();
-        for (BranchJobPosting jobPosting : jobPostings) {
-            for (JobApplication jobApplication : jobPosting.getJobApplications()) {
-                if (jobApplication.getId() == ID) {
-                    return jobApplication;
-                }
-            }
-        }
-        return null;
     }
 
     /**

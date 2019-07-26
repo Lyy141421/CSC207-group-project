@@ -6,11 +6,10 @@ import ApplicantStuff.JobApplicationDocument;
 import ApplicantStuff.Reference;
 import DocumentManagers.ApplicantDocumentManager;
 import DocumentManagers.CompanyDocumentManager;
+import GUIClasses.CommonUserGUI.UserPanel;
 import Main.User;
-import GUIClasses.ReferenceInterface.ReferencePanel;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -33,8 +32,11 @@ public class SubmitDocumentsActionListener implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         this.updateFileStorage();
-        this.showSuccessfulSubmissionPanel(e);
-
+        JPanel parent = (JPanel) ((JButton) e.getSource()).getParent();
+        JOptionPane.showMessageDialog(parent, "You have successfully scheduled an interview.");
+        JPanel cards = new CardLayoutPanelGetter().fromSubmitFilesButton(e);
+        UserPanel userPanel = (UserPanel) cards.getParent();
+        userPanel.resetCards(); // Update all the cards
     }
 
     /**
@@ -58,18 +60,5 @@ public class SubmitDocumentsActionListener implements ActionListener {
         }
         CompanyDocumentManager companyDocManager = jobApp.getJobPosting().getCompany().getDocumentManager();
         companyDocManager.addFilesForJobApplication(jobApp, filesToSubmit);
-    }
-
-    /**
-     * Switch the card to the successful submission panel.
-     *
-     * @param e The click of the submit button.
-     */
-    private void showSuccessfulSubmissionPanel(ActionEvent e) {
-        JPanel cards = new CardLayoutPanelGetter().fromSubmitFilesButton(e);
-        ReferencePanel referencePanel = (ReferencePanel) cards.getParent();
-        referencePanel.updateCards(); // Update all the cards
-        CardLayout cl = (CardLayout) cards.getLayout();
-        cl.show(cards, ReferencePanel.SUCCESSFUL_SUBMISSION);
     }
 }

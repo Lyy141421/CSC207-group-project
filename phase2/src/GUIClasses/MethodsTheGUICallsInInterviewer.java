@@ -27,7 +27,7 @@ public class MethodsTheGUICallsInInterviewer {
         return this.interviewer;
     }
 
-    public boolean isAfterToday(LocalDate date) {
+    public boolean dateSelectedIsAfterToday(LocalDate date) {
         return date.isAfter(this.jobAppSystem.getToday());
     }
 

@@ -5,9 +5,9 @@ import GUIClasses.MethodsTheGUICallsInInterviewer;
 
 import java.util.HashMap;
 
-public class InterviewerCoordinatorView extends InterviewerViewComplete {
+public class InterviewerCoordinatorViewAndSelect extends InterviewerViewAndWriteNotes {
 
-    InterviewerCoordinatorView(MethodsTheGUICallsInInterviewer interviewerInterface) {
+    InterviewerCoordinatorViewAndSelect(MethodsTheGUICallsInInterviewer interviewerInterface) {
         super(interviewerInterface);
         this.add(super.splitDisplay);
     }

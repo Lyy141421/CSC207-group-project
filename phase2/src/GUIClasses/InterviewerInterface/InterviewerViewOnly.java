@@ -13,7 +13,7 @@ import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.util.HashMap;
 
-public class InterviewerView extends InterviewerPanel {
+public class InterviewerViewOnly extends InterviewerPanel {
 
     static String OVERVIEW = "Overview";
     static String FILE = "View Files";
@@ -28,7 +28,7 @@ public class InterviewerView extends InterviewerPanel {
     JList applicantList;
 
 
-    InterviewerView(MethodsTheGUICallsInInterviewer interviewerInterface) {
+    InterviewerViewOnly(MethodsTheGUICallsInInterviewer interviewerInterface) {
         super(interviewerInterface);
         this.interviews = getInterviewMap();
         this.setLayout(new BorderLayout());
@@ -47,10 +47,7 @@ public class InterviewerView extends InterviewerPanel {
     }
 
     void setInterviewList(JSplitPane splitPane) {
-        this.interviewList = new JList<>();
-        this.interviewList.setListData(interviews.keySet().toArray(new String[interviews.size()]));
-        this.interviewList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
-        this.interviewList.setLayoutOrientation(JList.VERTICAL);
+        super.setInterviewList();
 
         splitPane.setLeftComponent(new JScrollPane(this.interviewList));
     }

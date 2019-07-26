@@ -148,7 +148,7 @@ public class InterviewManager implements Serializable {
      *
      * @param applicationToWithdraw the application to withdraw.
      */
-    public void withdrawApplication(JobApplication applicationToWithdraw) {
+    public void updateForApplicationWithdrawal(JobApplication applicationToWithdraw) {
         if (!applicationToWithdraw.getInterviews().isEmpty()) {
             Interview interview = applicationToWithdraw.getLastInterview();
             interview.removeApplication(applicationToWithdraw);

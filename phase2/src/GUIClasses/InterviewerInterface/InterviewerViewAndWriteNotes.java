@@ -9,12 +9,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
 
-public class InterviewerViewComplete extends InterviewerView {
+public class InterviewerViewAndWriteNotes extends InterviewerViewOnly {
 
     JPanel notesPanel = new JPanel();
     JTextArea notes;
 
-    InterviewerViewComplete(MethodsTheGUICallsInInterviewer interviewerInterface) {
+    InterviewerViewAndWriteNotes(MethodsTheGUICallsInInterviewer interviewerInterface) {
         super(interviewerInterface);
         this.setLayout(new BorderLayout());
 
@@ -46,7 +46,7 @@ public class InterviewerViewComplete extends InterviewerView {
                 String note = notes.getText();
                 Interview selectedInterview = interviews.get(interviewList.getSelectedValue());
                 interviewerInterface.storeInterviewNotes(selectedInterview, interviewerInterface.getInterviewer(), note);
-                InterviewerViewComplete.super.reload();
+                InterviewerViewAndWriteNotes.super.setInterviewList();
                 refreshTabs();
             }
         });
