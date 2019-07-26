@@ -2,10 +2,10 @@ package CompanyStuff.JobPostings;
 
 import CompanyStuff.Branch;
 import CompanyStuff.Company;
+import NotificationSystem.Observable;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Observable;
 
 public class CompanyJobPosting extends Observable implements Serializable {
 

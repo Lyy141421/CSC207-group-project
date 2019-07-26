@@ -13,7 +13,7 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-public class BranchJobPosting extends CompanyJobPosting implements Observable {
+public class BranchJobPosting extends CompanyJobPosting {
 
     // === Class variables ===
     static final long serialVersionUID = 1L;
@@ -27,8 +27,6 @@ public class BranchJobPosting extends CompanyJobPosting implements Observable {
     private Branch branch; // The branch that listed this job posting
     private ArrayList<JobApplication> jobApplications; // The list of applications for this job posting
     private InterviewManager interviewManager; // Interview manager for this job posting
-    private ArrayList<Observer> observerList = new ArrayList<>(); // A list of observers for pushing notifications
-
 
     // === Representation invariants ===
     // References can only submit reference letters after the applicant close date and before the reference close date
@@ -241,44 +239,6 @@ public class BranchJobPosting extends CompanyJobPosting implements Observable {
     }
 
     // === Observable Methods ===
-
-    /**
-     * Adding an observer to the notification recipient list
-     */
-    public void attach(Observer observer){
-        if (!observerList.contains(observer)) {
-            observerList.add(observer);
-        }
-    }
-
-    /**
-     * Removing an observer from the notification recipient list
-     */
-    public void detach(Observer observer){
-        observerList.remove(observer);
-    }
-
-    /**
-     * Sending a notification to all observers
-     *
-     * @param notification - The notification to be sent
-     */
-    public void notifyAllObservers(Notification notification){
-        updateObserverList();
-        for (Observer observer : observerList) {
-            notifyObserver(observer, notification);
-        }
-    }
-
-    /**
-     *Sending a notification to a particular observer
-     *
-     * @param observer - The observer receiving the notification
-     * @param notification - The notification to be sent
-     */
-    public void notifyObserver(Observer observer, Notification notification){
-        observer.update(notification);
-    }
 
     /**
      * A method to internally change the structure of the observer list

@@ -6,6 +6,7 @@ import NotificationSystem.Observer;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Random;
 
 public abstract class User implements Serializable, Observer {
@@ -114,8 +115,12 @@ public abstract class User implements Serializable, Observer {
 
     public void update(Object obj) {
         if(obj instanceof Notification){
-            this.getNotificationManager().add((Notification)obj);
+            this.addNotification((Notification)obj);
         }
+    }
+
+    public ArrayList<Notification> getAllNotifications(){
+        return this.notification_manager.getNotifications();
     }
 
     public void addNotification(Notification notification){
