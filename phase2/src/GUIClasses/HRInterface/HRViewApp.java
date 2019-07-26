@@ -100,6 +100,8 @@ public class HRViewApp extends HRPanel {
         JButton hire = new JButton("Select candidates to hire");
         hire.setVisible(false);
         //TODO: actionlistener.
+        //TODO: should check if job posting has any applications still in consideration. if no, close posting. if yes,
+        // call pop-up with HRInterface and list of applications.
         return hire;
     }
 
