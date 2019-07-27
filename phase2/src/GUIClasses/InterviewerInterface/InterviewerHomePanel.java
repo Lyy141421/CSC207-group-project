@@ -23,6 +23,7 @@ public class InterviewerHomePanel extends InterviewerPanel {
         c.gridx = 0;
         c.gridy = 0;
         this.add(this.createWelcomePanel(), c);
+        c.insets = new Insets(10, 0, 0, 0);
         c.gridy++;
         c.gridheight = 100;
         this.add(this.createInterviewsToSchedulePanel(), c);
@@ -31,6 +32,7 @@ public class InterviewerHomePanel extends InterviewerPanel {
         this.add(this.createUpcomingInterviewsPanel(), c);
         c.gridy = 201;
         c.gridheight = 100;
+        c.insets = new Insets(10, 0, 10, 0);
         this.add(this.createIncompleteInterviewsPanel(), c);
     }
 
@@ -73,10 +75,10 @@ public class InterviewerHomePanel extends InterviewerPanel {
         Object[][] data = new Object[unscheduledInterviews.size()][];
 
         for (int i = 0; i < unscheduledInterviews.size(); i++) {
-            data[i] = unscheduledInterviews.get(i).getCategoryValuesForInterviewerUnscheduled();
+            data[i] = unscheduledInterviews.get(i).getCategoryValuesForInterviewerUnscheduledOrIncomplete();
         }
 
-        return this.createTablePanel(Interview.getCategoryNamesForInterviewerUnscheduled(), data);
+        return this.createTablePanel(Interview.getCategoryNamesForInterviewerUnscheduledOrIncomplete(), data);
     }
 
     private JPanel createUpcomingInterviewsPanel() {
@@ -113,10 +115,10 @@ public class InterviewerHomePanel extends InterviewerPanel {
         Object[][] data = new Object[incompleteInterviews.size()][];
 
         for (int i = 0; i < incompleteInterviews.size(); i++) {
-            data[i] = incompleteInterviews.get(i).getCategoryValuesForInterviewerScheduled();
+            data[i] = incompleteInterviews.get(i).getCategoryValuesForInterviewerUnscheduledOrIncomplete();
         }
 
-        return this.createTablePanel(Interview.getCategoryNamesForInterviewerScheduled(), data);
+        return this.createTablePanel(Interview.getCategoryNamesForInterviewerUnscheduledOrIncomplete(), data);
     }
 
     public static void main(String[] args) {

@@ -1,7 +1,7 @@
 package GUIClasses.InterviewerInterface;
 
 import CompanyStuff.Interview;
-import GUIClasses.CommonUserGUI.TitleCreator;
+
 import GUIClasses.MethodsTheGUICallsInInterviewer;
 
 import javax.swing.*;
@@ -28,9 +28,7 @@ class InterviewerViewAndWriteNotes extends InterviewerViewOnly {
 
     private void setWriteNotesPanel() {
         if (interviewerInterface.hasAlreadyWrittenNotes(interviewSelected)) {
-            notesPanel.removeAll();
-            notesPanel.add(new TitleCreator().createTitlePanel("You have already written notes for this interview", 18),
-                    SwingConstants.CENTER);
+            JOptionPane.showMessageDialog(notesPanel, "You have already written notes for this interview");
         } else {
             notesPanel.setLayout(new BoxLayout(notesPanel, BoxLayout.Y_AXIS));
             this.notes = new JTextArea("Please enter interview notes");

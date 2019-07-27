@@ -15,28 +15,28 @@ import java.util.HashMap;
 
 public class InterviewerViewOnly extends InterviewerPanel implements ListSelectionListener {
 
-    static String OVERVIEW = "Overview";
-    static String FILE = "View Files";
-    static String VIEW_NOTES = "View Notes";
+    private static String OVERVIEW = "Overview";
+    private static String FILE = "View Files";
+    private static String VIEW_NOTES = "View Notes";
 
     JTabbedPane infoPane;
-    JSplitPane splitDisplay;
     private JTextArea overview;
     private JPanel viewNotesPanel = new JPanel();
+    private JPanel documentViewerPanel = new JPanel(new BorderLayout());
     private JPanel documentViewer;
     private JobApplication jobAppSelected;
-    private JList applicantList;
+    private JList applicantList = new JList();
     Interview interviewSelected;
 
     InterviewerViewOnly(MethodsTheGUICallsInInterviewer interviewerInterface) {
         super(interviewerInterface);
-        this.interviews = getInterviewMap();
+        this.setInterviews(this.getInterviewMap());
         this.setLayout(new BorderLayout());
 
         splitDisplay = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
         splitDisplay.setDividerLocation(200);
-        this.setInterviewList(splitDisplay);
-        this.setInfoPane(splitDisplay);
+        this.setInterviewList();
+        this.setInfoPane();
         this.setInterviewListSelectionListener();
         this.add(splitDisplay);
     }
@@ -45,23 +45,16 @@ public class InterviewerViewOnly extends InterviewerPanel implements ListSelecti
         return getTitleToInterviewMap(interviewerInterface.getAllIncompleteInterviews());
     }
 
-    void setInfoPane (JSplitPane splitDisplay) {
-        this.infoPane = new JTabbedPane();
-        this.infoPane.addTab(this.OVERVIEW, makeOverviewTab("Select an interview to view overview."));
-        this.documentViewer = new JPanel();
-        this.documentViewer.setLayout(new BorderLayout());
-        this.infoPane.addTab(this.FILE, this.documentViewer);
-        this.infoPane.addTab(this.VIEW_NOTES, makeNotesTab());
+    private void setInfoPane() {
+        infoPane = new JTabbedPane();
+        infoPane.addTab(OVERVIEW, makeOverviewTab());
+        infoPane.addTab(FILE, documentViewerPanel);
+        infoPane.addTab(VIEW_NOTES, makeNotesTab());
 
         splitDisplay.setRightComponent(this.infoPane);
     }
 
-    JPanel createDocumentViewer() {
-        return new DocumentViewer(this.interviewerInterface.getFolderForJobApplication(jobAppSelected));
-    }
-
-    JPanel createApplicantListPanel(Interview interview) {
-        JPanel applicantListPanel = new JPanel();
+    private JPanel createApplicantListPanel(Interview interview) {
         DefaultListModel listModel = new DefaultListModel();
         for (JobApplication jobApp : interview.getJobApplications()) {
             listModel.addElement(jobApp.getApplicant().getLegalName());
@@ -71,6 +64,7 @@ public class InterviewerViewOnly extends InterviewerPanel implements ListSelecti
         applicantList.setSelectedIndex(-1);
         applicantList.setLayoutOrientation(JList.VERTICAL);
         this.setApplicantListSelectionListener(interview);
+        JPanel applicantListPanel = new JPanel();
         applicantListPanel.add(applicantList);
         return applicantListPanel;
     }
@@ -82,28 +76,29 @@ public class InterviewerViewOnly extends InterviewerPanel implements ListSelecti
                 if (!e.getValueIsAdjusting()) {
                     if (applicantList.getSelectedIndex() != -1) {
                         jobAppSelected = interview.getJobApplications().get(applicantList.getSelectedIndex());
-                        documentViewer.add(createDocumentViewer(), BorderLayout.CENTER);
-                        documentViewer.revalidate();
+                        documentViewer = new DocumentViewer(interviewerInterface.getFolderForJobApplication(jobAppSelected));
+                        documentViewerPanel.add(documentViewer, BorderLayout.CENTER);
+                        documentViewerPanel.revalidate();
                     }
                 }
             }
         });
     }
 
-    JComponent makeOverviewTab (String text) {
-        this.overview = new JTextArea(text);
+    private JComponent makeOverviewTab() {
+        this.overview = new JTextArea("Select an interview to view overview.");
         this.overview.setEditable(false);
         this.overview.setBorder(new EtchedBorder(EtchedBorder.LOWERED));
 
         return new JScrollPane(this.overview);
     }
 
-    JComponent makeNotesTab() {
+    private JComponent makeNotesTab() {
         this.viewNotesPanel.setLayout(new BoxLayout(viewNotesPanel, BoxLayout.Y_AXIS));
         return new JScrollPane(this.viewNotesPanel);
     }
 
-    void setViewNotesPanel(Interview interview) {
+    private void setViewNotesPanel(Interview interview) {
         HashMap<Interviewer, String> interviewerToNotes = this.interviewerInterface.getInterviewerToNotes(interview);
         this.viewNotesPanel.removeAll();
         for (Interviewer interviewer : interviewerToNotes.keySet()) {
@@ -121,7 +116,7 @@ public class InterviewerViewOnly extends InterviewerPanel implements ListSelecti
         }
     }
 
-    void setInterviewListSelectionListener() {
+    private void setInterviewListSelectionListener() {
         interviewList.addListSelectionListener(this);
     }
 
@@ -134,9 +129,16 @@ public class InterviewerViewOnly extends InterviewerPanel implements ListSelecti
         }
     }
 
+    private JLabel createApplicantListPrompt() {
+        return new JLabel("Select an applicant:");
+    }
+
     void loadTabContents(Interview selectedInterview) {
         overview.setText(selectedInterview.toString());
-        documentViewer.add(createApplicantListPanel(selectedInterview), BorderLayout.WEST);
+        documentViewerPanel.removeAll();
+        documentViewerPanel.add(createApplicantListPrompt(), BorderLayout.BEFORE_FIRST_LINE);
+        documentViewerPanel.add(createApplicantListPanel(selectedInterview), BorderLayout.WEST);
+        documentViewerPanel.revalidate();
         setViewNotesPanel(selectedInterview);
     }
 

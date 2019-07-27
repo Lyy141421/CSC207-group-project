@@ -34,29 +34,27 @@ public class ReferencePanel extends UserPanel {
     ReferencePanel(String username, JobApplicationSystem jobApplicationSystem, LogoutActionListener logoutActionListener) {
         this.reference = (Reference) jobApplicationSystem.getUserManager().findUserByUsername(username);
         this.setLayout(new GridBagLayout());
+        this.setCards();
 
         GridBagConstraints c = new GridBagConstraints();
-        c.weightx = 0.5;
-        c.weighty = 0.7;
+        c.weightx = 1;
+        c.weighty = 0.5;
         c.fill = GridBagConstraints.BOTH;
         c.gridx = 0;
-        c.gridwidth = 10;
+        c.gridwidth = 15;
         c.gridy = 0;
-        this.add(new ReferenceSideBarMenuPanel(logoutActionListener), c);
+        this.add(new ReferenceSideBarMenuPanel(cards, logoutActionListener), c);
 
         c.weightx = 1;
-//        c.fill = GridBagConstraints.BOTH;
-        c.gridx = 11;
+        c.gridx = 16;
         c.fill = GridBagConstraints.REMAINDER;
         this.add(cards, c);
-
-        this.addCards();
     }
 
     /**
      * Add the cards to the card layout panel
      */
-    public void addCards() {
+    public void setCards() {
         cards.add(new ReferenceHomePanel(this.reference), UserPanel.HOME);
         cards.add(new UserProfilePanel(this.reference), UserPanel.PROFILE);
         cards.add(new ReferenceSubmitLetterPanel(this.reference), SUBMIT_REFERENCE_LETTER);
@@ -66,9 +64,9 @@ public class ReferencePanel extends UserPanel {
     /**
      * Update the cards after a reference letter submission.
      */
-    public void resetCards() {
+    public void refresh() {
         cards.removeAll();
-        this.addCards();
+        this.setCards();
     }
 
     public static void main(String[] args) {

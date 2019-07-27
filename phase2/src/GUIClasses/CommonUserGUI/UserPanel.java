@@ -7,8 +7,8 @@ abstract public class UserPanel extends JPanel {
     public static String HOME = "HOME";
     public static String PROFILE = "PROFILE";
 
-    abstract public void addCards();
+    abstract public void setCards();
 
-    abstract public void resetCards();
+    abstract public void refresh();
 
 }

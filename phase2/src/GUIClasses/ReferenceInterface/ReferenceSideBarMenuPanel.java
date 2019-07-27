@@ -1,10 +1,9 @@
 package GUIClasses.ReferenceInterface;
 
-import GUIClasses.ActionListeners.CardLayoutPanelGetter;
 import GUIClasses.ActionListeners.LogoutActionListener;
 import GUIClasses.ActionListeners.ProfileActionListener;
 import GUIClasses.ActionListeners.ReturnHomeActionListener;
-import Main.JobApplicationSystem;
+import GUIClasses.CommonUserGUI.UserPanel;
 import GUIClasses.CommonUserGUI.SideBarMenu;
 
 import javax.swing.*;
@@ -21,11 +20,13 @@ class ReferenceSideBarMenuPanel extends JPanel {
     private static int NUM_MAIN_MENU_OPTIONS = 4;
 
     // === Instance variable ===
+    private JPanel cards;
     private LogoutActionListener logoutActionListener;
 
 
     // === Constructor ===
-    ReferenceSideBarMenuPanel(LogoutActionListener logoutActionListener) {
+    ReferenceSideBarMenuPanel(JPanel cards, LogoutActionListener logoutActionListener) {
+        this.cards = cards;
         this.logoutActionListener = logoutActionListener;
         TreeMap<String, Object> fullMenu = this.createFullMenu();
         this.setLayout(new BorderLayout());
@@ -45,17 +46,15 @@ class ReferenceSideBarMenuPanel extends JPanel {
         fullMenu.put("3. Submit Reference Letter", new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JPanel cards = new CardLayoutPanelGetter().fromMenuItemDirectlyOnMenuBar(e);
-                CardLayout cl = (CardLayout) cards.getLayout();
-                cl.show(cards, ReferencePanel.SUBMIT_REFERENCE_LETTER);
+                ((UserPanel) cards.getParent()).refresh();
+                ((CardLayout) cards.getLayout()).show(cards, ReferencePanel.SUBMIT_REFERENCE_LETTER);
             }
         });
         fullMenu.put("4. View Referee Job Postings", new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JPanel cards = new CardLayoutPanelGetter().fromMenuItemDirectlyOnMenuBar(e);
-                CardLayout cl = (CardLayout) cards.getLayout();
-                cl.show(cards, ReferencePanel.VIEW_REFEREE_JOB_POSTINGS);
+                ((UserPanel) cards.getParent()).refresh();
+                ((CardLayout) cards.getLayout()).show(cards, ReferencePanel.VIEW_REFEREE_JOB_POSTINGS);
             }
         });
         fullMenu.put("5. Logout", logoutActionListener);

@@ -20,7 +20,6 @@ class InterviewerSchedule extends InterviewerPanel {
     private static String PROMPT = "PROMPT";
     private static String SET_DATETIME = "SET_DATETIME";
 
-    private JSplitPane splitDisplay;
     private JPanel scheduleDateTimeCards;
     private JPanel scheduleDateTimePanel = new JPanel();
     private GridBagConstraints c = new GridBagConstraints();
@@ -41,7 +40,7 @@ class InterviewerSchedule extends InterviewerPanel {
         this.add(title, BorderLayout.PAGE_START);
         splitDisplay = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
         splitDisplay.setDividerLocation(200);
-        this.setInterviewList(splitDisplay);
+        this.setInterviewList();
         this.setInterviewListSelectionListener();
         this.setScheduleDateTimeCards();
         this.add(splitDisplay, BorderLayout.CENTER);
