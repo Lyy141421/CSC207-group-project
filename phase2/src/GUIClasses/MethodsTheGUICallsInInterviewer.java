@@ -15,25 +15,59 @@ public class MethodsTheGUICallsInInterviewer {
     // === Methods for GUI to call ===
     // InterviewerInterface class
 
-    private Interviewer interviewer;
-    private JobApplicationSystem jobAppSystem;
+    // === Instance variables ===
+    private Interviewer interviewer;    // The interviewer who logged in
+    private JobApplicationSystem jobAppSystem;  // The job application system being used.
 
+    // === Constructor ===
     public MethodsTheGUICallsInInterviewer(JobApplicationSystem jobAppSystem, Interviewer interviewer) {
         this.interviewer = interviewer;
         this.jobAppSystem = jobAppSystem;
     }
 
+    // === Getter ===
     public Interviewer getInterviewer() {
         return this.interviewer;
     }
 
+    // === Other methods ===
+
+    /**
+     * Check whether the date selected by the interviewer is after today's date as set in the job application system.
+     *
+     * @param date The date that the interviewer inputted.
+     * @return true iff the date is after today's date.
+     */
     public boolean dateSelectedIsAfterToday(LocalDate date) {
         return date.isAfter(this.jobAppSystem.getToday());
     }
 
+    /**
+     * Gets tomorrow's date.
+     * @return tomorrow's date as set in the job application system.
+     */
     public int[] getTomorrow() {
         LocalDate tomorrow = jobAppSystem.getToday().plusDays(1);
         return new int[]{tomorrow.getYear(), tomorrow.getMonthValue(), tomorrow.getDayOfMonth()};
+    }
+
+    /**
+     * Checks whether this interviewer has already written notes for this interview.
+     * @param interview The interview in question.
+     * @return true iff this interviewer has already written notes for this interview.
+     */
+    public boolean hasAlreadyWrittenNotes(Interview interview) {
+        return interview.hasAlreadyWrittenNotesForInterview(interviewer);
+    }
+
+    /**
+     * Gets the folder for this job application in the company "server".
+     *
+     * @param jobApp The job application selected by the interviewer to view.
+     * @return the file object that holds the files submitted for this job application.
+     */
+    public File getFolderForJobApplication(JobApplication jobApp) {
+        return this.interviewer.getBranch().getCompany().getDocumentManager().getFolderForJobApplication(jobApp);
     }
 
     /**
@@ -45,12 +79,13 @@ public class MethodsTheGUICallsInInterviewer {
         return this.interviewer.getAllIncompleteInterviews();
     }
 
+    /**
+     * Gets a list of interviews that are incomplete for which this interviewer is not the coordinator, ie, can
+     * only write notes.
+     * @return a list of incomplete interviews for which this interviewer is not the coordinator.
+     */
     public ArrayList<Interview> getIncompleteInterviewsAlreadyOccurredNotCoordinator() {
         return this.interviewer.getIncompleteInterviewsAlreadyOccurredNotAsCoordinator(this.jobAppSystem.getToday());
-    }
-
-    public File getFolderForJobApplication(JobApplication jobApp) {
-        return this.interviewer.getBranch().getCompany().getDocumentManager().getFolderForJobApplication(jobApp);
     }
 
     /**
@@ -59,7 +94,7 @@ public class MethodsTheGUICallsInInterviewer {
      * @return a list of interviews that are incomplete for which this interviewer is a coordinator.
      */
     public ArrayList<Interview> getIncompleteInterviewsAlreadyOccurredAsCoordinator() {
-        return this.interviewer.getIncompleteInterviewsAlreadyOccuredAsCoordinator(this.jobAppSystem.getToday());
+        return this.interviewer.getIncompleteInterviewsAlreadyOccurredAsCoordinator(this.jobAppSystem.getToday());
     }
 
     /**
@@ -72,7 +107,7 @@ public class MethodsTheGUICallsInInterviewer {
     }
 
     /**
-     * Get a list of upcoming interviews.
+     * Get a list of upcoming interviews that have been scheduled.
      *
      * @return a list of upcoming interviews.
      */
@@ -86,21 +121,17 @@ public class MethodsTheGUICallsInInterviewer {
      * @param interview      The interview in question.
      * @param jobAppToResult The hash map of job application to result(boolean pass/fail) for this interview.
      */
-    void setInterviewResults(Interview interview, HashMap<JobApplication, Boolean> jobAppToResult) {
+    public void setInterviewResults(Interview interview, HashMap<JobApplication, Boolean> jobAppToResult) {
         interview.setResults(jobAppToResult);
     }
 
     /**
-     * Set this interview as pass or fail for one applicant.
-     * @param interview The interview in question.
-     * @param jobApp    The job application to be passed/failed.
-     * @param result    The result of this interview (pass/fail)
+     * Store this interviewer's notes for this interview.
+     *
+     * @param interview The interview for which notes have been written for.
+     * @param notes     The notes that this interviewer has written.
      */
-    public void setInterviewResult(Interview interview, JobApplication jobApp, boolean result) {
-        interview.setResult(jobApp, result);
-    }
-
-    public void storeInterviewNotes(Interview interview, Interviewer interviewer, String notes) {
+    public void storeInterviewNotes(Interview interview, String notes) {
         if (interview.getInterviewCoordinator().equals(interviewer)) {
             interview.setInterviewCoordinatorNotes(notes);
         } else {
@@ -108,6 +139,11 @@ public class MethodsTheGUICallsInInterviewer {
         }
     }
 
+    /**
+     * Get a map of interviewers to notes for this interview.
+     * @param interview The interview being viewed.
+     * @return a map of interviewers to notes for this interview.
+     */
     public HashMap<Interviewer, String> getInterviewerToNotes(Interview interview) {
         HashMap<Interviewer, String> interviewerToNotes = new HashMap<>();
         interviewerToNotes.putAll(interview.getInterviewCoordinatorToNotes());
@@ -115,6 +151,11 @@ public class MethodsTheGUICallsInInterviewer {
         return interviewerToNotes;
     }
 
+    /**
+     * Gets a list of available times for this interviewer on this date.
+     * @param date  The date chosen by the interviewer.
+     * @return an array of available time slots for this interviewer on this date.
+     */
     public String[] getAvailableTimes(LocalDate date) {
         ArrayList<String> timeSlots = this.interviewer.getTimeSlotsAvailableOnDate(date);
         return timeSlots.toArray(new String[timeSlots.size()]);

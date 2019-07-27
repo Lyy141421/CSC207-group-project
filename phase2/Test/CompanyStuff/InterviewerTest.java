@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class InterviewerTest {
 
     Company company_a = new Company("company_a");
-    Branch branch_a = company_a.createBranch("BranchName", "Skiff Lake");
+    Branch branch_a = company_a.createBranch("BranchName", "E6H1P9");
 
 
     Branch createBranch (String name){
@@ -25,6 +25,11 @@ class InterviewerTest {
     Interviewer createInterviewer (String username){
         return new Interviewer(username, "ABC123", username + "'s Real Name", username + "@gmail.com", branch_a,
                 "Sales", LocalDate.of(2019, 7, 29));
+    }
+
+    Applicant createApplicant(String name) {
+        return new Applicant(name, "ABC123", name + " Lastname",
+                name + "@gmail.com", LocalDate.of(2019, 7, 29), "Toronto");
     }
 
     @Test
@@ -39,7 +44,7 @@ class InterviewerTest {
 
         assertTrue(interviewer.getNotificationManager() instanceof NotificationManager);
         assertEquals(interviewer.getBranch().getName(), "BranchName");
-        assertEquals(interviewer.getBranch().getCma(), "Skiff Lake");
+        assertEquals(interviewer.getBranch().getCma(), "Fredericton");
         assertEquals(interviewer.getField(), "Sales");
     }
 
@@ -100,7 +105,7 @@ class InterviewerTest {
         interviewer.update(new Notification("TestN", "TestN text"));
         assertTrue(interviewer.getNotificationManager().getNotifications().size() == 1);
         interviewer.update(5);
-        assertTrue(interviewer.getNotificationManager().getNotifications().size() == 0);
+        assertTrue(interviewer.getNotificationManager().getNotifications().size() == 1);
     }
 
     @Test
@@ -123,8 +128,9 @@ class InterviewerTest {
         Interviewer interviewer = this.createInterviewer("Phillip");
         Notification notification = new Notification("TestN", "TestN text");
         interviewer.addNotification(notification);
-        interviewer.removeNotification(notification);
         assertTrue(interviewer.getNotificationManager().getNotifications().size() == 1);
+        interviewer.removeNotification(notification);
+        assertTrue(interviewer.getNotificationManager().getNotifications().size() == 0);
     }
 
     @Test
@@ -172,16 +178,16 @@ class InterviewerTest {
     void setInterviews() {
         Interviewer interviewer = this.createInterviewer("Phillip");
         ArrayList<Interview> lst = new ArrayList<>();
-        lst.add(new Interview(
-                new JobApplication(new Applicant("","","","", LocalDate.now(), ""),
-                new BranchJobPosting("","","",new ArrayList<>(), new ArrayList<>(),1,branch_a, LocalDate.of(2020,1,1), LocalDate.of(2020,1,1), LocalDate.of(2020,1,1)),
-                LocalDate.of(2020,1,1)), interviewer));
+        BranchJobPosting jobPosting = new BranchJobPosting("", "", "", new ArrayList<>(),
+                new ArrayList<>(), 1, branch_a, LocalDate.of(2020, 1, 1), LocalDate.of(2020, 1, 1), LocalDate.of(2020, 1, 1));
+        JobApplication jobApp = new JobApplication(new Applicant("", "", "", "", LocalDate.now(), ""), jobPosting, LocalDate.of(2020, 1, 3));
+        lst.add(new Interview(jobApp, interviewer, jobPosting.getInterviewManager()));
         interviewer.setInterviews(lst);
-        assertTrue(interviewer.getInterviews().size() == 0);
+        assertTrue(interviewer.getInterviews().size() == 1);
     }
 
     @Test
-    void getEarliestTimeAvailableForNewInterview() {
+    void getEarliestTimeAvailableForNewInterview() { //todo test this
     }
 
     @Test

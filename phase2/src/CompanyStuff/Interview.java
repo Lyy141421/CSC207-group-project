@@ -28,14 +28,14 @@ public class Interview implements Serializable {
     private HashMap<Interviewer, String> otherInterviewersToNotes = new HashMap<>();
     // The date and time of this interview
     private InterviewTime time;
-    // Interview type and description
-    private String[] interviewTypeAndDescription;
+    // The interview manager for this interview
+    private InterviewManager interviewManager;
 
     // === Representation invariants ===
     // ID >= 1
 
     // === Constructor ===
-    public Interview(JobApplication jobApplication, Interviewer interviewer) {
+    public Interview(JobApplication jobApplication, Interviewer interviewer, InterviewManager interviewManager) {
         Interview.totalNumOfInterviews++;
         this.id = Interview.totalNumOfInterviews;
         this.jobApplicationsToResult = new HashMap<JobApplication, Boolean>() {{
@@ -44,14 +44,11 @@ public class Interview implements Serializable {
         this.interviewCoordinatorToNotes = new HashMap<Interviewer, String>() {{
             put(interviewer, null);
         }};
-        this.interviewTypeAndDescription = jobApplication.getJobPosting().getInterviewManager().
-                getCurrentRoundTypeAndDescription();
-        interviewer.addInterview(this);
-        jobApplication.addInterview(this);
+        this.interviewManager = interviewManager;
     }
 
     Interview(ArrayList<JobApplication> jobApplications, Interviewer interviewCoordinator,
-              ArrayList<Interviewer> otherInterviewers) {
+              ArrayList<Interviewer> otherInterviewers, InterviewManager interviewManager) {
         Interview.totalNumOfInterviews++;
         this.id = Interview.totalNumOfInterviews;
         this.setJobApplications(jobApplications);
@@ -59,32 +56,13 @@ public class Interview implements Serializable {
             put(interviewCoordinator, null);
         }};
         this.setOtherInterviewersToNotes(otherInterviewers);
-        this.interviewTypeAndDescription = jobApplications.get(0).getJobPosting().getInterviewManager().
-                getCurrentRoundTypeAndDescription();
-        this.addInterviewForInterviewers();
-        this.addInterviewForJobApplications();
-    }
-
-    private void addInterviewForInterviewers() {
-        for (Interviewer interviewer : this.getAllInterviewers()) {
-            interviewer.addInterview(this);
-        }
-    }
-
-    private void addInterviewForJobApplications() {
-        for (JobApplication jobApp : this.getJobApplications()) {
-            jobApp.addInterview(this);
-        }
+        this.interviewManager = interviewManager;
     }
 
     // === Public methods ===
     // === Getters ===
     public int getId() {
         return this.id;
-    }
-
-    public String[] getInterviewTypeAndDescription() {
-        return this.interviewTypeAndDescription;
     }
 
     public HashMap<Interviewer, String> getInterviewCoordinatorToNotes() {
@@ -101,10 +79,6 @@ public class Interview implements Serializable {
 
     public InterviewTime getTime() {
         return this.time;
-    }
-
-    public HashMap<JobApplication, Boolean> getJobApplicationsToResult() {
-        return this.jobApplicationsToResult;
     }
 
     public ArrayList<JobApplication> getJobApplications() {
@@ -149,6 +123,7 @@ public class Interview implements Serializable {
             boolean result = jobAppToResult.get(jobApp);
             this.jobApplicationsToResult.replace(jobApp, result);
         }
+        this.interviewManager.updateInterviewersOfInterviewCompletionOrCancellation(this);
     }
 
     /**
@@ -158,7 +133,7 @@ public class Interview implements Serializable {
      * @param result The result (pass/fail)
      */
     public void setResult(JobApplication jobApp, Boolean result) {
-        this.getJobApplicationsToResult().replace(jobApp, result);
+        this.jobApplicationsToResult.replace(jobApp, result);
     }
 
     /**
@@ -200,7 +175,7 @@ public class Interview implements Serializable {
     /**
      * Check whether this interview is scheduled.
      *
-     * @return
+     * @return true iff this interview has been scheduled
      */
     public boolean isScheduled() {
         return this.time != null;
@@ -239,6 +214,20 @@ public class Interview implements Serializable {
     }
 
     /**
+     * Check whether this interviewer has already written notes for this interview.
+     *
+     * @param interviewer The interviewer in question.
+     * @return true iff this interviewer has already written notes for this interview.
+     */
+    public boolean hasAlreadyWrittenNotesForInterview(Interviewer interviewer) {
+        if (this.getInterviewCoordinator().equals(interviewer)) {
+            return this.getInterviewCoordinatorToNotes().get(interviewer) != null;
+        } else {
+            return this.getOtherInterviewersToNotes().get(interviewer) != null;
+        }
+    }
+
+    /**
      * Get the names of the interviewees for this interview.
      *
      * @return a string of names of interviewees for this interview.
@@ -252,31 +241,32 @@ public class Interview implements Serializable {
         return applicantNames;
     }
 
-    public static String[] getCategoryNamesForInterviewerUnscheduled() {
+    public static String[] getCategoryNamesForInterviewerUnscheduledOrIncomplete() {
         return new String[]{"Interviewee", "Job Posting"};
     }
 
-    public String[] getCategoryValuesForInterviewerUnscheduled() {
+    public String[] getCategoryValuesForInterviewerUnscheduledOrIncomplete() {
         JobApplication jobApp = this.getJobApplications().get(0);
-        return new String[]{jobApp.getApplicant().getLegalName(), jobApp.getJobPosting().getTitle()};
+        return new String[]{this.getIntervieweeNames(), jobApp.getJobPosting().getTitle()};
     }
 
     public static String[] getCategoryNamesForInterviewerScheduled() {
-        return new String[]{"Job Posting", "Interview Type", "Interview Description", "Interview Coordinator",
-                "Interview Time"};
+        return new String[]{"Job Posting", "Type", "Description", "Coordinator",
+                "Time"};
     }
 
     public String[] getCategoryValuesForInterviewerScheduled() {
         JobApplication jobApp = this.getJobApplications().get(0);
-        return new String[]{jobApp.getJobPosting().getTitle(), this.getInterviewTypeAndDescription()[0],
-                this.getInterviewTypeAndDescription()[1], this.getInterviewCoordinator().getLegalName(),
+        String[] typeAndDescription = this.interviewManager.getCurrentRoundTypeAndDescription();
+        return new String[]{jobApp.getJobPosting().getTitle(), typeAndDescription[0],
+                typeAndDescription[1], this.getInterviewCoordinator().getLegalName(),
                 this.getTime().toString()};
     }
 
     public String getMiniDescriptionForInterviewer() {
         JobApplication jobApp = this.getJobApplications().get(0);
         String s = "Job Posting: " + jobApp.getJobPosting().getTitle() + "  ";
-        s += "Interview Description: " + this.getInterviewTypeAndDescription()[1] + "   ";
+        s += "Interview Description: " + this.interviewManager.getCurrentRoundTypeAndDescription()[1] + "   ";
         return s;
     }
 
@@ -291,10 +281,11 @@ public class Interview implements Serializable {
 
     @Override
     public String toString() {
+        String[] typeAndDescription = this.interviewManager.getCurrentRoundTypeAndDescription();
         String s = "Interview ID: " + this.getId() + "\n";
         s += "Job Posting: " + this.getJobApplications().get(0).getJobPosting().getTitle() + "\n";
-        s += "Interview Type: " + this.getInterviewTypeAndDescription()[0] + "\n";
-        s += "Interview Description: " + this.getInterviewTypeAndDescription()[1] + "\n";
+        s += "Interview Type: " + typeAndDescription[0] + "\n";
+        s += "Interview Description: " + typeAndDescription[1] + "\n";
         s += "Interview Coordinator: " + this.getInterviewCoordinator().getLegalName() + "\n";
         if (!this.getOtherInterviewers().isEmpty()) {
             s += "Secondary Interviewers: " + this.getOtherInterviewersNames() + "\n";

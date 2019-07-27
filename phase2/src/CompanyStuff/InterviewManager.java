@@ -154,12 +154,16 @@ public class InterviewManager implements Serializable {
             interview.removeApplication(applicationToWithdraw);
             // If it is a group interview and there are still people left, do not withdraw
             if (interview.getJobApplications().isEmpty()) {
-                for (Interviewer interviewer : interview.getAllInterviewers()) {
-                    interviewer.removeInterview(interview);
-                }
+                this.updateInterviewersOfInterviewCompletionOrCancellation(interview);
             }
         }
         this.reject(applicationToWithdraw);
+    }
+
+    public void updateInterviewersOfInterviewCompletionOrCancellation(Interview interview) {
+        for (Interviewer interviewer : interview.getAllInterviewers()) {
+            interviewer.removeInterview(interview);
+        }
     }
 
     /**
@@ -210,6 +214,39 @@ public class InterviewManager implements Serializable {
     }
 
     /**
+     * Add an interview for all interviewers involved.
+     *
+     * @param interview The interview that was set up.
+     */
+    private void addInterviewForInterviewers(Interview interview) {
+        for (Interviewer interviewer : interview.getAllInterviewers()) {
+            interviewer.addInterview(interview);
+        }
+    }
+
+    /**
+     * Add an interview for all job applications involved.
+     *
+     * @param interview The interview that was set up.
+     */
+    private void addInterviewForJobApplications(Interview interview) {
+        for (JobApplication jobApp : interview.getJobApplications()) {
+            jobApp.addInterview(interview);
+            jobApp.getStatus().advanceStatus();
+        }
+    }
+
+    /**
+     * Update all the participants selected of the new interview that was created.
+     *
+     * @param interview The interview that was set up.
+     */
+    private void updateParticipantsOfNewInterview(Interview interview) {
+        this.addInterviewForInterviewers(interview);
+        this.addInterviewForJobApplications(interview);
+    }
+
+    /**
      * Set up one-on-one interviews for all applications in consideration.
      * Note: Interviewer would set the date/time
      */
@@ -217,7 +254,8 @@ public class InterviewManager implements Serializable {
         for (JobApplication jobApp : this.applicationsInConsideration) {
             String field = this.branchJobPosting.getField();
             Interviewer interviewer = this.branchJobPosting.getBranch().findInterviewerByField(field);
-            new Interview(jobApp, interviewer);
+            Interview interview = new Interview(jobApp, interviewer, this);
+            this.updateParticipantsOfNewInterview(interview);
         }
     }
 
@@ -230,13 +268,11 @@ public class InterviewManager implements Serializable {
     public void setUpGroupInterview(Interviewer interviewCoordinator, ArrayList<Interviewer> otherInterviewers,
                                     LocalDate today, int minNumDaysNotice) {
         Interview interview = new Interview(this.applicationsInConsideration, interviewCoordinator,
-                otherInterviewers);
+                otherInterviewers, this);
         ArrayList<Interviewer> allInterviewers = interview.getAllInterviewers();
         InterviewTime interviewTime = this.getEarliestTimeAvailableForAllInterviewers(allInterviewers, today.plusDays(minNumDaysNotice));
         interview.setTime(interviewTime);
-        for (JobApplication jobApp : this.applicationsInConsideration) {
-            jobApp.getStatus().advanceStatus();
-        }
+        this.updateParticipantsOfNewInterview(interview);
     }
 
     // ============================================================================================================== //

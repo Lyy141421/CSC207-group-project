@@ -33,28 +33,40 @@ public class ReferencePanel extends UserPanel {
     // === Constructor ===
     ReferencePanel(String username, JobApplicationSystem jobApplicationSystem, LogoutActionListener logoutActionListener) {
         this.reference = (Reference) jobApplicationSystem.getUserManager().findUserByUsername(username);
-        this.setLayout(new BorderLayout());
-        this.add(new ReferenceSideBarMenuPanel(logoutActionListener), BorderLayout.WEST);
-        this.addCards();
+        this.setLayout(new GridBagLayout());
+        this.setCards();
+
+        GridBagConstraints c = new GridBagConstraints();
+        c.weightx = 1;
+        c.weighty = 0.5;
+        c.fill = GridBagConstraints.BOTH;
+        c.gridx = 0;
+        c.gridwidth = 15;
+        c.gridy = 0;
+        this.add(new ReferenceSideBarMenuPanel(cards, logoutActionListener), c);
+
+        c.weightx = 1;
+        c.gridx = 16;
+        c.fill = GridBagConstraints.REMAINDER;
+        this.add(cards, c);
     }
 
     /**
      * Add the cards to the card layout panel
      */
-    public void addCards() {
+    public void setCards() {
         cards.add(new ReferenceHomePanel(this.reference), UserPanel.HOME);
         cards.add(new UserProfilePanel(this.reference), UserPanel.PROFILE);
         cards.add(new ReferenceSubmitLetterPanel(this.reference), SUBMIT_REFERENCE_LETTER);
         cards.add(new ReferenceViewRefereeJobPostingsPanel(this.reference), VIEW_REFEREE_JOB_POSTINGS);
-        this.add(cards, BorderLayout.CENTER);
     }
 
     /**
      * Update the cards after a reference letter submission.
      */
-    public void resetCards() {
+    public void refresh() {
         cards.removeAll();
-        this.addCards();
+        this.setCards();
     }
 
     public static void main(String[] args) {
@@ -86,7 +98,7 @@ public class ReferencePanel extends UserPanel {
         branchJobPostingManager.updateJobPostingsClosedForApplications(LocalDate.now());
         LogoutActionListener logoutActionListener = new LogoutActionListener(new Container(), new CardLayout(), jobApplicationSystem);
         frame.add(new ReferencePanel(reference.getUsername(), jobApplicationSystem, logoutActionListener));
-        frame.setSize(800, 600);
+        frame.setSize(854, 480);
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
