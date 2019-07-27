@@ -124,11 +124,11 @@ public abstract class User implements Serializable, Observer {
     }
 
     public void addNotification(Notification notification){
-        this.getNotificationManager().remove(notification);
+        this.getNotificationManager().add(notification);
     }
 
     public void removeNotification(Notification notification){
-        this.getNotificationManager().add(notification);
+        this.getNotificationManager().remove(notification);
     }
 
     @Override
