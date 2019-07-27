@@ -10,18 +10,33 @@ import java.util.HashMap;
 
 
 abstract class InterviewerPanel extends JPanel {
+    /**
+     * Class that contains all shared instance variables/methods among the different cards.
+     */
 
-    MethodsTheGUICallsInInterviewer interviewerInterface;
-    HashMap<String, Interview> interviews;
-    JList<String> interviewList = new JList<>();
-    JSplitPane splitDisplay;
+    // === Instance variables ===
+    MethodsTheGUICallsInInterviewer interviewerInterface;   // Interviewer GUI backend
+    HashMap<String, Interview> interviews;  // The map of titles to interviews to be displayed on the left-hand side
+    JList<String> interviewList = new JList<>();    // The list of interviews to be dispalyed on the left-hand side
+    JSplitPane splitDisplay;    // The split display for the panels.
 
+    // === Constructor ===
     InterviewerPanel(MethodsTheGUICallsInInterviewer interviewerInterface) {
         this.interviewerInterface = interviewerInterface;
         splitDisplay = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
         splitDisplay.setDividerLocation(150);
     }
 
+    // === Getter ===
+    HashMap<String, Interview> getTitleToInterviewMap(ArrayList<Interview> interviewList) {
+        HashMap<String, Interview> titleToInterviewMap = new HashMap<>();
+        for (Interview interview : interviewList) {
+            titleToInterviewMap.put(this.toInterviewTitle(interview), interview);
+        }
+        return titleToInterviewMap;
+    }
+
+    // === Setters ===
     void setInterviews(HashMap<String, Interview> interviews) {
         this.interviews = interviews;
     }
@@ -34,15 +49,13 @@ abstract class InterviewerPanel extends JPanel {
         splitDisplay.setLeftComponent(this.interviewList);
     }
 
-    HashMap<String, Interview> getTitleToInterviewMap(ArrayList<Interview> interviewList) {
-        HashMap<String, Interview> titleToInterviewMap = new HashMap<>();
-        for (Interview interview: interviewList) {
-            titleToInterviewMap.put(this.toInterviewTitle(interview), interview);
-        }
-        return titleToInterviewMap;
-    }
-
-    String toInterviewTitle(Interview interview) {
+    /**
+     * Get the interview title to be displayed in the interview list.
+     *
+     * @param interview The interview being displayed.
+     * @return the title that is to be displayed for this interview.
+     */
+    private String toInterviewTitle(Interview interview) {
         String interviewTimeString = "";
         if (interview.getTime() != null) {
             interviewTimeString = interview.getTime().toString();
@@ -50,6 +63,9 @@ abstract class InterviewerPanel extends JPanel {
         return interview.getId() + ": " + interviewTimeString + " " + interview.getIntervieweeNames();
     }
 
+    /**
+     * Refreshes all the cards in InterviewerMain when any changes are made.
+     */
     void refresh() {
         ((UserPanel) this.getParent().getParent()).refresh();
     }

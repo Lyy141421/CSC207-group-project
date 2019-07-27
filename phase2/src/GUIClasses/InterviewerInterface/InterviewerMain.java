@@ -17,16 +17,22 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class InterviewerMain extends UserPanel {
+    /**
+     * The main panel for Interviewer GUI.
+     */
 
     // === Class variables ===
+    // Keys for the cards in the card layout
     static String SCHEDULE = "SCHEDULE";
     static String ADD_NOTES = "ADD_NOTES";
     static String INCOMPLETE = "INCOMPLETE";
     static String COORDINATOR = "COORDINATOR";
 
-    private MethodsTheGUICallsInInterviewer interviewerInterface;
-    private JPanel cards = new JPanel(new CardLayout());
+    // === Instance variables ===
+    private MethodsTheGUICallsInInterviewer interviewerInterface;   // The backend class for the Interviewer GUI
+    private JPanel cards = new JPanel(new CardLayout());        // The panel that contains all the Interviewer cards
 
+    // === Constructor ===
     private InterviewerMain(MethodsTheGUICallsInInterviewer interviewerInterface, LogoutActionListener logoutActionListener) {
         this.interviewerInterface = interviewerInterface;
         this.setLayout(new GridBagLayout());
@@ -49,6 +55,9 @@ public class InterviewerMain extends UserPanel {
         this.add(cards, c);
     }
 
+    /**
+     * Sets the cards for the Interviewer GUI.
+     */
     public void setCards() {
         cards.add(new InterviewerHomePanel(this.interviewerInterface), InterviewerMain.HOME);
         cards.add(new UserProfilePanel(this.interviewerInterface.getInterviewer()), InterviewerMain.PROFILE);

@@ -11,21 +11,45 @@ import java.awt.event.ActionListener;
 import java.util.HashMap;
 
 class InterviewerViewAndWriteNotes extends InterviewerViewOnly {
+    /**
+     * Panel for viewing and writing notes for an interview.
+     */
 
     // === Instance variables ===
-    private JPanel notesPanel = new JPanel();
-    private JTextArea notes;
+    private JPanel notesPanel = new JPanel();   // The panel for writing notes.
+    private JTextArea notes;    // The text area where the notes are written.
 
+    // === Constructor ===
     InterviewerViewAndWriteNotes(MethodsTheGUICallsInInterviewer interviewerInterface) {
         super(interviewerInterface);
         this.infoPane.addTab("Write notes", this.notesPanel);
     }
 
+    /**
+     * Gets the appropriate interviews to display in the interview list.
+     *
+     * @return the map of interviews for which this interview can write notes.
+     */
     @Override
     HashMap<String, Interview> getInterviewMap() {
         return getTitleToInterviewMap(interviewerInterface.getIncompleteInterviewsAlreadyOccurredNotCoordinator());
     }
 
+    /**
+     * Load the contents of the tabs.
+     *
+     * @param interviewSelected The interview selected.
+     */
+    @Override
+    void loadTabContents(Interview interviewSelected) {
+        super.loadTabContents(interviewSelected);
+        notesPanel.removeAll();
+        setWriteNotesPanel();
+    }
+
+    /**
+     * Set the contents of the panel for writing notes.
+     */
     private void setWriteNotesPanel() {
         if (interviewerInterface.hasAlreadyWrittenNotes(interviewSelected)) {
             JOptionPane.showMessageDialog(notesPanel, "You have already written notes for this interview");
@@ -39,6 +63,10 @@ class InterviewerViewAndWriteNotes extends InterviewerViewOnly {
         notesPanel.revalidate();
     }
 
+    /**
+     * Create a panel with a save notes button.
+     * @return the panel created.
+     */
     private JPanel createSaveNotesButtonPanel() {
         JPanel saveButtonPanel = new JPanel();
         JButton saveButton = new JButton("Save notes");
@@ -47,19 +75,12 @@ class InterviewerViewAndWriteNotes extends InterviewerViewOnly {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String note = notes.getText();
-                interviewerInterface.storeInterviewNotes(interviewSelected, interviewerInterface.getInterviewer(), note);
+                interviewerInterface.storeInterviewNotes(interviewSelected, note);
                 JOptionPane.showMessageDialog(notesPanel, "You have successfully written notes for this interview");
                 refresh();
             }
         });
 
         return saveButtonPanel;
-    }
-
-    @Override
-    void loadTabContents(Interview selectedInterview) {
-        super.loadTabContents(selectedInterview);
-        notesPanel.removeAll();
-        setWriteNotesPanel();
     }
 }

@@ -1,20 +1,19 @@
 package GUIClasses.InterviewerInterface;
 
-import CompanyStuff.Branch;
-import CompanyStuff.Company;
 import CompanyStuff.Interview;
-import CompanyStuff.Interviewer;
 import GUIClasses.MethodsTheGUICallsInInterviewer;
-import Main.JobApplicationSystem;
 import GUIClasses.CommonUserGUI.TitleCreator;
 
 import javax.swing.*;
 import java.awt.*;
-import java.time.LocalDate;
 import java.util.ArrayList;
 
-public class InterviewerHomePanel extends InterviewerPanel {
+class InterviewerHomePanel extends InterviewerPanel {
+    /**
+     * The Home panel of the Interviewer GUI.
+     */
 
+    // === Constructor ===
     InterviewerHomePanel(MethodsTheGUICallsInInterviewer interviewerInterface) {
         super(interviewerInterface);
 
@@ -36,6 +35,11 @@ public class InterviewerHomePanel extends InterviewerPanel {
         this.add(this.createIncompleteInterviewsPanel(), c);
     }
 
+    /**
+     * Create a welcome panel to be displayed.
+     *
+     * @return the welcome panel created.
+     */
     private JPanel createWelcomePanel() {
         JPanel welcomePanel = new JPanel();
         JLabel welcomeMessage = new JLabel("Welcome " + this.interviewerInterface.getInterviewer().getLegalName());
@@ -46,6 +50,12 @@ public class InterviewerHomePanel extends InterviewerPanel {
         return welcomePanel;
     }
 
+    /**
+     * Create a panel with a table.
+     * @param categoryNames The column names.
+     * @param data  The data in the cells.
+     * @return the panel created.
+     */
     private JPanel createTablePanel(String[] categoryNames, Object[][] data) {
         JPanel tablePanel = new JPanel(new GridLayout(1, 0));
 
@@ -61,6 +71,10 @@ public class InterviewerHomePanel extends InterviewerPanel {
         return tablePanel;
     }
 
+    /**
+     * Create the full panel that contains information for interviews to schedule.
+     * @return the panel created.
+     */
     private JPanel createInterviewsToSchedulePanel() {
         JPanel schedulePanel = new JPanel();
         schedulePanel.setLayout(new BorderLayout());
@@ -70,6 +84,10 @@ public class InterviewerHomePanel extends InterviewerPanel {
         return schedulePanel;
     }
 
+    /**
+     * Create a panel with a table that contains information for interviews to schedule.
+     * @return the panel created.
+     */
     private JPanel createInterviewsToScheduleTablePanel() {
         ArrayList<Interview> unscheduledInterviews = this.interviewerInterface.getInterviewsThatNeedScheduling();
         Object[][] data = new Object[unscheduledInterviews.size()][];
@@ -81,6 +99,10 @@ public class InterviewerHomePanel extends InterviewerPanel {
         return this.createTablePanel(Interview.getCategoryNamesForInterviewerUnscheduledOrIncomplete(), data);
     }
 
+    /**
+     * Create the full panel that contains information for upcoming interviews.
+     * @return the panel created.
+     */
     private JPanel createUpcomingInterviewsPanel() {
         JPanel schedulePanel = new JPanel();
         schedulePanel.setLayout(new BorderLayout());
@@ -90,6 +112,10 @@ public class InterviewerHomePanel extends InterviewerPanel {
         return schedulePanel;
     }
 
+    /**
+     * Create a panel with a table that contains information for upcoming interviews.
+     * @return the panel created.
+     */
     private JPanel createUpcomingInterviewsTablePanel() {
         ArrayList<Interview> scheduledInterviews = this.interviewerInterface.getScheduledUpcomingInterviews();
         Object[][] data = new Object[scheduledInterviews.size()][];
@@ -101,6 +127,10 @@ public class InterviewerHomePanel extends InterviewerPanel {
         return this.createTablePanel(Interview.getCategoryNamesForInterviewerScheduled(), data);
     }
 
+    /**
+     * Create the full panel that contains information for incomplete interviews.
+     * @return the panel created.
+     */
     private JPanel createIncompleteInterviewsPanel() {
         JPanel schedulePanel = new JPanel();
         schedulePanel.setLayout(new BorderLayout());
@@ -110,6 +140,10 @@ public class InterviewerHomePanel extends InterviewerPanel {
         return schedulePanel;
     }
 
+    /**
+     * Create a panel with a table that contains information for incomplete interviews.
+     * @return the panel created.
+     */
     private JPanel createIncompleteInterviewsTablePanel() {
         ArrayList<Interview> incompleteInterviews = this.interviewerInterface.getIncompleteInterviewsAlreadyOccurredAsCoordinator();
         Object[][] data = new Object[incompleteInterviews.size()][];
@@ -120,23 +154,4 @@ public class InterviewerHomePanel extends InterviewerPanel {
 
         return this.createTablePanel(Interview.getCategoryNamesForInterviewerUnscheduledOrIncomplete(), data);
     }
-
-    public static void main(String[] args) {
-        JFrame frame = new JFrame("Interviewer Home Page");
-        JobApplicationSystem jobApplicationSystem = new JobApplicationSystem();
-        jobApplicationSystem.setToday(LocalDate.now());
-        jobApplicationSystem.setPreviousLoginDate(LocalDate.now());
-        Company company = jobApplicationSystem.createCompany("Company");
-        Branch branch = new Branch("Branch", "Toronto", company);
-        branch.setCompany(company);
-        company.addBranch(branch);
-        Interviewer interviewer = jobApplicationSystem.getUserManager().createInterviewer("username", "password", "Legal Name", "email@gmail.com", branch, "Field", LocalDate.now());
-        MethodsTheGUICallsInInterviewer interviewerInterface = new MethodsTheGUICallsInInterviewer(jobApplicationSystem, interviewer);
-        JPanel panel = new InterviewerHomePanel(interviewerInterface);
-        frame.add(panel);
-        frame.setSize(854, 480);
-        frame.setVisible(true);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    }
-
 }

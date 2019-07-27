@@ -12,16 +12,19 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.TreeMap;
 
-public class InterviewerSideBarMenuPanel extends JPanel {
+class InterviewerSideBarMenuPanel extends JPanel {
+    /**
+     * The side bar menu that is constant throughout the Interviewer GUI.
+     */
 
-    // === Class variables ===
+    // === Static variables ===
     private static int CELL_WIDTH = 170;
     private static int CELL_HEIGHT = 30;
     private static int NUM_MAIN_MENU_OPTIONS = 6;
 
     // === Instance variables ===
-    private JPanel cards;
-    private LogoutActionListener logoutActionListener;
+    private JPanel cards;   // The cards in the interviewer GUI
+    private LogoutActionListener logoutActionListener;  // The action listener for logging out
 
     // === Constructor ===
     InterviewerSideBarMenuPanel(JPanel cards, LogoutActionListener logoutActionListener) {
