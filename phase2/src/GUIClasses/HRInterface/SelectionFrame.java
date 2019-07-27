@@ -65,10 +65,21 @@ public class SelectionFrame extends JInternalFrame implements ItemListener {
             @Override
             public void actionPerformed(ActionEvent e) {
                 //TODO: Send warning if not enough applicants selected
-                //TODO: hire the selected applicants
+                HRInterface.hireApplications(getApplicantsToHire());
             }
         });
         this.add(confirmButton, c);
+    }
+
+    private ArrayList<JobApplication> getApplicantsToHire() {
+        ArrayList<JobApplication> appsToHire = new ArrayList<>();
+        for (JCheckBox key : checkboxToAppMap.keySet()) {
+            if (key.isSelected()) {
+                appsToHire.add(checkboxToAppMap.get(key));
+            }
+        }
+
+        return appsToHire;
     }
 
     private void addCancelButton() {
