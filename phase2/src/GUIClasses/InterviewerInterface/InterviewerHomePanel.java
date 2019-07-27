@@ -6,7 +6,7 @@ import CompanyStuff.Interview;
 import CompanyStuff.Interviewer;
 import GUIClasses.MethodsTheGUICallsInInterviewer;
 import Main.JobApplicationSystem;
-import GUIClasses.CommonUserGUI.FrequentlyUsedMethods;
+import GUIClasses.CommonUserGUI.TitleCreator;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,16 +18,20 @@ public class InterviewerHomePanel extends InterviewerPanel {
     InterviewerHomePanel(MethodsTheGUICallsInInterviewer interviewerInterface) {
         super(interviewerInterface);
 
-        this.setLayout(new BorderLayout());
-        this.add(this.createWelcomePanel(), BorderLayout.BEFORE_FIRST_LINE);
-        this.add(this.createUpcomingInterviewsPanel(), BorderLayout.CENTER);
-        JPanel remindersPanel = new JPanel();
-        remindersPanel.setLayout(new BoxLayout(remindersPanel, BoxLayout.X_AXIS));
-        remindersPanel.add(this.createIncompleteInterviewsPanel());
-        remindersPanel.add(Box.createRigidArea(new Dimension(20, 0)));
-        remindersPanel.add(this.createInterviewsToSchedulePanel());
-        this.add(remindersPanel, BorderLayout.SOUTH);
-        this.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        this.setLayout(new GridBagLayout());
+        GridBagConstraints c = new GridBagConstraints();
+        c.gridx = 0;
+        c.gridy = 0;
+        this.add(this.createWelcomePanel(), c);
+        c.gridy++;
+        c.gridheight = 100;
+        this.add(this.createInterviewsToSchedulePanel(), c);
+        c.gridy = 101;
+        c.gridheight = 100;
+        this.add(this.createUpcomingInterviewsPanel(), c);
+        c.gridy = 201;
+        c.gridheight = 100;
+        this.add(this.createIncompleteInterviewsPanel(), c);
     }
 
     private JPanel createWelcomePanel() {
@@ -50,6 +54,7 @@ public class InterviewerHomePanel extends InterviewerPanel {
         table.setFillsViewportHeight(true);
 
         JScrollPane scrollPane = new JScrollPane(table);
+        scrollPane.setMinimumSize(new Dimension(500, 70));
         tablePanel.add(scrollPane);
         return tablePanel;
     }
@@ -57,7 +62,7 @@ public class InterviewerHomePanel extends InterviewerPanel {
     private JPanel createInterviewsToSchedulePanel() {
         JPanel schedulePanel = new JPanel();
         schedulePanel.setLayout(new BorderLayout());
-        schedulePanel.add(new FrequentlyUsedMethods().createTitlePanel(
+        schedulePanel.add(new TitleCreator().createTitlePanel(
                 "One-on-One interviews to schedule", 17), BorderLayout.BEFORE_FIRST_LINE);
         schedulePanel.add(this.createInterviewsToScheduleTablePanel(), BorderLayout.CENTER);
         return schedulePanel;
@@ -77,7 +82,7 @@ public class InterviewerHomePanel extends InterviewerPanel {
     private JPanel createUpcomingInterviewsPanel() {
         JPanel schedulePanel = new JPanel();
         schedulePanel.setLayout(new BorderLayout());
-        schedulePanel.add(new FrequentlyUsedMethods().createTitlePanel(
+        schedulePanel.add(new TitleCreator().createTitlePanel(
                 "Upcoming interviews:", 17), BorderLayout.BEFORE_FIRST_LINE);
         schedulePanel.add(this.createUpcomingInterviewsTablePanel(), BorderLayout.CENTER);
         return schedulePanel;
@@ -97,7 +102,7 @@ public class InterviewerHomePanel extends InterviewerPanel {
     private JPanel createIncompleteInterviewsPanel() {
         JPanel schedulePanel = new JPanel();
         schedulePanel.setLayout(new BorderLayout());
-        schedulePanel.add(new FrequentlyUsedMethods().createTitlePanel(
+        schedulePanel.add(new TitleCreator().createTitlePanel(
                 "Incomplete interviews:", 17), BorderLayout.BEFORE_FIRST_LINE);
         schedulePanel.add(this.createIncompleteInterviewsTablePanel(), BorderLayout.CENTER);
         return schedulePanel;
@@ -120,14 +125,14 @@ public class InterviewerHomePanel extends InterviewerPanel {
         jobApplicationSystem.setToday(LocalDate.now());
         jobApplicationSystem.setPreviousLoginDate(LocalDate.now());
         Company company = jobApplicationSystem.createCompany("Company");
-        Branch branch = new Branch("Branch", "L4B3Z9", company);
+        Branch branch = new Branch("Branch", "Toronto", company);
         branch.setCompany(company);
         company.addBranch(branch);
         Interviewer interviewer = jobApplicationSystem.getUserManager().createInterviewer("username", "password", "Legal Name", "email@gmail.com", branch, "Field", LocalDate.now());
         MethodsTheGUICallsInInterviewer interviewerInterface = new MethodsTheGUICallsInInterviewer(jobApplicationSystem, interviewer);
         JPanel panel = new InterviewerHomePanel(interviewerInterface);
         frame.add(panel);
-        frame.setSize(800, 600);
+        frame.setSize(854, 480);
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }

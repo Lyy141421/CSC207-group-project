@@ -1,42 +1,52 @@
 package CompanyStuff;
 
 import ApplicantStuff.JobApplication;
+import CompanyStuff.JobPostings.BranchJobPosting;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Scanner;
 
 public class JobApplicationGrader {
-
-    // TODO make this better
+    /**
+     * Class that grades a job application based on the number of occurrences of key words and phrases in the files submitted.
+     */
 
     // === Instance variable ===
     private ArrayList<String> keyWordsAndPhrases;
-    private HashMap<JobApplication, Integer> jobAppToGrade;
+    private ArrayList<JobApplication> jobApps;
+    private ArrayList<GradedJobApplication> gradedJobApps = new ArrayList<>();
     private int grade;
 
     // === Constructor ===
-    JobApplicationGrader(ArrayList<JobApplication> jobApps, ArrayList<String> keyWordsAndPhrases) {
+    public JobApplicationGrader(BranchJobPosting jobPosting, ArrayList<String> keyWordsAndPhrases) {
+        this.jobApps = jobPosting.getJobApplications();
         this.keyWordsAndPhrases = keyWordsAndPhrases;
-
-        for (JobApplication jobApp : jobApps) {
-            jobAppToGrade.put(jobApp, 0);
-        }
     }
-
-    // === Getter ===
-
-    int getGrade(JobApplication jobApp) {
-        return this.jobAppToGrade.get(jobApp);
-    }
-
 
     // === Other methods ===
 
-    public void gradeAllJobApps() {
-        for (JobApplication jobApp : this.jobAppToGrade.keySet()) {
-            this.jobAppToGrade.replace(jobApp, this.gradeJobApplication(jobApp));
+    /**
+     * Get the list of job applications sorted in non-decreasing order based on the grade given.
+     *
+     * @return the list of job applications sorted in non-decreasing order.
+     */
+    public ArrayList<JobApplication> getSortedJobApps() {
+        this.gradeAllJobApps();
+
+        ArrayList<JobApplication> sortedJobApps = new ArrayList<>();
+        this.gradedJobApps.sort(new JobAppComparator());
+        for (GradedJobApplication gradedJobApplication : this.gradedJobApps) {
+            sortedJobApps.add(gradedJobApplication.jobApp);
+        }
+        return sortedJobApps;
+    }
+
+    private void gradeAllJobApps() {
+        for (JobApplication jobApp : this.jobApps) {
+            this.gradedJobApps.add(new GradedJobApplication(jobApp, this.gradeJobApplication(jobApp)));
         }
     }
 
@@ -63,9 +73,31 @@ public class JobApplicationGrader {
                 scanner.close();
             } catch (IOException ex) {
                 ex.printStackTrace();
+                continue;
             }
         }
         return grade;
+    }
+
+    private class GradedJobApplication {
+
+        // === Instance variables ===
+        private JobApplication jobApp;
+        private int grade;
+
+        GradedJobApplication(JobApplication jobApp, int grade) {
+            this.jobApp = jobApp;
+            this.grade = grade;
+        }
+    }
+
+    private class JobAppComparator implements Comparator<GradedJobApplication> {
+
+        // Note this is used to sort in non-decreasing order.
+        @Override
+        public int compare(GradedJobApplication jobApp1, GradedJobApplication jobApp2) {
+            return jobApp2.grade - jobApp1.grade;
+        }
     }
 
 

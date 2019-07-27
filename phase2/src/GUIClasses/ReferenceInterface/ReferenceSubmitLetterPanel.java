@@ -3,7 +3,7 @@ package GUIClasses.ReferenceInterface;
 import ApplicantStuff.JobApplication;
 import ApplicantStuff.Reference;
 import GUIClasses.CommonUserGUI.FileChooser;
-import GUIClasses.CommonUserGUI.FrequentlyUsedMethods;
+import GUIClasses.CommonUserGUI.TitleCreator;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -30,10 +30,10 @@ public class ReferenceSubmitLetterPanel extends JPanel implements ActionListener
         this.fileChooser = new FileChooser(reference, null);    // So that the file chooser is on the panel
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-        this.add(new FrequentlyUsedMethods().createTitlePanel("Submit Reference Letter", 20));
-        this.add(new FrequentlyUsedMethods().createTitlePanel("Select a Job Application", 15));
+        this.add(new TitleCreator().createTitlePanel("Submit Reference Letter", 20));
+        this.add(new TitleCreator().createTitlePanel("Select a Job Application", 15));
         this.add(this.createJobApplicationListPanel());
-        this.add(new FrequentlyUsedMethods().createTitlePanel("Choose a File", 15));
+        this.add(new TitleCreator().createTitlePanel("Choose a File", 15));
         this.add(fileChooser);
     }
 
@@ -68,8 +68,7 @@ public class ReferenceSubmitLetterPanel extends JPanel implements ActionListener
      */
     private JPanel createButtonPane() {
         JPanel buttonPane = new JPanel();
-        buttonPane.setLayout(new BoxLayout(buttonPane,
-                BoxLayout.LINE_AXIS));
+        buttonPane.setLayout(new BoxLayout(buttonPane, BoxLayout.LINE_AXIS));
         selectJobAppButton.addActionListener(this);
         selectJobAppButton.setEnabled(false);
         buttonPane.add(selectJobAppButton);
@@ -80,7 +79,7 @@ public class ReferenceSubmitLetterPanel extends JPanel implements ActionListener
     // For the list selection listener
     @Override
     public void valueChanged(ListSelectionEvent e) {
-        if (e.getValueIsAdjusting() == false) {
+        if (!e.getValueIsAdjusting()) {
             if (jobAppList.getSelectedIndex() == -1) {
                 selectJobAppButton.setEnabled(false);   //No selection, disable select button.
 

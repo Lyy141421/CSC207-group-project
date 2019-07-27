@@ -36,6 +36,10 @@ public class MethodsTheGUICallsInInterviewer {
         return new int[]{tomorrow.getYear(), tomorrow.getMonthValue(), tomorrow.getDayOfMonth()};
     }
 
+    public boolean hasAlreadyWrittenNotes(Interview interview) {
+        return interview.hasAlreadyWrittenNotesForInterview(interviewer);
+    }
+
     /**
      * Get a list of interviews that are incomplete.
      *
@@ -59,7 +63,7 @@ public class MethodsTheGUICallsInInterviewer {
      * @return a list of interviews that are incomplete for which this interviewer is a coordinator.
      */
     public ArrayList<Interview> getIncompleteInterviewsAlreadyOccurredAsCoordinator() {
-        return this.interviewer.getIncompleteInterviewsAlreadyOccuredAsCoordinator(this.jobAppSystem.getToday());
+        return this.interviewer.getIncompleteInterviewsAlreadyOccurredAsCoordinator(this.jobAppSystem.getToday());
     }
 
     /**
@@ -86,18 +90,8 @@ public class MethodsTheGUICallsInInterviewer {
      * @param interview      The interview in question.
      * @param jobAppToResult The hash map of job application to result(boolean pass/fail) for this interview.
      */
-    void setInterviewResults(Interview interview, HashMap<JobApplication, Boolean> jobAppToResult) {
+    public void setInterviewResults(Interview interview, HashMap<JobApplication, Boolean> jobAppToResult) {
         interview.setResults(jobAppToResult);
-    }
-
-    /**
-     * Set this interview as pass or fail for one applicant.
-     * @param interview The interview in question.
-     * @param jobApp    The job application to be passed/failed.
-     * @param result    The result of this interview (pass/fail)
-     */
-    public void setInterviewResult(Interview interview, JobApplication jobApp, boolean result) {
-        interview.setResult(jobApp, result);
     }
 
     public void storeInterviewNotes(Interview interview, Interviewer interviewer, String notes) {

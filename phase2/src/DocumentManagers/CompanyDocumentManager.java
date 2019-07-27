@@ -22,22 +22,6 @@ public class CompanyDocumentManager extends DocumentManager {
     public CompanyDocumentManager(Company company) {
         this.company = company;
         this.setFolder(new File(FOLDER_PATH + "/" + this.company.getName()));
-        for (Branch branch : company.getBranches()) {
-            this.createBranchSubDirectories(branch);
-        }
-    }
-
-    /**
-     * Make subdirectories for this company.
-     */
-    private void createBranchSubDirectories(Branch branch) {
-        File branchFolder = new File(this.getFolder().getPath() + "/" + branch.getName());
-        try {
-            branchFolder.mkdirs();
-            branchFolder.createNewFile();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
     }
 
     /**

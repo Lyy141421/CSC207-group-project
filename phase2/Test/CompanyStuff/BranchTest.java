@@ -62,9 +62,9 @@ public class BranchTest {
         jobPosting.getInterviewManager().setInterviewConfiguration(interviewConfiguration);
         JobApplication jobApp = new JobApplication(applicant, jobPosting, LocalDate.of(2019, 7, 21));
 
-        new Interview(jobApp, interviewer1);
-        new Interview(jobApp, interviewer2);
-        new Interview(jobApp, interviewer2);
+        new Interview(jobApp, interviewer1, jobPosting.getInterviewManager());
+        new Interview(jobApp, interviewer2, jobPosting.getInterviewManager());
+        new Interview(jobApp, interviewer2, jobPosting.getInterviewManager());
         assert branch.findInterviewerByField("HR").equals(interviewer1);
     }
 }

@@ -5,6 +5,7 @@ import ApplicantStuff.JobApplication;
 import CompanyStuff.Branch;
 import CompanyStuff.HRCoordinator;
 import CompanyStuff.Interviewer;
+import CompanyStuff.JobApplicationGrader;
 import CompanyStuff.JobPostings.BranchJobPosting;
 import CompanyStuff.JobPostings.BranchJobPostingManager;
 import Main.JobApplicationSystem;
@@ -125,6 +126,7 @@ public class MethodsTheGUICallsInHR {
         return true;
     }
 
+    // TODO fix implementation
     public boolean hireApplications(ArrayList<JobApplication> jobAppsToHire) {
         for (JobApplication jobApp : jobAppsToHire) {
             jobApp.getStatus().setHired();
@@ -136,6 +138,18 @@ public class MethodsTheGUICallsInHR {
             return false;
         }
         return true;
+    }
+
+    /**
+     * Get a list of job applications sorted in non-decreasing order based on the number of occurrences of key words and phrases.
+     *
+     * @param jobPosting         The job posting that has recently closed.
+     * @param keyWordsAndPhrases The key words and phrases that the HR Coordinator has inputted.
+     * @return
+     */
+    public ArrayList<JobApplication> getJobApplicationInNonDecreasingOrder(BranchJobPosting jobPosting, ArrayList<String> keyWordsAndPhrases) {
+        JobApplicationGrader jobAppGrader = new JobApplicationGrader(jobPosting, keyWordsAndPhrases);
+        return jobAppGrader.getSortedJobApps();
     }
 
     /* *

@@ -13,7 +13,7 @@ import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.util.HashMap;
 
-public class InterviewerViewOnly extends InterviewerPanel {
+public class InterviewerViewOnly extends InterviewerPanel implements ListSelectionListener {
 
     static String OVERVIEW = "Overview";
     static String FILE = "View Files";
@@ -21,12 +21,12 @@ public class InterviewerViewOnly extends InterviewerPanel {
 
     JTabbedPane infoPane;
     JSplitPane splitDisplay;
-    JTextArea overview;
-    JPanel viewNotesPanel;
-    JPanel documentViewer;
-    JobApplication jobAppSelected;
-    JList applicantList;
-
+    private JTextArea overview;
+    private JPanel viewNotesPanel = new JPanel();
+    private JPanel documentViewer;
+    private JobApplication jobAppSelected;
+    private JList applicantList;
+    Interview interviewSelected;
 
     InterviewerViewOnly(MethodsTheGUICallsInInterviewer interviewerInterface) {
         super(interviewerInterface);
@@ -34,22 +34,15 @@ public class InterviewerViewOnly extends InterviewerPanel {
         this.setLayout(new BorderLayout());
 
         splitDisplay = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-        splitDisplay.setDividerLocation(250);
+        splitDisplay.setDividerLocation(200);
         this.setInterviewList(splitDisplay);
         this.setInfoPane(splitDisplay);
-
-        this.setListSelectionListener();
+        this.setInterviewListSelectionListener();
         this.add(splitDisplay);
     }
 
     HashMap<String, Interview> getInterviewMap() {
         return getTitleToInterviewMap(interviewerInterface.getAllIncompleteInterviews());
-    }
-
-    void setInterviewList(JSplitPane splitPane) {
-        super.setInterviewList();
-
-        splitPane.setLeftComponent(new JScrollPane(this.interviewList));
     }
 
     void setInfoPane (JSplitPane splitDisplay) {
@@ -106,13 +99,13 @@ public class InterviewerViewOnly extends InterviewerPanel {
     }
 
     JComponent makeNotesTab() {
-        this.viewNotesPanel = new JPanel();
         this.viewNotesPanel.setLayout(new BoxLayout(viewNotesPanel, BoxLayout.Y_AXIS));
         return new JScrollPane(this.viewNotesPanel);
     }
 
     void setViewNotesPanel(Interview interview) {
         HashMap<Interviewer, String> interviewerToNotes = this.interviewerInterface.getInterviewerToNotes(interview);
+        this.viewNotesPanel.removeAll();
         for (Interviewer interviewer : interviewerToNotes.keySet()) {
             if (interviewerToNotes.get(interviewer) != null) {
                 JLabel interviewerName = new JLabel(interviewer.getLegalName());
@@ -128,31 +121,23 @@ public class InterviewerViewOnly extends InterviewerPanel {
         }
     }
 
+    void setInterviewListSelectionListener() {
+        interviewList.addListSelectionListener(this);
+    }
+
+    @Override
+    public void valueChanged(ListSelectionEvent e) {
+        if (interviewList.getSelectedIndex() != -1) {
+            String selectedTitle = interviewList.getSelectedValue();
+            interviewSelected = interviews.get(selectedTitle);
+            loadTabContents(interviewSelected);
+        }
+    }
+
     void loadTabContents(Interview selectedInterview) {
         overview.setText(selectedInterview.toString());
         documentViewer.add(createApplicantListPanel(selectedInterview), BorderLayout.WEST);
-        viewNotesPanel.removeAll();
         setViewNotesPanel(selectedInterview);
-    }
-
-    void refreshTabs() {
-        overview.setText("Select an interview to view overview.");
-        documentViewer.removeAll();
-        viewNotesPanel.removeAll();
-    }
-
-    void setListSelectionListener() {
-        this.interviewList.addListSelectionListener(new ListSelectionListener() {
-            @Override
-            public void valueChanged(ListSelectionEvent e) {
-                if (interviewList.getSelectedIndex() != -1) {
-                    String selectedTitle = interviewList.getSelectedValue();
-                    loadTabContents(interviews.get(selectedTitle));
-                } else {
-                    refreshTabs();
-                }
-            }
-        });
     }
 
 }

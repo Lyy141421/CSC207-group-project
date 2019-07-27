@@ -2,13 +2,12 @@ package GUIClasses.ReferenceInterface;
 
 import ApplicantStuff.Reference;
 import CompanyStuff.JobPostings.BranchJobPosting;
-import GUIClasses.CommonUserGUI.FrequentlyUsedMethods;
+import GUIClasses.CommonUserGUI.TitleCreator;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
-import java.util.ArrayList;
 
 public class ReferenceViewRefereeJobPostingsPanel extends JPanel {
 
@@ -32,10 +31,10 @@ public class ReferenceViewRefereeJobPostingsPanel extends JPanel {
         this.reference = reference;
         this.setLayout(new BorderLayout());
         this.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-        this.add(new FrequentlyUsedMethods().createTitlePanel(
+        this.add(new TitleCreator().createTitlePanel(
                 "View the Job Postings That Your Referees Have Applied To", 20), BorderLayout.PAGE_START);
         splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-        splitPane.setDividerLocation(300);
+        splitPane.setDividerLocation(200);
         splitPane.setRightComponent(jobPostingCards);
         this.setJobPostingList(splitPane);
         this.setJobPostingCards(splitPane);

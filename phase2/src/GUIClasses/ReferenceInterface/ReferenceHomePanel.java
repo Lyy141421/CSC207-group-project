@@ -2,7 +2,7 @@ package GUIClasses.ReferenceInterface;
 
 import ApplicantStuff.JobApplication;
 import ApplicantStuff.Reference;
-import GUIClasses.CommonUserGUI.FrequentlyUsedMethods;
+import GUIClasses.CommonUserGUI.TitleCreator;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,10 +15,14 @@ class ReferenceHomePanel extends JPanel {
     ReferenceHomePanel(Reference reference) {
         this.reference = reference;
 
-        this.setLayout(new BorderLayout());
-        this.add(this.createWelcomePanel(), BorderLayout.BEFORE_FIRST_LINE);
-        this.add(this.createReminderPanel(), BorderLayout.CENTER);
-        this.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        this.setLayout(new GridBagLayout());
+        GridBagConstraints c = new GridBagConstraints();
+        c.gridx = 0;
+        c.gridy = 0;
+        this.add(this.createWelcomePanel(), c);
+        c.gridy++;
+        c.gridheight = 100;
+        this.add(this.createReminderPanel(), c);
     }
 
     private JPanel createWelcomePanel() {
@@ -34,7 +38,7 @@ class ReferenceHomePanel extends JPanel {
     private JPanel createReminderPanel() {
         JPanel reminderPanel = new JPanel();
         reminderPanel.setLayout(new BorderLayout());
-        reminderPanel.add(new FrequentlyUsedMethods().createTitlePanel(
+        reminderPanel.add(new TitleCreator().createTitlePanel(
                 "Reference letters that still need to be submitted: ", 20), BorderLayout.BEFORE_FIRST_LINE);
         reminderPanel.add(this.createJobAppTablePanel(), BorderLayout.CENTER);
         return reminderPanel;
@@ -46,7 +50,7 @@ class ReferenceHomePanel extends JPanel {
      * https://docs.oracle.com/javase/tutorial/uiswing/components/table.html
      */
     private JPanel createJobAppTablePanel() {
-        JPanel jobAppTablePanel = new JPanel(new GridLayout(1, 0));
+        JPanel jobAppTablePanel = new JPanel(new GridLayout());
 
         ArrayList<JobApplication> jobApps = this.reference.getJobAppsForReference();
         Object[][] data = new Object[jobApps.size()][];
@@ -58,11 +62,11 @@ class ReferenceHomePanel extends JPanel {
         JTable jobAppTable = new JTable(data, JobApplication.categoryNamesForReference());
         jobAppTable.setCellSelectionEnabled(false);
         jobAppTable.setEnabled(false);
-        jobAppTable.setPreferredScrollableViewportSize(new Dimension(500, 70));
         jobAppTable.setFillsViewportHeight(true);
 
         JScrollPane scrollPane = new JScrollPane(jobAppTable);
         jobAppTablePanel.add(scrollPane);
+        scrollPane.setPreferredSize(new Dimension(400, 200));
         return jobAppTablePanel;
     }
 

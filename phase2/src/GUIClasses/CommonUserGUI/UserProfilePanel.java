@@ -12,7 +12,7 @@ public class UserProfilePanel extends JPanel {
     public UserProfilePanel(User user) {
         this.user = user;
         this.setLayout(new BorderLayout());
-        JPanel title = new FrequentlyUsedMethods().createTitlePanel("User Information", 30);
+        JPanel title = new TitleCreator().createTitlePanel("User Information", 30);
         title.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
         this.add(title, BorderLayout.PAGE_START);
         JPanel userInfoPanel = new JPanel();

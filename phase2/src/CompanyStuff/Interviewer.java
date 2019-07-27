@@ -6,8 +6,6 @@ import ApplicantStuff.JobApplication;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 public class Interviewer extends User {
 
@@ -309,7 +307,7 @@ public class Interviewer extends User {
      * @param today Today's date.
      * @return a list fo incomplete interviews for which this interviewer is a coordinator.
      */
-    public ArrayList<Interview> getIncompleteInterviewsAlreadyOccuredAsCoordinator(LocalDate today) {
+    public ArrayList<Interview> getIncompleteInterviewsAlreadyOccurredAsCoordinator(LocalDate today) {
         ArrayList<Interview> interviews = new ArrayList<>();
         for (Interview interview : this.getIncompleteInterviewsAlreadyOccurred(today)) {
             if (interview.getInterviewCoordinator().equals(this)) {

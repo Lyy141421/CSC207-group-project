@@ -33,8 +33,23 @@ public class ReferencePanel extends UserPanel {
     // === Constructor ===
     ReferencePanel(String username, JobApplicationSystem jobApplicationSystem, LogoutActionListener logoutActionListener) {
         this.reference = (Reference) jobApplicationSystem.getUserManager().findUserByUsername(username);
-        this.setLayout(new BorderLayout());
-        this.add(new ReferenceSideBarMenuPanel(logoutActionListener), BorderLayout.WEST);
+        this.setLayout(new GridBagLayout());
+
+        GridBagConstraints c = new GridBagConstraints();
+        c.weightx = 0.5;
+        c.weighty = 0.7;
+        c.fill = GridBagConstraints.BOTH;
+        c.gridx = 0;
+        c.gridwidth = 10;
+        c.gridy = 0;
+        this.add(new ReferenceSideBarMenuPanel(logoutActionListener), c);
+
+        c.weightx = 1;
+//        c.fill = GridBagConstraints.BOTH;
+        c.gridx = 11;
+        c.fill = GridBagConstraints.REMAINDER;
+        this.add(cards, c);
+
         this.addCards();
     }
 
@@ -46,7 +61,6 @@ public class ReferencePanel extends UserPanel {
         cards.add(new UserProfilePanel(this.reference), UserPanel.PROFILE);
         cards.add(new ReferenceSubmitLetterPanel(this.reference), SUBMIT_REFERENCE_LETTER);
         cards.add(new ReferenceViewRefereeJobPostingsPanel(this.reference), VIEW_REFEREE_JOB_POSTINGS);
-        this.add(cards, BorderLayout.CENTER);
     }
 
     /**
@@ -86,7 +100,7 @@ public class ReferencePanel extends UserPanel {
         branchJobPostingManager.updateJobPostingsClosedForApplications(LocalDate.now());
         LogoutActionListener logoutActionListener = new LogoutActionListener(new Container(), new CardLayout(), jobApplicationSystem);
         frame.add(new ReferencePanel(reference.getUsername(), jobApplicationSystem, logoutActionListener));
-        frame.setSize(800, 600);
+        frame.setSize(854, 480);
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }

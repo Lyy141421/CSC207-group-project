@@ -172,10 +172,10 @@ class InterviewerTest {
     void setInterviews() {
         Interviewer interviewer = this.createInterviewer("Phillip");
         ArrayList<Interview> lst = new ArrayList<>();
-        lst.add(new Interview(
-                new JobApplication(new Applicant("","","","", LocalDate.now(), ""),
-                new BranchJobPosting("","","",new ArrayList<>(), new ArrayList<>(),1,branch_a, LocalDate.of(2020,1,1), LocalDate.of(2020,1,1), LocalDate.of(2020,1,1)),
-                LocalDate.of(2020,1,1)), interviewer));
+        BranchJobPosting jobPosting = new BranchJobPosting("", "", "", new ArrayList<>(),
+                new ArrayList<>(), 1, branch_a, LocalDate.of(2020, 1, 1), LocalDate.of(2020, 1, 1), LocalDate.of(2020, 1, 1));
+        JobApplication jobApp = new JobApplication(new Applicant("", "", "", "", LocalDate.now(), ""), jobPosting, LocalDate.of(2020, 1, 3));
+        lst.add(new Interview(jobApp, interviewer, jobPosting.getInterviewManager()));
         interviewer.setInterviews(lst);
         assertTrue(interviewer.getInterviews().size() == 0);
     }

@@ -3,7 +3,7 @@ package GUIClasses.CommonUserGUI;
 import javax.swing.*;
 import java.awt.*;
 
-public class FrequentlyUsedMethods {
+public class TitleCreator {
     //TODO rename
 
     /**

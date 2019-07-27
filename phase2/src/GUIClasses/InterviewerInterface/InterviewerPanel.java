@@ -1,6 +1,7 @@
 package GUIClasses.InterviewerInterface;
 
 import CompanyStuff.Interview;
+import GUIClasses.CommonUserGUI.UserPanel;
 import GUIClasses.MethodsTheGUICallsInInterviewer;
 
 import javax.swing.*;
@@ -20,11 +21,12 @@ abstract class InterviewerPanel extends JPanel {
         this.interviewerInterface = interviewerInterface;
     }
 
-    void setInterviewList() {
+    void setInterviewList(JSplitPane splitDisplay) {
         this.interviewList.setListData(interviews.keySet().toArray(new String[interviews.size()]));
         this.interviewList.setSelectedIndex(-1);
-        this.interviewList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+        this.interviewList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         this.interviewList.setLayoutOrientation(JList.VERTICAL);
+        splitDisplay.setLeftComponent(this.interviewList);
     }
 
     HashMap<String, Interview> getTitleToInterviewMap(ArrayList<Interview> interviewList) {
@@ -40,7 +42,11 @@ abstract class InterviewerPanel extends JPanel {
         if (interview.getTime() != null) {
             interviewTimeString = interview.getTime().toString();
         }
-        return interview.getId() + "-" + interviewTimeString + " " + interview.getIntervieweeNames();
+        return interview.getId() + ": " + interviewTimeString + " " + interview.getIntervieweeNames();
+    }
+
+    void refresh() {
+        ((UserPanel) this.getParent().getParent()).resetCards();
     }
 
 //    HashMap<String, Interview> getApplicantToInterviewMap(ArrayList<Interview> interviewList) {
