@@ -67,9 +67,9 @@ class InterviewerCoordinatorViewAndSelect extends InterviewerViewAndWriteNotes {
                     boolean isAdvanced = isAdvancedButtonSelected(jobAppsToButtonGroup.get(jobApp));
                     jobAppToResults.put(jobApp, isAdvanced);
                     JOptionPane.showMessageDialog(resultsPanel, "You have successfully completed this interview.");
-                    refresh();
                 }
                 interviewerInterface.setInterviewResults(interviewSelected, jobAppToResults);
+                refresh();
             }
         });
 

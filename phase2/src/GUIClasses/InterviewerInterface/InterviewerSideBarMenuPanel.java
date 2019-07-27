@@ -1,10 +1,9 @@
 package GUIClasses.InterviewerInterface;
 
-import GUIClasses.ActionListeners.CardLayoutPanelGetter;
 import GUIClasses.ActionListeners.LogoutActionListener;
 import GUIClasses.ActionListeners.ProfileActionListener;
 import GUIClasses.ActionListeners.ReturnHomeActionListener;
-import Main.JobApplicationSystem;
+import GUIClasses.CommonUserGUI.UserPanel;
 import GUIClasses.CommonUserGUI.SideBarMenu;
 
 import javax.swing.*;
@@ -21,10 +20,12 @@ public class InterviewerSideBarMenuPanel extends JPanel {
     private static int NUM_MAIN_MENU_OPTIONS = 6;
 
     // === Instance variables ===
+    private JPanel cards;
     private LogoutActionListener logoutActionListener;
 
     // === Constructor ===
-    InterviewerSideBarMenuPanel(LogoutActionListener logoutActionListener) {
+    InterviewerSideBarMenuPanel(JPanel cards, LogoutActionListener logoutActionListener) {
+        this.cards = cards;
         this.logoutActionListener = logoutActionListener;
         TreeMap<String, Object> fullMenu = this.createFullMenu();
         this.setLayout(new BorderLayout());
@@ -44,65 +45,32 @@ public class InterviewerSideBarMenuPanel extends JPanel {
         fullMenu.put("3. Schedule Interviews", new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JPanel cards = new CardLayoutPanelGetter().fromMenuItemDirectlyOnMenuBar(e);
-                CardLayout cl = (CardLayout) cards.getLayout();
-                cl.show(cards, InterviewerMain.SCHEDULE);
+                ((UserPanel) cards.getParent()).refresh();
+                ((CardLayout) cards.getLayout()).show(cards, InterviewerMain.SCHEDULE);
             }
         });
         fullMenu.put("4. View Interviewees", new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JPanel cards = new CardLayoutPanelGetter().fromMenuItemDirectlyOnMenuBar(e);
-                CardLayout cl = (CardLayout) cards.getLayout();
-                cl.show(cards, InterviewerMain.INCOMPLETE);
+                ((UserPanel) cards.getParent()).refresh();
+                ((CardLayout) cards.getLayout()).show(cards, InterviewerMain.INCOMPLETE);
             }
         });
         fullMenu.put("5. Add Interview Notes", new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JPanel cards = new CardLayoutPanelGetter().fromMenuItemDirectlyOnMenuBar(e);
-                CardLayout cl = (CardLayout) cards.getLayout();
-                cl.show(cards, InterviewerMain.ADD_NOTES);
+                ((UserPanel) cards.getParent()).refresh();
+                ((CardLayout) cards.getLayout()).show(cards, InterviewerMain.ADD_NOTES);
             }
         });
         fullMenu.put("6. Complete Interviews", new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JPanel cards = new CardLayoutPanelGetter().fromMenuItemDirectlyOnMenuBar(e);
-                CardLayout cl = (CardLayout) cards.getLayout();
-                cl.show(cards, InterviewerMain.COORDINATOR);
+                ((UserPanel) cards.getParent()).refresh();
+                ((CardLayout) cards.getLayout()).show(cards, InterviewerMain.COORDINATOR);
             }
         });
         fullMenu.put("7. Logout", logoutActionListener);
         return fullMenu;
     }
-
-    public static void main(String[] args) {
-        //Schedule a job for the event-dispatching thread:
-        //creating and showing this application's GUI.
-        javax.swing.SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                JobApplicationSystem jobAppSystem = new JobApplicationSystem();
-                LogoutActionListener logoutActionListener = new LogoutActionListener(new Container(),
-                        new CardLayout(), jobAppSystem);
-
-                JFrame frame = new JFrame("Interviewer Home Page");
-                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-                JPanel menuPanel = new JPanel();
-                menuPanel.setBackground(Color.WHITE); // contrasting bg
-                menuPanel.add(new InterviewerSideBarMenuPanel(logoutActionListener));
-
-                Container contentPane = frame.getContentPane();
-                contentPane.setBackground(Color.WHITE); //contrasting bg
-
-                frame.add(menuPanel, BorderLayout.LINE_START);
-
-                //Display the window.
-                frame.setSize(500, 250);
-                frame.setVisible(true);
-            }
-        });
-    }
-
 }

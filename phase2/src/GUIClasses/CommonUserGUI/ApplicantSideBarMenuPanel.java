@@ -1,6 +1,5 @@
 package GUIClasses.CommonUserGUI;
 
-import GUIClasses.ActionListeners.ViewUploadedDocumentsActionListener;
 import GUIClasses.ActionListeners.ProfileActionListener;
 import GUIClasses.ActionListeners.ReturnHomeActionListener;
 import ApplicantStuff.Applicant;
@@ -38,7 +37,12 @@ public class ApplicantSideBarMenuPanel extends JPanel {
         TreeMap<String, Object> fullMenu = new TreeMap<>();
         fullMenu.put("1. Home", new ReturnHomeActionListener());
         fullMenu.put("2. Profile", new ProfileActionListener());
-        fullMenu.put("3. View Uploaded Documents", new ViewUploadedDocumentsActionListener(this.applicant));
+        fullMenu.put("3. View Uploaded Documents", new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
         fullMenu.put("3. View Schedule", new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

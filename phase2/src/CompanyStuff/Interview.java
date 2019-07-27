@@ -241,13 +241,13 @@ public class Interview implements Serializable {
         return applicantNames;
     }
 
-    public static String[] getCategoryNamesForInterviewerUnscheduled() {
+    public static String[] getCategoryNamesForInterviewerUnscheduledOrIncomplete() {
         return new String[]{"Interviewee", "Job Posting"};
     }
 
-    public String[] getCategoryValuesForInterviewerUnscheduled() {
+    public String[] getCategoryValuesForInterviewerUnscheduledOrIncomplete() {
         JobApplication jobApp = this.getJobApplications().get(0);
-        return new String[]{jobApp.getApplicant().getLegalName(), jobApp.getJobPosting().getTitle()};
+        return new String[]{this.getIntervieweeNames(), jobApp.getJobPosting().getTitle()};
     }
 
     public static String[] getCategoryNamesForInterviewerScheduled() {

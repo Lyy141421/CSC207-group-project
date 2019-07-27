@@ -291,7 +291,7 @@ public class Interviewer extends User {
      * @param today Today's date.
      * @return a list of incomplete interviews for this interviewer.
      */
-    public ArrayList<Interview> getIncompleteInterviewsAlreadyOccurred(LocalDate today) {
+    private ArrayList<Interview> getIncompleteInterviewsAlreadyOccurred(LocalDate today) {
         ArrayList<Interview> incompleteInterviews = new ArrayList<>();
         for (Interview interview : this.getAllIncompleteInterviews()) {
             if (interview.getTime() != null && interview.getTime().getDate().isBefore(today)) {
