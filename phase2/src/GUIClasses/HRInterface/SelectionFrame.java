@@ -60,27 +60,11 @@ abstract class SelectionFrame extends JInternalFrame{
         c.gridy++;
         c.gridx = 1;
         this.confirmButton = new JButton("Confirm");
-        confirmButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                HRInterface.hireApplications(getApplicantsToHire());
-            }
-        });
+        this.addConfirmListener();
         this.add(confirmButton, c);
     }
 
     abstract void addConfirmListener();
-
-    private ArrayList<JobApplication> getApplicantsToHire() {
-        ArrayList<JobApplication> appsToHire = new ArrayList<>();
-        for (JCheckBox checkBox : checkBoxToAppMap.keySet()) {
-            if (checkBox.isSelected()) {
-                appsToHire.add(checkBoxToAppMap.get(checkBox));
-            }
-        }
-
-        return appsToHire;
-    }
 
     private void addCancelButton() {
         c.gridx = 2;
