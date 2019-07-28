@@ -3,12 +3,15 @@ package CompanyStuff;
 import ApplicantStuff.JobApplication;
 import CompanyStuff.JobPostings.BranchJobPosting;
 import Miscellaneous.InterviewTime;
+import NotificationSystem.Notification;
+import NotificationSystem.Observable;
+import NotificationSystem.Observer;
 
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-public class InterviewManager implements Serializable {
+public class InterviewManager extends Observable implements Serializable {
     /**
      * A class that manages interviews for a job posting.
      */
@@ -54,9 +57,14 @@ public class InterviewManager implements Serializable {
         this.applicationsInConsideration = applicationsInConsideration;
         this.applicationsRejected = new ArrayList<>();
         this.interviewConfiguration = new ArrayList<>();
+        this.updateObserverList();
     }
 
     // === Getters ===
+    public BranchJobPosting getBranchJobPosting() {
+        return this.branchJobPosting;
+    }
+
     public int getCurrentRound() {
         return this.currentRound;
     }
@@ -192,7 +200,10 @@ public class InterviewManager implements Serializable {
      */
     public void updateJobPostingStatus() {
         if (this.hasNoJobApplicationsInConsideration()) {
-            // TODO notify HR
+            this.updateObserverList();
+            this.notifyAllObservers(new Notification("Warning No Applications in Consideration",
+                    "There are no applications in consideration in " + this.getBranchJobPosting().getTitle()
+                            + " job posting."));
         } else if (this.currentRound != 0 | this.isInterviewProcessOver()) {
             // The check for current round ensures that applicants get at least 1 interview
             this.hireAllApplicants();
@@ -364,5 +375,15 @@ public class InterviewManager implements Serializable {
      */
     private void hireAllApplicants() {
         this.hireApplicants(this.applicationsInConsideration);
+    }
+
+    @Override
+    public void updateObserverList(){
+        for (Observer observer : this.getBranchJobPosting().getBranch().getHrCoordinators()){
+            this.detach(observer); //Clears out any possible old HRCoordinators
+        }
+        for (Observer observer : this.getBranchJobPosting().getBranch().getHrCoordinators()){
+            this.attach(observer);
+        }
     }
 }

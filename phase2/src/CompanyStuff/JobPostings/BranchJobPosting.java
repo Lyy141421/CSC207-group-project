@@ -232,9 +232,7 @@ public class BranchJobPosting extends CompanyJobPosting {
 
     // === Observable Methods ===
 
-    /**
-     * A method to internally change the structure of the observer list
-     */
+    @Override
     public void updateObserverList(){
         for (JobApplication job_application : this.interviewManager.getApplicationsInConsideration()){
             this.attach(job_application.getApplicant());

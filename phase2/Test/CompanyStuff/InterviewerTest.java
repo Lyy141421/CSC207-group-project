@@ -134,14 +134,6 @@ class InterviewerTest {
     }
 
     @Test
-    void equals1() {
-    }
-
-    @Test
-    void hashCode1() {
-    }
-
-    @Test
     void getBranch() {
         Interviewer interviewer = this.createInterviewer("Phillip");
         assertTrue(interviewer.getBranch() instanceof Branch);
