@@ -48,7 +48,6 @@ public class HRViewPosting extends HRPanel{
         buttons.add(this.createScheduleButton());
         buttons.add(this.createViewAppButton());
         buttons.add(this.homeButton);
-        //TODO: when page first loaded, first item is automatically displayed, but not SELECTED for itemListener to pick up.
 
         this.add(splitDisplay, BorderLayout.CENTER);
         this.add(buttons, BorderLayout.SOUTH);
@@ -96,7 +95,9 @@ public class HRViewPosting extends HRPanel{
             public void actionPerformed(ActionEvent e) {
                 String selectedTitle = jobPostingList.getSelectedValue();
                 BranchJobPosting selectedJP = currJPs.get(selectedTitle);
-                //TODO: open internal frame for selection
+                //TODO: open internal frame for group interview selection
+
+                removeFromJPLists(selectedTitle);
             }
         });
 
@@ -123,9 +124,14 @@ public class HRViewPosting extends HRPanel{
         viewAppsButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                BranchJobPosting selectedJP = currJPs.get(jobPostingList.getSelectedValue());
+                String selectedTitle = jobPostingList.getSelectedValue();
+                BranchJobPosting selectedJP = currJPs.get(selectedTitle);
                 ArrayList<JobApplication> appsUnderSelectedJP = selectedJP.getJobApplications();
                 HRViewApp appPanel = new HRViewApp(parent, HRInterface, today, getTitleToAppMap(appsUnderSelectedJP));
+                if (hiringJP.containsKey(selectedTitle)) {
+                    appPanel.setHireVisible(true);
+                    removeFromJPLists(selectedTitle);
+                }
                 parent.remove(4);
                 parent.add(appPanel, APPLICATION);
                 ((CardLayout) parent.getLayout()).show(parent, APPLICATION);

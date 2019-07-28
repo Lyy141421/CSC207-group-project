@@ -10,7 +10,10 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class HRViewApp extends HRPanel {
@@ -24,6 +27,7 @@ public class HRViewApp extends HRPanel {
     private JTabbedPane infoPane;
     private JTextArea overview;
     private JPanel documentViewer;
+    private JButton hireButton;
 
 
     HRViewApp(Container contentPane, MethodsTheGUICallsInHR HRInterface, LocalDate today, HashMap<String, JobApplication> currApps) {
@@ -39,8 +43,8 @@ public class HRViewApp extends HRPanel {
         this.setInfoPane(splitDisplay);
 
         JPanel buttons = new JPanel(new FlowLayout());
-        buttons.add(this.createHireButton());
-        buttons.add(this.createSelectButton());
+        this.createHireButton();
+        buttons.add(this.hireButton);
         buttons.add(this.homeButton);
 
         this.setListSelectionListener();
@@ -49,7 +53,6 @@ public class HRViewApp extends HRPanel {
     void reload () {
         this.applicationList.removeAll();
         this.applicationList.setListData(this.currApps.keySet().toArray(new String[this.currApps.size()]));
-        //TODO: change buttons based on job posting selected
     }
 
     private void setApplicationList (JSplitPane splitDisplay) {
@@ -96,20 +99,22 @@ public class HRViewApp extends HRPanel {
         return new JScrollPane(this.overview);
     }
 
-    private JButton createHireButton() {
-        JButton hire = new JButton("Select candidates to hire");
-        hire.setVisible(false);
-        //TODO: actionlistener.
-        //TODO: should check if job posting has any applications still in consideration. if no, close posting. if yes,
-        // call pop-up with HRInterface and list of applications.
-        return hire;
+    private void createHireButton() {
+        this.hireButton = new JButton("Select candidates to hire");
+        this.hireButton.setVisible(false);
+        this.hireButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new HiringSelectionFrame(HRInterface, new ArrayList<>(currApps.values()));
+            }
+        });
     }
 
-    private JButton createSelectButton() {
-        JButton select = new JButton("Select candidates to consider");
-        select.setVisible(false);
-        //TODO: actionlistener.
-        return select;
+    void setHireVisible(boolean visible) {
+        if (visible) {
+            this.hireButton.setVisible(true);
+            this.homeButton.setVisible(false);
+        }
     }
 
     /*
