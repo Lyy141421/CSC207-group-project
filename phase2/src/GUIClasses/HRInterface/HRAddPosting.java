@@ -106,6 +106,7 @@ public class HRAddPosting extends HRPanel {
         this.companyPostingList.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
+                CompanyJobPosting selectedJP = companyJPMap.get((String)companyPostingList.getSelectedItem());
 
             }
         });

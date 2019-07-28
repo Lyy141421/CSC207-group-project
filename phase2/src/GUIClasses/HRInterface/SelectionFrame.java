@@ -13,18 +13,18 @@ import java.awt.event.ItemListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class SelectionFrame extends JInternalFrame implements ItemListener {
+abstract class SelectionFrame extends JInternalFrame{
 
     MethodsTheGUICallsInHR HRInterface;
 
-    private int availablePositions;
-    HashMap<JCheckBox, JobApplication> checkboxToAppMap = new HashMap<>();
+    HashMap<JCheckBox, JobApplication> checkBoxToAppMap = new HashMap<>();
     GridBagConstraints c = new GridBagConstraints();
+
+    JButton confirmButton;
 
     SelectionFrame(MethodsTheGUICallsInHR HRInterface, ArrayList<JobApplication> applications) {
         super("Select");
         this.HRInterface = HRInterface;
-        this.availablePositions = applications.get(0).getJobPosting().getNumPositions();
 
         this.setLayout(new GridBagLayout());
 
@@ -46,21 +46,20 @@ public class SelectionFrame extends JInternalFrame implements ItemListener {
         c.gridx = -1;
         c.gridy = 0;
         for (JobApplication app : applications) {
-            JCheckBox checkbox = new JCheckBox(app.getApplicant().getLegalName());
-            checkbox.addItemListener(this);
-            checkboxToAppMap.put(checkbox, app);
+            JCheckBox checkBox = new JCheckBox(app.getApplicant().getLegalName());
+            checkBoxToAppMap.put(checkBox, app);
             c.gridx = (c.gridx+1)%3;
             if (c.gridx == 0) {
                 c.gridy++;
             }
-            this.add(checkbox, c);
+            this.add(checkBox, c);
         }
     }
 
     private void addConfirmButton() {
         c.gridy++;
         c.gridx = 1;
-        JButton confirmButton = new JButton("Confirm");
+        this.confirmButton = new JButton("Confirm");
         confirmButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -70,11 +69,13 @@ public class SelectionFrame extends JInternalFrame implements ItemListener {
         this.add(confirmButton, c);
     }
 
+    abstract void addConfirmListener();
+
     private ArrayList<JobApplication> getApplicantsToHire() {
         ArrayList<JobApplication> appsToHire = new ArrayList<>();
-        for (JCheckBox key : checkboxToAppMap.keySet()) {
-            if (key.isSelected()) {
-                appsToHire.add(checkboxToAppMap.get(key));
+        for (JCheckBox checkBox : checkBoxToAppMap.keySet()) {
+            if (checkBox.isSelected()) {
+                appsToHire.add(checkBoxToAppMap.get(checkBox));
             }
         }
 
@@ -91,20 +92,5 @@ public class SelectionFrame extends JInternalFrame implements ItemListener {
             }
         });
         this.add(cancelButton, c);
-    }
-
-    @Override
-    public void itemStateChanged(ItemEvent e) {
-        JCheckBox changedSelection = (JCheckBox) e.getItemSelectable();
-        if (e.getStateChange() == ItemEvent.SELECTED) {
-            availablePositions--;
-            if (availablePositions <0) {
-                changedSelection.setSelected(false);
-                availablePositions++;
-                JOptionPane.showMessageDialog(this, "Selection exceeded number of positions available.");
-            }
-        } else {
-            availablePositions++;
-        }
     }
 }

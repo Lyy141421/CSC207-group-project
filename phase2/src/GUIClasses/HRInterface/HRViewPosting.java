@@ -81,9 +81,9 @@ public class HRViewPosting extends HRPanel{
                 BranchJobPosting selectedJP = currJPs.get(selectedTitle);
                 info.setText(getStatus(selectedTitle) + selectedJP.toString());
                 if (scheduleJP.containsKey(selectedTitle)) {
-                    scheduleButton.setEnabled(false);
-                } else {
                     scheduleButton.setEnabled(true);
+                } else {
+                    scheduleButton.setEnabled(false);
                 }
             }
         });
@@ -96,13 +96,7 @@ public class HRViewPosting extends HRPanel{
             public void actionPerformed(ActionEvent e) {
                 String selectedTitle = jobPostingList.getSelectedValue();
                 BranchJobPosting selectedJP = currJPs.get(selectedTitle);
-                boolean success = HRInterface.setUpInterviews(selectedJP);
-                if (success) {
-                    removeFromJPLists(selectedTitle);
-                    JOptionPane.showMessageDialog(containerPane, "Interviews have been scheduled.");
-                } else {
-                    JOptionPane.showMessageDialog(containerPane, "Interviews cannot be scheduled at this time.");
-                }
+                //TODO: open internal frame for selection
             }
         });
 
