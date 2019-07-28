@@ -31,8 +31,7 @@ public class Applicant extends User {
     private ApplicantDocumentManager documentManager;
 
     // === Public methods ===
-    // === Constructors ===
-
+    // === Constructor ===
     public Applicant(String username, String password, String legalName, String email, LocalDate dateCreated,
                      String cma) {
         super(username, password, legalName, email, dateCreated);
@@ -96,7 +95,12 @@ public class Applicant extends User {
         return false;
     }
 
-    // TODO what is this for?
+    /**
+     * Checks whether this applicant has already applied to this branch.
+     *
+     * @param branch The branch in question.
+     * @return true iff this applicant has already applied to this branch
+     */
     public boolean hasAppliedToBranch(Branch branch) {
         for (BranchJobPosting posting : branch.getJobPostingManager().getBranchJobPostings())
             if (this.hasAppliedToPosting(posting))
@@ -117,16 +121,16 @@ public class Applicant extends User {
                 ArrayList<BranchJobPosting> openPostings = jpm.getOpenJobPostings(jobAppSystem.getToday());
                 openPostings.retainAll(jpm.getJobPostingsNotAppliedToByApplicant(this));
                 jobPostings.addAll(openPostings);
-                }
+            }
         return jobPostings;
     }
 
 
     /**
-     * Report whether the date that the last job posting this applicant applied to was 30 days ago from today.
+     * Report whether the date that the last job posting this applicant applied to was 30 days ago from getToday.
      *
      * @param today Today's date.
-     * @return true iff today's date is 30 days after the closing date for the last job this applicant applied to.
+     * @return true iff getToday's date is 30 days after the closing date for the last job this applicant applied to.
      */
     public boolean isInactive(LocalDate today) {
         return this.jobApplicationManager.getNumDaysSinceMostRecentCloseDate(today) >= Applicant.INACTIVE_DAYS;

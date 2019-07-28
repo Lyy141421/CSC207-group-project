@@ -5,6 +5,7 @@ import CompanyStuff.JobPostings.BranchJobPosting;
 import CompanyStuff.Company;
 //import UIClasses.UserInterface;
 import ApplicantStuff.Applicant;
+import FileLoadingAndStoring.DataLoaderAndStorer;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -17,7 +18,7 @@ public class JobApplicationSystem {
     private ArrayList<Company> companies = new ArrayList<>();
     // The user manager for the system
     private UserManager userManager = new UserManager();
-    // The date this program interprets as today.
+    // The date this program interprets as getToday.
     private LocalDate today;
     // The previous login date for this application
     private LocalDate previousLoginDate;
@@ -28,25 +29,18 @@ public class JobApplicationSystem {
     }
 
 
-/*    // === Class methods ===
-    public static void run() throws ClassNotFoundException, IOException {
-        JobApplicationSystem JAS = new JobApplicationSystem();
-        UserInterface UI = new UserInterface(JAS);
-        DataLoaderAndStorer dataLoaderAndStorer = new DataLoaderAndStorer(JAS, "./files/users.ser",
-                "./files/companies.ser", "./files/previousLoginDate.txt");
+    // === Class methods ===
+    public static void run() {
+        JobApplicationSystem jobAppSystem = new JobApplicationSystem();
+        DataLoaderAndStorer dataLoaderAndStorer = new DataLoaderAndStorer(jobAppSystem);
         dataLoaderAndStorer.loadAllData();
         while (true) {
-            try {
-                UI.getTodaysDateValid();
-                JAS.applicant30Day();
-                JAS.updateAllInterviewRounds();
-                UI.run();
-            } catch (ExitException ee) {
-                dataLoaderAndStorer.storeAllData();
-                System.exit(0);
-            }
+            // Create and run the main frame
+            // TODO these method calls would have to appear in main frame after user selects date
+            jobAppSystem.applicant30Day();
+            jobAppSystem.updateAllJobPostings();
         }
-    }*/
+    }
 
     // === Public methods ===
     // === Getters ===
@@ -124,13 +118,9 @@ public class JobApplicationSystem {
     /**
      * Updates all the interview rounds that have been completed.
      */
-    private void updateAllInterviewRounds() {
+    private void updateAllJobPostings() {
         for (Company company : this.companies) {
-            for (Branch branch : company.getBranches()) {
-                for (BranchJobPosting branchJobPosting : branch.getJobPostingManager().getBranchJobPostings()) {
-                    branchJobPosting.advanceInterviewRound();
-                }
-            }
+            company.updateJobPostings(this.getToday());
         }
     }
 }

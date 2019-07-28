@@ -21,10 +21,6 @@ public class HRCoordinator extends User {
 
 
     // === Public methods ===
-    // === Constructors ===
-    public HRCoordinator() {
-    }
-
     public HRCoordinator(String username, String password, String legalName, String email, Branch branch,
                          LocalDate dateCreated) {
         super(username, password, legalName, email, dateCreated);

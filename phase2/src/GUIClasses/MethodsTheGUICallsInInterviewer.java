@@ -33,10 +33,10 @@ public class MethodsTheGUICallsInInterviewer {
     // === Other methods ===
 
     /**
-     * Check whether the date selected by the interviewer is after today's date as set in the job application system.
+     * Check whether the date selected by the interviewer is after getToday's date as set in the job application system.
      *
      * @param date The date that the interviewer inputted.
-     * @return true iff the date is after today's date.
+     * @return true iff the date is after getToday's date.
      */
     public boolean dateSelectedIsAfterToday(LocalDate date) {
         return date.isAfter(this.jobAppSystem.getToday());
@@ -168,8 +168,8 @@ public class MethodsTheGUICallsInInterviewer {
      * @param date      The date chosen.
      * @param timeSlot  The time slot chosen.
      * @return true iff this interview can be scheduled on this date and at this time.
-     * is invalid, ie, it's before today's date.
-     * Precondition: the date is after today's date.
+     * is invalid, ie, it's before getToday's date.
+     * Precondition: the date is after getToday's date.
      */
     public boolean scheduleInterview(Interview interview, LocalDate date, String timeSlot) {
         InterviewTime interviewTime = new InterviewTime(date, timeSlot);

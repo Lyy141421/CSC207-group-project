@@ -38,11 +38,10 @@ class InterviewerViewAndWriteNotes extends InterviewerViewOnly {
     /**
      * Load the contents of the tabs.
      *
-     * @param interviewSelected The interview selected.
      */
     @Override
-    void loadTabContents(Interview interviewSelected) {
-        super.loadTabContents(interviewSelected);
+    void loadTabContents() {
+        super.loadTabContents();
         notesPanel.removeAll();
         setWriteNotesPanel();
     }

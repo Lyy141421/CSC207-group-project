@@ -51,7 +51,7 @@ public class InterviewerMainCopy extends JPanel {
         //TODO: might want to combine the following two since they differ in one function only.
         this.add(this.viewCompletePanel = new InterviewerViewComplete(this, this.interviewerInterface, this.today), InterviewerPanel.COMPLETE);
         this.add(this.coordinatorViewPanel = new InterviewerCoordinatorView(this, this.interviewerInterface, this.today), InterviewerPanel.COORDINATOR);
-//        this.add(this.schedulePanel = new InterviewerSchedule(this, this.interviewerInterface, this.today), InterviewerPanel.SCHEDULE);
+//        this.add(this.schedulePanel = new InterviewerSchedule(this, this.interviewerInterface, this.getToday), InterviewerPanel.SCHEDULE);
     }
 
     private void setActions() {

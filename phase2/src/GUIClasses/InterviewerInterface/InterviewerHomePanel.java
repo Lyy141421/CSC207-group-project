@@ -2,7 +2,7 @@ package GUIClasses.InterviewerInterface;
 
 import CompanyStuff.Interview;
 import GUIClasses.MethodsTheGUICallsInInterviewer;
-import GUIClasses.CommonUserGUI.TitleCreator;
+import GUIClasses.CommonUserGUI.GUIElementsCreator;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,10 +19,12 @@ class InterviewerHomePanel extends InterviewerPanel {
 
         this.setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
+        c.weightx = 0.5;
         c.gridx = 0;
         c.gridy = 0;
+        c.fill = GridBagConstraints.HORIZONTAL;
         this.add(this.createWelcomePanel(), c);
-        c.insets = new Insets(10, 0, 0, 0);
+        c.insets = new Insets(10, 10, 0, 10);
         c.gridy++;
         c.gridheight = 100;
         this.add(this.createInterviewsToSchedulePanel(), c);
@@ -31,7 +33,7 @@ class InterviewerHomePanel extends InterviewerPanel {
         this.add(this.createUpcomingInterviewsPanel(), c);
         c.gridy = 201;
         c.gridheight = 100;
-        c.insets = new Insets(10, 0, 10, 0);
+        c.insets = new Insets(10, 10, 10, 10);
         this.add(this.createIncompleteInterviewsPanel(), c);
     }
 
@@ -51,34 +53,13 @@ class InterviewerHomePanel extends InterviewerPanel {
     }
 
     /**
-     * Create a panel with a table.
-     * @param categoryNames The column names.
-     * @param data  The data in the cells.
-     * @return the panel created.
-     */
-    private JPanel createTablePanel(String[] categoryNames, Object[][] data) {
-        JPanel tablePanel = new JPanel(new GridLayout(1, 0));
-
-        JTable table = new JTable(data, categoryNames);
-        table.setCellSelectionEnabled(false);
-        table.setEnabled(false);
-        table.setPreferredScrollableViewportSize(new Dimension(500, 70));
-        table.setFillsViewportHeight(true);
-
-        JScrollPane scrollPane = new JScrollPane(table);
-        scrollPane.setMinimumSize(new Dimension(500, 70));
-        tablePanel.add(scrollPane);
-        return tablePanel;
-    }
-
-    /**
      * Create the full panel that contains information for interviews to schedule.
      * @return the panel created.
      */
     private JPanel createInterviewsToSchedulePanel() {
         JPanel schedulePanel = new JPanel();
         schedulePanel.setLayout(new BorderLayout());
-        schedulePanel.add(new TitleCreator().createTitlePanel(
+        schedulePanel.add(new GUIElementsCreator().createTitlePanel(
                 "One-on-One interviews to schedule", 17), BorderLayout.BEFORE_FIRST_LINE);
         schedulePanel.add(this.createInterviewsToScheduleTablePanel(), BorderLayout.CENTER);
         return schedulePanel;
@@ -96,7 +77,7 @@ class InterviewerHomePanel extends InterviewerPanel {
             data[i] = unscheduledInterviews.get(i).getCategoryValuesForInterviewerUnscheduledOrIncomplete();
         }
 
-        return this.createTablePanel(Interview.getCategoryNamesForInterviewerUnscheduledOrIncomplete(), data);
+        return new GUIElementsCreator().createTablePanel(Interview.getCategoryNamesForInterviewerUnscheduledOrIncomplete(), data);
     }
 
     /**
@@ -106,7 +87,7 @@ class InterviewerHomePanel extends InterviewerPanel {
     private JPanel createUpcomingInterviewsPanel() {
         JPanel schedulePanel = new JPanel();
         schedulePanel.setLayout(new BorderLayout());
-        schedulePanel.add(new TitleCreator().createTitlePanel(
+        schedulePanel.add(new GUIElementsCreator().createTitlePanel(
                 "Upcoming interviews:", 17), BorderLayout.BEFORE_FIRST_LINE);
         schedulePanel.add(this.createUpcomingInterviewsTablePanel(), BorderLayout.CENTER);
         return schedulePanel;
@@ -124,7 +105,7 @@ class InterviewerHomePanel extends InterviewerPanel {
             data[i] = scheduledInterviews.get(i).getCategoryValuesForInterviewerScheduled();
         }
 
-        return this.createTablePanel(Interview.getCategoryNamesForInterviewerScheduled(), data);
+        return new GUIElementsCreator().createTablePanel(Interview.getCategoryNamesForInterviewerScheduled(), data);
     }
 
     /**
@@ -134,7 +115,7 @@ class InterviewerHomePanel extends InterviewerPanel {
     private JPanel createIncompleteInterviewsPanel() {
         JPanel schedulePanel = new JPanel();
         schedulePanel.setLayout(new BorderLayout());
-        schedulePanel.add(new TitleCreator().createTitlePanel(
+        schedulePanel.add(new GUIElementsCreator().createTitlePanel(
                 "Incomplete interviews:", 17), BorderLayout.BEFORE_FIRST_LINE);
         schedulePanel.add(this.createIncompleteInterviewsTablePanel(), BorderLayout.CENTER);
         return schedulePanel;
@@ -152,6 +133,6 @@ class InterviewerHomePanel extends InterviewerPanel {
             data[i] = incompleteInterviews.get(i).getCategoryValuesForInterviewerUnscheduledOrIncomplete();
         }
 
-        return this.createTablePanel(Interview.getCategoryNamesForInterviewerUnscheduledOrIncomplete(), data);
+        return new GUIElementsCreator().createTablePanel(Interview.getCategoryNamesForInterviewerUnscheduledOrIncomplete(), data);
     }
 }

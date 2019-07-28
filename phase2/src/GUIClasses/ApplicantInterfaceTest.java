@@ -2,7 +2,7 @@ package GUIClasses;
 
 //import UIClasses.UserInterface;
 
-//import static Main.JobApplicationSystem.today;
+//import static Main.JobApplicationSystem.getToday;
 
 //public class ApplicantInterfaceTest extends UserInterface {
     /**
@@ -20,16 +20,16 @@ package GUIClasses;
     *//**
      * Check if there are interviews on the date of login
      *//*
-    boolean checkUpcomingInterviews(LocalDate today) {
-        ArrayList<Interview> upcomingInterviews = applicant.getJobApplicationManager().getUpcomingInterviews(today);
+    boolean checkUpcomingInterviews(LocalDate getToday) {
+        ArrayList<Interview> upcomingInterviews = applicant.getJobApplicationManager().getUpcomingInterviews(getToday);
         return (upcomingInterviews.size() > 0);
     }
 
     *//**
      * Returns an arraylist containing all the job postings that apply to the applicant
      *//*
-    ArrayList<JobPosting> findApplicablePostings(LocalDate today, String field, String companyName) {
-        ArrayList<JobPosting> openJobPostings = applicant.getOpenJobPostingsNotAppliedTo(today);
+    ArrayList<JobPosting> findApplicablePostings(LocalDate getToday, String field, String companyName) {
+        ArrayList<JobPosting> openJobPostings = applicant.getOpenJobPostingsNotAppliedTo(getToday);
         ArrayList<JobPosting> ret = new ArrayList<>();
         for (JobPosting posting : openJobPostings) {
             String filterField = (field == null)? posting.getField() : field;
@@ -46,11 +46,11 @@ package GUIClasses;
      * Allow the applicant to select files from their account, and use these files to assemble a JobApplication.
      *
      * @param sc The Scanner for user input.
-     * @param today Today's date.
+ * @param getToday Today's date.
      * @param posting The job posting that this applicant wishes to apply to.
      * @return a job application containing this applicant's chosen files.
      *//*
-    private JobApplication createJobApplicationThroughFiles(Scanner sc, LocalDate today, JobPosting posting) {
+    private JobApplication createJobApplicationThroughFiles(Scanner sc, LocalDate getToday, JobPosting posting) {
         System.out.println("Here are your files: ");
         int CVFileNumber = 0;
         for (JobApplicationDocument document : applicant.getDocumentManager().getDocuments()) {
@@ -69,7 +69,7 @@ package GUIClasses;
         System.out.println("Please enter the file number of the cover letter you would like to submit.");
         int coverLetterOption = getMenuOption(sc, coverLetterFileNumber);
         JobApplicationDocument coverLetter = applicant.getDocumentManager().getDocuments().get(coverLetterOption-1);
-        return new JobApplication(applicant, posting, CV, coverLetter, today);
+        return new JobApplication(applicant, posting, CV, coverLetter, getToday);
     }
 
     *//**
@@ -78,7 +78,7 @@ package GUIClasses;
     JobApplication createAppThroughInput(String CVContents, String coverLetterContents, JobPosting posting) {
         JobApplicationDocument CV = new JobApplicationDocument(CVContents);
         JobApplicationDocument coverLetter = new JobApplicationDocument(coverLetterContents);
-        return new JobApplication(applicant, posting, CV, coverLetter, today);
+        return new JobApplication(applicant, posting, CV, coverLetter, getToday);
     }
 
     *//**
@@ -103,18 +103,18 @@ package GUIClasses;
      * Withdraw an application
      *//*
     boolean withdrawApp(JobApplication application) {
-        return applicant.withdrawJobApplication(today, application.getJobPosting());
+        return applicant.withdrawJobApplication(getToday, application.getJobPosting());
     }
 
     *//**
      * Return status since last job application (none submitted or days since)
      *//*
-    String daysSince(LocalDate today) {
+    String daysSince(LocalDate getToday) {
         if (applicant.getJobApplicationManager().getJobApplications().isEmpty())
             return("You have not yet submitted any job applications.");
         else
             return("It has been " +
-                    applicant.getJobApplicationManager().getNumDaysSinceMostRecentCloseDate(today) +
+                    applicant.getJobApplicationManager().getNumDaysSinceMostRecentCloseDate(getToday) +
                     " days since your most recent application closed.");
     }
 

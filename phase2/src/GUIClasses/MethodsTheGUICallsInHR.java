@@ -2,7 +2,6 @@ package GUIClasses;
 
 import ApplicantStuff.Applicant;
 import ApplicantStuff.JobApplication;
-import CompanyStuff.Branch;
 import CompanyStuff.HRCoordinator;
 import CompanyStuff.Interviewer;
 import CompanyStuff.JobApplicationGrader;
@@ -63,7 +62,7 @@ public class MethodsTheGUICallsInHR {
      */
     public ArrayList<BranchJobPosting> getJPToHire() {
         BranchJobPostingManager JPManager = this.hr.getBranch().getJobPostingManager();
-        return JPManager.getJobPostingsForHiring(this.jobAppSystem.getToday());
+        return JPManager.getJobPostingsThatNeedHRSelectionForHiring(this.jobAppSystem.getToday());
     }
 
     /**
@@ -130,20 +129,6 @@ public class MethodsTheGUICallsInHR {
         return true;
     }
 
-    // TODO fix implementation
-    public boolean hireApplications(ArrayList<JobApplication> jobAppsToHire) {
-        for (JobApplication jobApp : jobAppsToHire) {
-            jobApp.getStatus().setHired();
-        }
-        BranchJobPosting jobPosting = jobAppsToHire.get(0).getJobPosting();
-        jobPosting.setFilled();
-        jobPosting.getInterviewManager().archiveRejected();
-        if (jobPosting.getInterviewManager().getNumOpenPositions() > 0) {
-            return false;
-        }
-        return true;
-    }
-
     /**
      * Get a list of job applications sorted in non-decreasing order based on the number of occurrences of key words and phrases.
      *
@@ -177,6 +162,7 @@ public class MethodsTheGUICallsInHR {
         }
     }
 
+
     public ArrayList<Interviewer> getInterviewersInField(BranchJobPosting jobPosting) {
         return this.hr.getBranch().getFieldToInterviewers().get(jobPosting.getField());
     }
@@ -192,6 +178,11 @@ public class MethodsTheGUICallsInHR {
                                      ArrayList<Interviewer> otherInterviewers, int minNumDaysNotice) {
         jobPosting.getInterviewManager().setUpGroupInterview(interviewCoordinator, otherInterviewers,
                 jobAppSystem.getToday(), minNumDaysNotice);
+    }
+
+    public void selectApplicantsForHire(ArrayList<JobApplication> jobAppsToHire) {
+        BranchJobPosting jobPosting = jobAppsToHire.get(0).getJobPosting();
+        jobPosting.getInterviewManager().hireApplicants(jobAppsToHire);
     }
 
 }

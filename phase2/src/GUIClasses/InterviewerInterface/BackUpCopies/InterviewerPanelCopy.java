@@ -82,7 +82,7 @@ abstract class InterviewerPanelCopy extends JPanel {
 
     /*private Container contentPane;
     private InterviewerInterface interviewerInterface;
-    private LocalDate today;
+    private LocalDate getToday;
 
     private ArrayList<Interview> pastInterviews;
     private ArrayList<Interview> futureInterviews;
@@ -95,11 +95,11 @@ abstract class InterviewerPanelCopy extends JPanel {
     private DefaultComboBoxModel<String> completeTitles;
     private JList<String> scheduleInterviews;
 
-    InterviewerPanel(Container contentPane, InterviewerInterface interviewerInterface, LocalDate today) {
+    InterviewerPanel(Container contentPane, InterviewerInterface interviewerInterface, LocalDate getToday) {
         this.contentPane = contentPane;
         this.interviewerInterface = interviewerInterface;
-        this.today = today;
-        ArrayList<ArrayList<Interview>> interviews = interviewerInterface.getInterviewsBeforeOnAndAfterToday(today);
+        this.getToday = getToday;
+        ArrayList<ArrayList<Interview>> interviews = interviewerInterface.getInterviewsBeforeOnAndAfterToday(getToday);
         this.pastInterviews = interviews.get(0);
         this.futureInterviews = interviews.get(1);
         this.futureInterviews.addAll(interviews.get(2));
@@ -306,7 +306,7 @@ abstract class InterviewerPanelCopy extends JPanel {
                 LocalDate date = ((Date) interviewDate.getModel().getValue()).toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
                 int selectedIndex = interviews.getSelectedIndex();
                 Interview interview = interviewsToBeScheduled.get(selectedIndex);
-                if (date.isAfter(today)) {
+                if (date.isAfter(getToday)) {
                     boolean canSchedule = interviewerInterface.scheduleInterview(interview, date, timeSlot.getSelectedIndex());
                     if (canSchedule) {
                         interviewsToBeScheduled.remove(selectedIndex);
@@ -317,7 +317,7 @@ abstract class InterviewerPanelCopy extends JPanel {
                         JOptionPane.showMessageDialog(schedulePanel, "Unable to book the interview at the selected date and time");
                     }
                 } else {
-                    JOptionPane.showMessageDialog(schedulePanel, "Please choose a date after today.");
+                    JOptionPane.showMessageDialog(schedulePanel, "Please choose a date after getToday.");
                 }
             }
         });

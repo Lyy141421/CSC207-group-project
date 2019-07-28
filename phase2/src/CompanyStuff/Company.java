@@ -2,6 +2,7 @@ package CompanyStuff;
 
 import ApplicantStuff.Applicant;
 import ApplicantStuff.JobApplication;
+import CompanyStuff.JobPostings.BranchJobPostingManager;
 import DocumentManagers.CompanyDocumentManager;
 import DocumentManagers.DocumentManagerFactory;
 import FileLoadingAndStoring.DataLoaderAndStorer;
@@ -9,6 +10,7 @@ import CompanyStuff.JobPostings.BranchJobPosting;
 import CompanyStuff.JobPostings.CompanyJobPosting;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -27,6 +29,7 @@ public class Company implements Serializable {
     // The document manager for this branch
     private CompanyDocumentManager documentManager;
 
+    // === Constructor ===
     public Company(String name) {
         this.name = name;
         this.branches = new ArrayList<>();
@@ -34,6 +37,7 @@ public class Company implements Serializable {
         this.documentManager = new DocumentManagerFactory().getCompanyDocumentManager(this);
     }
 
+    // === Getters ===
     public String getName() {
         return name;
     }
@@ -59,7 +63,7 @@ public class Company implements Serializable {
      *
      * @param branch The branch to be added.
      */
-    public void addBranch(Branch branch) {
+    private void addBranch(Branch branch) {
         this.branches.add(branch);
         this.getDocumentManager().createBranchFolder(branch);
     }
@@ -83,10 +87,16 @@ public class Company implements Serializable {
                 return null;
         }
         Branch newBranch = new Branch(name, cma, this);
-        branches.add(newBranch);
+        this.addBranch(newBranch);
         return newBranch;
     }
 
+    /**
+     * Get the branch by name.
+     *
+     * @param name The name of the branch.
+     * @return the branch with this name or null if it cannot be found.
+     */
     public Branch getBranch(String name) {
         for (Branch branch : this.getBranches()) {
             if (branch.getName().equals(name)) {
@@ -111,6 +121,20 @@ public class Company implements Serializable {
             }
         }
         return apps;
+    }
+
+    /**
+     * Update all the job postings in this company as appropriate.
+     *
+     * @param today Today's date.
+     */
+    public void updateJobPostings(LocalDate today) {
+        for (Branch branch : this.getBranches()) {
+            BranchJobPostingManager branchJobPostingManager = branch.getJobPostingManager();
+            branchJobPostingManager.updateJobPostingsClosedForApplications(today);
+            branchJobPostingManager.updateJobPostingsClosedForReferences(today);
+            branchJobPostingManager.updateAllClosedUnfilledJobPostings(today);
+        }
     }
 
     @Override

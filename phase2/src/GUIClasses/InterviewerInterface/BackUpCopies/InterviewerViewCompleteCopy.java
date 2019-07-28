@@ -46,7 +46,7 @@ public class InterviewerViewCompleteCopy extends InterviewerView {
     }
 
 /*
-        this.pastInterviews = getTitleToInterviewMap(interviewerInterface.getAllIncompleteInterviews(today));
+        this.pastInterviews = getTitleToInterviewMap(interviewerInterface.getAllIncompleteInterviews(getToday));
 
         this.setLayout(new BorderLayout());
         JPanel select = new JPanel();

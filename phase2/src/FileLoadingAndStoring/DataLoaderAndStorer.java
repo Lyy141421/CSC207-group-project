@@ -16,7 +16,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 public class DataLoaderAndStorer {
-    private JobApplicationSystem jobApplicationSystem;
 
     // File names of storage files
     private static final String FILES_FOLDER_PATH = "./files";
@@ -25,6 +24,10 @@ public class DataLoaderAndStorer {
     private static final String DATE_FILE_PATH = FILES_FOLDER_PATH + "/previousLoginDate.txt";
     private static final String FSA_TO_CMA_PATH = FILES_FOLDER_PATH + "/CMA_per_FSA_Centroid.json";
 
+    // === Instance variable ===
+    private JobApplicationSystem jobApplicationSystem;
+
+    // === Constructor ===
     public DataLoaderAndStorer(JobApplicationSystem jobApplicationSystem) {
         this.jobApplicationSystem = jobApplicationSystem;
     }
@@ -34,31 +37,15 @@ public class DataLoaderAndStorer {
      */
     public void loadAllData() {
         try {
-            File filesFolder = new File(FILES_FOLDER_PATH);
-            if (!filesFolder.exists()) {
-                filesFolder.mkdir();
-                filesFolder.createNewFile();
-            }
-
-            File userFile = new File(USER_FILE_PATH);
-            if (userFile.exists()) {
-                this.loadUsers();
-            } else {
-                userFile.createNewFile();
-            }
-
-            File companyFile = new File(COMPANY_FILE_PATH);
-            if (companyFile.exists()) {
-                this.loadCompanies();
-            } else {
-                companyFile.createNewFile();
-            }
-
-            File dateFile = new File(DATE_FILE_PATH);
-            if (dateFile.exists()) {
-                this.loadPreviousLoginDate();
-            } else {
-                dateFile.createNewFile();
+            this.createFilesFolder();
+            String[] filePaths = new String[]{USER_FILE_PATH, COMPANY_FILE_PATH, DATE_FILE_PATH};
+            for (String filePath : filePaths) {
+                File file = new File(filePath);
+                if (file.exists()) {
+                    this.loadRespectiveData(filePath);
+                } else {
+                    file.createNewFile();
+                }
             }
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -66,10 +53,41 @@ public class DataLoaderAndStorer {
     }
 
     /**
+     * Create the files folder.
+     *
+     * @throws IOException
+     */
+    private void createFilesFolder() throws IOException {
+        File filesFolder = new File(FILES_FOLDER_PATH);
+        if (!filesFolder.exists()) {
+            filesFolder.mkdir();
+            filesFolder.createNewFile();
+        }
+    }
+
+    /**
+     * Load the respective data based on the file path.
+     *
+     * @param filePath The file path where the data is stored.
+     */
+    private void loadRespectiveData(String filePath) {
+        switch (filePath) {
+            case USER_FILE_PATH:
+                this.loadUsers();
+                break;
+            case COMPANY_FILE_PATH:
+                this.loadCompanies();
+                break;
+            case DATE_FILE_PATH:
+                this.loadPreviousLoginDate();
+        }
+    }
+
+    /**
      * Load the FSA hash map (for location purposes).
      *
      * @return the hash map loaded.
-     * // TODO the FAS hashamp should be a field in job application system
+     * // TODO the FAS hashmap should be a field in job application system
      */
     public static HashMap<String, String> loadFSAHashMap() {
         HashMap map = new HashMap();

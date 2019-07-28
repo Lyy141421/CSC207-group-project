@@ -4,7 +4,7 @@ import GUIClasses.ActionListeners.LogoutActionListener;
 import GUIClasses.ActionListeners.ProfileActionListener;
 import GUIClasses.ActionListeners.ReturnHomeActionListener;
 import GUIClasses.CommonUserGUI.UserPanel;
-import GUIClasses.CommonUserGUI.SideBarMenu;
+import GUIClasses.CommonUserGUI.SideBarMenuCreator;
 
 import javax.swing.*;
 import java.awt.*;
@@ -32,7 +32,7 @@ class InterviewerSideBarMenuPanel extends JPanel {
         this.logoutActionListener = logoutActionListener;
         TreeMap<String, Object> fullMenu = this.createFullMenu();
         this.setLayout(new BorderLayout());
-        this.add(new SideBarMenu(fullMenu, CELL_WIDTH, CELL_HEIGHT).createMenuBar());
+        this.add(new SideBarMenuCreator(fullMenu, CELL_WIDTH, CELL_HEIGHT).createMenuBar());
         this.setSize(CELL_WIDTH, CELL_HEIGHT * NUM_MAIN_MENU_OPTIONS);
     }
 

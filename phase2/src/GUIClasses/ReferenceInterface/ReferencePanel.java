@@ -23,31 +23,35 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class ReferencePanel extends UserPanel {
+    /**
+     * The main reference panel.
+     */
 
-    // === Instance variables ===
-    private Reference reference;
-    private JPanel cards = new JPanel(new CardLayout());
+    // === Class variables ===
+    // The keys for the cards
     static final String SUBMIT_REFERENCE_LETTER = "Submit";
     static final String VIEW_REFEREE_JOB_POSTINGS = "View Referee Job Postings";
 
+    // === Instance variables ===
+    private Reference reference;    // The reference who logged in
+    private JPanel cards = new JPanel(new CardLayout());    // The cards that are being displayed
+
     // === Constructor ===
-    ReferencePanel(String username, JobApplicationSystem jobApplicationSystem, LogoutActionListener logoutActionListener) {
-        this.reference = (Reference) jobApplicationSystem.getUserManager().findUserByUsername(username);
+    public ReferencePanel(Reference reference, LogoutActionListener logoutActionListener) {
+        this.reference = reference;
         this.setLayout(new GridBagLayout());
         this.setCards();
 
         GridBagConstraints c = new GridBagConstraints();
-        c.weightx = 1;
+        c.gridx = 0;
+        c.gridy = 0;
+        c.weightx = 0.5;
         c.weighty = 0.5;
         c.fill = GridBagConstraints.BOTH;
-        c.gridx = 0;
-        c.gridwidth = 15;
-        c.gridy = 0;
         this.add(new ReferenceSideBarMenuPanel(cards, logoutActionListener), c);
 
-        c.weightx = 1;
-        c.gridx = 16;
-        c.fill = GridBagConstraints.REMAINDER;
+        c.weightx = 0.01;
+        c.gridx++;
         this.add(cards, c);
     }
 
@@ -77,9 +81,7 @@ public class ReferencePanel extends UserPanel {
         jobApplicationSystem.setPreviousLoginDate(LocalDate.of(2019, 7, 19));
         Reference reference = jobApplicationSystem.getUserManager().createReference("bob@gmail.com", LocalDate.of(2019, 7, 19));
         Company company = jobApplicationSystem.createCompany("Company");
-        Branch branch = new Branch("Branch", "L4B3Z9", company);
-        branch.setCompany(company);
-        company.addBranch(branch);
+        Branch branch = company.createBranch("Branch", "Toronto");
         Applicant applicant = jobApplicationSystem.getUserManager().createApplicant("username", "password", "Legal Name", "email@gmail.com", LocalDate.now(), "L4B4P8");
         HRCoordinator hrc = new HRCoordinator("HR", "password", "HRC", "email@gmail.com", branch, LocalDate.of(2019, 7, 19));
         BranchJobPosting jobPosting = hrc.addJobPosting("title", "field", "descriptionhujedkfnvsgrhjegskamkagjrwuiladkvmkajgirwouskvmzkjgiskdzvn,mkngs\niznvjgsirklzngjslitw4gsijlkznjsirtwtrsigjlzknvmJDEI0   IPUOwrahektdznmv\nlpox-98uy7gufhvnb tmwkeafoisCXU*yygchbvn    4mk2RWFsvzx\nwgudkngrhadkjn\nwhaegkjsc\ngwaeihfkncMZ<ghaecsknm,z\n",
@@ -97,7 +99,7 @@ public class ReferencePanel extends UserPanel {
         BranchJobPostingManager branchJobPostingManager = branch.getJobPostingManager();
         branchJobPostingManager.updateJobPostingsClosedForApplications(LocalDate.now());
         LogoutActionListener logoutActionListener = new LogoutActionListener(new Container(), new CardLayout(), jobApplicationSystem);
-        frame.add(new ReferencePanel(reference.getUsername(), jobApplicationSystem, logoutActionListener));
+        frame.add(new ReferencePanel(reference, logoutActionListener));
         frame.setSize(854, 480);
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

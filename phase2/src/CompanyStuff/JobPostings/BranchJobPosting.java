@@ -6,10 +6,7 @@ import ApplicantStuff.Reference;
 import CompanyStuff.Branch;
 import CompanyStuff.InterviewManager;
 import NotificationSystem.Notification;
-import NotificationSystem.Observable;
-import NotificationSystem.Observer;
 
-import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -79,11 +76,7 @@ public class BranchJobPosting extends CompanyJobPosting {
     }
 
 
-    // === Setters ===
-    public void setInterviewManager(InterviewManager interviewManager) {
-        this.interviewManager = interviewManager;
-    }
-
+    // === Setter ===
     public void setFilled() {
         this.filled = true;
     }
@@ -167,11 +160,10 @@ public class BranchJobPosting extends CompanyJobPosting {
     /**
      * Create an interview manager for this job posting after this branch posting has been closed for further applications.
      */
-    // TODO: why does this need a cloned list
     public void createInterviewManager() {
         InterviewManager interviewManager = new InterviewManager(this,
                 (ArrayList<JobApplication>) this.getJobApplications().clone());
-        this.setInterviewManager(interviewManager);
+        this.interviewManager = interviewManager;
     }
 
     /**
@@ -191,12 +183,12 @@ public class BranchJobPosting extends CompanyJobPosting {
     /**
      * Advance the round of interviews for this job posting.
      */
-    public void advanceInterviewRound() {
+    void advanceInterviewRound() {
         if (interviewManager == null) {
             return;
         }
         InterviewManager interviewManager = this.getInterviewManager();
-        if (interviewManager.getCurrentRound() < interviewManager.getMaxNumberOfRounds()) {
+        if (interviewManager.getCurrentRound() < interviewManager.getFinalRoundNumber()) {
             if (interviewManager.isCurrentRoundOver()) {
                 interviewManager.advanceRound();
                 this.notifyAllObservers(new Notification("Advance to Next Round",
@@ -218,7 +210,6 @@ public class BranchJobPosting extends CompanyJobPosting {
         return emails;
     }
 
-
     /**
      * Remove this job application for this job posting.
      *
@@ -226,6 +217,25 @@ public class BranchJobPosting extends CompanyJobPosting {
      */
     public void removeJobApplication(JobApplication jobApplication) {
         this.jobApplications.remove(jobApplication);
+    }
+
+    /**
+     * Get the category names for this job posting.
+     *
+     * @return a list of category names for this job posting for a reference.
+     */
+    public static String[] getCategoryLabelsForReference() {
+        return new String[]{"Title", "Field", "Description", "Company/Branch", "Reference deadline"};
+    }
+
+    /**
+     * Get the category values for this job posting for a reference.
+     *
+     * @return a list of category values for this job posting for a reference.
+     */
+    public String[] getCategoryValuesForReference() {
+        return new String[]{this.getTitle(), this.getField(), this.getDescription(), this.getBranch().getName(),
+                this.getReferenceCloseDate().toString()};
     }
 
     @Override
@@ -240,9 +250,7 @@ public class BranchJobPosting extends CompanyJobPosting {
 
     // === Observable Methods ===
 
-    /**
-     * A method to internally change the structure of the observer list
-     */
+    @Override
     public void updateObserverList(){
         for (JobApplication job_application : this.interviewManager.getApplicationsInConsideration()){
             this.attach(job_application.getApplicant());

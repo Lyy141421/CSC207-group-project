@@ -67,11 +67,11 @@ public class Interviewer extends User {
     // === Other methods ===
 
     /**
-     * Get the earliest time available one week from today when the interviewer is available.
+     * Get the earliest time available one week from getToday when the interviewer is available.
      *
      * @param today   Today's date.
-     * @param numDays The number of days from today when interviews can be scheduled for.
-     * @return the earliest time available one week from today when the interviewer is available.
+     * @param numDays The number of days from getToday when interviews can be scheduled for.
+     * @return the earliest time available one week from getToday when the interviewer is available.
      */
     public InterviewTime getEarliestTimeAvailableForNewInterview(LocalDate today, int numDays) {
         LocalDate date = today.plusDays(numDays);
@@ -265,7 +265,7 @@ public class Interviewer extends User {
     public ArrayList<Interview> getScheduledUpcomingInterviews(LocalDate today) {
         ArrayList<Interview> scheduledInterviews = new ArrayList<>();
         for (Interview interview : this.interviews) {
-            if (interview.getTime() != null && !interview.isComplete() && !interview.getTime().getDate().isBefore(today)) {
+            if (interview.getTime() != null && interview.isIncomplete() && !interview.getTime().getDate().isBefore(today)) {
                 scheduledInterviews.add(interview);
             }
         }
@@ -279,7 +279,7 @@ public class Interviewer extends User {
     public ArrayList<Interview> getAllIncompleteInterviews() {
         ArrayList<Interview> incompleteInterviews = new ArrayList<>();
         for (Interview interview : this.interviews) {
-            if (!interview.isComplete()) {
+            if (interview.isIncomplete()) {
                 incompleteInterviews.add(interview);
             }
         }

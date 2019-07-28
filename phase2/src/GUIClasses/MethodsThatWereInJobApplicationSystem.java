@@ -12,7 +12,7 @@ public class MethodsThatWereInJobApplicationSystem {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                new MainFrame(today);
+                new MainFrame(getToday);
             }
         });
     }*/

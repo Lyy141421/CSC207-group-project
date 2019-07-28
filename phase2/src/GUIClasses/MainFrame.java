@@ -12,14 +12,14 @@
 //
 //public class MainFrame extends JFrame {
 //
-//    LocalDate today;
+//    LocalDate getToday;
 //    private CardLayout layoutManager = new CardLayout();
 //    //private JPanel homePanel;
 //    NewUserPanel newUserRef;
 
-    /*public MainFrame (LocalDate today) {
+    /*public MainFrame (LocalDate getToday) {
         super("GET A JOB");
-        this.today = today;
+        this.getToday = getToday;
         initUI();
         addCards();
     }
@@ -52,7 +52,7 @@
 
         // When confirmed this is the date they want:
         // This converts the Date object from JDatePicker to a LocalDate object
-        today = ((Date) manualToday.getModel().getValue()).toInstant().atZone(ZoneId.systemDefault()).toLocalDate();*//*
+        getToday = ((Date) manualToday.getModel().getValue()).toInstant().atZone(ZoneId.systemDefault()).toLocalDate();*//*
     }
 
     *//**
@@ -69,8 +69,8 @@
         //interface = new InterfaceFactory.create(User)
         //if User instanceOf ...
         //(cast to xxxInterface) interface
-//        this.add(new HRPanel(this.getContentPane(), interface, today), "HR");
-//        this.add(new InterviewerPanel(this.getContentPane(), interface, today), "INTERVIEWER");
+//        this.add(new HRPanel(this.getContentPane(), interface, getToday), "HR");
+//        this.add(new InterviewerPanel(this.getContentPane(), interface, getToday), "INTERVIEWER");
 //        this.add(new ApplicantPanel(), "APPLICANT");
     }
 

@@ -90,7 +90,7 @@ public class HRPanel extends JPanel { //implements ActionListener {
 
     private Container contentPane;
     private HRCoordinatorInterface HRInterface;
-    private LocalDate today;
+    private LocalDate getToday;
 
     private ArrayList<JobPosting> prePhoneJP;
     private ArrayList<JobPosting> scheduleJP;
@@ -110,11 +110,11 @@ public class HRPanel extends JPanel { //implements ActionListener {
     private JPanel phoneOrNotButtons = new JPanel();
 
     // Create interface for HR
-    HRPanel(Container contentPane, HRCoordinatorInterface HRInterface, LocalDate today) {
+    HRPanel(Container contentPane, HRCoordinatorInterface HRInterface, LocalDate getToday) {
         this.contentPane = contentPane;
         this.HRInterface = HRInterface;
-        this.today = today;
-        ArrayList<ArrayList<JobPosting>> HRInfoList = HRInterface.getHighPriorityAndAllJobPostings(today);
+        this.getToday = getToday;
+        ArrayList<ArrayList<JobPosting>> HRInfoList = HRInterface.getHighPriorityAndAllJobPostings(getToday);
         this.prePhoneJP = HRInfoList.get(0);
         this.scheduleJP = HRInfoList.get(1);
         this.hiringJP = HRInfoList.get(2);
@@ -479,7 +479,7 @@ public class HRPanel extends JPanel { //implements ActionListener {
         formatter.setAllowsInvalid(false);
 
         UtilDateModel dateModel = new UtilDateModel();
-        dateModel.setDate(today.getYear(), today.getMonthValue() - 1, today.getDayOfMonth());
+        dateModel.setDate(getToday.getYear(), getToday.getMonthValue() - 1, getToday.getDayOfMonth());
         dateModel.setSelected(true);
         JDatePanelImpl datePanel = new JDatePanelImpl(dateModel);
 
@@ -537,7 +537,7 @@ public class HRPanel extends JPanel { //implements ActionListener {
                         jobDescriptionInput.getText(), requirementsInput.getText(), numPositionsInput.getValue(),
                         ((Date) closeDateInput.getModel().getValue()).toInstant().atZone(ZoneId.systemDefault()).toLocalDate()};
                 if (isValidInput(postingFields)) {
-                    HRInterface.addJobPosting(today, postingFields);
+                    HRInterface.addJobPosting(getToday, postingFields);
                 } else {
                     JOptionPane.showMessageDialog(addPostingPanel, "One or more fields have illegal input.");
                 }
@@ -609,7 +609,7 @@ public class HRPanel extends JPanel { //implements ActionListener {
             i++;
         }
 
-        if (((LocalDate) fields[5]).isBefore(today)) {
+        if (((LocalDate) fields[5]).isBefore(getToday)) {
             valid = false;
         }
 

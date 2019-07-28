@@ -47,9 +47,9 @@ public class Status extends Observable implements Serializable {
     }
 
     // === Setters ===
-    public void setDescriptions(ArrayList<Object[]> interviewConfiguration) {
+    public void setDescriptions(ArrayList<String[]> interviewConfiguration) {
         for (int i = 0; i < interviewConfiguration.size(); i++) {
-            this.descriptions.put(i, (String) interviewConfiguration.get(i)[0]);
+            this.descriptions.put(i, interviewConfiguration.get(i)[0]);
         }
         this.descriptions.put(interviewConfiguration.size(), "Hired");
         this.lastRound = interviewConfiguration.size() - 1;

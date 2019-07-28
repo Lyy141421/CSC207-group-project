@@ -461,7 +461,7 @@ class ApplicantPanel extends JPanel {
 
     */
 /**
- * Builds reminder dialog if the applicant has an interview on "today"
+ * Builds reminder dialog if the applicant has an interview on "getToday"
  *//*
 
     private JDialog buildReminder() {
@@ -474,7 +474,7 @@ class ApplicantPanel extends JPanel {
                 d.setVisible(false);
             }
         });
-        d.add( new JLabel ("You have interview(s) today!"), SwingConstants.CENTER);
+        d.add( new JLabel ("You have interview(s) getToday!"), SwingConstants.CENTER);
         d.add(b);
         d.setSize(300,80);
         d.setVisible(true);

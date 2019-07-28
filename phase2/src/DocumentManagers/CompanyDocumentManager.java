@@ -1,5 +1,4 @@
 package DocumentManagers;
-
 import ApplicantStuff.Applicant;
 import ApplicantStuff.JobApplication;
 import ApplicantStuff.JobApplicationDocument;
@@ -14,12 +13,13 @@ import java.util.ArrayList;
 public class CompanyDocumentManager extends DocumentManager {
 
     // === Class variables ===
-    public static String FOLDER_PATH = DocumentManager.INITIAL_PATH + "/companies";
+    private static String FOLDER_PATH = DocumentManager.INITIAL_PATH + "/companies";
 
     // === Instance variables ===
     private Company company;
 
-    public CompanyDocumentManager(Company company) {
+    // === Constructor ===
+    CompanyDocumentManager(Company company) {
         this.company = company;
         this.setFolder(new File(FOLDER_PATH + "/" + this.company.getName()));
     }

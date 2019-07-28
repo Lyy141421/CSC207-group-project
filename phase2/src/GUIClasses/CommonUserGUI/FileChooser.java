@@ -53,79 +53,31 @@ import java.util.ArrayList;
 public class FileChooser extends JPanel implements ActionListener {
 
     // === Class variables ===
-    private static final int APPLICANT_MAX_NUM_FILES = 2;   // TODO must fix
+    //    private static final int APPLICANT_MAX_NUM_FILES = // TODO do we have a limit?
     private static final int REFERENCE_MAX_NUM_FILES = 1;
 
     // === Instance variables ===
-    JButton uploadButton;
-    JButton submitButton;
-    // The panel for removing the files selected
-    RemoveFileButtonsPanel removeFileButtonsPanel;
-    JFileChooser fc;
-    String uploadButtonIconPath = "./Open16.gif";
-    ArrayList<File> filesToSubmit = new ArrayList<>();
-    User user;
-    JobApplication jobApp;
+    private JButton uploadButton;   // The upload button
+    private JButton submitButton;   // The submit button
+    private RemoveFileButtonsPanel removeFileButtonsPanel;  // The panel for removing the files selected
+    private JFileChooser fc;    // The file chooser
+    private String uploadButtonIconPath = "./Open16.gif";   // The icon image for uploading a document
+    private ArrayList<File> filesToSubmit = new ArrayList<>();  // The list of files to submit
 
+    private User user;  // The user who logged in
+    private JobApplication jobApp;  // The job application for this document submission
+
+    // === Constructor ===
     public FileChooser(User user, JobApplication jobApp) {
         super(new BorderLayout());
-
         this.user = user;
         this.jobApp = jobApp;
 
-        //Create a file chooser
         fc = new JFileChooser();
         fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-
-        uploadButton = new JButton("Upload", new ImageIcon(uploadButtonIconPath));
-        uploadButton.addActionListener(this);
-
-        JPanel uploadButtonPanel = new JPanel();
-        uploadButtonPanel.add(uploadButton);
-        uploadButton.setEnabled(false);
-
-        submitButton = new JButton("Submit");
-        submitButton.setEnabled(false);
-        submitButton.addActionListener(new SubmitDocumentsActionListener(this.user, this.jobApp, this.filesToSubmit));
-
-        removeFileButtonsPanel = new RemoveFileButtonsPanel();
-        removeFileButtonsPanel.setBackground(Color.WHITE);
-        add(removeFileButtonsPanel, BorderLayout.CENTER);
-
-        JPanel submitButtonPanel = new JPanel();
-        submitButtonPanel.add(submitButton);
-        add(submitButtonPanel, BorderLayout.AFTER_LAST_LINE);
-        add(uploadButtonPanel, BorderLayout.PAGE_START);
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == uploadButton) {
-            int returnVal = fc.showOpenDialog(FileChooser.this);
-
-            if (returnVal == JFileChooser.APPROVE_OPTION) {
-                this.addFileToSubmitList();
-                if (user instanceof Reference && filesToSubmit.size() == REFERENCE_MAX_NUM_FILES) {
-                    uploadButton.setEnabled(false);
-                } else if (user instanceof Applicant) {
-                    if (filesToSubmit.size() == APPLICANT_MAX_NUM_FILES) {
-                        uploadButton.setEnabled(false);
-                    }
-                }
-            }
-        }
-    }
-
-    /**
-     * Add the file selected by the user to the list to be submitted and add the optional remove button for the file.
-     */
-    private void addFileToSubmitList() {
-        File file = fc.getSelectedFile();
-        JButton removeFileButton = removeFileButtonsPanel.addButton(file);
-        removeFileButton.addActionListener(
-                new FileChooserRemoveFileButtonActionListener(this, removeFileButton, file));
-        filesToSubmit.add(file);
-        submitButton.setEnabled(true);
+        this.setUploadButtonPanel();
+        this.setRemoveFilesButtonPanel();
+        this.setSubmitButtonPanel();
     }
 
     // === Getters ===
@@ -143,5 +95,73 @@ public class FileChooser extends JPanel implements ActionListener {
 
     public JButton getSubmitButton() {
         return this.submitButton;
+    }
+
+    public void enableUploadButton() {
+        this.uploadButton.setEnabled(true);
+        this.revalidate();
+    }
+
+    // === Private methods ===
+
+    /**
+     * Set the upload button panel.
+     */
+    private void setUploadButtonPanel() {
+        uploadButton = new JButton("Upload", new ImageIcon(uploadButtonIconPath));
+        uploadButton.addActionListener(this);
+
+        JPanel uploadButtonPanel = new JPanel();
+        uploadButtonPanel.add(uploadButton);
+        uploadButton.setEnabled(false);
+        this.add(uploadButtonPanel, BorderLayout.BEFORE_FIRST_LINE);
+    }
+
+    /**
+     * Set the remove files button panel.
+     */
+    private void setRemoveFilesButtonPanel() {
+        removeFileButtonsPanel = new RemoveFileButtonsPanel();
+        removeFileButtonsPanel.setBackground(Color.WHITE);
+        this.add(removeFileButtonsPanel, BorderLayout.CENTER);
+    }
+
+    /**
+     * Set the submit button panel.
+     */
+    private void setSubmitButtonPanel() {
+        submitButton = new JButton("Submit");
+        submitButton.setEnabled(false);
+        submitButton.addActionListener(new SubmitDocumentsActionListener(this.user, this.jobApp, this.filesToSubmit));
+
+        JPanel submitButtonPanel = new JPanel();
+        submitButtonPanel.add(submitButton);
+        this.add(submitButtonPanel, BorderLayout.AFTER_LAST_LINE);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == uploadButton) {
+            int returnVal = fc.showOpenDialog(FileChooser.this);
+
+            if (returnVal == JFileChooser.APPROVE_OPTION) {
+                this.addFileToSubmitList();
+                if (user instanceof Reference && filesToSubmit.size() == REFERENCE_MAX_NUM_FILES) {
+                    uploadButton.setEnabled(false);
+                }
+            }
+        }
+    }
+
+    /**
+     * Add the file selected by the user to the list to be submitted and add the optional remove button for the file.
+     */
+    private void addFileToSubmitList() {
+        File file = fc.getSelectedFile();
+        JButton removeFileButton = removeFileButtonsPanel.addButton(file);
+        removeFileButton.addActionListener(
+                new FileChooserRemoveFileButtonActionListener(this, removeFileButton, file));
+        filesToSubmit.add(file);
+        submitButton.setEnabled(true);
     }
 }
