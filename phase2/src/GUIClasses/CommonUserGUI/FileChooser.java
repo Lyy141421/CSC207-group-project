@@ -97,6 +97,11 @@ public class FileChooser extends JPanel implements ActionListener {
         return this.submitButton;
     }
 
+    public void enableUploadButton() {
+        this.uploadButton.setEnabled(true);
+        this.revalidate();
+    }
+
     // === Private methods ===
 
     /**
@@ -109,7 +114,7 @@ public class FileChooser extends JPanel implements ActionListener {
         JPanel uploadButtonPanel = new JPanel();
         uploadButtonPanel.add(uploadButton);
         uploadButton.setEnabled(false);
-        this.add(uploadButtonPanel, BorderLayout.AFTER_LAST_LINE);
+        this.add(uploadButtonPanel, BorderLayout.BEFORE_FIRST_LINE);
     }
 
     /**

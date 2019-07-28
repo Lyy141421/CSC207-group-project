@@ -5,6 +5,7 @@ import CompanyStuff.JobPostings.BranchJobPosting;
 import CompanyStuff.Company;
 //import UIClasses.UserInterface;
 import ApplicantStuff.Applicant;
+import FileLoadingAndStoring.DataLoaderAndStorer;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -28,25 +29,18 @@ public class JobApplicationSystem {
     }
 
 
-/*    // === Class methods ===
-    public static void run() throws ClassNotFoundException, IOException {
-        JobApplicationSystem JAS = new JobApplicationSystem();
-        UserInterface UI = new UserInterface(JAS);
-        DataLoaderAndStorer dataLoaderAndStorer = new DataLoaderAndStorer(JAS, "./files/users.ser",
-                "./files/companies.ser", "./files/previousLoginDate.txt");
+    // === Class methods ===
+    public static void run() {
+        JobApplicationSystem jobAppSystem = new JobApplicationSystem();
+        DataLoaderAndStorer dataLoaderAndStorer = new DataLoaderAndStorer(jobAppSystem);
         dataLoaderAndStorer.loadAllData();
         while (true) {
-            try {
-                UI.getTodaysDateValid();
-                JAS.applicant30Day();
-                JAS.updateAllInterviewRounds();
-                UI.run();
-            } catch (ExitException ee) {
-                dataLoaderAndStorer.storeAllData();
-                System.exit(0);
-            }
+            // Create and run the main frame
+            // TODO these method calls would have to appear in main frame after user selects date
+            jobAppSystem.applicant30Day();
+            jobAppSystem.updateAllJobPostings();
         }
-    }*/
+    }
 
     // === Public methods ===
     // === Getters ===
@@ -124,7 +118,7 @@ public class JobApplicationSystem {
     /**
      * Updates all the interview rounds that have been completed.
      */
-    private void updateJobPostings() {
+    private void updateAllJobPostings() {
         for (Company company : this.companies) {
             company.updateJobPostings(this.getToday());
         }

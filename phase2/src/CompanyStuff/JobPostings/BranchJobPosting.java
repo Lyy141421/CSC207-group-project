@@ -210,7 +210,6 @@ public class BranchJobPosting extends CompanyJobPosting {
         return emails;
     }
 
-
     /**
      * Remove this job application for this job posting.
      *
@@ -218,6 +217,25 @@ public class BranchJobPosting extends CompanyJobPosting {
      */
     public void removeJobApplication(JobApplication jobApplication) {
         this.jobApplications.remove(jobApplication);
+    }
+
+    /**
+     * Get the category names for this job posting.
+     *
+     * @return a list of category names for this job posting for a reference.
+     */
+    public static String[] getCategoryLabelsForReference() {
+        return new String[]{"Title", "Field", "Description", "Company/Branch", "Reference deadline"};
+    }
+
+    /**
+     * Get the category values for this job posting for a reference.
+     *
+     * @return a list of category values for this job posting for a reference.
+     */
+    public String[] getCategoryValuesForReference() {
+        return new String[]{this.getTitle(), this.getField(), this.getDescription(), this.getBranch().getName(),
+                this.getReferenceCloseDate().toString()};
     }
 
     @Override

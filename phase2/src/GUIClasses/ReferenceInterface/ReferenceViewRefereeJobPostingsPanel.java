@@ -2,7 +2,7 @@ package GUIClasses.ReferenceInterface;
 
 import ApplicantStuff.Reference;
 import CompanyStuff.JobPostings.BranchJobPosting;
-import GUIClasses.CommonUserGUI.TitleCreator;
+import GUIClasses.CommonUserGUI.GUIElementsCreator;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -24,7 +24,7 @@ class ReferenceViewRefereeJobPostingsPanel extends JPanel {
     // The split pane
     private JSplitPane splitPane;
     // The list that displays the job applications that need reference letters
-    private JList jobPostingList;
+    private JList<String> jobPostingList;
     // The panel that displays the job posting information
     private JPanel jobPostingCards = new JPanel(new CardLayout());
 
@@ -34,10 +34,10 @@ class ReferenceViewRefereeJobPostingsPanel extends JPanel {
         this.reference = reference;
         this.setLayout(new BorderLayout());
         this.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-        this.add(new TitleCreator().createTitlePanel(
+        this.add(new GUIElementsCreator().createTitlePanel(
                 "View the Job Postings That Your Referees Have Applied To", 20), BorderLayout.PAGE_START);
         splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-        splitPane.setDividerLocation(200);
+        splitPane.setDividerLocation(130);
         splitPane.setRightComponent(jobPostingCards);
         this.setJobPostingList(splitPane);
         this.setJobPostingCards(splitPane);
@@ -114,8 +114,7 @@ class ReferenceViewRefereeJobPostingsPanel extends JPanel {
      * @return the panel where the job posting information is displayed.
      */
     private JPanel createJobPostingPanel(BranchJobPosting jobPosting) {
-        JPanel jobPostingSummaryPanel = new JPanel();
-        jobPostingSummaryPanel.setLayout(new GridBagLayout());
+        JPanel jobPostingSummaryPanel = new JPanel(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
         this.addJobPostingCategoryLabels(c, jobPostingSummaryPanel);
         this.addJobPostingCategoryValues(c, jobPostingSummaryPanel, jobPosting);
@@ -129,17 +128,15 @@ class ReferenceViewRefereeJobPostingsPanel extends JPanel {
      * @param mainPanel The panel where these labels are going to end up.
      */
     private void addJobPostingCategoryLabels(GridBagConstraints c, JPanel mainPanel) {
+        c.weightx = 0.5;
         c.insets = new Insets(0, 0, 20, 0);
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 0;
         c.gridy = 0;
-        mainPanel.add(new JLabel("Job Title: "), c);
-        c.gridy++;
-        mainPanel.add(new JLabel("Job Description:"), c);
-        c.gridy++;
-        mainPanel.add(new JLabel("Company Branch:"), c);
-        c.gridy++;
-        mainPanel.add(new JLabel("Close Date:"), c);
+        for (String label : BranchJobPosting.getCategoryLabelsForReference()) {
+            mainPanel.add(new JLabel("  " + label + ": "), c);
+            c.gridy++;
+        }
     }
 
     /**
@@ -151,24 +148,15 @@ class ReferenceViewRefereeJobPostingsPanel extends JPanel {
      */
     private void addJobPostingCategoryValues(GridBagConstraints c, JPanel mainPanel, BranchJobPosting jobPosting) {
         c.insets = new Insets(0, 30, 20, 0);
-        c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 1;
         c.gridy = 0;
-        JTextArea titleName = new JTextArea(jobPosting.getTitle());
-        titleName.setEditable(false);
-        mainPanel.add(titleName, c);
-        c.gridy++;
-        JTextArea jobDescriptionContent = new JTextArea(jobPosting.getDescription());
-        jobDescriptionContent.setEditable(false);
-        mainPanel.add(jobDescriptionContent, c);
-        c.gridy++;
-        JTextArea branchName = new JTextArea(jobPosting.getBranch().getName());
-        branchName.setEditable(false);
-        mainPanel.add(branchName, c);
-        c.gridy++;
-        JTextArea referenceCloseDate = new JTextArea(jobPosting.getReferenceCloseDate().toString());
-        referenceCloseDate.setEditable(false);
-        mainPanel.add(referenceCloseDate, c);
+        for (String value : jobPosting.getCategoryValuesForReference()) {
+            JTextArea textArea = new JTextArea(value);
+            textArea.setEditable(false);
+            textArea.setLineWrap(true);
+            mainPanel.add(textArea, c);
+            c.gridy++;
+        }
     }
 
 }

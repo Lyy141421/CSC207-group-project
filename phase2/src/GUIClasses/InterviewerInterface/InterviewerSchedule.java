@@ -1,7 +1,7 @@
 package GUIClasses.InterviewerInterface;
 
 import CompanyStuff.Interview;
-import GUIClasses.CommonUserGUI.TitleCreator;
+import GUIClasses.CommonUserGUI.GUIElementsCreator;
 import GUIClasses.MethodsTheGUICallsInInterviewer;
 import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
 import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
@@ -42,7 +42,7 @@ class InterviewerSchedule extends InterviewerPanel {
         this.interviews = getTitleToInterviewMap(interviewerInterface.getInterviewsThatNeedScheduling());
 
         this.setLayout(new BorderLayout());
-        JPanel title = new TitleCreator().createTitlePanel("Schedule Interviews", 20);
+        JPanel title = new GUIElementsCreator().createTitlePanel("Schedule Interviews", 20);
         this.add(title, BorderLayout.PAGE_START);
         splitDisplay = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
         splitDisplay.setDividerLocation(200);
@@ -103,7 +103,7 @@ class InterviewerSchedule extends InterviewerPanel {
         scheduleDateTimePanel.setLayout(new GridBagLayout());
         c.gridx = 0;
         c.gridy = 0;
-        JPanel selectDatePrompt = new TitleCreator().createTitlePanel("Select a date", 15);
+        JPanel selectDatePrompt = new GUIElementsCreator().createTitlePanel("Select a date", 15);
         scheduleDateTimePanel.add(selectDatePrompt, c);
         c.gridx++;
         scheduleDateTimePanel.add(createSelectDatePanel(), c);
@@ -158,7 +158,7 @@ class InterviewerSchedule extends InterviewerPanel {
         c.gridx = 0;
         c.gridy++;
         c.fill = GridBagConstraints.CENTER;
-        JPanel selectTimePrompt = new TitleCreator().createTitlePanel("Select a time slot", 15);
+        JPanel selectTimePrompt = new GUIElementsCreator().createTitlePanel("Select a time slot", 15);
         scheduleDateTimePanel.add(selectTimePrompt, c);
         c.gridx++;
         scheduleDateTimePanel.add(createSelectTimePanel(dateSelected), c);

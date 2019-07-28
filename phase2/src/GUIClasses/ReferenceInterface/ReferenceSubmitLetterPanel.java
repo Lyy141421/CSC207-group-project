@@ -3,7 +3,7 @@ package GUIClasses.ReferenceInterface;
 import ApplicantStuff.JobApplication;
 import ApplicantStuff.Reference;
 import GUIClasses.CommonUserGUI.FileChooser;
-import GUIClasses.CommonUserGUI.TitleCreator;
+import GUIClasses.CommonUserGUI.GUIElementsCreator;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -33,10 +33,10 @@ public class ReferenceSubmitLetterPanel extends JPanel implements ActionListener
         this.fileChooser = new FileChooser(reference, null);    // So that the file chooser is on the panel
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-        this.add(new TitleCreator().createTitlePanel("Submit Reference Letter", 20));
-        this.add(new TitleCreator().createTitlePanel("Select a Job Application", 15));
+        this.add(new GUIElementsCreator().createTitlePanel("Submit Reference Letter", 20));
+        this.add(new GUIElementsCreator().createTitlePanel("Select a Job Application", 15));
         this.add(this.createJobApplicationListPanel());
-        this.add(new TitleCreator().createTitlePanel("Choose a File", 15));
+        this.add(new GUIElementsCreator().createTitlePanel("Choose a File", 15));
         this.add(fileChooser);
     }
 
@@ -99,7 +99,7 @@ public class ReferenceSubmitLetterPanel extends JPanel implements ActionListener
         JobApplication jobAppSelected = reference.getJobAppsForReference().get(selectedIndex);
         this.remove(fileChooser);
         fileChooser = new FileChooser(reference, jobAppSelected);
-        fileChooser.getUploadButton().setEnabled(true);
+        fileChooser.enableUploadButton();
         this.add(fileChooser);
         this.revalidate();
     }

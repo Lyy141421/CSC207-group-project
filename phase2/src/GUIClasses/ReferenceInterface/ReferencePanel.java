@@ -37,23 +37,21 @@ public class ReferencePanel extends UserPanel {
     private JPanel cards = new JPanel(new CardLayout());    // The cards that are being displayed
 
     // === Constructor ===
-    public ReferencePanel(String username, JobApplicationSystem jobApplicationSystem, LogoutActionListener logoutActionListener) {
-        this.reference = (Reference) jobApplicationSystem.getUserManager().findUserByUsername(username);
+    public ReferencePanel(Reference reference, LogoutActionListener logoutActionListener) {
+        this.reference = reference;
         this.setLayout(new GridBagLayout());
         this.setCards();
 
         GridBagConstraints c = new GridBagConstraints();
+        c.gridx = 0;
+        c.gridy = 0;
         c.weightx = 0.5;
         c.weighty = 0.5;
         c.fill = GridBagConstraints.BOTH;
-        c.gridx = 0;
-        c.gridwidth = 15;
-        c.gridy = 0;
         this.add(new ReferenceSideBarMenuPanel(cards, logoutActionListener), c);
 
-        c.weightx = 1;
-        c.gridx = 16;
-        c.fill = GridBagConstraints.REMAINDER;
+        c.weightx = 0.01;
+        c.gridx++;
         this.add(cards, c);
     }
 
@@ -101,7 +99,7 @@ public class ReferencePanel extends UserPanel {
         BranchJobPostingManager branchJobPostingManager = branch.getJobPostingManager();
         branchJobPostingManager.updateJobPostingsClosedForApplications(LocalDate.now());
         LogoutActionListener logoutActionListener = new LogoutActionListener(new Container(), new CardLayout(), jobApplicationSystem);
-        frame.add(new ReferencePanel(reference.getUsername(), jobApplicationSystem, logoutActionListener));
+        frame.add(new ReferencePanel(reference, logoutActionListener));
         frame.setSize(854, 480);
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

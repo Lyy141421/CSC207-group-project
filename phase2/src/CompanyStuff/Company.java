@@ -123,9 +123,16 @@ public class Company implements Serializable {
         return apps;
     }
 
+    /**
+     * Update all the job postings in this company as appropriate.
+     *
+     * @param today Today's date.
+     */
     public void updateJobPostings(LocalDate today) {
         for (Branch branch : this.getBranches()) {
             BranchJobPostingManager branchJobPostingManager = branch.getJobPostingManager();
+            branchJobPostingManager.updateJobPostingsClosedForApplications(today);
+            branchJobPostingManager.updateJobPostingsClosedForReferences(today);
             branchJobPostingManager.updateAllClosedUnfilledJobPostings(today);
         }
     }

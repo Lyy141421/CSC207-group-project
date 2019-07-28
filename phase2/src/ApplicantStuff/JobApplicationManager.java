@@ -24,7 +24,6 @@ public class JobApplicationManager implements Serializable {
     private ArrayList<JobApplication> jobApplications = new ArrayList<>();
 
     // === Public methods ===
-
     // === Constructors ===
     public JobApplicationManager() {
     }
@@ -41,7 +40,7 @@ public class JobApplicationManager implements Serializable {
      *
      * @param application The application being added.
      */
-    public void addJobApplication(JobApplication application) {
+    void addJobApplication(JobApplication application) {
         this.jobApplications.add(application);
         this.jobApplications.sort(new CloseDateComparator());
     }
@@ -51,7 +50,7 @@ public class JobApplicationManager implements Serializable {
      *
      * @param jobPosting The job posting from which the job application is to be removed.
      */
-    public void removeJobApplication(BranchJobPosting jobPosting) {
+    void removeJobApplication(BranchJobPosting jobPosting) {
         JobApplication app = this.findJobApplication(jobPosting);
         this.jobApplications.remove(app);
     }
@@ -85,7 +84,7 @@ public class JobApplicationManager implements Serializable {
      * @param today Today's date.
      * @return the number of days since the most recent job posting close date.
      */
-    public long getNumDaysSinceMostRecentCloseDate(LocalDate today) {
+    long getNumDaysSinceMostRecentCloseDate(LocalDate today) {
         if (this.getLastClosedJobApp() == null) {
             return 0;
         } else {
@@ -99,7 +98,7 @@ public class JobApplicationManager implements Serializable {
      *
      * @return a list of previous job applications submitted where the posting is now filled.
      */
-    public ArrayList<JobApplication> getPreviousJobApplications() {
+    ArrayList<JobApplication> getPreviousJobApplications() {
         ArrayList<JobApplication> previousJobApps = new ArrayList<>();
         for (JobApplication jobApplication : this.getJobApplications()) {
             if (jobApplication.isArchived() || jobApplication.isHired()) {

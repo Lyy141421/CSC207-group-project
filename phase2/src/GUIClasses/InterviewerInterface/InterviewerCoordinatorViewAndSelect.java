@@ -2,7 +2,7 @@ package GUIClasses.InterviewerInterface;
 
 import ApplicantStuff.JobApplication;
 import CompanyStuff.Interview;
-import GUIClasses.CommonUserGUI.TitleCreator;
+import GUIClasses.CommonUserGUI.GUIElementsCreator;
 import GUIClasses.MethodsTheGUICallsInInterviewer;
 
 import javax.swing.*;
@@ -58,7 +58,7 @@ class InterviewerCoordinatorViewAndSelect extends InterviewerViewAndWriteNotes {
      * @param interviewSelected The interview selected by the interviewer.
      */
     private void setResultsPanelAndHashMap(Interview interviewSelected) {
-        resultsPanel.add(new TitleCreator().createTitlePanel("Set the interview results", 20),
+        resultsPanel.add(new GUIElementsCreator().createTitlePanel("Set the interview results", 20),
                 BorderLayout.PAGE_START);
         JPanel selectResultsPanel = new JPanel(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();

@@ -233,27 +233,6 @@ public class BranchJobPostingManager implements Serializable {
         }
     }
 
-    /**
-     * Create and add a job posting to the system.
-     *
-     * @param jobTitle          The job title.
-     * @param jobDescription    The job description.
-     * @param requiredDocuments The required documents for this job posting.
-     * @param tags              The tags for this job posting.
-     * @param numPositions      The number of positions for this job.
-     * @param postDate          The date this job posting was posted.
-     * @param applicationCloseDate  The last date for application submissions.
-     * @param referenceCloseDate    The last date for reference letter submissions.
-     */
-    public BranchJobPosting addJobPosting(String jobTitle, String jobField, String jobDescription,
-                                          ArrayList<String> requiredDocuments, ArrayList<String> tags, int numPositions,
-                                          LocalDate postDate, LocalDate applicationCloseDate, LocalDate referenceCloseDate) {
-        BranchJobPosting branchJobPosting = new BranchJobPosting(jobTitle, jobField, jobDescription, requiredDocuments,
-                tags, numPositions, this.branch, postDate, applicationCloseDate, referenceCloseDate);
-        this.branch.getJobPostingManager().addJobPosting(branchJobPosting);
-        return branchJobPosting;
-    }
-
     // ============================================================================================================== //
     // === Package-private methods ===
 
@@ -272,7 +251,6 @@ public class BranchJobPostingManager implements Serializable {
      *
      * @param today Today's date.
      */
-    // TODO this method must be called after the user enters the date and before program launches
     public void updateJobPostingsClosedForApplications(LocalDate today) {
         CompanyDocumentManager companyDocManager = this.getBranch().getCompany().getDocumentManager();
         for (BranchJobPosting jobPosting : this.getJobPostingsRecentlyClosedForApplications(today)) {
@@ -290,7 +268,6 @@ public class BranchJobPostingManager implements Serializable {
      *
      * @param today Today's date.
      */
-    // TODO: this method must be called after the user enters the date and before program launches
     public void updateJobPostingsClosedForReferences(LocalDate today) {
         for (BranchJobPosting jobPosting : this.getJobPostingsRecentlyClosedForReferences(today)) {
             if (jobPosting.isClosedForReferences(today)) {
