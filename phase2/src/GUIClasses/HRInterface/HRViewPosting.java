@@ -131,6 +131,9 @@ public class HRViewPosting extends HRPanel{
                 if (hiringJP.containsKey(selectedTitle)) {
                     appPanel.setHireVisible();
                     removeFromJPLists(selectedTitle);
+                } else if (prePhoneJP.containsKey(selectedTitle)) {
+                    appPanel.setSelectVisible();
+                    removeFromJPLists(selectedTitle);
                 }
                 parent.remove(4);
                 parent.add(appPanel, APPLICATION);

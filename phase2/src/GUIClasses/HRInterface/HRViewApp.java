@@ -125,9 +125,14 @@ public class HRViewApp extends HRPanel {
         this.selectButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                new InterviewSelectionFrame(HRInterface, new ArrayList<>(currApps.values()));
             }
         });
+    }
+
+    void setSelectVisible() {
+        this.hireButton.setVisible(true);
+        this.homeButton.setVisible(false);
     }
 
     /*
