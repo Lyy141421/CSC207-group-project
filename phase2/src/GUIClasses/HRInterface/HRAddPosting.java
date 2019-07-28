@@ -1,21 +1,27 @@
 package GUIClasses.HRInterface;
 
+import CompanyStuff.Company;
+import CompanyStuff.JobPostings.BranchJobPosting;
+import CompanyStuff.JobPostings.CompanyJobPosting;
 import GUIClasses.MethodsTheGUICallsInHR;
 
-import org.jdatepicker.impl.JDatePanelImpl;
-import org.jdatepicker.impl.JDatePickerImpl;
-import org.jdatepicker.impl.UtilDateModel;
+import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
+import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
+import net.sourceforge.jdatepicker.impl.UtilDateModel;
 
 import javax.swing.*;
 import javax.swing.text.NumberFormatter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 public class HRAddPosting extends HRPanel {
@@ -23,6 +29,10 @@ public class HRAddPosting extends HRPanel {
     JPanel containerPane = this;
     GridBagConstraints c;
     List<JComponent> entryBoxes = new ArrayList();
+    HashMap<String, CompanyJobPosting> companyJPMap;
+
+    JComboBox<String> companyPostingList;
+    DefaultComboBoxModel<String> companyPostingModel;
 
     HRAddPosting(Container contentPane, MethodsTheGUICallsInHR HRInterface, LocalDate today) {
         super(contentPane, HRInterface, today);
@@ -70,8 +80,7 @@ public class HRAddPosting extends HRPanel {
     private void addAllFields () {
         this.c.gridx = 1;
         this.c.gridy = -1;
-        JTextField jobTitleInput = new JTextField(30);
-        this.addFieldToPanel(jobTitleInput);
+        this.addJobTitleSelection();
         JTextField jobFieldInput = new JTextField(30);
         this.addFieldToPanel(jobFieldInput);
         JTextArea jobDescriptionInput = new JTextArea(4, 30);
@@ -80,6 +89,45 @@ public class HRAddPosting extends HRPanel {
         this.addFieldToPanel(requirementsInput);
         this.addDatePicker();
         this.addNumOfPositionField();
+    }
+
+    private void addJobTitleSelection() {
+        this.companyPostingList = new JComboBox<>();
+        this.companyPostingList.setEditable(true);
+        this.setCompanyJPMap(this.HRInterface.getHR().getBranch().getCompany().getCompanyJobPostings());
+        this.companyPostingModel = new DefaultComboBoxModel<>(companyJPMap.keySet().toArray(new String[companyJPMap.size()]));
+        this.companyPostingList.setModel(this.companyPostingModel);
+        this.setCompanyPostingListListener();
+
+        this.addFieldToPanel(this.companyPostingList);
+    }
+
+    private void setCompanyPostingListListener() {
+        this.companyPostingList.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+
+            }
+        });
+    }
+
+    /**
+     * Sets hash map of titles to company job postings from a list of job postings.
+     * @param JPList a list of company job postings.
+     */
+    private void setCompanyJPMap(ArrayList<CompanyJobPosting> JPList) {
+        for (CompanyJobPosting JP : JPList) {
+            companyJPMap.put(this.toCompanyJPTitle(JP), JP);
+        }
+    }
+
+    /**
+     * Gets a string representation of the title of this company job posting.
+     * @param companyJobPosting a company job posting.
+     * @return the title to be displayed of this company job posting.
+     */
+    private String toCompanyJPTitle(CompanyJobPosting companyJobPosting) {
+        return companyJobPosting.getId() + "-" + companyJobPosting.getTitle();
     }
 
     private void addDatePicker() {
@@ -117,7 +165,7 @@ public class HRAddPosting extends HRPanel {
                                 .getValue()).toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
                 };
                 if (isValidInput(postingFields)) {
-                    HRInterface.addJobPosting(today, postingFields);
+                    HRInterface.addJobPosting(postingFields);
                     JOptionPane.showMessageDialog(containerPane, "Job posting has been added.");
                 } else {
                     JOptionPane.showMessageDialog(containerPane, "One or more fields have illegal input.");
@@ -148,7 +196,7 @@ public class HRAddPosting extends HRPanel {
             i++;
         }
 
-        if (((LocalDate) fields[5]).isBefore(this.today)) {
+        if (!this.HRInterface.getToday().isBefore(((LocalDate) fields[5]))) {
             valid = false;
         }
 

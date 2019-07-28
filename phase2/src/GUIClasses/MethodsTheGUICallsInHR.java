@@ -28,6 +28,10 @@ public class MethodsTheGUICallsInHR {
         return this.hr;
     }
 
+    public LocalDate getToday() {
+        return this.jobAppSystem.getToday();
+    }
+
     /**
      * * Get the task that the HR Coordinator must accomplish at this moment for this job posting.
      */

@@ -142,9 +142,9 @@ public class HRViewPosting extends HRPanel{
     }
 
     private void setJPLists() {
-        this.prePhoneJP = this.getTitleToJPMap(HRInterface.getJPToReview(today));
-        this.scheduleJP = this.getTitleToJPMap(HRInterface.getJPToSchedule(today));
-        this.hiringJP = this.getTitleToJPMap(HRInterface.getJPToHire(today));
+        this.prePhoneJP = this.getTitleToJPMap(HRInterface.getJPToReview());
+        this.scheduleJP = this.getTitleToJPMap(HRInterface.getJPToSchedule());
+        this.hiringJP = this.getTitleToJPMap(HRInterface.getJPToHire());
         this.allJP = this.getTitleToJPMap(HRInterface.getAllJP());
 
         this.importantJP.putAll(this.prePhoneJP);

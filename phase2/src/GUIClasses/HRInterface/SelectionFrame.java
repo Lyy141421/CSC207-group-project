@@ -64,7 +64,6 @@ public class SelectionFrame extends JInternalFrame implements ItemListener {
         confirmButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //TODO: Send warning if not enough applicants selected
                 HRInterface.hireApplications(getApplicantsToHire());
             }
         });
