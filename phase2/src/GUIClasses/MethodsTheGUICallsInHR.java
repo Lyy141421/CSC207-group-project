@@ -167,14 +167,13 @@ public class MethodsTheGUICallsInHR {
     }
 
     /**
-     * Choose whether this application moves on for the first round.
+     * Reject the list of applications for first round.
      *
-     * @param jobApp   The job application in question.
-     * @param selected Whether or not the application is selected to move on.
+     * @param jobApps   The job applications NOT getting interviews.
      */
-    public void selectApplicationForFirstRound(JobApplication jobApp, boolean selected) {
-        if (!selected) {
-            jobApp.getJobPosting().getInterviewManager().reject(jobApp);
+    public void rejectApplicationForFirstRound(ArrayList<JobApplication> jobApps) {
+        for (JobApplication app : jobApps) {
+            app.getJobPosting().getInterviewManager().reject(app);
         }
     }
 
