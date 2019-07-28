@@ -13,6 +13,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class ReferenceSubmitLetterPanel extends JPanel implements ActionListener, ListSelectionListener {
+    /**
+     * The panel for submitting a reference letter.
+     */
 
     // === Instance variables ===
     // The reference who logged in

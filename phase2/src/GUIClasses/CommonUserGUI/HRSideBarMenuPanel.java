@@ -25,7 +25,7 @@ public class HRSideBarMenuPanel extends JPanel {
         this.hrCoordinator = hrCoordinator;
         TreeMap<String, Object> fullMenu = this.createFullMenu();
         this.setLayout(new BorderLayout());
-        this.add(new SideBarMenu(fullMenu, CELL_WIDTH, CELL_HEIGHT).createMenuBar());
+        this.add(new SideBarMenuCreator(fullMenu, CELL_WIDTH, CELL_HEIGHT).createMenuBar());
         this.setSize(CELL_WIDTH, CELL_HEIGHT * NUM_MAIN_MENU_OPTIONS);
     }
 
@@ -132,30 +132,5 @@ public class HRSideBarMenuPanel extends JPanel {
             }
         });
         return fullMenu;
-    }
-
-    public static void main(String[] args) {
-        //Schedule a job for the event-dispatching thread:
-        //creating and showing this application's GUI.
-        javax.swing.SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                HRCoordinator HRC = new HRCoordinator();
-                JFrame frame = new JFrame("HR Home Page");
-                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-                JPanel menuPanel = new JPanel();
-                menuPanel.setBackground(Color.WHITE); // contrasting bg
-                menuPanel.add(new HRSideBarMenuPanel(HRC));
-
-                Container contentPane = frame.getContentPane();
-                contentPane.setBackground(Color.WHITE); //contrasting bg
-
-                frame.add(menuPanel, BorderLayout.LINE_START);
-
-                //Display the window.
-                frame.setSize(500, 250);
-                frame.setVisible(true);
-            }
-        });
     }
 }

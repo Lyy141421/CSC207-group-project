@@ -9,9 +9,14 @@ import java.awt.*;
 import java.util.ArrayList;
 
 class ReferenceHomePanel extends JPanel {
+    /**
+     * The reference home panel.
+     */
 
-    private Reference reference;
+    // === Instance variables ===
+    private Reference reference;    // The reference who logged in
 
+    // === Constructor ===
     ReferenceHomePanel(Reference reference) {
         this.reference = reference;
 
@@ -25,6 +30,11 @@ class ReferenceHomePanel extends JPanel {
         this.add(this.createReminderPanel(), c);
     }
 
+    /**
+     * Create the welcome panel to be displayed.
+     *
+     * @return the panel created.
+     */
     private JPanel createWelcomePanel() {
         JPanel welcomePanel = new JPanel();
         JLabel welcomeMessage = new JLabel("Welcome " + this.reference.getEmail());
@@ -35,6 +45,10 @@ class ReferenceHomePanel extends JPanel {
         return welcomePanel;
     }
 
+    /**
+     * Create the reminder panel to be displayed.
+     * @return the panel created.
+     */
     private JPanel createReminderPanel() {
         JPanel reminderPanel = new JPanel();
         reminderPanel.setLayout(new BorderLayout());
@@ -47,7 +61,7 @@ class ReferenceHomePanel extends JPanel {
     /**
      * Create a panel that displays a table of job applications that still need reference letters submitted.
      *
-     * https://docs.oracle.com/javase/tutorial/uiswing/components/table.html
+     * Adapted from https://docs.oracle.com/javase/tutorial/uiswing/components/table.html
      */
     private JPanel createJobAppTablePanel() {
         JPanel jobAppTablePanel = new JPanel(new GridLayout());

@@ -265,7 +265,7 @@ public class Interviewer extends User {
     public ArrayList<Interview> getScheduledUpcomingInterviews(LocalDate today) {
         ArrayList<Interview> scheduledInterviews = new ArrayList<>();
         for (Interview interview : this.interviews) {
-            if (interview.getTime() != null && !interview.isComplete() && !interview.getTime().getDate().isBefore(today)) {
+            if (interview.getTime() != null && interview.isIncomplete() && !interview.getTime().getDate().isBefore(today)) {
                 scheduledInterviews.add(interview);
             }
         }
@@ -279,7 +279,7 @@ public class Interviewer extends User {
     public ArrayList<Interview> getAllIncompleteInterviews() {
         ArrayList<Interview> incompleteInterviews = new ArrayList<>();
         for (Interview interview : this.interviews) {
-            if (!interview.isComplete()) {
+            if (interview.isIncomplete()) {
                 incompleteInterviews.add(interview);
             }
         }

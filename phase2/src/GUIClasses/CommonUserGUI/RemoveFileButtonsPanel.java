@@ -5,10 +5,14 @@ import java.awt.*;
 import java.io.File;
 
 class RemoveFileButtonsPanel extends JPanel {
+    /**
+     * A panel for removing files selected.
+     */
 
     // === Class variables ===
     private static final Color LIGHT_RED = new Color(255, 210, 210);
 
+    // === Constructor ===
     RemoveFileButtonsPanel() {
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
     }

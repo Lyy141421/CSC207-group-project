@@ -163,10 +163,10 @@ public class Interview implements Serializable {
      *
      * @return true iff the interview is completed, ie, every job application has been assigned a pass/fail.
      */
-    public boolean isComplete() {
+    public boolean isIncomplete() {
         for (JobApplication jobApp : this.jobApplicationsToResult.keySet()) {
             if (this.jobApplicationsToResult.get(jobApp) == null) {
-                return false;
+                return true;
             }
         }
         return true;

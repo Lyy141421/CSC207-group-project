@@ -4,7 +4,9 @@ import javax.swing.*;
 import java.awt.*;
 
 public class TitleCreator {
-    //TODO rename
+    /**
+     * A title creator.
+     */
 
     /**
      * Create the title panel.

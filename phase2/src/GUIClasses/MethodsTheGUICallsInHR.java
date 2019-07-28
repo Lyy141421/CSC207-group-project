@@ -28,6 +28,10 @@ public class MethodsTheGUICallsInHR {
         return this.hr;
     }
 
+    public LocalDate today() {
+        return this.jobAppSystem.getToday();
+    }
+
     /**
      * * Get the task that the HR Coordinator must accomplish at this moment for this job posting.
      */
@@ -126,20 +130,6 @@ public class MethodsTheGUICallsInHR {
         return true;
     }
 
-    // TODO fix implementation
-    public boolean hireApplications(ArrayList<JobApplication> jobAppsToHire) {
-        for (JobApplication jobApp : jobAppsToHire) {
-            jobApp.getStatus().setHired();
-        }
-        BranchJobPosting jobPosting = jobAppsToHire.get(0).getJobPosting();
-        jobPosting.setFilled();
-        jobPosting.getInterviewManager().archiveRejected();
-        if (jobPosting.getInterviewManager().getNumOpenPositions() > 0) {
-            return false;
-        }
-        return true;
-    }
-
     /**
      * Get a list of job applications sorted in non-decreasing order based on the number of occurrences of key words and phrases.
      *
@@ -189,6 +179,11 @@ public class MethodsTheGUICallsInHR {
                                      ArrayList<Interviewer> otherInterviewers, int minNumDaysNotice) {
         jobPosting.getInterviewManager().setUpGroupInterview(interviewCoordinator, otherInterviewers,
                 jobAppSystem.getToday(), minNumDaysNotice);
+    }
+
+    public void selectApplicantsForHire(ArrayList<JobApplication> jobAppsToHire) {
+        BranchJobPosting jobPosting = jobAppsToHire.get(0).getJobPosting();
+        jobPosting.getInterviewManager().hireApplicants(jobAppsToHire);
     }
 
 }

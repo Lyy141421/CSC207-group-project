@@ -21,7 +21,8 @@ public class InterviewManager implements Serializable {
     public static final int SELECT_APPS_FOR_FIRST_ROUND = 1;
     public static final int SET_INTERVIEW_CONFIGURATION = 2;
     public static final int SCHEDULE_GROUP_INTERVIEWS = 3;
-    public static final int HIRE_APPLICANTS = 4;
+    public static final int SELECT_APPS_TO_HIRE = 4;
+    public static final int HIRE_APPLICANTS = 5;
 
     // === Instance variables ===
     // The job posting for this interview manager
@@ -110,20 +111,11 @@ public class InterviewManager implements Serializable {
     public boolean isCurrentRoundOver() {
         for (JobApplication jobApp : this.getApplicationsInConsideration()) {
             Interview lastInterview = jobApp.getLastInterview();
-            if (lastInterview != null && lastInterview.isComplete()) {
+            if (lastInterview != null && !lastInterview.isIncomplete()) {
                 return true;
             }
         }
         return false;
-    }
-
-    /**
-     * Checks whether the next round of interviews is a group interview.
-     *
-     * @return true iff the next interview round is a group interview.
-     */
-    public boolean isNextRoundGroupInterview() {
-        return this.interviewConfiguration.get(this.currentRound + 1)[1].equals(Interview.GROUP);
     }
 
     /**
@@ -160,24 +152,6 @@ public class InterviewManager implements Serializable {
         this.reject(applicationToWithdraw);
     }
 
-    public void updateInterviewersOfInterviewCompletionOrCancellation(Interview interview) {
-        for (Interviewer interviewer : interview.getAllInterviewers()) {
-            interviewer.removeInterview(interview);
-        }
-    }
-
-    /**
-     * Check if the number of applications in consideration is less than or equal to the number of positions available
-     * in the posting and is not zero.
-     *
-     * @return true iff number of applications in consideration is less than or equal to the number of positions
-     * available and is not zero.
-     */
-    public boolean isNumApplicationsUnderOrAtThreshold() {
-        int jobAppsSize = this.applicationsInConsideration.size();
-        return jobAppsSize > 0 && jobAppsSize <= this.branchJobPosting.getNumPositions();
-    }
-
     /**
      * Archive all the rejected applications for this job posting.
      */
@@ -196,20 +170,107 @@ public class InterviewManager implements Serializable {
      * @return the integer representing the task the HR Coordinator must accomplish.
      */
     public int getHrTask() {
-        if (this.hasNoJobApplicationsInConsideration()) {
-            return InterviewManager.CLOSE_POSTING_NO_HIRE;
-        } else if (!this.hasChosenApplicantsForFirstRound()) {
+        if (!this.hasChosenApplicantsForFirstRound()) {
             return InterviewManager.SELECT_APPS_FOR_FIRST_ROUND;
         } else if (this.interviewConfiguration.isEmpty()) {
             return InterviewManager.SET_INTERVIEW_CONFIGURATION;
-        } else if (this.currentRound != 0 && this.isNumApplicationsUnderOrAtThreshold()) {
-            return InterviewManager.HIRE_APPLICANTS;
-        } else if (this.isInterviewProcessOver()) {
-            return InterviewManager.HIRE_APPLICANTS;
-        } else if (this.isCurrentRoundOver() && this.isNextRoundGroupInterview()) {
+        } else if (this.isCurrentRoundOver() && this.hasNextRound() && this.isNextRoundGroupInterview()) {
             return InterviewManager.SCHEDULE_GROUP_INTERVIEWS;
+        } else if (this.isInterviewProcessOver() && !this.isNumApplicationsUnderOrAtThreshold()) {
+            return InterviewManager.SELECT_APPS_TO_HIRE;
         } else {
             return InterviewManager.DO_NOTHING;
+        }
+    }
+
+    private boolean hasNextRound() {
+        return this.isNumApplicationsUnderOrAtThreshold();
+    }
+
+    /**
+     * Update the status of this job posting.
+     * Note: this will be called every time someone logs in
+     *
+     */
+    public void updateJobPostingStatus() {
+        if (this.hasNoJobApplicationsInConsideration()) {
+            // TODO notify HR
+        } else if (this.currentRound != 0 | this.isInterviewProcessOver()) {
+            // The check for current round ensures that applicants get at least 1 interview
+            if (this.isNumApplicationsUnderOrAtThreshold()) {
+                this.hireAllApplicants();
+            }
+        }
+    }
+
+    /**
+     * Set up one-on-one interviews for all applications in consideration.
+     * Note: Interviewer would set the date/time
+     */
+    public void setUpOneOnOneInterviews() {
+        for (JobApplication jobApp : this.applicationsInConsideration) {
+            String field = this.branchJobPosting.getField();
+            Interviewer interviewer = this.branchJobPosting.getBranch().findInterviewerByField(field);
+            Interview interview = new Interview(jobApp, interviewer, this);
+            this.updateParticipantsOfNewInterview(interview);
+        }
+    }
+
+    /**
+     * Set up a group interview for all applications in consideration.
+     *
+     * @param interviewCoordinator The interview coordinator selected.
+     * @param otherInterviewers    The other interviewers selected.
+     */
+    public void setUpGroupInterview(Interviewer interviewCoordinator, ArrayList<Interviewer> otherInterviewers,
+                                    LocalDate today, int minNumDaysNotice) {
+        Interview interview = new Interview(this.applicationsInConsideration, interviewCoordinator,
+                otherInterviewers, this);
+        ArrayList<Interviewer> allInterviewers = interview.getAllInterviewers();
+        InterviewTime interviewTime = this.getEarliestTimeAvailableForAllInterviewers(allInterviewers, today.plusDays(minNumDaysNotice));
+        interview.setTime(interviewTime);
+        this.updateParticipantsOfNewInterview(interview);
+    }
+
+    /**
+     * Update the interviewers for this interview of completion or cancellation.
+     *
+     * @param interview The interview that has been completed or cancelled.
+     */
+    void updateInterviewersOfInterviewCompletionOrCancellation(Interview interview) {
+        for (Interviewer interviewer : interview.getAllInterviewers()) {
+            interviewer.removeInterview(interview);
+        }
+    }
+
+    // ============================================================================================================== //
+    // === Private methods ===
+    // === Other methods ===
+
+    /**
+     * Get the earliest interviewTime available for all these interviewers from this date forward.
+     *
+     * @param allInterviewers The interviewers participating in a group interview.
+     * @param earliestDate    The earliest date that this group interview can be scheduled.
+     * @return the earliest InterviewTime when all these interviewers are available.
+     */
+    // TODO THIS METHOD REQUIRES A LOT OF TESTING!!!!!!
+    private InterviewTime getEarliestTimeAvailableForAllInterviewers(ArrayList<Interviewer> allInterviewers,
+                                                                     LocalDate earliestDate) {
+        Interviewer interviewer1 = allInterviewers.get(0);
+        LocalDate dateAvailable = interviewer1.getFirstDateAvailableOnOrAfterDate(earliestDate);
+        ArrayList<String> timeSlotsAvailableForInterviewer1 = interviewer1.getTimeSlotsAvailableOnDate(dateAvailable);
+        int i = 1;
+        while (!timeSlotsAvailableForInterviewer1.isEmpty() && i < allInterviewers.size()) {
+            ArrayList<String> timeSlotsFilledForInterviewer = allInterviewers.get(i).getTimeSlotsFilledOnDate(dateAvailable);
+            timeSlotsAvailableForInterviewer1.removeAll(timeSlotsFilledForInterviewer);
+            i++;
+        }
+        if (timeSlotsAvailableForInterviewer1.isEmpty()) {
+            return this.getEarliestTimeAvailableForAllInterviewers(allInterviewers, earliestDate.plusDays(1));
+        } else {
+            String timeSlot = timeSlotsAvailableForInterviewer1.get(0);
+            return new InterviewTime(dateAvailable, timeSlot);
         }
     }
 
@@ -247,64 +308,14 @@ public class InterviewManager implements Serializable {
     }
 
     /**
-     * Set up one-on-one interviews for all applications in consideration.
-     * Note: Interviewer would set the date/time
-     */
-    public void setUpOneOnOneInterviews() {
-        for (JobApplication jobApp : this.applicationsInConsideration) {
-            String field = this.branchJobPosting.getField();
-            Interviewer interviewer = this.branchJobPosting.getBranch().findInterviewerByField(field);
-            Interview interview = new Interview(jobApp, interviewer, this);
-            this.updateParticipantsOfNewInterview(interview);
-        }
-    }
-
-    /**
-     * Set up a group interview for all applications in consideration.
+     * Checks whether the next round of interviews is a group interview.
      *
-     * @param interviewCoordinator The interview coordinator selected.
-     * @param otherInterviewers    The other interviewers selected.
+     * @return true iff the next interview round is a group interview.
      */
-    public void setUpGroupInterview(Interviewer interviewCoordinator, ArrayList<Interviewer> otherInterviewers,
-                                    LocalDate today, int minNumDaysNotice) {
-        Interview interview = new Interview(this.applicationsInConsideration, interviewCoordinator,
-                otherInterviewers, this);
-        ArrayList<Interviewer> allInterviewers = interview.getAllInterviewers();
-        InterviewTime interviewTime = this.getEarliestTimeAvailableForAllInterviewers(allInterviewers, today.plusDays(minNumDaysNotice));
-        interview.setTime(interviewTime);
-        this.updateParticipantsOfNewInterview(interview);
+    private boolean isNextRoundGroupInterview() {
+        return this.interviewConfiguration.get(this.currentRound + 1)[1].equals(Interview.GROUP);
     }
 
-    // ============================================================================================================== //
-    // === Private methods ===
-    // === Other methods ===
-
-    /**
-     * Get the earliest interviewTime available for all these interviewers from this date forward.
-     *
-     * @param allInterviewers The interviewers participating in a group interview.
-     * @param earliestDate    The earliest date that this group interview can be scheduled.
-     * @return the earliest InterviewTime when all these interviewers are available.
-     */
-    // TODO THIS METHOD REQUIRES A LOT OF TESTING!!!!!!
-    private InterviewTime getEarliestTimeAvailableForAllInterviewers(ArrayList<Interviewer> allInterviewers,
-                                                                     LocalDate earliestDate) {
-        Interviewer interviewer1 = allInterviewers.get(0);
-        LocalDate dateAvailable = interviewer1.getFirstDateAvailableOnOrAfterDate(earliestDate);
-        ArrayList<String> timeSlotsAvailableForInterviewer1 = interviewer1.getTimeSlotsAvailableOnDate(dateAvailable);
-        int i = 1;
-        while (!timeSlotsAvailableForInterviewer1.isEmpty() && i < allInterviewers.size()) {
-            ArrayList<String> timeSlotsFilledForInterviewer = allInterviewers.get(i).getTimeSlotsFilledOnDate(dateAvailable);
-            timeSlotsAvailableForInterviewer1.removeAll(timeSlotsFilledForInterviewer);
-            i++;
-        }
-        if (timeSlotsAvailableForInterviewer1.isEmpty()) {
-            return this.getEarliestTimeAvailableForAllInterviewers(allInterviewers, earliestDate.plusDays(1));
-        } else {
-            String timeSlot = timeSlotsAvailableForInterviewer1.get(0);
-            return new InterviewTime(dateAvailable, timeSlot);
-        }
-    }
 
     /**
      * Check whether there are any applications in consideration.
@@ -322,5 +333,37 @@ public class InterviewManager implements Serializable {
      */
     private boolean isInterviewProcessOver() {
         return this.isCurrentRoundOver() && this.currentRound == this.interviewConfiguration.size();
+    }
+
+    /**
+     * Check if the number of applications in consideration is less than or equal to the number of positions available
+     * in the posting and is not zero.
+     *
+     * @return true iff number of applications in consideration is less than or equal to the number of positions
+     * available and is not zero.
+     */
+    private boolean isNumApplicationsUnderOrAtThreshold() {
+        int jobAppsSize = this.applicationsInConsideration.size();
+        return jobAppsSize > 0 && jobAppsSize <= this.branchJobPosting.getNumPositions();
+    }
+
+    /**
+     * Hire the applicants in this list.
+     *
+     * @param jobAppsToHire The job applications of those to be hired.
+     */
+    public void hireApplicants(ArrayList<JobApplication> jobAppsToHire) {
+        for (JobApplication jobApp : jobAppsToHire) {
+            jobApp.getStatus().setHired();
+        }
+        this.branchJobPosting.setFilled();
+        this.archiveRejected();
+    }
+
+    /**
+     * Hire all the applicants
+     */
+    private void hireAllApplicants() {
+        this.hireApplicants(this.applicationsInConsideration);
     }
 }

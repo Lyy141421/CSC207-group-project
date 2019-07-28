@@ -45,16 +45,19 @@ import java.util.TreeMap;
 import javax.swing.*;
 
 
-public class SideBarMenu extends MouseAdapter {
+public class SideBarMenuCreator extends MouseAdapter {
+    /**
+     * A side bar menu creator.
+     */
 
     // === Instance variables ===
-    private TreeMap<String, Object> menuTitles;
-    private MouseAdapter mouseAdapter = new MouseAdapter1();
-    private int cellWidth;
-    private int cellHeight;
+    private TreeMap<String, Object> menuTitles; // A map of menu titles to action listeners
+    private MouseAdapter mouseAdapter = new MouseAdapter1();    // The mouse adapter
+    private int cellWidth;  // The width of each cell
+    private int cellHeight; // The height of each cell
 
     // === Constructor ===
-    public SideBarMenu(TreeMap<String, Object> menuTitles, int cellWidth, int cellHeight) {
+    public SideBarMenuCreator(TreeMap<String, Object> menuTitles, int cellWidth, int cellHeight) {
         this.menuTitles = menuTitles;
         this.cellWidth = cellWidth;
         this.cellHeight = cellHeight;
@@ -92,6 +95,11 @@ public class SideBarMenu extends MouseAdapter {
         return menu;
     }
 
+    /**
+     * Set the background colour and border
+     *
+     * @param menu The menu that is being set
+     */
     private void setBackgroundAndBorder(JComponent menu) {
         menu.setBackground(Color.LIGHT_GRAY);
         menu.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY));

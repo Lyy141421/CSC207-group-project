@@ -15,10 +15,9 @@ public class JobApplicationGrader {
      */
 
     // === Instance variable ===
-    private ArrayList<String> keyWordsAndPhrases;
-    private ArrayList<JobApplication> jobApps;
-    private ArrayList<GradedJobApplication> gradedJobApps = new ArrayList<>();
-    private int grade;
+    private ArrayList<String> keyWordsAndPhrases;   // The key words and phrases the HR Coordinator inputs.
+    private ArrayList<JobApplication> jobApps;  // The job applications submitted for a job posting.
+    private ArrayList<GradedJobApplication> gradedJobApps = new ArrayList<>();  // The graded job applications
 
     // === Constructor ===
     public JobApplicationGrader(BranchJobPosting jobPosting, ArrayList<String> keyWordsAndPhrases) {
@@ -44,6 +43,9 @@ public class JobApplicationGrader {
         return sortedJobApps;
     }
 
+    /**
+     * Grade all job appplications.
+     */
     private void gradeAllJobApps() {
         for (JobApplication jobApp : this.jobApps) {
             this.gradedJobApps.add(new GradedJobApplication(jobApp, this.gradeJobApplication(jobApp)));
@@ -59,6 +61,7 @@ public class JobApplicationGrader {
     private int gradeJobApplication(JobApplication jobApplication) {
         Company company = jobApplication.getJobPosting().getCompany();
         File[] filesSubmitted = company.getDocumentManager().getFilesForJobApplication(jobApplication);
+        int grade = 0;
         for (File file : filesSubmitted) {
             try {
                 Scanner scanner = new Scanner(file);
@@ -75,16 +78,21 @@ public class JobApplicationGrader {
                 ex.printStackTrace();
                 continue;
             }
+
         }
         return grade;
     }
 
     private class GradedJobApplication {
+        /**
+         * A graded job application.
+         */
 
         // === Instance variables ===
-        private JobApplication jobApp;
-        private int grade;
+        private JobApplication jobApp;  // The job application graded.
+        private int grade;  // The grade received.
 
+        // === Constructor ===
         GradedJobApplication(JobApplication jobApp, int grade) {
             this.jobApp = jobApp;
             this.grade = grade;

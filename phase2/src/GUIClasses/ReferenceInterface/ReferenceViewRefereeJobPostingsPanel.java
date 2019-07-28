@@ -9,7 +9,10 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 
-public class ReferenceViewRefereeJobPostingsPanel extends JPanel {
+class ReferenceViewRefereeJobPostingsPanel extends JPanel {
+    /**
+     * The panel for viewing referees
+     */
 
     // === Class variables ===
     // The key for the prompt card

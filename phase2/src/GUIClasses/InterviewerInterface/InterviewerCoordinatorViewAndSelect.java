@@ -43,11 +43,10 @@ class InterviewerCoordinatorViewAndSelect extends InterviewerViewAndWriteNotes {
     /**
      * Loads the contents of the tabs for the tabbed pane.
      *
-     * @param interviewSelected The interview selected by the interviewer.
      */
     @Override
-    void loadTabContents(Interview interviewSelected) {
-        super.loadTabContents(interviewSelected);
+    void loadTabContents() {
+        super.loadTabContents();
         resultsPanel.removeAll();
         setResultsPanelAndHashMap(this.interviewSelected);
         resultsPanel.add(createSaveResultsButtonPanel(), BorderLayout.AFTER_LAST_LINE);

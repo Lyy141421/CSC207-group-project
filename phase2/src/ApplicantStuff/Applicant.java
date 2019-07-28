@@ -31,8 +31,7 @@ public class Applicant extends User {
     private ApplicantDocumentManager documentManager;
 
     // === Public methods ===
-    // === Constructors ===
-
+    // === Constructor ===
     public Applicant(String username, String password, String legalName, String email, LocalDate dateCreated,
                      String cma) {
         super(username, password, legalName, email, dateCreated);
@@ -96,7 +95,12 @@ public class Applicant extends User {
         return false;
     }
 
-    // TODO what is this for?
+    /**
+     * Checks whether this applicant has already applied to this branch.
+     *
+     * @param branch The branch in question.
+     * @return true iff this applicant has already applied to this branch
+     */
     public boolean hasAppliedToBranch(Branch branch) {
         for (BranchJobPosting posting : branch.getJobPostingManager().getBranchJobPostings())
             if (this.hasAppliedToPosting(posting))

@@ -27,7 +27,7 @@ public class Branch implements Serializable {
     private BranchJobPostingManager jobPostingManager;
 
     // === Public methods ===
-    // === Constructors ===
+    // === Constructor ===
     public Branch(String name, String cma, Company company) {
         this.name = name;
         this.cma = cma;
@@ -66,11 +66,6 @@ public class Branch implements Serializable {
         return this.jobPostingManager;
     }
 
-    // For testing only // TODO delete when done
-    public void setCompany(Company company) {
-        this.company = company;
-    }
-
     // === Other methods ===
     public BranchJobPosting getBranchJobPosting(int id) {
         for (BranchJobPosting posting : this.jobPostingManager.getBranchJobPostings()) {
@@ -85,7 +80,7 @@ public class Branch implements Serializable {
      *
      * @param hrCoordinator The HR Coordinator to be added.
      */
-    public void addHRCoordinator(HRCoordinator hrCoordinator) {
+    void addHRCoordinator(HRCoordinator hrCoordinator) {
         this.hrCoordinators.add(hrCoordinator);
     }
 
@@ -104,7 +99,7 @@ public class Branch implements Serializable {
      *
      * @param interviewer The interviewer to be added.
      */
-    public void addInterviewer(Interviewer interviewer) {
+    void addInterviewer(Interviewer interviewer) {
         String field = interviewer.getField();
         if (!this.fieldToInterviewers.containsKey(field)) {
             this.fieldToInterviewers.put(field, new ArrayList<>());
@@ -138,7 +133,7 @@ public class Branch implements Serializable {
      * @param jobField The job field of the interviewer to be found.
      * @return the interviewer with the least amount of interviews in this field.
      */
-    public Interviewer findInterviewerByField(String jobField) {
+    Interviewer findInterviewerByField(String jobField) {
         Interviewer interviewerSoFar = this.fieldToInterviewers.get(jobField).get(0);
         int minNumberOfInterviews = interviewerSoFar.getInterviews().size();
         for (Interviewer interviewer : this.fieldToInterviewers.get(jobField)) {

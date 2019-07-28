@@ -17,11 +17,6 @@ public class DocumentManager implements Serializable {
     // The actual folder that contains the company's/user's documents
     private File folder;
 
-    // === Constructors ===
-
-    public DocumentManager() {
-    }
-
     // === Getters ===
     public File getFolder() {
         return this.folder;

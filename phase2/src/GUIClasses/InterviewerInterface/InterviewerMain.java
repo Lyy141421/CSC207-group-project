@@ -33,7 +33,7 @@ public class InterviewerMain extends UserPanel {
     private JPanel cards = new JPanel(new CardLayout());        // The panel that contains all the Interviewer cards
 
     // === Constructor ===
-    private InterviewerMain(MethodsTheGUICallsInInterviewer interviewerInterface, LogoutActionListener logoutActionListener) {
+    public InterviewerMain(MethodsTheGUICallsInInterviewer interviewerInterface, LogoutActionListener logoutActionListener) {
         this.interviewerInterface = interviewerInterface;
         this.setLayout(new GridBagLayout());
         this.setCards();
