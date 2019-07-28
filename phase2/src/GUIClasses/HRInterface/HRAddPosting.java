@@ -107,7 +107,6 @@ public class HRAddPosting extends HRPanel {
             @Override
             public void itemStateChanged(ItemEvent e) {
                 CompanyJobPosting selectedJP = companyJPMap.get((String)companyPostingList.getSelectedItem());
-
             }
         });
     }
@@ -197,7 +196,7 @@ public class HRAddPosting extends HRPanel {
             i++;
         }
 
-        if (!this.HRInterface.today().isBefore(((LocalDate) fields[5]))) {
+        if (!this.HRInterface.getToday().isBefore(((LocalDate) fields[5]))) {
             valid = false;
         }
 
