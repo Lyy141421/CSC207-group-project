@@ -24,7 +24,7 @@ public class ApplicantSideBarMenuPanel extends JPanel {
         this.applicant = applicant;
         TreeMap<String, Object> fullMenu = this.createFullMenu();
         this.setLayout(new BorderLayout());
-        this.add(new SideBarMenu(fullMenu, CELL_WIDTH, CELL_HEIGHT).createMenuBar());
+        this.add(new SideBarMenuCreator(fullMenu, CELL_WIDTH, CELL_HEIGHT).createMenuBar());
         this.setSize(CELL_WIDTH, CELL_HEIGHT * NUM_MAIN_MENU_OPTIONS);
     }
 
