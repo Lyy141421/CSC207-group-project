@@ -197,7 +197,7 @@ public class HRAddPosting extends HRPanel {
             i++;
         }
 
-        if (!this.HRInterface.getToday().isBefore(((LocalDate) fields[5]))) {
+        if (!this.HRInterface.today().isBefore(((LocalDate) fields[5]))) {
             valid = false;
         }
 
