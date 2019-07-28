@@ -12,6 +12,7 @@ import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -89,10 +90,10 @@ public class HRViewApp extends HRPanel {
     }
 
     private JPanel createDocumentViewer(JobApplication selectedApp) {
-        CompanyDocumentManager CDM = new CompanyDocumentManager(this.HRInterface.getHR().getBranch().getCompany());
-        DocumentViewer DV = new DocumentViewer(CDM.getFolderForJobApplication(selectedApp));
+        File folderForApp = this.HRInterface.getFolderForJobApplication(selectedApp);
+        DocumentViewer documentViewer = new DocumentViewer(folderForApp);
 
-        return DV;
+        return documentViewer;
     }
 
     private JComponent makeOverviewTab (String text) {
