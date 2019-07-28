@@ -3,6 +3,7 @@ package GUIClasses;
 import ApplicantStuff.Applicant;
 import ApplicantStuff.JobApplication;
 import CompanyStuff.HRCoordinator;
+import CompanyStuff.Interview;
 import CompanyStuff.Interviewer;
 import CompanyStuff.JobApplicationGrader;
 import CompanyStuff.JobPostings.BranchJobPosting;
@@ -165,6 +166,21 @@ public class MethodsTheGUICallsInHR {
 
     public ArrayList<Interviewer> getInterviewersInField(BranchJobPosting jobPosting) {
         return this.hr.getBranch().getFieldToInterviewers().get(jobPosting.getField());
+    }
+
+    public void setInterviewConfiguration(BranchJobPosting jobPosting, ArrayList<Boolean> isInterviewRoundOneOnOne,
+                                          ArrayList<String> descriptions) {
+        ArrayList<String[]> interviewConfiguration = new ArrayList<>();
+        int i = 0;
+        while (i < isInterviewRoundOneOnOne.size()) {
+            if (isInterviewRoundOneOnOne.get(i)) {
+                interviewConfiguration.add(new String[]{Interview.ONE_ON_ONE, descriptions.get(i)});
+            } else {
+                interviewConfiguration.add(new String[]{Interview.GROUP, descriptions.get(i)});
+            }
+            i++;
+        }
+        jobPosting.getInterviewManager().setInterviewConfiguration(interviewConfiguration);
     }
 
     /**
