@@ -10,6 +10,7 @@ import CompanyStuff.JobPostings.BranchJobPosting;
 import CompanyStuff.JobPostings.BranchJobPostingManager;
 import Main.JobApplicationSystem;
 
+import java.io.File;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -181,6 +182,16 @@ public class MethodsTheGUICallsInHR {
             i++;
         }
         jobPosting.getInterviewManager().setInterviewConfiguration(interviewConfiguration);
+    }
+
+    /**
+     * Gets the folder for this job application in the company "server".
+     *
+     * @param jobApp The job application selected by the interviewer to view.
+     * @return the file object that holds the files submitted for this job application.
+     */
+    public File getFolderForJobApplication(JobApplication jobApp) {
+        return this.hr.getBranch().getCompany().getDocumentManager().getFolderForJobApplication(jobApp);
     }
 
     /**
