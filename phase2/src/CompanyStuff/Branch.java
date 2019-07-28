@@ -107,6 +107,7 @@ public class Branch implements Serializable {
         this.fieldToInterviewers.get(field).add(interviewer);
     }
 
+
     @Override
     public boolean equals(Object obj) {
         if (!(obj instanceof Branch))

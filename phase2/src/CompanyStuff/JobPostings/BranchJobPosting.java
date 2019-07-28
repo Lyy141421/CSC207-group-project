@@ -6,10 +6,7 @@ import ApplicantStuff.Reference;
 import CompanyStuff.Branch;
 import CompanyStuff.InterviewManager;
 import NotificationSystem.Notification;
-import NotificationSystem.Observable;
-import NotificationSystem.Observer;
 
-import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -79,11 +76,7 @@ public class BranchJobPosting extends CompanyJobPosting {
     }
 
 
-    // === Setters ===
-    public void setInterviewManager(InterviewManager interviewManager) {
-        this.interviewManager = interviewManager;
-    }
-
+    // === Setter ===
     public void setFilled() {
         this.filled = true;
     }
@@ -167,11 +160,10 @@ public class BranchJobPosting extends CompanyJobPosting {
     /**
      * Create an interview manager for this job posting after this branch posting has been closed for further applications.
      */
-    // TODO: why does this need a cloned list
     public void createInterviewManager() {
         InterviewManager interviewManager = new InterviewManager(this,
                 (ArrayList<JobApplication>) this.getJobApplications().clone());
-        this.setInterviewManager(interviewManager);
+        this.interviewManager = interviewManager;
     }
 
     /**
@@ -191,12 +183,12 @@ public class BranchJobPosting extends CompanyJobPosting {
     /**
      * Advance the round of interviews for this job posting.
      */
-    public void advanceInterviewRound() {
+    void advanceInterviewRound() {
         if (interviewManager == null) {
             return;
         }
         InterviewManager interviewManager = this.getInterviewManager();
-        if (interviewManager.getCurrentRound() < interviewManager.getMaxNumberOfRounds()) {
+        if (interviewManager.getCurrentRound() < interviewManager.getFinalRoundNumber()) {
             if (interviewManager.isCurrentRoundOver()) {
                 interviewManager.advanceRound();
                 this.notifyAllObservers(new Notification("Advance to Next Round",

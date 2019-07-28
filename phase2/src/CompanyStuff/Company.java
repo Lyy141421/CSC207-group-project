@@ -2,6 +2,7 @@ package CompanyStuff;
 
 import ApplicantStuff.Applicant;
 import ApplicantStuff.JobApplication;
+import CompanyStuff.JobPostings.BranchJobPostingManager;
 import DocumentManagers.CompanyDocumentManager;
 import DocumentManagers.DocumentManagerFactory;
 import FileLoadingAndStoring.DataLoaderAndStorer;
@@ -9,6 +10,7 @@ import CompanyStuff.JobPostings.BranchJobPosting;
 import CompanyStuff.JobPostings.CompanyJobPosting;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -119,6 +121,13 @@ public class Company implements Serializable {
             }
         }
         return apps;
+    }
+
+    public void updateJobPostings(LocalDate today) {
+        for (Branch branch : this.getBranches()) {
+            BranchJobPostingManager branchJobPostingManager = branch.getJobPostingManager();
+            branchJobPostingManager.updateAllClosedUnfilledJobPostings(today);
+        }
     }
 
     @Override

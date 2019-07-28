@@ -124,13 +124,9 @@ public class JobApplicationSystem {
     /**
      * Updates all the interview rounds that have been completed.
      */
-    private void updateAllInterviewRounds() {
+    private void updateJobPostings() {
         for (Company company : this.companies) {
-            for (Branch branch : company.getBranches()) {
-                for (BranchJobPosting branchJobPosting : branch.getJobPostingManager().getBranchJobPostings()) {
-                    branchJobPosting.advanceInterviewRound();
-                }
-            }
+            company.updateJobPostings(this.getToday());
         }
     }
 }

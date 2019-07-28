@@ -16,13 +16,12 @@ public class InterviewManager implements Serializable {
     // === Class variables ===
     static final long serialVersionUID = 1L;
     // Integers that represent the task the HR Coordinator needs to accomplish
-    public static final int CLOSE_POSTING_NO_HIRE = -1;
     private static final int DO_NOTHING = 0;
-    public static final int SELECT_APPS_FOR_FIRST_ROUND = 1;
-    public static final int SET_INTERVIEW_CONFIGURATION = 2;
-    public static final int SCHEDULE_GROUP_INTERVIEWS = 3;
-    public static final int SELECT_APPS_TO_HIRE = 4;
-    public static final int HIRE_APPLICANTS = 5;
+    public static final int EXTEND_APPLICATION_DEADLINE = 1;
+    public static final int SELECT_APPS_FOR_FIRST_ROUND = 2;
+    public static final int SET_INTERVIEW_CONFIGURATION = 3;
+    public static final int SCHEDULE_GROUP_INTERVIEWS = 4;
+    public static final int SELECT_APPS_TO_HIRE = 5;
 
     // === Instance variables ===
     // The job posting for this interview manager
@@ -62,7 +61,7 @@ public class InterviewManager implements Serializable {
         return this.currentRound;
     }
 
-    public int getMaxNumberOfRounds() {
+    public int getFinalRoundNumber() {
         return this.maxNumberOfRounds;
     }
 
@@ -89,7 +88,7 @@ public class InterviewManager implements Serializable {
     // === Setters ===
     public void setInterviewConfiguration(ArrayList<String[]> interviewConfiguration) {
         this.interviewConfiguration = interviewConfiguration;
-        this.maxNumberOfRounds = interviewConfiguration.size();
+        this.maxNumberOfRounds = interviewConfiguration.size() - 1; // because round starts at 0
     }
 
     // === Other methods ===
@@ -171,10 +170,13 @@ public class InterviewManager implements Serializable {
      */
     public int getHrTask() {
         if (!this.hasChosenApplicantsForFirstRound()) {
+            if (this.hasNoJobApplicationsInConsideration()) {
+                return InterviewManager.EXTEND_APPLICATION_DEADLINE;
+            }
             return InterviewManager.SELECT_APPS_FOR_FIRST_ROUND;
         } else if (this.interviewConfiguration.isEmpty()) {
             return InterviewManager.SET_INTERVIEW_CONFIGURATION;
-        } else if (this.isCurrentRoundOver() && this.hasNextRound() && this.isNextRoundGroupInterview()) {
+        } else if (!this.isInterviewProcessOver() && this.isNextRoundGroupInterview()) {
             return InterviewManager.SCHEDULE_GROUP_INTERVIEWS;
         } else if (this.isInterviewProcessOver() && !this.isNumApplicationsUnderOrAtThreshold()) {
             return InterviewManager.SELECT_APPS_TO_HIRE;
@@ -183,13 +185,9 @@ public class InterviewManager implements Serializable {
         }
     }
 
-    private boolean hasNextRound() {
-        return this.isNumApplicationsUnderOrAtThreshold();
-    }
-
     /**
      * Update the status of this job posting.
-     * Note: this will be called every time someone logs in
+     * Note: this will be called every time someone logs in // TODO
      *
      */
     public void updateJobPostingStatus() {
@@ -197,9 +195,7 @@ public class InterviewManager implements Serializable {
             // TODO notify HR
         } else if (this.currentRound != 0 | this.isInterviewProcessOver()) {
             // The check for current round ensures that applicants get at least 1 interview
-            if (this.isNumApplicationsUnderOrAtThreshold()) {
-                this.hireAllApplicants();
-            }
+            this.hireAllApplicants();
         }
     }
 
@@ -327,12 +323,15 @@ public class InterviewManager implements Serializable {
     }
 
     /**
-     * Check if interview process has finished the last interview round.
+     * Check if interview process is over, ie, the number of applications left is under or at the threshold
+     * and/or all the interview rounds have been completed.
      *
-     * @return true iff the maximum number of interview rounds has been completed.
+     * @return true iff the number of applications left is under or at the threshold
+     * and/or all the interview rounds have been completed.
      */
     private boolean isInterviewProcessOver() {
-        return this.isCurrentRoundOver() && this.currentRound == this.interviewConfiguration.size();
+        return this.isCurrentRoundOver() && (this.isNumApplicationsUnderOrAtThreshold() |
+                this.currentRound == this.interviewConfiguration.size());
     }
 
     /**

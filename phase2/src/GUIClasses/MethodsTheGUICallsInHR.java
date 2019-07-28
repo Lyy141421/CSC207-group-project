@@ -2,7 +2,6 @@ package GUIClasses;
 
 import ApplicantStuff.Applicant;
 import ApplicantStuff.JobApplication;
-import CompanyStuff.Branch;
 import CompanyStuff.HRCoordinator;
 import CompanyStuff.Interviewer;
 import CompanyStuff.JobApplicationGrader;
@@ -63,7 +62,7 @@ public class MethodsTheGUICallsInHR {
      */
     public ArrayList<BranchJobPosting> getJPToHire() {
         BranchJobPostingManager JPManager = this.hr.getBranch().getJobPostingManager();
-        return JPManager.getJobPostingsForHiring(this.jobAppSystem.getToday());
+        return JPManager.getJobPostingsThatNeedHRSelectionForHiring(this.jobAppSystem.getToday());
     }
 
     /**

@@ -140,38 +140,38 @@ public class BranchJobPostingManager implements Serializable {
         return jobPostings;
     }
 
-    /**
-     * Get a list of job postings with no applications in consideration.
-     *
-     * @param today Today's date.
-     * @return a list of job postings with no applications in consideration.
-     */
-    public ArrayList<BranchJobPosting> getClosedJobPostingsNoApplicationsInConsideration(LocalDate today) {
-        ArrayList<BranchJobPosting> jobPostings = new ArrayList<>();
-        for (BranchJobPosting jobPosting : this.getClosedJobPostingsNotFilled(today)) {
-            InterviewManager interviewManager = jobPosting.getInterviewManager();
-            if (interviewManager.getHrTask() == InterviewManager.CLOSE_POSTING_NO_HIRE) {
-                jobPostings.add(jobPosting);
-            }
-        }
-        return jobPostings;
-    }
-
-    /**
-     * Get a list of job postings that have closed with no applications submitted.
-     *
-     * @param today Today's date
-     * @return a list of job postings with no applications.
-     */
-    public ArrayList<BranchJobPosting> getClosedJobPostingsNoApplicationsSubmitted(LocalDate today) {
-        ArrayList<BranchJobPosting> jobPostings = new ArrayList<>();
-        for (BranchJobPosting jobPosting : this.getClosedJobPostingsNotFilled(today)) {
-            if (jobPosting.hasNoApplicationsSubmitted()) {
-                jobPostings.add(jobPosting);
-            }
-        }
-        return jobPostings;
-    }
+//    /**
+//     * Get a list of job postings with no applications in consideration.
+//     *
+//     * @param today Today's date.
+//     * @return a list of job postings with no applications in consideration.
+//     */
+//    public ArrayList<BranchJobPosting> getClosedJobPostingsNoApplicationsInConsideration(LocalDate today) {
+//        ArrayList<BranchJobPosting> jobPostings = new ArrayList<>();
+//        for (BranchJobPosting jobPosting : this.getClosedJobPostingsNotFilled(today)) {
+//            InterviewManager interviewManager = jobPosting.getInterviewManager();
+//            if (interviewManager.getHrTask() == InterviewManager.CLOSE_POSTING_NO_HIRE) {
+//                jobPostings.add(jobPosting);
+//            }
+//        }
+//        return jobPostings;
+//    }
+//
+//    /**
+//     * Get a list of job postings that have closed with no applications submitted.
+//     *
+//     * @param today Today's date
+//     * @return a list of job postings with no applications.
+//     */
+//    public ArrayList<BranchJobPosting> getClosedJobPostingsNoApplicationsSubmitted(LocalDate today) {
+//        ArrayList<BranchJobPosting> jobPostings = new ArrayList<>();
+//        for (BranchJobPosting jobPosting : this.getClosedJobPostingsNotFilled(today)) {
+//            if (jobPosting.hasNoApplicationsSubmitted()) {
+//                jobPostings.add(jobPosting);
+//            }
+//        }
+//        return jobPostings;
+//    }
 
     /**
      * Get a list of all filled job postings at this branch.
@@ -210,14 +210,27 @@ public class BranchJobPostingManager implements Serializable {
      * @param today Today's date.
      * @return a list of job postings that are ready for the final hiring step.
      */
-    public ArrayList<BranchJobPosting> getJobPostingsForHiring(LocalDate today) {
+    public ArrayList<BranchJobPosting> getJobPostingsThatNeedHRSelectionForHiring(LocalDate today) {
         ArrayList<BranchJobPosting> jobPostings = new ArrayList<>();
         for (BranchJobPosting jobPosting : this.getClosedJobPostingsNotFilled(today)) {
-            if (jobPosting.getInterviewManager().getHrTask() == InterviewManager.HIRE_APPLICANTS) {
+            if (jobPosting.getInterviewManager().getHrTask() == InterviewManager.SELECT_APPS_TO_HIRE) {
                 jobPostings.add(jobPosting);
             }
         }
         return jobPostings;
+    }
+
+    /**
+     * Updates all closed unfilled job postings.
+     *
+     * @param today Today's date.
+     *              Note: method is called every time someone logs in
+     */
+    public void updateAllClosedUnfilledJobPostings(LocalDate today) {
+        for (BranchJobPosting jobPosting : this.getClosedJobPostingsNotFilled(today)) {
+            jobPosting.getInterviewManager().updateJobPostingStatus();
+            jobPosting.advanceInterviewRound();
+        }
     }
 
     /**
@@ -277,7 +290,7 @@ public class BranchJobPostingManager implements Serializable {
      *
      * @param today Today's date.
      */
-    // TODO this method must be called after the user enters the date and before program launches
+    // TODO: this method must be called after the user enters the date and before program launches
     public void updateJobPostingsClosedForReferences(LocalDate today) {
         for (BranchJobPosting jobPosting : this.getJobPostingsRecentlyClosedForReferences(today)) {
             if (jobPosting.isClosedForReferences(today)) {
