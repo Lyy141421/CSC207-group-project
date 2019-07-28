@@ -129,7 +129,7 @@ public class HRViewPosting extends HRPanel{
                 ArrayList<JobApplication> appsUnderSelectedJP = selectedJP.getJobApplications();
                 HRViewApp appPanel = new HRViewApp(parent, HRInterface, today, getTitleToAppMap(appsUnderSelectedJP));
                 if (hiringJP.containsKey(selectedTitle)) {
-                    appPanel.setHireVisible(true);
+                    appPanel.setHireVisible();
                     removeFromJPLists(selectedTitle);
                 }
                 parent.remove(4);

@@ -28,6 +28,7 @@ public class HRViewApp extends HRPanel {
     private JTextArea overview;
     private JPanel documentViewer;
     private JButton hireButton;
+    private JButton selectButton;
 
 
     HRViewApp(Container contentPane, MethodsTheGUICallsInHR HRInterface, LocalDate today, HashMap<String, JobApplication> currApps) {
@@ -45,6 +46,8 @@ public class HRViewApp extends HRPanel {
         JPanel buttons = new JPanel(new FlowLayout());
         this.createHireButton();
         buttons.add(this.hireButton);
+        this.createSelectButton();
+        buttons.add(this.selectButton);
         buttons.add(this.homeButton);
 
         this.setListSelectionListener();
@@ -110,11 +113,21 @@ public class HRViewApp extends HRPanel {
         });
     }
 
-    void setHireVisible(boolean visible) {
-        if (visible) {
-            this.hireButton.setVisible(true);
-            this.homeButton.setVisible(false);
-        }
+    void setHireVisible() {
+        this.hireButton.setVisible(true);
+        this.homeButton.setVisible(false);
+
+    }
+
+    private void createSelectButton() {
+        this.selectButton = new JButton("Select candidates to interview");
+        this.selectButton.setVisible(false);
+        this.selectButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
     }
 
     /*
