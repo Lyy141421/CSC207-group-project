@@ -3,6 +3,7 @@ package CompanyStuff;
 import ApplicantStuff.JobApplication;
 import CompanyStuff.JobPostings.BranchJobPosting;
 import Miscellaneous.InterviewTime;
+import NotificationSystem.Notification;
 import NotificationSystem.Observable;
 import NotificationSystem.Observer;
 
@@ -201,7 +202,10 @@ public class InterviewManager extends Observable implements Serializable {
      */
     public void updateJobPostingStatus() {
         if (this.hasNoJobApplicationsInConsideration()) {
-            // TODO notify HR
+            this.updateObserverList();
+            this.notifyAllObservers(new Notification("Warning No Applications in Consideration",
+                    "There are no applications in consideration in " + this.getBranchJobPosting().getTitle()
+                            + " job posting."));
         } else if (this.currentRound != 0 | this.isInterviewProcessOver()) {
             // The check for current round ensures that applicants get at least 1 interview
             if (this.isNumApplicationsUnderOrAtThreshold()) {
