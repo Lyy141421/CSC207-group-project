@@ -308,33 +308,45 @@ class InterviewerTest {
 
     @Test
     void getAllIncompleteInterviews() {
+        Interviewer interviewer = this.createInterviewer("Phillip");
+        ArrayList<Interview> lst = new ArrayList<>();
+        Interview interview = createInterview(interviewer);
+        lst.add(interview);
+        interviewer.setInterviews(lst);
+        assertEquals(interviewer.getAllIncompleteInterviews().size(), 1);
+        //todo check completed interview changes size
     }
-
-    @Test
-    void getIncompleteInterviewsAlreadyOccurred() {
-    }
-
-    @Test
-    void getIncompleteInterviewsAlreadyOccuredAsCoordinator() {
-    }
-
-    @Test
-    void getIncompleteInterviewsAlreadyOccurredNotAsCoordinator() {
-    }
-
-    @Test
-    void getListOfIntervieweeJobApplications() {
-    }
-
-    @Test
-    void getDisplayedProfileCategories() {
-    }
-
-    @Test
-    void getDisplayedProfileInformation() {
-    }
+//
+//    @Test
+//    void getIncompleteInterviewsAlreadyOccurred() {
+//    }
+//
+//    @Test
+//    void getIncompleteInterviewsAlreadyOccuredAsCoordinator() {
+//    }
+//
+//    @Test
+//    void getIncompleteInterviewsAlreadyOccurredNotAsCoordinator() {
+//    }
+//
+//    @Test
+//    void getListOfIntervieweeJobApplications() {
+//    }
+//
+//    @Test
+//    void getDisplayedProfileCategories() {
+//    }
+//
+//    @Test
+//    void getDisplayedProfileInformation() {
+//    }
 
     @Test
     void addInterview() {
+        Interviewer interviewer = this.createInterviewer("Phillip");
+        Interview interview = createInterview(interviewer);
+        assertEquals(interviewer.getInterviews().size(), 0);
+        interviewer.addInterview(interview);
+        assertEquals(interviewer.getInterviews().size(), 1);
     }
 }
