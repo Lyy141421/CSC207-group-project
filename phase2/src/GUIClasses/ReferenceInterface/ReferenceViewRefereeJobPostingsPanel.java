@@ -34,8 +34,8 @@ class ReferenceViewRefereeJobPostingsPanel extends JPanel {
         this.reference = reference;
         this.setLayout(new BorderLayout());
         this.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-        this.add(new GUIElementsCreator().createTitlePanel(
-                "View the Job Postings That Your Referees Have Applied To", 20), BorderLayout.PAGE_START);
+        this.add(new GUIElementsCreator().createLabelPanel(
+                "View the Job Postings That Your Referees Have Applied To", 20, true), BorderLayout.PAGE_START);
         splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
         splitPane.setDividerLocation(130);
         splitPane.setRightComponent(jobPostingCards);

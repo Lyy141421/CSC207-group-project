@@ -196,10 +196,6 @@ public class InterviewManager extends Observable implements Serializable {
         }
     }
 
-    private boolean hasNextRound() {
-        return this.isNumApplicationsUnderOrAtThreshold();
-    }
-
     /**
      * Update the status of this job posting.
      * Note: this will be called every time someone logs in

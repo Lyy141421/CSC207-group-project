@@ -129,14 +129,15 @@ class JobApplicationTest {
         interviewConfiguration.add(new String[]{Interview.ONE_ON_ONE, "In-person"});
         interviewConfiguration.add(new String[]{Interview.ONE_ON_ONE, "In-person"});
         jobPosting.getInterviewManager().setInterviewConfiguration(interviewConfiguration);
-        Interviewer interviewer = new Interviewer("Interviewer", "password", "Legal Name", "email", jobPosting.getBranch(), "field", LocalDate.of(2019, 7, 10));
-        new Interview(jobApp, interviewer, jobPosting.getInterviewManager());
+        new Interviewer("Interviewer", "password", "Legal Name", "email", jobPosting.getBranch(), "field", LocalDate.of(2019, 7, 10));
+        jobPosting.getInterviewManager().setUpOneOnOneInterviews();
 
         assertEquals(1, jobApp.getInterviews().size());
         assertEquals("Interviewer", jobApp.getInterviews().get(0).getInterviewCoordinator().getUsername());
+        jobApp.getLastInterview().setResult(jobApp, true);
 
-        Interviewer interviewer2 = new Interviewer("Interviewer2", "password", "Legal Name", "email", jobPosting.getBranch(), "field", LocalDate.of(2019, 7, 10));
-        Interview interview2 = new Interview(jobApp, interviewer2, jobPosting.getInterviewManager());
+        new Interviewer("Interviewer2", "password", "Legal Name", "email", jobPosting.getBranch(), "field", LocalDate.of(2019, 7, 10));
+        jobPosting.getInterviewManager().setUpOneOnOneInterviews();
         assertEquals(2, jobApp.getInterviews().size());
         assertEquals("Interviewer", jobApp.getInterviews().get(0).getInterviewCoordinator().getUsername());
         assertEquals("Interviewer2", jobApp.getInterviews().get(1).getInterviewCoordinator().getUsername());

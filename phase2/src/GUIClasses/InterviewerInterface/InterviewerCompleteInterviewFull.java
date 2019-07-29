@@ -1,7 +1,6 @@
 package GUIClasses.InterviewerInterface;
 
 import ApplicantStuff.JobApplication;
-import CompanyStuff.Interview;
 import GUIClasses.CommonUserGUI.GUIElementsCreator;
 import GUIClasses.MethodsTheGUICallsInInterviewer;
 
@@ -12,7 +11,7 @@ import java.awt.event.ActionListener;
 import java.util.Enumeration;
 import java.util.HashMap;
 
-class InterviewerCoordinatorViewAndSelect extends InterviewerViewAndWriteNotes {
+class InterviewerCompleteInterviewFull extends InterviewerViewAndWriteNotes {
     /**
      * The panel where interviewers set the results of an interview.
      */
@@ -25,19 +24,9 @@ class InterviewerCoordinatorViewAndSelect extends InterviewerViewAndWriteNotes {
     private HashMap<JobApplication, ButtonGroup> jobAppsToButtonGroup = new HashMap<>();
 
     // === Constructor ===
-    InterviewerCoordinatorViewAndSelect(MethodsTheGUICallsInInterviewer interviewerInterface) {
+    InterviewerCompleteInterviewFull(MethodsTheGUICallsInInterviewer interviewerInterface) {
         super(interviewerInterface);
         this.infoPane.addTab("Set results", this.resultsPanel);
-    }
-
-    /**
-     * Gets the map of interview titles to the interviews for all incomplete interviews as coordinator that have already occurred.
-     *
-     * @return a map of interview titles to the interviews for this card.
-     */
-    @Override
-    HashMap<String, Interview> getInterviewMap() {
-        return getTitleToInterviewMap(interviewerInterface.getIncompleteInterviewsAlreadyOccurredAsCoordinator());
     }
 
     /**
@@ -47,18 +36,31 @@ class InterviewerCoordinatorViewAndSelect extends InterviewerViewAndWriteNotes {
     @Override
     void loadTabContents() {
         super.loadTabContents();
+        setResultsPanelFull();
+    }
+
+    /**
+     * Set the full results panel.
+     */
+    private void setResultsPanelFull() {
         resultsPanel.removeAll();
-        setResultsPanelAndHashMap(this.interviewSelected);
-        resultsPanel.add(createSaveResultsButtonPanel(), BorderLayout.AFTER_LAST_LINE);
+        if (!interviewerInterface.isCoordinator(interviewSelected)) {
+            JPanel message = new GUIElementsCreator().createLabelPanel("You do not have permission to set the " +
+                    "results of this interview", 18, false);
+            message.setBorder(BorderFactory.createEmptyBorder(100, 20, 20, 20));
+            resultsPanel.add(message, BorderLayout.CENTER);
+        } else {
+            setResultsPanelAndHashMap();
+            resultsPanel.add(createSaveResultsButtonPanel(), BorderLayout.AFTER_LAST_LINE);
+        }
         resultsPanel.revalidate();
     }
 
     /**
      * Sets the result panel and map of job applications to button group.
-     * @param interviewSelected The interview selected by the interviewer.
      */
-    private void setResultsPanelAndHashMap(Interview interviewSelected) {
-        resultsPanel.add(new GUIElementsCreator().createTitlePanel("Set the interview results", 20),
+    private void setResultsPanelAndHashMap() {
+        resultsPanel.add(new GUIElementsCreator().createLabelPanel("Set the interview results", 20, true),
                 BorderLayout.PAGE_START);
         JPanel selectResultsPanel = new JPanel(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();

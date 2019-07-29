@@ -13,7 +13,7 @@ import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.util.HashMap;
 
-public class InterviewerViewOnly extends InterviewerPanel implements ListSelectionListener {
+public class InterviewerViewOnly extends AbstractInterviewerPanel implements ListSelectionListener {
     /**
      * Panel for only viewing interview information.
      */

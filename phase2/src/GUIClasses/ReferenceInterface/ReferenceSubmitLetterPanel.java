@@ -33,10 +33,10 @@ public class ReferenceSubmitLetterPanel extends JPanel implements ActionListener
         this.fileChooser = new FileChooser(reference, null);    // So that the file chooser is on the panel
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-        this.add(new GUIElementsCreator().createTitlePanel("Submit Reference Letter", 20));
-        this.add(new GUIElementsCreator().createTitlePanel("Select a Job Application", 15));
+        this.add(new GUIElementsCreator().createLabelPanel("Submit Reference Letter", 20, true));
+        this.add(new GUIElementsCreator().createLabelPanel("Select a Job Application", 15, true));
         this.add(this.createJobApplicationListPanel());
-        this.add(new GUIElementsCreator().createTitlePanel("Choose a File", 15));
+        this.add(new GUIElementsCreator().createLabelPanel("Choose a File", 15, true));
         this.add(fileChooser);
     }
 

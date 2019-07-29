@@ -22,7 +22,6 @@ public class Reference extends User {
     }
 
     // === Getter ===
-
     public ArrayList<JobApplication> getJobAppsForReference() {
         return this.jobAppsForReference;
     }
@@ -70,7 +69,10 @@ public class Reference extends User {
         ArrayList<BranchJobPosting> jobPostings = new ArrayList<>();
         ArrayList<JobApplication> jobApps = this.jobAppsForReference;
         for (JobApplication jobApp : jobApps) {
-            jobPostings.add(jobApp.getJobPosting());
+            BranchJobPosting jobPosting = jobApp.getJobPosting();
+            if (!jobPostings.contains(jobPosting)) {
+                jobPostings.add(jobPosting);
+            }
         }
         return jobPostings;
     }
