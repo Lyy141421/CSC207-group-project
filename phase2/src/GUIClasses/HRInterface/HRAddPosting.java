@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.Flow;
 
 public class HRAddPosting extends HRPanel {
 
@@ -165,7 +166,33 @@ public class HRAddPosting extends HRPanel {
     }
 
     private void addSelectionBox (String[] recommended) {
-
+        JPanel selectionPanel = new JPanel();
+        JTextField textInput = new JTextField();
+        selectionPanel.add(textInput, BorderLayout.WEST);
+        JPanel recommendedPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        for (String label: recommended) {
+            JCheckBox checkBox = new JCheckBox(label);
+            checkBox.addItemListener(new ItemListener() {
+                @Override
+                public void itemStateChanged(ItemEvent e) {
+                    String currText = textInput.getText();
+                    if (e.getStateChange()==ItemEvent.SELECTED) {
+                        if (!currText.endsWith(";")) {
+                            currText += ";";
+                        }
+                        currText += checkBox.getText() + ";";
+                    } else if (e.getStateChange()==ItemEvent.DESELECTED) {
+                        if (currText.contains(checkBox.getText())) {
+                            currText = currText.replaceAll(checkBox.getText()+";*", "");
+                        }
+                    }
+                    textInput.setText(currText);
+                }
+            });
+            recommendedPanel.add(checkBox);
+        }
+        selectionPanel.add(new JScrollPane(recommendedPanel), BorderLayout.EAST);
+        //TODO: add to panel and add textField to entryBox.
     }
 
     private JButton createSubmitButton() {
