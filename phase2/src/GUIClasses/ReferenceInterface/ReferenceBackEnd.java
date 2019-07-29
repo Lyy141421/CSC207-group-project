@@ -50,7 +50,7 @@ class ReferenceBackEnd {
      * @return true iff today's date is after the application close date of the job posting that this job application is for.
      */
     boolean isTodayAfterApplicationCloseDate(JobApplication jobApplication) {
-        return jobApplication.getJobPosting().getApplicantCloseDate().isAfter(jobAppSystem.getToday());
+        return jobAppSystem.getToday().isAfter(jobApplication.getJobPosting().getApplicantCloseDate());
     }
 
 }

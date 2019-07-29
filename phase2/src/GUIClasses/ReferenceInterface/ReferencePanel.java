@@ -77,7 +77,7 @@ public class ReferencePanel extends UserPanel {
         JFrame frame = new JFrame("Reference Home Page");
         JobApplicationSystem jobApplicationSystem = new JobApplicationSystem();
         new DataLoaderAndStorer(jobApplicationSystem).loadAllData();
-        jobApplicationSystem.setToday(LocalDate.of(2019, 7, 19));
+        jobApplicationSystem.setToday(LocalDate.of(2019, 7, 20));
         jobApplicationSystem.setPreviousLoginDate(LocalDate.of(2019, 7, 19));
         Reference reference = jobApplicationSystem.getUserManager().createReference("bob@gmail.com", LocalDate.of(2019, 7, 19));
         Company company = jobApplicationSystem.createCompany("Company");
