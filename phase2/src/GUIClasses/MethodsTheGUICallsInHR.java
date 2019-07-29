@@ -8,6 +8,7 @@ import CompanyStuff.Interviewer;
 import CompanyStuff.JobApplicationGrader;
 import CompanyStuff.JobPostings.BranchJobPosting;
 import CompanyStuff.JobPostings.BranchJobPostingManager;
+import CompanyStuff.JobPostings.CompanyJobPosting;
 import Main.JobApplicationSystem;
 
 import java.io.File;
@@ -95,6 +96,13 @@ public class MethodsTheGUICallsInHR {
                 referenceCloseDate);
     }
 
+    public void implementJobPosting(CompanyJobPosting cjp, Object[] jobPostingFields) {
+        int numPositions = (int) jobPostingFields[0];
+        LocalDate postDate = (LocalDate) jobPostingFields[1];
+        LocalDate applicationCloseDate = (LocalDate) jobPostingFields[2];
+        LocalDate referenceCloseDate = (LocalDate) jobPostingFields[3];
+        this.hr.implementJobPosting(cjp, numPositions, postDate, applicationCloseDate, referenceCloseDate);
+    }
     /**
      * Get all job applications submitted by this applicant with this username.
      * @param applicantUsername The applicant username inputted.
