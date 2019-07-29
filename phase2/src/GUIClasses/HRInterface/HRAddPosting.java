@@ -26,6 +26,8 @@ import java.util.List;
 
 public class HRAddPosting extends HRPanel {
 
+    static int MAX_NUM_POSITIONS = 1000;
+
     JPanel containerPane = this;
     GridBagConstraints c;
     List<JComponent> entryBoxes = new ArrayList();
@@ -33,6 +35,8 @@ public class HRAddPosting extends HRPanel {
 
     JComboBox<String> companyPostingList;
     DefaultComboBoxModel<String> companyPostingModel;
+
+    //title, field, description, required documents, tags, numOfPos, close date, reference close date
 
     HRAddPosting(Container contentPane, MethodsTheGUICallsInHR HRInterface, LocalDate today) {
         super(contentPane, HRInterface, today);
@@ -48,6 +52,8 @@ public class HRAddPosting extends HRPanel {
 
     void reload() {
         //TODO: erase content of everything in entryBoxes
+        revalidate();
+        repaint();
     }
 
     private void addLabelToPanel(JComponent component) {
@@ -69,12 +75,18 @@ public class HRAddPosting extends HRPanel {
         this.addLabelToPanel(jobField);
         JLabel jobDescription = new JLabel("Job description");
         this.addLabelToPanel(jobDescription);
-        JLabel requirements = new JLabel("Requirements");
+        JLabel requirements = new JLabel("Required document(s)");
         this.addLabelToPanel(requirements);
+        JLabel tags = new JLabel("Tag(s)");
+        this.addLabelToPanel(tags);
         JLabel numPositions = new JLabel("Number of positions");
         this.addLabelToPanel(numPositions);
         JLabel closeDate = new JLabel("Close date");
         this.addLabelToPanel(closeDate);
+        JLabel numRefs = new JLabel("Number of references");
+        this.addLabelToPanel(numRefs);
+        JLabel refCloseDate = new JLabel("Reference close date");
+        this.addLabelToPanel(refCloseDate);
     }
 
     private void addAllFields () {
@@ -85,10 +97,12 @@ public class HRAddPosting extends HRPanel {
         this.addFieldToPanel(jobFieldInput);
         JTextArea jobDescriptionInput = new JTextArea(4, 30);
         this.addFieldToPanel(jobDescriptionInput);
-        JTextArea requirementsInput = new JTextArea(4, 30);
-        this.addFieldToPanel(requirementsInput);
+        this.addSelectionBox(CompanyJobPosting.RECOMMENDED_DOCUMENTS);
+        this.addSelectionBox(CompanyJobPosting.RECOMMENDED_TAGS);
+        this.addNumField();
         this.addDatePicker();
-        this.addNumOfPositionField();
+        this.addNumField();
+        this.addDatePicker();
     }
 
     private void addJobTitleSelection() {
@@ -106,7 +120,11 @@ public class HRAddPosting extends HRPanel {
         this.companyPostingList.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
-                CompanyJobPosting selectedJP = companyJPMap.get((String)companyPostingList.getSelectedItem());
+                String selectedTitle = (String)companyPostingList.getSelectedItem();
+                if (companyJPMap.containsKey(selectedTitle)) {
+                    CompanyJobPosting selectedJP = companyJPMap.get(selectedTitle);
+                    //TODO: fill in certain default fields and disable them
+                }
             }
         });
     }
@@ -139,16 +157,15 @@ public class HRAddPosting extends HRPanel {
         this.addFieldToPanel(closeDateInput);
     }
 
-    private void addNumOfPositionField () {
-        NumberFormatter formatter = new NumberFormatter(NumberFormat.getInstance());
-        formatter.setValueClass(Integer.class);
-        formatter.setMinimum(0);
-        formatter.setMaximum(Integer.MAX_VALUE);
-        formatter.setAllowsInvalid(false);
-        JFormattedTextField numPositionsInput = new JFormattedTextField(formatter);
-        numPositionsInput.setValue(1);
-        numPositionsInput.setColumns(30);
-        this.addFieldToPanel(numPositionsInput);
+    private void addNumField () {
+        SpinnerNumberModel numModel = new SpinnerNumberModel(1, 1, MAX_NUM_POSITIONS, 1);
+        JSpinner numInput = new JSpinner(numModel);
+
+        this.addFieldToPanel(numInput);
+    }
+
+    private void addSelectionBox (String[] recommended) {
+
     }
 
     private JButton createSubmitButton() {
@@ -172,6 +189,7 @@ public class HRAddPosting extends HRPanel {
                 }
             }
         });
+
         return submit;
     }
 
