@@ -8,7 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
-class InterviewerHomePanel extends InterviewerPanel {
+class InterviewerHomePanel extends AbstractInterviewerPanel {
     /**
      * The Home panel of the Interviewer GUI.
      */
@@ -22,8 +22,8 @@ class InterviewerHomePanel extends InterviewerPanel {
         c.weightx = 0.5;
         c.gridx = 0;
         c.gridy = 0;
-        c.fill = GridBagConstraints.HORIZONTAL;
         this.add(this.createWelcomePanel(), c);
+        c.fill = GridBagConstraints.HORIZONTAL;
         c.insets = new Insets(10, 10, 0, 10);
         c.gridy++;
         c.gridheight = 100;
@@ -43,13 +43,9 @@ class InterviewerHomePanel extends InterviewerPanel {
      * @return the welcome panel created.
      */
     private JPanel createWelcomePanel() {
-        JPanel welcomePanel = new JPanel();
-        JLabel welcomeMessage = new JLabel("Welcome " + this.interviewerInterface.getInterviewer().getLegalName());
-        welcomeMessage.setFont(new Font("Century Gothic", Font.BOLD, 20));
-        welcomePanel.add(welcomeMessage);
-        welcomeMessage.setHorizontalAlignment(JLabel.CENTER);
-        welcomeMessage.revalidate();
-        return welcomePanel;
+        JPanel welcomeMessage = new GUIElementsCreator().createLabelPanel("Welcome " +
+                this.interviewerInterface.getInterviewer().getLegalName(), 20, true);
+        return welcomeMessage;
     }
 
     /**
@@ -59,8 +55,8 @@ class InterviewerHomePanel extends InterviewerPanel {
     private JPanel createInterviewsToSchedulePanel() {
         JPanel schedulePanel = new JPanel();
         schedulePanel.setLayout(new BorderLayout());
-        schedulePanel.add(new GUIElementsCreator().createTitlePanel(
-                "One-on-One interviews to schedule", 17), BorderLayout.BEFORE_FIRST_LINE);
+        schedulePanel.add(new GUIElementsCreator().createLabelPanel(
+                "One-on-One interviews to schedule", 17, true), BorderLayout.BEFORE_FIRST_LINE);
         schedulePanel.add(this.createInterviewsToScheduleTablePanel(), BorderLayout.CENTER);
         return schedulePanel;
     }
@@ -87,8 +83,8 @@ class InterviewerHomePanel extends InterviewerPanel {
     private JPanel createUpcomingInterviewsPanel() {
         JPanel schedulePanel = new JPanel();
         schedulePanel.setLayout(new BorderLayout());
-        schedulePanel.add(new GUIElementsCreator().createTitlePanel(
-                "Upcoming interviews:", 17), BorderLayout.BEFORE_FIRST_LINE);
+        schedulePanel.add(new GUIElementsCreator().createLabelPanel(
+                "Upcoming interviews:", 17, true), BorderLayout.BEFORE_FIRST_LINE);
         schedulePanel.add(this.createUpcomingInterviewsTablePanel(), BorderLayout.CENTER);
         return schedulePanel;
     }
@@ -115,8 +111,8 @@ class InterviewerHomePanel extends InterviewerPanel {
     private JPanel createIncompleteInterviewsPanel() {
         JPanel schedulePanel = new JPanel();
         schedulePanel.setLayout(new BorderLayout());
-        schedulePanel.add(new GUIElementsCreator().createTitlePanel(
-                "Incomplete interviews:", 17), BorderLayout.BEFORE_FIRST_LINE);
+        schedulePanel.add(new GUIElementsCreator().createLabelPanel(
+                "Incomplete Interviews:", 17, true), BorderLayout.BEFORE_FIRST_LINE);
         schedulePanel.add(this.createIncompleteInterviewsTablePanel(), BorderLayout.CENTER);
         return schedulePanel;
     }
@@ -126,7 +122,7 @@ class InterviewerHomePanel extends InterviewerPanel {
      * @return the panel created.
      */
     private JPanel createIncompleteInterviewsTablePanel() {
-        ArrayList<Interview> incompleteInterviews = this.interviewerInterface.getIncompleteInterviewsAlreadyOccurredAsCoordinator();
+        ArrayList<Interview> incompleteInterviews = this.interviewerInterface.getIncompleteInterviewsAlreadyOccurred();
         Object[][] data = new Object[incompleteInterviews.size()][];
 
         for (int i = 0; i < incompleteInterviews.size(); i++) {

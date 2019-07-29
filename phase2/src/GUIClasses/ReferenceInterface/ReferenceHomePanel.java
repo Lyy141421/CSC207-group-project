@@ -53,8 +53,8 @@ class ReferenceHomePanel extends JPanel {
     private JPanel createReminderPanel() {
         JPanel reminderPanel = new JPanel();
         reminderPanel.setLayout(new BorderLayout());
-        reminderPanel.add(new GUIElementsCreator().createTitlePanel(
-                "Reference letters that still need to be submitted: ", 20), BorderLayout.BEFORE_FIRST_LINE);
+        reminderPanel.add(new GUIElementsCreator().createLabelPanel(
+                "Reference letters that still need to be submitted: ", 20, true), BorderLayout.BEFORE_FIRST_LINE);
         reminderPanel.add(this.createJobAppTablePanel(), BorderLayout.CENTER);
         return reminderPanel;
     }
