@@ -3,7 +3,6 @@ package CompanyStuff;
 import ApplicantStuff.Applicant;
 import ApplicantStuff.JobApplication;
 import CompanyStuff.JobPostings.BranchJobPosting;
-import Managers.JobPostingManager;
 import Miscellaneous.InterviewTime;
 import NotificationSystem.Notification;
 import NotificationSystem.NotificationManager;
@@ -216,9 +215,9 @@ class InterviewerTest {
         ArrayList<Interview> lst = new ArrayList<>();
         lst.add(createInterview(interviewer));
         interviewer.setInterviews(lst);
-        assertTrue(interviewer.isAvailable(new InterviewTime(today, "9-10 am")));
-        interviewer.getInterviews().get(0).setTime(new InterviewTime(today, "9-10 am"));
-        assertTrue(!interviewer.isAvailable(new InterviewTime(today, "9-10 am")));
+        assertTrue(interviewer.isAvailable(new InterviewTime(today, InterviewTime.NINE_TO_TEN_AM)));
+        interviewer.getInterviews().get(0).setTime(new InterviewTime(today, InterviewTime.NINE_TO_TEN_AM));
+        assertTrue(!interviewer.isAvailable(new InterviewTime(today, InterviewTime.NINE_TO_TEN_AM)));
     }
 
     @Test
@@ -227,7 +226,7 @@ class InterviewerTest {
         ArrayList<Interview> lst = new ArrayList<>();
         lst.add(createInterview(interviewer));
         interviewer.setInterviews(lst);
-        interviewer.getInterviews().get(0).setTime(new InterviewTime(today, "9-10 am"));
+        interviewer.getInterviews().get(0).setTime(new InterviewTime(today, InterviewTime.NINE_TO_TEN_AM));
         assertTrue(interviewer.isAvailable(today));
     }
 
@@ -237,7 +236,7 @@ class InterviewerTest {
         ArrayList<Interview> lst = new ArrayList<>();
         lst.add(createInterview(interviewer));
         interviewer.setInterviews(lst);
-        interviewer.getInterviews().get(0).setTime(new InterviewTime(today, "9-10 am"));
+        interviewer.getInterviews().get(0).setTime(new InterviewTime(today, InterviewTime.NINE_TO_TEN_AM));
         assertTrue(interviewer.getFirstDateAvailableOnOrAfterDate(today) == today);
     }
 
@@ -247,7 +246,7 @@ class InterviewerTest {
         ArrayList<Interview> lst = new ArrayList<>();
         lst.add(createInterview(interviewer));
         interviewer.setInterviews(lst);
-        interviewer.getInterviews().get(0).setTime(new InterviewTime(today, "9-10 am"));
+        interviewer.getInterviews().get(0).setTime(new InterviewTime(today, InterviewTime.NINE_TO_TEN_AM));
         assertEquals(interviewer.getTimeSlotsFilledOnDate(today).get(0), "2019-07-29 at 9-10 am");
     }
 
@@ -257,8 +256,8 @@ class InterviewerTest {
         ArrayList<Interview> lst = new ArrayList<>();
         lst.add(createInterview(interviewer));
         interviewer.setInterviews(lst);
-        interviewer.getInterviews().get(0).setTime(new InterviewTime(today, "9-10 am"));
-        assertEquals(interviewer.getTimeSlotsAvailableOnDate(today).size(), 7);
+        interviewer.getInterviews().get(0).setTime(new InterviewTime(today, InterviewTime.NINE_TO_TEN_AM));
+        assertEquals(InterviewTime.timeSlots.size() - 1, interviewer.getTimeSlotsAvailableOnDate(today).size());
     }
 
     @Test

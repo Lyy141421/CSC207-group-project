@@ -198,7 +198,7 @@ public class Interviewer extends User {
         ArrayList<Interview> interviewsOnDate = this.getInterviewsOnDate(date);
         ArrayList<String> timeSlots = (ArrayList<String>) InterviewTime.timeSlots.clone();
         for (Interview interview : interviewsOnDate) {
-            timeSlots.remove(interview.getTime().getTimeSlotsString());
+            timeSlots.remove(interview.getTime().getTimeSlot());
         }
         return timeSlots;
     }
