@@ -9,6 +9,8 @@ import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.ArrayList;
@@ -16,15 +18,19 @@ import java.util.HashMap;
 
 public class GroupInterviewFrame extends JInternalFrame {
 
+    static int MAX_DAYS = 20;
+
     MethodsTheGUICallsInHR HRInterface;
     BranchJobPosting branchJobPosting;
 
     HashMap<String, Interviewer> nameToInterviewerMap;
+
+    JSpinner daysSpinner;
+    JComboBox<String> coordinatorSelection;
     HashMap<Interviewer, JCheckBox> interviewerToCheckBoxMap;
 
-    JComboBox<String> coordinatorSelection;
-
     GroupInterviewFrame(MethodsTheGUICallsInHR HRInterface, BranchJobPosting branchJobPosting) {
+        super("Select interviewers for group interview");
         this.HRInterface = HRInterface;
         this.branchJobPosting = branchJobPosting;
 
@@ -32,9 +38,12 @@ public class GroupInterviewFrame extends JInternalFrame {
 
         this.setLayout(new BorderLayout());
 
+        this.daysSpinner = new JSpinner(new SpinnerNumberModel(1, 1, MAX_DAYS, 1));
+        this.add(this.daysSpinner, BorderLayout.NORTH);
+
         this.add(new JScrollPane(this.createInterviewers()), BorderLayout.EAST);
         this.add(this.createCoordinator(), BorderLayout.WEST);
-        this.setButtons();
+        this.setConfirmButton();
     }
 
     JPanel createCoordinator() {
@@ -49,6 +58,7 @@ public class GroupInterviewFrame extends JInternalFrame {
                 Interviewer selectedInterviewer = nameToInterviewerMap.get(name);
                 JCheckBox interviewerCheckBox = interviewerToCheckBoxMap.get(selectedInterviewer);
                 interviewerCheckBox.setEnabled(e.getStateChange() == ItemEvent.DESELECTED);
+                interviewerCheckBox.setSelected(false);
             }
         });
 
@@ -86,12 +96,27 @@ public class GroupInterviewFrame extends JInternalFrame {
         return interviewer.getLegalName();
     }
 
-    private void setButtons() {
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+    private void setConfirmButton() {
         JButton confirmButton = new JButton("Confirm");
-        JButton cancelButton = new JButton("Cancel");
-        buttonPanel.add(confirmButton);
-        buttonPanel.add(cancelButton);
-        this.add(buttonPanel, BorderLayout.SOUTH);
+        confirmButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                HRInterface.setUpGroupInterviews(branchJobPosting,
+                        nameToInterviewerMap.get((String)coordinatorSelection.getSelectedItem()),
+                        getSelectedInterviewers(), (int)daysSpinner.getValue());
+            }
+        });
+        this.add(confirmButton, BorderLayout.SOUTH);
+    }
+
+    private ArrayList<Interviewer> getSelectedInterviewers() {
+        ArrayList<Interviewer> selectedInterviewer = new ArrayList<>();
+        for (Interviewer interviewer: this.interviewerToCheckBoxMap.keySet()) {
+            if (this.interviewerToCheckBoxMap.get(interviewer).isSelected()) {
+                selectedInterviewer.add(interviewer);
+            }
+        }
+
+        return selectedInterviewer;
     }
 }
