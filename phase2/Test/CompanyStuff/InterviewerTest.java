@@ -4,6 +4,7 @@ import ApplicantStuff.Applicant;
 import ApplicantStuff.JobApplication;
 import CompanyStuff.JobPostings.BranchJobPosting;
 import Managers.JobPostingManager;
+import Miscellaneous.InterviewTime;
 import NotificationSystem.Notification;
 import NotificationSystem.NotificationManager;
 import org.junit.jupiter.api.Test;
@@ -206,20 +207,38 @@ class InterviewerTest {
         ArrayList<Interview> lst = new ArrayList<>();
         lst.add(createInterview(interviewer));
         interviewer.setInterviews(lst);
-        interviewer.findJobAppById(interviewer.getInterviews().get(0).getId());
+        assertTrue(interviewer.findJobAppById(interviewer.getInterviews().get(0).getId()) instanceof JobApplication);
     }
 
     @Test
     void isAvailable() {
-
+        Interviewer interviewer = this.createInterviewer("Phillip");
+        ArrayList<Interview> lst = new ArrayList<>();
+        lst.add(createInterview(interviewer));
+        interviewer.setInterviews(lst);
+        assertTrue(interviewer.isAvailable(new InterviewTime(today, "9-10 am")));
+        interviewer.getInterviews().get(0).setTime(new InterviewTime(today, "9-10 am"));
+        assertTrue(!interviewer.isAvailable(new InterviewTime(today, "9-10 am")));
     }
 
     @Test
     void isAvailable1() {
+        Interviewer interviewer = this.createInterviewer("Phillip");
+        ArrayList<Interview> lst = new ArrayList<>();
+        lst.add(createInterview(interviewer));
+        interviewer.setInterviews(lst);
+        interviewer.getInterviews().get(0).setTime(new InterviewTime(today, "9-10 am"));
+        assertTrue(interviewer.isAvailable(today));
     }
 
     @Test
     void getFirstDateAvailableOnOrAfterDate() {
+        Interviewer interviewer = this.createInterviewer("Phillip");
+        ArrayList<Interview> lst = new ArrayList<>();
+        lst.add(createInterview(interviewer));
+        interviewer.setInterviews(lst);
+        interviewer.getInterviews().get(0).setTime(new InterviewTime(today, "9-10 am"));
+        assertTrue(interviewer.getFirstDateAvailableOnOrAfterDate(today) == today);
     }
 
     @Test
