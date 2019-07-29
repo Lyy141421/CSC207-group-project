@@ -254,6 +254,10 @@ public class BranchJobPostingManager implements Serializable {
     public void updateJobPostingsClosedForApplications(LocalDate today) {
         CompanyDocumentManager companyDocManager = this.getBranch().getCompany().getDocumentManager();
         for (BranchJobPosting jobPosting : this.getJobPostingsRecentlyClosedForApplications(today)) {
+            if (jobPosting.hasNoApplicationsSubmitted()) {
+                // HR Coordinator has the option to reopen the job posting
+                return;
+            }
             // Creates an interview manager so that if applicant withdraws their application from this point on,
             // they are automatically rejected.
             jobPosting.createInterviewManager();
