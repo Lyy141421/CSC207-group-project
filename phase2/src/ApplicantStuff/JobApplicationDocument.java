@@ -18,14 +18,19 @@ public class JobApplicationDocument implements Serializable {
 
 
     // === Public methods ===
-
     // === Constructor for references ===
+    /*
+     * Precondition: the file must already be created.
+     */
     public JobApplicationDocument(File file) {
         this.file = file;
         this.file.setReadOnly();
     }
 
     // === Constructors for applicants submitting a file ===
+    /*
+     * Precondition: the file must already be created.
+     */
     public JobApplicationDocument(File file, String username) {
         File folder = new File(ApplicantDocumentManager.FOLDER_PATH + "/" + username);
         String filePath = folder.getPath() + "/" + file.getName();
@@ -79,8 +84,7 @@ public class JobApplicationDocument implements Serializable {
      * @param contents The contents of this file.
      * @return the new file created.
      */
-    // TODO make private after testing
-    File createNewFile(String filePath, String contents) {
+    private File createNewFile(String filePath, String contents) {
         File newFile = new File(filePath);
         try {
             newFile.createNewFile();
@@ -99,8 +103,7 @@ public class JobApplicationDocument implements Serializable {
      * @param filePath The file path being stripped.
      * @return an array of the filename (without extension) and the extension,
      */
-    // TODO make private after testing
-    String[] separateExtension(String filePath) {
+    private String[] separateExtension(String filePath) {
         int indexOfLastDot = filePath.lastIndexOf(".");
         return new String[]{filePath.substring(0, indexOfLastDot), filePath.substring(indexOfLastDot)};
     }
@@ -110,8 +113,7 @@ public class JobApplicationDocument implements Serializable {
      *
      * @param oldFilePath The file path to be replaced.
      */
-    // TODO make private after testing
-    String getNewFilePath(String oldFilePath) {
+    private String getNewFilePath(String oldFilePath) {
         String[] fileNameAndExtension = this.separateExtension(oldFilePath);
         int i = 1;
         String newFilePath = fileNameAndExtension[0] + "(" + i + ")" + fileNameAndExtension[1];

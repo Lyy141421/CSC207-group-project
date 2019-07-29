@@ -307,29 +307,6 @@ class JobApplicationManagerTest {
     }
 
     @Test
-    void testGetFilesSubmittedForApplicationNoFiles() {
-        Applicant applicant = this.createApplicant();
-        Branch branch = this.createCompanyBranchEmployeesAndJobPostings();
-        BranchJobPosting jobPosting = branch.getJobPostingManager().getBranchJobPostings().get(0);
-        JobApplication jobApp1 = this.createJobApplication(applicant, jobPosting);
-        assertTrue(applicant.getJobApplicationManager().getFilesSubmittedForApplication(jobApp1).isEmpty());
-    }
-
-    @Test
-    void testGetFilesSubmittedForApplicationSomeFiles() {
-        Applicant applicant = this.createApplicant();
-        Branch branch = this.createCompanyBranchEmployeesAndJobPostings();
-        BranchJobPosting jobPosting = branch.getJobPostingManager().getBranchJobPostings().get(0);
-        JobApplication jobApp1 = this.createJobApplication(applicant, jobPosting);
-        File file = new File("./sample.txt");
-        ArrayList<JobApplicationDocument> jobAppDocs = new ArrayList<>(Arrays.asList(new JobApplicationDocument(file),
-                new JobApplicationDocument(file), new JobApplicationDocument(file)));
-        jobApp1.addFiles(jobAppDocs);
-        assertEquals(3, applicant.getJobApplicationManager().getFilesSubmittedForApplication(jobApp1).size());
-        assertEquals("sample.txt", applicant.getJobApplicationManager().getFilesSubmittedForApplication(jobApp1).get(0).getFile().getName());
-    }
-
-    @Test
     void testGetLastClosedJobAppNoJobApp() {
         Applicant applicant = this.createApplicant();
         assertNull(applicant.getJobApplicationManager().getLastClosedJobApp());

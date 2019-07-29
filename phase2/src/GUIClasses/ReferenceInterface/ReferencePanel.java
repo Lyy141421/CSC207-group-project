@@ -33,12 +33,12 @@ public class ReferencePanel extends UserPanel {
     static final String VIEW_REFEREE_JOB_POSTINGS = "View Referee Job Postings";
 
     // === Instance variables ===
-    private Reference reference;    // The reference who logged in
+    private ReferenceBackEnd referenceBackEnd;  // The back end of the reference GUI
     private JPanel cards = new JPanel(new CardLayout());    // The cards that are being displayed
 
     // === Constructor ===
-    public ReferencePanel(Reference reference, LogoutActionListener logoutActionListener) {
-        this.reference = reference;
+    public ReferencePanel(Reference reference, JobApplicationSystem jobAppSystem, LogoutActionListener logoutActionListener) {
+        this.referenceBackEnd = new ReferenceBackEnd(reference, jobAppSystem);
         this.setLayout(new GridBagLayout());
         this.setCards();
 
@@ -59,10 +59,10 @@ public class ReferencePanel extends UserPanel {
      * Add the cards to the card layout panel
      */
     public void setCards() {
-        cards.add(new ReferenceHomePanel(this.reference), UserPanel.HOME);
-        cards.add(new UserProfilePanel(this.reference), UserPanel.PROFILE);
-        cards.add(new ReferenceSubmitLetterPanel(this.reference), SUBMIT_REFERENCE_LETTER);
-        cards.add(new ReferenceViewRefereeJobPostingsPanel(this.reference), VIEW_REFEREE_JOB_POSTINGS);
+        cards.add(new ReferenceHomePanel(this.referenceBackEnd.getReference()), UserPanel.HOME);
+        cards.add(new UserProfilePanel(this.referenceBackEnd.getReference()), UserPanel.PROFILE);
+        cards.add(new ReferenceSubmitLetterPanel(this.referenceBackEnd), SUBMIT_REFERENCE_LETTER);
+        cards.add(new ReferenceViewRefereeJobPostingsPanel(this.referenceBackEnd.getReference()), VIEW_REFEREE_JOB_POSTINGS);
     }
 
     /**
@@ -99,7 +99,7 @@ public class ReferencePanel extends UserPanel {
         BranchJobPostingManager branchJobPostingManager = branch.getJobPostingManager();
         branchJobPostingManager.updateJobPostingsClosedForApplications(LocalDate.now());
         LogoutActionListener logoutActionListener = new LogoutActionListener(new Container(), new CardLayout(), jobApplicationSystem);
-        frame.add(new ReferencePanel(reference, logoutActionListener));
+        frame.add(new ReferencePanel(reference, jobApplicationSystem, logoutActionListener));
         frame.setSize(854, 480);
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

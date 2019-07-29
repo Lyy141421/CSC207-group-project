@@ -177,7 +177,7 @@ public class JobApplication implements Serializable {
      * @return a list of job application category names.
      */
     public static String[] categoryNamesForReference() {
-        return new String[]{"Referee", "Job Posting", "Submission Deadline"};
+        return new String[]{"Referee", "Job Posting", "Submission start date", "Submission Deadline"};
     }
 
     /**
@@ -187,6 +187,7 @@ public class JobApplication implements Serializable {
      */
     public String[] getCategoryValuesForReference() {
         return new String[]{this.getApplicant().getLegalName(), this.getJobPosting().getTitle(),
+                this.getJobPosting().getApplicantCloseDate().plusDays(1).toString(),
                 this.getJobPosting().getReferenceCloseDate().toString()};
     }
 

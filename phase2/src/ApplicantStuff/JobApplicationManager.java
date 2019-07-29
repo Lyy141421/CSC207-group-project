@@ -124,16 +124,6 @@ public class JobApplicationManager implements Serializable {
     }
 
     /**
-     * Get a list of files submitted for this job application.
-     *
-     * @param jobApplication The job application in question.
-     * @return a list of files submitted for this job application
-     */
-    public ArrayList<JobApplicationDocument> getFilesSubmittedForApplication(JobApplication jobApplication) {
-        return jobApplication.getFilesSubmitted();
-    }
-
-    /**
      * Find the application with the last closing date of all submitted applications by this applicant.
      *
      * @return the application with the last close date, or null if no applications exist.

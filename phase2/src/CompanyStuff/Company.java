@@ -34,7 +34,7 @@ public class Company implements Serializable {
         this.name = name;
         this.branches = new ArrayList<>();
         this.companyJobPostings = new ArrayList<>();
-        this.documentManager = new DocumentManagerFactory().getCompanyDocumentManager(this);
+        this.documentManager = new DocumentManagerFactory().createCompanyDocumentManager(this);
     }
 
     // === Getters ===
