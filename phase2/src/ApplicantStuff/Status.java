@@ -23,13 +23,12 @@ public class Status extends Observable implements Serializable {
         put(Status.SUBMITTED, "Submitted");
         put(Status.UNDER_REVIEW, "Under review");
     }};
-    // The integer that represents a "Hired" status
-    private int hired;
-    private int lastRound;
 
     // === Instance variable ===
-    private int value = Status.SUBMITTED;
-    private JobApplication jobApplication;
+    private int value = Status.SUBMITTED;   // The integer representing the status
+    private JobApplication jobApplication;  // The job application that this status is for
+    private int hired;  // The integer that represents a "Hired" status
+    private int lastRound;  // The integer that represents the last round of interviews
 
     // === Constructors ===
     Status(Observer observer, JobApplication jobApplication) {
@@ -75,7 +74,8 @@ public class Status extends Observable implements Serializable {
     public void setHired() {
         this.setValue(this.hired);
         notifyAllObservers(new Notification("Hired!!",
-                "You have been hired at "+ this.jobApplication.getJobPosting().getBranch().getName() +", make sure to check your email."));
+                "You have been hired at " + this.jobApplication.getJobPosting().getBranch().getName() + "," +
+                        " make sure to check your email."));
     }
 
     /**
@@ -107,18 +107,4 @@ public class Status extends Observable implements Serializable {
     boolean isArchived() {
         return this.value == Status.ARCHIVED;
     }
-
-    // Status class
-    boolean isUnderReview() {
-        return this.value == Status.UNDER_REVIEW;
-    }
-
-    boolean isOnFirstRound() {
-        return this.value == Status.FIRST_ROUND;
-    }
-
-    boolean isOnLastRound() {
-        return this.value == this.lastRound;
-    }
-
 }

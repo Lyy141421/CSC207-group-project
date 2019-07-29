@@ -3,6 +3,7 @@ package CompanyStuff;
 import Miscellaneous.InterviewTime;
 import Main.User;
 import ApplicantStuff.JobApplication;
+import Miscellaneous.InterviewTimeComparator;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -367,6 +368,9 @@ public class Interviewer extends User {
      */
     void addInterview(Interview interview) {
         this.interviews.add(interview);
+        if (interview.getTime() != null) {
+            this.interviews.sort(new InterviewTimeComparator());
+        }
     }
 
 }

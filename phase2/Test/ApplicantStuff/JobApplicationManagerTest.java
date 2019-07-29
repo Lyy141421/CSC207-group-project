@@ -5,6 +5,7 @@ import CompanyStuff.JobPostings.BranchJobPosting;
 import Miscellaneous.InterviewTime;
 import org.junit.jupiter.api.Test;
 
+import java.io.File;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -52,10 +53,9 @@ class JobApplicationManagerTest {
         BranchJobPosting jobPosting = branch.getJobPostingManager().getBranchJobPostings().get(0);
         Applicant applicant = this.createApplicant();
         JobApplicationManager jobAppManager = applicant.getJobApplicationManager();
-        JobApplication jobApp = this.createJobApplication(applicant, jobPosting);
-        jobAppManager.addJobApplication(jobApp);
+        this.createJobApplication(applicant, jobPosting);
         assertEquals(1, jobAppManager.getJobApplications().size());
-        jobAppManager.addJobApplication(jobApp);
+        this.createJobApplication(applicant, jobPosting);
         assertEquals(2, jobAppManager.getJobApplications().size());
         assertEquals("jsmith", jobAppManager.getJobApplications().get(1).getApplicant().getUsername());
     }
@@ -71,8 +71,7 @@ class JobApplicationManagerTest {
         jobAppManager.removeJobApplication(jobPosting2);
         assertTrue(jobAppManager.getJobApplications().isEmpty());
 
-        JobApplication jobApp = this.createJobApplication(applicant, jobPosting);
-        jobAppManager.addJobApplication(jobApp);
+        this.createJobApplication(applicant, jobPosting);
         jobAppManager.removeJobApplication(jobPosting2);
         assertEquals(1, jobAppManager.getJobApplications().size());
     }
@@ -84,10 +83,8 @@ class JobApplicationManagerTest {
         BranchJobPosting jobPosting2 = branch.getJobPostingManager().getBranchJobPostings().get(1);
         Applicant applicant = this.createApplicant();
         JobApplicationManager jobAppManager = applicant.getJobApplicationManager();
-        JobApplication jobApp = this.createJobApplication(applicant, jobPosting);
-        JobApplication jobApp2 = this.createJobApplication(applicant, jobPosting2);
-        jobAppManager.addJobApplication(jobApp);
-        jobAppManager.addJobApplication(jobApp2);
+        this.createJobApplication(applicant, jobPosting);
+        this.createJobApplication(applicant, jobPosting2);
         assertEquals(2, jobAppManager.getJobApplications().size());
         jobAppManager.removeJobApplication(jobPosting);
         assertEquals(1, jobAppManager.getJobApplications().size());
@@ -114,10 +111,11 @@ class JobApplicationManagerTest {
         BranchJobPosting jobPosting = branch.getJobPostingManager().getBranchJobPostings().get(0);
         Applicant applicant = this.createApplicant();
         this.createJobApplication(applicant, jobPosting);
+        branch.getJobPostingManager().updateJobPostingsClosedForApplications(LocalDate.of(2019, 8, 4));
         branch.getJobPostingManager().updateJobPostingsClosedForReferences(LocalDate.of(2019, 8, 11));
         jobPosting.getInterviewManager().setUpOneOnOneInterviews();
         branch.getFieldToInterviewers().get("field").get(0).getInterviews().get(0).setTime(new InterviewTime(LocalDate.of(2019, 8, 17), InterviewTime.ELEVEN_AM_TO_NOON));
-        assertEquals(1, applicant.getJobApplicationManager().getUpcomingInterviews(LocalDate.of(2019, 8, 12)));
+        assertEquals(1, applicant.getJobApplicationManager().getUpcomingInterviews(LocalDate.of(2019, 8, 12)).size());
     }
 
     @Test
@@ -128,11 +126,13 @@ class JobApplicationManagerTest {
         Applicant applicant = this.createApplicant();
         this.createJobApplication(applicant, jobPosting);
         this.createJobApplication(applicant, jobPosting2);
+        branch.getJobPostingManager().updateJobPostingsClosedForApplications(LocalDate.of(2019, 8, 4));
         branch.getJobPostingManager().updateJobPostingsClosedForReferences(LocalDate.of(2019, 8, 11));
         jobPosting.getInterviewManager().setUpOneOnOneInterviews();
+        jobPosting2.getInterviewManager().setUpOneOnOneInterviews();
         branch.getFieldToInterviewers().get("field").get(0).getInterviews().get(0).setTime(new InterviewTime(LocalDate.of(2019, 8, 17), InterviewTime.ELEVEN_AM_TO_NOON));
-        branch.getFieldToInterviewers().get("field").get(0).getInterviews().get(0).setTime(new InterviewTime(LocalDate.of(2019, 8, 14), InterviewTime.ELEVEN_AM_TO_NOON));
-        assertEquals(2, applicant.getJobApplicationManager().getUpcomingInterviews(LocalDate.of(2019, 8, 12)));
+        branch.getFieldToInterviewers().get("field").get(0).getInterviews().get(1).setTime(new InterviewTime(LocalDate.of(2019, 8, 14), InterviewTime.ELEVEN_AM_TO_NOON));
+        assertEquals(2, applicant.getJobApplicationManager().getUpcomingInterviews(LocalDate.of(2019, 8, 12)).size());
     }
 
     @Test
@@ -141,10 +141,11 @@ class JobApplicationManagerTest {
         BranchJobPosting jobPosting = branch.getJobPostingManager().getBranchJobPostings().get(0);
         Applicant applicant = this.createApplicant();
         this.createJobApplication(applicant, jobPosting);
+        branch.getJobPostingManager().updateJobPostingsClosedForApplications(LocalDate.of(2019, 8, 4));
         branch.getJobPostingManager().updateJobPostingsClosedForReferences(LocalDate.of(2019, 8, 11));
         jobPosting.getInterviewManager().setUpOneOnOneInterviews();
         branch.getFieldToInterviewers().get("field").get(0).getInterviews().get(0).setTime(new InterviewTime(LocalDate.of(2019, 8, 19), InterviewTime.ELEVEN_AM_TO_NOON));
-        assertEquals(1, applicant.getJobApplicationManager().getUpcomingInterviews(LocalDate.of(2019, 8, 12)));
+        assertEquals(1, applicant.getJobApplicationManager().getUpcomingInterviews(LocalDate.of(2019, 8, 12)).size());
     }
 
     @Test
@@ -153,10 +154,11 @@ class JobApplicationManagerTest {
         BranchJobPosting jobPosting = branch.getJobPostingManager().getBranchJobPostings().get(0);
         Applicant applicant = this.createApplicant();
         this.createJobApplication(applicant, jobPosting);
+        branch.getJobPostingManager().updateJobPostingsClosedForApplications(LocalDate.of(2019, 8, 4));
         branch.getJobPostingManager().updateJobPostingsClosedForReferences(LocalDate.of(2019, 8, 11));
         jobPosting.getInterviewManager().setUpOneOnOneInterviews();
         branch.getFieldToInterviewers().get("field").get(0).getInterviews().get(0).setTime(new InterviewTime(LocalDate.of(2019, 8, 19), InterviewTime.ELEVEN_AM_TO_NOON));
-        assertEquals(1, applicant.getJobApplicationManager().getUpcomingInterviews(LocalDate.of(2019, 8, 11)));
+        assertTrue(applicant.getJobApplicationManager().getUpcomingInterviews(LocalDate.of(2019, 8, 11)).isEmpty());
     }
 
     @Test
@@ -167,11 +169,13 @@ class JobApplicationManagerTest {
         Applicant applicant = this.createApplicant();
         this.createJobApplication(applicant, jobPosting);
         this.createJobApplication(applicant, jobPosting2);
+        branch.getJobPostingManager().updateJobPostingsClosedForApplications(LocalDate.of(2019, 8, 4));
         branch.getJobPostingManager().updateJobPostingsClosedForReferences(LocalDate.of(2019, 8, 11));
         jobPosting.getInterviewManager().setUpOneOnOneInterviews();
+        jobPosting2.getInterviewManager().setUpOneOnOneInterviews();
         branch.getFieldToInterviewers().get("field").get(0).getInterviews().get(0).setTime(new InterviewTime(LocalDate.of(2019, 8, 20), InterviewTime.ELEVEN_AM_TO_NOON));
-        branch.getFieldToInterviewers().get("field").get(0).getInterviews().get(0).setTime(new InterviewTime(LocalDate.of(2019, 8, 19), InterviewTime.ELEVEN_AM_TO_NOON));
-        assertEquals(1, applicant.getJobApplicationManager().getUpcomingInterviews(LocalDate.of(2019, 8, 12)));
+        branch.getFieldToInterviewers().get("field").get(0).getInterviews().get(1).setTime(new InterviewTime(LocalDate.of(2019, 8, 19), InterviewTime.ELEVEN_AM_TO_NOON));
+        assertEquals(1, applicant.getJobApplicationManager().getUpcomingInterviews(LocalDate.of(2019, 8, 12)).size());
     }
 
     @Test
@@ -210,18 +214,161 @@ class JobApplicationManagerTest {
     }
 
     @Test
-    void getPreviousJobApplications() {
+    void testGetPreviousJobApplicationsNoJobApps() {
+        Applicant applicant = this.createApplicant();
+        assertTrue(applicant.getJobApplicationManager().getPreviousJobApplications().isEmpty());
     }
 
     @Test
-    void getCurrentJobApplications() {
+    void testGetPreviousJobApplicationsOneJobAppOpen() {
+        Applicant applicant = this.createApplicant();
+        Branch branch = this.createCompanyBranchEmployeesAndJobPostings();
+        BranchJobPosting jobPosting = branch.getJobPostingManager().getBranchJobPostings().get(0);
+        this.createJobApplication(applicant, jobPosting);
+        assertTrue(applicant.getJobApplicationManager().getPreviousJobApplications().isEmpty());
     }
 
     @Test
-    void getFilesSubmittedForApplication() {
+    void testGetPreviousJobApplicationsOneJobAppArchived() {
+        Applicant applicant = this.createApplicant();
+        Branch branch = this.createCompanyBranchEmployeesAndJobPostings();
+        BranchJobPosting jobPosting = branch.getJobPostingManager().getBranchJobPostings().get(0);
+        JobApplication jobApp = this.createJobApplication(applicant, jobPosting);
+        jobApp.getStatus().setArchived();
+        assertEquals(1, applicant.getJobApplicationManager().getPreviousJobApplications().size());
     }
 
     @Test
-    void getLastClosedJobApp() {
+    void testGetPreviousJobApplicationsMixed() {
+        Applicant applicant = this.createApplicant();
+        Branch branch = this.createCompanyBranchEmployeesAndJobPostings();
+        BranchJobPosting jobPosting = branch.getJobPostingManager().getBranchJobPostings().get(0);
+        BranchJobPosting jobPosting2 = branch.getJobPostingManager().getBranchJobPostings().get(1);
+        JobApplication jobApp1 = this.createJobApplication(applicant, jobPosting);
+        JobApplication jobApp2 = this.createJobApplication(applicant, jobPosting2);
+        assertTrue(applicant.getJobApplicationManager().getPreviousJobApplications().isEmpty());
+        jobApp1.getStatus().setArchived();
+        assertEquals(1, applicant.getJobApplicationManager().getPreviousJobApplications().size());
+        jobApp2.getStatus().setArchived();
+        assertEquals(2, applicant.getJobApplicationManager().getPreviousJobApplications().size());
+    }
+
+    @Test
+    void testGetCurrentJobApplicationsNoJobApps() {
+        Applicant applicant = this.createApplicant();
+        assertTrue(applicant.getJobApplicationManager().getCurrentJobApplications().isEmpty());
+    }
+
+    @Test
+    void testGetCurrentJobApplicationsOneFilledJobApp() {
+        Applicant applicant = this.createApplicant();
+        Branch branch = this.createCompanyBranchEmployeesAndJobPostings();
+        BranchJobPosting jobPosting = branch.getJobPostingManager().getBranchJobPostings().get(0);
+        JobApplication jobApp1 = this.createJobApplication(applicant, jobPosting);
+        jobApp1.getStatus().setArchived();
+        assertTrue(applicant.getJobApplicationManager().getCurrentJobApplications().isEmpty());
+    }
+
+    @Test
+    void testGetCurrentJobApplicationsOneOpenJobApp() {
+        Applicant applicant = this.createApplicant();
+        Branch branch = this.createCompanyBranchEmployeesAndJobPostings();
+        BranchJobPosting jobPosting = branch.getJobPostingManager().getBranchJobPostings().get(0);
+        this.createJobApplication(applicant, jobPosting);
+        assertEquals(1, applicant.getJobApplicationManager().getCurrentJobApplications().size());
+    }
+
+    @Test
+    void testGetCurrentJobApplicationsMixed() {
+        Applicant applicant = this.createApplicant();
+        Branch branch = this.createCompanyBranchEmployeesAndJobPostings();
+        BranchJobPosting jobPosting = branch.getJobPostingManager().getBranchJobPostings().get(0);
+        BranchJobPosting jobPosting2 = branch.getJobPostingManager().getBranchJobPostings().get(1);
+        JobApplication jobApp1 = this.createJobApplication(applicant, jobPosting);
+        JobApplication jobApp2 = this.createJobApplication(applicant, jobPosting2);
+        assertEquals(2, applicant.getJobApplicationManager().getCurrentJobApplications().size());
+        jobApp1.getStatus().setArchived();
+        assertEquals(1, applicant.getJobApplicationManager().getCurrentJobApplications().size());
+        jobApp2.getStatus().setArchived();
+        assertTrue(applicant.getJobApplicationManager().getCurrentJobApplications().isEmpty());
+    }
+
+    @Test
+    void testGetCurrentJobApplicationsOneJobAppThenWithdrawn() {
+        Applicant applicant = this.createApplicant();
+        Branch branch = this.createCompanyBranchEmployeesAndJobPostings();
+        BranchJobPosting jobPosting = branch.getJobPostingManager().getBranchJobPostings().get(0);
+        JobApplication jobApp1 = this.createJobApplication(applicant, jobPosting);
+        assertEquals(1, applicant.getJobApplicationManager().getCurrentJobApplications().size());
+        branch.getJobPostingManager().updateJobPostingsClosedForApplications(LocalDate.of(2019, 8, 5));
+        branch.getJobPostingManager().updateJobPostingsClosedForReferences(LocalDate.of(2019, 8, 11));
+        applicant.withdrawJobApplication(LocalDate.of(2019, 8, 13), jobPosting);
+        assertTrue(applicant.getJobApplicationManager().getCurrentJobApplications().isEmpty());
+    }
+
+    @Test
+    void testGetFilesSubmittedForApplicationNoFiles() {
+        Applicant applicant = this.createApplicant();
+        Branch branch = this.createCompanyBranchEmployeesAndJobPostings();
+        BranchJobPosting jobPosting = branch.getJobPostingManager().getBranchJobPostings().get(0);
+        JobApplication jobApp1 = this.createJobApplication(applicant, jobPosting);
+        assertTrue(applicant.getJobApplicationManager().getFilesSubmittedForApplication(jobApp1).isEmpty());
+    }
+
+    @Test
+    void testGetFilesSubmittedForApplicationSomeFiles() {
+        Applicant applicant = this.createApplicant();
+        Branch branch = this.createCompanyBranchEmployeesAndJobPostings();
+        BranchJobPosting jobPosting = branch.getJobPostingManager().getBranchJobPostings().get(0);
+        JobApplication jobApp1 = this.createJobApplication(applicant, jobPosting);
+        File file = new File("./sample.txt");
+        ArrayList<JobApplicationDocument> jobAppDocs = new ArrayList<>(Arrays.asList(new JobApplicationDocument(file),
+                new JobApplicationDocument(file), new JobApplicationDocument(file)));
+        jobApp1.addFiles(jobAppDocs);
+        assertEquals(3, applicant.getJobApplicationManager().getFilesSubmittedForApplication(jobApp1).size());
+        assertEquals("sample.txt", applicant.getJobApplicationManager().getFilesSubmittedForApplication(jobApp1).get(0).getFile().getName());
+    }
+
+    @Test
+    void testGetLastClosedJobAppNoJobApp() {
+        Applicant applicant = this.createApplicant();
+        assertNull(applicant.getJobApplicationManager().getLastClosedJobApp());
+    }
+
+    @Test
+    void testGetLastClosedJobAppOneOpenJobApp() {
+        Applicant applicant = this.createApplicant();
+        Branch branch = this.createCompanyBranchEmployeesAndJobPostings();
+        BranchJobPosting jobPosting = branch.getJobPostingManager().getBranchJobPostings().get(0);
+        JobApplication jobApp1 = this.createJobApplication(applicant, jobPosting);
+        assertEquals(jobApp1, applicant.getJobApplicationManager().getLastClosedJobApp());
+    }
+
+    @Test
+    void testGetLastClosedJobAppTwoOpenJobApp() {
+        Applicant applicant = this.createApplicant();
+        Branch branch = this.createCompanyBranchEmployeesAndJobPostings();
+        BranchJobPosting jobPosting = branch.getJobPostingManager().getBranchJobPostings().get(0);
+        BranchJobPosting jobPosting2 = branch.getJobPostingManager().getBranchJobPostings().get(1);
+        this.createJobApplication(applicant, jobPosting);
+        JobApplication jobApp2 = this.createJobApplication(applicant, jobPosting2);
+        assertEquals(jobApp2, applicant.getJobApplicationManager().getLastClosedJobApp());
+    }
+
+    @Test
+    void testFindJobApplicationNoJobAppToPosting() {
+        Applicant applicant = this.createApplicant();
+        Branch branch = this.createCompanyBranchEmployeesAndJobPostings();
+        BranchJobPosting jobPosting = branch.getJobPostingManager().getBranchJobPostings().get(0);
+        assertNull(applicant.getJobApplicationManager().findJobApplication(jobPosting));
+    }
+
+    @Test
+    void testFindJobApplicationJobAppToPosting() {
+        Applicant applicant = this.createApplicant();
+        Branch branch = this.createCompanyBranchEmployeesAndJobPostings();
+        BranchJobPosting jobPosting = branch.getJobPostingManager().getBranchJobPostings().get(0);
+        JobApplication jobApp = this.createJobApplication(applicant, jobPosting);
+        assertEquals(jobApp, applicant.getJobApplicationManager().findJobApplication(jobPosting));
     }
 }

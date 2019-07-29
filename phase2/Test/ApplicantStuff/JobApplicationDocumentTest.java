@@ -70,7 +70,7 @@ class JobApplicationDocumentTest {
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-        newFile.delete();
+        newFile.deleteOnExit();
     }
 
     @Test

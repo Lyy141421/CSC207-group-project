@@ -155,7 +155,8 @@ public class JobApplicationManager implements Serializable {
      * @param posting The job posting in question.
      * @return the job application associated with this job posting.
      */
-    private JobApplication findJobApplication(BranchJobPosting posting) {
+    // TODO set as private after testing
+    public JobApplication findJobApplication(BranchJobPosting posting) {
         for (JobApplication app : this.jobApplications) {
             if (app.getJobPosting().equals(posting)) {
                 return app;
