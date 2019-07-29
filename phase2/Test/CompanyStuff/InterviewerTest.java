@@ -3,6 +3,7 @@ package CompanyStuff;
 import ApplicantStuff.Applicant;
 import ApplicantStuff.JobApplication;
 import CompanyStuff.JobPostings.BranchJobPosting;
+import Managers.JobPostingManager;
 import NotificationSystem.Notification;
 import NotificationSystem.NotificationManager;
 import org.junit.jupiter.api.Test;
@@ -14,8 +15,11 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class InterviewerTest {
 
+    LocalDate today = LocalDate.of(2019, 7, 29);
     Company company_a = new Company("company_a");
     Branch branch_a = company_a.createBranch("BranchName", "E6H1P9");
+    HRCoordinator HRCord = new HRCoordinator("Stacy", "ABC123", "Stacy O",
+            "Stacy@gmail.com", branch_a, today);
 
 
     Branch createBranch (String name){
@@ -24,12 +28,27 @@ class InterviewerTest {
 
     Interviewer createInterviewer (String username){
         return new Interviewer(username, "ABC123", username + "'s Real Name", username + "@gmail.com", branch_a,
-                "Sales", LocalDate.of(2019, 7, 29));
+                "Sales", today);
     }
 
     Applicant createApplicant(String name) {
         return new Applicant(name, "ABC123", name + " Lastname",
-                name + "@gmail.com", LocalDate.of(2019, 7, 29), "Toronto");
+                name + "@gmail.com", today, "Toronto");
+    }
+
+    BranchJobPosting createPosting(String name){
+        return new BranchJobPosting(name, "Sales", "none", new ArrayList<>(),
+                new ArrayList<>(), 1, branch_a, today, today.plusDays(5), today.plusDays(5));
+    }
+
+    JobApplication createJobApplication(Interviewer interviewer){
+        BranchJobPosting branchJobPosting = createPosting("TestPosting");
+        return new JobApplication(createApplicant("Zach"), branchJobPosting, today);
+    }
+
+    Interview createInterview(Interviewer interviewer){
+        JobApplication jobApplication = createJobApplication(interviewer);
+        return new Interview(jobApplication, interviewer, jobApplication.getJobPosting().getInterviewManager());
     }
 
     @Test
@@ -40,7 +59,7 @@ class InterviewerTest {
         assertEquals(interviewer.getPassword(), "ABC123");
         assertEquals(interviewer.getLegalName(), "Phillip's Real Name");
         assertEquals(interviewer.getEmail(), "Phillip@gmail.com");
-        assertEquals(interviewer.getDateCreated(), LocalDate.of(2019, 7, 29));
+        assertEquals(interviewer.getDateCreated(), today);
 
         assertTrue(interviewer.getNotificationManager() instanceof NotificationManager);
         assertEquals(interviewer.getBranch().getName(), "BranchName");
@@ -75,7 +94,7 @@ class InterviewerTest {
     @Test
     void getDateCreated() {
         Interviewer interviewer = this.createInterviewer("Phillip");
-        assertEquals(interviewer.getDateCreated(), LocalDate.of(2019, 7, 29));
+        assertEquals(interviewer.getDateCreated(), today);
     }
 
     @Test
@@ -170,24 +189,29 @@ class InterviewerTest {
     void setInterviews() {
         Interviewer interviewer = this.createInterviewer("Phillip");
         ArrayList<Interview> lst = new ArrayList<>();
-        BranchJobPosting jobPosting = new BranchJobPosting("", "", "", new ArrayList<>(),
-                new ArrayList<>(), 1, branch_a, LocalDate.of(2020, 1, 1), LocalDate.of(2020, 1, 1), LocalDate.of(2020, 1, 1));
-        JobApplication jobApp = new JobApplication(new Applicant("", "", "", "", LocalDate.now(), ""), jobPosting, LocalDate.of(2020, 1, 3));
-        lst.add(new Interview(jobApp, interviewer, jobPosting.getInterviewManager()));
+        lst.add(createInterview(interviewer));
         interviewer.setInterviews(lst);
         assertTrue(interviewer.getInterviews().size() == 1);
     }
 
     @Test
-    void getEarliestTimeAvailableForNewInterview() { //todo test this
+    void getEarliestTimeAvailableForNewInterview() { //todo test this more
+        Interviewer interviewer = this.createInterviewer("Phillip");
+        assertEquals(interviewer.getEarliestTimeAvailableForNewInterview(today, 5).getDate(), today.plusDays(5));
     }
 
     @Test
     void findJobAppById() {
+        Interviewer interviewer = this.createInterviewer("Phillip");
+        ArrayList<Interview> lst = new ArrayList<>();
+        lst.add(createInterview(interviewer));
+        interviewer.setInterviews(lst);
+        interviewer.findJobAppById(interviewer.getInterviews().get(0).getId());
     }
 
     @Test
     void isAvailable() {
+
     }
 
     @Test
