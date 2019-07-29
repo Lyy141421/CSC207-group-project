@@ -103,7 +103,6 @@ public class InterviewManager extends Observable implements Serializable {
     }
 
     // === Other methods ===
-
     /**
      * Get the number of applications still required.
      *
@@ -204,9 +203,9 @@ public class InterviewManager extends Observable implements Serializable {
     public void updateJobPostingStatus() {
         if (this.hasNoJobApplicationsInConsideration()) {
             this.updateObserverList();
-            this.notifyAllObservers(new Notification("Warning No Applications in Consideration",
+            this.notifyAllObservers(new Notification("Warning: No Applications in Consideration",
                     "There are no applications in consideration in " + this.getBranchJobPosting().getTitle()
-                            + " job posting."));
+                            + " job posting (id " + this.getBranchJobPosting().getId() + ")."));
         } else if (this.currentRound != 0 | this.isInterviewProcessOver()) {
             // The check for current round ensures that applicants get at least 1 interview
             this.hireAllApplicants();
