@@ -335,18 +335,18 @@ public class Interviewer extends User {
 //        return interviews;
 //    }
 
-    /**
-     * Get a list of job applications of this interviewer's interviewees.
-     *
-     * @return a list of job applications of the applicants that are being interviewed by this interviewer.
-     */
-    public ArrayList<JobApplication> getListOfIntervieweeJobApplications() {
-        ArrayList<JobApplication> jobApplications = new ArrayList<>();
-        for (Interview interview : this.interviews) {
-            jobApplications.addAll(interview.getJobApplications());
-        }
-        return jobApplications;
-    }
+//    /**
+//     * Get a list of job applications of this interviewer's interviewees.
+//     *
+//     * @return a list of job applications of the applicants that are being interviewed by this interviewer.
+//     */
+//    public ArrayList<JobApplication> getListOfIntervieweeJobApplications() {
+//        ArrayList<JobApplication> jobApplications = new ArrayList<>();
+//        for (Interview interview : this.interviews) {
+//            jobApplications.addAll(interview.getJobApplications());
+//        }
+//        return jobApplications;
+//    }
 
     @Override
     public String[] getDisplayedProfileCategories() {

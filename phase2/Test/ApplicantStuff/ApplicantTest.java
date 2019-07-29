@@ -18,12 +18,12 @@ import static org.junit.jupiter.api.Assertions.*;
 class ApplicantTest {
 
     Company company1 = new Company("Company");
-    Branch branch1A = company1.createBranch("Branch", "Toronto");
+    Branch branch1A = company1.createBranch("Branch", "M3R3Z3");
     Branch branch1B = company1.createBranch("Branch2", "Toronto");
     HRCoordinator hrc = new HRCoordinator("horace", "ABC", "Horace Businessman",
             "horace@gmail.com", branch1A, LocalDate.of(2019, 7, 15));
     Company company2 = new Company("Company2");
-    Branch branch2A = company2.createBranch("Branch2", "Toronto");
+    Branch branch2A = company2.createBranch("Branch2", "L4B4P8");
     HRCoordinator hrc2 = new HRCoordinator("boris", "ABC", "Boris Businessman",
             "boris@gmail.com", branch2A, LocalDate.of(2019, 7, 15));
 

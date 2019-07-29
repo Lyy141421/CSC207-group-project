@@ -50,16 +50,15 @@ public class ApplicantDocumentManager extends DocumentManager {
     }
 
     /**
-     * Remove the files submitted for an application to a job posting that has been closed for 30 days.
+     * Remove the files submitted to all applications when the last closed application was at least 30 days ago.
      *
      * @param today Today's date.
      */
     public void removeFilesFromAccountIfInactive(LocalDate today) {
         if (this.applicant.isInactive(today)) {
-            JobApplicationManager jobApplicationManager = applicant.getJobApplicationManager();
-            JobApplication lastClosedJobApp = jobApplicationManager.getLastClosedJobApp();
-            ArrayList<JobApplicationDocument> documents = jobApplicationManager.getFilesSubmittedForApplication(lastClosedJobApp);
-            this.removeDocuments(documents);
+            for (File file : this.getFolder().listFiles()) {
+                file.delete();
+            }
         }
     }
 }

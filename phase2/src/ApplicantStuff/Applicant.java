@@ -20,7 +20,7 @@ public class Applicant extends User {
     // === Class variables ===
     static final long serialVersionUID = 1L;
     // Number of days passed for user account to be deemed inActive
-    private static final int INACTIVE_DAYS = 30;
+    public static final int INACTIVE_DAYS = 30;
 
     // === Instance variables ===
     // The Census Metropolitan Area or Census Agglomeration that this applicant is assumed to be closest to
@@ -37,7 +37,7 @@ public class Applicant extends User {
         super(username, password, legalName, email, dateCreated);
         this.cma = cma;
         this.jobApplicationManager = new JobApplicationManager();
-        this.documentManager = new DocumentManagerFactory().getApplicantDocumentManager(this);
+        this.documentManager = new DocumentManagerFactory().createApplicantDocumentManager(this);
     }
 
     // === Getters ===

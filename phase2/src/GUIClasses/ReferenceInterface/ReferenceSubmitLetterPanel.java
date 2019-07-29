@@ -1,7 +1,6 @@
 package GUIClasses.ReferenceInterface;
 
 import ApplicantStuff.JobApplication;
-import ApplicantStuff.Reference;
 import GUIClasses.CommonUserGUI.FileChooser;
 import GUIClasses.CommonUserGUI.GUIElementsCreator;
 
@@ -18,8 +17,8 @@ public class ReferenceSubmitLetterPanel extends JPanel implements ActionListener
      */
 
     // === Instance variables ===
-    // The reference who logged in
-    private Reference reference;
+    // The reference back end
+    private ReferenceBackEnd referenceBackEnd;
     // The button for selecting a job application
     private JButton selectJobAppButton = new JButton("Select");
     // The list that displays the job applications that need reference letters
@@ -28,9 +27,9 @@ public class ReferenceSubmitLetterPanel extends JPanel implements ActionListener
     private FileChooser fileChooser;
 
     // === Constructor ===
-    ReferenceSubmitLetterPanel(Reference reference) {
-        this.reference = reference;
-        this.fileChooser = new FileChooser(reference, null);    // So that the file chooser is on the panel
+    ReferenceSubmitLetterPanel(ReferenceBackEnd referenceBackEnd) {
+        this.referenceBackEnd = referenceBackEnd;
+        this.fileChooser = new FileChooser(this.referenceBackEnd.getReference(), null);    // So that the file chooser is on the panel
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         this.add(new GUIElementsCreator().createLabelPanel("Submit Reference Letter", 20, true));
@@ -49,7 +48,7 @@ public class ReferenceSubmitLetterPanel extends JPanel implements ActionListener
         JPanel jobAppListPanel = new JPanel();
         jobAppListPanel.setLayout(new BorderLayout());
         DefaultListModel listModel = new DefaultListModel();
-        for (JobApplication jobApp : reference.getJobAppsForReference()) {
+        for (JobApplication jobApp : referenceBackEnd.getJobAppsForReference()) {
             listModel.addElement(jobApp.getMiniDescriptionForReference());
         }
         jobAppList = new JList(listModel);
@@ -96,11 +95,15 @@ public class ReferenceSubmitLetterPanel extends JPanel implements ActionListener
     @Override
     public void actionPerformed(ActionEvent e) {
         int selectedIndex = jobAppList.getSelectedIndex();
-        JobApplication jobAppSelected = reference.getJobAppsForReference().get(selectedIndex);
-        this.remove(fileChooser);
-        fileChooser = new FileChooser(reference, jobAppSelected);
-        fileChooser.enableUploadButton();
-        this.add(fileChooser);
-        this.revalidate();
+        JobApplication jobAppSelected = referenceBackEnd.getJobAppsForReference().get(selectedIndex);
+        if (referenceBackEnd.isTodayAfterApplicationCloseDate(jobAppSelected)) {
+            this.remove(fileChooser);
+            fileChooser = new FileChooser(referenceBackEnd.getReference(), jobAppSelected);
+            fileChooser.enableUploadButton();
+            this.add(fileChooser);
+            this.revalidate();
+        } else {
+            JOptionPane.showMessageDialog(this, "Reference letter submission has not yet opened for this job posting");
+        }
     }
 }
