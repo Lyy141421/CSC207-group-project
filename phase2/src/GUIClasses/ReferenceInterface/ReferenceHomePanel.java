@@ -14,11 +14,11 @@ class ReferenceHomePanel extends JPanel {
      */
 
     // === Instance variables ===
-    private Reference reference;    // The reference who logged in
+    private ReferenceBackEnd referenceBackEnd;    // The reference who logged in
 
     // === Constructor ===
-    ReferenceHomePanel(Reference reference) {
-        this.reference = reference;
+    ReferenceHomePanel(ReferenceBackEnd referenceBackEnd) {
+        this.referenceBackEnd = referenceBackEnd;
 
         this.setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
@@ -37,7 +37,7 @@ class ReferenceHomePanel extends JPanel {
      */
     private JPanel createWelcomePanel() {
         JPanel welcomePanel = new JPanel();
-        JLabel welcomeMessage = new JLabel("Welcome " + this.reference.getEmail());
+        JLabel welcomeMessage = new JLabel("Welcome " + this.referenceBackEnd.getEmail());
         welcomeMessage.setFont(new Font("Century Gothic", Font.BOLD, 20));
         welcomePanel.add(welcomeMessage);
         welcomeMessage.setHorizontalAlignment(JLabel.CENTER);
@@ -64,7 +64,7 @@ class ReferenceHomePanel extends JPanel {
      *
      */
     private JPanel createJobAppTablePanel() {
-        ArrayList<JobApplication> jobApps = this.reference.getJobAppsForReference();
+        ArrayList<JobApplication> jobApps = this.referenceBackEnd.getJobAppsForReference();
         Object[][] data = new Object[jobApps.size()][];
 
         for (int i = 0; i < jobApps.size(); i++) {

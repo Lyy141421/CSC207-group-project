@@ -19,8 +19,8 @@ class ReferenceViewRefereeJobPostingsPanel extends JPanel {
     private static String PROMPT = "PROMPT";
 
     // === Instance variables ===
-    // The reference who logged in
-    private Reference reference;
+    // The reference back end
+    private ReferenceBackEnd referenceBackend;
     // The split pane
     private JSplitPane splitPane;
     // The list that displays the job applications that need reference letters
@@ -30,8 +30,8 @@ class ReferenceViewRefereeJobPostingsPanel extends JPanel {
 
 
     // === Constructor ===
-    ReferenceViewRefereeJobPostingsPanel(Reference reference) {
-        this.reference = reference;
+    ReferenceViewRefereeJobPostingsPanel(ReferenceBackEnd referenceBackEnd) {
+        this.referenceBackend = referenceBackEnd;
         this.setLayout(new BorderLayout());
         this.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         this.add(new GUIElementsCreator().createLabelPanel(
@@ -54,7 +54,7 @@ class ReferenceViewRefereeJobPostingsPanel extends JPanel {
      */
     private void setJobPostingList(JSplitPane splitPane) {
         this.jobPostingList = new JList<>();
-        this.jobPostingList.setListData(reference.getJobPostingNameList());
+        this.jobPostingList.setListData(referenceBackend.getJobPostingNameList());
         this.jobPostingList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
         this.jobPostingList.setLayoutOrientation(JList.VERTICAL);
         splitPane.setLeftComponent(new JScrollPane(this.jobPostingList));
@@ -100,7 +100,7 @@ class ReferenceViewRefereeJobPostingsPanel extends JPanel {
     private void setJobPostingCards(JSplitPane splitPane) {
         jobPostingCards.add(this.createPromptCard(), PROMPT);
         int index = 0;
-        for (BranchJobPosting jobPosting : this.reference.getJobPostings()) {
+        for (BranchJobPosting jobPosting : this.referenceBackend.getJobPostings()) {
             jobPostingCards.add(this.createJobPostingPanel(jobPosting), String.valueOf(index));
             index++;
         }

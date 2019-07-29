@@ -59,10 +59,10 @@ public class ReferencePanel extends UserPanel {
      * Add the cards to the card layout panel
      */
     public void setCards() {
-        cards.add(new ReferenceHomePanel(this.referenceBackEnd.getReference()), UserPanel.HOME);
+        cards.add(new ReferenceHomePanel(this.referenceBackEnd), UserPanel.HOME);
         cards.add(new UserProfilePanel(this.referenceBackEnd.getReference()), UserPanel.PROFILE);
         cards.add(new ReferenceSubmitLetterPanel(this.referenceBackEnd), SUBMIT_REFERENCE_LETTER);
-        cards.add(new ReferenceViewRefereeJobPostingsPanel(this.referenceBackEnd.getReference()), VIEW_REFEREE_JOB_POSTINGS);
+        cards.add(new ReferenceViewRefereeJobPostingsPanel(this.referenceBackEnd), VIEW_REFEREE_JOB_POSTINGS);
     }
 
     /**

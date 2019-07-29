@@ -3,7 +3,6 @@ package GUIClasses.InterviewerInterface;
 import CompanyStuff.Interview;
 
 import GUIClasses.CommonUserGUI.GUIElementsCreator;
-import GUIClasses.MethodsTheGUICallsInInterviewer;
 
 import javax.swing.*;
 import java.awt.*;
@@ -21,7 +20,7 @@ class InterviewerViewAndWriteNotes extends InterviewerViewOnly {
     private JTextArea notes;    // The text area where the notes are written.
 
     // === Constructor ===
-    InterviewerViewAndWriteNotes(MethodsTheGUICallsInInterviewer interviewerInterface) {
+    InterviewerViewAndWriteNotes(InterviewerBackEnd interviewerInterface) {
         super(interviewerInterface);
         this.infoPane.addTab("Write notes", this.notesPanel);
     }

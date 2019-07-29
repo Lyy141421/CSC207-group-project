@@ -2,7 +2,6 @@ package GUIClasses.InterviewerInterface;
 
 import CompanyStuff.Interview;
 import GUIClasses.CommonUserGUI.GUIElementsCreator;
-import GUIClasses.MethodsTheGUICallsInInterviewer;
 import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
 import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
 import net.sourceforge.jdatepicker.impl.UtilDateModel;
@@ -37,7 +36,7 @@ class InterviewerSchedule extends AbstractInterviewerPanel {
     private Interview interviewSelected;    // The interview selected by the interviewer
 
     // === Constructor ===
-    InterviewerSchedule(MethodsTheGUICallsInInterviewer interviewerInterface) {
+    InterviewerSchedule(InterviewerBackEnd interviewerInterface) {
         super(interviewerInterface);
         this.interviews = getTitleToInterviewMap(interviewerInterface.getInterviewsThatNeedScheduling());
 

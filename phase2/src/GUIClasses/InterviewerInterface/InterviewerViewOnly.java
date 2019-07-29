@@ -4,7 +4,6 @@ import ApplicantStuff.JobApplication;
 import CompanyStuff.Interview;
 import CompanyStuff.Interviewer;
 import GUIClasses.CommonUserGUI.DocumentViewer;
-import GUIClasses.MethodsTheGUICallsInInterviewer;
 
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
@@ -35,7 +34,7 @@ public class InterviewerViewOnly extends AbstractInterviewerPanel implements Lis
     Interview interviewSelected;    // The interview selected
 
     // === Constructor ===
-    InterviewerViewOnly(MethodsTheGUICallsInInterviewer interviewerInterface) {
+    InterviewerViewOnly(InterviewerBackEnd interviewerInterface) {
         super(interviewerInterface);
         this.setInterviews(this.getInterviewMap());
         this.setLayout(new BorderLayout());

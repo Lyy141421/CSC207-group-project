@@ -2,7 +2,6 @@ package GUIClasses.InterviewerInterface;
 
 import CompanyStuff.Interview;
 import GUIClasses.CommonUserGUI.UserPanel;
-import GUIClasses.MethodsTheGUICallsInInterviewer;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -15,13 +14,13 @@ abstract class AbstractInterviewerPanel extends JPanel {
      */
 
     // === Instance variables ===
-    MethodsTheGUICallsInInterviewer interviewerInterface;   // Interviewer GUI backend
+    InterviewerBackEnd interviewerInterface;   // Interviewer GUI backend
     HashMap<String, Interview> interviews;  // The map of titles to interviews to be displayed on the left-hand side
     JList<String> interviewList = new JList<>();    // The list of interviews to be displayed on the left-hand side
     JSplitPane splitDisplay;    // The split display for the panels.
 
     // === Constructor ===
-    AbstractInterviewerPanel(MethodsTheGUICallsInInterviewer interviewerInterface) {
+    AbstractInterviewerPanel(InterviewerBackEnd interviewerInterface) {
         this.interviewerInterface = interviewerInterface;
         splitDisplay = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
         splitDisplay.setDividerLocation(150);

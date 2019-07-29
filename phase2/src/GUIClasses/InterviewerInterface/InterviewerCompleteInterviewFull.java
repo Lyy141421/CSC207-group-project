@@ -2,7 +2,6 @@ package GUIClasses.InterviewerInterface;
 
 import ApplicantStuff.JobApplication;
 import GUIClasses.CommonUserGUI.GUIElementsCreator;
-import GUIClasses.MethodsTheGUICallsInInterviewer;
 
 import javax.swing.*;
 import java.awt.*;
@@ -24,7 +23,7 @@ class InterviewerCompleteInterviewFull extends InterviewerViewAndWriteNotes {
     private HashMap<JobApplication, ButtonGroup> jobAppsToButtonGroup = new HashMap<>();
 
     // === Constructor ===
-    InterviewerCompleteInterviewFull(MethodsTheGUICallsInInterviewer interviewerInterface) {
+    InterviewerCompleteInterviewFull(InterviewerBackEnd interviewerInterface) {
         super(interviewerInterface);
         this.infoPane.addTab("Set results", this.resultsPanel);
     }

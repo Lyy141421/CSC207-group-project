@@ -8,7 +8,6 @@ import FileLoadingAndStoring.DataLoaderAndStorer;
 import GUIClasses.ActionListeners.LogoutActionListener;
 import GUIClasses.CommonUserGUI.UserPanel;
 import GUIClasses.CommonUserGUI.UserProfilePanel;
-import GUIClasses.MethodsTheGUICallsInInterviewer;
 import Main.JobApplicationSystem;
 
 import javax.swing.*;
@@ -29,12 +28,12 @@ public class InterviewerPanel extends UserPanel {
     static String COMPLETE = "COMPLETE";
 
     // === Instance variables ===
-    private MethodsTheGUICallsInInterviewer interviewerInterface;   // The backend class for the Interviewer GUI
+    private InterviewerBackEnd interviewerInterface;   // The backend class for the Interviewer GUI
     private JPanel cards = new JPanel(new CardLayout());        // The panel that contains all the Interviewer cards
 
     // === Constructor ===
     public InterviewerPanel(Interviewer interviewer, JobApplicationSystem jobAppSystem, LogoutActionListener logoutActionListener) {
-        this.interviewerInterface = new MethodsTheGUICallsInInterviewer(jobAppSystem, interviewer);
+        this.interviewerInterface = new InterviewerBackEnd(jobAppSystem, interviewer);
         this.setLayout(new GridBagLayout());
         this.setCards();
 

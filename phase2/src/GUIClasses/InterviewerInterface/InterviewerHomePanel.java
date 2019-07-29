@@ -1,7 +1,6 @@
 package GUIClasses.InterviewerInterface;
 
 import CompanyStuff.Interview;
-import GUIClasses.MethodsTheGUICallsInInterviewer;
 import GUIClasses.CommonUserGUI.GUIElementsCreator;
 
 import javax.swing.*;
@@ -14,7 +13,7 @@ class InterviewerHomePanel extends AbstractInterviewerPanel {
      */
 
     // === Constructor ===
-    InterviewerHomePanel(MethodsTheGUICallsInInterviewer interviewerInterface) {
+    InterviewerHomePanel(InterviewerBackEnd interviewerInterface) {
         super(interviewerInterface);
 
         this.setLayout(new GridBagLayout());
