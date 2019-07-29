@@ -32,8 +32,9 @@ public class GroupInterviewFrame extends JInternalFrame {
 
         this.setLayout(new BorderLayout());
 
-        this.add(this.createCoordinator(), BorderLayout.WEST);
         this.add(new JScrollPane(this.createInterviewers()), BorderLayout.EAST);
+        this.add(this.createCoordinator(), BorderLayout.WEST);
+        this.setButtons();
     }
 
     JPanel createCoordinator() {
@@ -43,7 +44,11 @@ public class GroupInterviewFrame extends JInternalFrame {
         this.coordinatorSelection.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
-
+                //TODO: enable deselected, disable selection of coordinator
+                String name = (String) e.getItem();
+                Interviewer selectedInterviewer = nameToInterviewerMap.get(name);
+                JCheckBox interviewerCheckBox = interviewerToCheckBoxMap.get(selectedInterviewer);
+                interviewerCheckBox.setEnabled(e.getStateChange() == ItemEvent.DESELECTED);
             }
         });
 
