@@ -43,6 +43,7 @@ public class HRCoordinator extends User {
      * Create and add a job posting to the system.
      *
      * @param jobTitle          The job title.
+     * @param jobField          The job field.
      * @param jobDescription    The job description.
      * @param requiredDocuments The required documents for this job posting.
      * @param tags              The tags for this job posting.

@@ -225,11 +225,11 @@ public class JobApplication implements Serializable {
     @Override
     public String toString() {
         String s = "Application ID: " + this.getId() + "\n";
-        s += "Applicant: " + this.getApplicant().getLegalName() + "(" + this.getApplicant().getUsername() + ")" + "\n";
-        s += "Job Posting: " + this.jobPosting.getTitle() + " -- ID: " + this.jobPosting.getId();
+        s += "Applicant: " + this.getApplicant().getLegalName() + " (" + this.getApplicant().getUsername() + ")" + "\n";
+        s += "Job Posting: " + this.jobPosting.getTitle() + " -- ID: " + this.jobPosting.getId() + "\n";
         s += "Status: " + this.status.getDescription() + "\n";
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        s += "Application date: " + this.getApplicationDate().format(dtf);
+        s += "Application date: " + this.getApplicationDate().format(dtf) + "\n";
         return s;
     }
 }
