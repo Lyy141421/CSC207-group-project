@@ -98,10 +98,9 @@ public class MethodsTheGUICallsInHR {
 
     public void implementJobPosting(CompanyJobPosting cjp, Object[] jobPostingFields) {
         int numPositions = (int) jobPostingFields[0];
-        LocalDate postDate = (LocalDate) jobPostingFields[1];
-        LocalDate applicationCloseDate = (LocalDate) jobPostingFields[2];
-        LocalDate referenceCloseDate = (LocalDate) jobPostingFields[3];
-        this.hr.implementJobPosting(cjp, numPositions, postDate, applicationCloseDate, referenceCloseDate);
+        LocalDate applicationCloseDate = (LocalDate) jobPostingFields[1];
+        LocalDate referenceCloseDate = (LocalDate) jobPostingFields[2];
+        this.hr.implementJobPosting(cjp, numPositions, jobAppSystem.getToday(), applicationCloseDate, referenceCloseDate);
     }
     /**
      * Get all job applications submitted by this applicant with this username.
