@@ -247,7 +247,7 @@ class InterviewerTest {
         lst.add(createInterview(interviewer));
         interviewer.setInterviews(lst);
         interviewer.getInterviews().get(0).setTime(new InterviewTime(today, InterviewTime.NINE_TO_TEN_AM));
-        assertEquals(interviewer.getTimeSlotsFilledOnDate(today).get(0), "2019-07-29 at 9-10 am");
+        assertEquals(interviewer.getTimeSlotsFilledOnDate(today).get(0), "9-10 am");
     }
 
     @Test
@@ -262,18 +262,48 @@ class InterviewerTest {
 
     @Test
     void removeInterview() {
+        Interviewer interviewer = this.createInterviewer("Phillip");
+        ArrayList<Interview> lst = new ArrayList<>();
+        Interview interview = createInterview(interviewer);
+        lst.add(interview);
+        interviewer.setInterviews(lst);
+        interviewer.removeInterview(interview);
+        assertTrue(interviewer.getInterviews().size() == 0);
     }
 
     @Test
     void scheduleInterview() {
+        Interviewer interviewer = this.createInterviewer("Phillip");
+        ArrayList<Interview> lst = new ArrayList<>();
+        Interview interview = createInterview(interviewer);
+        lst.add(interview);
+        interviewer.setInterviews(lst);
+        interviewer.scheduleInterview(interview, new InterviewTime(today, InterviewTime.NINE_TO_TEN_AM));
+        assertTrue(interviewer.getInterviews().get(0).getTime().getTimeSlot().equals(InterviewTime.NINE_TO_TEN_AM));
     }
 
     @Test
     void getUnscheduledInterviews() {
+        Interviewer interviewer = this.createInterviewer("Phillip");
+        ArrayList<Interview> lst = new ArrayList<>();
+        Interview interview = createInterview(interviewer);
+        lst.add(interview);
+        interviewer.setInterviews(lst);
+        assertEquals(interviewer.getUnscheduledInterviews().get(0), interview);
+        interviewer.scheduleInterview(interview, new InterviewTime(today, InterviewTime.NINE_TO_TEN_AM));
+        assertTrue(interviewer.getUnscheduledInterviews().size() == 0);
     }
 
     @Test
     void getScheduledUpcomingInterviews() {
+        Interviewer interviewer = this.createInterviewer("Phillip");
+        ArrayList<Interview> lst = new ArrayList<>();
+        Interview interview = createInterview(interviewer);
+        lst.add(interview);
+        interviewer.setInterviews(lst);
+        assertTrue(interviewer.getScheduledUpcomingInterviews(today).size() == 0);
+        interviewer.scheduleInterview(interview, new InterviewTime(today, InterviewTime.NINE_TO_TEN_AM));
+        assertEquals(interviewer.getScheduledUpcomingInterviews(today).get(0), interview);
     }
 
     @Test
