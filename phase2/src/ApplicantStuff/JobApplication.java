@@ -28,7 +28,7 @@ public class JobApplication implements Serializable {
     // The files submitted for this job application
     private ArrayList<JobApplicationDocument> filesSubmitted = new ArrayList<>();
     // The status of this application
-    private Status status = new Status(this.getApplicant(), this);
+    private Status status;
     // The date this application was submitted
     private LocalDate applicationDate;
     // The references that this applicant has chosen
@@ -52,6 +52,7 @@ public class JobApplication implements Serializable {
         this.applicationDate = applicationDate;
         this.jobPosting.addJobApplication(this);
         applicant.getJobApplicationManager().addJobApplication(this);
+        this.status = new Status(this.getApplicant(), this);
     }
 
     // === Getters ===
