@@ -3,7 +3,6 @@ package CompanyStuff;
 import ApplicantStuff.Applicant;
 import ApplicantStuff.JobApplication;
 import CompanyStuff.JobPostings.BranchJobPosting;
-import Managers.JobPostingManager;
 import NotificationSystem.Notification;
 import NotificationSystem.NotificationManager;
 import org.junit.jupiter.api.Test;

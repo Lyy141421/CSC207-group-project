@@ -80,22 +80,39 @@ public class MethodsTheGUICallsInInterviewer {
     }
 
     /**
-     * Gets a list of interviews that are incomplete for which this interviewer is not the coordinator, ie, can
-     * only write notes.
-     * @return a list of incomplete interviews for which this interviewer is not the coordinator.
+     * Get a list of incomplete interviews that have already occurred.
+     * @return a list of incomplete interviews that have already occurred.
      */
-    public ArrayList<Interview> getIncompleteInterviewsAlreadyOccurredNotCoordinator() {
-        return this.interviewer.getIncompleteInterviewsAlreadyOccurredNotAsCoordinator(this.jobAppSystem.getToday());
+    public ArrayList<Interview> getIncompleteInterviewsAlreadyOccurred() {
+        return this.interviewer.getIncompleteInterviewsAlreadyOccurred(this.jobAppSystem.getToday());
     }
 
     /**
-     * Get a list of interviews that are incomplete for which this interviewer is a coordinator.
-     *
-     * @return a list of interviews that are incomplete for which this interviewer is a coordinator.
+     * Checks whether this interviewer is the coordinator for this interview.
+     * @param interview The interview that has been selected.
+     * @return true iff this interviewer is the coordinator for this interview.
      */
-    public ArrayList<Interview> getIncompleteInterviewsAlreadyOccurredAsCoordinator() {
-        return this.interviewer.getIncompleteInterviewsAlreadyOccurredAsCoordinator(this.jobAppSystem.getToday());
+    public boolean isCoordinator(Interview interview) {
+        return interview.getInterviewCoordinator().equals(this.interviewer);
     }
+
+//    /**
+//     * Gets a list of interviews that are incomplete for which this interviewer is not the coordinator, ie, can
+//     * only write notes.
+//     * @return a list of incomplete interviews for which this interviewer is not the coordinator.
+//     */
+//    public ArrayList<Interview> getIncompleteInterviewsAlreadyOccurredNotCoordinator() {
+//        return this.interviewer.getIncompleteInterviewsAlreadyOccurredNotAsCoordinator(this.jobAppSystem.getToday());
+//    }
+//
+//    /**
+//     * Get a list of interviews that are incomplete for which this interviewer is a coordinator.
+//     *
+//     * @return a list of interviews that are incomplete for which this interviewer is a coordinator.
+//     */
+//    public ArrayList<Interview> getIncompleteInterviewsAlreadyOccurredAsCoordinator() {
+//        return this.interviewer.getIncompleteInterviewsAlreadyOccurredAsCoordinator(this.jobAppSystem.getToday());
+//    }
 
     /**
      * Get a list of interviews that need scheduling.

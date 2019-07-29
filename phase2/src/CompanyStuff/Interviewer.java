@@ -270,6 +270,7 @@ public class Interviewer extends User {
                 scheduledInterviews.add(interview);
             }
         }
+        scheduledInterviews.sort(new InterviewTimeComparator());
         return scheduledInterviews;
     }
 
@@ -292,7 +293,7 @@ public class Interviewer extends User {
      * @param today Today's date.
      * @return a list of incomplete interviews for this interviewer.
      */
-    private ArrayList<Interview> getIncompleteInterviewsAlreadyOccurred(LocalDate today) {
+    public ArrayList<Interview> getIncompleteInterviewsAlreadyOccurred(LocalDate today) {
         ArrayList<Interview> incompleteInterviews = new ArrayList<>();
         for (Interview interview : this.getAllIncompleteInterviews()) {
             if (interview.getTime() != null && interview.getTime().getDate().isBefore(today)) {
@@ -302,37 +303,37 @@ public class Interviewer extends User {
         return incompleteInterviews;
     }
 
-    /**
-     * Get a list of incomplete interviews for which this interviewer is a coordinator.
-     *
-     * @param today Today's date.
-     * @return a list fo incomplete interviews for which this interviewer is a coordinator.
-     */
-    public ArrayList<Interview> getIncompleteInterviewsAlreadyOccurredAsCoordinator(LocalDate today) {
-        ArrayList<Interview> interviews = new ArrayList<>();
-        for (Interview interview : this.getIncompleteInterviewsAlreadyOccurred(today)) {
-            if (interview.getInterviewCoordinator().equals(this)) {
-                interviews.add(interview);
-            }
-        }
-        return interviews;
-    }
-
-    /**
-     * Get a list of incomplete interviews for which this interviewer is not a coordinator.
-     *
-     * @param today Today's date.
-     * @return a list fo incomplete interviews for which this interviewer is not a coordinator.
-     */
-    public ArrayList<Interview> getIncompleteInterviewsAlreadyOccurredNotAsCoordinator(LocalDate today) {
-        ArrayList<Interview> interviews = new ArrayList<>();
-        for (Interview interview : this.getIncompleteInterviewsAlreadyOccurred(today)) {
-            if (!interview.getInterviewCoordinator().equals(this)) {
-                interviews.add(interview);
-            }
-        }
-        return interviews;
-    }
+//    /**
+//     * Get a list of incomplete interviews for which this interviewer is a coordinator.
+//     *
+//     * @param today Today's date.
+//     * @return a list fo incomplete interviews for which this interviewer is a coordinator.
+//     */
+//    public ArrayList<Interview> getIncompleteInterviewsAlreadyOccurredAsCoordinator(LocalDate today) {
+//        ArrayList<Interview> interviews = new ArrayList<>();
+//        for (Interview interview : this.getIncompleteInterviewsAlreadyOccurred(today)) {
+//            if (interview.getInterviewCoordinator().equals(this)) {
+//                interviews.add(interview);
+//            }
+//        }
+//        return interviews;
+//    }
+//
+//    /**
+//     * Get a list of incomplete interviews for which this interviewer is not a coordinator.
+//     *
+//     * @param today Today's date.
+//     * @return a list fo incomplete interviews for which this interviewer is not a coordinator.
+//     */
+//    public ArrayList<Interview> getIncompleteInterviewsAlreadyOccurredNotAsCoordinator(LocalDate today) {
+//        ArrayList<Interview> interviews = new ArrayList<>();
+//        for (Interview interview : this.getIncompleteInterviewsAlreadyOccurred(today)) {
+//            if (!interview.getInterviewCoordinator().equals(this)) {
+//                interviews.add(interview);
+//            }
+//        }
+//        return interviews;
+//    }
 
     /**
      * Get a list of job applications of this interviewer's interviewees.
@@ -368,9 +369,6 @@ public class Interviewer extends User {
      */
     void addInterview(Interview interview) {
         this.interviews.add(interview);
-        if (interview.getTime() != null) {
-            this.interviews.sort(new InterviewTimeComparator());
-        }
     }
 
 }

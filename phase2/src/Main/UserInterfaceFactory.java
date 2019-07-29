@@ -1,12 +1,6 @@
 package Main;
 
-import ApplicantStuff.Applicant;
-import CompanyStuff.HRCoordinator;
-import CompanyStuff.Interviewer;
 import GUIClasses.ActionListeners.LogoutActionListener;
-import GUIClasses.CommonUserGUI.UserPanel;
-import GUIClasses.InterviewerInterface.InterviewerMain;
-import GUIClasses.ReferenceInterface.ReferencePanel;
 
 public class UserInterfaceFactory {
 

@@ -2,6 +2,7 @@ package GUIClasses.InterviewerInterface;
 
 import CompanyStuff.Interview;
 
+import GUIClasses.CommonUserGUI.GUIElementsCreator;
 import GUIClasses.MethodsTheGUICallsInInterviewer;
 
 import javax.swing.*;
@@ -32,7 +33,7 @@ class InterviewerViewAndWriteNotes extends InterviewerViewOnly {
      */
     @Override
     HashMap<String, Interview> getInterviewMap() {
-        return getTitleToInterviewMap(interviewerInterface.getIncompleteInterviewsAlreadyOccurredNotCoordinator());
+        return getTitleToInterviewMap(interviewerInterface.getIncompleteInterviewsAlreadyOccurred());
     }
 
     /**
@@ -51,7 +52,10 @@ class InterviewerViewAndWriteNotes extends InterviewerViewOnly {
      */
     private void setWriteNotesPanel() {
         if (interviewerInterface.hasAlreadyWrittenNotes(interviewSelected)) {
-            JOptionPane.showMessageDialog(notesPanel, "You have already written notes for this interview");
+            notesPanel.setLayout(new BorderLayout());
+            JPanel message = new GUIElementsCreator().createLabelPanel("You have already written notes for this interview", 18, false);
+            message.setBorder(BorderFactory.createEmptyBorder(100, 20, 20, 20));
+            notesPanel.add(message, BorderLayout.CENTER);
         } else {
             notesPanel.setLayout(new BoxLayout(notesPanel, BoxLayout.Y_AXIS));
             this.notes = new JTextArea("Please enter interview notes");

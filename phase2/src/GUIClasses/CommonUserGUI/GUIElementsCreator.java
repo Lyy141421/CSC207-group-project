@@ -11,14 +11,20 @@ public class GUIElementsCreator {
      */
 
     /**
-     * Create the title panel.
+     * Create a panel with this label
      *
-     * @param text     The actual title.
-     * @param fontSize The size of the title.
+     * @param text     The actual title/message.
+     * @param fontSize The size of the title/message.
+     * @param isTitle Whether or not this is a panel title.
      * @return the JPanel with this title.
      */
-    public JPanel createTitlePanel(String text, int fontSize) {
-        JLabel title = new JLabel(text);
+    public JPanel createLabelPanel(String text, int fontSize, boolean isTitle) {
+        JLabel title;
+        if (isTitle) {
+            title = new JLabel(text);
+        } else {
+            title = new JLabel("<html><p>" + text + "</p></html>");
+        }
         JPanel titlePanel = new JPanel(new BorderLayout());
         titlePanel.add(title, BorderLayout.PAGE_START);
         title.setFont(new Font("Century Gothic", Font.BOLD, fontSize));

@@ -49,28 +49,21 @@ class InterviewerSideBarMenuPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 ((UserPanel) cards.getParent()).refresh();
-                ((CardLayout) cards.getLayout()).show(cards, InterviewerMain.SCHEDULE);
+                ((CardLayout) cards.getLayout()).show(cards, InterviewerPanel.SCHEDULE);
             }
         });
         fullMenu.put("4. View Interviewees", new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 ((UserPanel) cards.getParent()).refresh();
-                ((CardLayout) cards.getLayout()).show(cards, InterviewerMain.INCOMPLETE);
+                ((CardLayout) cards.getLayout()).show(cards, InterviewerPanel.INCOMPLETE);
             }
         });
-        fullMenu.put("5. Add Interview Notes", new ActionListener() {
+        fullMenu.put("5. Complete Interviews", new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 ((UserPanel) cards.getParent()).refresh();
-                ((CardLayout) cards.getLayout()).show(cards, InterviewerMain.ADD_NOTES);
-            }
-        });
-        fullMenu.put("6. Complete Interviews", new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                ((UserPanel) cards.getParent()).refresh();
-                ((CardLayout) cards.getLayout()).show(cards, InterviewerMain.COORDINATOR);
+                ((CardLayout) cards.getLayout()).show(cards, InterviewerPanel.COMPLETE);
             }
         });
         fullMenu.put("7. Logout", logoutActionListener);
