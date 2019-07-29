@@ -25,7 +25,7 @@ public class HiringSelectionFrame extends SelectionFrame implements ItemListener
         confirmButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                HRInterface.hireApplications(getApplicantsSelected());
+                HRInterface.selectApplicantsForHire(getApplicantsSelected());
             }
         });
     }
