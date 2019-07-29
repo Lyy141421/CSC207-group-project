@@ -243,10 +243,22 @@ class InterviewerTest {
 
     @Test
     void getTimeSlotsFilledOnDate() {
+        Interviewer interviewer = this.createInterviewer("Phillip");
+        ArrayList<Interview> lst = new ArrayList<>();
+        lst.add(createInterview(interviewer));
+        interviewer.setInterviews(lst);
+        interviewer.getInterviews().get(0).setTime(new InterviewTime(today, "9-10 am"));
+        assertEquals(interviewer.getTimeSlotsFilledOnDate(today).get(0), "2019-07-29 at 9-10 am");
     }
 
     @Test
     void getTimeSlotsAvailableOnDate() {
+        Interviewer interviewer = this.createInterviewer("Phillip");
+        ArrayList<Interview> lst = new ArrayList<>();
+        lst.add(createInterview(interviewer));
+        interviewer.setInterviews(lst);
+        interviewer.getInterviews().get(0).setTime(new InterviewTime(today, "9-10 am"));
+        assertEquals(interviewer.getTimeSlotsAvailableOnDate(today).size(), 7);
     }
 
     @Test
