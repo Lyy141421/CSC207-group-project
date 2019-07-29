@@ -48,10 +48,8 @@ abstract class SelectionFrame extends JInternalFrame{
         for (JobApplication app : applications) {
             JCheckBox checkBox = new JCheckBox(app.getApplicant().getLegalName());
             checkBoxToAppMap.put(checkBox, app);
+            c.gridy += (c.gridx+1)/3;
             c.gridx = (c.gridx+1)%3;
-            if (c.gridx == 0) {
-                c.gridy++;
-            }
             this.add(checkBox, c);
         }
     }
