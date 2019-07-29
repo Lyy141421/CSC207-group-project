@@ -35,7 +35,7 @@ class JobApplicationManagerTest {
                 LocalDate.of(2019, 8, 10));
         hrc.addJobPosting("Title", "field", "descriptionhujedk",
                 new ArrayList<>(Arrays.asList("CV", "Cover Letter", "Reference Letter")), new ArrayList<>(), 1,
-                LocalDate.of(2019, 7, 15), LocalDate.of(2019, 7, 30),
+                LocalDate.of(2019, 7, 15), LocalDate.of(2019, 8, 3),
                 LocalDate.of(2019, 8, 10));
         return branch1A;
     }
@@ -174,11 +174,39 @@ class JobApplicationManagerTest {
         assertEquals(1, applicant.getJobApplicationManager().getUpcomingInterviews(LocalDate.of(2019, 8, 12)));
     }
 
+    @Test
+    void testGetNumDaysSinceMostRecentCloseDateNoJobApps() {
+        Applicant applicant = this.createApplicant();
+        assertEquals(0, applicant.getJobApplicationManager().getNumDaysSinceMostRecentCloseDate(LocalDate.now()));
+    }
 
     @Test
-    void getNumDaysSinceMostRecentCloseDate() {
+    void testGetNumDaysSinceMostRecentCloseDateOneOpenJobApp() {
         Applicant applicant = this.createApplicant();
+        Branch branch = this.createCompanyBranchEmployeesAndJobPostings();
+        BranchJobPosting jobPosting = branch.getJobPostingManager().getBranchJobPostings().get(0);
+        this.createJobApplication(applicant, jobPosting);
+        assertEquals(0, applicant.getJobApplicationManager().getNumDaysSinceMostRecentCloseDate(jobPosting.getApplicantCloseDate().minusDays(3)));
+    }
 
+    @Test
+    void testGetNumDaysSinceMostRecentCloseDateOneClosedJobApp() {
+        Applicant applicant = this.createApplicant();
+        Branch branch = this.createCompanyBranchEmployeesAndJobPostings();
+        BranchJobPosting jobPosting = branch.getJobPostingManager().getBranchJobPostings().get(0);
+        this.createJobApplication(applicant, jobPosting);
+        assertEquals(3, applicant.getJobApplicationManager().getNumDaysSinceMostRecentCloseDate(jobPosting.getApplicantCloseDate().plusDays(3)));
+    }
+
+    @Test
+    void testGetNumDaysSinceMostRecentCloseDateOneClosedOneOpen() {
+        Applicant applicant = this.createApplicant();
+        Branch branch = this.createCompanyBranchEmployeesAndJobPostings();
+        BranchJobPosting jobPosting = branch.getJobPostingManager().getBranchJobPostings().get(0);
+        BranchJobPosting jobPosting2 = branch.getJobPostingManager().getBranchJobPostings().get(1);
+        this.createJobApplication(applicant, jobPosting);
+        this.createJobApplication(applicant, jobPosting2);
+        assertEquals(0, applicant.getJobApplicationManager().getNumDaysSinceMostRecentCloseDate(jobPosting.getApplicantCloseDate().plusDays(2)));
     }
 
     @Test

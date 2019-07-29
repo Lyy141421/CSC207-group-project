@@ -3,12 +3,14 @@ package GUIClasses;
 import ApplicantStuff.Applicant;
 import ApplicantStuff.JobApplication;
 import CompanyStuff.HRCoordinator;
+import CompanyStuff.Interview;
 import CompanyStuff.Interviewer;
 import CompanyStuff.JobApplicationGrader;
 import CompanyStuff.JobPostings.BranchJobPosting;
 import CompanyStuff.JobPostings.BranchJobPostingManager;
 import Main.JobApplicationSystem;
 
+import java.io.File;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -165,6 +167,31 @@ public class MethodsTheGUICallsInHR {
 
     public ArrayList<Interviewer> getInterviewersInField(BranchJobPosting jobPosting) {
         return this.hr.getBranch().getFieldToInterviewers().get(jobPosting.getField());
+    }
+
+    public void setInterviewConfiguration(BranchJobPosting jobPosting, ArrayList<Boolean> isInterviewRoundOneOnOne,
+                                          ArrayList<String> descriptions) {
+        ArrayList<String[]> interviewConfiguration = new ArrayList<>();
+        int i = 0;
+        while (i < isInterviewRoundOneOnOne.size()) {
+            if (isInterviewRoundOneOnOne.get(i)) {
+                interviewConfiguration.add(new String[]{Interview.ONE_ON_ONE, descriptions.get(i)});
+            } else {
+                interviewConfiguration.add(new String[]{Interview.GROUP, descriptions.get(i)});
+            }
+            i++;
+        }
+        jobPosting.getInterviewManager().setInterviewConfiguration(interviewConfiguration);
+    }
+
+    /**
+     * Gets the folder for this job application in the company "server".
+     *
+     * @param jobApp The job application selected by the interviewer to view.
+     * @return the file object that holds the files submitted for this job application.
+     */
+    public File getFolderForJobApplication(JobApplication jobApp) {
+        return this.hr.getBranch().getCompany().getDocumentManager().getFolderForJobApplication(jobApp);
     }
 
     /**

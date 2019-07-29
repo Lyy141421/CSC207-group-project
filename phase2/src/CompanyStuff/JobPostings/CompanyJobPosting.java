@@ -13,6 +13,11 @@ public class CompanyJobPosting extends Observable implements Serializable {
     static final long serialVersionUID = 1L;
     // The total number of job postings created
     private static int totalNumOfJobPostings;
+    // The list of recommended documents for submission
+    public static String[] RECOMMENDED_DOCUMENTS = new String[]{"CV/Resume", "Cover letter", "Reference letter"};
+    // The list of recommended tags
+    public static String[] RECOMMENDED_TAGS = new String[]{"Computer science", "Bachelor's degree", "Prior work experience",
+            "Team-oriented", "Full-time", "Contract", "Part-time", "Salaried", "Hourly"};
 
     // === Instance variables ===
     // The job posting id
