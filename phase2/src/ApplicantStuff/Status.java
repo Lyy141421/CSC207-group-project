@@ -73,7 +73,7 @@ public class Status extends Observable implements Serializable {
      */
     public void setHired() {
         this.setValue(this.hired);
-        notifyAllObservers(new Notification("Hired!!",
+        notifyAllObservers(new Notification("You've Been Hired!",
                 "You have been hired at " + this.jobApplication.getJobPosting().getBranch().getName() + "," +
                         " make sure to check your email."));
     }

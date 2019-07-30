@@ -376,6 +376,9 @@ public class InterviewManager extends Observable implements Serializable {
      * Hire all the applicants
      */
     private void hireAllApplicants() {
+        this.notifyAllObservers(new Notification("AutoHiring All Applicants",
+                "All applicants in " + this.getBranchJobPosting().getTitle()
+                        + " have been auto-hired"));
         this.hireApplicants(this.applicationsInConsideration);
     }
 
