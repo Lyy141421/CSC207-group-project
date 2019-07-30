@@ -169,7 +169,7 @@ public class Interview implements Serializable {
                 return true;
             }
         }
-        return true;
+        return false;
     }
 
     /**

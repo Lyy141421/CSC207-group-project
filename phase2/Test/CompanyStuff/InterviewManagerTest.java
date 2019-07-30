@@ -75,24 +75,31 @@ public class InterviewManagerTest {
         BranchJobPosting branchJobPosting = (BranchJobPosting)list.get(4);
         JobApplication application1 = (JobApplication)list.get(5);
         JobApplication application2 = (JobApplication)list.get(6);
+
         ArrayList<String[]> interviewConfiguration = new ArrayList<>();
         interviewConfiguration.add(new String[]{Interview.ONE_ON_ONE, "In-person interview"});
         interviewManager.setInterviewConfiguration(interviewConfiguration);
         interviewManager.setUpOneOnOneInterviews();
         assert interviewer1.getInterviews().size() == 1;
         assert interviewer2.getInterviews().size() == 1;
+
         Interview interview1 = interviewer1.getInterviews().get(0);
         Interview interview2 = interviewer2.getInterviews().get(0);
         InterviewTime time = new InterviewTime(LocalDate.now().plusDays(5), "9-10 am");
         interviewer1.scheduleInterview(interview1, time);
         interviewer2.scheduleInterview(interview2, time);
-        // interviewer2 is actually interviewing the applicant with job application 1
+
         interview2.setResult(application1, false);
         interview1.setResult(application2, true);
-        interviewManager.reject(application1);
+        assert interviewManager.currentRoundIsOver();
+        interviewManager.reject(application1); //TODO: remove
         assert interviewManager.getApplicationsInConsideration().equals(Collections.singletonList(application2));
         assert interviewManager.getApplicationsRejected().equals(Collections.singletonList(application1));
+
         interviewManager.hireApplicants(interviewManager.getApplicationsInConsideration());
+        assert interviewManager.getBranchJobPosting().isFilled();
+        assert application1.getStatus().isArchived();
+        assert application2.getStatus().isHired();
     }
 
 

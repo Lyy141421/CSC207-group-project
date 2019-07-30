@@ -117,7 +117,7 @@ public class InterviewManager extends Observable implements Serializable {
      *
      * @return true iff all interviews in this round have been completed.
      */
-    public boolean isCurrentRoundOver() {
+    public boolean currentRoundIsOver() {
         for (JobApplication jobApp : this.getApplicationsInConsideration()) {
             Interview lastInterview = jobApp.getLastInterview();
             if (lastInterview != null && !lastInterview.isIncomplete()) {
@@ -343,7 +343,7 @@ public class InterviewManager extends Observable implements Serializable {
      * and/or all the interview rounds have been completed.
      */
     private boolean isInterviewProcessOver() {
-        return this.isCurrentRoundOver() && (this.isNumApplicationsUnderOrAtThreshold() |
+        return this.currentRoundIsOver() && (this.isNumApplicationsUnderOrAtThreshold() |
                 this.currentRound == this.interviewConfiguration.size());
     }
 
