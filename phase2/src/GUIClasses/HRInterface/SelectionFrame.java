@@ -21,12 +21,12 @@ abstract class SelectionFrame extends JInternalFrame{
     GridBagConstraints c = new GridBagConstraints();
 
     JButton confirmButton;
-    JButton homeButton;
+    JButton returnButton;
 
-    SelectionFrame(MethodsTheGUICallsInHR HRInterface, ArrayList<JobApplication> applications, JButton homeButton, int toSelect) {
+    SelectionFrame(MethodsTheGUICallsInHR HRInterface, ArrayList<JobApplication> applications, JButton returnButton, int toSelect) {
         super("Select");
         this.HRInterface = HRInterface;
-        this.homeButton = homeButton;
+        this.returnButton = returnButton;
 
         this.setLayout(new GridBagLayout());
 
@@ -75,7 +75,7 @@ abstract class SelectionFrame extends JInternalFrame{
         cancelButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                homeButton.setVisible(false);
+                returnButton.setVisible(false);
                 dispose();
             }
         });

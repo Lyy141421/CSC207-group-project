@@ -53,7 +53,17 @@ public class HRViewApp extends HRPanel {
 
         this.setApplicationList(splitDisplay);
         this.setInfoPane(splitDisplay);
+        this.setButtons(mode);
 
+        this.setListSelectionListener();
+    }
+
+    void reload () {
+        this.applicationList.removeAll();
+        this.applicationList.setListData(this.currApps.keySet().toArray(new String[this.currApps.size()]));
+    }
+
+    private void setButtons(int mode) {
         JPanel buttons = new JPanel(new FlowLayout());
         this.createHireButton();
         buttons.add(this.hireButton);
@@ -61,7 +71,7 @@ public class HRViewApp extends HRPanel {
         buttons.add(this.selectButton);
         this.createReturnButton();
         buttons.add(this.returnButton);
-        //TODO: show buttons depending on mode
+
         switch (mode) {
             case 0:
                 this.setViewOnlyMode();
@@ -73,15 +83,7 @@ public class HRViewApp extends HRPanel {
                 this.setHireMode();
                 break;
         }
-
-        //buttons.add(this.homeButton);
-
-        this.setListSelectionListener();
-    }
-
-    void reload () {
-        this.applicationList.removeAll();
-        this.applicationList.setListData(this.currApps.keySet().toArray(new String[this.currApps.size()]));
+        this.add(buttons, BorderLayout.SOUTH);
     }
 
     private void setApplicationList (JSplitPane splitDisplay) {
@@ -149,7 +151,7 @@ public class HRViewApp extends HRPanel {
         this.hireButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new HiringSelectionFrame(HRInterface, new ArrayList<>(currApps.values()), returnButton);
+                JInternalFrame popUp = new HiringSelectionFrame(HRInterface, new ArrayList<>(currApps.values()), returnButton);
             }
         });
     }
