@@ -18,14 +18,17 @@ public class GradingFilterFrame extends JInternalFrame {
     MethodsTheGUICallsInHR HRInterface;
     ArrayList<JobApplication> applications;
 
+    JButton homeButton;
+
     JTextField keywordInput;
     JSpinner numberToSelect;
 
-    GradingFilterFrame(MethodsTheGUICallsInHR HRInterface, ArrayList<JobApplication> applications) {
+    GradingFilterFrame(MethodsTheGUICallsInHR HRInterface, ArrayList<JobApplication> applications, JButton homeButton) {
         super("Sort by keywords");
 
         this.HRInterface = HRInterface;
         this.applications = applications;
+        this.homeButton = homeButton;
 
         this.setKeywordInput();
         this.setSelectNumber();
@@ -60,7 +63,9 @@ public class GradingFilterFrame extends JInternalFrame {
             public void actionPerformed(ActionEvent e) {
                 ArrayList<String> keywords = new ArrayList<>(Arrays.asList(keywordInput.getText().split(";")));
                 ArrayList<JobApplication> sortedApplications = HRInterface.getJobApplicationInNonDecreasingOrder(applications.get(0).getJobPosting(), keywords);
-                new InterviewSelectionFrame(HRInterface, sortedApplications, ((SpinnerNumberModel)numberToSelect.getModel()).getNumber().intValue());
+                JInternalFrame interviewSelectionFrame = new InterviewSelectionFrame(HRInterface, sortedApplications,
+                        homeButton, ((SpinnerNumberModel)numberToSelect.getModel()).getNumber().intValue());
+                dispose();
             }
         });
 

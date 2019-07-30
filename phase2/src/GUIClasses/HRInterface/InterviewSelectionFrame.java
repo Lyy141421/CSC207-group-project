@@ -12,8 +12,8 @@ import java.util.ArrayList;
 
 public class InterviewSelectionFrame extends SelectionFrame {
 
-    InterviewSelectionFrame(MethodsTheGUICallsInHR HRInterface, ArrayList<JobApplication> applications, int toSelect) {
-        super(HRInterface, applications, toSelect);
+    InterviewSelectionFrame(MethodsTheGUICallsInHR HRInterface, ArrayList<JobApplication> applications, JButton homeButton, int toSelect) {
+        super(HRInterface, applications, homeButton, toSelect);
     }
 
     @Override
@@ -22,6 +22,8 @@ public class InterviewSelectionFrame extends SelectionFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 HRInterface.rejectApplicationForFirstRound(getApplicantsDeselected());
+                homeButton.setVisible(true);
+                dispose();
             }
         });
     }

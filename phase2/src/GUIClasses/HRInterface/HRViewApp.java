@@ -7,6 +7,8 @@ import GUIClasses.CommonUserGUI.DocumentViewer;
 
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
+import javax.swing.event.InternalFrameEvent;
+import javax.swing.event.InternalFrameListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
@@ -109,7 +111,7 @@ public class HRViewApp extends HRPanel {
         this.hireButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new HiringSelectionFrame(HRInterface, new ArrayList<>(currApps.values()));
+                new HiringSelectionFrame(HRInterface, new ArrayList<>(currApps.values()), homeButton);
             }
         });
     }
@@ -126,7 +128,7 @@ public class HRViewApp extends HRPanel {
         this.selectButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new InterviewSelectionFrame(HRInterface, new ArrayList<>(currApps.values()));
+                JInternalFrame popUp = new GradingFilterFrame(HRInterface, new ArrayList<>(currApps.values()), homeButton);
             }
         });
     }
@@ -135,15 +137,4 @@ public class HRViewApp extends HRPanel {
         this.hireButton.setVisible(true);
         this.homeButton.setVisible(false);
     }
-
-    /*
-    private boolean isPhoneSetup() {
-        boolean isSetup = true;
-        for (JobApplication jobApps : currApps) {
-            if (!(jobApps.isOnPhoneInterview() || HRInterface.isRejected(jobApps))) {
-                isSetup = false;
-            }
-        }
-        return isSetup;
-    }*/
 }
