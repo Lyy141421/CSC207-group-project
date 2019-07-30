@@ -1,6 +1,7 @@
 package GUIClasses.HRInterface;
 
 import ApplicantStuff.JobApplication;
+import CompanyStuff.JobPostings.BranchJobPosting;
 import GUIClasses.MethodsTheGUICallsInHR;
 
 import javax.swing.*;
@@ -12,8 +13,12 @@ import java.util.ArrayList;
 
 public class InterviewSelectionFrame extends SelectionFrame {
 
+    BranchJobPosting branchJobPosting;
+
     InterviewSelectionFrame(MethodsTheGUICallsInHR HRInterface, ArrayList<JobApplication> applications, JButton returnButton, int toSelect) {
         super(HRInterface, applications, returnButton, toSelect);
+
+        this.branchJobPosting = applications.get(0).getJobPosting();
     }
 
     @Override
@@ -22,7 +27,7 @@ public class InterviewSelectionFrame extends SelectionFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 HRInterface.rejectApplicationForFirstRound(getApplicantsDeselected());
-                returnButton.setVisible(true);
+                JInternalFrame popUp = new InterviewConfigFrame(HRInterface, branchJobPosting, returnButton);
                 dispose();
             }
         });
