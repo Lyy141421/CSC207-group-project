@@ -97,7 +97,11 @@ public class CompanyJobPosting extends Observable implements Serializable {
     }
 
     public String getTagsString(){
-        return tags.toString().replace("[", "").replace("]", "");
+        return tags.toString().replace("[", "").replace("]", "").replace(", ", ";");
+    }
+
+    public String getDocsString(){
+        return requiredDocuments.toString().replace("[", "").replace("]", "").replace(", ", ";");
     }
 
     public boolean containsTag(String tag){

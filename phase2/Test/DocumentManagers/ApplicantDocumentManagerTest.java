@@ -36,7 +36,7 @@ class ApplicantDocumentManagerTest {
                 "horace@gmail.com", branch1A, "field", LocalDate.of(2019, 7, 15));
         hrc.addJobPosting("Title", "field", "descriptionhujedk",
                 new ArrayList<>(Arrays.asList("CV", "Cover Letter", "Reference Letter")), new ArrayList<>(), 1,
-                LocalDate.of(2019, 7, 15), LocalDate.of(2019, 7, Applicant.INACTIVE_DAYS),
+                LocalDate.of(2019, 7, 15), LocalDate.of(2019, 7, 30),
                 LocalDate.of(2019, 8, 10));
         hrc.addJobPosting("Title", "field", "descriptionhujedk",
                 new ArrayList<>(Arrays.asList("CV", "Cover Letter", "Reference Letter")), new ArrayList<>(), 1,

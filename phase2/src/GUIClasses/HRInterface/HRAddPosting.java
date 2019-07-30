@@ -37,8 +37,6 @@ public class HRAddPosting extends HRPanel {
     JComboBox<String> companyPostingList;
     DefaultComboBoxModel<String> companyPostingModel;
 
-    //title, field, description, required documents, tags, numOfPos, close date, reference close date
-
     HRAddPosting(Container contentPane, MethodsTheGUICallsInHR HRInterface, LocalDate today) {
         super(contentPane, HRInterface, today);
 
@@ -49,6 +47,7 @@ public class HRAddPosting extends HRPanel {
         this.addAllLabels();
         this.addAllFields();
         this.addButtons();
+        this.setCompanyPostingListListener();
     }
 
     void reload() {
@@ -112,7 +111,6 @@ public class HRAddPosting extends HRPanel {
         this.setCompanyJPMap(this.HRInterface.getHR().getBranch().getCompany().getCompanyJobPostings());
         this.companyPostingModel = new DefaultComboBoxModel<>(companyJPMap.keySet().toArray(new String[companyJPMap.size()]));
         this.companyPostingList.setModel(this.companyPostingModel);
-        this.setCompanyPostingListListener();
 
         this.addFieldToPanel(this.companyPostingList);
     }
@@ -121,13 +119,43 @@ public class HRAddPosting extends HRPanel {
         this.companyPostingList.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
+                //TODO: this needs testing 1. select an existing posting
+                //                         2. select a different posting
+                //                         3. input new title
+                //                         4. select posting again
                 String selectedTitle = (String)companyPostingList.getSelectedItem();
                 if (companyJPMap.containsKey(selectedTitle)) {
                     CompanyJobPosting selectedJP = companyJPMap.get(selectedTitle);
                     //TODO: fill in certain default fields and disable them
+                    //0.title, 1.field, 2.description, 3.required documents, 4.tags, 5.numOfPos, 6.close date, 7.numOfRef, 8.reference close date
+                    //Company default： 0, 1, 2, 3, 4, 7
+                    fillDefaultValue(selectedJP);
+                    disableDefaultFields();
+                } else {
+                    for (JComponent component: entryBoxes) {
+                        component.setEnabled(true);
+                    }
                 }
             }
         });
+    }
+
+    private void fillDefaultValue(CompanyJobPosting companyJobPosting) {
+        ((JTextField)this.entryBoxes.get(1)).setText(companyJobPosting.getField());
+        ((JTextArea)this.entryBoxes.get(2)).setText(companyJobPosting.getDescription());
+        ((JTextField)this.entryBoxes.get(3)).setText(companyJobPosting.getDocsString());
+        ((JTextField)this.entryBoxes.get(3)).setText(companyJobPosting.getTagsString());
+        // TODO: fill in reference letter number
+        // ((SpinnerNumberModel)((JSpinner)this.entryBoxes.get(7)).getModel()).getNumber(companyJobPosting.getNumRef);
+    }
+
+    private void disableDefaultFields() {
+        this.entryBoxes.get(0).setEnabled(false);
+        this.entryBoxes.get(1).setEnabled(false);
+        this.entryBoxes.get(2).setEnabled(false);
+        this.entryBoxes.get(3).setEnabled(false);
+        this.entryBoxes.get(4).setEnabled(false);
+        this.entryBoxes.get(7).setEnabled(false);
     }
 
     /**
@@ -192,7 +220,8 @@ public class HRAddPosting extends HRPanel {
             recommendedPanel.add(checkBox);
         }
         selectionPanel.add(new JScrollPane(recommendedPanel), BorderLayout.EAST);
-        //TODO: add to panel and add textField to entryBox.
+        addLabelToPanel(selectionPanel);
+        this.entryBoxes.add(textInput);
     }
 
     private JButton createSubmitButton() {

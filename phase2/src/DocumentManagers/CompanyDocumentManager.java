@@ -44,7 +44,8 @@ public class CompanyDocumentManager extends DocumentManager {
      * @param branchJobPosting The branch job posting for which a folder is to be created.
      * @return the folder that was created.
      */
-    private File createBranchJobPostingFolder(BranchJobPosting branchJobPosting) {
+    // TODO make private after testing
+    public File createBranchJobPostingFolder(BranchJobPosting branchJobPosting) {
         Branch branch = branchJobPosting.getBranch();
         File branchFolder = new File(this.getFolder().getPath() + "/" + branch.getName());
         File jobPostingFolder = new File(branchFolder.getPath() + "/" + branchJobPosting.getId() + "_" +
@@ -64,7 +65,8 @@ public class CompanyDocumentManager extends DocumentManager {
      * @param branchJobPosting The job posting in question.
      * @return the folder for this job posting.
      */
-    private File getFolderForJobPosting(BranchJobPosting branchJobPosting) {
+    // TODO make private after testing
+    public File getFolderForJobPosting(BranchJobPosting branchJobPosting) {
         Branch branch = branchJobPosting.getBranch();
         File branchFolder = new File(this.getFolder().getPath() + "/" + branch.getName());
         return new File(branchFolder.getPath() + "/" + branchJobPosting.getId() + "_" +
@@ -78,7 +80,8 @@ public class CompanyDocumentManager extends DocumentManager {
      * @param jobApp           The job application for which the folder is to be created.
      * @return the folder created.
      */
-    private File createApplicationFolder(File jobPostingFolder, JobApplication jobApp) {
+    // TODO make private after testing
+    public File createApplicationFolder(File jobPostingFolder, JobApplication jobApp) {
         Applicant applicant = jobApp.getApplicant();
         File applicationFolder = new File(jobPostingFolder.getPath() + "/" + applicant.getUsername());
         applicationFolder.mkdirs();
@@ -98,11 +101,15 @@ public class CompanyDocumentManager extends DocumentManager {
     public File getFolderForJobApplication(JobApplication jobApplication) {
         BranchJobPosting jobPosting = jobApplication.getJobPosting();
         File jobPostingFolder = this.getFolderForJobPosting(jobPosting);
-        File[] userFolders = jobPostingFolder.listFiles();
-        String username = jobApplication.getApplicant().getUsername();
-        for (File userFolder : userFolders) {
-            if (userFolder.getName().equals(username)) {
-                return userFolder;
+        if (jobPostingFolder != null) {
+            File[] userFolders = jobPostingFolder.listFiles();
+            if (userFolders != null) {
+                String username = jobApplication.getApplicant().getUsername();
+                for (File userFolder : userFolders) {
+                    if (userFolder.getName().equals(username)) {
+                        return userFolder;
+                    }
+                }
             }
         }
         return null;
@@ -115,7 +122,11 @@ public class CompanyDocumentManager extends DocumentManager {
      * @return the list of files submitted with this job application.
      */
     public File[] getFilesForJobApplication(JobApplication jobApplication) {
-        return this.getFolderForJobApplication(jobApplication).listFiles();
+        if (this.getFolderForJobApplication(jobApplication) != null) {
+            return this.getFolderForJobApplication(jobApplication).listFiles();
+        } else {
+            return new File[0];
+        }
     }
 
     /**
@@ -126,9 +137,11 @@ public class CompanyDocumentManager extends DocumentManager {
      */
     public void addFilesForJobApplication(JobApplication jobApp, ArrayList<File> filesSubmitted) {
         File folder = this.getFolderForJobApplication(jobApp);
-        for (File fileToSubmit : filesSubmitted) {
-            JobApplicationDocument document = new JobApplicationDocument(fileToSubmit);
-            document.copyFile(folder + "/" + fileToSubmit.getName());
+        if (folder != null) {
+            for (File fileToSubmit : filesSubmitted) {
+                JobApplicationDocument document = new JobApplicationDocument(fileToSubmit);
+                document.copyFile(folder + "/" + fileToSubmit.getName());
+            }
         }
     }
 
@@ -139,7 +152,10 @@ public class CompanyDocumentManager extends DocumentManager {
      * @return true iff documents have already been transferred for this job posting.
      */
     public boolean applicationDocumentsTransferred(BranchJobPosting jobPosting) {
-        return this.getFolderForJobPosting(jobPosting).exists();
+        if (this.getFolderForJobPosting(jobPosting) != null) {
+            return this.getFolderForJobPosting(jobPosting).exists();
+        }
+        return false;
     }
 
     /**
