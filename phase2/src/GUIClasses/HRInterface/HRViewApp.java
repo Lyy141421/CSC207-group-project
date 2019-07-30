@@ -33,10 +33,18 @@ public class HRViewApp extends HRPanel {
     private JButton hireButton;
     private JButton selectButton;
 
+    JButton returnButton;
+    String previousPanel;
 
-    HRViewApp(Container contentPane, MethodsTheGUICallsInHR HRInterface, LocalDate today, HashMap<String, JobApplication> currApps) {
+
+    //mode: 0 view only
+    //      1 review
+    //      2 hiring
+    HRViewApp(Container contentPane, MethodsTheGUICallsInHR HRInterface, LocalDate today,
+              HashMap<String, JobApplication> currApps, String previousPanel, int mode) {
         super(contentPane, HRInterface, today);
         this.currApps = currApps;
+        this.previousPanel = previousPanel;
 
         this.setLayout(new BorderLayout());
 
@@ -51,7 +59,22 @@ public class HRViewApp extends HRPanel {
         buttons.add(this.hireButton);
         this.createSelectButton();
         buttons.add(this.selectButton);
-        buttons.add(this.homeButton);
+        this.createReturnButton();
+        buttons.add(this.returnButton);
+        //TODO: show buttons depending on mode
+        switch (mode) {
+            case 0:
+                this.setViewOnlyMode();
+                break;
+            case 1:
+                this.setSelectMode();
+                break;
+            case 2:
+                this.setHireMode();
+                break;
+        }
+
+        //buttons.add(this.homeButton);
 
         this.setListSelectionListener();
     }
@@ -105,21 +128,34 @@ public class HRViewApp extends HRPanel {
         return new JScrollPane(this.overview);
     }
 
+    private void createReturnButton() {
+        this.returnButton = new JButton("Return");
+        this.returnButton.setVisible(false);
+        this.returnButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ((CardLayout) parent.getLayout()).show(parent, previousPanel);
+            }
+        });
+    }
+
+    private void setViewOnlyMode() {
+        this.returnButton.setVisible(true);
+    }
+
     private void createHireButton() {
         this.hireButton = new JButton("Select candidates to hire");
         this.hireButton.setVisible(false);
         this.hireButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new HiringSelectionFrame(HRInterface, new ArrayList<>(currApps.values()), homeButton);
+                new HiringSelectionFrame(HRInterface, new ArrayList<>(currApps.values()), returnButton);
             }
         });
     }
 
-    void setHireVisible() {
+    void setHireMode() {
         this.hireButton.setVisible(true);
-        this.homeButton.setVisible(false);
-
     }
 
     private void createSelectButton() {
@@ -128,13 +164,12 @@ public class HRViewApp extends HRPanel {
         this.selectButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JInternalFrame popUp = new GradingFilterFrame(HRInterface, new ArrayList<>(currApps.values()), homeButton);
+                JInternalFrame popUp = new GradingFilterFrame(HRInterface, new ArrayList<>(currApps.values()), returnButton);
             }
         });
     }
 
-    void setSelectVisible() {
-        this.hireButton.setVisible(true);
-        this.homeButton.setVisible(false);
+    void setSelectMode() {
+        this.selectButton.setVisible(true);
     }
 }

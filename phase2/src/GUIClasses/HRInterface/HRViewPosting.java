@@ -127,14 +127,15 @@ public class HRViewPosting extends HRPanel{
                 String selectedTitle = jobPostingList.getSelectedValue();
                 BranchJobPosting selectedJP = currJPs.get(selectedTitle);
                 ArrayList<JobApplication> appsUnderSelectedJP = selectedJP.getJobApplications();
-                HRViewApp appPanel = new HRViewApp(parent, HRInterface, today, getTitleToAppMap(appsUnderSelectedJP));
-                if (hiringJP.containsKey(selectedTitle)) {
-                    appPanel.setHireVisible();
+                int mode = 0;
+                if (prePhoneJP.containsKey(selectedTitle)) {
+                    mode = 1;
                     removeFromJPLists(selectedTitle);
-                } else if (prePhoneJP.containsKey(selectedTitle)) {
-                    appPanel.setSelectVisible();
+                } else if (hiringJP.containsKey(selectedTitle)) {
+                    mode = 2;
                     removeFromJPLists(selectedTitle);
                 }
+                HRViewApp appPanel = new HRViewApp(parent, HRInterface, today, getTitleToAppMap(appsUnderSelectedJP), HRPanel.POSTING, mode);
                 parent.remove(4);
                 parent.add(appPanel, APPLICATION);
                 ((CardLayout) parent.getLayout()).show(parent, APPLICATION);
