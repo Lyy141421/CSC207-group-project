@@ -26,7 +26,7 @@ public class HRViewPosting extends HRPanel{
     private HashMap<String, BranchJobPosting> importantJP = new HashMap<>();
     private HashMap<String, BranchJobPosting> allJP;
 
-    HashMap<String, BranchJobPosting> currJPs;
+    private HashMap<String, BranchJobPosting> currJPs = new HashMap<>();
 
     private JTextArea info;
     private JButton scheduleButton;
@@ -89,7 +89,8 @@ public class HRViewPosting extends HRPanel{
     }
 
     private JButton createScheduleButton () {
-        this.scheduleButton = new JButton("Schedule");
+        this.scheduleButton = new JButton("Schedule group interview");
+        this.scheduleButton.setVisible(false);
         this.scheduleButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -122,21 +123,25 @@ public class HRViewPosting extends HRPanel{
         viewAppsButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String selectedTitle = jobPostingList.getSelectedValue();
-                BranchJobPosting selectedJP = currJPs.get(selectedTitle);
-                ArrayList<JobApplication> appsUnderSelectedJP = selectedJP.getJobApplications();
-                int mode = 0;
-                if (prePhoneJP.containsKey(selectedTitle)) {
-                    mode = 1;
-                    removeFromJPLists(selectedTitle);
-                } else if (hiringJP.containsKey(selectedTitle)) {
-                    mode = 2;
-                    removeFromJPLists(selectedTitle);
+                if (jobPostingList.isSelectionEmpty()) {
+                    JOptionPane.showMessageDialog(containerPane, "Please select a job posting!");
+                } else {
+                    String selectedTitle = jobPostingList.getSelectedValue();
+                    BranchJobPosting selectedJP = currJPs.get(selectedTitle);
+                    ArrayList<JobApplication> appsUnderSelectedJP = selectedJP.getJobApplications();
+                    int mode = 0;
+                    if (prePhoneJP.containsKey(selectedTitle)) {
+                        mode = 1;
+                        removeFromJPLists(selectedTitle);
+                    } else if (hiringJP.containsKey(selectedTitle)) {
+                        mode = 2;
+                        removeFromJPLists(selectedTitle);
+                    }
+                    HRViewApp appPanel = new HRViewApp(parent, HRInterface, today, getTitleToAppMap(appsUnderSelectedJP), HRPanel.POSTING, mode);
+                    parent.remove(4);
+                    parent.add(appPanel, APPLICATION);
+                    ((CardLayout) parent.getLayout()).show(parent, APPLICATION);
                 }
-                HRViewApp appPanel = new HRViewApp(parent, HRInterface, today, getTitleToAppMap(appsUnderSelectedJP), HRPanel.POSTING, mode);
-                parent.remove(4);
-                parent.add(appPanel, APPLICATION);
-                ((CardLayout) parent.getLayout()).show(parent, APPLICATION);
             }
         });
 

@@ -30,7 +30,7 @@ public class HRAddPosting extends HRPanel {
     JPanel containerPane = this;
     GridBagConstraints c;
     List<JComponent> entryBoxes = new ArrayList();
-    HashMap<String, CompanyJobPosting> companyJPMap;
+    HashMap<String, CompanyJobPosting> companyJPMap = new HashMap<>();
 
     JComboBox<String> companyPostingList;
     DefaultComboBoxModel<String> companyPostingModel;
@@ -81,8 +81,6 @@ public class HRAddPosting extends HRPanel {
         this.addLabelToPanel(numPositions);
         JLabel closeDate = new JLabel("Close date");
         this.addLabelToPanel(closeDate);
-        JLabel numRefs = new JLabel("Number of references");
-        this.addLabelToPanel(numRefs);
         JLabel refCloseDate = new JLabel("Reference close date");
         this.addLabelToPanel(refCloseDate);
     }
@@ -91,15 +89,16 @@ public class HRAddPosting extends HRPanel {
         this.c.gridx = 1;
         this.c.gridy = -1;
         this.addJobTitleSelection();
+        //TODO: the textField isn't showing up at the right size.
         JTextField jobFieldInput = new JTextField(30);
         this.addFieldToPanel(jobFieldInput);
+        //TODO: the textArea isn't showing up at the right size.
         JTextArea jobDescriptionInput = new JTextArea(4, 30);
         this.addFieldToPanel(jobDescriptionInput);
         this.addSelectionBox(CompanyJobPosting.RECOMMENDED_DOCUMENTS);
         this.addSelectionBox(CompanyJobPosting.RECOMMENDED_TAGS);
         this.addNumField();
         this.addDatePicker();
-        this.addNumField();
         this.addDatePicker();
     }
 
@@ -124,7 +123,6 @@ public class HRAddPosting extends HRPanel {
                 String selectedTitle = (String)companyPostingList.getSelectedItem();
                 if (companyJPMap.containsKey(selectedTitle)) {
                     CompanyJobPosting selectedJP = companyJPMap.get(selectedTitle);
-                    //TODO: fill in certain default fields and disable them
                     //0.title, 1.field, 2.description, 3.required documents, 4.tags, 5.numOfPos, 6.close date, 7.numOfRef, 8.reference close date
                     //Company default： 0, 1, 2, 3, 4, 7
                     fillDefaultValue(selectedJP);
@@ -142,9 +140,7 @@ public class HRAddPosting extends HRPanel {
         ((JTextField)this.entryBoxes.get(1)).setText(companyJobPosting.getField());
         ((JTextArea)this.entryBoxes.get(2)).setText(companyJobPosting.getDescription());
         ((JTextField)this.entryBoxes.get(3)).setText(companyJobPosting.getDocsString());
-        ((JTextField)this.entryBoxes.get(3)).setText(companyJobPosting.getTagsString());
-        // TODO: fill in reference letter number
-        // ((SpinnerNumberModel)((JSpinner)this.entryBoxes.get(7)).getModel()).getNumber(companyJobPosting.getNumRef);
+        ((JTextField)this.entryBoxes.get(4)).setText(companyJobPosting.getTagsString());
     }
 
     private void disableDefaultFields() {
@@ -193,7 +189,7 @@ public class HRAddPosting extends HRPanel {
 
     private void addSelectionBox (String[] recommended) {
         JPanel selectionPanel = new JPanel();
-        JTextField textInput = new JTextField();
+        JTextField textInput = new JTextField(30);
         selectionPanel.add(textInput, BorderLayout.WEST);
         JPanel recommendedPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         for (String label: recommended) {
@@ -217,7 +213,10 @@ public class HRAddPosting extends HRPanel {
             });
             recommendedPanel.add(checkBox);
         }
-        selectionPanel.add(new JScrollPane(recommendedPanel), BorderLayout.EAST);
+        JScrollPane labelPane = new JScrollPane(recommendedPanel);
+        labelPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        labelPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+        selectionPanel.add(labelPane, BorderLayout.EAST);
         addLabelToPanel(selectionPanel);
         this.entryBoxes.add(textInput);
     }
@@ -263,8 +262,7 @@ public class HRAddPosting extends HRPanel {
         return new Object[]{((SpinnerNumberModel)((JSpinner)entryBoxes.get(5)).getModel()).getNumber(),
                 ((Date)((JDatePanelImpl)entryBoxes.get(6)).getModel().getValue()).toInstant().
                         atZone(ZoneId.systemDefault()).toLocalDate(),
-                ((SpinnerNumberModel)((JSpinner)entryBoxes.get(7)).getModel()).getNumber(),
-                ((Date)((JDatePanelImpl)entryBoxes.get(8)).getModel().getValue()).toInstant().
+                ((Date)((JDatePanelImpl)entryBoxes.get(7)).getModel().getValue()).toInstant().
                         atZone(ZoneId.systemDefault()).toLocalDate(),
         };
     }
@@ -295,7 +293,7 @@ public class HRAddPosting extends HRPanel {
 
         if (!this.HRInterface.getToday().isBefore(((LocalDate) mandatoryFields[1]))) {
             valid = false;
-        } else if (((LocalDate) mandatoryFields[3]).isBefore(((LocalDate) mandatoryFields[1]))) {
+        } else if (((LocalDate) mandatoryFields[2]).isBefore(((LocalDate) mandatoryFields[1]))) {
             valid = false;
         }
 
