@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class HRViewPosting extends HRPanel{
-    JPanel containerPane = this;
+    HRViewPosting containerPane = this;
 
     private HashMap<String, BranchJobPosting> prePhoneJP;
     private HashMap<String, BranchJobPosting> scheduleJP;
@@ -95,9 +95,7 @@ public class HRViewPosting extends HRPanel{
             public void actionPerformed(ActionEvent e) {
                 String selectedTitle = jobPostingList.getSelectedValue();
                 BranchJobPosting selectedJP = currJPs.get(selectedTitle);
-                //TODO: open internal frame for group interview selection
-
-                removeFromJPLists(selectedTitle);
+                JInternalFrame popUp = new GroupInterviewFrame(HRInterface, selectedJP, containerPane);
             }
         });
 
@@ -156,7 +154,7 @@ public class HRViewPosting extends HRPanel{
         this.importantJP.putAll(this.hiringJP);
     }
 
-    private void removeFromJPLists(String title) {
+    void removeFromJPLists(String title) {
         this.prePhoneJP.remove(title);
         this.scheduleJP.remove(title);
         this.hiringJP.remove(title);
