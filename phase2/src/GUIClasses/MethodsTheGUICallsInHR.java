@@ -83,15 +83,19 @@ public class MethodsTheGUICallsInHR {
      * Add a job posting for this company.
      * @param jobPostingFields  The fields that the user inputs.
      */
-    public void addJobPosting(Object[] jobPostingFields) {
-        String title = (String) jobPostingFields[0];
-        String field = (String) jobPostingFields[1];
-        String description = (String) jobPostingFields[2];
-        ArrayList<String> requirements = (ArrayList<String>) jobPostingFields[3];
-        ArrayList<String> tags = (ArrayList<String>) jobPostingFields[4];
-        int numPositions = (Integer) jobPostingFields[5];
-        LocalDate applicationCloseDate = (LocalDate) jobPostingFields[6];
-        LocalDate referenceCloseDate = (LocalDate) jobPostingFields[7];
+    public void addJobPosting(Object[] mandatoryFields, String[] defaultFields) {
+        String title = defaultFields[0];
+        String field = defaultFields[1];
+        String description = defaultFields[2];
+        //TODO: requirements and tags are stored as strings. Split at ";" to make an ArrayList.
+        //defaultField[3]
+        ArrayList<String> requirements = (ArrayList<String>) defaultFields[3];
+        //defaultField[4]
+        ArrayList<String> tags = (ArrayList<String>) defaultFields[4];
+        int numPositions = (Integer) mandatoryFields[0];
+        LocalDate applicationCloseDate = (LocalDate) mandatoryFields[1];
+        //TODO: number of reference is at index 2 of mandatoryFields
+        LocalDate referenceCloseDate = (LocalDate) mandatoryFields[3];
         this.hr.addJobPosting(title, field, description, requirements, tags, numPositions, jobAppSystem.getToday(), applicationCloseDate,
                 referenceCloseDate);
     }
@@ -99,7 +103,8 @@ public class MethodsTheGUICallsInHR {
     public void implementJobPosting(CompanyJobPosting cjp, Object[] jobPostingFields) {
         int numPositions = (int) jobPostingFields[0];
         LocalDate applicationCloseDate = (LocalDate) jobPostingFields[1];
-        LocalDate referenceCloseDate = (LocalDate) jobPostingFields[2];
+        //TODO: num of reference is at index 2.
+        LocalDate referenceCloseDate = (LocalDate) jobPostingFields[3];
         this.hr.implementJobPosting(cjp, numPositions, jobAppSystem.getToday(), applicationCloseDate, referenceCloseDate);
     }
     /**
