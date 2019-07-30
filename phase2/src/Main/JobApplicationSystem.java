@@ -1,11 +1,13 @@
 package Main;
 
+import ApplicantStuff.JobApplication;
 import CompanyStuff.Branch;
 import CompanyStuff.JobPostings.BranchJobPosting;
 import CompanyStuff.Company;
 //import UIClasses.UserInterface;
 import ApplicantStuff.Applicant;
 import FileLoadingAndStoring.DataLoaderAndStorer;
+import NotificationSystem.Notification;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -37,6 +39,7 @@ public class JobApplicationSystem {
         while (true) {
             // Create and run the main frame
             // TODO these method calls would have to appear in main frame after user selects date
+            jobAppSystem.notificationDate(jobAppSystem.getToday());
             jobAppSystem.applicant30Day();
             jobAppSystem.updateAllJobPostings();
         }
@@ -103,13 +106,19 @@ public class JobApplicationSystem {
         return company;
     }
 
+    static  void notificationDate(LocalDate date) {
+        if (!Notification.getDateStatic().equals(date)){
+            Notification.setDate(date);
+        }
+    }
+
     // ============================================================================================================== //
     // === Private methods ===
 
     /**
      * Methods that removes the files from one's account if user has not been active for at least 30 days.
      */
-    private void applicant30Day() {//todo remove
+    private void applicant30Day() {
         for (Applicant app : this.userManager.getAllApplicants()) {
             app.getDocumentManager().removeFilesFromAccountIfInactive(this.today);
         }
