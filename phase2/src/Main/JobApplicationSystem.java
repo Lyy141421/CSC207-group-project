@@ -17,9 +17,9 @@ public class JobApplicationSystem {
 
     // === Instance variables ===
     // List of companies registered in the system
-    private ArrayList<Company> companies = new ArrayList<>();
+    private static ArrayList<Company> companies = new ArrayList<>();
     // The user manager for the system
-    private UserManager userManager = new UserManager();
+    private static UserManager userManager = new UserManager();
     // The date this program interprets as getToday.
     private LocalDate today;
     // The previous login date for this application
@@ -48,8 +48,8 @@ public class JobApplicationSystem {
     // === Public methods ===
     // === Getters ===
 
-    public UserManager getUserManager() {
-        return this.userManager;
+    public static UserManager getUserManager() {
+        return userManager;
     }
 
     public ArrayList<Company> getCompanies() {
@@ -86,8 +86,8 @@ public class JobApplicationSystem {
      * @param name The name of the company.
      * @return the company with this name or null if cannot be found.
      */
-    public Company getCompany(String name) {
-        for (Company company : this.companies) {
+    public static Company getCompany(String name) {
+        for (Company company : companies) {
             if (company.getName().equalsIgnoreCase(name))
                 return company;
         }

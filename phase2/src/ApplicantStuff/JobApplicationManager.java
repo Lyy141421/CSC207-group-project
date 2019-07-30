@@ -84,7 +84,7 @@ public class JobApplicationManager implements Serializable {
      * @param today Today's date.
      * @return the number of days since the most recent job posting close date.
      */
-    long getNumDaysSinceMostRecentCloseDate(LocalDate today) {
+    public long getNumDaysSinceMostRecentCloseDate(LocalDate today) {
         if (this.getLastClosedJobApp() == null) {
             return 0;
         } else {
@@ -98,7 +98,7 @@ public class JobApplicationManager implements Serializable {
      *
      * @return a list of previous job applications submitted where the posting is now filled.
      */
-    ArrayList<JobApplication> getPreviousJobApplications() {
+    public ArrayList<JobApplication> getPreviousJobApplications() {
         ArrayList<JobApplication> previousJobApps = new ArrayList<>();
         for (JobApplication jobApplication : this.getJobApplications()) {
             if (jobApplication.isArchived() || jobApplication.isHired()) {
@@ -118,6 +118,19 @@ public class JobApplicationManager implements Serializable {
         for (JobApplication jobApplication : this.getJobApplications()) {
             if (!this.getPreviousJobApplications().contains(jobApplication)) {
                 currentJobApps.add(jobApplication);
+            }
+        }
+        return currentJobApps;
+    }
+
+    /**
+     * Above, but returning their postings
+     */
+    public ArrayList<BranchJobPosting> getCurrentJobAppsPostings() {
+        ArrayList<BranchJobPosting> currentJobApps = new ArrayList<>();
+        for (JobApplication jobApplication : this.getJobApplications()) {
+            if (!this.getPreviousJobApplications().contains(jobApplication)) {
+                currentJobApps.add(jobApplication.getJobPosting());
             }
         }
         return currentJobApps;
