@@ -12,10 +12,14 @@ public class Notification implements Serializable {
     // The date on which this Notification was created
     LocalDate date;
 
+    // === Static Variables ===
+    // The date retrieved from JobApplicationSystem
+    static LocalDate sdate = LocalDate.now();
+
     // === Constructors ===
 
     public Notification(String title, String message) {
-        this.date = LocalDate.now();//todo change
+        this.date = getDateStatic();
         this.title = title;
         this.message = message;
     }
@@ -25,9 +29,11 @@ public class Notification implements Serializable {
     public String getTitle(){
         return this.title;
     }
+
     public String getMessage(){
         return this.message;
     }
+
     public LocalDate getDate(){
         return this.date;
     }
@@ -43,5 +49,15 @@ public class Notification implements Serializable {
         output.append(this.getMessage());
         output.append("\n");
         return output.toString();
+    }
+
+    // === Static ===
+
+    static public void setDate(LocalDate date){
+        sdate = date;
+    }
+
+    static public LocalDate getDateStatic(){
+        return sdate;
     }
 }
