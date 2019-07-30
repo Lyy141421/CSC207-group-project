@@ -27,7 +27,7 @@ public class LoginMain extends JPanel {
     private MainFrame mainframe;
     private NewUserPanel newUserRef;
 
-    public LoginMain(NewUserPanel newUserRef, Container parent, CardLayout masterLayout, JobApplicationSystem jobAppSystem) {
+    public LoginMain(NewUserPanel newUserRef, Container parent, CardLayout masterLayout) {
         this.parent = parent;
         this.masterLayout = masterLayout;
         this.mainframe = (MainFrame) this.parent.getParent().getParent().getParent();
@@ -35,7 +35,7 @@ public class LoginMain extends JPanel {
         this.setLayout(null);
         this.addTextItems();
         this.addEntryItems();
-        this.backend = new LoginBackend(jobAppSystem);
+        this.backend = new LoginBackend();
     }
 
     /**
@@ -231,7 +231,7 @@ public class LoginMain extends JPanel {
      * Attempts a login through the GUI
      */
     private void GUILogin(String username) {
-        User user = this.backend.getJobAppSystem().getUserManager().findUserByUsername(username);
+        User user = JobApplicationSystem.getUserManager().findUserByUsername(username);
         if(user instanceof Applicant) {
             ApplicantMain newAppPanel = new ApplicantMain((Applicant)user);
             //TODO: get date
@@ -242,9 +242,9 @@ public class LoginMain extends JPanel {
         } else if(user instanceof Interviewer) {
             //TODO: Handle
         } else { //Reference
-            ReferencePanel newRefPanel = new ReferencePanel(username, this.backend.getJobAppSystem(), parent, masterLayout);
-            this.parent.add(newRefPanel, "REFERENCE");
-            this.masterLayout.show(parent, "REFERENCE");
+//            ReferencePanel newRefPanel = new ReferencePanel(username, this.backend.getJobAppSystem(), parent, masterLayout);
+//            this.parent.add(newRefPanel, "REFERENCE");
+//            this.masterLayout.show(parent, "REFERENCE");
         }
         this.newUserRef.setNewUsername(null);
     }
