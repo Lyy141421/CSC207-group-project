@@ -22,6 +22,7 @@ public class GroupInterviewFrame extends JInternalFrame {
 
     MethodsTheGUICallsInHR HRInterface;
     BranchJobPosting branchJobPosting;
+    HRViewPosting parentPanel;
 
     HashMap<String, Interviewer> nameToInterviewerMap;
 
@@ -29,10 +30,11 @@ public class GroupInterviewFrame extends JInternalFrame {
     JComboBox<String> coordinatorSelection;
     HashMap<Interviewer, JCheckBox> interviewerToCheckBoxMap;
 
-    GroupInterviewFrame(MethodsTheGUICallsInHR HRInterface, BranchJobPosting branchJobPosting) {
+    GroupInterviewFrame(MethodsTheGUICallsInHR HRInterface, BranchJobPosting branchJobPosting, HRViewPosting postingPanel) {
         super("Select interviewers for group interview");
         this.HRInterface = HRInterface;
         this.branchJobPosting = branchJobPosting;
+        this.parentPanel = postingPanel;
 
         this.nameToInterviewerMap = this.getNameToInterviewerMap(HRInterface.getInterviewersInField(branchJobPosting));
 
@@ -43,7 +45,9 @@ public class GroupInterviewFrame extends JInternalFrame {
 
         this.add(new JScrollPane(this.createInterviewers()), BorderLayout.EAST);
         this.add(this.createCoordinator(), BorderLayout.WEST);
-        this.setConfirmButton();
+        this.setButtons();
+
+        this.setVisible(true);
     }
 
     JPanel createCoordinator() {
@@ -96,7 +100,7 @@ public class GroupInterviewFrame extends JInternalFrame {
         return interviewer.getLegalName();
     }
 
-    private void setConfirmButton() {
+    private void setButtons() {
         JButton confirmButton = new JButton("Confirm");
         confirmButton.addActionListener(new ActionListener() {
             @Override
@@ -104,6 +108,17 @@ public class GroupInterviewFrame extends JInternalFrame {
                 HRInterface.setUpGroupInterviews(branchJobPosting,
                         nameToInterviewerMap.get((String)coordinatorSelection.getSelectedItem()),
                         getSelectedInterviewers(), (int)daysSpinner.getValue());
+                parentPanel.removeFromJPLists(parentPanel.toJPTitle(branchJobPosting));
+                parentPanel.reload();
+                dispose();
+            }
+        });
+        JButton cancelButton = new JButton("Cancel");
+        cancelButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose();
+                parentPanel.reload();
             }
         });
         this.add(confirmButton, BorderLayout.SOUTH);

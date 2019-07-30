@@ -48,7 +48,7 @@ public class HRMain extends JPanel {
         this.add(this.viewPostingPanel = new HRViewPosting(this, this.HRInterface, this.today), HRPanel.POSTING, 1);
         this.add(this.searchPanel = new HRSearchApplicant(this, this.HRInterface, this.today), HRPanel.SEARCH, 2);
         this.add(this.addPostingPanel = new HRAddPosting(this, this.HRInterface, this.today), HRPanel.ADD_POSTING, 3);
-        this.add(new HRViewApp(this, this.HRInterface, this.today, new HashMap<>()), HRPanel.APPLICATION, 4);
+        //this.add(new HRViewApp(this, this.HRInterface, this.today, new HashMap<>()), HRPanel.APPLICATION, 4);
     }
 
     private void setPanelSwitchActions() {

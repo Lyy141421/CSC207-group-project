@@ -19,9 +19,7 @@ import java.awt.event.ItemListener;
 import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
 import java.util.concurrent.Flow;
 
@@ -229,16 +227,16 @@ public class HRAddPosting extends HRPanel {
         submit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Object[] postingFields = new Object[]{((JTextField)entryBoxes.get(0)).getText(),
-                        ((JTextField)entryBoxes.get(1)).getText(),
-                        ((JTextArea)entryBoxes.get(2)).getText(),
-                        ((JTextArea)entryBoxes.get(3)).getText(),
-                        ((JFormattedTextField)entryBoxes.get(4)).getValue(),
-                        ((Date)((JDatePanelImpl)entryBoxes.get(5)).getModel()
-                                .getValue()).toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
-                };
-                if (isValidInput(postingFields)) {
-                    HRInterface.addJobPosting(postingFields);
+                Object[] mandatoryFields = getMandatoryFields();
+                Optional<String[]> defaultFields = getDefaultFields();
+                if (isValidInput(mandatoryFields, defaultFields)) {
+                    if (defaultFields.isEmpty()) {
+                        CompanyJobPosting companyJobPosting= companyJPMap.get(((JTextField)entryBoxes.get(0)).getText());
+                        HRInterface.implementJobPosting(companyJobPosting, mandatoryFields);
+                    } else {
+
+                        HRInterface.addJobPosting(mandatoryFields, defaultFields.get());
+                    }
                     JOptionPane.showMessageDialog(containerPane, "Job posting has been added.");
                 } else {
                     JOptionPane.showMessageDialog(containerPane, "One or more fields have illegal input.");
@@ -247,6 +245,28 @@ public class HRAddPosting extends HRPanel {
         });
 
         return submit;
+    }
+
+    private Optional<String[]> getDefaultFields() {
+        if (this.companyJPMap.containsKey(((JTextField)entryBoxes.get(0)).getText())) {
+            return Optional.empty();
+        }
+        return Optional.of(new String[]{((JTextField)entryBoxes.get(0)).getText(),
+                ((JTextField)entryBoxes.get(1)).getText(),
+                ((JTextArea)entryBoxes.get(2)).getText(),
+                ((JTextArea)entryBoxes.get(3)).getText(),
+                ((JTextArea)entryBoxes.get(4)).getText(),
+        });
+    }
+
+    private Object[] getMandatoryFields() {
+        return new Object[]{((SpinnerNumberModel)((JSpinner)entryBoxes.get(5)).getModel()).getNumber(),
+                ((Date)((JDatePanelImpl)entryBoxes.get(6)).getModel().getValue()).toInstant().
+                        atZone(ZoneId.systemDefault()).toLocalDate(),
+                ((SpinnerNumberModel)((JSpinner)entryBoxes.get(7)).getModel()).getNumber(),
+                ((Date)((JDatePanelImpl)entryBoxes.get(8)).getModel().getValue()).toInstant().
+                        atZone(ZoneId.systemDefault()).toLocalDate(),
+        };
     }
 
     private void addButtons () {
@@ -259,18 +279,23 @@ public class HRAddPosting extends HRPanel {
         this.addLabelToPanel(buttons);
     }
 
-    private boolean isValidInput(Object[] fields) {
+    private boolean isValidInput(Object[] mandatoryFields, Optional<String[]> defaultFields) {
         boolean valid = true;
 
-        int i = 0;
-        while (valid && i < 4) {
-            if (fields[i].equals("")) {
-                valid = false;
+        if (defaultFields.isPresent()) {
+            int i = 0;
+            String[] defaultEntries = defaultFields.get();
+            while (valid && i <= 4) {
+                if (defaultEntries[i].equals("")) {
+                    valid = false;
+                }
+                i++;
             }
-            i++;
         }
 
-        if (!this.HRInterface.getToday().isBefore(((LocalDate) fields[5]))) {
+        if (!this.HRInterface.getToday().isBefore(((LocalDate) mandatoryFields[1]))) {
+            valid = false;
+        } else if (((LocalDate) mandatoryFields[3]).isBefore(((LocalDate) mandatoryFields[1]))) {
             valid = false;
         }
 

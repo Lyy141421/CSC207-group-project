@@ -48,7 +48,7 @@ public class HRSearchApplicant extends HRPanel{
                 if (apps.isEmpty()) {
                     JOptionPane.showMessageDialog(parent, "The applicant cannot be found.");
                 } else {
-                    HRViewApp appPanel = new HRViewApp(parent, HRInterface, today, getTitleToAppMap(apps));
+                    HRViewApp appPanel = new HRViewApp(parent, HRInterface, today, getTitleToAppMap(apps), HRPanel.SEARCH, 0);
                     parent.remove(4);
                     parent.add(appPanel, APPLICATION);
                     ((CardLayout) parent.getLayout()).show(parent, APPLICATION);

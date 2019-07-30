@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class HRViewPosting extends HRPanel{
-    JPanel containerPane = this;
+    HRViewPosting containerPane = this;
 
     private HashMap<String, BranchJobPosting> prePhoneJP;
     private HashMap<String, BranchJobPosting> scheduleJP;
@@ -95,9 +95,7 @@ public class HRViewPosting extends HRPanel{
             public void actionPerformed(ActionEvent e) {
                 String selectedTitle = jobPostingList.getSelectedValue();
                 BranchJobPosting selectedJP = currJPs.get(selectedTitle);
-                //TODO: open internal frame for group interview selection
-
-                removeFromJPLists(selectedTitle);
+                JInternalFrame popUp = new GroupInterviewFrame(HRInterface, selectedJP, containerPane);
             }
         });
 
@@ -127,14 +125,15 @@ public class HRViewPosting extends HRPanel{
                 String selectedTitle = jobPostingList.getSelectedValue();
                 BranchJobPosting selectedJP = currJPs.get(selectedTitle);
                 ArrayList<JobApplication> appsUnderSelectedJP = selectedJP.getJobApplications();
-                HRViewApp appPanel = new HRViewApp(parent, HRInterface, today, getTitleToAppMap(appsUnderSelectedJP));
-                if (hiringJP.containsKey(selectedTitle)) {
-                    appPanel.setHireVisible();
+                int mode = 0;
+                if (prePhoneJP.containsKey(selectedTitle)) {
+                    mode = 1;
                     removeFromJPLists(selectedTitle);
-                } else if (prePhoneJP.containsKey(selectedTitle)) {
-                    appPanel.setSelectVisible();
+                } else if (hiringJP.containsKey(selectedTitle)) {
+                    mode = 2;
                     removeFromJPLists(selectedTitle);
                 }
+                HRViewApp appPanel = new HRViewApp(parent, HRInterface, today, getTitleToAppMap(appsUnderSelectedJP), HRPanel.POSTING, mode);
                 parent.remove(4);
                 parent.add(appPanel, APPLICATION);
                 ((CardLayout) parent.getLayout()).show(parent, APPLICATION);
@@ -155,7 +154,7 @@ public class HRViewPosting extends HRPanel{
         this.importantJP.putAll(this.hiringJP);
     }
 
-    private void removeFromJPLists(String title) {
+    void removeFromJPLists(String title) {
         this.prePhoneJP.remove(title);
         this.scheduleJP.remove(title);
         this.hiringJP.remove(title);

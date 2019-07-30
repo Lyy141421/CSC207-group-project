@@ -26,9 +26,12 @@ public class InterviewConfigFrame extends JInternalFrame {
     JPanel formatPanel = new JPanel();
     JPanel buttonPanel = new JPanel();
 
-    InterviewConfigFrame(MethodsTheGUICallsInHR HRInterface, BranchJobPosting branchJobPosting) {
+    JButton returnButton;
+
+    InterviewConfigFrame(MethodsTheGUICallsInHR HRInterface, BranchJobPosting branchJobPosting, JButton returnButton) {
         this.HRInterface = HRInterface;
         this.branchJobPosting = branchJobPosting;
+        this.returnButton = returnButton;
 
         this.setLayout(new BorderLayout());
         this.formatPanel.setLayout(new BoxLayout(this.formatPanel, BoxLayout.Y_AXIS));
@@ -38,7 +41,7 @@ public class InterviewConfigFrame extends JInternalFrame {
 
         this.addSelectPanel();
         this.addNewRoundButton();
-        this.addSubmitAndCancel();
+        this.createSubmitButton();
     }
 
     void addSelectPanel() {
@@ -74,6 +77,8 @@ public class InterviewConfigFrame extends JInternalFrame {
         selectPanel.add(descriptionInput, c);
 
         this.formatPanel.add(selectPanel);
+
+        this.setVisible(true);
     }
 
     void addNewRoundButton() {
@@ -88,28 +93,21 @@ public class InterviewConfigFrame extends JInternalFrame {
         this.buttonPanel.add(newRoundButton, BorderLayout.CENTER);
     }
 
-    void addSubmitAndCancel() {
-        JPanel submitAndCancelPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+    void createSubmitButton() {
+        JPanel submitPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         JButton submitButton = new JButton("Submit");
         submitButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 HRInterface.setInterviewConfiguration(branchJobPosting, getIsOneOnOne(), getDescriptions());
-                JOptionPane.showMessageDialog(container, "The interview configurations have been set.");
+                JOptionPane.showInternalMessageDialog(container, "The interview configurations have been set.");
+                returnButton.setVisible(true);
                 dispose();
             }
         });
-        JButton cancelButton = new JButton("Cancel");
-        cancelButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                dispose();
-            }
-        });
-        submitAndCancelPanel.add(submitButton);
-        submitAndCancelPanel.add(cancelButton);
+        submitPanel.add(submitButton);
 
-        this.buttonPanel.add(submitAndCancelPanel, BorderLayout.SOUTH);
+        this.buttonPanel.add(submitPanel, BorderLayout.SOUTH);
     }
 
     ArrayList<Boolean> getIsOneOnOne() {

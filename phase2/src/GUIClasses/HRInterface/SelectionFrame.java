@@ -21,17 +21,21 @@ abstract class SelectionFrame extends JInternalFrame{
     GridBagConstraints c = new GridBagConstraints();
 
     JButton confirmButton;
+    JButton returnButton;
 
-    SelectionFrame(MethodsTheGUICallsInHR HRInterface, ArrayList<JobApplication> applications) {
+    SelectionFrame(MethodsTheGUICallsInHR HRInterface, ArrayList<JobApplication> applications, JButton returnButton, int toSelect) {
         super("Select");
         this.HRInterface = HRInterface;
+        this.returnButton = returnButton;
 
         this.setLayout(new GridBagLayout());
 
-        this.addApplicants(applications);
+        this.addApplicants(applications, toSelect);
         this.addConfirmButton();
         this.addCancelButton();
         this.addPrompt();
+
+        this.setVisible(true);
     }
 
     private void addPrompt() {
@@ -42,12 +46,15 @@ abstract class SelectionFrame extends JInternalFrame{
         this.add(prompt, c);
     }
 
-    private void addApplicants(ArrayList<JobApplication> applications) {
+    private void addApplicants(ArrayList<JobApplication> applications, int toSelect) {
         c.gridx = -1;
         c.gridy = 0;
-        for (JobApplication app : applications) {
-            JCheckBox checkBox = new JCheckBox(app.getApplicant().getLegalName());
-            checkBoxToAppMap.put(checkBox, app);
+        for (int i=0; i<applications.size(); i++) {
+            JCheckBox checkBox = new JCheckBox(applications.get(i).getApplicant().getLegalName());
+            checkBoxToAppMap.put(checkBox, applications.get(i));
+            if (i<toSelect) {
+                checkBox.setSelected(true);
+            }
             c.gridy += (c.gridx+1)/3;
             c.gridx = (c.gridx+1)%3;
             this.add(checkBox, c);
@@ -70,6 +77,7 @@ abstract class SelectionFrame extends JInternalFrame{
         cancelButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                returnButton.setVisible(false);
                 dispose();
             }
         });

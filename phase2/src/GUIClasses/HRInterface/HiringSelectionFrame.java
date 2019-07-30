@@ -14,8 +14,8 @@ public class HiringSelectionFrame extends SelectionFrame implements ItemListener
 
     private int availablePositions;
 
-    HiringSelectionFrame(MethodsTheGUICallsInHR HRInterface, ArrayList<JobApplication> applications) {
-        super(HRInterface, applications);
+    HiringSelectionFrame(MethodsTheGUICallsInHR HRInterface, ArrayList<JobApplication> applications, JButton returnButton) {
+        super(HRInterface, applications, returnButton,0);
 
         this.availablePositions = applications.get(0).getJobPosting().getNumPositions();
         this.addCheckboxListener();
