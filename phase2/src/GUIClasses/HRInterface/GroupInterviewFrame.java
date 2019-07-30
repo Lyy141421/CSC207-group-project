@@ -46,6 +46,8 @@ public class GroupInterviewFrame extends JInternalFrame {
         this.add(new JScrollPane(this.createInterviewers()), BorderLayout.EAST);
         this.add(this.createCoordinator(), BorderLayout.WEST);
         this.setButtons();
+
+        this.setVisible(true);
     }
 
     JPanel createCoordinator() {

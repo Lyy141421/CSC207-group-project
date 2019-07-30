@@ -34,6 +34,7 @@ public class GradingFilterFrame extends JInternalFrame {
         this.setSelectNumber();
         this.setButtons();
 
+        this.setVisible(true);
     }
 
     void setKeywordInput() {

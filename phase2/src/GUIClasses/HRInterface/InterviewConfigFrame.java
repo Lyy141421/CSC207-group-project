@@ -77,6 +77,8 @@ public class InterviewConfigFrame extends JInternalFrame {
         selectPanel.add(descriptionInput, c);
 
         this.formatPanel.add(selectPanel);
+
+        this.setVisible(true);
     }
 
     void addNewRoundButton() {

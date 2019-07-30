@@ -34,6 +34,8 @@ abstract class SelectionFrame extends JInternalFrame{
         this.addConfirmButton();
         this.addCancelButton();
         this.addPrompt();
+
+        this.setVisible(true);
     }
 
     private void addPrompt() {
