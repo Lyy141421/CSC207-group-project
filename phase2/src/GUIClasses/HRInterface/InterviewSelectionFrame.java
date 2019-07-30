@@ -12,8 +12,8 @@ import java.util.ArrayList;
 
 public class InterviewSelectionFrame extends SelectionFrame {
 
-    InterviewSelectionFrame(MethodsTheGUICallsInHR HRInterface, ArrayList<JobApplication> applications) {
-        super(HRInterface, applications);
+    InterviewSelectionFrame(MethodsTheGUICallsInHR HRInterface, ArrayList<JobApplication> applications, int toSelect) {
+        super(HRInterface, applications, toSelect);
     }
 
     @Override
