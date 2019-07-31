@@ -8,11 +8,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
-public class InterviewSelectionFrame extends SelectionFrame {
+class InterviewSelectionFrame extends SelectionFrame {
 
-    BranchJobPosting branchJobPosting;
+    private BranchJobPosting branchJobPosting;
 
-    InterviewSelectionFrame(HRBackEnd HRInterface, ArrayList<JobApplication> applications, JButton returnButton, int toSelect) {
+    InterviewSelectionFrame(HRBackend HRInterface, ArrayList<JobApplication> applications, JButton returnButton, int toSelect) {
         super(HRInterface, applications, returnButton, toSelect);
 
         this.branchJobPosting = applications.get(0).getJobPosting();
@@ -23,14 +23,14 @@ public class InterviewSelectionFrame extends SelectionFrame {
         this.confirmButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                HRInterface.rejectApplicationForFirstRound(getApplicantsDeselected());
-                JInternalFrame popUp = new InterviewConfigFrame(HRInterface, branchJobPosting, returnButton);
+                hrBackend.rejectApplicationForFirstRound(getApplicantsDeselected());
+                JInternalFrame popUp = new InterviewConfigFrame(hrBackend, branchJobPosting, returnButton);
                 dispose();
             }
         });
     }
 
-    ArrayList<JobApplication> getApplicantsDeselected() {
+    private ArrayList<JobApplication> getApplicantsDeselected() {
         ArrayList<JobApplication> appsDeselected = new ArrayList<>();
         for (JCheckBox checkBox : checkBoxToAppMap.keySet()) {
             if (!checkBox.isSelected()) {

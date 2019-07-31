@@ -11,11 +11,10 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class HRViewApp extends HRPanel {
+class HRViewApp extends HRPanel {
 
     private String OVERVIEW = "Overview";
     private String FILE = "View Files";
@@ -37,8 +36,8 @@ public class HRViewApp extends HRPanel {
     //mode: 0 view only
     //      1 review
     //      2 hiring
-    HRViewApp(JPanel parent, HRBackEnd hrBackEnd, HashMap<String, JobApplication> currApps, String previousPanel, int mode) {
-        super(hrBackEnd);
+    HRViewApp(JPanel parent, HRBackend hrBackend, HashMap<String, JobApplication> currApps, String previousPanel, int mode) {
+        super(hrBackend);
         this.parent = parent;
         this.currApps = currApps;
         this.previousPanel = previousPanel;
@@ -114,7 +113,7 @@ public class HRViewApp extends HRPanel {
     }
 
     private JPanel createDocumentViewer(JobApplication selectedApp) {
-        File folderForApp = this.hrBackEnd.getFolderForJobApplication(selectedApp);
+        File folderForApp = this.hrBackend.getFolderForJobApplication(selectedApp);
         DocumentViewer documentViewer = new DocumentViewer(folderForApp);
 
         return documentViewer;
@@ -148,7 +147,7 @@ public class HRViewApp extends HRPanel {
         this.hireButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JInternalFrame popUp = new HiringSelectionFrame(hrBackEnd, new ArrayList<>(currApps.values()), returnButton);
+                JInternalFrame popUp = new HiringSelectionFrame(hrBackend, new ArrayList<>(currApps.values()), returnButton);
             }
         });
     }
@@ -163,7 +162,7 @@ public class HRViewApp extends HRPanel {
         this.selectButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JInternalFrame popUp = new GradingFilterFrame(hrBackEnd, new ArrayList<>(currApps.values()), returnButton);
+                JInternalFrame popUp = new GradingFilterFrame(hrBackend, new ArrayList<>(currApps.values()), returnButton);
             }
         });
     }

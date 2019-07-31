@@ -1,6 +1,7 @@
 package GUIClasses;
 
 import GUIClasses.StartInterface.LoginMain;
+import Main.JobApplicationSystem;
 import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
 import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
 import net.sourceforge.jdatepicker.impl.UtilDateModel;
@@ -15,14 +16,15 @@ import java.util.Date;
 
 public class MainFrame extends JFrame {
 
-    LocalDate getToday;
+    private LocalDate getToday;
+    private JobApplicationSystem jobAppSystem;
     private CardLayout layoutManager = new CardLayout();
     //private JPanel homePanel;
     NewUserPanel newUserRef;
 
-    public MainFrame (LocalDate getToday) {
+    public MainFrame(JobApplicationSystem jobAppSystem) {
         super("GET A JOB");
-        this.getToday = getToday;
+        this.jobAppSystem = jobAppSystem;
         initUI();
         addCards();
     }
@@ -65,9 +67,9 @@ public class MainFrame extends JFrame {
     private void addCards () {
         //this.add(this.homePanel);
         // We need to be careful with when these cards get constructed, in case it's missing arguments to run methods
-        NewUserPanel newUserRef = new NewUserPanel(this.getContentPane(), this.layoutManager);
+        NewUserPanel newUserRef = new NewUserPanel(this.getContentPane(), this.layoutManager, this.jobAppSystem);
         this.add(newUserRef, "NEWUSER");
-        this.add(new LoginMain(this.newUserRef, this.getContentPane(), this.layoutManager), "LOGIN");
+        this.add(new LoginMain(this.newUserRef, this.getContentPane(), this.layoutManager, this.jobAppSystem), "LOGIN");
         // got User object from login/signup
         //interface = new InterfaceFactory.create(User)
         //if User instanceOf ...

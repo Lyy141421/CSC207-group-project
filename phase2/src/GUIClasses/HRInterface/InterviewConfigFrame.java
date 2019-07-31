@@ -10,9 +10,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
-public class InterviewConfigFrame extends JInternalFrame {
+class InterviewConfigFrame extends JInternalFrame {
 
-    HRBackEnd HRInterface;
+    HRBackend hrBackend;
     BranchJobPosting branchJobPosting;
 
     JInternalFrame container = this;
@@ -27,8 +27,8 @@ public class InterviewConfigFrame extends JInternalFrame {
 
     JButton returnButton;
 
-    InterviewConfigFrame(HRBackEnd HRInterface, BranchJobPosting branchJobPosting, JButton returnButton) {
-        this.HRInterface = HRInterface;
+    InterviewConfigFrame(HRBackend hrBackend, BranchJobPosting branchJobPosting, JButton returnButton) {
+        this.hrBackend = hrBackend;
         this.branchJobPosting = branchJobPosting;
         this.returnButton = returnButton;
 
@@ -98,7 +98,7 @@ public class InterviewConfigFrame extends JInternalFrame {
         submitButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                HRInterface.setInterviewConfiguration(branchJobPosting, getIsOneOnOne(), getDescriptions());
+                hrBackend.setInterviewConfiguration(branchJobPosting, getIsOneOnOne(), getDescriptions());
                 JOptionPane.showInternalMessageDialog(container, "The interview configurations have been set.");
                 returnButton.setVisible(true);
                 dispose();

@@ -12,8 +12,8 @@ class HRHome extends HRPanel {
 
     // TODO add a scroll bar on the right side
 
-    HRHome(HRBackEnd hrBackEnd) {
-        super(hrBackEnd);
+    HRHome(HRBackend hrBackend) {
+        super(hrBackend);
         this.setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
         c.weightx = 0.5;
@@ -32,9 +32,9 @@ class HRHome extends HRPanel {
 
     private ArrayList<Object[]> createTitleToJobPostingsArray() {
         ArrayList<Object[]> titleToJobPostings = new ArrayList<>();
-        titleToJobPostings.add(new Object[]{"Job Postings To Review", this.hrBackEnd.getJPToReview()});
-        titleToJobPostings.add(new Object[]{"Job Postings That Need Group Interviews Scheduled", this.hrBackEnd.getJPToSchedule()});
-        titleToJobPostings.add(new Object[]{"Job Postings That Need Final Hiring Decision", this.hrBackEnd.getJPToHire()});
+        titleToJobPostings.add(new Object[]{"Job Postings To Review", this.hrBackend.getJPToReview()});
+        titleToJobPostings.add(new Object[]{"Job Postings That Need Group Interviews Scheduled", this.hrBackend.getJPToSchedule()});
+        titleToJobPostings.add(new Object[]{"Job Postings That Need Final Hiring Decision", this.hrBackend.getJPToHire()});
         return titleToJobPostings;
     }
 
@@ -45,7 +45,7 @@ class HRHome extends HRPanel {
      */
     private JPanel createWelcomePanel() {
         JPanel welcomeMessage = new GUIElementsCreator().createLabelPanel("Welcome " +
-                this.hrBackEnd.getHR().getLegalName(), 20, true);
+                this.hrBackend.getHR().getLegalName(), 20, true);
         return welcomeMessage;
     }
 

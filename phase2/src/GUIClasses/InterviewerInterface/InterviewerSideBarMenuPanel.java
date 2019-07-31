@@ -17,11 +17,6 @@ class InterviewerSideBarMenuPanel extends JPanel {
      * The side bar menu that is constant throughout the Interviewer GUI.
      */
 
-    // === Static variables ===
-    private static int CELL_WIDTH = 170;
-    private static int CELL_HEIGHT = 30;
-    private static int NUM_MAIN_MENU_OPTIONS = 6;
-
     // === Instance variables ===
     private JPanel cards;   // The cards in the interviewer GUI
     private LogoutActionListener logoutActionListener;  // The action listener for logging out
@@ -32,8 +27,7 @@ class InterviewerSideBarMenuPanel extends JPanel {
         this.logoutActionListener = logoutActionListener;
         TreeMap<String, Object> fullMenu = this.createFullMenu();
         this.setLayout(new BorderLayout());
-        this.add(new SideBarMenuCreator(fullMenu, CELL_WIDTH, CELL_HEIGHT).createMenuBar());
-        this.setSize(CELL_WIDTH, CELL_HEIGHT * NUM_MAIN_MENU_OPTIONS);
+        this.add(new SideBarMenuCreator(fullMenu).createMenuBar());
     }
 
     /**

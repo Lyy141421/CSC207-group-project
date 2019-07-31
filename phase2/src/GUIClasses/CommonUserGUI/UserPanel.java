@@ -9,8 +9,8 @@ abstract public class UserPanel extends JPanel {
 
     // === Class variables ===
     // Keys for common cards
-    public static String HOME = "HOME";
-    public static String PROFILE = "PROFILE";
+    public static final String HOME = "HOME";
+    public static final String PROFILE = "PROFILE";
 
     /**
      * Set the cards.

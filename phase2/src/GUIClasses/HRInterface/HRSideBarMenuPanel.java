@@ -14,11 +14,6 @@ import java.util.TreeMap;
 
 class HRSideBarMenuPanel extends JPanel {
 
-    // === Class variables ===
-    private static int CELL_WIDTH = 170;
-    private static int CELL_HEIGHT = 30;
-    private static int NUM_MAIN_MENU_OPTIONS = 7;
-
     // === Instance variable ===
     private JPanel cards;
     private LogoutActionListener logoutActionListener;
@@ -29,8 +24,7 @@ class HRSideBarMenuPanel extends JPanel {
         this.logoutActionListener = logoutActionListener;
         TreeMap<String, Object> fullMenu = this.createFullMenu();
         this.setLayout(new BorderLayout());
-        this.add(new SideBarMenuCreator(fullMenu, CELL_WIDTH, CELL_HEIGHT).createMenuBar());
-        this.setSize(CELL_WIDTH, CELL_HEIGHT * NUM_MAIN_MENU_OPTIONS);
+        this.add(new SideBarMenuCreator(fullMenu).createMenuBar());
     }
 
     /**
@@ -63,7 +57,7 @@ class HRSideBarMenuPanel extends JPanel {
                 ((CardLayout) cards.getLayout()).show(cards, HRPanel.BROWSE_POSTINGS);
             }
         });
-        fullMenu.put("6. Search applicant records", new ActionListener() {
+        fullMenu.put("6. Search applicant", new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 ((UserPanel) cards.getParent()).refresh();

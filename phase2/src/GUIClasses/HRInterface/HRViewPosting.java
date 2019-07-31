@@ -10,11 +10,10 @@ import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class HRViewPosting extends HRPanel{
+class HRViewPosting extends HRPanel {
 
     private HashMap<String, BranchJobPosting> unreviewedJP;
     private HashMap<String, BranchJobPosting> scheduleJP;
@@ -32,8 +31,8 @@ public class HRViewPosting extends HRPanel{
     private JList<String> jobPostingList = new JList<>();
 
 
-    HRViewPosting(HRBackEnd hrBackEnd, JPanel parent, boolean isTodo) {
-        super(hrBackEnd);
+    HRViewPosting(HRBackend hrBackend, JPanel parent, boolean isTodo) {
+        super(hrBackend);
         this.parent = parent;
         this.isTodo = isTodo;
         this.setJPLists();
@@ -101,7 +100,7 @@ public class HRViewPosting extends HRPanel{
             public void actionPerformed(ActionEvent e) {
                 String selectedTitle = jobPostingList.getSelectedValue();
                 BranchJobPosting selectedJP = currJPs.get(selectedTitle);
-                JInternalFrame popUp = new GroupInterviewFrame(hrBackEnd, selectedJP, containerPane);
+                JInternalFrame popUp = new GroupInterviewFrame(hrBackend, selectedJP, containerPane);
             }
         });
 
@@ -151,7 +150,7 @@ public class HRViewPosting extends HRPanel{
             mode = 2;
             removeFromJPLists(selectedTitle);
         }
-        HRViewApp appPanel = new HRViewApp(parent, hrBackEnd, getTitleToAppMap(appsUnderSelectedJP), this.getPreviousPanelKey(), mode);
+        HRViewApp appPanel = new HRViewApp(parent, hrBackend, getTitleToAppMap(appsUnderSelectedJP), this.getPreviousPanelKey(), mode);
         parent.remove(4);
         parent.add(appPanel, APPLICATION);
         ((CardLayout) parent.getLayout()).show(parent, APPLICATION);
@@ -166,10 +165,10 @@ public class HRViewPosting extends HRPanel{
     }
 
     private void setJPLists() {
-        this.unreviewedJP = this.getTitleToJPMap(hrBackEnd.getJPToReview());
-        this.scheduleJP = this.getTitleToJPMap(hrBackEnd.getJPToSchedule());
-        this.hiringJP = this.getTitleToJPMap(hrBackEnd.getJPToHire());
-        this.allJP = this.getTitleToJPMap(hrBackEnd.getAllJP());
+        this.unreviewedJP = this.getTitleToJPMap(hrBackend.getJPToReview());
+        this.scheduleJP = this.getTitleToJPMap(hrBackend.getJPToSchedule());
+        this.hiringJP = this.getTitleToJPMap(hrBackend.getJPToHire());
+        this.allJP = this.getTitleToJPMap(hrBackend.getAllJP());
 
         this.importantJP.putAll(this.unreviewedJP);
         this.importantJP.putAll(this.scheduleJP);

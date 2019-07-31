@@ -16,13 +16,13 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-class HRBackEnd {
+class HRBackend {
 
     // === Instance variables ===
     private JobApplicationSystem jobAppSystem;
     private HRCoordinator hr;
 
-    HRBackEnd(JobApplicationSystem jobAppSystem, HRCoordinator hr) {
+    HRBackend(JobApplicationSystem jobAppSystem, HRCoordinator hr) {
         this.jobAppSystem = jobAppSystem;
         this.hr = hr;
     }
@@ -97,8 +97,7 @@ class HRBackEnd {
         ArrayList<String> tags = new ArrayList<>(Arrays.asList(defaultFields[4].split(";")));
         int numPositions = (Integer) mandatoryFields[0];
         LocalDate applicationCloseDate = (LocalDate) mandatoryFields[1];
-        //TODO: number of reference is at index 2 of mandatoryFields
-        LocalDate referenceCloseDate = (LocalDate) mandatoryFields[3];
+        LocalDate referenceCloseDate = (LocalDate) mandatoryFields[2];
         this.hr.addJobPosting(title, field, description, requirements, tags, numPositions, jobAppSystem.getToday(), applicationCloseDate,
                 referenceCloseDate);
     }
@@ -106,8 +105,7 @@ class HRBackEnd {
     void implementJobPosting(CompanyJobPosting cjp, Object[] jobPostingFields) {
         int numPositions = (int) jobPostingFields[0];
         LocalDate applicationCloseDate = (LocalDate) jobPostingFields[1];
-        //TODO: num of reference is at index 2.
-        LocalDate referenceCloseDate = (LocalDate) jobPostingFields[3];
+        LocalDate referenceCloseDate = (LocalDate) jobPostingFields[2];
         this.hr.implementJobPosting(cjp, numPositions, jobAppSystem.getToday(), applicationCloseDate, referenceCloseDate);
     }
     /**

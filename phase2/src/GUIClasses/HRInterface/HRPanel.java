@@ -5,10 +5,6 @@ import CompanyStuff.JobPostings.*;
 
 
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -22,10 +18,10 @@ abstract class HRPanel extends JPanel {
     static final String ADD_POSTING = "ADDPOSTING";
 
     // === Instance variables ===
-    HRBackEnd hrBackEnd;
+    HRBackend hrBackend;
 
-    HRPanel(HRBackEnd hrBackEnd) {
-        this.hrBackEnd = hrBackEnd;
+    HRPanel(HRBackend hrBackend) {
+        this.hrBackend = hrBackend;
     }
 
     /**

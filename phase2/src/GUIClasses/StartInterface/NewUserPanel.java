@@ -13,12 +13,12 @@ import java.awt.event.ActionListener;
  */
 
 public class NewUserPanel extends JPanel {
-    private LoginBackend BackEnd;
+    private LoginBackend backend;
     private CardLayout masterLayout;
     private Container parent;
     private String newUsername;
 
-    public NewUserPanel(Container parent, CardLayout masterLayout) {
+    public NewUserPanel(Container parent, CardLayout masterLayout, JobApplicationSystem jobAppSystem) {
         this.parent = parent;
         this.masterLayout = masterLayout;
         this.setLayout(new GridLayout(3, 1));
@@ -41,7 +41,7 @@ public class NewUserPanel extends JPanel {
         this.add(selector);
         this.add(forms);
         this.add(buttons);
-        this.BackEnd = new LoginBackend();
+        this.backend = new LoginBackend(jobAppSystem);
     }
 
     /**
@@ -129,19 +129,19 @@ public class NewUserPanel extends JPanel {
     private int createApplicant() {
         JPanel forms = this.getPanelByName(this, "formPanel");
         Component[] items = this.getPanelByName(forms, "applicantCard").getComponents();
-        return BackEnd.createNewApplicant(this.BackEnd.getInputs(items, this.newUsername));
+        return backend.createNewApplicant(this.backend.getInputs(items, this.newUsername));
     }
 
     private int createInterviewer() {
         JPanel forms = this.getPanelByName(this, "formPanel");
         Component[] items = this.getPanelByName(forms, "interviewerCard").getComponents();
-        return BackEnd.createNewInterviewer(this.BackEnd.getInputs(items, this.newUsername));
+        return backend.createNewInterviewer(this.backend.getInputs(items, this.newUsername));
     }
 
     private int createHRC() {
         JPanel forms = this.getPanelByName(this, "formPanel");
         Component[] items = this.getPanelByName(forms, "HRCCard").getComponents();
-        return BackEnd.createNewHRC(this.BackEnd.getInputs(items, this.newUsername));
+        return backend.createNewHRC(this.backend.getInputs(items, this.newUsername));
     }
 
     /**

@@ -1,6 +1,7 @@
 package GUIClasses.HRInterface;
 
 import ApplicantStuff.JobApplication;
+import GUIClasses.HRInterface.InterviewSelectionFrame;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,11 +10,11 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class GradingFilterFrame extends JInternalFrame {
+class GradingFilterFrame extends JInternalFrame {
 
     private static int MAX_TO_SELECT = 1000;
 
-    HRBackEnd HRInterface;
+    HRBackend hrBackend;
     ArrayList<JobApplication> applications;
 
     JButton returnButton;
@@ -21,10 +22,10 @@ public class GradingFilterFrame extends JInternalFrame {
     JTextField keywordInput;
     JSpinner numberToSelect;
 
-    GradingFilterFrame(HRBackEnd HRInterface, ArrayList<JobApplication> applications, JButton returnButton) {
+    GradingFilterFrame(HRBackend hrBackend, ArrayList<JobApplication> applications, JButton returnButton) {
         super("Sort by keywords");
 
-        this.HRInterface = HRInterface;
+        this.hrBackend = hrBackend;
         this.applications = applications;
         this.returnButton = returnButton;
 
@@ -61,8 +62,8 @@ public class GradingFilterFrame extends JInternalFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 ArrayList<String> keywords = new ArrayList<>(Arrays.asList(keywordInput.getText().split(";")));
-                ArrayList<JobApplication> sortedApplications = HRInterface.getJobApplicationInNonDecreasingOrder(applications.get(0).getJobPosting(), keywords);
-                JInternalFrame interviewSelectionFrame = new InterviewSelectionFrame(HRInterface, sortedApplications,
+                ArrayList<JobApplication> sortedApplications = hrBackend.getJobApplicationInNonDecreasingOrder(applications.get(0).getJobPosting(), keywords);
+                JInternalFrame interviewSelectionFrame = new InterviewSelectionFrame(hrBackend, sortedApplications,
                         returnButton, ((SpinnerNumberModel)numberToSelect.getModel()).getNumber().intValue());
                 dispose();
             }

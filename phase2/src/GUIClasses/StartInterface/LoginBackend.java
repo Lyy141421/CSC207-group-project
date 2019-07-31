@@ -1,9 +1,9 @@
 package GUIClasses.StartInterface;
 
-import ApplicantStuff.JobApplication;
 import CompanyStuff.Branch;
 import CompanyStuff.Company;
 import Main.JobApplicationSystem;
+import Main.User;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,9 +11,21 @@ import java.time.LocalDate;
 import java.util.HashMap;
 
 class LoginBackend {
-    /**
+    /*
      * The general user interface
      */
+
+    private JobApplicationSystem jobAppSystem;
+
+    // === Constructor ===
+    LoginBackend(JobApplicationSystem jobAppSystem) {
+        this.jobAppSystem = jobAppSystem;
+    }
+
+
+    User findUserByUsername(String username) {
+        return jobAppSystem.getUserManager().findUserByUsername(username);
+    }
 
     // === Private methods ===
 
@@ -22,7 +34,6 @@ class LoginBackend {
      *
      * @return the e-mail address inputted by the user.
      */
-
     private boolean checkValidEmail(String email) {
         if (!email.contains("@") || email.charAt(0) == '@')
             return false;
@@ -48,7 +59,7 @@ class LoginBackend {
         } else if (name.equals("") || password.equals("")) {
             return 0;
         } else {
-            JobApplicationSystem.getUserManager().createApplicant(
+            jobAppSystem.getUserManager().createApplicant(
                     username, password, name, email, LocalDate.now(), postalCode);
             return 3;
         }
@@ -63,7 +74,7 @@ class LoginBackend {
         String password = inputs.get("password");
         String name = inputs.get("name");
         String email = inputs.get("email");
-        Company company = JobApplicationSystem.getCompany(inputs.get("company"));
+        Company company = jobAppSystem.getCompany(inputs.get("company"));
         Branch branch = company.getBranch(inputs.get("branch"));
         if(!this.checkValidEmail(email)) {
             return 1;
@@ -72,7 +83,7 @@ class LoginBackend {
         } else if(name.equals("") || password.equals("")) {
             return 0;
         } else {
-            JobApplicationSystem.getUserManager().createHRCoordinator(
+            jobAppSystem.getUserManager().createHRCoordinator(
                     username, password, name, email, branch, LocalDate.now());
             return 3;
         }
@@ -87,7 +98,7 @@ class LoginBackend {
         String password = inputs.get("password");
         String name = inputs.get("name");
         String email = inputs.get("email");
-        Company company = JobApplicationSystem.getCompany(inputs.get("company"));
+        Company company = jobAppSystem.getCompany(inputs.get("company"));
         Branch branch = company.getBranch(inputs.get("branch"));
         String field = "what the fuck"; //TODO: figure out what to do here
         if(!this.checkValidEmail(email)) {
@@ -97,7 +108,7 @@ class LoginBackend {
         } else if(company == null) {
             return 2;
         } else {
-            JobApplicationSystem.getUserManager().createInterviewer(
+            jobAppSystem.getUserManager().createInterviewer(
                     username, password, name, email, branch, field, LocalDate.now());
             return 3;
         }
@@ -138,13 +149,13 @@ class LoginBackend {
      * @return 0 - blank field, 1 - no user exists, 2 - successful login, 3 - wrong pass
      */
     int login(String username, String password) {
-        if (JobApplicationSystem.getUserManager().findUserByUsername(username) == null) {
+        if (jobAppSystem.getUserManager().findUserByUsername(username) == null) {
             return 1;
         } else if (username.equals("") || password.equals("")) {
             return 0;
         }
         else {
-            if (JobApplicationSystem.getUserManager().passwordCorrect(username, password)) {
+            if (jobAppSystem.getUserManager().passwordCorrect(username, password)) {
                 return 2;
             } else {
                 return 3;

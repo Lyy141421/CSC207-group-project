@@ -29,7 +29,7 @@ public class HRAddPosting extends HRPanel {
     JComboBox<String> companyPostingList;
     DefaultComboBoxModel<String> companyPostingModel;
 
-    HRAddPosting(HRBackEnd hrBackEnd) {
+    HRAddPosting(HRBackend hrBackEnd) {
         super(hrBackEnd);
 
         this.setLayout(new GridBagLayout());
@@ -85,7 +85,7 @@ public class HRAddPosting extends HRPanel {
         this.addJobTitleSelection();
         //TODO: the textField isn't showing up at the right size.
         JTextField jobFieldInput = new JTextField(30);
-        jobFieldInput.setMinimumSize(new Dimension(100, 30));
+        jobFieldInput.setMinimumSize(new Dimension(200, 30));
         this.addFieldToPanel(jobFieldInput);
         //TODO: the textArea isn't showing up at the right size.
         JTextArea jobDescriptionInput = new JTextArea(4, 30);

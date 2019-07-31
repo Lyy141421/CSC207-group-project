@@ -6,7 +6,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -17,8 +16,8 @@ public class HRSearchApplicant extends HRPanel{
     private JPanel inputPanel;
     HashMap<String, JobApplication> currApps;
 
-    HRSearchApplicant(HRBackEnd hrBackEnd, JPanel parent) {
-        super(hrBackEnd);
+    HRSearchApplicant(HRBackend hrBackend, JPanel parent) {
+        super(hrBackend);
         this.parent = parent;
         this.setLayout(new BorderLayout());
 
@@ -38,11 +37,11 @@ public class HRSearchApplicant extends HRPanel{
         searchButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ArrayList<JobApplication> apps = hrBackEnd.getAllJobApplicationsToCompany(nameInput.getText());
+                ArrayList<JobApplication> apps = hrBackend.getAllJobApplicationsToCompany(nameInput.getText());
                 if (apps.isEmpty()) {
                     JOptionPane.showMessageDialog(inputPanel, "The applicant cannot be found.");
                 } else {
-                    HRViewApp appPanel = new HRViewApp(parent, hrBackEnd, getTitleToAppMap(apps), HRPanel.SEARCH_APPLICANT, 0);
+                    HRViewApp appPanel = new HRViewApp(parent, hrBackend, getTitleToAppMap(apps), HRPanel.SEARCH_APPLICANT, 0);
                     parent.remove(4);
                     parent.add(appPanel, APPLICATION);
                     ((CardLayout) parent.getLayout()).show(parent, APPLICATION);

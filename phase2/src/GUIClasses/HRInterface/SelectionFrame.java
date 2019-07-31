@@ -11,7 +11,7 @@ import java.util.HashMap;
 
 abstract class SelectionFrame extends JInternalFrame{
 
-    HRBackEnd HRInterface;
+    HRBackend hrBackend;
 
     HashMap<JCheckBox, JobApplication> checkBoxToAppMap = new HashMap<>();
     GridBagConstraints c = new GridBagConstraints();
@@ -19,9 +19,9 @@ abstract class SelectionFrame extends JInternalFrame{
     JButton confirmButton;
     JButton returnButton;
 
-    SelectionFrame(HRBackEnd HRInterface, ArrayList<JobApplication> applications, JButton returnButton, int toSelect) {
+    SelectionFrame(HRBackend hrBackend, ArrayList<JobApplication> applications, JButton returnButton, int toSelect) {
         super("Select");
-        this.HRInterface = HRInterface;
+        this.hrBackend = hrBackend;
         this.returnButton = returnButton;
 
         this.setLayout(new GridBagLayout());

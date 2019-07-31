@@ -1,5 +1,7 @@
 package GUIClasses.ApplicantInterface;
 
+import GUIClasses.CommonUserGUI.SideBarMenuCreator;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -7,10 +9,6 @@ import java.awt.event.ActionListener;
 import java.util.TreeMap;
 
 public class ApplicantSideBarMenuPanel extends JPanel {
-    // === Class variables ===
-    private static int CELL_WIDTH = 170;
-    private static int CELL_HEIGHT = 30;
-    private static int NUM_MAIN_MENU_OPTIONS = 7;
 
     // === Instance variable ===
     private CardLayout affectedLayout;
@@ -22,8 +20,7 @@ public class ApplicantSideBarMenuPanel extends JPanel {
         this.cards = cards;
         TreeMap<String, Object> fullMenu = this.createFullMenu();
         this.setLayout(new BorderLayout());
-        this.add(new SideBarMenu(fullMenu, CELL_WIDTH, CELL_HEIGHT).createMenuBar());
-        this.setSize(CELL_WIDTH, CELL_HEIGHT * NUM_MAIN_MENU_OPTIONS);
+        this.add(new SideBarMenuCreator(fullMenu).createMenuBar());
     }
 
     /**

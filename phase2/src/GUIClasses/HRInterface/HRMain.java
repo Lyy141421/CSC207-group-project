@@ -10,29 +10,26 @@ import Main.JobApplicationSystem;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.time.LocalDate;
 
 public class HRMain extends UserPanel {
 
-    HRBackEnd hrBackEnd;
+    HRBackend hrBackend;
     JPanel cards = new JPanel(new CardLayout());
 
     private HRMain(HRCoordinator hrCoordinator, JobApplicationSystem jobAppSystem, LogoutActionListener logoutActionListener) {
-        this.hrBackEnd = new HRBackEnd(jobAppSystem, hrCoordinator);
+        this.hrBackend = new HRBackend(jobAppSystem, hrCoordinator);
         this.setLayout(new GridBagLayout());
         this.setCards();
 
         GridBagConstraints c = new GridBagConstraints();
         c.gridx = 0;
         c.gridy = 0;
-        c.weightx = 0.5;
+        c.weightx = 0.15;
         c.weighty = 0.5;
         c.fill = GridBagConstraints.BOTH;
         this.add(new HRSideBarMenuPanel(cards, logoutActionListener), c);
 
-        c.weightx = 0.01;
         c.gridx++;
         this.add(cards, c);
     }
@@ -40,13 +37,16 @@ public class HRMain extends UserPanel {
     //=====Add component methods=====
 
     public void setCards() {
-        cards.add(new HRHome(this.hrBackEnd), UserPanel.HOME);
-        cards.add(new UserProfilePanel(this.hrBackEnd.getHR()), UserPanel.PROFILE);
-        cards.add(new HRViewPosting(this.hrBackEnd, cards, true), HRPanel.TODO_POSTINGS);
-        cards.add(new HRViewPosting(this.hrBackEnd, cards, false), HRPanel.BROWSE_POSTINGS);
-        cards.add(new HRSearchApplicant(this.hrBackEnd, cards), HRPanel.SEARCH_APPLICANT);
-        cards.add(new HRAddPosting(this.hrBackEnd), HRPanel.ADD_POSTING);
-        //cards.add(new HRViewApp(this, this.hrBackEnd, this.today, new HashMap<>()), HRPanel.APPLICATION);
+        cards.add(new HRHome(this.hrBackend), UserPanel.HOME);
+        cards.add(new UserProfilePanel(this.hrBackend.getHR()), UserPanel.PROFILE);
+        cards.add(new HRViewPosting(this.hrBackend, cards, true), HRPanel.TODO_POSTINGS);
+        cards.add(new HRViewPosting(this.hrBackend, cards, false), HRPanel.BROWSE_POSTINGS);
+        cards.add(new HRSearchApplicant(this.hrBackend, cards), HRPanel.SEARCH_APPLICANT);
+//        cards.add(new HRAddPosting(this.hrBackend
+//       ), HRPanel.ADD_POSTING);
+        cards.add(new HRAddPostingForm(this.hrBackend), HRPanel.ADD_POSTING);
+        //cards.add(new HRViewApp(this, this.hrBackend
+        //, this.today, new HashMap<>()), HRPanel.APPLICATION);
     }
 
     public void refresh() {

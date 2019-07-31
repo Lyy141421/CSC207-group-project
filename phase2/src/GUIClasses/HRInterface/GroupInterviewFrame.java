@@ -14,11 +14,11 @@ import java.awt.event.ItemListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class GroupInterviewFrame extends JInternalFrame {
+class GroupInterviewFrame extends JInternalFrame {
 
     static int MAX_DAYS = 20;
 
-    HRBackEnd HRInterface;
+    HRBackend hrBackend;
     BranchJobPosting branchJobPosting;
     HRViewPosting parentPanel;
 
@@ -28,13 +28,13 @@ public class GroupInterviewFrame extends JInternalFrame {
     JComboBox<String> coordinatorSelection;
     HashMap<Interviewer, JCheckBox> interviewerToCheckBoxMap;
 
-    GroupInterviewFrame(HRBackEnd HRInterface, BranchJobPosting branchJobPosting, HRViewPosting postingPanel) {
+    GroupInterviewFrame(HRBackend hrBackend, BranchJobPosting branchJobPosting, HRViewPosting postingPanel) {
         super("Select interviewers for group interview");
-        this.HRInterface = HRInterface;
+        this.hrBackend = hrBackend;
         this.branchJobPosting = branchJobPosting;
         this.parentPanel = postingPanel;
 
-        this.nameToInterviewerMap = this.getNameToInterviewerMap(HRInterface.getInterviewersInField(branchJobPosting));
+        this.nameToInterviewerMap = this.getNameToInterviewerMap(hrBackend.getInterviewersInField(branchJobPosting));
 
         this.setLayout(new BorderLayout());
 
@@ -103,7 +103,7 @@ public class GroupInterviewFrame extends JInternalFrame {
         confirmButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                HRInterface.setUpGroupInterviews(branchJobPosting,
+                hrBackend.setUpGroupInterviews(branchJobPosting,
                         nameToInterviewerMap.get((String)coordinatorSelection.getSelectedItem()),
                         getSelectedInterviewers(), (int)daysSpinner.getValue());
                 parentPanel.removeFromJPLists(parentPanel.toJPTitle(branchJobPosting));
