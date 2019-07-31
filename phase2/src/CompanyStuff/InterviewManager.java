@@ -230,6 +230,8 @@ public class InterviewManager extends Observable implements Serializable {
      *
      * @param interviewCoordinator The interview coordinator selected.
      * @param otherInterviewers    The other interviewers selected.
+     * @param today                Today's date.
+     * @param minNumDaysNotice     The minimum number of days after which the interview can be held.
      */
     public void setUpGroupInterview(Interviewer interviewCoordinator, ArrayList<Interviewer> otherInterviewers,
                                     LocalDate today, int minNumDaysNotice) {
