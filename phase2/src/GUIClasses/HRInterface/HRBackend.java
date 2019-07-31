@@ -15,6 +15,7 @@ import java.io.File;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 
 class HRBackend {
 
@@ -39,12 +40,12 @@ class HRBackend {
         return new int[]{this.getToday().getYear(), this.getToday().getMonthValue(), this.getToday().getDayOfMonth()};
     }
 
-    /**
-     * * Get the task that the HR Coordinator must accomplish at this moment for this job posting.
-     */
-    int getTaskForJobPosting(BranchJobPosting jobPosting) {
-        return jobPosting.getInterviewManager().getHrTask();
-    }
+//    /**
+//     * * Get the task that the HR Coordinator must accomplish at this moment for this job posting.
+//     */
+//    int getTaskForJobPosting(BranchJobPosting jobPosting) {
+//        return jobPosting.getInterviewManager().getHrTask();
+//    }
 
     /**
      * Gets an array list of branch job postings that are under review for first round of interviews.
@@ -108,6 +109,7 @@ class HRBackend {
         LocalDate referenceCloseDate = (LocalDate) jobPostingFields[2];
         this.hr.implementJobPosting(cjp, numPositions, jobAppSystem.getToday(), applicationCloseDate, referenceCloseDate);
     }
+
     /**
      * Get all job applications submitted by this applicant with this username.
      * @param applicantUsername The applicant username inputted.
@@ -119,6 +121,23 @@ class HRBackend {
         if (applicant == null) {
             return new ArrayList<>();
         }
+        return this.getJobAppsByApplicantForCompany(applicant);
+    }
+
+    private ArrayList<Applicant> getAllApplicantsWhoHaveAppliedToCompany() {
+        return this.hr.getBranch().getCompany().getAllApplicantsWhoHaveAppliedToCompany(jobAppSystem.getToday());
+    }
+
+    HashMap<String, Applicant> getApplicantHashMap() {
+        HashMap<String, Applicant> titleToApplicant = new HashMap<>();
+        for (Applicant applicant : this.getAllApplicantsWhoHaveAppliedToCompany()) {
+            String title = applicant.getLegalName() + " (" + applicant.getUsername() + ")";
+            titleToApplicant.put(title, applicant);
+        }
+        return titleToApplicant;
+    }
+
+    ArrayList<JobApplication> getJobAppsByApplicantForCompany(Applicant applicant) {
         return this.hr.getBranch().getCompany().getAllApplicationsToCompany(applicant);
     }
 
@@ -156,15 +175,15 @@ class HRBackend {
         return jobAppGrader.getSortedJobApps();
     }
 
-    /* *
-     * Checks whether this job application has been rejected.
-     *
-     * @param jobApplication The job application in question.
-     * @return true iff this job application has been rejected.
-     */
-    boolean isRejected(JobApplication jobApplication) {
-        return jobApplication.getJobPosting().getInterviewManager().getApplicationsRejected().contains(jobApplication);
-    }
+//    /* *
+//     * Checks whether this job application has been rejected.
+//     *
+//     * @param jobApplication The job application in question.
+//     * @return true iff this job application has been rejected.
+//     */
+//    boolean isRejected(JobApplication jobApplication) {
+//        return jobApplication.getJobPosting().getInterviewManager().getApplicationsRejected().contains(jobApplication);
+//    }
 
     /**
      * Reject the list of applications for first round.

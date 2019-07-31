@@ -1,6 +1,7 @@
 package CompanyStuff.JobPostings;
 
 import ApplicantStuff.Applicant;
+import ApplicantStuff.JobApplication;
 import ApplicantStuff.Reference;
 import CompanyStuff.Branch;
 import CompanyStuff.InterviewManager;
@@ -74,6 +75,22 @@ public class BranchJobPostingManager implements Serializable {
     }
 
     /**
+     * Get all closed job postings for this branch.
+     *
+     * @param today Today's date.
+     * @return a list of all closed job postings at this branch.
+     */
+    private ArrayList<BranchJobPosting> getAllClosedJobPostings(LocalDate today) {
+        ArrayList<BranchJobPosting> closedPostings = new ArrayList<>();
+        for (BranchJobPosting branchJobPosting : this.branchJobPostings) {
+            if ((branchJobPosting.isClosedForReferences(today))) {
+                closedPostings.add(branchJobPosting);
+            }
+        }
+        return closedPostings;
+    }
+
+    /**
      * Get a list of closed job postings for this branch that have not yet been filled.
      *
      * @param today Today's date.
@@ -123,22 +140,22 @@ public class BranchJobPostingManager implements Serializable {
         return jobPostings;
     }
 
-    /**
-     * Get job postings that need interview configurations set up.
-     *
-     * @param today Today's date.
-     * @return the list of job postings that need interview configurations set up.
-     */
-    public ArrayList<BranchJobPosting> getJobPostingsThatNeedInterviewProcessConfigured(LocalDate today) {
-        ArrayList<BranchJobPosting> jobPostings = new ArrayList<>();
-        for (BranchJobPosting jobPosting : this.getClosedJobPostingsNotFilled(today)) {
-            InterviewManager interviewManager = jobPosting.getInterviewManager();
-            if (interviewManager.getHrTask() == InterviewManager.SET_INTERVIEW_CONFIGURATION) {
-                jobPostings.add(jobPosting);
-            }
-        }
-        return jobPostings;
-    }
+//    /**
+//     * Get job postings that need interview configurations set up.
+//     *
+//     * @param today Today's date.
+//     * @return the list of job postings that need interview configurations set up.
+//     */
+//    public ArrayList<BranchJobPosting> getJobPostingsThatNeedInterviewProcessConfigured(LocalDate today) {
+//        ArrayList<BranchJobPosting> jobPostings = new ArrayList<>();
+//        for (BranchJobPosting jobPosting : this.getClosedJobPostingsNotFilled(today)) {
+//            InterviewManager interviewManager = jobPosting.getInterviewManager();
+//            if (interviewManager.getHrTask() == InterviewManager.SET_INTERVIEW_CONFIGURATION) {
+//                jobPostings.add(jobPosting);
+//            }
+//        }
+//        return jobPostings;
+//    }
 
 //    /**
 //     * Get a list of job postings with no applications in consideration.
@@ -172,21 +189,21 @@ public class BranchJobPostingManager implements Serializable {
 //        }
 //        return jobPostings;
 //    }
-
-    /**
-     * Get a list of all filled job postings at this branch.
-     *
-     * @return a list of filled job postings at this branch.
-     */
-    public ArrayList<BranchJobPosting> getFilledJobPostings() {
-        ArrayList<BranchJobPosting> jobPostings = new ArrayList<>();
-        for (BranchJobPosting jobPosting : this.branchJobPostings) {
-            if (jobPosting.isFilled()) {
-                jobPostings.add(jobPosting);
-            }
-        }
-        return jobPostings;
-    }
+//
+//    /**
+//     * Get a list of all filled job postings at this branch.
+//     *
+//     * @return a list of filled job postings at this branch.
+//     */
+//    public ArrayList<BranchJobPosting> getFilledJobPostings() {
+//        ArrayList<BranchJobPosting> jobPostings = new ArrayList<>();
+//        for (BranchJobPosting jobPosting : this.branchJobPostings) {
+//            if (jobPosting.isFilled()) {
+//                jobPostings.add(jobPosting);
+//            }
+//        }
+//        return jobPostings;
+//    }
 
     /**
      * Get a list of job postings where a current interview round is over.
@@ -231,6 +248,25 @@ public class BranchJobPostingManager implements Serializable {
             jobPosting.getInterviewManager().updateJobPostingStatus();
             jobPosting.advanceInterviewRound();
         }
+    }
+
+    /**
+     * Get all the applicants who have applied to this branch.
+     *
+     * @param today Today's date.
+     * @return a list of all applicants who have applied to this branch
+     */
+    public ArrayList<Applicant> getAllApplicantsToBranch(LocalDate today) {
+        ArrayList<Applicant> applicants = new ArrayList<>();
+        for (BranchJobPosting jobPosting : this.getAllClosedJobPostings(today)) {
+            for (JobApplication jobApplication : jobPosting.getJobApplications()) {
+                Applicant applicant = jobApplication.getApplicant();
+                if (!applicants.contains(applicant)) {
+                    applicants.add(applicant);
+                }
+            }
+        }
+        return applicants;
     }
 
     // ============================================================================================================== //

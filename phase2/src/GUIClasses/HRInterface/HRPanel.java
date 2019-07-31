@@ -11,7 +11,7 @@ import java.util.HashMap;
 abstract class HRPanel extends JPanel {
 
     // === Constants ===
-    static final String TODO_POSTINGS = "TODO_POSTINGS";
+    static final String HIGH_PRIORITY_POSTINGS = "HIGH_PRIORITY_POSTINGS";
     static final String BROWSE_POSTINGS = "BROWSE_POSTINGS";
     static final String APPLICATION = "APPLICATION";
     static final String SEARCH_APPLICANT = "SEARCH_APPLICANT";

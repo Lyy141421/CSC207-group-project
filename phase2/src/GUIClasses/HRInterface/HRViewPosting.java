@@ -25,18 +25,18 @@ class HRViewPosting extends HRPanel {
 
     private HRViewPosting containerPane = this;
     private JPanel parent;
-    private boolean isTodo;
+    private boolean isHighPriority;
     private JTextArea info;
     private JButton scheduleButton;
     private JList<String> jobPostingList = new JList<>();
 
 
-    HRViewPosting(HRBackend hrBackend, JPanel parent, boolean isTodo) {
+    HRViewPosting(HRBackend hrBackend, JPanel parent, boolean isHighPriority) {
         super(hrBackend);
         this.parent = parent;
-        this.isTodo = isTodo;
+        this.isHighPriority = isHighPriority;
         this.setJPLists();
-        if (isTodo) {
+        if (isHighPriority) {
             this.currJPs = importantJP;
         } else {
             this.currJPs = allJP;
@@ -100,7 +100,7 @@ class HRViewPosting extends HRPanel {
             public void actionPerformed(ActionEvent e) {
                 String selectedTitle = jobPostingList.getSelectedValue();
                 BranchJobPosting selectedJP = currJPs.get(selectedTitle);
-                JInternalFrame popUp = new GroupInterviewFrame(hrBackend, selectedJP, containerPane);
+                add(new GroupInterviewPane(hrBackend, selectedJP, containerPane));
             }
         });
 
@@ -151,14 +151,16 @@ class HRViewPosting extends HRPanel {
             removeFromJPLists(selectedTitle);
         }
         HRViewApp appPanel = new HRViewApp(parent, hrBackend, getTitleToAppMap(appsUnderSelectedJP), this.getPreviousPanelKey(), mode);
-        parent.remove(4);
-        parent.add(appPanel, APPLICATION);
-        ((CardLayout) parent.getLayout()).show(parent, APPLICATION);
+        if (parent.getComponents().length > 6) {
+            parent.remove(6);
+        }
+        parent.add(appPanel, HRPanel.APPLICATION);
+        ((CardLayout) parent.getLayout()).show(parent, HRPanel.APPLICATION);
     }
 
     private String getPreviousPanelKey() {
-        if (isTodo) {
-            return HRPanel.TODO_POSTINGS;
+        if (isHighPriority) {
+            return HRPanel.HIGH_PRIORITY_POSTINGS;
         } else {
             return HRPanel.BROWSE_POSTINGS;
         }

@@ -49,9 +49,9 @@ class HRViewApp extends HRPanel {
 
         this.setApplicationList(splitDisplay);
         this.setInfoPane(splitDisplay);
-        this.setButtons(mode);
-
         this.setListSelectionListener();
+        this.add(splitDisplay);
+        this.setButtons(mode);
     }
 
     void reload () {

@@ -40,7 +40,7 @@ class HRSideBarMenuPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 ((UserPanel) cards.getParent()).refresh();
-                ((CardLayout) cards.getLayout()).show(cards, HRPanel.TODO_POSTINGS);
+                ((CardLayout) cards.getLayout()).show(cards, HRPanel.HIGH_PRIORITY_POSTINGS);
             }
         });
         fullMenu.put("4. Add Job Posting", new ActionListener() {

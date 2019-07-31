@@ -53,7 +53,7 @@ import java.util.ArrayList;
 public class FileChooser extends JPanel implements ActionListener {
 
     // === Class variables ===
-    //    private static final int APPLICANT_MAX_NUM_FILES = // TODO do we have a limit?
+    private static final int APPLICANT_MAX_NUM_FILES = 20;
     private static final int REFERENCE_MAX_NUM_FILES = 1;
 
     // === Instance variables ===
@@ -147,6 +147,8 @@ public class FileChooser extends JPanel implements ActionListener {
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 this.addFileToSubmitList();
                 if (user instanceof Reference && filesToSubmit.size() == REFERENCE_MAX_NUM_FILES) {
+                    uploadButton.setEnabled(false);
+                } else if (user instanceof Applicant && filesToSubmit.size() == APPLICANT_MAX_NUM_FILES) {
                     uploadButton.setEnabled(false);
                 }
             }

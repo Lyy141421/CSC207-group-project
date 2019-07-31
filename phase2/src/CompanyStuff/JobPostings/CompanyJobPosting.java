@@ -17,7 +17,7 @@ public class CompanyJobPosting extends Observable implements Serializable {
     public static String[] RECOMMENDED_DOCUMENTS = new String[]{"CV/Resume", "Cover letter", "Reference letter"};
     // The list of recommended tags
     public static String[] RECOMMENDED_TAGS = new String[]{"Computer science", "Bachelor's degree", "Prior work experience",
-            "Team-oriented", "Full-time", "Contract", "Part-time", "Salaried", "Hourly"};
+            "Team-oriented"};
 
     // === Instance variables ===
     // The job posting id
@@ -104,6 +104,17 @@ public class CompanyJobPosting extends Observable implements Serializable {
         return requiredDocuments.toString().replace("[", "").replace("]", "").replace(", ", ";");
     }
 
+    private String getStringForList(ArrayList<String> list) {
+        String s = "";
+        for (String item : list) {
+            s += item + ", ";
+        }
+        if (!list.isEmpty()) {
+            s = s.substring(0, s.length() - 2);
+        }
+        return s;
+    }
+
     public boolean containsTag(String tag){
         return tags.contains(tag);
     }
@@ -138,13 +149,14 @@ public class CompanyJobPosting extends Observable implements Serializable {
      */
     @Override
     public String toString() {
-        String s = "Job ID: " + this.id + "\n";
-        s += "Title: " + this.title + "\n";
-        s += "Field: " + this.field + "\n";
-        s += "Description: " + this.description + "\n";
+        String s = "Job ID: " + this.id + "\n\n";
+        s += "Title: " + this.title + "\n\n";
+        s += "Field: " + this.field + "\n\n";
+        s += "Description: " + this.description + "\n\n";
 //        s += "Branches: " + branches + "\n";
-        s += "Tags: " + this.getTagsString() + "\n";
-        s += "Company: " + this.company.getName() + "\n";
+        s += "Required Documents: " + this.getStringForList(this.requiredDocuments) + "\n\n";
+        s += "Tags: " + this.getStringForList(this.tags) + "\n\n";
+        s += "Company: " + this.company.getName() + "\n\n";
         return s;
     }
 }

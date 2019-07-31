@@ -22,9 +22,8 @@ public class InterviewManager extends Observable implements Serializable {
     private static final int DO_NOTHING = 0;
     private static final int EXTEND_APPLICATION_DEADLINE = 1;
     public static final int SELECT_APPS_FOR_FIRST_ROUND = 2;
-    public static final int SET_INTERVIEW_CONFIGURATION = 3;
-    public static final int SCHEDULE_GROUP_INTERVIEWS = 4;
-    public static final int SELECT_APPS_TO_HIRE = 5;
+    public static final int SCHEDULE_GROUP_INTERVIEWS = 3;
+    public static final int SELECT_APPS_TO_HIRE = 4;
 
     // === Instance variables ===
     // The job posting for this interview manager
@@ -184,8 +183,6 @@ public class InterviewManager extends Observable implements Serializable {
                 return InterviewManager.EXTEND_APPLICATION_DEADLINE;
             }
             return InterviewManager.SELECT_APPS_FOR_FIRST_ROUND;
-        } else if (this.interviewConfiguration.isEmpty()) {
-            return InterviewManager.SET_INTERVIEW_CONFIGURATION;
         } else if (!this.isInterviewProcessOver() && this.isNextRoundGroupInterview()) {
             return InterviewManager.SCHEDULE_GROUP_INTERVIEWS;
         } else if (this.isInterviewProcessOver() && !this.isNumApplicationsUnderOrAtThreshold()) {

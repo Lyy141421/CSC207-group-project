@@ -54,6 +54,8 @@ class HRAddPostingForm extends HRPanel {
     private JPanel containerPane = this;    // The container pane from which message dialogs will pop up from
     private List<JComponent> entryBoxes = new ArrayList<>();    // The list of optional entry boxes
     private HashMap<String, CompanyJobPosting> companyJPMap = new HashMap<>();  // The map of company job postings to be displayed
+    private JScrollPane requiredDocumentsEntry;
+    private JScrollPane tagsEntry;
 
     private JComboBox<String> companyPostingList;               // The list of company job postings to be displayed
     private DefaultComboBoxModel<String> companyPostingModel;   // The combo box for selecting a company posting
@@ -130,14 +132,14 @@ class HRAddPostingForm extends HRPanel {
         rect.width = LARGER_RECTANGLE_WIDTH;
         jobDescriptionEntry.setBounds(rect);
         this.add(jobDescriptionEntry);
-        this.entryBoxes.add(jobDescriptionEntry);
+        this.entryBoxes.add((JTextArea) jobDescriptionEntry.getViewport().getView());
     }
 
     private void addRequiredDocumentsEntry(Rectangle rect) {
         String instructions = "Enter the documents in a semi-colon separated list with no spaces. (e.g: 3 reference letters;Transcript)";
         JScrollPane extraRequiredDocumentsEntry = new GUIElementsCreator().createEditableTextAreaWithScrollBar(instructions);
 
-        JScrollPane requiredDocumentsEntry = this.createSelectionBox(CompanyJobPosting.RECOMMENDED_DOCUMENTS,
+        requiredDocumentsEntry = this.createSelectionBox(CompanyJobPosting.RECOMMENDED_DOCUMENTS,
                 (JTextArea) extraRequiredDocumentsEntry.getViewport().getView(), instructions);
         rect.height = MEDIUM_RECTANGLE_HEIGHT;
         rect.width = MEDIUM_RECTANGLE_WIDTH;
@@ -154,7 +156,7 @@ class HRAddPostingForm extends HRPanel {
         String instructions = "Enter the tags in a semi-colon separated list with no spaces. (e.g: University of Toronto;Java)";
         JScrollPane extraTagsEntry = new GUIElementsCreator().createEditableTextAreaWithScrollBar(instructions);
 
-        JScrollPane tagsEntry = this.createSelectionBox(CompanyJobPosting.RECOMMENDED_TAGS,
+        tagsEntry = this.createSelectionBox(CompanyJobPosting.RECOMMENDED_TAGS,
                 (JTextArea) extraTagsEntry.getViewport().getView(), instructions);
         rect.x = RECTANGLE_X_COLUMN_2;
         rect.y += MEDIUM_RECTANGLE_Y_INCREMENT;
@@ -225,15 +227,20 @@ class HRAddPostingForm extends HRPanel {
 
     private void fillDefaultValue(CompanyJobPosting companyJobPosting) {
         ((JTextField) this.entryBoxes.get(1)).setText(companyJobPosting.getField());
-        ((JTextArea) this.entryBoxes.get(2)).setText(companyJobPosting.getDescription());
-        ((JTextField) this.entryBoxes.get(3)).setText(companyJobPosting.getDocsString());
-        ((JTextField) this.entryBoxes.get(4)).setText(companyJobPosting.getTagsString());
+        ((JTextArea) entryBoxes.get(2)).setText(companyJobPosting.getDescription());
+        ((JTextArea) entryBoxes.get(3)).setText(companyJobPosting.getDocsString());
+        ((JTextArea) entryBoxes.get(4)).setText(companyJobPosting.getTagsString());
     }
 
     private void disableDefaultFields() {
         for (int i = 0; i < 5; i++) {
             this.entryBoxes.get(i).setEnabled(false);
+            if (this.entryBoxes instanceof JTextComponent) {
+                ((JTextComponent) this.entryBoxes.get(i)).setEditable(false);
+            }
+            // TODO disable documents and tags
         }
+
     }
 
     /**
@@ -254,7 +261,7 @@ class HRAddPostingForm extends HRPanel {
      * @return the title to be displayed of this company job posting.
      */
     private String toCompanyJPTitle(CompanyJobPosting companyJobPosting) {
-        return companyJobPosting.getId() + "-" + companyJobPosting.getTitle();
+        return companyJobPosting.getId() + " - " + companyJobPosting.getTitle();
     }
 
     private JDatePickerImpl createDatePicker() {
@@ -284,15 +291,25 @@ class HRAddPostingForm extends HRPanel {
         JScrollPane labelPane = new JScrollPane(recommendedPanel);
         labelPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         labelPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+        this.setSelectionBoxTextArea(checkedInput, textInput, instructions);
+        return labelPane;
+    }
+
+    private void setSelectionBoxTextArea(String checkedInput, JTextArea textInput, String instructions) {
         String fullTextInput = checkedInput;
-        if (!fullTextInput.endsWith(";")) {
-            fullTextInput += ";";
+        if (fullTextInput.startsWith(";")) {
+            fullTextInput = fullTextInput.substring(1);
         }
-        if (!textInput.equals(instructions)) {
+        if (!textInput.getText().equals(instructions)) {
+            if (!fullTextInput.endsWith(";")) {
+                fullTextInput += ";";
+            }
             fullTextInput += textInput.getText();
+            if (fullTextInput.endsWith(";")) {
+                fullTextInput = fullTextInput.substring(0, fullTextInput.length() - 1);
+            }
         }
         this.entryBoxes.add(new JTextArea(fullTextInput));
-        return labelPane;
     }
 
     private String addCheckBoxItemListener(JCheckBox checkBox) {
@@ -333,11 +350,10 @@ class HRAddPostingForm extends HRPanel {
                 Object[] mandatoryFields = getMandatoryFields();
                 Optional<String[]> defaultFields = getDefaultFields();
                 if (isValidInput(mandatoryFields, defaultFields)) {
-                    if (!defaultFields.isPresent()) {   //TODO the isEmpty call was giving me an error
+                    if (!defaultFields.isPresent()) {
                         CompanyJobPosting companyJobPosting = companyJPMap.get(((JTextField) entryBoxes.get(0)).getText());
                         hrBackend.implementJobPosting(companyJobPosting, mandatoryFields);
                     } else {
-
                         hrBackend.addJobPosting(mandatoryFields, defaultFields.get());
                     }
                     JOptionPane.showMessageDialog(containerPane, "Job posting has been added.");
@@ -356,17 +372,12 @@ class HRAddPostingForm extends HRPanel {
         if (this.companyJPMap.containsKey(jobTitleText)) {
             return Optional.empty();
         }
-        String jobDescriptionText = this.getTextFromScrollPaneWithTextArea((JScrollPane) entryBoxes.get(2));
         return Optional.of(new String[]{jobTitleText,  // title
                 ((JTextField) entryBoxes.get(1)).getText(),  // field
-                jobDescriptionText,   // description
+                ((JTextArea) entryBoxes.get(2)).getText(),   // description
                 ((JTextArea) entryBoxes.get(3)).getText(),   // documents
                 ((JTextArea) entryBoxes.get(4)).getText(),   // tags
         });
-    }
-
-    private String getTextFromScrollPaneWithTextArea(JScrollPane scrollPane) {
-        return ((JTextArea) scrollPane.getViewport().getView()).getText();
     }
 
     private Object[] getMandatoryFields() {

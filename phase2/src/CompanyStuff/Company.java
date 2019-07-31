@@ -124,6 +124,24 @@ public class Company implements Serializable {
     }
 
     /**
+     * Get a list of all applicants who have applied to this company.
+     *
+     * @param today Today's date.
+     * @return a list of all applicants who have applied to this company.
+     */
+    public ArrayList<Applicant> getAllApplicantsWhoHaveAppliedToCompany(LocalDate today) {
+        ArrayList<Applicant> applicants = new ArrayList<>();
+        for (Branch branch : this.branches) {
+            for (Applicant applicant : branch.getJobPostingManager().getAllApplicantsToBranch(today)) {
+                if (!applicants.contains(applicant)) {
+                    applicants.add(applicant);
+                }
+            }
+        }
+        return applicants;
+    }
+
+    /**
      * Update all the job postings in this company as appropriate.
      *
      * @param today Today's date.
