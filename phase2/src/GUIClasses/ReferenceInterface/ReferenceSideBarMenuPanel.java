@@ -47,14 +47,14 @@ class ReferenceSideBarMenuPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 ((UserPanel) cards.getParent()).refresh();
-                ((CardLayout) cards.getLayout()).show(cards, ReferencePanel.SUBMIT_REFERENCE_LETTER);
+                ((CardLayout) cards.getLayout()).show(cards, ReferenceMain.SUBMIT_REFERENCE_LETTER);
             }
         });
         fullMenu.put("4. View Referee Job Postings", new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 ((UserPanel) cards.getParent()).refresh();
-                ((CardLayout) cards.getLayout()).show(cards, ReferencePanel.VIEW_REFEREE_JOB_POSTINGS);
+                ((CardLayout) cards.getLayout()).show(cards, ReferenceMain.VIEW_REFEREE_JOB_POSTINGS);
             }
         });
         fullMenu.put("5. Logout", logoutActionListener);

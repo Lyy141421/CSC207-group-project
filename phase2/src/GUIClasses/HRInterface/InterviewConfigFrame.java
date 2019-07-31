@@ -1,7 +1,6 @@
 package GUIClasses.HRInterface;
 
 import CompanyStuff.JobPostings.BranchJobPosting;
-import GUIClasses.MethodsTheGUICallsInHR;
 
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
@@ -13,7 +12,7 @@ import java.util.ArrayList;
 
 public class InterviewConfigFrame extends JInternalFrame {
 
-    MethodsTheGUICallsInHR HRInterface;
+    HRBackEnd HRInterface;
     BranchJobPosting branchJobPosting;
 
     JInternalFrame container = this;
@@ -28,7 +27,7 @@ public class InterviewConfigFrame extends JInternalFrame {
 
     JButton returnButton;
 
-    InterviewConfigFrame(MethodsTheGUICallsInHR HRInterface, BranchJobPosting branchJobPosting, JButton returnButton) {
+    InterviewConfigFrame(HRBackEnd HRInterface, BranchJobPosting branchJobPosting, JButton returnButton) {
         this.HRInterface = HRInterface;
         this.branchJobPosting = branchJobPosting;
         this.returnButton = returnButton;

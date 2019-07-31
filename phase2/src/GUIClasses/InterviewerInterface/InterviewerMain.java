@@ -16,7 +16,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class InterviewerPanel extends UserPanel {
+public class InterviewerMain extends UserPanel {
     /**
      * The main panel for Interviewer GUI.
      */
@@ -32,7 +32,7 @@ public class InterviewerPanel extends UserPanel {
     private JPanel cards = new JPanel(new CardLayout());        // The panel that contains all the Interviewer cards
 
     // === Constructor ===
-    public InterviewerPanel(Interviewer interviewer, JobApplicationSystem jobAppSystem, LogoutActionListener logoutActionListener) {
+    public InterviewerMain(Interviewer interviewer, JobApplicationSystem jobAppSystem, LogoutActionListener logoutActionListener) {
         this.interviewerInterface = new InterviewerBackEnd(jobAppSystem, interviewer);
         this.setLayout(new GridBagLayout());
         this.setCards();
@@ -58,11 +58,11 @@ public class InterviewerPanel extends UserPanel {
      * Sets the cards for the Interviewer GUI.
      */
     public void setCards() {
-        cards.add(new InterviewerHomePanel(this.interviewerInterface), InterviewerPanel.HOME);
-        cards.add(new UserProfilePanel(this.interviewerInterface.getInterviewer()), InterviewerPanel.PROFILE);
-        cards.add(new InterviewerSchedule(this.interviewerInterface), InterviewerPanel.SCHEDULE);
-        cards.add(new InterviewerViewOnly(this.interviewerInterface), InterviewerPanel.INCOMPLETE);
-        cards.add(new InterviewerCompleteInterviewFull(this.interviewerInterface), InterviewerPanel.COMPLETE);
+        cards.add(new InterviewerHomePanel(this.interviewerInterface), InterviewerMain.HOME);
+        cards.add(new UserProfilePanel(this.interviewerInterface.getInterviewer()), InterviewerMain.PROFILE);
+        cards.add(new InterviewerSchedule(this.interviewerInterface), InterviewerMain.SCHEDULE);
+        cards.add(new InterviewerViewOnly(this.interviewerInterface), InterviewerMain.INCOMPLETE);
+        cards.add(new InterviewerCompleteInterviewFull(this.interviewerInterface), InterviewerMain.COMPLETE);
     }
 
     public void refresh() {
@@ -106,7 +106,7 @@ public class InterviewerPanel extends UserPanel {
         jobApplicationSystem.setToday(LocalDate.of(2019, 8, 20));
         LogoutActionListener logoutActionListener = new LogoutActionListener(new Container(), new CardLayout(), jobApplicationSystem);
         JFrame frame = new JFrame();
-        frame.add(new InterviewerPanel(interviewer, jobApplicationSystem, logoutActionListener));
+        frame.add(new InterviewerMain(interviewer, jobApplicationSystem, logoutActionListener));
         frame.setSize(854, 480);
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

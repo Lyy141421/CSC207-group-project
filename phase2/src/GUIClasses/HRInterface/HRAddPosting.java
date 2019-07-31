@@ -1,27 +1,21 @@
 package GUIClasses.HRInterface;
 
-import CompanyStuff.Company;
-import CompanyStuff.JobPostings.BranchJobPosting;
 import CompanyStuff.JobPostings.CompanyJobPosting;
-import GUIClasses.MethodsTheGUICallsInHR;
 
 import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
 import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
 import net.sourceforge.jdatepicker.impl.UtilDateModel;
 
 import javax.swing.*;
-import javax.swing.text.NumberFormatter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.*;
 import java.util.List;
-import java.util.concurrent.Flow;
 
 public class HRAddPosting extends HRPanel {
 
@@ -35,8 +29,8 @@ public class HRAddPosting extends HRPanel {
     JComboBox<String> companyPostingList;
     DefaultComboBoxModel<String> companyPostingModel;
 
-    HRAddPosting(Container contentPane, MethodsTheGUICallsInHR HRInterface, LocalDate today) {
-        super(contentPane, HRInterface, today);
+    HRAddPosting(HRBackEnd hrBackEnd) {
+        super(hrBackEnd);
 
         this.setLayout(new GridBagLayout());
         this.c = new GridBagConstraints();
@@ -73,13 +67,13 @@ public class HRAddPosting extends HRPanel {
         this.addLabelToPanel(jobField);
         JLabel jobDescription = new JLabel("Job description");
         this.addLabelToPanel(jobDescription);
-        JLabel requirements = new JLabel("Required document(s)");
+        JLabel requirements = new JLabel("Required document(s) (e.g: '3 Reference Letters')");
         this.addLabelToPanel(requirements);
         JLabel tags = new JLabel("Tag(s)");
         this.addLabelToPanel(tags);
         JLabel numPositions = new JLabel("Number of positions");
         this.addLabelToPanel(numPositions);
-        JLabel closeDate = new JLabel("Close date");
+        JLabel closeDate = new JLabel("Applicant Close date");
         this.addLabelToPanel(closeDate);
         JLabel refCloseDate = new JLabel("Reference close date");
         this.addLabelToPanel(refCloseDate);
@@ -91,9 +85,11 @@ public class HRAddPosting extends HRPanel {
         this.addJobTitleSelection();
         //TODO: the textField isn't showing up at the right size.
         JTextField jobFieldInput = new JTextField(30);
+        jobFieldInput.setMinimumSize(new Dimension(100, 30));
         this.addFieldToPanel(jobFieldInput);
         //TODO: the textArea isn't showing up at the right size.
         JTextArea jobDescriptionInput = new JTextArea(4, 30);
+        jobDescriptionInput.setMinimumSize(new Dimension(100, 30));
         this.addFieldToPanel(jobDescriptionInput);
         this.addSelectionBox(CompanyJobPosting.RECOMMENDED_DOCUMENTS);
         this.addSelectionBox(CompanyJobPosting.RECOMMENDED_TAGS);
@@ -105,7 +101,7 @@ public class HRAddPosting extends HRPanel {
     private void addJobTitleSelection() {
         this.companyPostingList = new JComboBox<>();
         this.companyPostingList.setEditable(true);
-        this.setCompanyJPMap(this.HRInterface.getHR().getBranch().getCompany().getCompanyJobPostings());
+        this.setCompanyJPMap(this.hrBackEnd.getHR().getBranch().getCompany().getCompanyJobPostings());
         this.companyPostingModel = new DefaultComboBoxModel<>(companyJPMap.keySet().toArray(new String[companyJPMap.size()]));
         this.companyPostingList.setModel(this.companyPostingModel);
 
@@ -173,7 +169,8 @@ public class HRAddPosting extends HRPanel {
 
     private void addDatePicker() {
         UtilDateModel dateModel = new UtilDateModel();
-        dateModel.setDate(today.getYear(), today.getMonthValue() - 1, today.getDayOfMonth());
+        int[] todayComponents = hrBackEnd.getTodayComponents();
+        dateModel.setDate(todayComponents[0], todayComponents[1] - 1, todayComponents[2]);
         dateModel.setSelected(true);
         JDatePanelImpl datePanel = new JDatePanelImpl(dateModel);
         JDatePickerImpl closeDateInput = new JDatePickerImpl(datePanel);
@@ -229,12 +226,12 @@ public class HRAddPosting extends HRPanel {
                 Object[] mandatoryFields = getMandatoryFields();
                 Optional<String[]> defaultFields = getDefaultFields();
                 if (isValidInput(mandatoryFields, defaultFields)) {
-                    if (defaultFields.isEmpty()) {
+                    if (!defaultFields.isPresent()) {   //TODO the isEmpty call was giving me an error
                         CompanyJobPosting companyJobPosting= companyJPMap.get(((JTextField)entryBoxes.get(0)).getText());
-                        HRInterface.implementJobPosting(companyJobPosting, mandatoryFields);
+                        hrBackEnd.implementJobPosting(companyJobPosting, mandatoryFields);
                     } else {
 
-                        HRInterface.addJobPosting(mandatoryFields, defaultFields.get());
+                        hrBackEnd.addJobPosting(mandatoryFields, defaultFields.get());
                     }
                     JOptionPane.showMessageDialog(containerPane, "Job posting has been added.");
                 } else {
@@ -272,7 +269,6 @@ public class HRAddPosting extends HRPanel {
         JButton submit = this.createSubmitButton();
 
         buttons.add(submit);
-        buttons.add(this.homeButton);
 
         this.addLabelToPanel(buttons);
     }
@@ -291,7 +287,7 @@ public class HRAddPosting extends HRPanel {
             }
         }
 
-        if (!this.HRInterface.getToday().isBefore(((LocalDate) mandatoryFields[1]))) {
+        if (!this.hrBackEnd.getToday().isBefore(((LocalDate) mandatoryFields[1]))) {
             valid = false;
         } else if (((LocalDate) mandatoryFields[2]).isBefore(((LocalDate) mandatoryFields[1]))) {
             valid = false;

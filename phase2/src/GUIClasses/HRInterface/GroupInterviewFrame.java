@@ -1,9 +1,7 @@
 package GUIClasses.HRInterface;
 
-import CompanyStuff.Branch;
 import CompanyStuff.Interviewer;
 import CompanyStuff.JobPostings.BranchJobPosting;
-import GUIClasses.MethodsTheGUICallsInHR;
 
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
@@ -20,7 +18,7 @@ public class GroupInterviewFrame extends JInternalFrame {
 
     static int MAX_DAYS = 20;
 
-    MethodsTheGUICallsInHR HRInterface;
+    HRBackEnd HRInterface;
     BranchJobPosting branchJobPosting;
     HRViewPosting parentPanel;
 
@@ -30,7 +28,7 @@ public class GroupInterviewFrame extends JInternalFrame {
     JComboBox<String> coordinatorSelection;
     HashMap<Interviewer, JCheckBox> interviewerToCheckBoxMap;
 
-    GroupInterviewFrame(MethodsTheGUICallsInHR HRInterface, BranchJobPosting branchJobPosting, HRViewPosting postingPanel) {
+    GroupInterviewFrame(HRBackEnd HRInterface, BranchJobPosting branchJobPosting, HRViewPosting postingPanel) {
         super("Select interviewers for group interview");
         this.HRInterface = HRInterface;
         this.branchJobPosting = branchJobPosting;
