@@ -1,7 +1,6 @@
 package GUIClasses.HRInterface;
 
 import ApplicantStuff.JobApplication;
-import GUIClasses.MethodsTheGUICallsInHR;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,30 +12,25 @@ import java.util.HashMap;
 
 public class HRSearchApplicant extends HRPanel{
 
+    private JPanel parent;
     private JTextField nameInput;
-
+    private JPanel inputPanel;
     HashMap<String, JobApplication> currApps;
 
-    HRSearchApplicant(Container contentPane, MethodsTheGUICallsInHR HRInterface, LocalDate today) {
-        super(contentPane, HRInterface, today);
-
+    HRSearchApplicant(HRBackEnd hrBackEnd, JPanel parent) {
+        super(hrBackEnd);
+        this.parent = parent;
         this.setLayout(new BorderLayout());
 
-        JPanel row = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        inputPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 
         JLabel applicantName = new JLabel("Applicant username");
         this.nameInput = new JTextField(30);
 
-        row.add(applicantName);
-        row.add(this.nameInput);
-        row.add(createSearchButton());
-        this.add(row, BorderLayout.CENTER);
-
-        this.add(this.homeButton, BorderLayout.SOUTH);
-    }
-
-    void reload() {
-
+        inputPanel.add(applicantName);
+        inputPanel.add(this.nameInput);
+        inputPanel.add(createSearchButton());
+        this.add(inputPanel, BorderLayout.CENTER);
     }
 
     private JButton createSearchButton () {
@@ -44,11 +38,11 @@ public class HRSearchApplicant extends HRPanel{
         searchButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ArrayList<JobApplication> apps = HRInterface.getAllJobApplicationsToCompany(nameInput.getText());
+                ArrayList<JobApplication> apps = hrBackEnd.getAllJobApplicationsToCompany(nameInput.getText());
                 if (apps.isEmpty()) {
-                    JOptionPane.showMessageDialog(parent, "The applicant cannot be found.");
+                    JOptionPane.showMessageDialog(inputPanel, "The applicant cannot be found.");
                 } else {
-                    HRViewApp appPanel = new HRViewApp(parent, HRInterface, today, getTitleToAppMap(apps), HRPanel.SEARCH, 0);
+                    HRViewApp appPanel = new HRViewApp(parent, hrBackEnd, getTitleToAppMap(apps), HRPanel.SEARCH_APPLICANT, 0);
                     parent.remove(4);
                     parent.add(appPanel, APPLICATION);
                     ((CardLayout) parent.getLayout()).show(parent, APPLICATION);

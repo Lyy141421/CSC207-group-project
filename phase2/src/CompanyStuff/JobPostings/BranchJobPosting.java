@@ -229,6 +229,24 @@ public class BranchJobPosting extends CompanyJobPosting {
     }
 
     /**
+     * Get the category names for this job posting.
+     *
+     * @return a list of category names for this job posting for a reference.
+     */
+    public static String[] getCategoryLabelsForHR() {
+        return new String[]{"Title", "Field"};
+    }
+
+    /**
+     * Get the category values for this job posting for a reference.
+     *
+     * @return a list of category values for this job posting for a reference.
+     */
+    public String[] getCategoryValuesForHR() {
+        return new String[]{this.getTitle(), this.getField()};
+    }
+
+    /**
      * Get the category values for this job posting for a reference.
      *
      * @return a list of category values for this job posting for a reference.

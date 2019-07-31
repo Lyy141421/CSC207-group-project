@@ -1,8 +1,6 @@
 package GUIClasses.HRInterface;
 
 import ApplicantStuff.JobApplication;
-import CompanyStuff.JobPostings.BranchJobPosting;
-import GUIClasses.MethodsTheGUICallsInHR;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,7 +13,7 @@ public class GradingFilterFrame extends JInternalFrame {
 
     private static int MAX_TO_SELECT = 1000;
 
-    MethodsTheGUICallsInHR HRInterface;
+    HRBackEnd HRInterface;
     ArrayList<JobApplication> applications;
 
     JButton returnButton;
@@ -23,7 +21,7 @@ public class GradingFilterFrame extends JInternalFrame {
     JTextField keywordInput;
     JSpinner numberToSelect;
 
-    GradingFilterFrame(MethodsTheGUICallsInHR HRInterface, ArrayList<JobApplication> applications, JButton returnButton) {
+    GradingFilterFrame(HRBackEnd HRInterface, ArrayList<JobApplication> applications, JButton returnButton) {
         super("Sort by keywords");
 
         this.HRInterface = HRInterface;
