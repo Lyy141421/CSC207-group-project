@@ -183,7 +183,7 @@ public class BranchJobPosting extends CompanyJobPosting {
     /**
      * Advance the round of interviews for this job posting.
      */
-    void advanceInterviewRound() {
+    public void advanceInterviewRound() {
         if (interviewManager == null) {
             return;
         }
