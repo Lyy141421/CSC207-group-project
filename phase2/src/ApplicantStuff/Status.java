@@ -95,7 +95,7 @@ public class Status extends Observable implements Serializable {
      *
      * @return true iff this status is set to hired.
      */
-    boolean isHired() {
+    public boolean isHired() {
         return this.value == this.hired;
     }
 
@@ -104,7 +104,7 @@ public class Status extends Observable implements Serializable {
      *
      * @return true iff this status is set to archived.
      */
-    boolean isArchived() {
+    public boolean isArchived() {
         return this.value == Status.ARCHIVED;
     }
 }

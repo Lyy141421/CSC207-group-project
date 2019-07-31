@@ -1,110 +1,83 @@
 package GUIClasses.HRInterface;
 
-import GUIClasses.MethodsTheGUICallsInHR;
+import CompanyStuff.JobPostings.BranchJobPosting;
+import GUIClasses.CommonUserGUI.GUIElementsCreator;
+import GUIClasses.CommonUserGUI.UserPanel;
 
 import javax.swing.*;
-import javax.swing.border.EtchedBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.time.LocalDate;
+import java.util.ArrayList;
 
-public class HRHome extends HRPanel {
+class HRHome extends HRPanel {
 
-    GridBagConstraints c;
+    // TODO add a scroll bar on the right side
 
-    private JButton logoutButton;
-    private JButton searchButton;
-    private JButton browseButton;
-    private JButton addButton;
-    private JButton toDoButton;
-
-    HRHome(Container contentPane, MethodsTheGUICallsInHR HRInterface, LocalDate today) {
-        super(contentPane, HRInterface, today);
-
+    HRHome(HRBackend hrBackend) {
+        super(hrBackend);
         this.setLayout(new GridBagLayout());
-        this.c = new GridBagConstraints();
-
-        this.toDoButton = new JButton("To-Do");
-        this.c.gridx = 0;
-        this.c.gridy = 0;
-        this.add(toDoButton, this.c);
-
-        this.createBrowseButton();
-        this.createAddButton();
-        this.createSearchButton();
-        this.addMenu();
-
-        this.logoutButton = new JButton("Logout");
-        this.c.gridx = 2;
-        this.c.gridy = 2;
-        this.c.gridwidth = 1;
-        this.c.insets = new Insets(20, 100, 0, 0);
-        this.add(logoutButton, this.c);
+        GridBagConstraints c = new GridBagConstraints();
+        c.weightx = 0.5;
+        c.gridx = 0;
+        c.gridy = 0;
+        this.add(this.createWelcomePanel(), c);
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.insets = new Insets(10, 10, 10, 10);
+        c.gridy = 1;
+        c.gridheight = 75;
+        for (Object[] titleAndArray : this.createTitleToJobPostingsArray()) {
+            this.add(this.createJobPostingsTablePanel((String) titleAndArray[0], (ArrayList<BranchJobPosting>) titleAndArray[1]), c);
+            c.gridy += c.gridheight;
+        }
     }
 
-    void reload() {
-        //TODO: update to-do button
+    private ArrayList<Object[]> createTitleToJobPostingsArray() {
+        ArrayList<Object[]> titleToJobPostings = new ArrayList<>();
+        titleToJobPostings.add(new Object[]{"Job Postings To Review", this.hrBackend.getJPToReview()});
+        titleToJobPostings.add(new Object[]{"Job Postings That Need Group Interviews Scheduled", this.hrBackend.getJPToSchedule()});
+        titleToJobPostings.add(new Object[]{"Job Postings That Need Final Hiring Decision", this.hrBackend.getJPToHire()});
+        return titleToJobPostings;
     }
 
-    JButton getLogoutButton() {
-        return this.logoutButton;
+    /**
+     * Create a welcome panel to be displayed.
+     *
+     * @return the welcome panel created.
+     */
+    private JPanel createWelcomePanel() {
+        JPanel welcomeMessage = new GUIElementsCreator().createLabelPanel("Welcome " +
+                this.hrBackend.getHR().getLegalName(), 20, true);
+        return welcomeMessage;
     }
 
-    JButton getBrowseButton() {
-        return this.browseButton;
+    /**
+     * Create the full panel that contains information for jobPostings to schedule.
+     *
+     * @return the panel created.
+     */
+    private JPanel createJobPostingsTablePanel(String tableTitle, ArrayList<BranchJobPosting> jobPostings) {
+        JPanel applicantSelection = new JPanel();
+        applicantSelection.setLayout(new BorderLayout());
+        applicantSelection.add(new GUIElementsCreator().createLabelPanel(
+                tableTitle, 15, true), BorderLayout.BEFORE_FIRST_LINE);
+        applicantSelection.add(this.createJobPostingsTable(jobPostings), BorderLayout.CENTER);
+        return applicantSelection;
     }
 
-    JButton getToDoButton() {
-        return this.toDoButton;
+    private JPanel createJobPostingsTable(ArrayList<BranchJobPosting> jobPostings) {
+        Object[][] data = new Object[jobPostings.size()][];
+
+        for (int i = 0; i < jobPostings.size(); i++) {
+            data[i] = jobPostings.get(i).getCategoryValuesForHR();
+        }
+
+        return new GUIElementsCreator().createTablePanel(BranchJobPosting.getCategoryLabelsForHR(), data);
     }
 
-    private void addMenu() {
-        JPanel menu = new JPanel();
-        menu.setLayout(new BoxLayout(menu, BoxLayout.Y_AXIS));
-        menu.setBorder(new EtchedBorder(EtchedBorder.LOWERED));
-
-        menu.add(this.browseButton);
-        menu.add(this.addButton);
-        menu.add(this.searchButton);
-
-        this.c.gridx = 1;
-        this.c.gridy = 1;
-        this.c.gridwidth = 2;
-        this.add(menu, this.c);
+    /**
+     * Refreshes all the cards in InterviewerMain when any changes are made.
+     */
+    void refresh() {
+        ((UserPanel) this.getParent().getParent()).refresh();
     }
 
-    private void createBrowseButton() {
-        this.browseButton = new JButton("Browse all job postings");
-        this.browseButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-        this.browseButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                //TODO: insert allJP to currJP and change jobPostingList content
-                ((CardLayout) parent.getLayout()).show(parent, POSTING);
-            }
-        });
-    }
-
-    private void createSearchButton() {
-        this.searchButton = new JButton("Search applicant");
-        this.searchButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-        this.searchButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                ((CardLayout) parent.getLayout()).show(parent, SEARCH);
-            }
-        });
-    }
-
-    private void createAddButton() {
-        this.addButton = new JButton("Add job posting");
-        this.addButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-        this.addButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                ((CardLayout) parent.getLayout()).show(parent, ADD_POSTING);
-            }
-        });
-    }
 }

@@ -1,10 +1,10 @@
-package GUIClasses.InterviewerInterface;
+package GUIClasses.HRInterface;
 
 import GUIClasses.ActionListeners.LogoutActionListener;
 import GUIClasses.ActionListeners.ProfileActionListener;
 import GUIClasses.ActionListeners.ReturnHomeActionListener;
-import GUIClasses.CommonUserGUI.UserPanel;
 import GUIClasses.CommonUserGUI.SideBarMenuCreator;
+import GUIClasses.CommonUserGUI.UserPanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,17 +12,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.TreeMap;
 
-class InterviewerSideBarMenuPanel extends JPanel {
-    /**
-     * The side bar menu that is constant throughout the Interviewer GUI.
-     */
+class HRSideBarMenuPanel extends JPanel {
 
-    // === Instance variables ===
-    private JPanel cards;   // The cards in the interviewer GUI
-    private LogoutActionListener logoutActionListener;  // The action listener for logging out
+    // === Instance variable ===
+    private JPanel cards;
+    private LogoutActionListener logoutActionListener;
 
     // === Constructor ===
-    InterviewerSideBarMenuPanel(JPanel cards, LogoutActionListener logoutActionListener) {
+    HRSideBarMenuPanel(JPanel cards, LogoutActionListener logoutActionListener) {
         this.cards = cards;
         this.logoutActionListener = logoutActionListener;
         TreeMap<String, Object> fullMenu = this.createFullMenu();
@@ -39,25 +36,32 @@ class InterviewerSideBarMenuPanel extends JPanel {
         TreeMap<String, Object> fullMenu = new TreeMap<>();
         fullMenu.put("1. Home", new ReturnHomeActionListener());
         fullMenu.put("2. Profile", new ProfileActionListener());
-        fullMenu.put("3. Schedule Interviews", new ActionListener() {
+        fullMenu.put("3. High priority tasks", new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 ((UserPanel) cards.getParent()).refresh();
-                ((CardLayout) cards.getLayout()).show(cards, InterviewerMain.SCHEDULE);
+                ((CardLayout) cards.getLayout()).show(cards, HRPanel.TODO_POSTINGS);
             }
         });
-        fullMenu.put("4. View Interviewees", new ActionListener() {
+        fullMenu.put("4. Add Job Posting", new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 ((UserPanel) cards.getParent()).refresh();
-                ((CardLayout) cards.getLayout()).show(cards, InterviewerMain.INCOMPLETE);
+                ((CardLayout) cards.getLayout()).show(cards, HRPanel.ADD_POSTING);
             }
         });
-        fullMenu.put("5. Complete Interviews", new ActionListener() {
+        fullMenu.put("5. Browse Job Postings", new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 ((UserPanel) cards.getParent()).refresh();
-                ((CardLayout) cards.getLayout()).show(cards, InterviewerMain.COMPLETE);
+                ((CardLayout) cards.getLayout()).show(cards, HRPanel.BROWSE_POSTINGS);
+            }
+        });
+        fullMenu.put("6. Search applicant", new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ((UserPanel) cards.getParent()).refresh();
+                ((CardLayout) cards.getLayout()).show(cards, HRPanel.SEARCH_APPLICANT);
             }
         });
         fullMenu.put("7. Logout", logoutActionListener);

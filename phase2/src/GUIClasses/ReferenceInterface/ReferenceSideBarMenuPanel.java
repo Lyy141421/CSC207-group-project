@@ -14,11 +14,6 @@ import java.util.TreeMap;
 
 class ReferenceSideBarMenuPanel extends JPanel {
 
-    // === Class variables ===
-    private static int CELL_WIDTH = 190;
-    private static int CELL_HEIGHT = 20;
-    private static int NUM_MAIN_MENU_OPTIONS = 4;
-
     // === Instance variable ===
     private JPanel cards;   // The cards that are being switched
     private LogoutActionListener logoutActionListener;  // The action listener for logging out
@@ -30,8 +25,7 @@ class ReferenceSideBarMenuPanel extends JPanel {
         this.logoutActionListener = logoutActionListener;
         TreeMap<String, Object> fullMenu = this.createFullMenu();
         this.setLayout(new BorderLayout());
-        this.add(new SideBarMenuCreator(fullMenu, CELL_WIDTH, CELL_HEIGHT).createMenuBar());
-        this.setSize(CELL_WIDTH, CELL_HEIGHT * NUM_MAIN_MENU_OPTIONS);
+        this.add(new SideBarMenuCreator(fullMenu).createMenuBar());
     }
 
     /**
@@ -47,14 +41,14 @@ class ReferenceSideBarMenuPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 ((UserPanel) cards.getParent()).refresh();
-                ((CardLayout) cards.getLayout()).show(cards, ReferencePanel.SUBMIT_REFERENCE_LETTER);
+                ((CardLayout) cards.getLayout()).show(cards, ReferenceMain.SUBMIT_REFERENCE_LETTER);
             }
         });
         fullMenu.put("4. View Referee Job Postings", new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 ((UserPanel) cards.getParent()).refresh();
-                ((CardLayout) cards.getLayout()).show(cards, ReferencePanel.VIEW_REFEREE_JOB_POSTINGS);
+                ((CardLayout) cards.getLayout()).show(cards, ReferenceMain.VIEW_REFEREE_JOB_POSTINGS);
             }
         });
         fullMenu.put("5. Logout", logoutActionListener);

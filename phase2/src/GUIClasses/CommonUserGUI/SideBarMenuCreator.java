@@ -53,14 +53,10 @@ public class SideBarMenuCreator extends MouseAdapter {
     // === Instance variables ===
     private TreeMap<String, Object> menuTitles; // A map of menu titles to action listeners
     private MouseAdapter mouseAdapter = new MouseAdapter1();    // The mouse adapter
-    private int cellWidth;  // The width of each cell
-    private int cellHeight; // The height of each cell
 
     // === Constructor ===
-    public SideBarMenuCreator(TreeMap<String, Object> menuTitles, int cellWidth, int cellHeight) {
+    public SideBarMenuCreator(TreeMap<String, Object> menuTitles) {
         this.menuTitles = menuTitles;
-        this.cellWidth = cellWidth;
-        this.cellHeight = cellHeight;
     }
 
     // === Package-private methods ===
@@ -102,8 +98,7 @@ public class SideBarMenuCreator extends MouseAdapter {
      */
     private void setBackgroundAndBorder(JComponent menu) {
         menu.setBackground(Color.LIGHT_GRAY);
-        menu.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY));
-        menu.setPreferredSize(new Dimension(this.cellWidth, this.cellHeight));
+//        menu.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY));
         menu.revalidate();
     }
 

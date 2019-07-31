@@ -1,9 +1,7 @@
 package GUIClasses.HRInterface;
 
 import ApplicantStuff.JobApplication;
-import CompanyStuff.Branch;
 import CompanyStuff.JobPostings.BranchJobPosting;
-import GUIClasses.MethodsTheGUICallsInHR;
 
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
@@ -12,30 +10,37 @@ import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemListener;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class HRViewPosting extends HRPanel{
-    HRViewPosting containerPane = this;
+class HRViewPosting extends HRPanel {
 
-    private HashMap<String, BranchJobPosting> prePhoneJP;
+    private HashMap<String, BranchJobPosting> unreviewedJP;
     private HashMap<String, BranchJobPosting> scheduleJP;
     private HashMap<String, BranchJobPosting> hiringJP;
     private HashMap<String, BranchJobPosting> importantJP = new HashMap<>();
     private HashMap<String, BranchJobPosting> allJP;
 
-    HashMap<String, BranchJobPosting> currJPs;
+    private HashMap<String, BranchJobPosting> currJPs;
 
+    private HRViewPosting containerPane = this;
+    private JPanel parent;
+    private boolean isTodo;
     private JTextArea info;
     private JButton scheduleButton;
     private JList<String> jobPostingList = new JList<>();
 
 
-    HRViewPosting(Container contentPane, MethodsTheGUICallsInHR HRInterface, LocalDate today) {
-        super(contentPane, HRInterface, today);
+    HRViewPosting(HRBackend hrBackend, JPanel parent, boolean isTodo) {
+        super(hrBackend);
+        this.parent = parent;
+        this.isTodo = isTodo;
         this.setJPLists();
+        if (isTodo) {
+            this.currJPs = importantJP;
+        } else {
+            this.currJPs = allJP;
+        }
 
         this.setLayout(new BorderLayout());
 
@@ -47,7 +52,6 @@ public class HRViewPosting extends HRPanel{
         JPanel buttons = new JPanel(new FlowLayout());
         buttons.add(this.createScheduleButton());
         buttons.add(this.createViewAppButton());
-        buttons.add(this.homeButton);
 
         this.add(splitDisplay, BorderLayout.CENTER);
         this.add(buttons, BorderLayout.SOUTH);
@@ -89,13 +93,14 @@ public class HRViewPosting extends HRPanel{
     }
 
     private JButton createScheduleButton () {
-        this.scheduleButton = new JButton("Schedule");
+        this.scheduleButton = new JButton("Schedule group interview");
+        this.scheduleButton.setVisible(false);
         this.scheduleButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String selectedTitle = jobPostingList.getSelectedValue();
                 BranchJobPosting selectedJP = currJPs.get(selectedTitle);
-                JInternalFrame popUp = new GroupInterviewFrame(HRInterface, selectedJP, containerPane);
+                JInternalFrame popUp = new GroupInterviewFrame(hrBackend, selectedJP, containerPane);
             }
         });
 
@@ -122,40 +127,56 @@ public class HRViewPosting extends HRPanel{
         viewAppsButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String selectedTitle = jobPostingList.getSelectedValue();
-                BranchJobPosting selectedJP = currJPs.get(selectedTitle);
-                ArrayList<JobApplication> appsUnderSelectedJP = selectedJP.getJobApplications();
-                int mode = 0;
-                if (prePhoneJP.containsKey(selectedTitle)) {
-                    mode = 1;
-                    removeFromJPLists(selectedTitle);
-                } else if (hiringJP.containsKey(selectedTitle)) {
-                    mode = 2;
-                    removeFromJPLists(selectedTitle);
+                if (jobPostingList.isSelectionEmpty()) {
+                    JOptionPane.showMessageDialog(containerPane, "Please select a job posting!");
+                } else {
+                    setApplicationPanel();
                 }
-                HRViewApp appPanel = new HRViewApp(parent, HRInterface, today, getTitleToAppMap(appsUnderSelectedJP), HRPanel.POSTING, mode);
-                parent.remove(4);
-                parent.add(appPanel, APPLICATION);
-                ((CardLayout) parent.getLayout()).show(parent, APPLICATION);
             }
         });
 
         return viewAppsButton;
     }
 
-    private void setJPLists() {
-        this.prePhoneJP = this.getTitleToJPMap(HRInterface.getJPToReview());
-        this.scheduleJP = this.getTitleToJPMap(HRInterface.getJPToSchedule());
-        this.hiringJP = this.getTitleToJPMap(HRInterface.getJPToHire());
-        this.allJP = this.getTitleToJPMap(HRInterface.getAllJP());
+    private void setApplicationPanel() {
+        String selectedTitle = jobPostingList.getSelectedValue();
+        BranchJobPosting selectedJP = currJPs.get(selectedTitle);
+        ArrayList<JobApplication> appsUnderSelectedJP = selectedJP.getJobApplications();
+        int mode = 0;
+        if (unreviewedJP.containsKey(selectedTitle)) {
+            mode = 1;
+            removeFromJPLists(selectedTitle);
+        } else if (hiringJP.containsKey(selectedTitle)) {
+            mode = 2;
+            removeFromJPLists(selectedTitle);
+        }
+        HRViewApp appPanel = new HRViewApp(parent, hrBackend, getTitleToAppMap(appsUnderSelectedJP), this.getPreviousPanelKey(), mode);
+        parent.remove(4);
+        parent.add(appPanel, APPLICATION);
+        ((CardLayout) parent.getLayout()).show(parent, APPLICATION);
+    }
 
-        this.importantJP.putAll(this.prePhoneJP);
+    private String getPreviousPanelKey() {
+        if (isTodo) {
+            return HRPanel.TODO_POSTINGS;
+        } else {
+            return HRPanel.BROWSE_POSTINGS;
+        }
+    }
+
+    private void setJPLists() {
+        this.unreviewedJP = this.getTitleToJPMap(hrBackend.getJPToReview());
+        this.scheduleJP = this.getTitleToJPMap(hrBackend.getJPToSchedule());
+        this.hiringJP = this.getTitleToJPMap(hrBackend.getJPToHire());
+        this.allJP = this.getTitleToJPMap(hrBackend.getAllJP());
+
+        this.importantJP.putAll(this.unreviewedJP);
         this.importantJP.putAll(this.scheduleJP);
         this.importantJP.putAll(this.hiringJP);
     }
 
     void removeFromJPLists(String title) {
-        this.prePhoneJP.remove(title);
+        this.unreviewedJP.remove(title);
         this.scheduleJP.remove(title);
         this.hiringJP.remove(title);
         this.importantJP.remove(title);
@@ -163,10 +184,10 @@ public class HRViewPosting extends HRPanel{
 
     private String getStatus(String selectedJPTitle) {
         String status;
-        if (prePhoneJP.containsKey(selectedJPTitle)) {
-            status = "Important: Select applicants for phone interview.\n\n";
+        if (unreviewedJP.containsKey(selectedJPTitle)) {
+            status = "Important: Select applicants for the first round of interviews.\n\n";
         } else if (scheduleJP.containsKey(selectedJPTitle)) {
-            status = "Important: Schedule interviews for the next round.\n\n";
+            status = "Important: Schedule group interviews for the next round.\n\n";
         } else if (hiringJP.containsKey(selectedJPTitle)) {
             status = "Important: Make hiring decisions for final candidates.\n\n";
         } else {

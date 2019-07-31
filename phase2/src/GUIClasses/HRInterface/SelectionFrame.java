@@ -1,21 +1,17 @@
 package GUIClasses.HRInterface;
 
 import ApplicantStuff.JobApplication;
-import CompanyStuff.JobPostings.BranchJobPosting;
-import GUIClasses.MethodsTheGUICallsInHR;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 abstract class SelectionFrame extends JInternalFrame{
 
-    MethodsTheGUICallsInHR HRInterface;
+    HRBackend hrBackend;
 
     HashMap<JCheckBox, JobApplication> checkBoxToAppMap = new HashMap<>();
     GridBagConstraints c = new GridBagConstraints();
@@ -23,9 +19,9 @@ abstract class SelectionFrame extends JInternalFrame{
     JButton confirmButton;
     JButton returnButton;
 
-    SelectionFrame(MethodsTheGUICallsInHR HRInterface, ArrayList<JobApplication> applications, JButton returnButton, int toSelect) {
+    SelectionFrame(HRBackend hrBackend, ArrayList<JobApplication> applications, JButton returnButton, int toSelect) {
         super("Select");
-        this.HRInterface = HRInterface;
+        this.hrBackend = hrBackend;
         this.returnButton = returnButton;
 
         this.setLayout(new GridBagLayout());

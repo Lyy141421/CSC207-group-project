@@ -1,4 +1,4 @@
-package GUIClasses;
+package GUIClasses.HRInterface;
 
 import ApplicantStuff.Applicant;
 import ApplicantStuff.JobApplication;
@@ -16,23 +16,27 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class MethodsTheGUICallsInHR {
+class HRBackend {
 
     // === Instance variables ===
     private JobApplicationSystem jobAppSystem;
     private HRCoordinator hr;
 
-    public MethodsTheGUICallsInHR(JobApplicationSystem jobAppSystem, HRCoordinator hr) {
+    HRBackend(JobApplicationSystem jobAppSystem, HRCoordinator hr) {
         this.jobAppSystem = jobAppSystem;
         this.hr = hr;
     }
 
-    public HRCoordinator getHR() {
+    HRCoordinator getHR() {
         return this.hr;
     }
 
-    public LocalDate getToday() {
+    LocalDate getToday() {
         return this.jobAppSystem.getToday();
+    }
+
+    int[] getTodayComponents() {
+        return new int[]{this.getToday().getYear(), this.getToday().getMonthValue(), this.getToday().getDayOfMonth()};
     }
 
     /**
@@ -46,7 +50,7 @@ public class MethodsTheGUICallsInHR {
      * Gets an array list of branch job postings that are under review for first round of interviews.
      * @return the array list of branch job postings.
      */
-    public ArrayList<BranchJobPosting> getJPToReview() {
+    ArrayList<BranchJobPosting> getJPToReview() {
         BranchJobPostingManager JPManager = this.hr.getBranch().getJobPostingManager();
         return JPManager.getJobPostingsRecentlyClosedForReferences(this.jobAppSystem.getToday());
     }
@@ -55,7 +59,7 @@ public class MethodsTheGUICallsInHR {
      * Gets an array list of branch job postings that are ready to schedule for next round of interviews.
      * @return the array list of branch job postings.
      */
-    public ArrayList<BranchJobPosting> getJPToSchedule() {
+    ArrayList<BranchJobPosting> getJPToSchedule() {
         BranchJobPostingManager JPManager = this.hr.getBranch().getJobPostingManager();
         return JPManager.getJobPostingsThatNeedGroupInterviewsScheduled(this.jobAppSystem.getToday());
     }
@@ -64,7 +68,7 @@ public class MethodsTheGUICallsInHR {
      * Gets an array list of branch job postings that are in hiring stage.
      * @return the array list of branch job postings.
      */
-    public ArrayList<BranchJobPosting> getJPToHire() {
+    ArrayList<BranchJobPosting> getJPToHire() {
         BranchJobPostingManager JPManager = this.hr.getBranch().getJobPostingManager();
         return JPManager.getJobPostingsThatNeedHRSelectionForHiring(this.jobAppSystem.getToday());
     }
@@ -74,7 +78,7 @@ public class MethodsTheGUICallsInHR {
      *
      * @return the array list of all branch job postings.
      */
-    public ArrayList<BranchJobPosting> getAllJP() {
+    ArrayList<BranchJobPosting> getAllJP() {
         BranchJobPostingManager JPManager = this.hr.getBranch().getJobPostingManager();
         return JPManager.getBranchJobPostings();
     }
@@ -85,7 +89,7 @@ public class MethodsTheGUICallsInHR {
      * @param mandatoryFields  The fields that must be entered regardless of method of adding JP.
      * @param defaultFields The fields that are set by default in company posting mode.
      */
-    public void addJobPosting(Object[] mandatoryFields, String[] defaultFields) {
+    void addJobPosting(Object[] mandatoryFields, String[] defaultFields) {
         String title = defaultFields[0];
         String field = defaultFields[1];
         String description = defaultFields[2];
@@ -93,17 +97,15 @@ public class MethodsTheGUICallsInHR {
         ArrayList<String> tags = new ArrayList<>(Arrays.asList(defaultFields[4].split(";")));
         int numPositions = (Integer) mandatoryFields[0];
         LocalDate applicationCloseDate = (LocalDate) mandatoryFields[1];
-        //TODO: number of reference is at index 2 of mandatoryFields
-        LocalDate referenceCloseDate = (LocalDate) mandatoryFields[3];
+        LocalDate referenceCloseDate = (LocalDate) mandatoryFields[2];
         this.hr.addJobPosting(title, field, description, requirements, tags, numPositions, jobAppSystem.getToday(), applicationCloseDate,
                 referenceCloseDate);
     }
 
-    public void implementJobPosting(CompanyJobPosting cjp, Object[] jobPostingFields) {
+    void implementJobPosting(CompanyJobPosting cjp, Object[] jobPostingFields) {
         int numPositions = (int) jobPostingFields[0];
         LocalDate applicationCloseDate = (LocalDate) jobPostingFields[1];
-        //TODO: num of reference is at index 2.
-        LocalDate referenceCloseDate = (LocalDate) jobPostingFields[3];
+        LocalDate referenceCloseDate = (LocalDate) jobPostingFields[2];
         this.hr.implementJobPosting(cjp, numPositions, jobAppSystem.getToday(), applicationCloseDate, referenceCloseDate);
     }
     /**
@@ -112,7 +114,7 @@ public class MethodsTheGUICallsInHR {
      * @return a list of job applications submitted by this applicant with this username.
      */
 
-    public ArrayList<JobApplication> getAllJobApplicationsToCompany(String applicantUsername) {
+    ArrayList<JobApplication> getAllJobApplicationsToCompany(String applicantUsername) {
         Applicant applicant = (Applicant) jobAppSystem.getUserManager().findUserByUsername(applicantUsername);
         if (applicant == null) {
             return new ArrayList<>();
@@ -127,7 +129,7 @@ public class MethodsTheGUICallsInHR {
      * @param toHire Whether or not the HR Coordinator wants to hire the applicant.
      * */
 
-    public boolean hireOrRejectApplication(JobApplication jobApp, boolean toHire) {
+    boolean hireOrRejectApplication(JobApplication jobApp, boolean toHire) {
         if (toHire) {
             jobApp.getStatus().setHired();
         } else {
@@ -149,7 +151,7 @@ public class MethodsTheGUICallsInHR {
      * @param keyWordsAndPhrases The key words and phrases that the HR Coordinator has inputted.
      * @return
      */
-    public ArrayList<JobApplication> getJobApplicationInNonDecreasingOrder(BranchJobPosting jobPosting, ArrayList<String> keyWordsAndPhrases) {
+    ArrayList<JobApplication> getJobApplicationInNonDecreasingOrder(BranchJobPosting jobPosting, ArrayList<String> keyWordsAndPhrases) {
         JobApplicationGrader jobAppGrader = new JobApplicationGrader(jobPosting, keyWordsAndPhrases);
         return jobAppGrader.getSortedJobApps();
     }
@@ -160,7 +162,7 @@ public class MethodsTheGUICallsInHR {
      * @param jobApplication The job application in question.
      * @return true iff this job application has been rejected.
      */
-    public boolean isRejected(JobApplication jobApplication) {
+    boolean isRejected(JobApplication jobApplication) {
         return jobApplication.getJobPosting().getInterviewManager().getApplicationsRejected().contains(jobApplication);
     }
 
@@ -169,19 +171,19 @@ public class MethodsTheGUICallsInHR {
      *
      * @param jobApps   The job applications NOT getting interviews.
      */
-    public void rejectApplicationForFirstRound(ArrayList<JobApplication> jobApps) {
+    void rejectApplicationForFirstRound(ArrayList<JobApplication> jobApps) {
         for (JobApplication app : jobApps) {
             app.getJobPosting().getInterviewManager().reject(app);
         }
     }
 
 
-    public ArrayList<Interviewer> getInterviewersInField(BranchJobPosting jobPosting) {
+    ArrayList<Interviewer> getInterviewersInField(BranchJobPosting jobPosting) {
         return this.hr.getBranch().getFieldToInterviewers().get(jobPosting.getField());
     }
 
-    public void setInterviewConfiguration(BranchJobPosting jobPosting, ArrayList<Boolean> isInterviewRoundOneOnOne,
-                                          ArrayList<String> descriptions) {
+    void setInterviewConfiguration(BranchJobPosting jobPosting, ArrayList<Boolean> isInterviewRoundOneOnOne,
+                                   ArrayList<String> descriptions) {
         ArrayList<String[]> interviewConfiguration = new ArrayList<>();
         int i = 0;
         while (i < isInterviewRoundOneOnOne.size()) {
@@ -201,7 +203,7 @@ public class MethodsTheGUICallsInHR {
      * @param jobApp The job application selected by the interviewer to view.
      * @return the file object that holds the files submitted for this job application.
      */
-    public File getFolderForJobApplication(JobApplication jobApp) {
+    File getFolderForJobApplication(JobApplication jobApp) {
         return this.hr.getBranch().getCompany().getDocumentManager().getFolderForJobApplication(jobApp);
     }
 
@@ -212,13 +214,13 @@ public class MethodsTheGUICallsInHR {
      * @param interviewCoordinator The interview coordinator selected
      * @param otherInterviewers The other interviewers selected
      */
-    public void setUpGroupInterviews(BranchJobPosting jobPosting, Interviewer interviewCoordinator,
-                                     ArrayList<Interviewer> otherInterviewers, int minNumDaysNotice) {
+    void setUpGroupInterviews(BranchJobPosting jobPosting, Interviewer interviewCoordinator,
+                              ArrayList<Interviewer> otherInterviewers, int minNumDaysNotice) {
         jobPosting.getInterviewManager().setUpGroupInterview(interviewCoordinator, otherInterviewers,
                 jobAppSystem.getToday(), minNumDaysNotice);
     }
 
-    public void selectApplicantsForHire(ArrayList<JobApplication> jobAppsToHire) {
+    void selectApplicantsForHire(ArrayList<JobApplication> jobAppsToHire) {
         BranchJobPosting jobPosting = jobAppsToHire.get(0).getJobPosting();
         jobPosting.getInterviewManager().hireApplicants(jobAppsToHire);
     }

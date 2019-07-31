@@ -1,52 +1,27 @@
 package GUIClasses.HRInterface;
 
 import ApplicantStuff.JobApplication;
-import GUIClasses.MethodsTheGUICallsInHR;
 import CompanyStuff.JobPostings.*;
 
 
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 abstract class HRPanel extends JPanel {
-    Container parent;
-    MethodsTheGUICallsInHR HRInterface;
-    LocalDate today;
 
-    //=====Constants=====
-    static String HOME = "HOME";
-    static String POSTING = "POSTING";
-    static String APPLICATION = "APPLICATION";
-    static String SEARCH = "SEARCH";
-    static String ADD_POSTING = "ADDPOSTING";
+    // === Constants ===
+    static final String TODO_POSTINGS = "TODO_POSTINGS";
+    static final String BROWSE_POSTINGS = "BROWSE_POSTINGS";
+    static final String APPLICATION = "APPLICATION";
+    static final String SEARCH_APPLICANT = "SEARCH_APPLICANT";
+    static final String ADD_POSTING = "ADDPOSTING";
 
-    JButton homeButton;
+    // === Instance variables ===
+    HRBackend hrBackend;
 
-
-    HRPanel(Container contentPane, MethodsTheGUICallsInHR HRInterface, LocalDate today) {
-        this.parent = contentPane;
-        this.HRInterface = HRInterface;
-        this.today = today;
-
-        this.createHomeButton();
-    }
-
-    abstract void reload();
-
-    private void createHomeButton() {
-        this.homeButton = new JButton("Home");
-        this.homeButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                ((CardLayout) parent.getLayout()).show(parent, HOME);
-                //TODO: update todo on home panel
-            }
-        });
+    HRPanel(HRBackend hrBackend) {
+        this.hrBackend = hrBackend;
     }
 
     /**

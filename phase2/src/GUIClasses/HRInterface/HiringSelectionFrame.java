@@ -1,7 +1,6 @@
 package GUIClasses.HRInterface;
 
 import ApplicantStuff.JobApplication;
-import GUIClasses.MethodsTheGUICallsInHR;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -10,12 +9,12 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.ArrayList;
 
-public class HiringSelectionFrame extends SelectionFrame implements ItemListener {
+class HiringSelectionFrame extends SelectionFrame implements ItemListener {
 
     private int availablePositions;
 
-    HiringSelectionFrame(MethodsTheGUICallsInHR HRInterface, ArrayList<JobApplication> applications, JButton returnButton) {
-        super(HRInterface, applications, returnButton,0);
+    HiringSelectionFrame(HRBackend hrBackend, ArrayList<JobApplication> applications, JButton returnButton) {
+        super(hrBackend, applications, returnButton, 0);
 
         this.availablePositions = applications.get(0).getJobPosting().getNumPositions();
         this.addCheckboxListener();
@@ -25,7 +24,7 @@ public class HiringSelectionFrame extends SelectionFrame implements ItemListener
         confirmButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                HRInterface.selectApplicantsForHire(getApplicantsSelected());
+                hrBackend.selectApplicantsForHire(getApplicantsSelected());
             }
         });
     }

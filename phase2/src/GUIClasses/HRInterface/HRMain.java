@@ -1,95 +1,57 @@
 package GUIClasses.HRInterface;
 
-import ApplicantStuff.JobApplication;
 import CompanyStuff.Branch;
 import CompanyStuff.Company;
 import CompanyStuff.HRCoordinator;
-import CompanyStuff.JobPostings.BranchJobPosting;
-import GUIClasses.MethodsTheGUICallsInHR;
+import GUIClasses.ActionListeners.LogoutActionListener;
+import GUIClasses.CommonUserGUI.UserPanel;
+import GUIClasses.CommonUserGUI.UserProfilePanel;
 import Main.JobApplicationSystem;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.time.LocalDate;
-import java.util.HashMap;
 
-public class HRMain extends JPanel {
+public class HRMain extends UserPanel {
 
-    Container contentPane;
-    MethodsTheGUICallsInHR HRInterface;
-    LocalDate today;
+    HRBackend hrBackend;
+    JPanel cards = new JPanel(new CardLayout());
 
-    Container mainPanel = this;
-    CardLayout cardLayout = new CardLayout();
+    private HRMain(HRCoordinator hrCoordinator, JobApplicationSystem jobAppSystem, LogoutActionListener logoutActionListener) {
+        this.hrBackend = new HRBackend(jobAppSystem, hrCoordinator);
+        this.setLayout(new GridBagLayout());
+        this.setCards();
 
-    HRHome homePanel;
-    HRViewPosting viewPostingPanel;
-    HRSearchApplicant searchPanel;
-    HRAddPosting addPostingPanel;
+        GridBagConstraints c = new GridBagConstraints();
+        c.gridx = 0;
+        c.gridy = 0;
+        c.weightx = 0.15;
+        c.weighty = 0.5;
+        c.fill = GridBagConstraints.BOTH;
+        this.add(new HRSideBarMenuPanel(cards, logoutActionListener), c);
 
-    private HRMain (Container contentPane, MethodsTheGUICallsInHR HRInterface, LocalDate today) {
-        this.setLayout(this.cardLayout);
-
-        this.contentPane = contentPane;
-        this.HRInterface = HRInterface;
-        this.today = today;
-
-        this.addPanels();
-
-        this.setPanelSwitchActions();
+        c.gridx++;
+        this.add(cards, c);
     }
 
     //=====Add component methods=====
 
-    private void addPanels() {
-        this.add(this.homePanel = new HRHome(this, this.HRInterface, this.today), HRPanel.HOME, 0);
-        this.add(this.viewPostingPanel = new HRViewPosting(this, this.HRInterface, this.today), HRPanel.POSTING, 1);
-        this.add(this.searchPanel = new HRSearchApplicant(this, this.HRInterface, this.today), HRPanel.SEARCH, 2);
-        this.add(this.addPostingPanel = new HRAddPosting(this, this.HRInterface, this.today), HRPanel.ADD_POSTING, 3);
-        //this.add(new HRViewApp(this, this.HRInterface, this.today, new HashMap<>()), HRPanel.APPLICATION, 4);
+    public void setCards() {
+        cards.add(new HRHome(this.hrBackend), UserPanel.HOME);
+        cards.add(new UserProfilePanel(this.hrBackend.getHR()), UserPanel.PROFILE);
+        cards.add(new HRViewPosting(this.hrBackend, cards, true), HRPanel.TODO_POSTINGS);
+        cards.add(new HRViewPosting(this.hrBackend, cards, false), HRPanel.BROWSE_POSTINGS);
+        cards.add(new HRSearchApplicant(this.hrBackend, cards), HRPanel.SEARCH_APPLICANT);
+//        cards.add(new HRAddPosting(this.hrBackend
+//       ), HRPanel.ADD_POSTING);
+        cards.add(new HRAddPostingForm(this.hrBackend), HRPanel.ADD_POSTING);
+        //cards.add(new HRViewApp(this, this.hrBackend
+        //, this.today, new HashMap<>()), HRPanel.APPLICATION);
     }
 
-    private void setPanelSwitchActions() {
-        this.setLogoutAction();
-        this.setToDoAction();
-        this.setBrowseAction();
-    }
-
-    //=====panel switch methods=====
-
-    private void setLogoutAction () {
-        this.homePanel.getLogoutButton().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                //TODO: save all changes.
-                //TODO: Replace "LOGIN" with static constant.
-                ((CardLayout) contentPane.getLayout()).show(contentPane, "LOGIN");
-            }
-        });
-    }
-
-    private void setToDoAction () {
-        this.homePanel.getToDoButton().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                viewPostingPanel.setCurrJPs(viewPostingPanel.getImportantJP());
-                viewPostingPanel.reload();
-                cardLayout.show(mainPanel, HRPanel.POSTING);
-            }
-        });
-    }
-
-    private void setBrowseAction () {
-        this.homePanel.getBrowseButton().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                viewPostingPanel.setCurrJPs(viewPostingPanel.getAllJP());
-                viewPostingPanel.reload();
-                cardLayout.show(mainPanel, HRPanel.POSTING);
-            }
-        });
+    public void refresh() {
+        cards.removeAll();
+        this.setCards();
     }
 
     public static void main(String[] args) {
@@ -99,7 +61,9 @@ public class HRMain extends JPanel {
         Company company = jobAppSystem.createCompany("Company");
         Branch branch = company.createBranch("Branch", "L4B4P8");
         HRCoordinator hrc = jobAppSystem.getUserManager().createHRCoordinator("hr", "password", "name", "email", branch, LocalDate.now());
-        frame.add(new HRMain(frame.getContentPane(), new MethodsTheGUICallsInHR(jobAppSystem, hrc), jobAppSystem.getToday()));
+        LogoutActionListener logoutActionListener = new LogoutActionListener(new Container(), new CardLayout(), jobAppSystem);
+        frame.add(new HRMain(hrc, jobAppSystem, logoutActionListener));
+        frame.setSize(854, 480);
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }

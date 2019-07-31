@@ -4,10 +4,12 @@ import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import java.awt.*;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 
 public class GUIElementsCreator {
-    /**
-     * A title creator.
+    /*
+     * A GUI elements creator.
      */
 
     /**
@@ -76,5 +78,32 @@ public class GUIElementsCreator {
                 width = 300;
             columnModel.getColumn(column).setPreferredWidth(width);
         }
+    }
+
+    public JScrollPane createEditableTextAreaWithScrollBar(String text) {
+        JTextArea textArea = new JTextArea();
+        textArea.setText(text);
+        textArea.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                if (textArea.getText().equals(text)) {
+                    textArea.setText("");
+                }
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (textArea.getText().equals("")) {
+                    textArea.setText(text);
+                }
+            }
+        });
+        textArea.setLineWrap(true);
+        textArea.setWrapStyleWord(true);
+        JScrollPane areaScrollPane = new JScrollPane(textArea);
+        areaScrollPane.setVerticalScrollBarPolicy(
+                JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        areaScrollPane.setPreferredSize(new Dimension(250, 250));
+        return areaScrollPane;
     }
 }

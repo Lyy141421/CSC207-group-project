@@ -1,9 +1,9 @@
 package GUIClasses.StartInterface;
 
-import ApplicantStuff.JobApplication;
 import CompanyStuff.Branch;
 import CompanyStuff.Company;
 import Main.JobApplicationSystem;
+import Main.User;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,24 +11,21 @@ import java.time.LocalDate;
 import java.util.HashMap;
 
 class LoginBackend {
-    /**
+    /*
      * The general user interface
      */
 
-    // === Instance variables ===
-    JobApplicationSystem jobAppSystem;
+    private JobApplicationSystem jobAppSystem;
 
-    // === Constructors ===
+    // === Constructor ===
     LoginBackend(JobApplicationSystem jobAppSystem) {
         this.jobAppSystem = jobAppSystem;
     }
 
-    // === Getter ===
 
-    public JobApplicationSystem getJobAppSystem() {
-        return this.jobAppSystem;
+    User findUserByUsername(String username) {
+        return jobAppSystem.getUserManager().findUserByUsername(username);
     }
-
 
     // === Private methods ===
 
@@ -37,7 +34,6 @@ class LoginBackend {
      *
      * @return the e-mail address inputted by the user.
      */
-
     private boolean checkValidEmail(String email) {
         if (!email.contains("@") || email.charAt(0) == '@')
             return false;

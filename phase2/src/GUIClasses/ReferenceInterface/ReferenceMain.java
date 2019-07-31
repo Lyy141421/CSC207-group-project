@@ -22,7 +22,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class ReferencePanel extends UserPanel {
+public class ReferenceMain extends UserPanel {
     /**
      * The main reference panel.
      */
@@ -37,7 +37,7 @@ public class ReferencePanel extends UserPanel {
     private JPanel cards = new JPanel(new CardLayout());    // The cards that are being displayed
 
     // === Constructor ===
-    public ReferencePanel(Reference reference, JobApplicationSystem jobAppSystem, LogoutActionListener logoutActionListener) {
+    public ReferenceMain(Reference reference, JobApplicationSystem jobAppSystem, LogoutActionListener logoutActionListener) {
         this.referenceBackEnd = new ReferenceBackEnd(reference, jobAppSystem);
         this.setLayout(new GridBagLayout());
         this.setCards();
@@ -99,7 +99,7 @@ public class ReferencePanel extends UserPanel {
         BranchJobPostingManager branchJobPostingManager = branch.getJobPostingManager();
         branchJobPostingManager.updateJobPostingsClosedForApplications(LocalDate.now());
         LogoutActionListener logoutActionListener = new LogoutActionListener(new Container(), new CardLayout(), jobApplicationSystem);
-        frame.add(new ReferencePanel(reference, jobApplicationSystem, logoutActionListener));
+        frame.add(new ReferenceMain(reference, jobApplicationSystem, logoutActionListener));
         frame.setSize(854, 480);
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

@@ -117,7 +117,7 @@ public class InterviewManager extends Observable implements Serializable {
      *
      * @return true iff all interviews in this round have been completed.
      */
-    public boolean isCurrentRoundOver() {
+    public boolean currentRoundIsOver() {
         for (JobApplication jobApp : this.getApplicationsInConsideration()) {
             Interview lastInterview = jobApp.getLastInterview();
             if (lastInterview != null && !lastInterview.isIncomplete()) {
@@ -230,6 +230,8 @@ public class InterviewManager extends Observable implements Serializable {
      *
      * @param interviewCoordinator The interview coordinator selected.
      * @param otherInterviewers    The other interviewers selected.
+     * @param today                Today's date.
+     * @param minNumDaysNotice     The minimum number of days after which the interview can be held.
      */
     public void setUpGroupInterview(Interviewer interviewCoordinator, ArrayList<Interviewer> otherInterviewers,
                                     LocalDate today, int minNumDaysNotice) {
@@ -343,7 +345,7 @@ public class InterviewManager extends Observable implements Serializable {
      * and/or all the interview rounds have been completed.
      */
     private boolean isInterviewProcessOver() {
-        return this.isCurrentRoundOver() && (this.isNumApplicationsUnderOrAtThreshold() |
+        return this.currentRoundIsOver() && (this.isNumApplicationsUnderOrAtThreshold() |
                 this.currentRound == this.interviewConfiguration.size());
     }
 

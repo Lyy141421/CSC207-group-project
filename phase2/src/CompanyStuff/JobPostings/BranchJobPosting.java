@@ -183,13 +183,13 @@ public class BranchJobPosting extends CompanyJobPosting {
     /**
      * Advance the round of interviews for this job posting.
      */
-    void advanceInterviewRound() {
+    public void advanceInterviewRound() {
         if (interviewManager == null) {
             return;
         }
         InterviewManager interviewManager = this.getInterviewManager();
         if (interviewManager.getCurrentRound() < interviewManager.getFinalRoundNumber()) {
-            if (interviewManager.isCurrentRoundOver()) {
+            if (interviewManager.currentRoundIsOver()) {
                 interviewManager.advanceRound();
                 this.notifyAllObservers(new Notification("Advance to Next Round",
                         "You have advanced to the next round in " + super.getTitle()));
@@ -226,6 +226,24 @@ public class BranchJobPosting extends CompanyJobPosting {
      */
     public static String[] getCategoryLabelsForReference() {
         return new String[]{"Title", "Field", "Description", "Company/Branch", "Reference deadline"};
+    }
+
+    /**
+     * Get the category names for this job posting.
+     *
+     * @return a list of category names for this job posting for a reference.
+     */
+    public static String[] getCategoryLabelsForHR() {
+        return new String[]{"Title", "Field"};
+    }
+
+    /**
+     * Get the category values for this job posting for a reference.
+     *
+     * @return a list of category values for this job posting for a reference.
+     */
+    public String[] getCategoryValuesForHR() {
+        return new String[]{this.getTitle(), this.getField()};
     }
 
     /**

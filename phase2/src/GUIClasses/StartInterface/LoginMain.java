@@ -3,9 +3,7 @@ package GUIClasses.StartInterface;
 import ApplicantStuff.Applicant;
 import CompanyStuff.HRCoordinator;
 import CompanyStuff.Interviewer;
-import GUIClasses.ApplicantInterface.ApplicantMain;
 import GUIClasses.MainFrame;
-import GUIClasses.ReferenceInterface.ReferencePanel;
 import Main.JobApplicationSystem;
 import Main.User;
 
@@ -13,7 +11,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.time.LocalDate;
 
 /**
  * REMEMBER:
@@ -231,20 +228,20 @@ public class LoginMain extends JPanel {
      * Attempts a login through the GUI
      */
     private void GUILogin(String username) {
-        User user = this.backend.getJobAppSystem().getUserManager().findUserByUsername(username);
+        User user = this.backend.findUserByUsername(username);
         if(user instanceof Applicant) {
-            ApplicantMain newAppPanel = new ApplicantMain((Applicant)user);
+//            ApplicantMain newAppPanel = new ApplicantMain((Applicant)user);
             //TODO: get date
-            this.parent.add(newAppPanel, "APPLICANT");
+//            this.parent.add(newAppPanel, "APPLICANT");
             this.masterLayout.show(parent, "APPLICANT");
         } else if(user instanceof HRCoordinator) {
             //TODO: Handle
         } else if(user instanceof Interviewer) {
             //TODO: Handle
         } else { //Reference
-            ReferencePanel newRefPanel = new ReferencePanel(username, this.backend.getJobAppSystem(), parent, masterLayout);
-            this.parent.add(newRefPanel, "REFERENCE");
-            this.masterLayout.show(parent, "REFERENCE");
+//            ReferencePanel newRefPanel = new ReferencePanel(username, this.backend.getJobAppSystem(), parent, masterLayout);
+//            this.parent.add(newRefPanel, "REFERENCE");
+//            this.masterLayout.show(parent, "REFERENCE");
         }
         this.newUserRef.setNewUsername(null);
     }
