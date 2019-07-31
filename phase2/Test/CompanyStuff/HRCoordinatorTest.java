@@ -44,21 +44,37 @@ class HRCoordinatorTest {
 
     @Test
     void getBranch() {
+        HRCoordinator hrcord = createHR("Phillip");
+        assertEquals(hrcord.getBranch(), branch);
     }
 
     @Test
     void setBranch() {
+        HRCoordinator hrcord = createHR("Phillip");
+        assertEquals(hrcord.getBranch(), branch);
+        Branch branch_two = company.createBranch("BranchName2", "E6H1P9");
+        hrcord.setBranch(branch_two);
+        assertEquals(hrcord.getBranch(), branch_two);
+        assertNotEquals(hrcord.getBranch(), branch);
     }
 
     @Test
     void addJobPosting() {
+        HRCoordinator hrcord = createHR("Phillip");
+        hrcord.addJobPosting("A Job Title", "Jobbing", "A Job", new ArrayList<>(),
+                new ArrayList<>(), 3, today, today.plusDays(5), today.plusDays(5));
+        assertEquals(hrcord.getBranch().getJobPostingManager().getBranchJobPostings().get(0).getTitle(),
+                "A Job Title");
+
     }
 
     @Test
     void implementJobPosting() {
+
     }
 
     @Test
     void chooseInterviewConfiguration() {
+
     }
 }
