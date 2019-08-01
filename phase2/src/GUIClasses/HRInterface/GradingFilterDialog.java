@@ -1,7 +1,6 @@
 package GUIClasses.HRInterface;
 
 import ApplicantStuff.JobApplication;
-import GUIClasses.HRInterface.InterviewSelectionFrame;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,10 +9,11 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-class GradingFilterFrame extends JInternalFrame {
+class GradingFilterDialog extends JDialog {
 
     private static int MAX_TO_SELECT = 1000;
 
+    JFrame parent;
     HRBackend hrBackend;
     ArrayList<JobApplication> applications;
 
@@ -22,12 +22,15 @@ class GradingFilterFrame extends JInternalFrame {
     JTextField keywordInput;
     JSpinner numberToSelect;
 
-    GradingFilterFrame(HRBackend hrBackend, ArrayList<JobApplication> applications, JButton returnButton) {
-        super("Sort by keywords");
+    GradingFilterDialog(JFrame parent, HRBackend hrBackend, ArrayList<JobApplication> applications, JButton returnButton) {
+        super(parent,"Sort by keywords");
 
+        this.parent = parent;
         this.hrBackend = hrBackend;
         this.applications = applications;
         this.returnButton = returnButton;
+
+        setSize(300, 200);
 
         this.setKeywordInput();
         this.setSelectNumber();
@@ -63,7 +66,7 @@ class GradingFilterFrame extends JInternalFrame {
             public void actionPerformed(ActionEvent e) {
                 ArrayList<String> keywords = new ArrayList<>(Arrays.asList(keywordInput.getText().split(";")));
                 ArrayList<JobApplication> sortedApplications = hrBackend.getJobApplicationInNonDecreasingOrder(applications.get(0).getJobPosting(), keywords);
-                JInternalFrame interviewSelectionFrame = new InterviewSelectionFrame(hrBackend, sortedApplications,
+                JDialog interviewSelectionFrame = new InterviewSelectionDialog(parent, hrBackend, sortedApplications,
                         returnButton, ((SpinnerNumberModel)numberToSelect.getModel()).getNumber().intValue());
                 dispose();
             }

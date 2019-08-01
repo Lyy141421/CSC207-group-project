@@ -9,9 +9,10 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-abstract class SelectionFrame extends JInternalFrame{
+abstract class SelectionDialog extends JDialog{
 
     HRBackend hrBackend;
+    JFrame parent;
 
     HashMap<JCheckBox, JobApplication> checkBoxToAppMap = new HashMap<>();
     GridBagConstraints c = new GridBagConstraints();
@@ -19,8 +20,9 @@ abstract class SelectionFrame extends JInternalFrame{
     JButton confirmButton;
     JButton returnButton;
 
-    SelectionFrame(HRBackend hrBackend, ArrayList<JobApplication> applications, JButton returnButton, int toSelect) {
-        super("Select");
+    SelectionDialog(JFrame parent, HRBackend hrBackend, ArrayList<JobApplication> applications, JButton returnButton, int toSelect) {
+        super(parent, "Select");
+        this.parent = parent;
         this.hrBackend = hrBackend;
         this.returnButton = returnButton;
 

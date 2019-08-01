@@ -100,7 +100,8 @@ class HRViewPosting extends HRPanel {
             public void actionPerformed(ActionEvent e) {
                 String selectedTitle = jobPostingList.getSelectedValue();
                 BranchJobPosting selectedJP = currJPs.get(selectedTitle);
-                add(new GroupInterviewPane(hrBackend, selectedJP, containerPane));
+                JFrame frame = (JFrame) SwingUtilities.windowForComponent(containerPane);
+                new GroupInterviewDialog(frame, hrBackend, selectedJP, containerPane);
             }
         });
 

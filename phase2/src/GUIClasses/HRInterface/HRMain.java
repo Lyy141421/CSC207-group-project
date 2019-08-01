@@ -14,7 +14,6 @@ import GUIClasses.ActionListeners.LogoutActionListener;
 import GUIClasses.CommonUserGUI.UserPanel;
 import GUIClasses.CommonUserGUI.UserProfilePanel;
 import Main.JobApplicationSystem;
-import sun.plugin.util.UserProfile;
 
 import javax.swing.*;
 import java.awt.*;
@@ -66,7 +65,7 @@ public class HRMain extends UserPanel {
     public static void main(String[] args) {
         JFrame frame = new JFrame("HR Main");
         JobApplicationSystem jobApplicationSystem = new JobApplicationSystem();
-        new DataLoaderAndStorer(jobApplicationSystem).loadAllData();
+        //new DataLoaderAndStorer(jobApplicationSystem).loadAllData();
         jobApplicationSystem.setToday(LocalDate.of(2019, 7, 28));
         jobApplicationSystem.setPreviousLoginDate(LocalDate.of(2019, 7, 19));
         Reference reference = jobApplicationSystem.getUserManager().createReference("bob@gmail.com", LocalDate.of(2019, 7, 19));

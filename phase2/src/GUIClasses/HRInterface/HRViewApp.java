@@ -147,7 +147,9 @@ class HRViewApp extends HRPanel {
         this.hireButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JInternalFrame popUp = new HiringSelectionFrame(hrBackend, new ArrayList<>(currApps.values()), returnButton);
+                JFrame frame = (JFrame) SwingUtilities.windowForComponent(parent);
+                JDialog popUp = new HiringSelectionDialog(frame, hrBackend, new ArrayList<>(currApps.values()), returnButton);
+                add(popUp);
             }
         });
     }
@@ -162,7 +164,8 @@ class HRViewApp extends HRPanel {
         this.selectButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JInternalFrame popUp = new GradingFilterFrame(hrBackend, new ArrayList<>(currApps.values()), returnButton);
+                JFrame frame = (JFrame) SwingUtilities.windowForComponent(parent);
+                JDialog popUp = new GradingFilterDialog(frame, hrBackend, new ArrayList<>(currApps.values()), returnButton);
             }
         });
     }

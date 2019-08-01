@@ -8,12 +8,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
-class InterviewSelectionFrame extends SelectionFrame {
+class InterviewSelectionDialog extends SelectionDialog {
 
     private BranchJobPosting branchJobPosting;
 
-    InterviewSelectionFrame(HRBackend HRInterface, ArrayList<JobApplication> applications, JButton returnButton, int toSelect) {
-        super(HRInterface, applications, returnButton, toSelect);
+    InterviewSelectionDialog(JFrame parent, HRBackend HRInterface, ArrayList<JobApplication> applications, JButton returnButton, int toSelect) {
+        super(parent, HRInterface, applications, returnButton, toSelect);
 
         this.branchJobPosting = applications.get(0).getJobPosting();
     }
@@ -24,7 +24,7 @@ class InterviewSelectionFrame extends SelectionFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 hrBackend.rejectApplicationForFirstRound(getApplicantsDeselected());
-                JInternalFrame popUp = new InterviewConfigFrame(hrBackend, branchJobPosting, returnButton);
+                JDialog popUp = new InterviewConfigDialog(parent, hrBackend, branchJobPosting, returnButton);
                 dispose();
             }
         });

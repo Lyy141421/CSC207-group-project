@@ -9,12 +9,12 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.ArrayList;
 
-class HiringSelectionFrame extends SelectionFrame implements ItemListener {
+class HiringSelectionDialog extends SelectionDialog implements ItemListener {
 
     private int availablePositions;
 
-    HiringSelectionFrame(HRBackend hrBackend, ArrayList<JobApplication> applications, JButton returnButton) {
-        super(hrBackend, applications, returnButton, 0);
+    HiringSelectionDialog(JFrame parent, HRBackend hrBackend, ArrayList<JobApplication> applications, JButton returnButton) {
+        super(parent, hrBackend, applications, returnButton, 0);
 
         this.availablePositions = applications.get(0).getJobPosting().getNumPositions();
         this.addCheckboxListener();

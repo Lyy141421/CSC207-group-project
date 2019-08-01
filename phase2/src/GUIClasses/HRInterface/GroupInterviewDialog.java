@@ -14,10 +14,11 @@ import java.awt.event.ItemListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-class GroupInterviewFrame extends JInternalFrame {
+class GroupInterviewDialog extends JDialog {
 
     static int MAX_DAYS = 20;
 
+    JFrame parent;
     HRBackend hrBackend;
     BranchJobPosting branchJobPosting;
     HRViewPosting parentPanel;
@@ -28,8 +29,9 @@ class GroupInterviewFrame extends JInternalFrame {
     JComboBox<String> coordinatorSelection;
     HashMap<Interviewer, JCheckBox> interviewerToCheckBoxMap;
 
-    GroupInterviewFrame(HRBackend hrBackend, BranchJobPosting branchJobPosting, HRViewPosting postingPanel) {
-        super("Select interviewers for group interview");
+    GroupInterviewDialog(JFrame parent, HRBackend hrBackend, BranchJobPosting branchJobPosting, HRViewPosting postingPanel) {
+        super(parent, "Select interviewers for group interview");
+        this.parent = parent;
         this.hrBackend = hrBackend;
         this.branchJobPosting = branchJobPosting;
         this.parentPanel = postingPanel;

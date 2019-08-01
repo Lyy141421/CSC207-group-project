@@ -10,12 +10,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
-class InterviewConfigFrame extends JInternalFrame {
+class InterviewConfigDialog extends JDialog {
 
     HRBackend hrBackend;
     BranchJobPosting branchJobPosting;
+    JFrame parent;
 
-    JInternalFrame container = this;
+    JDialog container = this;
 
     private int rounds = 0;
 
@@ -27,7 +28,9 @@ class InterviewConfigFrame extends JInternalFrame {
 
     JButton returnButton;
 
-    InterviewConfigFrame(HRBackend hrBackend, BranchJobPosting branchJobPosting, JButton returnButton) {
+    InterviewConfigDialog(JFrame parent, HRBackend hrBackend, BranchJobPosting branchJobPosting, JButton returnButton) {
+        super(parent, "Set interview formats");
+        this.parent = parent;
         this.hrBackend = hrBackend;
         this.branchJobPosting = branchJobPosting;
         this.returnButton = returnButton;
