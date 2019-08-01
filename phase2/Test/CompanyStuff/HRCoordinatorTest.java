@@ -2,8 +2,8 @@ package CompanyStuff;
 
 import CompanyStuff.JobPostings.BranchJobPosting;
 import CompanyStuff.JobPostings.CompanyJobPosting;
+import NotificationSystem.Notification;
 import NotificationSystem.NotificationManager;
-import UsersAndJobObjects.JobPosting;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
@@ -47,7 +47,18 @@ class HRCoordinatorTest {
 
     @Test
     void notificationTest() {
-        //todo test the whole system here for HR
+        HRCoordinator hrcord = createHR("Phillip");
+        hrcord.addJobPosting("Sales Person For Hire", "Jobbing", "A Job", new ArrayList<>(),
+                new ArrayList<>(), 3, today, today.plusDays(5), today.plusDays(5));
+        hrcord.getBranch().getJobPostingManager().getBranchJobPostings().get(0).createInterviewManager();
+        hrcord.getBranch().getJobPostingManager().getBranchJobPostings().get(0).getInterviewManager().updateJobPostingStatus();
+        assertEquals(hrcord.getAllNotifications().size(), 1);
+        assertEquals(hrcord.getAllNotifications().get(0).getMessage(),
+              "There are no applications in consideration for theSales Person For Hire job posting (id 9). It has been automatically set to filled with 0 positions.");
+        hrcord.getBranch().getJobPostingManager().getBranchJobPostings().get(0).getInterviewManager().updateJobPostingStatus();
+        assertEquals(hrcord.getAllNotifications().size(), 2);
+        hrcord.removeAllNotifications();
+        assertEquals(hrcord.getAllNotifications().size(), 0);
     }
 
     @Test
@@ -71,7 +82,7 @@ class HRCoordinatorTest {
         HRCoordinator hrcord = createHR("Phillip");
         hrcord.addJobPosting("A Job Title", "Jobbing", "A Job", new ArrayList<>(),
                 new ArrayList<>(), 3, today, today.plusDays(5), today.plusDays(5));
-        assertEquals(hrcord.getBranch().getJobPostingManager().getBranchJobPostings().get(0).getTitle(),
+        assertEquals(company.getBranches().get(0).getJobPostingManager().getBranchJobPostings().get(0).getTitle(),
                 "A Job Title");
 
     }

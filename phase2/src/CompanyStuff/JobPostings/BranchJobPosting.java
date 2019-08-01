@@ -174,7 +174,7 @@ public class BranchJobPosting extends CompanyJobPosting {
     /**
      * Create an interview manager for this job posting after this branch posting has been closed for further applications.
      */
-    void createInterviewManager() {
+    public void createInterviewManager() {
         InterviewManager interviewManager = new InterviewManager(this,
                 (ArrayList<JobApplication>) this.getJobApplications().clone());
         this.interviewManager = interviewManager;

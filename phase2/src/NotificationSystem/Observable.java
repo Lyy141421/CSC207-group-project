@@ -36,6 +36,16 @@ public abstract class Observable {
     }
 
     /**
+     * Checks if an observer is attached to this observable
+     *
+     * @param observer - The observer to check
+     * @return - Weather or not the observer is in this observable
+     */
+    protected boolean containsObserver(Observer observer) {
+        return observer_list.contains(observer);
+    }
+
+    /**
      *Sending a notification to a particular observer
      *
      * @param observer - The observer receiving the notification
