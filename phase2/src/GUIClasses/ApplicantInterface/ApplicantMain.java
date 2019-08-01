@@ -1,6 +1,7 @@
 package GUIClasses.ApplicantInterface;
 
 import ApplicantStuff.Applicant;
+import GUIClasses.CommonUserGUI.UserProfilePanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -8,11 +9,11 @@ import java.awt.*;
 /**
  * Panel which displays all of the required functionality for an Applicant user
  */
-public class ApplicantMain extends JPanel {
+class ApplicantMain extends JPanel {
     private Applicant applicant;
     private ApplicantPanel masterPanel;
 
-    public ApplicantMain(Applicant applicant, ApplicantPanel masterPanel) {
+    ApplicantMain(Applicant applicant, ApplicantPanel masterPanel) {
         this.applicant = applicant;
         this.masterPanel = masterPanel;
 
@@ -41,9 +42,9 @@ public class ApplicantMain extends JPanel {
         JPanel ret = new JPanel(new CardLayout());
         ret.add(new ApplicantHome(applicant), "HOME");
         ret.add(new ApplicantBrowsePostings(applicant, masterPanel), "POSTINGS");
-        ret.add(new ApplicantViewProfile(applicant), "PROFILE");
+        ret.add(new UserProfilePanel(applicant), "PROFILE");
 //        ret.add(new TODO, "DOCUMENTS"); fixing rn
-//        ret.add(new TODO ApplicantSchedule(), "SCHEDULE"); fixing rn
+//        ret.add(new TODO ApplicantSchedule(), "SCHEDULE"); MAKE
         ret.add(new ApplicantViewApps(applicant), "MANAGE");
         return ret;
     }
