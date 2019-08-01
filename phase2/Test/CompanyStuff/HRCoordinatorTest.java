@@ -1,5 +1,6 @@
 package CompanyStuff;
 
+import CompanyStuff.JobPostings.CompanyJobPosting;
 import NotificationSystem.NotificationManager;
 import UsersAndJobObjects.JobPosting;
 import org.junit.jupiter.api.Test;
@@ -17,6 +18,11 @@ class HRCoordinatorTest {
 
     JobPosting createJobPosting(String id) {
         return new JobPosting(id);
+    }
+
+    CompanyJobPosting createCompanyJobPosting() {
+        return new CompanyJobPosting("A Job Title", "Jobbing", "A Job", new ArrayList<>(),
+                new ArrayList<>(), company, branch);
     }
 
     HRCoordinator createHR(String name) {
