@@ -1,6 +1,7 @@
 package GUIClasses.HRInterface;
 
 import ApplicantStuff.JobApplication;
+import GUIClasses.CommonUserGUI.GUIElementsCreator;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,16 +12,16 @@ import java.util.Arrays;
 
 class GradingFilterDialog extends JDialog {
 
-    private static int MAX_TO_SELECT = 1000;
+    private static final int MAX_TO_SELECT = 1000;
 
-    JFrame parent;
+    private JFrame parent;
     HRBackend hrBackend;
-    ArrayList<JobApplication> applications;
+    private ArrayList<JobApplication> applications;
 
-    JButton returnButton;
+    private JButton returnButton;
 
-    JTextField keywordInput;
-    JSpinner numberToSelect;
+    private JScrollPane keywordInput;
+    private JSpinner numberToSelect;
 
     GradingFilterDialog(JFrame parent, HRBackend hrBackend, ArrayList<JobApplication> applications, JButton returnButton) {
         super(parent,"Sort by keywords");
@@ -30,23 +31,28 @@ class GradingFilterDialog extends JDialog {
         this.applications = applications;
         this.returnButton = returnButton;
 
-        setSize(300, 200);
+        this.setSize(500, 350);
+        this.setResizable(false);
 
         this.setKeywordInput();
         this.setSelectNumber();
         this.setButtons();
-
         this.setVisible(true);
     }
 
     void setKeywordInput() {
         JPanel keywordPanel = new JPanel();
+        keywordPanel.setLayout(new BoxLayout(keywordPanel, BoxLayout.Y_AXIS));
         JLabel keywordPrompt = new JLabel("Keywords to search for:");
-        this.keywordInput = new JTextField();
+        this.keywordInput = new GUIElementsCreator().createTextAreaWithScrollBar("", true);
+        this.keywordInput.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        this.keywordInput.revalidate();
         JLabel separateLabel = new JLabel("Separate keywords by ';' (no space).");
-        keywordPanel.add(keywordPrompt, BorderLayout.NORTH);
-        keywordPanel.add(this.keywordInput, BorderLayout.CENTER);
-        keywordPanel.add(separateLabel, BorderLayout.SOUTH);
+        keywordPanel.add(keywordPrompt);
+        keywordPanel.add(Box.createRigidArea(new Dimension(0, 5)));
+        keywordPanel.add(separateLabel);
+        keywordPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+        keywordPanel.add(this.keywordInput);
         this.add(keywordPanel, BorderLayout.CENTER);
     }
 
@@ -60,18 +66,20 @@ class GradingFilterDialog extends JDialog {
     }
 
     void setButtons() {
+        JPanel confirmButtonPanel = new JPanel();
         JButton confirmButton = new JButton("Confirm");
         confirmButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ArrayList<String> keywords = new ArrayList<>(Arrays.asList(keywordInput.getText().split(";")));
+                String textInput = ((JTextArea) keywordInput.getViewport().getView()).getText();
+                ArrayList<String> keywords = new ArrayList<>(Arrays.asList(textInput.split(";")));
                 ArrayList<JobApplication> sortedApplications = hrBackend.getJobApplicationInNonDecreasingOrder(applications.get(0).getJobPosting(), keywords);
-                JDialog interviewSelectionFrame = new InterviewSelectionDialog(parent, hrBackend, sortedApplications,
+                new InterviewSelectionDialog(parent, hrBackend, sortedApplications,
                         returnButton, ((SpinnerNumberModel)numberToSelect.getModel()).getNumber().intValue());
                 dispose();
             }
         });
-
-        this.add(confirmButton, BorderLayout.SOUTH);
+        confirmButtonPanel.add(confirmButton);
+        this.add(confirmButtonPanel, BorderLayout.SOUTH);
     }
 }

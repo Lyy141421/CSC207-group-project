@@ -1,12 +1,14 @@
 package ApplicantStuff;
 
 import CompanyStuff.Interview;
+import CompanyStuff.Interviewer;
 import CompanyStuff.JobPostings.BranchJobPosting;
 
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class JobApplication implements Serializable {
     /**
@@ -162,6 +164,15 @@ public class JobApplication implements Serializable {
      */
     public void addInterview(Interview interview) {
         this.interviews.add(interview);
+    }
+
+    public HashMap<String, HashMap<Interviewer, String>> getAllInterviewNotesForApplication() {
+        HashMap<String, HashMap<Interviewer, String>> interviewNotes = new HashMap<>();
+        for (Interview interview : this.getInterviews()) {
+            String round = interview.getMiniDescriptionForHR();
+            interviewNotes.put(round, interview.getAllInterviewersToNotes());
+        }
+        return interviewNotes;
     }
 
 

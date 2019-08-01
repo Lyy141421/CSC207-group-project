@@ -1,7 +1,9 @@
 package GUIClasses.HRInterface;
 
 import ApplicantStuff.JobApplication;
+import CompanyStuff.Interviewer;
 import GUIClasses.CommonUserGUI.DocumentViewer;
+import GUIClasses.CommonUserGUI.GUIElementsCreator;
 
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
@@ -16,21 +18,24 @@ import java.util.HashMap;
 
 class HRViewApp extends HRPanel {
 
-    private String OVERVIEW = "Overview";
-    private String FILE = "View Files";
+    private static final String OVERVIEW = "Overview";
+    private static final String FILE = "View Files";
+    private static final String INTERVIEW_NOTES = "Interview Notes";
 
     HashMap<String, JobApplication> currApps;
 
-    JPanel parent;
+    private JPanel parent;
     private JList<String> applicationList = new JList<>();
     private JTabbedPane infoPane;
     private JTextArea overview;
     private JPanel documentViewer;
+    private JPanel interviewNotesPanel;
     private JButton hireButton;
     private JButton selectButton;
+    private JobApplication jobAppSelected;
 
-    JButton returnButton;
-    String previousPanel;
+    private JButton returnButton;
+    private String previousPanel;
 
 
     //mode: 0 view only
@@ -41,7 +46,6 @@ class HRViewApp extends HRPanel {
         this.parent = parent;
         this.currApps = currApps;
         this.previousPanel = previousPanel;
-
         this.setLayout(new BorderLayout());
 
         JSplitPane splitDisplay = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
@@ -95,19 +99,23 @@ class HRViewApp extends HRPanel {
             @Override
             public void valueChanged(ListSelectionEvent e) {
                 String selectedTitle = applicationList.getSelectedValue();
-                JobApplication selectedApp = currApps.get(selectedTitle);
-                overview.setText(selectedApp.toString());
+                jobAppSelected = currApps.get(selectedTitle);
+                overview.setText(jobAppSelected.toString());
                 documentViewer.removeAll();
-                documentViewer.add(createDocumentViewer(selectedApp));
+                documentViewer.add(createDocumentViewer(jobAppSelected));
+                interviewNotesPanel.removeAll();
+                setInterviewNotesPanel();
             }
         });
     }
 
     private void setInfoPane (JSplitPane splitDisplay) {
         this.infoPane = new JTabbedPane();
-        this.infoPane.addTab(this.OVERVIEW, makeOverviewTab("Select an application to view overview."));
+        this.infoPane.addTab(OVERVIEW, makeOverviewTab("Select an application to view overview."));
         this.documentViewer = new JPanel();
-        this.infoPane.addTab(this.FILE, this.documentViewer);
+        this.infoPane.addTab(FILE, this.documentViewer);
+        this.interviewNotesPanel = new JPanel();
+        this.infoPane.addTab(INTERVIEW_NOTES, this.interviewNotesPanel);
 
         splitDisplay.setRightComponent(this.infoPane);
     }
@@ -124,6 +132,35 @@ class HRViewApp extends HRPanel {
         this.overview.setEditable(false);
         this.overview.setBorder(new EtchedBorder(EtchedBorder.LOWERED));
         return new JScrollPane(this.overview);
+    }
+
+    private void setInterviewNotesPanel() {
+        HashMap<String, HashMap<Interviewer, String>> roundToInterviewerToNotes = this.hrBackend.
+                getAllInterviewNotesForApplication(jobAppSelected);
+        this.interviewNotesPanel.setLayout(new BoxLayout(this.interviewNotesPanel, BoxLayout.Y_AXIS));
+        for (String round : roundToInterviewerToNotes.keySet()) {
+            JLabel interviewRoundTitle = new JLabel(round);
+            interviewRoundTitle.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
+            this.interviewNotesPanel.add(interviewRoundTitle);
+            for (Interviewer interviewer : roundToInterviewerToNotes.get(round).keySet()) {
+                if (roundToInterviewerToNotes.get(round).get(interviewer) != null) {
+                    this.setInterviewNotesForOneInterview(interviewer, roundToInterviewerToNotes.get(round).get(interviewer));
+                }
+            }
+            this.interviewNotesPanel.add(Box.createRigidArea(new Dimension(0, 30)));
+        }
+        interviewNotesPanel.revalidate();
+    }
+
+    private void setInterviewNotesForOneInterview(Interviewer interviewer, String notes) {
+        JLabel interviewerName = new JLabel(interviewer.getLegalName());
+        JScrollPane notesTextArea = new GUIElementsCreator().createTextAreaWithScrollBar(notes, false);
+        notesTextArea.setBorder(BorderFactory.createEmptyBorder(0, 30, 0, 30));
+        this.interviewNotesPanel.add(Box.createRigidArea(new Dimension(0, 15)));
+        this.interviewNotesPanel.add(interviewerName);
+        this.interviewNotesPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+        this.interviewNotesPanel.add(notesTextArea);
+        this.interviewNotesPanel.add(Box.createRigidArea(new Dimension(0, 25)));
     }
 
     private void createReturnButton() {
@@ -148,8 +185,7 @@ class HRViewApp extends HRPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JFrame frame = (JFrame) SwingUtilities.windowForComponent(parent);
-                JDialog popUp = new HiringSelectionDialog(frame, hrBackend, new ArrayList<>(currApps.values()), returnButton);
-                add(popUp);
+                new HiringSelectionDialog(frame, hrBackend, new ArrayList<>(currApps.values()), returnButton);
             }
         });
     }
@@ -165,7 +201,7 @@ class HRViewApp extends HRPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JFrame frame = (JFrame) SwingUtilities.windowForComponent(parent);
-                JDialog popUp = new GradingFilterDialog(frame, hrBackend, new ArrayList<>(currApps.values()), returnButton);
+                new GradingFilterDialog(frame, hrBackend, new ArrayList<>(currApps.values()), returnButton);
             }
         });
     }

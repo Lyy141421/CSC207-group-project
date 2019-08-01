@@ -47,6 +47,7 @@ class GroupInterviewDialog extends JDialog {
         this.add(this.createCoordinator(), BorderLayout.WEST);
         this.setButtons();
 
+        this.setSize(300, 200);
         this.setVisible(true);
     }
 
