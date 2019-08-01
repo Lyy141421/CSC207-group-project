@@ -1,5 +1,6 @@
 package CompanyStuff;
 
+import CompanyStuff.JobPostings.BranchJobPosting;
 import CompanyStuff.JobPostings.CompanyJobPosting;
 import NotificationSystem.NotificationManager;
 import UsersAndJobObjects.JobPosting;
@@ -16,8 +17,9 @@ class HRCoordinatorTest {
     private Company company = new Company("company_a");
     private Branch branch = company.createBranch("BranchName", "E6H1P9");
 
-    JobPosting createJobPosting(String id) {
-        return new JobPosting(id);
+    BranchJobPosting createPosting(String name){
+        return new BranchJobPosting(name, "Sales", "none", new ArrayList<>(),
+                new ArrayList<>(), 1, branch, today, today.plusDays(5), today.plusDays(5));
     }
 
     CompanyJobPosting createCompanyJobPosting() {
