@@ -244,4 +244,8 @@ class HRBackend {
         jobPosting.getInterviewManager().hireApplicants(jobAppsToHire);
     }
 
+    HashMap<String, HashMap<Interviewer, String>> getAllInterviewNotesForApplication(JobApplication jobApp) {
+        return jobApp.getAllInterviewNotesForApplication();
+    }
+
 }

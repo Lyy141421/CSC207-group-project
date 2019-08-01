@@ -30,6 +30,8 @@ public class Interview implements Serializable {
     private InterviewTime time;
     // The interview manager for this interview
     private InterviewManager interviewManager;
+    // The interview type
+    private String[] typeAndDescription;
 
     // === Representation invariants ===
     // ID >= 1
@@ -45,6 +47,7 @@ public class Interview implements Serializable {
             put(interviewer, null);
         }};
         this.interviewManager = interviewManager;
+        this.typeAndDescription = this.interviewManager.getCurrentRoundTypeAndDescription();
     }
 
     Interview(ArrayList<JobApplication> jobApplications, Interviewer interviewCoordinator,
@@ -57,6 +60,7 @@ public class Interview implements Serializable {
         }};
         this.setOtherInterviewersToNotes(otherInterviewers);
         this.interviewManager = interviewManager;
+        this.typeAndDescription = this.interviewManager.getCurrentRoundTypeAndDescription();
     }
 
     // === Public methods ===
@@ -137,6 +141,13 @@ public class Interview implements Serializable {
         this.jobApplicationsToResult.replace(jobApp, result);
         this.interviewManager.updateInterviewersOfInterviewCompletionOrCancellation(this);
         this.interviewManager.updateApplicationsInConsideration(this);
+    }
+
+    public HashMap<Interviewer, String> getAllInterviewersToNotes() {
+        HashMap<Interviewer, String> allInterviewersToNotes = new HashMap<>();
+        allInterviewersToNotes.putAll((HashMap<Interviewer, String>) this.interviewCoordinatorToNotes.clone());
+        allInterviewersToNotes.putAll((HashMap<Interviewer, String>) this.getOtherInterviewersToNotes().clone());
+        return allInterviewersToNotes;
     }
 
     /**
@@ -260,20 +271,23 @@ public class Interview implements Serializable {
 
     public String[] getCategoryValuesForInterviewerScheduled() {
         JobApplication jobApp = this.getJobApplications().get(0);
-        String[] typeAndDescription = this.interviewManager.getCurrentRoundTypeAndDescription();
         return new String[]{jobApp.getJobPosting().getTitle(), typeAndDescription[0],
                 typeAndDescription[1], this.getInterviewCoordinator().getLegalName(),
                 this.getTime().toString()};
     }
 
-    public String getMiniDescriptionForInterviewer() {
-        JobApplication jobApp = this.getJobApplications().get(0);
-        String s = "Job Posting: " + jobApp.getJobPosting().getTitle() + "  ";
-        s += "Interview Description: " + this.interviewManager.getCurrentRoundTypeAndDescription()[1] + "   ";
-        return s;
+//    public String getMiniDescriptionForInterviewer() {
+//        JobApplication jobApp = this.getJobApplications().get(0);
+//        String s = "Job Posting: " + jobApp.getJobPosting().getTitle() + "  ";
+//        s += "Interview Description: " + this.interviewManager.getCurrentRoundTypeAndDescription()[1] + "   ";
+//        return s;
+//    }
+
+    public String getMiniDescriptionForHR() {
+        return this.typeAndDescription[0] + " (" + this.typeAndDescription[1] + ")";
     }
 
-    public String getOtherInterviewersNames() {
+    private String getOtherInterviewersNames() {
         String s = "";
         for (Interviewer interviewer : this.getOtherInterviewers()) {
             s += interviewer.getLegalName() + ", ";
@@ -284,11 +298,10 @@ public class Interview implements Serializable {
 
     @Override
     public String toString() {
-        String[] typeAndDescription = this.interviewManager.getCurrentRoundTypeAndDescription();
         String s = "Interview ID: " + this.getId() + "\n";
         s += "Job Posting: " + this.getJobApplications().get(0).getJobPosting().getTitle() + "\n";
-        s += "Interview Type: " + typeAndDescription[0] + "\n";
-        s += "Interview Description: " + typeAndDescription[1] + "\n";
+        s += "Interview Type: " + this.typeAndDescription[0] + "\n";
+        s += "Interview Description: " + this.typeAndDescription[1] + "\n";
         s += "Interview Coordinator: " + this.getInterviewCoordinator().getLegalName() + "\n";
         if (!this.getOtherInterviewers().isEmpty()) {
             s += "Secondary Interviewers: " + this.getOtherInterviewersNames() + "\n";
