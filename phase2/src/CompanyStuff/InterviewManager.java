@@ -201,8 +201,8 @@ public class InterviewManager extends Observable implements Serializable {
         if (this.hasNoJobApplicationsInConsideration()) {
             this.updateObserverList();
             this.notifyAllObservers(new Notification("Warning: No Applications in Consideration",
-                    "There are no applications in consideration in " + this.getBranchJobPosting().getTitle()
-                            + " job posting (id " + this.getBranchJobPosting().getId() + ")."));
+                    "There are no applications in consideration for the " + this.getBranchJobPosting().getTitle()
+                            + " job posting."));
         } else if (this.currentRound != 0 | this.isInterviewProcessOver()) {
             // The check for current round ensures that applicants get at least 1 interview
             this.hireAllApplicants();
