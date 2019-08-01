@@ -6,6 +6,7 @@ import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
 import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
 import net.sourceforge.jdatepicker.impl.UtilDateModel;
 
+
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
@@ -125,7 +126,7 @@ class HRAddPostingForm extends HRPanel {
     }
 
     private void addJobDescriptionEntry(Rectangle rect) {
-        JScrollPane jobDescriptionEntry = new GUIElementsCreator().createEditableTextAreaWithScrollBar("");
+        JScrollPane jobDescriptionEntry = new GUIElementsCreator().createTextAreaWithScrollBar("", true);
         rect.x = RECTANGLE_X_COLUMN_2;
         rect.y += STANDARD_RECTANGLE_Y_INCREMENT;
         rect.height = LARGER_RECTANGLE_HEIGHT;
@@ -137,7 +138,7 @@ class HRAddPostingForm extends HRPanel {
 
     private void addRequiredDocumentsEntry(Rectangle rect) {
         String instructions = "Enter the documents in a semi-colon separated list with no spaces. (e.g: 3 reference letters;Transcript)";
-        JScrollPane extraRequiredDocumentsEntry = new GUIElementsCreator().createEditableTextAreaWithScrollBar(instructions);
+        JScrollPane extraRequiredDocumentsEntry = new GUIElementsCreator().createTextAreaWithScrollBar(instructions, true);
 
         requiredDocumentsEntry = this.createSelectionBox(CompanyJobPosting.RECOMMENDED_DOCUMENTS,
                 (JTextArea) extraRequiredDocumentsEntry.getViewport().getView(), instructions);
@@ -154,7 +155,7 @@ class HRAddPostingForm extends HRPanel {
 
     private void addTagsEntry(Rectangle rect) {
         String instructions = "Enter the tags in a semi-colon separated list with no spaces. (e.g: University of Toronto;Java)";
-        JScrollPane extraTagsEntry = new GUIElementsCreator().createEditableTextAreaWithScrollBar(instructions);
+        JScrollPane extraTagsEntry = new GUIElementsCreator().createTextAreaWithScrollBar(instructions, true);
 
         tagsEntry = this.createSelectionBox(CompanyJobPosting.RECOMMENDED_TAGS,
                 (JTextArea) extraTagsEntry.getViewport().getView(), instructions);

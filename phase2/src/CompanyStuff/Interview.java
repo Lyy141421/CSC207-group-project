@@ -284,7 +284,8 @@ public class Interview implements Serializable {
 //    }
 
     public String getMiniDescriptionForHR() {
-        return this.typeAndDescription[0] + " (" + this.typeAndDescription[1] + ")";
+        return "Job posting: " + this.getJobApplications().get(0).getJobPosting().getTitle() + " -- " +
+                this.typeAndDescription[0] + " (" + this.typeAndDescription[1] + ")";
     }
 
     private String getOtherInterviewersNames() {

@@ -100,10 +100,10 @@ public class HRMain extends UserPanel {
         JobApplicationSystem jobApplicationSystem = new JobApplicationSystem();
         new DataLoaderAndStorer(jobApplicationSystem).loadAllData();
         Branch branch = jobApplicationSystem.getCompanies().get(0).getBranches().get(0);
-        branch.getJobPostingManager().updateJobPostingsClosedForApplications(LocalDate.of(2019, 7, 31));
-        branch.getJobPostingManager().updateJobPostingsClosedForReferences(LocalDate.of(2019, 8, 11));
+//        branch.getJobPostingManager().updateJobPostingsClosedForApplications(LocalDate.of(2019, 7, 31));
+//        branch.getJobPostingManager().updateJobPostingsClosedForReferences(LocalDate.of(2019, 8, 11));
         HRCoordinator hrc = branch.getHrCoordinators().get(0);
-        jobApplicationSystem.setToday(LocalDate.of(2019, 8, 17));
+        jobApplicationSystem.setToday(LocalDate.of(2019, 8, 25));
         LogoutActionListener logoutActionListener = new LogoutActionListener(new Container(), new CardLayout(), jobApplicationSystem);
         JFrame frame = new JFrame();
         frame.add(new HRMain(hrc, jobApplicationSystem, logoutActionListener));

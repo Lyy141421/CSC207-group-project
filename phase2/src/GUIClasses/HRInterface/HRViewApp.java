@@ -3,6 +3,7 @@ package GUIClasses.HRInterface;
 import ApplicantStuff.JobApplication;
 import CompanyStuff.Interviewer;
 import GUIClasses.CommonUserGUI.DocumentViewer;
+import GUIClasses.CommonUserGUI.GUIElementsCreator;
 
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
@@ -13,7 +14,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 
 class HRViewApp extends HRPanel {
@@ -140,9 +140,10 @@ class HRViewApp extends HRPanel {
         this.interviewNotesPanel.setLayout(new BoxLayout(this.interviewNotesPanel, BoxLayout.Y_AXIS));
         for (String round : roundToInterviewerToNotes.keySet()) {
             JLabel interviewRoundTitle = new JLabel(round);
+            interviewRoundTitle.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
             this.interviewNotesPanel.add(interviewRoundTitle);
             for (Interviewer interviewer : roundToInterviewerToNotes.get(round).keySet()) {
-                if (roundToInterviewerToNotes.get(interviewer) != null) {
+                if (roundToInterviewerToNotes.get(round).get(interviewer) != null) {
                     this.setInterviewNotesForOneInterview(interviewer, roundToInterviewerToNotes.get(round).get(interviewer));
                 }
             }
@@ -153,9 +154,8 @@ class HRViewApp extends HRPanel {
 
     private void setInterviewNotesForOneInterview(Interviewer interviewer, String notes) {
         JLabel interviewerName = new JLabel(interviewer.getLegalName());
-        interviewerName.setHorizontalAlignment(SwingConstants.LEFT);
-        JTextArea notesTextArea = new JTextArea(notes);
-        notesTextArea.setEditable(false);
+        JScrollPane notesTextArea = new GUIElementsCreator().createTextAreaWithScrollBar(notes, false);
+        notesTextArea.setBorder(BorderFactory.createEmptyBorder(0, 30, 0, 30));
         this.interviewNotesPanel.add(Box.createRigidArea(new Dimension(0, 15)));
         this.interviewNotesPanel.add(interviewerName);
         this.interviewNotesPanel.add(Box.createRigidArea(new Dimension(0, 10)));
