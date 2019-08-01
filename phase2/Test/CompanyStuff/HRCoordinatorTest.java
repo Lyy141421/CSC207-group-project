@@ -54,7 +54,7 @@ class HRCoordinatorTest {
         hrcord.getBranch().getJobPostingManager().getBranchJobPostings().get(0).getInterviewManager().updateJobPostingStatus();
         assertEquals(hrcord.getAllNotifications().size(), 1);
         assertEquals(hrcord.getAllNotifications().get(0).getMessage(),
-              "There are no applications in consideration for the Sales Person For Hire job posting.");
+              "There are no applications in consideration for theSales Person For Hire job posting (id 9). It has been automatically set to filled with 0 positions.");
         hrcord.getBranch().getJobPostingManager().getBranchJobPostings().get(0).getInterviewManager().updateJobPostingStatus();
         assertEquals(hrcord.getAllNotifications().size(), 2);
         hrcord.removeAllNotifications();
