@@ -251,6 +251,19 @@ public class InterviewManager extends Observable implements Serializable {
         }
     }
 
+    /**
+     * Update the list of applications in consideration when an interview is completed.
+     *
+     * @param interview The interview that has been completed.
+     */
+    void updateApplicationsInConsideration(Interview interview) {
+        for (JobApplication jobApp : interview.getJobApplications()) {
+            if (!interview.isPassed(jobApp)) {
+                this.reject(jobApp);
+            }
+        }
+    }
+
     // ============================================================================================================== //
     // === Private methods ===
     // === Other methods ===

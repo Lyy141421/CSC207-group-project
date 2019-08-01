@@ -124,6 +124,7 @@ public class Interview implements Serializable {
             this.jobApplicationsToResult.replace(jobApp, result);
         }
         this.interviewManager.updateInterviewersOfInterviewCompletionOrCancellation(this);
+        this.interviewManager.updateApplicationsInConsideration(this);
     }
 
     /**
@@ -134,6 +135,8 @@ public class Interview implements Serializable {
      */
     public void setResult(JobApplication jobApp, Boolean result) {
         this.jobApplicationsToResult.replace(jobApp, result);
+        this.interviewManager.updateInterviewersOfInterviewCompletionOrCancellation(this);
+        this.interviewManager.updateApplicationsInConsideration(this);
     }
 
     /**
