@@ -131,6 +131,12 @@ public abstract class User implements Serializable, Observer {
         this.getNotificationManager().remove(notification);
     }
 
+    public void removeAllNotifications(){
+        for(Notification notification : (ArrayList<Notification>)this.getAllNotifications().clone()){
+            removeNotification(notification);
+        }
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (!(obj instanceof User)) {

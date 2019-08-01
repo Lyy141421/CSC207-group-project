@@ -32,4 +32,9 @@ public interface Observer {
      */
     void removeNotification(Notification notification);
 
+    /**
+     * Removes all Notifications from this user
+     */
+    void removeAllNotifications();
+
 }

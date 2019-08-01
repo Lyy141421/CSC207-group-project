@@ -201,7 +201,7 @@ public class InterviewManager extends Observable implements Serializable {
         if (this.hasNoJobApplicationsInConsideration()) {
             this.updateObserverList();
             this.notifyAllObservers(new Notification("Warning: No Applications in Consideration",
-                    "There are no applications in consideration in " + this.getBranchJobPosting().getTitle()
+                    "There are no applications in consideration for the" + this.getBranchJobPosting().getTitle()
                             + " job posting (id " + this.getBranchJobPosting().getId() + "). It has been automatically" +
                             "set to filled with 0 positions."));
             this.getBranchJobPosting().closeJobPostingNoApplicationsInConsideration();
@@ -399,10 +399,9 @@ public class InterviewManager extends Observable implements Serializable {
     @Override
     public void updateObserverList() {
         for (Observer observer : this.getBranchJobPosting().getBranch().getHrCoordinators()) {
-            this.detach(observer); //Clears out any possible old HRCoordinators
-        }
-        for (Observer observer : this.getBranchJobPosting().getBranch().getHrCoordinators()) {
-            this.attach(observer);
+            if (!this.containsObserver(observer)){
+                this.attach(observer);
+            }
         }
     }
 }
