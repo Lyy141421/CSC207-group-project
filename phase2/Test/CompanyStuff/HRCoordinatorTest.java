@@ -78,11 +78,27 @@ class HRCoordinatorTest {
 
     @Test
     void implementJobPosting() {
+        HRCoordinator hrcord = createHR("Phillip");
+        CompanyJobPosting posting = createCompanyJobPosting();
+        hrcord.implementJobPosting(posting, 3, today, today.plusDays(5), today.plusDays(5));
+        assertEquals(hrcord.getBranch().getJobPostingManager().getBranchJobPostings().get(0).getTitle(),
+                "A Job Title");
 
     }
 
     @Test
     void chooseInterviewConfiguration() {
-
+        HRCoordinator hrcord = createHR("Phillip");
+        BranchJobPosting posting = createPosting("Posting Name");
+        hrcord.addJobPosting("A Job Title", "Jobbing", "A Job", new ArrayList<>(),
+                new ArrayList<>(), 3, today, today.plusDays(5), today.plusDays(5));
+        ArrayList list = new ArrayList<>();
+        list.add(new String[1]);
+        list.add(new String[1]);
+        list.add(new String[1]);
+        posting.createInterviewManager();
+        hrcord.chooseInterviewConfiguration(posting,
+                list);
+        assertEquals(posting.getInterviewManager().getFinalRoundNumber(), 2);
     }
 }
