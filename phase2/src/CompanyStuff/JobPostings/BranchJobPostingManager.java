@@ -140,70 +140,21 @@ public class BranchJobPostingManager implements Serializable {
         return jobPostings;
     }
 
-//    /**
-//     * Get job postings that need interview configurations set up.
-//     *
-//     * @param today Today's date.
-//     * @return the list of job postings that need interview configurations set up.
-//     */
-//    public ArrayList<BranchJobPosting> getJobPostingsThatNeedInterviewProcessConfigured(LocalDate today) {
-//        ArrayList<BranchJobPosting> jobPostings = new ArrayList<>();
-//        for (BranchJobPosting jobPosting : this.getClosedJobPostingsNotFilled(today)) {
-//            InterviewManager interviewManager = jobPosting.getInterviewManager();
-//            if (interviewManager.getHrTask() == InterviewManager.SET_INTERVIEW_CONFIGURATION) {
-//                jobPostings.add(jobPosting);
-//            }
-//        }
-//        return jobPostings;
-//    }
-
-//    /**
-//     * Get a list of job postings with no applications in consideration.
-//     *
-//     * @param getToday Today's date.
-//     * @return a list of job postings with no applications in consideration.
-//     */
-//    public ArrayList<BranchJobPosting> getClosedJobPostingsNoApplicationsInConsideration(LocalDate getToday) {
-//        ArrayList<BranchJobPosting> jobPostings = new ArrayList<>();
-//        for (BranchJobPosting jobPosting : this.getClosedJobPostingsNotFilled(getToday)) {
-//            InterviewManager interviewManager = jobPosting.getInterviewManager();
-//            if (interviewManager.getHrTask() == InterviewManager.CLOSE_POSTING_NO_HIRE) {
-//                jobPostings.add(jobPosting);
-//            }
-//        }
-//        return jobPostings;
-//    }
-//
-//    /**
-//     * Get a list of job postings that have closed with no applications submitted.
-//     *
-//     * @param getToday Today's date
-//     * @return a list of job postings with no applications.
-//     */
-//    public ArrayList<BranchJobPosting> getClosedJobPostingsNoApplicationsSubmitted(LocalDate getToday) {
-//        ArrayList<BranchJobPosting> jobPostings = new ArrayList<>();
-//        for (BranchJobPosting jobPosting : this.getClosedJobPostingsNotFilled(getToday)) {
-//            if (jobPosting.hasNoApplicationsSubmitted()) {
-//                jobPostings.add(jobPosting);
-//            }
-//        }
-//        return jobPostings;
-//    }
-//
-//    /**
-//     * Get a list of all filled job postings at this branch.
-//     *
-//     * @return a list of filled job postings at this branch.
-//     */
-//    public ArrayList<BranchJobPosting> getFilledJobPostings() {
-//        ArrayList<BranchJobPosting> jobPostings = new ArrayList<>();
-//        for (BranchJobPosting jobPosting : this.branchJobPostings) {
-//            if (jobPosting.isFilled()) {
-//                jobPostings.add(jobPosting);
-//            }
-//        }
-//        return jobPostings;
-//    }
+    /**
+     * Get a list of job postings that have closed with no applications submitted and thus, may need an extension.
+     *
+     * @param getToday Today's date
+     * @return a list of job postings with no applications submitted.
+     */
+    public ArrayList<BranchJobPosting> getJobPostingsThatNeedDeadlineExtensions(LocalDate getToday) {
+        ArrayList<BranchJobPosting> jobPostings = new ArrayList<>();
+        for (BranchJobPosting jobPosting : this.getClosedJobPostingsNotFilled(getToday)) {
+            if (jobPosting.getInterviewManager().getHrTask() == InterviewManager.EXTEND_APPLICATION_DEADLINE) {
+                jobPostings.add(jobPosting);
+            }
+        }
+        return jobPostings;
+    }
 
     /**
      * Get a list of job postings where a current interview round is over.
@@ -245,7 +196,7 @@ public class BranchJobPostingManager implements Serializable {
      */
     public void updateAllClosedUnfilledJobPostings(LocalDate today) {
         for (BranchJobPosting jobPosting : this.getClosedJobPostingsNotFilled(today)) {
-            jobPosting.getInterviewManager().updateJobPostingStatus();
+            jobPosting.getInterviewManager().updateJobPostingFilledStatus();
             jobPosting.advanceInterviewRound();
         }
     }

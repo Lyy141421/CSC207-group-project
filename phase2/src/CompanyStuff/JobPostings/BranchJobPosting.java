@@ -85,14 +85,16 @@ public class BranchJobPosting extends CompanyJobPosting {
     // === Other methods ===
 
     /**
-     * Extend the close dates for this job posting
-     *
-     * @param newApplicantCloseDate The new applicant close date.
-     * @param newReferenceCloseDate The new reference close date.
+     * Update the fields of this job posting.
+     * @param numPositions  The number of positions for this job posting.
+     * @param applicationCloseDate  The application close date.
+     * @param referenceCloseDate    The reference close date.
      */
-    public void extendCloseDates(LocalDate newApplicantCloseDate, LocalDate newReferenceCloseDate) {
-        this.applicantCloseDate = newApplicantCloseDate;
-        this.referenceCloseDate = newReferenceCloseDate;
+    public void updateFields(int numPositions,
+                             LocalDate applicationCloseDate, LocalDate referenceCloseDate) {
+        this.numPositions = numPositions;
+        this.applicantCloseDate = applicationCloseDate;
+        this.referenceCloseDate = referenceCloseDate;
     }
 
     /**

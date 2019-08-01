@@ -1,11 +1,11 @@
 package GUIClasses.HRInterface;
 
+import CompanyStuff.JobPostings.BranchJobPosting;
 import CompanyStuff.JobPostings.CompanyJobPosting;
 import GUIClasses.CommonUserGUI.GUIElementsCreator;
 import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
 import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
 import net.sourceforge.jdatepicker.impl.UtilDateModel;
-
 
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
@@ -19,27 +19,27 @@ import java.time.ZoneId;
 import java.util.*;
 import java.util.List;
 
-class HRAddPostingForm extends HRPanel {
+class HRAddOrUpdatePostingForm extends HRPanel {
 
     private static final int MAX_NUM_POSITIONS = 1000;
 
     // === Bound positions ===
-    private static final int RECTANGLE_X_COLUMN_1 = 20;
-    private static final int RECTANGLE_X_COLUMN_2 = 170;
-    private static final int RECTANGLE_X_COLUMN_3 = 330;
-    private static final int RECTANGLE_X_COLUMN_3_HALF = 430;
-    private static final int RECTANGLE_X_COLUMN_4 = 500;
-    private static final int RECTANGLE_X_CENTER = 270;
-    private static final int STANDARD_RECTANGLE_WIDTH = 150;
-    private static final int MEDIUM_RECTANGLE_WIDTH = 225;
-    private static final int LARGER_RECTANGLE_WIDTH = 300;
-    private static final int RECTANGLE_START_Y = 10;
-    private static final int STANDARD_RECTANGLE_Y_INCREMENT = 40;
-    private static final int MEDIUM_RECTANGLE_Y_INCREMENT = 80;
-    private static final int LARGER_RECTANGLE_Y_INCREMENT = 110;
-    private static final int STANDARD_RECTANGLE_HEIGHT = 30;
-    private static final int MEDIUM_RECTANGLE_HEIGHT = 70;
-    private static final int LARGER_RECTANGLE_HEIGHT = 100;
+    private static final int X_COLUMN_1 = 20;
+    private static final int X_COLUMN_2 = 170;
+    private static final int X_COLUMN_3 = 330;
+    private static final int X_COLUMN_3_HALF = 430;
+    private static final int X_COLUMN_4 = 500;
+    private static final int X_CENTER = 270;
+    private static final int STANDARD_WIDTH = 150;
+    private static final int MEDIUM_WIDTH = 225;
+    private static final int LARGER_WIDTH = 300;
+    private static final int Y_START = 10;
+    private static final int STANDARD_Y_INCREMENT = 40;
+    private static final int MEDIUM_Y_INCREMENT = 80;
+    private static final int LARGER_Y_INCREMENT = 110;
+    private static final int STANDARD_HEIGHT = 30;
+    private static final int MEDIUM_HEIGHT = 70;
+    private static final int LARGER_HEIGHT = 100;
 
     // === Labels ===
     private static final String TITLE_LABEL = "Title: ";
@@ -57,40 +57,52 @@ class HRAddPostingForm extends HRPanel {
     private HashMap<String, CompanyJobPosting> companyJPMap = new HashMap<>();  // The map of company job postings to be displayed
     private JScrollPane requiredDocumentsEntry;
     private JScrollPane tagsEntry;
+    private JTextArea extraDocumentsEntry;
+    private String documentInputInstructions;
+    private JTextArea extraTagsEntry;
+    private String tagsInputInstructions;
+    private ArrayList<String> fullOptionalSelectionInput = new ArrayList<>();
+    private CompanyJobPosting selectedJP;
+    private boolean toAdd;
 
     private JComboBox<String> companyPostingList;               // The list of company job postings to be displayed
     private DefaultComboBoxModel<String> companyPostingModel;   // The combo box for selecting a company posting
 
     // === Constructor ===
-    HRAddPostingForm(HRBackend hrBackend) {
+    HRAddOrUpdatePostingForm(HRBackend hrBackend, boolean toAdd, BranchJobPosting jobPostingToUpdate) {
         super(hrBackend);
         this.setLayout(null);
         this.addFieldsAndSubmitButton();
         this.addText();
         this.setCompanyPostingListListener();
+        this.setJobTitleActionListener();
+        if (jobPostingToUpdate != null) {
+            selectedJP = jobPostingToUpdate;
+        }
+        this.toAdd = toAdd;
     }
 
     private void addText() {
-        Rectangle rect = new Rectangle(RECTANGLE_X_COLUMN_1, RECTANGLE_START_Y, STANDARD_RECTANGLE_WIDTH, STANDARD_RECTANGLE_HEIGHT);
+        Rectangle rect = new Rectangle(X_COLUMN_1, Y_START, STANDARD_WIDTH, STANDARD_HEIGHT);
         ArrayList<String> labels = this.getArrayListOfLabels();
 
         for (String text : labels) {
             JLabel label = new JLabel(text, SwingConstants.LEFT);
             if (text.equals(FIELD_LABEL) || text.equals(REFERENCE_CLOSE_DATE_LABEL)) {
                 label = new JLabel(text, SwingConstants.RIGHT);
-                rect.x = RECTANGLE_X_COLUMN_3;
+                rect.x = X_COLUMN_3;
                 label.setBounds(rect);
-                rect.x = RECTANGLE_X_COLUMN_1;
+                rect.x = X_COLUMN_1;
             } else {
                 label.setBounds(rect);
             }
             this.add(label);
             if (text.equals(DESCRIPTION_LABEL)) {
-                rect.y += LARGER_RECTANGLE_Y_INCREMENT;
+                rect.y += LARGER_Y_INCREMENT;
             } else if (text.equals(DOCUMENTS_LABEL) || text.equals(TAGS_LABEL)) {
-                rect.y += MEDIUM_RECTANGLE_Y_INCREMENT;
+                rect.y += MEDIUM_Y_INCREMENT;
             } else if (!(text.equals(TITLE_LABEL) || text.equals(APPLICANT_CLOSE_DATE_LABEL))) {
-                rect.y += STANDARD_RECTANGLE_Y_INCREMENT;
+                rect.y += STANDARD_Y_INCREMENT;
             }
         }
     }
@@ -101,9 +113,10 @@ class HRAddPostingForm extends HRPanel {
     }
 
     private void addFieldsAndSubmitButton() {
-        Rectangle rect = new Rectangle(RECTANGLE_X_COLUMN_2, RECTANGLE_START_Y, STANDARD_RECTANGLE_WIDTH,
-                STANDARD_RECTANGLE_HEIGHT);
-        this.addJobTitleAndFieldEntries(rect);
+        Rectangle rect = new Rectangle(X_COLUMN_2, Y_START, STANDARD_WIDTH,
+                STANDARD_HEIGHT);
+        this.addJobTitleEntry(rect);
+        this.addFieldEntry(rect);
         this.addJobDescriptionEntry(rect);
         this.addRequiredDocumentsEntry(rect);
         this.addTagsEntry(rect);
@@ -112,14 +125,16 @@ class HRAddPostingForm extends HRPanel {
         this.addSubmitButton(rect);
     }
 
-    private void addJobTitleAndFieldEntries(Rectangle rect) {
+    private void addJobTitleEntry(Rectangle rect) {
         this.addJobTitleSelection();
         companyPostingList.setBounds(rect);
         this.add(companyPostingList);
         this.entryBoxes.add(companyPostingList);
+    }
 
+    private void addFieldEntry(Rectangle rect) {
         JTextField jobFieldEntry = new JTextField();
-        rect.x = RECTANGLE_X_COLUMN_4;
+        rect.x = X_COLUMN_4;
         jobFieldEntry.setBounds(rect);
         this.add(jobFieldEntry);
         this.entryBoxes.add(jobFieldEntry);
@@ -127,54 +142,54 @@ class HRAddPostingForm extends HRPanel {
 
     private void addJobDescriptionEntry(Rectangle rect) {
         JScrollPane jobDescriptionEntry = new GUIElementsCreator().createTextAreaWithScrollBar("", true);
-        rect.x = RECTANGLE_X_COLUMN_2;
-        rect.y += STANDARD_RECTANGLE_Y_INCREMENT;
-        rect.height = LARGER_RECTANGLE_HEIGHT;
-        rect.width = LARGER_RECTANGLE_WIDTH;
+        rect.x = X_COLUMN_2;
+        rect.y += STANDARD_Y_INCREMENT;
+        rect.height = LARGER_HEIGHT;
+        rect.width = LARGER_WIDTH;
         jobDescriptionEntry.setBounds(rect);
         this.add(jobDescriptionEntry);
         this.entryBoxes.add((JTextArea) jobDescriptionEntry.getViewport().getView());
     }
 
     private void addRequiredDocumentsEntry(Rectangle rect) {
-        String instructions = "Enter the documents in a semi-colon separated list with no spaces. (e.g: 3 reference letters;Transcript)";
-        JScrollPane extraRequiredDocumentsEntry = new GUIElementsCreator().createTextAreaWithScrollBar(instructions, true);
-
-        requiredDocumentsEntry = this.createSelectionBox(CompanyJobPosting.RECOMMENDED_DOCUMENTS,
-                (JTextArea) extraRequiredDocumentsEntry.getViewport().getView(), instructions);
-        rect.height = MEDIUM_RECTANGLE_HEIGHT;
-        rect.width = MEDIUM_RECTANGLE_WIDTH;
-        rect.y += LARGER_RECTANGLE_Y_INCREMENT;
+        requiredDocumentsEntry = this.createSelectionBox(CompanyJobPosting.RECOMMENDED_DOCUMENTS);
+        rect.height = MEDIUM_HEIGHT;
+        rect.width = MEDIUM_WIDTH;
+        rect.y += LARGER_Y_INCREMENT;
         requiredDocumentsEntry.setBounds(rect);
         this.add(requiredDocumentsEntry);
 
-        rect.x = RECTANGLE_X_COLUMN_3_HALF;
-        extraRequiredDocumentsEntry.setBounds(rect);
-        this.add(extraRequiredDocumentsEntry);
+        rect.x = X_COLUMN_3_HALF;
+        documentInputInstructions = "Enter the documents in a semi-colon separated list with no spaces. (e.g: 3 reference letters;Transcript)";
+        JScrollPane extraDocumentsEntryScrollPane = new GUIElementsCreator().createTextAreaWithScrollBar(documentInputInstructions, true);
+        extraDocumentsEntryScrollPane.setBounds(rect);
+        this.add(extraDocumentsEntryScrollPane);
+        extraDocumentsEntry = (JTextArea) extraDocumentsEntryScrollPane.getViewport().getView();
+        this.entryBoxes.add(extraDocumentsEntry);
     }
 
     private void addTagsEntry(Rectangle rect) {
-        String instructions = "Enter the tags in a semi-colon separated list with no spaces. (e.g: University of Toronto;Java)";
-        JScrollPane extraTagsEntry = new GUIElementsCreator().createTextAreaWithScrollBar(instructions, true);
-
-        tagsEntry = this.createSelectionBox(CompanyJobPosting.RECOMMENDED_TAGS,
-                (JTextArea) extraTagsEntry.getViewport().getView(), instructions);
-        rect.x = RECTANGLE_X_COLUMN_2;
-        rect.y += MEDIUM_RECTANGLE_Y_INCREMENT;
+        tagsEntry = this.createSelectionBox(CompanyJobPosting.RECOMMENDED_TAGS);
+        rect.x = X_COLUMN_2;
+        rect.y += MEDIUM_Y_INCREMENT;
         tagsEntry.setBounds(rect);
         this.add(tagsEntry);
 
-        rect.x = RECTANGLE_X_COLUMN_3_HALF;
-        extraTagsEntry.setBounds(rect);
-        this.add(extraTagsEntry);
+        rect.x = X_COLUMN_3_HALF;
+        tagsInputInstructions = "Enter the tags in a semi-colon separated list with no spaces. (e.g: University of Toronto;Java)";
+        JScrollPane extraTagsEntryScrollPane = new GUIElementsCreator().createTextAreaWithScrollBar(tagsInputInstructions, true);
+        extraTagsEntryScrollPane.setBounds(rect);
+        this.add(extraTagsEntryScrollPane);
+        extraTagsEntry = (JTextArea) extraTagsEntryScrollPane.getViewport().getView();
+        this.entryBoxes.add(extraTagsEntry);
     }
 
     private void addNumberOfPositionsEntry(Rectangle rect) {
         JSpinner numPositionsEntry = this.createNumField();
-        rect.x = RECTANGLE_X_COLUMN_2;
-        rect.height = STANDARD_RECTANGLE_HEIGHT;
-        rect.width = STANDARD_RECTANGLE_WIDTH;
-        rect.y += MEDIUM_RECTANGLE_Y_INCREMENT;
+        rect.x = X_COLUMN_2;
+        rect.height = STANDARD_HEIGHT;
+        rect.width = STANDARD_WIDTH;
+        rect.y += MEDIUM_Y_INCREMENT;
         numPositionsEntry.setBounds(rect);
         this.add(numPositionsEntry);
         this.entryBoxes.add(numPositionsEntry);
@@ -182,13 +197,13 @@ class HRAddPostingForm extends HRPanel {
 
     private void addCloseDateEntries(Rectangle rect) {
         JDatePickerImpl applicantCloseDateEntry = this.createDatePicker();
-        rect.y += STANDARD_RECTANGLE_Y_INCREMENT;
+        rect.y += STANDARD_Y_INCREMENT;
         applicantCloseDateEntry.setBounds(rect);
         this.add(applicantCloseDateEntry);
         this.entryBoxes.add(applicantCloseDateEntry);
 
         JDatePickerImpl referenceCloseDateEntry = this.createDatePicker();
-        rect.x = RECTANGLE_X_COLUMN_4;
+        rect.x = X_COLUMN_4;
         referenceCloseDateEntry.setBounds(rect);
         this.add(referenceCloseDateEntry);
         this.entryBoxes.add(referenceCloseDateEntry);
@@ -199,7 +214,31 @@ class HRAddPostingForm extends HRPanel {
         this.companyPostingList.setEditable(true);
         this.setCompanyJPMap(this.hrBackend.getHR().getBranch().getCompany().getCompanyJobPostings());
         this.companyPostingModel = new DefaultComboBoxModel<>(companyJPMap.keySet().toArray(new String[companyJPMap.size()]));
+        this.companyPostingModel.setSelectedItem(null);
         this.companyPostingList.setModel(this.companyPostingModel);
+    }
+
+    private void setJobTitleActionListener() {
+        this.companyPostingList.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String jobTitleText = ((JTextComponent) ((JComboBox) entryBoxes.get(0)).getEditor().getEditorComponent()).getText();
+                if (!companyJPMap.keySet().contains(jobTitleText)) {
+                    enableAndClearAllInput();
+                }
+            }
+        });
+    }
+
+    private void enableAndClearAllInput() {
+        for (JComponent component : entryBoxes) {
+            component.setEnabled(true);
+            if (component instanceof JTextComponent) {
+                ((JTextComponent) component).setText("");
+            }
+        }
+        enableAllCheckBoxes(requiredDocumentsEntry);
+        enableAllCheckBoxes(tagsEntry);
     }
 
     private void setCompanyPostingListListener() {
@@ -212,36 +251,54 @@ class HRAddPostingForm extends HRPanel {
                 //                         4. select posting again
                 String selectedTitle = (String) companyPostingList.getSelectedItem();
                 if (companyJPMap.containsKey(selectedTitle)) {
-                    CompanyJobPosting selectedJP = companyJPMap.get(selectedTitle);
+                    selectedJP = companyJPMap.get(selectedTitle);
                     //0.title, 1.field, 2.description, 3.required documents, 4.tags, 5.numOfPos, 6.close date, 7.reference close date
                     //Company default： 0, 1, 2, 3, 4
-                    fillDefaultValue(selectedJP);
+                    fillDefaultValues();
                     disableDefaultFields();
-                } else {
-                    for (JComponent component : entryBoxes) {
-                        component.setEnabled(true);
-                    }
+                } else if (toAdd) {
+                    addFieldsAndSubmitButton();
+                    enableAndClearAllInput();
                 }
             }
         });
     }
 
-    private void fillDefaultValue(CompanyJobPosting companyJobPosting) {
-        ((JTextField) this.entryBoxes.get(1)).setText(companyJobPosting.getField());
-        ((JTextArea) entryBoxes.get(2)).setText(companyJobPosting.getDescription());
-        ((JTextArea) entryBoxes.get(3)).setText(companyJobPosting.getDocsString());
-        ((JTextArea) entryBoxes.get(4)).setText(companyJobPosting.getTagsString());
+    private void fillDefaultValues() {
+        ((JTextField) this.entryBoxes.get(1)).setText(selectedJP.getField());
+        ((JTextArea) entryBoxes.get(2)).setText(selectedJP.getDescription());
+        ((JTextArea) entryBoxes.get(3)).setText(selectedJP.getDocsStringNoRecommended());
+        ((JTextArea) entryBoxes.get(4)).setText(selectedJP.getTagsStringNoRecommended());
+        this.setDefaultCheckBoxesForDocsAndTags();
+    }
+
+    private void setDefaultCheckBoxesForDocsAndTags() {
+        this.setDefaultCheckBoxes(requiredDocumentsEntry, selectedJP.getRecommendedDocumentsUsed());
+        this.setDefaultCheckBoxes(tagsEntry, selectedJP.getRecommendedTagsUsed());
+    }
+
+    private void setDefaultCheckBoxes(JScrollPane scrollPaneWithCheckBoxes, ArrayList<String> recommendedItemsIncluded) {
+        Component[] checkBoxesDocs = ((JPanel) scrollPaneWithCheckBoxes.getViewport().getView()).getComponents();
+        for (Component checkBox : checkBoxesDocs) {
+            if (recommendedItemsIncluded.contains(((JCheckBox) checkBox).getText())) {
+                ((JCheckBox) checkBox).setSelected(true);
+            }
+            checkBox.setEnabled(false);
+        }
+    }
+
+    private void enableAllCheckBoxes(JScrollPane scrollPaneWithCheckBoxes) {
+        Component[] checkBoxesDocs = ((JPanel) scrollPaneWithCheckBoxes.getViewport().getView()).getComponents();
+        for (Component checkBox : checkBoxesDocs) {
+            checkBox.setEnabled(true);
+            ((JCheckBox) checkBox).setSelected(false);
+        }
     }
 
     private void disableDefaultFields() {
-        for (int i = 0; i < 5; i++) {
-            this.entryBoxes.get(i).setEnabled(false);
-            if (this.entryBoxes instanceof JTextComponent) {
-                ((JTextComponent) this.entryBoxes.get(i)).setEditable(false);
-            }
-            // TODO disable documents and tags
+        for (int i = 1; i < 5; i++) {
+            entryBoxes.get(i).setEnabled(false);
         }
-
     }
 
     /**
@@ -281,7 +338,7 @@ class HRAddPostingForm extends HRPanel {
         return numInput;
     }
 
-    private JScrollPane createSelectionBox(String[] recommended, JTextArea textInput, String instructions) {
+    private JScrollPane createSelectionBox(String[] recommended) {
         JPanel recommendedPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         String checkedInput = "";
         for (String label : recommended) {
@@ -292,12 +349,12 @@ class HRAddPostingForm extends HRPanel {
         JScrollPane labelPane = new JScrollPane(recommendedPanel);
         labelPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         labelPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
-        this.setSelectionBoxTextArea(checkedInput, textInput, instructions);
+        this.fullOptionalSelectionInput.add(checkedInput);
         return labelPane;
     }
 
-    private void setSelectionBoxTextArea(String checkedInput, JTextArea textInput, String instructions) {
-        String fullTextInput = checkedInput;
+    private void setAllSelectedAndInputtedItems(int index, JTextArea textInput, String instructions) {
+        String fullTextInput = this.fullOptionalSelectionInput.get(index);
         if (fullTextInput.startsWith(";")) {
             fullTextInput = fullTextInput.substring(1);
         }
@@ -310,7 +367,8 @@ class HRAddPostingForm extends HRPanel {
                 fullTextInput = fullTextInput.substring(0, fullTextInput.length() - 1);
             }
         }
-        this.entryBoxes.add(new JTextArea(fullTextInput));
+        this.fullOptionalSelectionInput.remove(index);
+        this.fullOptionalSelectionInput.add(index, fullTextInput);
     }
 
     private String addCheckBoxItemListener(JCheckBox checkBox) {
@@ -337,8 +395,8 @@ class HRAddPostingForm extends HRPanel {
 
     private void addSubmitButton(Rectangle rect) {
         JButton submitButton = this.createSubmitButton();
-        rect.x = RECTANGLE_X_CENTER;
-        rect.y += STANDARD_RECTANGLE_Y_INCREMENT;
+        rect.x = X_CENTER;
+        rect.y += STANDARD_Y_INCREMENT;
         submitButton.setBounds(rect);
         this.add(submitButton);
     }
@@ -351,33 +409,45 @@ class HRAddPostingForm extends HRPanel {
                 Object[] mandatoryFields = getMandatoryFields();
                 Optional<String[]> defaultFields = getDefaultFields();
                 if (isValidInput(mandatoryFields, defaultFields)) {
-                    if (!defaultFields.isPresent()) {
-                        CompanyJobPosting companyJobPosting = companyJPMap.get(((JTextField) entryBoxes.get(0)).getText());
-                        hrBackend.implementJobPosting(companyJobPosting, mandatoryFields);
+                    if (toAdd) {
+                        addJobPosting(defaultFields, mandatoryFields);
                     } else {
-                        hrBackend.addJobPosting(mandatoryFields, defaultFields.get());
+                        updateJobPosting(mandatoryFields);
                     }
-                    JOptionPane.showMessageDialog(containerPane, "Job posting has been added.");
                 } else {
                     JOptionPane.showMessageDialog(containerPane, "One or more fields have illegal input.");
                 }
             }
         });
-
         return submit;
+    }
+
+    private void addJobPosting(Optional<String[]> defaultFields, Object[] mandatoryFields) {
+        if (!defaultFields.isPresent()) {
+            hrBackend.implementJobPosting(selectedJP, mandatoryFields);
+        } else {
+            hrBackend.addJobPosting(mandatoryFields, defaultFields.get());
+        }
+        JOptionPane.showMessageDialog(containerPane, "Job posting has been added.");
+    }
+
+    private void updateJobPosting(Object[] mandatoryFields) {
+        hrBackend.updateJobPosting((BranchJobPosting) selectedJP, mandatoryFields);
+        JOptionPane.showMessageDialog(containerPane, "Job posting has been updated.");
     }
 
     private Optional<String[]> getDefaultFields() {
         String jobTitleText = ((JTextComponent) ((JComboBox) entryBoxes.get(0)).getEditor().getEditorComponent()).getText();
-        System.out.println(jobTitleText);
         if (this.companyJPMap.containsKey(jobTitleText)) {
             return Optional.empty();
         }
+        this.setAllSelectedAndInputtedItems(0, extraDocumentsEntry, documentInputInstructions);
+        this.setAllSelectedAndInputtedItems(1, extraTagsEntry, tagsInputInstructions);
         return Optional.of(new String[]{jobTitleText,  // title
                 ((JTextField) entryBoxes.get(1)).getText(),  // field
                 ((JTextArea) entryBoxes.get(2)).getText(),   // description
-                ((JTextArea) entryBoxes.get(3)).getText(),   // documents
-                ((JTextArea) entryBoxes.get(4)).getText(),   // tags
+                (this.fullOptionalSelectionInput.get(0)),   // documents
+                (this.fullOptionalSelectionInput.get(1)),   // tags
         });
     }
 
@@ -406,7 +476,7 @@ class HRAddPostingForm extends HRPanel {
 
         if (!this.hrBackend.getToday().isBefore(((LocalDate) mandatoryFields[1]))) {
             valid = false;
-        } else if (((LocalDate) mandatoryFields[2]).isBefore(((LocalDate) mandatoryFields[1]))) {
+        } else if (!((LocalDate) mandatoryFields[2]).isAfter(((LocalDate) mandatoryFields[1]))) {
             valid = false;
         }
 

@@ -2,10 +2,7 @@ package GUIClasses.HRInterface;
 
 import ApplicantStuff.Applicant;
 import ApplicantStuff.JobApplication;
-import CompanyStuff.HRCoordinator;
-import CompanyStuff.Interview;
-import CompanyStuff.Interviewer;
-import CompanyStuff.JobApplicationGrader;
+import CompanyStuff.*;
 import CompanyStuff.JobPostings.BranchJobPosting;
 import CompanyStuff.JobPostings.BranchJobPostingManager;
 import CompanyStuff.JobPostings.CompanyJobPosting;
@@ -39,13 +36,6 @@ class HRBackend {
     int[] getTodayComponents() {
         return new int[]{this.getToday().getYear(), this.getToday().getMonthValue(), this.getToday().getDayOfMonth()};
     }
-
-//    /**
-//     * * Get the task that the HR Coordinator must accomplish at this moment for this job posting.
-//     */
-//    int getTaskForJobPosting(BranchJobPosting jobPosting) {
-//        return jobPosting.getInterviewManager().getHrTask();
-//    }
 
     /**
      * Gets an array list of branch job postings that are under review for first round of interviews.
@@ -108,6 +98,13 @@ class HRBackend {
         LocalDate applicationCloseDate = (LocalDate) jobPostingFields[1];
         LocalDate referenceCloseDate = (LocalDate) jobPostingFields[2];
         this.hr.implementJobPosting(cjp, numPositions, jobAppSystem.getToday(), applicationCloseDate, referenceCloseDate);
+    }
+
+    void updateJobPosting(BranchJobPosting jobPosting, Object[] jobPostingFields) {
+        int numPositions = (int) jobPostingFields[0];
+        LocalDate applicationCloseDate = (LocalDate) jobPostingFields[1];
+        LocalDate referenceCloseDate = (LocalDate) jobPostingFields[2];
+        this.hr.updateJobPosting(jobPosting, numPositions, applicationCloseDate, referenceCloseDate);
     }
 
     /**
@@ -175,25 +172,14 @@ class HRBackend {
         return jobAppGrader.getSortedJobApps();
     }
 
-//    /* *
-//     * Checks whether this job application has been rejected.
-//     *
-//     * @param jobApplication The job application in question.
-//     * @return true iff this job application has been rejected.
-//     */
-//    boolean isRejected(JobApplication jobApplication) {
-//        return jobApplication.getJobPosting().getInterviewManager().getApplicationsRejected().contains(jobApplication);
-//    }
-
     /**
      * Reject the list of applications for first round.
      *
      * @param jobApps   The job applications NOT getting interviews.
      */
     void rejectApplicationForFirstRound(ArrayList<JobApplication> jobApps) {
-        for (JobApplication app : jobApps) {
-            app.getJobPosting().getInterviewManager().reject(app);
-        }
+        BranchJobPosting jobPosting = jobApps.get(0).getJobPosting();
+        jobPosting.getInterviewManager().reject(jobApps);
     }
 
 
@@ -252,9 +238,12 @@ class HRBackend {
         jobPosting.closeJobPostingNoApplicationsInConsideration();
     }
 
-    void extendJobPostingDeadlines(BranchJobPosting jobPosting, LocalDate newApplicantCloseDate,
-                                   LocalDate newReferenceCloseDate) {
-        jobPosting.extendCloseDates(newApplicantCloseDate, newReferenceCloseDate);
+    ArrayList<BranchJobPosting> getJPThatCanBeUpdated() {
+        BranchJobPostingManager jpm = this.hr.getBranch().getJobPostingManager();
+        ArrayList<BranchJobPosting> jobPostingsThatCanBeUpdated = new ArrayList<>();
+        jobPostingsThatCanBeUpdated.addAll(jpm.getOpenJobPostings(this.jobAppSystem.getToday()));
+        jobPostingsThatCanBeUpdated.addAll(jpm.getJobPostingsThatNeedDeadlineExtensions(this.jobAppSystem.getToday()));
+        return jobPostingsThatCanBeUpdated;
     }
 
 }

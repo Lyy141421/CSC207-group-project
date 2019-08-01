@@ -152,10 +152,10 @@ class HRViewPosting extends HRPanel {
             removeFromJPLists(selectedTitle);
         }
         HRViewApp appPanel = new HRViewApp(parent, hrBackend, getTitleToAppMap(appsUnderSelectedJP), this.getPreviousPanelKey(), mode);
-        if (parent.getComponents().length > 6) {
-            parent.remove(6);
+        if (parent.getComponents().length > 7) {
+            parent.remove(7);
         }
-        parent.add(appPanel, HRPanel.APPLICATION);
+        parent.add(appPanel, HRPanel.APPLICATION, 7);
         ((CardLayout) parent.getLayout()).show(parent, HRPanel.APPLICATION);
     }
 

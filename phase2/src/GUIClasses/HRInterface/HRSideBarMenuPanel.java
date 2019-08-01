@@ -50,21 +50,28 @@ class HRSideBarMenuPanel extends JPanel {
                 ((CardLayout) cards.getLayout()).show(cards, HRPanel.ADD_POSTING);
             }
         });
-        fullMenu.put("5. Browse Job Postings", new ActionListener() {
+        fullMenu.put("5. Update Job Posting", new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ((UserPanel) cards.getParent()).refresh();
+                ((CardLayout) cards.getLayout()).show(cards, HRPanel.UPDATE_POSTING);
+            }
+        });
+        fullMenu.put("6. Browse Job Postings", new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 ((UserPanel) cards.getParent()).refresh();
                 ((CardLayout) cards.getLayout()).show(cards, HRPanel.BROWSE_POSTINGS);
             }
         });
-        fullMenu.put("6. Search applicant", new ActionListener() {
+        fullMenu.put("7. Search applicant", new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 ((UserPanel) cards.getParent()).refresh();
                 ((CardLayout) cards.getLayout()).show(cards, HRPanel.SEARCH_APPLICANT);
             }
         });
-        fullMenu.put("7. Logout", logoutActionListener);
+        fullMenu.put("8. Logout", logoutActionListener);
         return fullMenu;
     }
 }
