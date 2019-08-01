@@ -248,4 +248,13 @@ class HRBackend {
         return jobApp.getAllInterviewNotesForApplication();
     }
 
+    void closeJobPostingNotFilled(BranchJobPosting jobPosting) {
+        jobPosting.closeJobPostingNoApplicationsInConsideration();
+    }
+
+    void extendJobPostingDeadlines(BranchJobPosting jobPosting, LocalDate newApplicantCloseDate,
+                                   LocalDate newReferenceCloseDate) {
+        jobPosting.extendCloseDates(newApplicantCloseDate, newReferenceCloseDate);
+    }
+
 }

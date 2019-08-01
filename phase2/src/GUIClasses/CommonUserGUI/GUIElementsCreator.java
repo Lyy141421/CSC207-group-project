@@ -89,14 +89,14 @@ public class GUIElementsCreator {
         textArea.addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) {
-                if (textArea.getText().equals(text)) {
+                if (textArea.getText().equals(text) && isEditable) {
                     textArea.setText("");
                 }
             }
 
             @Override
             public void focusLost(FocusEvent e) {
-                if (textArea.getText().equals("")) {
+                if (textArea.getText().equals("") && isEditable) {
                     textArea.setText(text);
                 }
             }

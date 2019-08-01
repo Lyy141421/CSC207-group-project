@@ -33,6 +33,8 @@ abstract class SelectionDialog extends JDialog{
         this.addCancelButton();
         this.addPrompt();
 
+        this.setSize(500, 350);
+        this.setResizable(false);
         this.setVisible(true);
     }
 
@@ -46,7 +48,7 @@ abstract class SelectionDialog extends JDialog{
 
     private void addApplicants(ArrayList<JobApplication> applications, int toSelect) {
         c.gridx = -1;
-        c.gridy = 0;
+        c.gridy = 1;
         for (int i=0; i<applications.size(); i++) {
             JCheckBox checkBox = new JCheckBox(applications.get(i).getApplicant().getLegalName());
             checkBoxToAppMap.put(checkBox, applications.get(i));

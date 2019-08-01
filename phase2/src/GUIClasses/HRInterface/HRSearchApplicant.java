@@ -34,7 +34,9 @@ class HRSearchApplicant extends HRPanel {
         JPanel mainTitle = new GUIElementsCreator().createLabelPanel("Search for an applicant", 20, true);
         mainTitle.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         JPanel manualSearchTitle = new GUIElementsCreator().createLabelPanel("Manual search", 17, true);
+        manualSearchTitle.setBorder(BorderFactory.createEmptyBorder(20, 20, 0, 20));
         JPanel listSearchTitle = new GUIElementsCreator().createLabelPanel("Search from list", 17, true);
+        listSearchTitle.setBorder(BorderFactory.createEmptyBorder(20, 20, 0, 20));
         this.setSearchPanel();
 
         JPanel[] panels = new JPanel[]{mainTitle, manualSearchTitle, searchPanel, listSearchTitle,

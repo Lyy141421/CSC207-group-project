@@ -34,8 +34,8 @@ class HRViewApp extends HRPanel {
     private JButton selectButton;
     private JobApplication jobAppSelected;
 
-    JButton returnButton;
-    String previousPanel;
+    private JButton returnButton;
+    private String previousPanel;
 
 
     //mode: 0 view only
@@ -185,8 +185,7 @@ class HRViewApp extends HRPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JFrame frame = (JFrame) SwingUtilities.windowForComponent(parent);
-                JDialog popUp = new HiringSelectionDialog(frame, hrBackend, new ArrayList<>(currApps.values()), returnButton);
-                add(popUp);
+                new HiringSelectionDialog(frame, hrBackend, new ArrayList<>(currApps.values()), returnButton);
             }
         });
     }
@@ -202,7 +201,7 @@ class HRViewApp extends HRPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JFrame frame = (JFrame) SwingUtilities.windowForComponent(parent);
-                JDialog popUp = new GradingFilterDialog(frame, hrBackend, new ArrayList<>(currApps.values()), returnButton);
+                new GradingFilterDialog(frame, hrBackend, new ArrayList<>(currApps.values()), returnButton);
             }
         });
     }

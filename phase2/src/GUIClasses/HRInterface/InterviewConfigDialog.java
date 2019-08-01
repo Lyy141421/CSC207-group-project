@@ -13,20 +13,20 @@ import java.util.ArrayList;
 class InterviewConfigDialog extends JDialog {
 
     HRBackend hrBackend;
-    BranchJobPosting branchJobPosting;
-    JFrame parent;
+    private BranchJobPosting branchJobPosting;
+    private JFrame parent;
 
-    JDialog container = this;
+    private JDialog container = this;
 
     private int rounds = 0;
 
-    ArrayList<JRadioButton> oneOnOneButtonList = new ArrayList<>();
-    ArrayList<JTextField> descriptionInputList = new ArrayList<>();
+    private ArrayList<JRadioButton> oneOnOneButtonList = new ArrayList<>();
+    private ArrayList<JTextField> descriptionInputList = new ArrayList<>();
 
-    JPanel formatPanel = new JPanel();
-    JPanel buttonPanel = new JPanel();
+    private JPanel formatPanel = new JPanel();
+    private JPanel buttonPanel = new JPanel();
 
-    JButton returnButton;
+    private JButton returnButton;
 
     InterviewConfigDialog(JFrame parent, HRBackend hrBackend, BranchJobPosting branchJobPosting, JButton returnButton) {
         super(parent, "Set interview formats");
@@ -44,9 +44,11 @@ class InterviewConfigDialog extends JDialog {
         this.addSelectPanel();
         this.addNewRoundButton();
         this.createSubmitButton();
+        this.setSize(new Dimension(500, 350));
+        this.setResizable(false);
     }
 
-    void addSelectPanel() {
+    private void addSelectPanel() {
         this.rounds++;
 
         JPanel selectPanel = new JPanel(new GridBagLayout());
@@ -70,11 +72,11 @@ class InterviewConfigDialog extends JDialog {
 
         c.gridx = 0;
         c.gridy = 1;
-        JLabel descriptionLabel = new JLabel("Description");
+        JLabel descriptionLabel = new JLabel("Description ");
         selectPanel.add(descriptionLabel, c);
         c.gridx++;
         c.gridwidth = 2;
-        JTextField descriptionInput = new JTextField();
+        JTextField descriptionInput = new JTextField(null, 30);
         this.descriptionInputList.add(descriptionInput);
         selectPanel.add(descriptionInput, c);
 
@@ -83,7 +85,8 @@ class InterviewConfigDialog extends JDialog {
         this.setVisible(true);
     }
 
-    void addNewRoundButton() {
+    private void addNewRoundButton() {
+        JPanel buttonPanel = new JPanel();
         JButton newRoundButton = new JButton("Add one round");
         newRoundButton.addActionListener(new ActionListener() {
             @Override
@@ -92,10 +95,11 @@ class InterviewConfigDialog extends JDialog {
             }
         });
 
-        this.buttonPanel.add(newRoundButton, BorderLayout.CENTER);
+        buttonPanel.add(newRoundButton);
+        this.buttonPanel.add(buttonPanel, BorderLayout.CENTER);
     }
 
-    void createSubmitButton() {
+    private void createSubmitButton() {
         JPanel submitPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         JButton submitButton = new JButton("Submit");
         submitButton.addActionListener(new ActionListener() {
@@ -112,7 +116,7 @@ class InterviewConfigDialog extends JDialog {
         this.buttonPanel.add(submitPanel, BorderLayout.SOUTH);
     }
 
-    ArrayList<Boolean> getIsOneOnOne() {
+    private ArrayList<Boolean> getIsOneOnOne() {
         ArrayList<Boolean> isOneOnOne = new ArrayList<>();
         for (JRadioButton oneOnOne: this.oneOnOneButtonList) {
             isOneOnOne.add(oneOnOne.isSelected());
@@ -121,7 +125,7 @@ class InterviewConfigDialog extends JDialog {
         return isOneOnOne;
     }
 
-    ArrayList<String> getDescriptions() {
+    private ArrayList<String> getDescriptions() {
         ArrayList<String> descriptions = new ArrayList<>();
         for (JTextField description: this.descriptionInputList) {
             descriptions.add(description.getText());

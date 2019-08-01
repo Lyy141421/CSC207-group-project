@@ -24,7 +24,7 @@ class InterviewSelectionDialog extends SelectionDialog {
             @Override
             public void actionPerformed(ActionEvent e) {
                 hrBackend.rejectApplicationForFirstRound(getApplicantsDeselected());
-                JDialog popUp = new InterviewConfigDialog(parent, hrBackend, branchJobPosting, returnButton);
+                new InterviewConfigDialog(parent, hrBackend, branchJobPosting, returnButton);
                 dispose();
             }
         });

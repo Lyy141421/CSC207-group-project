@@ -76,12 +76,24 @@ public class BranchJobPosting extends CompanyJobPosting {
     }
 
 
-    // === Setter ===
+    // === Setters ===
     public void setFilled() {
         this.filled = true;
+        //TODO notify HR
     }
 
     // === Other methods ===
+
+    /**
+     * Extend the close dates for this job posting
+     *
+     * @param newApplicantCloseDate The new applicant close date.
+     * @param newReferenceCloseDate The new reference close date.
+     */
+    public void extendCloseDates(LocalDate newApplicantCloseDate, LocalDate newReferenceCloseDate) {
+        this.applicantCloseDate = newApplicantCloseDate;
+        this.referenceCloseDate = newReferenceCloseDate;
+    }
 
     /**
      * Check whether this job posting has had any applications submitted.
@@ -160,7 +172,7 @@ public class BranchJobPosting extends CompanyJobPosting {
     /**
      * Create an interview manager for this job posting after this branch posting has been closed for further applications.
      */
-    public void createInterviewManager() {
+    void createInterviewManager() {
         InterviewManager interviewManager = new InterviewManager(this,
                 (ArrayList<JobApplication>) this.getJobApplications().clone());
         this.interviewManager = interviewManager;
@@ -217,6 +229,15 @@ public class BranchJobPosting extends CompanyJobPosting {
      */
     public void removeJobApplication(JobApplication jobApplication) {
         this.jobApplications.remove(jobApplication);
+    }
+
+    /**
+     * Close the job posting with no
+     */
+    public void closeJobPostingNoApplicationsInConsideration() {
+        this.setFilled();
+        this.numPositions = 0;
+        //TODO notify HR
     }
 
     /**
