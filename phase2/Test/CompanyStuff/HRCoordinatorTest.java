@@ -1,9 +1,7 @@
 package CompanyStuff;
 
-import CompanyStuff.JobPostings.BranchJobPosting;
-import CompanyStuff.JobPostings.CompanyJobPosting;
-import NotificationSystem.Notification;
 import NotificationSystem.NotificationManager;
+import UsersAndJobObjects.JobPosting;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;

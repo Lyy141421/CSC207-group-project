@@ -87,7 +87,7 @@ public class DataLoaderAndStorer {
      * Load the FSA hash map (for location purposes).
      *
      * @return the hash map loaded.
-     * // TODO the FAS hashmap should be a field in job application system
+     *
      */
     public static HashMap<String, String> loadFSAHashMap() {
         HashMap map = new HashMap();
