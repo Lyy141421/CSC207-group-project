@@ -121,6 +121,7 @@ class InterviewerSchedule extends AbstractInterviewerPanel {
         int[] tomorrow = this.interviewerInterface.getTomorrow();
         UtilDateModel dateModel = new UtilDateModel();
         dateModel.setDate(tomorrow[0], tomorrow[1] - 1, tomorrow[2]);
+        dateModel.setSelected(true);
         JDatePanelImpl datePanel = new JDatePanelImpl(dateModel);
         datePicker = new JDatePickerImpl(datePanel);
         selectDatePanel.add(datePicker);

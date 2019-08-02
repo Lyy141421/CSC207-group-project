@@ -33,7 +33,7 @@ public abstract class User implements Serializable, Observer {
     // The date the account was created
     private LocalDate dateCreated;
     // The Notification Manager
-    private NotificationManager notification_manager = new NotificationManager();
+    private NotificationManager notificationManager = new NotificationManager();
 
     // === Public methods ===
 
@@ -79,7 +79,7 @@ public abstract class User implements Serializable, Observer {
     }
 
     public NotificationManager getNotificationManager(){
-        return this.notification_manager;
+        return this.notificationManager;
     }
 
     // === Setters ===
@@ -113,28 +113,48 @@ public abstract class User implements Serializable, Observer {
 
     public abstract String[] getDisplayedProfileInformation();
 
+    /**
+     * The observer receiving something to observe
+     *
+     * @param obj - the object to be observed
+     */
     public void update(Object obj) {
         if(obj instanceof Notification){
             this.addNotification((Notification)obj);
         }
     }
 
+    /**
+     * Gets an ArrayList of All Notifications of this User
+     *
+     * @return - ArrayList of Notifications
+     */
     public ArrayList<Notification> getAllNotifications(){
-        return this.notification_manager.getNotifications();
+        return this.notificationManager.getNotifications();
     }
 
+    /**
+     * Adds a Notification to this user
+     *
+     * @param notification The Notification to add
+     */
     public void addNotification(Notification notification){
         this.getNotificationManager().add(notification);
     }
 
+    /**
+     * Removes a Notification from this user
+     *
+     * @param notification The Notification to remove
+     */
     public void removeNotification(Notification notification){
         this.getNotificationManager().remove(notification);
     }
-
+    /**
+     * Removes all Notifications from this user
+     */
     public void removeAllNotifications(){
-        for(Notification notification : (ArrayList<Notification>)this.getAllNotifications().clone()){
-            removeNotification(notification);
-        }
+        this.getNotificationManager().getNotifications().clear();
     }
 
     @Override

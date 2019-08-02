@@ -27,7 +27,7 @@ class GroupInterviewDialog extends JDialog {
 
     JSpinner daysSpinner;
     JComboBox<String> coordinatorSelection;
-    HashMap<Interviewer, JCheckBox> interviewerToCheckBoxMap;
+    HashMap<Interviewer, JCheckBox> interviewerToCheckBoxMap = new HashMap<>();
 
     GroupInterviewDialog(JFrame parent, HRBackend hrBackend, BranchJobPosting branchJobPosting, HRViewPosting postingPanel) {
         super(parent, "Select interviewers for group interview");

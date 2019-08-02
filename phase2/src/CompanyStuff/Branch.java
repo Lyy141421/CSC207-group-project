@@ -128,7 +128,8 @@ public class Branch implements Serializable {
     // === Other methods ===
 
     /**
-     * Find the interviewer with the least amount of interviews in this job field.
+     * Find the interviewer with the least amount of interviews in this job field. Return null if there are no interviewers
+     * in that field.
      *
      * @param jobField The job field of the interviewer to be found.
      * @return the interviewer with the least amount of interviews in this field.

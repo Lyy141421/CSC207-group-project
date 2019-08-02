@@ -4,6 +4,7 @@ import ApplicantStuff.Applicant;
 import ApplicantStuff.JobApplication;
 import CompanyStuff.JobPostings.BranchJobPostingManager;
 import DocumentManagers.CompanyDocumentManager;
+import DocumentManagers.DocumentManager;
 import DocumentManagers.DocumentManagerFactory;
 import FileLoadingAndStoring.DataLoaderAndStorer;
 import CompanyStuff.JobPostings.BranchJobPosting;
@@ -27,14 +28,14 @@ public class Company implements Serializable {
     // The list of company job postings for this company
     private ArrayList<CompanyJobPosting> companyJobPostings;
     // The document manager for this branch
-    private CompanyDocumentManager documentManager;
+    private DocumentManager documentManager;
 
     // === Constructor ===
     public Company(String name) {
         this.name = name;
         this.branches = new ArrayList<>();
         this.companyJobPostings = new ArrayList<>();
-        this.documentManager = new DocumentManagerFactory().createCompanyDocumentManager(this);
+        this.documentManager = new DocumentManagerFactory().createDocumentManager(this);
     }
 
     // === Getters ===
@@ -55,7 +56,7 @@ public class Company implements Serializable {
     }
 
     public CompanyDocumentManager getDocumentManager() {
-        return this.documentManager;
+        return (CompanyDocumentManager) this.documentManager;
     }
 
     /**
@@ -152,6 +153,11 @@ public class Company implements Serializable {
             branchJobPostingManager.updateJobPostingsClosedForApplications(today);
             branchJobPostingManager.updateJobPostingsClosedForReferences(today);
             branchJobPostingManager.updateAllClosedUnfilledJobPostings(today);
+            for (BranchJobPosting branchJobPosting : branchJobPostingManager.getBranchJobPostings()) {
+                if (branchJobPosting.isClosedForApplications(today)) {
+                    branchJobPosting.notifyAllJobPostings(branch);
+                }
+            }
         }
     }
 

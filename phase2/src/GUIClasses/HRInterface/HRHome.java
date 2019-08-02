@@ -70,7 +70,7 @@ class HRHome extends HRPanel {
             data[i] = jobPostings.get(i).getCategoryValuesForHR();
         }
 
-        return new GUIElementsCreator().createTablePanel(BranchJobPosting.getCategoryLabelsForHR(), data);
+        return new GUIElementsCreator().createTablePanel(BranchJobPosting.CATEGORY_LABELS_FOR_HR, data);
     }
 
     /**

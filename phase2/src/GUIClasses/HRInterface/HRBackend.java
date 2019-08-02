@@ -2,10 +2,7 @@ package GUIClasses.HRInterface;
 
 import ApplicantStuff.Applicant;
 import ApplicantStuff.JobApplication;
-import CompanyStuff.HRCoordinator;
-import CompanyStuff.Interview;
-import CompanyStuff.Interviewer;
-import CompanyStuff.JobApplicationGrader;
+import CompanyStuff.*;
 import CompanyStuff.JobPostings.BranchJobPosting;
 import CompanyStuff.JobPostings.BranchJobPostingManager;
 import CompanyStuff.JobPostings.CompanyJobPosting;
@@ -36,24 +33,18 @@ class HRBackend {
         return this.jobAppSystem.getToday();
     }
 
-    int[] getTodayComponents() {
-        return new int[]{this.getToday().getYear(), this.getToday().getMonthValue(), this.getToday().getDayOfMonth()};
+    int[] getTomorrowComponents() {
+        LocalDate tomorrow = this.getToday().plusDays(1);
+        return new int[]{tomorrow.getYear(), tomorrow.getMonthValue(), tomorrow.getDayOfMonth()};
     }
-
-//    /**
-//     * * Get the task that the HR Coordinator must accomplish at this moment for this job posting.
-//     */
-//    int getTaskForJobPosting(BranchJobPosting jobPosting) {
-//        return jobPosting.getInterviewManager().getHrTask();
-//    }
 
     /**
      * Gets an array list of branch job postings that are under review for first round of interviews.
      * @return the array list of branch job postings.
      */
     ArrayList<BranchJobPosting> getJPToReview() {
-        BranchJobPostingManager JPManager = this.hr.getBranch().getJobPostingManager();
-        return JPManager.getJobPostingsRecentlyClosedForReferences(this.jobAppSystem.getToday());
+        BranchJobPostingManager jpManager = this.hr.getBranch().getJobPostingManager();
+        return jpManager.getJobPostingsRecentlyClosedForReferences(this.jobAppSystem.getToday());
     }
 
     /**
@@ -61,8 +52,8 @@ class HRBackend {
      * @return the array list of branch job postings.
      */
     ArrayList<BranchJobPosting> getJPToSchedule() {
-        BranchJobPostingManager JPManager = this.hr.getBranch().getJobPostingManager();
-        return JPManager.getJobPostingsThatNeedGroupInterviewsScheduled(this.jobAppSystem.getToday());
+        BranchJobPostingManager jpManager = this.hr.getBranch().getJobPostingManager();
+        return jpManager.getJobPostingsThatNeedGroupInterviewsScheduled(this.jobAppSystem.getToday());
     }
 
     /**
@@ -70,8 +61,8 @@ class HRBackend {
      * @return the array list of branch job postings.
      */
     ArrayList<BranchJobPosting> getJPToHire() {
-        BranchJobPostingManager JPManager = this.hr.getBranch().getJobPostingManager();
-        return JPManager.getJobPostingsThatNeedHRSelectionForHiring(this.jobAppSystem.getToday());
+        BranchJobPostingManager jpManager = this.hr.getBranch().getJobPostingManager();
+        return jpManager.getJobPostingsThatNeedHRSelectionForHiring(this.jobAppSystem.getToday());
     }
 
     /**
@@ -79,20 +70,28 @@ class HRBackend {
      *
      * @return the array list of all branch job postings.
      */
-    ArrayList<BranchJobPosting> getAllJP() {
-        BranchJobPostingManager JPManager = this.hr.getBranch().getJobPostingManager();
-        return JPManager.getBranchJobPostings();
+    ArrayList<BranchJobPosting> getAllUnfilledJP() {
+        BranchJobPostingManager jpManager = this.hr.getBranch().getJobPostingManager();
+        return jpManager.getAllUnfilledJobPostings();
     }
 
 
     /**
-     * Add a job posting for this company.
+     * Add a job posting to the branch and check if there is an interviewer for that field.
      * @param mandatoryFields  The fields that must be entered regardless of method of adding JP.
      * @param defaultFields The fields that are set by default in company posting mode.
+     * @param isForced Whether or not the hr is forcing the add, that is, they already know there is no
+     *                 interviewer for that field
+     * @return true iff there is an interviewer for the field that this job posting is being added to.
      */
-    void addJobPosting(Object[] mandatoryFields, String[] defaultFields) {
+    boolean addJobPosting(Object[] mandatoryFields, String[] defaultFields, boolean isForced) {
         String title = defaultFields[0];
         String field = defaultFields[1];
+        if (!isForced) {
+            if (!this.hr.getBranch().hasInterviewerForField(field)) {
+                return false;
+            }
+        }
         String description = defaultFields[2];
         ArrayList<String> requirements = new ArrayList<>(Arrays.asList(defaultFields[3].split(";")));
         ArrayList<String> tags = new ArrayList<>(Arrays.asList(defaultFields[4].split(";")));
@@ -101,13 +100,27 @@ class HRBackend {
         LocalDate referenceCloseDate = (LocalDate) mandatoryFields[2];
         this.hr.addJobPosting(title, field, description, requirements, tags, numPositions, jobAppSystem.getToday(), applicationCloseDate,
                 referenceCloseDate);
+        return true;
     }
 
-    void implementJobPosting(CompanyJobPosting cjp, Object[] jobPostingFields) {
+    boolean implementJobPosting(CompanyJobPosting cjp, Object[] jobPostingFields, boolean isForced) {
+        if (!isForced) {
+            if (!this.hr.getBranch().hasInterviewerForField(cjp.getField())) {
+                return false;
+            }
+        }
         int numPositions = (int) jobPostingFields[0];
         LocalDate applicationCloseDate = (LocalDate) jobPostingFields[1];
         LocalDate referenceCloseDate = (LocalDate) jobPostingFields[2];
         this.hr.implementJobPosting(cjp, numPositions, jobAppSystem.getToday(), applicationCloseDate, referenceCloseDate);
+        return true;
+    }
+
+    void updateJobPosting(BranchJobPosting jobPosting, Object[] jobPostingFields) {
+        int numPositions = (int) jobPostingFields[0];
+        LocalDate applicationCloseDate = (LocalDate) jobPostingFields[1];
+        LocalDate referenceCloseDate = (LocalDate) jobPostingFields[2];
+        this.hr.updateJobPosting(jobPosting, numPositions, applicationCloseDate, referenceCloseDate);
     }
 
     /**
@@ -175,25 +188,13 @@ class HRBackend {
         return jobAppGrader.getSortedJobApps();
     }
 
-//    /* *
-//     * Checks whether this job application has been rejected.
-//     *
-//     * @param jobApplication The job application in question.
-//     * @return true iff this job application has been rejected.
-//     */
-//    boolean isRejected(JobApplication jobApplication) {
-//        return jobApplication.getJobPosting().getInterviewManager().getApplicationsRejected().contains(jobApplication);
-//    }
-
     /**
      * Reject the list of applications for first round.
      *
      * @param jobApps   The job applications NOT getting interviews.
      */
-    void rejectApplicationForFirstRound(ArrayList<JobApplication> jobApps) {
-        for (JobApplication app : jobApps) {
-            app.getJobPosting().getInterviewManager().reject(app);
-        }
+    void rejectApplicationForFirstRound(BranchJobPosting branchJobPosting, ArrayList<JobApplication> jobApps) {
+        branchJobPosting.getInterviewManager().rejectApplicationsForFirstRound(jobApps);
     }
 
 
@@ -248,13 +249,12 @@ class HRBackend {
         return jobApp.getAllInterviewNotesForApplication();
     }
 
-    void closeJobPostingNotFilled(BranchJobPosting jobPosting) {
-        jobPosting.closeJobPostingNoApplicationsInConsideration();
+    ArrayList<CompanyJobPosting> getCompanyJobPostingsThatCanBeExtended() {
+        return this.hr.getBranch().getJobPostingManager().getExtendableCompanyJobPostings();
     }
 
-    void extendJobPostingDeadlines(BranchJobPosting jobPosting, LocalDate newApplicantCloseDate,
-                                   LocalDate newReferenceCloseDate) {
-        jobPosting.extendCloseDates(newApplicantCloseDate, newReferenceCloseDate);
+    ArrayList<BranchJobPosting> getJPThatCanBeUpdated() {
+        return this.hr.getBranch().getJobPostingManager().getUpdatableJobPostings(this.jobAppSystem.getToday());
     }
 
 }

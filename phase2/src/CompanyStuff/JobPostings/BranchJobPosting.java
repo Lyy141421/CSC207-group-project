@@ -10,10 +10,15 @@ import NotificationSystem.Notification;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-public class BranchJobPosting extends CompanyJobPosting {
+public class BranchJobPosting extends CompanyJobPosting implements JobPostingObservable{
 
     // === Class variables ===
     static final long serialVersionUID = 1L;
+    // Category labels for Reference
+    public static final String[] CATEGORY_LABELS_FOR_REFERENCE = new String[]{"Title", "Field", "Description",
+            "Company/Branch", "Reference deadline"};
+    // Category labels for HR
+    public static final String[] CATEGORY_LABELS_FOR_HR = new String[]{"Title", "Field"};
 
     // === Instance variables ===
     private int numPositions;
@@ -82,17 +87,24 @@ public class BranchJobPosting extends CompanyJobPosting {
         //TODO notify HR
     }
 
+    //TODO: remove after testing
+    public void setInterviewManager(InterviewManager interviewManager) {
+        this.interviewManager = interviewManager;
+    }
+
     // === Other methods ===
 
     /**
-     * Extend the close dates for this job posting
-     *
-     * @param newApplicantCloseDate The new applicant close date.
-     * @param newReferenceCloseDate The new reference close date.
+     * Update the fields of this job posting.
+     * @param numPositions  The number of positions for this job posting.
+     * @param applicationCloseDate  The application close date.
+     * @param referenceCloseDate    The reference close date.
      */
-    public void extendCloseDates(LocalDate newApplicantCloseDate, LocalDate newReferenceCloseDate) {
-        this.applicantCloseDate = newApplicantCloseDate;
-        this.referenceCloseDate = newReferenceCloseDate;
+    public void updateFields(int numPositions,
+                             LocalDate applicationCloseDate, LocalDate referenceCloseDate) {
+        this.numPositions = numPositions;
+        this.applicantCloseDate = applicationCloseDate;
+        this.referenceCloseDate = referenceCloseDate;
     }
 
     /**
@@ -178,19 +190,19 @@ public class BranchJobPosting extends CompanyJobPosting {
         this.interviewManager = interviewManager;
     }
 
-    /**
-     * Check whether this job posting has had any interviews.
-     *
-     * @return true iff this job posting has had an interview.
-     */
-    public boolean hasInterviews() {
-        for (JobApplication jobApp : this.getJobApplications()) {
-            if (!jobApp.getInterviews().isEmpty()) {
-                return true;
-            }
-        }
-        return false;
-    }
+//    /**
+//     * Check whether this job posting has had any interviews.
+//     *
+//     * @return true iff this job posting has had an interview.
+//     */
+//    public boolean hasInterviews() {
+//        for (JobApplication jobApp : this.getJobApplications()) {
+//            if (!jobApp.getInterviews().isEmpty()) {
+//                return true;
+//            }
+//        }
+//        return false;
+//    }
 
     /**
      * Advance the round of interviews for this job posting.
@@ -201,7 +213,7 @@ public class BranchJobPosting extends CompanyJobPosting {
         }
         InterviewManager interviewManager = this.getInterviewManager();
         if (interviewManager.getCurrentRound() < interviewManager.getFinalRoundNumber()) {
-            if (interviewManager.currentRoundIsOver()) {
+            if (!interviewManager.interviewProcessHasBegun() || interviewManager.currentRoundIsOver()) {
                 interviewManager.advanceRound();
                 this.notifyAllObservers(new Notification("Advance to Next Round",
                         "You have advanced to the next round in " + super.getTitle()));
@@ -209,18 +221,18 @@ public class BranchJobPosting extends CompanyJobPosting {
         }
     }
 
-    /**
-     * Get a list of emails of applicants rejected.
-     *
-     * @return a list of emails of applicants rejected.
-     */
-    public ArrayList<String> getEmailsForRejectList() {
-        ArrayList<String> emails = new ArrayList<>();
-        for (JobApplication jobApp : this.jobApplications) {
-            emails.add(jobApp.getApplicant().getEmail());
-        }
-        return emails;
-    }
+//    /**
+//     * Get a list of emails of applicants rejected.
+//     *
+//     * @return a list of emails of applicants rejected.
+//     */
+//    public ArrayList<String> getEmailsForRejectList() {
+//        ArrayList<String> emails = new ArrayList<>();
+//        for (JobApplication jobApp : this.jobApplications) {
+//            emails.add(jobApp.getApplicant().getEmail());
+//        }
+//        return emails;
+//    }
 
     /**
      * Remove this job application for this job posting.
@@ -241,24 +253,6 @@ public class BranchJobPosting extends CompanyJobPosting {
     }
 
     /**
-     * Get the category names for this job posting.
-     *
-     * @return a list of category names for this job posting for a reference.
-     */
-    public static String[] getCategoryLabelsForReference() {
-        return new String[]{"Title", "Field", "Description", "Company/Branch", "Reference deadline"};
-    }
-
-    /**
-     * Get the category names for this job posting.
-     *
-     * @return a list of category names for this job posting for a reference.
-     */
-    public static String[] getCategoryLabelsForHR() {
-        return new String[]{"Title", "Field"};
-    }
-
-    /**
      * Get the category values for this job posting for a reference.
      *
      * @return a list of category values for this job posting for a reference.
@@ -275,6 +269,24 @@ public class BranchJobPosting extends CompanyJobPosting {
     public String[] getCategoryValuesForReference() {
         return new String[]{this.getTitle(), this.getField(), this.getDescription(), this.getBranch().getName(),
                 this.getReferenceCloseDate().toString()};
+    }
+
+    /**
+     * Get a string representation of this job posting.
+     *
+     * @return a string representation of this job posting.
+     */
+    @Override
+    public String toString() {
+        String s = "Job ID: " + this.id + "\n\n";
+        s += "Title: " + this.getTitle() + "\n\n";
+        s += "Field: " + this.getField() + "\n\n";
+        s += "Description: " + this.getDescription() + "\n\n";
+        s += "Required Documents: " + this.getStringForList(this.getRequiredDocuments()) + "\n\n";
+        s += "Tags: " + this.getStringForList(this.getTags()) + "\n\n";
+        s += "Applicant close date: " + this.getApplicantCloseDate().toString() + "\n\n";
+        s += "Reference close date: " + this.getReferenceCloseDate().toString() + "\n\n";
+        return s;
     }
 
     @Override
@@ -297,5 +309,17 @@ public class BranchJobPosting extends CompanyJobPosting {
         for (JobApplication job_application : this.interviewManager.getApplicationsRejected()){
             this.detach(job_application.getApplicant());
         }
+    }
+
+    @Override
+    public void attachJobPosting(CompanyJobPosting companyJobPosting) {
+        if (!this.observerList.contains(companyJobPosting))
+            this.observerList.add(companyJobPosting);
+    }
+
+    @Override
+    public void notifyAllJobPostings(Branch branch) {
+        for (CompanyJobPosting companyJobPosting : observerList)
+            companyJobPosting.removeBranch(branch);
     }
 }

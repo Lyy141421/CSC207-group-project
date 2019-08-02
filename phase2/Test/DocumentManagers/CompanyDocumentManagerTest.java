@@ -26,7 +26,7 @@ class CompanyDocumentManagerTest {
     @Test
     void testConstructor() {
         Company company = new Company("CompanyTest");
-        CompanyDocumentManager companyDocumentManager = new DocumentManagerFactory().createCompanyDocumentManager(company);
+        CompanyDocumentManager companyDocumentManager = (CompanyDocumentManager) new DocumentManagerFactory().createDocumentManager(company);
         assertEquals(company.getName(), companyDocumentManager.getFolder().getName());
         companyDocumentManager.getFolder().delete();
     }

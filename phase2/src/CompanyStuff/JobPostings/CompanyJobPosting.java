@@ -3,6 +3,7 @@ package CompanyStuff.JobPostings;
 import CompanyStuff.Branch;
 import CompanyStuff.Company;
 import NotificationSystem.Observable;
+import NotificationSystem.Observer;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -14,7 +15,7 @@ public class CompanyJobPosting extends Observable implements Serializable {
     // The total number of job postings created
     private static int totalNumOfJobPostings;
     // The list of recommended documents for submission
-    public static String[] RECOMMENDED_DOCUMENTS = new String[]{"CV/Resume", "Cover letter", "Reference letter"};
+    public static String[] RECOMMENDED_DOCUMENTS = new String[]{"CV", "Cover letter", "Reference letter"};
     // The list of recommended tags
     public static String[] RECOMMENDED_TAGS = new String[]{"Computer science", "Bachelor's degree", "Prior work experience",
             "Team-oriented"};
@@ -50,7 +51,6 @@ public class CompanyJobPosting extends Observable implements Serializable {
         this.company = company;
         this.branches = new ArrayList<>();
         this.branches.add(branch);
-        this.company.addCompanyJobPosting(this);
     }
 
     // === Public methods ===
@@ -96,15 +96,55 @@ public class CompanyJobPosting extends Observable implements Serializable {
         this.branches.add(branch);
     }
 
-    public String getTagsString(){
-        return tags.toString().replace("[", "").replace("]", "").replace(", ", ";");
+    public void removeBranch(Branch branch) {
+        if (this.branches.contains(branch))
+            this.branches.remove(branch);
     }
 
-    public String getDocsString(){
-        return requiredDocuments.toString().replace("[", "").replace("]", "").replace(", ", ";");
+    private String getListComplementString(ArrayList<String> actualList, String[] recommendedList) {
+        ArrayList<String> listComplement = (ArrayList<String>) actualList.clone();
+        for (String item : recommendedList) {
+            for (String item2 : actualList) {
+                if (item2.equalsIgnoreCase(item)) {
+                    listComplement.remove(item2);
+                    break;
+                }
+            }
+        }
+        return listComplement.toString().replace("[", "").replace("]",
+                "").replace(", ", ";");
     }
 
-    private String getStringForList(ArrayList<String> list) {
+    public String getTagsStringNoRecommended() {
+        return this.getListComplementString(this.getTags(), CompanyJobPosting.RECOMMENDED_TAGS);
+    }
+
+    public String getDocsStringNoRecommended() {
+        return this.getListComplementString(this.getRequiredDocuments(), CompanyJobPosting.RECOMMENDED_DOCUMENTS);
+    }
+
+    private ArrayList<String> getListIntersection(ArrayList<String> actualList, String[] recommendedList) {
+        ArrayList<String> listIntersection = new ArrayList<>();
+        for (String item : recommendedList) {
+            for (String item2 : actualList) {
+                if (item.equalsIgnoreCase(item2)) {
+                    listIntersection.add(item);
+                    break;
+                }
+            }
+        }
+        return listIntersection;
+    }
+
+    public ArrayList<String> getRecommendedTagsUsed() {
+        return this.getListIntersection(this.getTags(), CompanyJobPosting.RECOMMENDED_TAGS);
+    }
+
+    public ArrayList<String> getRecommendedDocumentsUsed() {
+        return this.getListIntersection(this.getRequiredDocuments(), CompanyJobPosting.RECOMMENDED_DOCUMENTS);
+    }
+
+    String getStringForList(ArrayList<String> list) {
         String s = "";
         for (String item : list) {
             s += item + ", ";
@@ -153,7 +193,7 @@ public class CompanyJobPosting extends Observable implements Serializable {
         s += "Title: " + this.title + "\n\n";
         s += "Field: " + this.field + "\n\n";
         s += "Description: " + this.description + "\n\n";
-//        s += "Branches: " + branches + "\n";
+//        s += "Branches: " + branches + "\n";  // TODO this should be displayed for applicant no?
         s += "Required Documents: " + this.getStringForList(this.requiredDocuments) + "\n\n";
         s += "Tags: " + this.getStringForList(this.tags) + "\n\n";
         s += "Company: " + this.company.getName() + "\n\n";

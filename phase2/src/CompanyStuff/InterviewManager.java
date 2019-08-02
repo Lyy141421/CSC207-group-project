@@ -20,7 +20,7 @@ public class InterviewManager extends Observable implements Serializable {
     static final long serialVersionUID = 1L;
     // Integers that represent the task the HR Coordinator needs to accomplish
     private static final int DO_NOTHING = 0;
-    private static final int EXTEND_APPLICATION_DEADLINE = 1;
+    public static final int EXTEND_APPLICATION_DEADLINE = 1;
     public static final int SELECT_APPS_FOR_FIRST_ROUND = 2;
     public static final int SCHEDULE_GROUP_INTERVIEWS = 3;
     public static final int SELECT_APPS_TO_HIRE = 4;
@@ -35,7 +35,7 @@ public class InterviewManager extends Observable implements Serializable {
     // The configuration of interviews chosen for this job posting
     private ArrayList<String[]> interviewConfiguration;
     // The current round of interviews
-    private int currentRound = 0;
+    private int currentRound = -1;
     // The maximum number of interview rounds
     private int maxNumberOfRounds;
     // Whether or not the applicants have been weeded out before the first round of interviews
@@ -69,7 +69,7 @@ public class InterviewManager extends Observable implements Serializable {
     }
 
     public int getFinalRoundNumber() {
-        return this.maxNumberOfRounds;
+        return this.maxNumberOfRounds - 1;
     }
 
     public String[] getCurrentRoundTypeAndDescription() {
@@ -95,7 +95,7 @@ public class InterviewManager extends Observable implements Serializable {
     // === Setters ===
     public void setInterviewConfiguration(ArrayList<String[]> interviewConfiguration) {
         this.interviewConfiguration = interviewConfiguration;
-        this.maxNumberOfRounds = interviewConfiguration.size() - 1;
+        this.maxNumberOfRounds = interviewConfiguration.size();
         for (JobApplication jobApp : this.applicationsInConsideration) {
             jobApp.getStatus().setDescriptions(interviewConfiguration);
         }
@@ -126,11 +126,18 @@ public class InterviewManager extends Observable implements Serializable {
         return false;
     }
 
+    public boolean interviewProcessHasBegun() {
+        return this.getCurrentRound() > -1;
+    }
+
     /**
      * Advance the round of interviews.
      */
     public void advanceRound() {
         this.currentRound++;
+        if (this.getCurrentRoundTypeAndDescription()[0].equals(Interview.ONE_ON_ONE)) {
+            this.setUpOneOnOneInterviews();
+        }
     }
 
     /**
@@ -138,9 +145,26 @@ public class InterviewManager extends Observable implements Serializable {
      *
      * @param jobApplication The application to be rejected.
      */
-    public void reject(JobApplication jobApplication) {
+    void reject(JobApplication jobApplication) {
         this.applicationsInConsideration.remove(jobApplication);
         this.applicationsRejected.add(jobApplication);
+    }
+
+    /**
+     * Reject the applications in this list for this job. Called when HR first selects applications to advance to first
+     * round.
+     *
+     * @param jobApplications The job applications to be rejected.
+     */
+    public void rejectApplicationsForFirstRound(ArrayList<JobApplication> jobApplications) {
+        for (JobApplication jobApp : jobApplications) {
+            this.reject(jobApp);
+        }
+        this.chosenApplicantsForFirstRound = true;
+
+        for (JobApplication jobApp : this.applicationsInConsideration) {
+            jobApp.getStatus().advanceStatus();
+        }
     }
 
     /**
@@ -183,13 +207,18 @@ public class InterviewManager extends Observable implements Serializable {
                 return InterviewManager.EXTEND_APPLICATION_DEADLINE;
             }
             return InterviewManager.SELECT_APPS_FOR_FIRST_ROUND;
-        } else if (!this.isInterviewProcessOver() && this.isNextRoundGroupInterview()) {
-            return InterviewManager.SCHEDULE_GROUP_INTERVIEWS;
+        } else if (!this.isInterviewProcessOver() && this.isCurrentRoundGroupInterviewUnscheduled()) {
+            if (!this.branchJobPosting.getBranch().hasInterviewerForField(this.branchJobPosting.getField())) {
+                this.notifyAllObservers(new Notification("No Interviewers For Field", "There are no interviewers" +
+                        "at your branch for this field. Group interviews cannot be set for round " + this.currentRound +
+                        " of interviews for " + this.branchJobPosting.getTitle() + "."));
+            } else {
+                return InterviewManager.SCHEDULE_GROUP_INTERVIEWS;
+            }
         } else if (this.isInterviewProcessOver() && !this.isNumApplicationsUnderOrAtThreshold()) {
             return InterviewManager.SELECT_APPS_TO_HIRE;
-        } else {
-            return InterviewManager.DO_NOTHING;
         }
+        return InterviewManager.DO_NOTHING;
     }
 
     /**
@@ -197,17 +226,17 @@ public class InterviewManager extends Observable implements Serializable {
      * Note: this will be called every time someone logs in
      *
      */
-    public void updateJobPostingStatus() {
+    public void updateJobPostingFilledStatus() {
         if (this.hasNoJobApplicationsInConsideration()) {
             this.updateObserverList();
             this.notifyAllObservers(new Notification("Warning: No Applications in Consideration",
-                    "There are no applications in consideration for the" + this.getBranchJobPosting().getTitle()
+                    "There are no applications in consideration for the " + this.getBranchJobPosting().getTitle()
                             + " job posting (id " + this.getBranchJobPosting().getId() + "). It has been automatically" +
                             " set to filled with 0 positions."));
             this.getBranchJobPosting().closeJobPostingNoApplicationsInConsideration();
-        } else if (this.currentRound != 0 | this.isInterviewProcessOver()) {
+        } else if (this.isInterviewProcessOver()) {
             // The check for current round ensures that applicants get at least 1 interview
-            this.hireAllApplicants();
+            this.hireApplicants(this.applicationsInConsideration);
         }
     }
 
@@ -216,11 +245,18 @@ public class InterviewManager extends Observable implements Serializable {
      * Note: Interviewer would set the date/time
      */
     public void setUpOneOnOneInterviews() {
-        for (JobApplication jobApp : this.applicationsInConsideration) {
-            String field = this.branchJobPosting.getField();
-            Interviewer interviewer = this.branchJobPosting.getBranch().findInterviewerByField(field);
-            Interview interview = new Interview(jobApp, interviewer, this);
-            this.updateParticipantsOfNewInterview(interview);
+        String field = this.branchJobPosting.getField();
+        if (!this.branchJobPosting.getBranch().hasInterviewerForField(field)) {
+            this.notifyAllObservers(new Notification("No Interviewers For Field", "There are no interviewers" +
+                    "at your branch for field " + field + ". One-on-One interviews cannot be set for round "
+                    + this.currentRound + " of interviews for " + this.branchJobPosting.getTitle() + "."));
+        }
+        else {
+            for (JobApplication jobApp : this.applicationsInConsideration) {
+                Interviewer interviewer = this.branchJobPosting.getBranch().findInterviewerByField(field);
+                Interview interview = new Interview(jobApp, interviewer, this);
+                this.updateParticipantsOfNewInterview(interview);
+            }
         }
     }
 
@@ -277,7 +313,6 @@ public class InterviewManager extends Observable implements Serializable {
      * @param earliestDate    The earliest date that this group interview can be scheduled.
      * @return the earliest InterviewTime when all these interviewers are available.
      */
-    // TODO THIS METHOD REQUIRES A LOT OF TESTING!!!!!!
     private InterviewTime getEarliestTimeAvailableForAllInterviewers(ArrayList<Interviewer> allInterviewers,
                                                                      LocalDate earliestDate) {
         Interviewer interviewer1 = allInterviewers.get(0);
@@ -335,8 +370,10 @@ public class InterviewManager extends Observable implements Serializable {
      *
      * @return true iff the next interview round is a group interview.
      */
-    private boolean isNextRoundGroupInterview() {
-        return this.interviewConfiguration.get(this.currentRound + 1)[1].equals(Interview.GROUP);
+    private boolean isCurrentRoundGroupInterviewUnscheduled() {
+        Interview lastInterview = this.applicationsInConsideration.get(0).getLastInterview();
+        return this.interviewConfiguration.get(this.currentRound)[0].equals(Interview.GROUP) &&
+                (lastInterview == null || lastInterview.getRoundNumber() < this.currentRound);
     }
 
 
@@ -358,7 +395,7 @@ public class InterviewManager extends Observable implements Serializable {
      */
     private boolean isInterviewProcessOver() {
         return this.currentRoundIsOver() && (this.isNumApplicationsUnderOrAtThreshold() |
-                this.currentRound == this.interviewConfiguration.size());
+                this.currentRound == this.getFinalRoundNumber());
     }
 
     /**
@@ -379,21 +416,14 @@ public class InterviewManager extends Observable implements Serializable {
      * @param jobAppsToHire The job applications of those to be hired.
      */
     public void hireApplicants(ArrayList<JobApplication> jobAppsToHire) {
+        this.notifyAllObservers(new Notification("AutoHiring All Applicants",
+                "All applicants in " + this.getBranchJobPosting().getTitle()
+                        + " have been auto-hired"));
         for (JobApplication jobApp : jobAppsToHire) {
             jobApp.getStatus().setHired();
         }
         this.branchJobPosting.setFilled();
         this.archiveRejected();
-    }
-
-    /**
-     * Hire all the applicants
-     */
-    private void hireAllApplicants() {
-        this.notifyAllObservers(new Notification("AutoHiring All Applicants",
-                "All applicants in " + this.getBranchJobPosting().getTitle()
-                        + " have been auto-hired"));
-        this.hireApplicants(this.applicationsInConsideration);
     }
 
     @Override

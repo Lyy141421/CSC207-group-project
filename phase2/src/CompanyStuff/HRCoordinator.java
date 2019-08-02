@@ -58,10 +58,7 @@ public class HRCoordinator extends User {
         CompanyJobPosting companyJobPosting = new CompanyJobPosting(jobTitle, jobField, jobDescription, requiredDocuments,
                 tags, this.branch.getCompany(), this.branch);
         this.branch.getCompany().addCompanyJobPosting(companyJobPosting);
-        BranchJobPosting branchJobPosting = new BranchJobPosting(jobTitle, jobField, jobDescription, requiredDocuments,
-                tags, numPositions, this.branch, postDate, applicationCloseDate, referenceCloseDate);
-        this.branch.getJobPostingManager().addJobPosting(branchJobPosting);
-        return branchJobPosting;
+        return this.implementJobPosting(companyJobPosting, numPositions, postDate, applicationCloseDate, referenceCloseDate);
     }
 
     public BranchJobPosting implementJobPosting(CompanyJobPosting companyJobPosting, int numPositions, LocalDate postDate,
@@ -69,8 +66,17 @@ public class HRCoordinator extends User {
         BranchJobPosting branchJobPosting = new BranchJobPosting(companyJobPosting.getTitle(), companyJobPosting.getField(),
                 companyJobPosting.getDescription(), companyJobPosting.getRequiredDocuments(), companyJobPosting.getTags(),
                 numPositions, this.branch, postDate, applicationCloseDate, referenceCloseDate);
+        branchJobPosting.attachJobPosting(companyJobPosting);
         this.branch.getJobPostingManager().addJobPosting(branchJobPosting);
         return branchJobPosting;
+    }
+
+    public void updateJobPosting(BranchJobPosting jobPosting, int numPositions, LocalDate applicationCloseDate,
+                                 LocalDate referenceCloseDate) {
+        jobPosting.updateFields(numPositions, applicationCloseDate, referenceCloseDate);
+        if (!jobPosting.getBranches().contains(this.getBranch())) { // TODO very weird please help!
+            jobPosting.addBranch(this.getBranch());
+        }
     }
 
     /**

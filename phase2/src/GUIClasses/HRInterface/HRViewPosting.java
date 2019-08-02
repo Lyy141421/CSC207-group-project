@@ -85,6 +85,7 @@ class HRViewPosting extends HRPanel {
                 info.setText(getStatus(selectedTitle) + selectedJP.toString());
                 if (scheduleJP.containsKey(selectedTitle)) {
                     scheduleButton.setEnabled(true);
+                    scheduleButton.setVisible(true);
                 } else {
                     scheduleButton.setEnabled(false);
                 }
@@ -152,10 +153,10 @@ class HRViewPosting extends HRPanel {
             removeFromJPLists(selectedTitle);
         }
         HRViewApp appPanel = new HRViewApp(parent, hrBackend, getTitleToAppMap(appsUnderSelectedJP), this.getPreviousPanelKey(), mode);
-        if (parent.getComponents().length > 6) {
-            parent.remove(6);
+        if (parent.getComponents().length > 7) {
+            parent.remove(7);
         }
-        parent.add(appPanel, HRPanel.APPLICATION);
+        parent.add(appPanel, HRPanel.APPLICATION, 7);
         ((CardLayout) parent.getLayout()).show(parent, HRPanel.APPLICATION);
     }
 
@@ -171,7 +172,7 @@ class HRViewPosting extends HRPanel {
         this.unreviewedJP = this.getTitleToJPMap(hrBackend.getJPToReview());
         this.scheduleJP = this.getTitleToJPMap(hrBackend.getJPToSchedule());
         this.hiringJP = this.getTitleToJPMap(hrBackend.getJPToHire());
-        this.allJP = this.getTitleToJPMap(hrBackend.getAllJP());
+        this.allJP = this.getTitleToJPMap(hrBackend.getAllUnfilledJP());
 
         this.importantJP.putAll(this.unreviewedJP);
         this.importantJP.putAll(this.scheduleJP);

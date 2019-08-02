@@ -5,14 +5,14 @@ import java.util.ArrayList;
 public abstract class Observable {
 
     // A list of observers for pushing notifications
-    private ArrayList<Observer> observer_list = new ArrayList<>();
+    private ArrayList<Observer> observerList = new ArrayList<>();
 
     /**
      * Adding an observer to the notification recipient list
      */
     protected void attach(Observer observer){
-        if (!observer_list.contains(observer)) {
-            observer_list.add(observer);
+        if (!observerList.contains(observer)) {
+            observerList.add(observer);
         }
     }
 
@@ -20,7 +20,7 @@ public abstract class Observable {
      * Removing an observer from the notification recipient list
      */
     protected void detach(Observer observer){
-        observer_list.remove(observer);
+        observerList.remove(observer);
     }
 
     /**
@@ -30,7 +30,7 @@ public abstract class Observable {
      */
     protected void notifyAllObservers(Notification notification){
         updateObserverList();
-        for (Observer observer : observer_list) {
+        for (Observer observer : observerList) {
             notifyObserver(observer, notification);
         }
     }
@@ -42,7 +42,7 @@ public abstract class Observable {
      * @return - Weather or not the observer is in this observable
      */
     protected boolean containsObserver(Observer observer) {
-        return observer_list.contains(observer);
+        return observerList.contains(observer);
     }
 
     /**

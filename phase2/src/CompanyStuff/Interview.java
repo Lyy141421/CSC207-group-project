@@ -16,6 +16,11 @@ public class Interview implements Serializable {
     // The interview types allowed
     public static String ONE_ON_ONE = "One-on-One";
     public static String GROUP = "Group";
+    // The category names for interviewer for unscheduled/incomplete interviews
+    public static final String[] CATEGORY_NAMES_FOR_INTERVIEWER_UNSCHEDULED_OR_INCOMPLETE = new String[]{"Interviewee", "Job Posting"};
+    // The category names for interviewer for scheduled interviews
+    public static final String[] CATEGORY_NAMES_FOR_INTERVIEWER_SCHEDULED = new String[]{"Job Posting", "Type", "Description", "Coordinator",
+            "Time"};
 
     // === Instance variables ===
     // The unique identifier for this interview
@@ -32,6 +37,8 @@ public class Interview implements Serializable {
     private InterviewManager interviewManager;
     // The interview type
     private String[] typeAndDescription;
+    // The interview round number
+    private int roundNumber;
 
     // === Representation invariants ===
     // ID >= 1
@@ -48,6 +55,7 @@ public class Interview implements Serializable {
         }};
         this.interviewManager = interviewManager;
         this.typeAndDescription = this.interviewManager.getCurrentRoundTypeAndDescription();
+        this.roundNumber = this.interviewManager.getCurrentRound();
     }
 
     Interview(ArrayList<JobApplication> jobApplications, Interviewer interviewCoordinator,
@@ -61,6 +69,7 @@ public class Interview implements Serializable {
         this.setOtherInterviewersToNotes(otherInterviewers);
         this.interviewManager = interviewManager;
         this.typeAndDescription = this.interviewManager.getCurrentRoundTypeAndDescription();
+        this.roundNumber = this.interviewManager.getCurrentRound();
     }
 
     // === Public methods ===
@@ -99,6 +108,10 @@ public class Interview implements Serializable {
 
     public HashMap<Interviewer, String> getOtherInterviewersToNotes() {
         return this.otherInterviewersToNotes;
+    }
+
+    public int getRoundNumber() {
+        return roundNumber;
     }
 
     // === Setters ===
@@ -255,18 +268,9 @@ public class Interview implements Serializable {
         return applicantNames;
     }
 
-    public static String[] getCategoryNamesForInterviewerUnscheduledOrIncomplete() {
-        return new String[]{"Interviewee", "Job Posting"};
-    }
-
     public String[] getCategoryValuesForInterviewerUnscheduledOrIncomplete() {
         JobApplication jobApp = this.getJobApplications().get(0);
         return new String[]{this.getIntervieweeNames(), jobApp.getJobPosting().getTitle()};
-    }
-
-    public static String[] getCategoryNamesForInterviewerScheduled() {
-        return new String[]{"Job Posting", "Type", "Description", "Coordinator",
-                "Time"};
     }
 
     public String[] getCategoryValuesForInterviewerScheduled() {
@@ -275,13 +279,6 @@ public class Interview implements Serializable {
                 typeAndDescription[1], this.getInterviewCoordinator().getLegalName(),
                 this.getTime().toString()};
     }
-
-//    public String getMiniDescriptionForInterviewer() {
-//        JobApplication jobApp = this.getJobApplications().get(0);
-//        String s = "Job Posting: " + jobApp.getJobPosting().getTitle() + "  ";
-//        s += "Interview Description: " + this.interviewManager.getCurrentRoundTypeAndDescription()[1] + "   ";
-//        return s;
-//    }
 
     public String getMiniDescriptionForHR() {
         return "Job posting: " + this.getJobApplications().get(0).getJobPosting().getTitle() + " -- " +

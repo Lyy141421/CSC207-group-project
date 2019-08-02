@@ -23,7 +23,7 @@ class InterviewSelectionDialog extends SelectionDialog {
         this.confirmButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                hrBackend.rejectApplicationForFirstRound(getApplicantsDeselected());
+                hrBackend.rejectApplicationForFirstRound(branchJobPosting, getApplicantsDeselected());
                 new InterviewConfigDialog(parent, hrBackend, branchJobPosting, returnButton);
                 dispose();
             }
