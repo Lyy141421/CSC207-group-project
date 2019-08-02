@@ -97,13 +97,16 @@ public class HRMain extends UserPanel {
 //        frame.setVisible(true);
 //        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        // Run this after running reference main
+        // Minimal steps to run this chunk of code.
+        // 1. delete all the files (.ser and .txt in the files directory)
+        // 2. run the reference main and clicking log out
+        // 3. run interview main and log out
+        // 4. Come back here to HRMain and run the main program
+        // 5. At this point, you can schedule a group interview
         JobApplicationSystem jobApplicationSystem = new JobApplicationSystem();
         new DataLoaderAndStorer(jobApplicationSystem).loadAllData();
         Branch branch = jobApplicationSystem.getCompanies().get(0).getBranches().get(0);
         branch.getJobPostingManager().updateAllClosedUnfilledJobPostings(LocalDate.of(2019, 8, 25));
-//        branch.getJobPostingManager().updateJobPostingsClosedForApplications(LocalDate.of(2019, 7, 31));
-//        branch.getJobPostingManager().updateJobPostingsClosedForReferences(LocalDate.of(2019, 8, 11));
         HRCoordinator hrc = branch.getHrCoordinators().get(0);
         jobApplicationSystem.setToday(LocalDate.of(2019, 8, 25));
         LogoutActionListener logoutActionListener = new LogoutActionListener(new Container(), new CardLayout(), jobApplicationSystem);
