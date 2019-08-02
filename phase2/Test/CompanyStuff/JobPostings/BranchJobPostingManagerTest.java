@@ -43,26 +43,43 @@ class BranchJobPostingManagerTest {
 
     @Test
     void getBranchJobPosting() {
+        BranchJobPosting posting = createJobPostingHR();
+        assertEquals(branch.getJobPostingManager().getBranchJobPosting(posting.getId()), posting);
     }
 
     @Test
     void getBranchJobPostings() {
+        BranchJobPosting posting = createJobPostingHR();
+        assertEquals(branch.getJobPostingManager().getBranchJobPostings().get(0), posting);
     }
 
     @Test
     void addJobPosting() {
+        BranchJobPosting posting = createPosting("Test Posting");
+        branch.getJobPostingManager().addJobPosting(posting);
+        assertEquals(branch.getJobPostingManager().getBranchJobPostings().get(0), posting);
     }
 
     @Test
     void getJobPostingsNotAppliedToByApplicant() {
+        BranchJobPosting posting = createJobPostingHR();
+        Applicant app = createApplicant("Phillip");
+        assertEquals(branch.getJobPostingManager().getJobPostingsNotAppliedToByApplicant(app).size(), 1);
+        posting.addJobApplication(createJobApplication(app, posting));
+        assertEquals(branch.getJobPostingManager().getJobPostingsNotAppliedToByApplicant(app).size(), 0);
     }
 
     @Test
     void getOpenJobPostings() {
+        createJobPostingHR();
+        assertEquals(branch.getJobPostingManager().getOpenJobPostings(today).size(), 1);
+        assertEquals(branch.getJobPostingManager().getOpenJobPostings(today.plusDays(7)).size(), 0);
+
     }
 
     @Test
     void getClosedJobPostingsNotFilled() {
+        
     }
 
     @Test
