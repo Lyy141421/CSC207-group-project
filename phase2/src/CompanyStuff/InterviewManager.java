@@ -35,7 +35,7 @@ public class InterviewManager extends Observable implements Serializable {
     // The configuration of interviews chosen for this job posting
     private ArrayList<String[]> interviewConfiguration;
     // The current round of interviews
-    private int currentRound = 0;
+    private int currentRound = -1;
     // The maximum number of interview rounds
     private int maxNumberOfRounds;
     // Whether or not the applicants have been weeded out before the first round of interviews
@@ -69,7 +69,7 @@ public class InterviewManager extends Observable implements Serializable {
     }
 
     public int getFinalRoundNumber() {
-        return this.maxNumberOfRounds;
+        return this.maxNumberOfRounds - 1;
     }
 
     public String[] getCurrentRoundTypeAndDescription() {
@@ -95,7 +95,7 @@ public class InterviewManager extends Observable implements Serializable {
     // === Setters ===
     public void setInterviewConfiguration(ArrayList<String[]> interviewConfiguration) {
         this.interviewConfiguration = interviewConfiguration;
-        this.maxNumberOfRounds = interviewConfiguration.size() - 1;
+        this.maxNumberOfRounds = interviewConfiguration.size();
         for (JobApplication jobApp : this.applicationsInConsideration) {
             jobApp.getStatus().setDescriptions(interviewConfiguration);
         }
@@ -124,6 +124,10 @@ public class InterviewManager extends Observable implements Serializable {
             }
         }
         return false;
+    }
+
+    public boolean hasInterviewProcessBegun() {
+        return this.getCurrentRound() > -1;
     }
 
     /**
@@ -157,6 +161,13 @@ public class InterviewManager extends Observable implements Serializable {
             this.reject(jobApp);
         }
         this.chosenApplicantsForFirstRound = true;
+    }
+
+    public void rejectApplicationsForFirstRound(ArrayList<JobApplication> jobApplications) {
+        this.reject(jobApplications);
+        for (JobApplication jobApp : this.applicationsInConsideration) {
+            jobApp.getStatus().advanceStatus();
+        }
     }
 
     /**
@@ -199,18 +210,18 @@ public class InterviewManager extends Observable implements Serializable {
                 return InterviewManager.EXTEND_APPLICATION_DEADLINE;
             }
             return InterviewManager.SELECT_APPS_FOR_FIRST_ROUND;
-        } else if (!this.isInterviewProcessOver() && this.isNextRoundGroupInterview()) {
+        } else if (!this.isInterviewProcessOver() && this.isCurrentRoundGroupInterviewUnscheduled()) {
             if (!this.branchJobPosting.getBranch().hasInterviewerForField(this.branchJobPosting.getField())) {
                 this.notifyAllObservers(new Notification("No Interviewers For Field", "There are no interviewers" +
                         "at your branch for this field. Group interviews cannot be set for round " + this.currentRound +
                         " of interviews for " + this.branchJobPosting.getTitle() + "."));
+            } else {
+                return InterviewManager.SCHEDULE_GROUP_INTERVIEWS;
             }
-            return InterviewManager.SCHEDULE_GROUP_INTERVIEWS;
         } else if (this.isInterviewProcessOver() && !this.isNumApplicationsUnderOrAtThreshold()) {
             return InterviewManager.SELECT_APPS_TO_HIRE;
-        } else {
-            return InterviewManager.DO_NOTHING;
         }
+        return InterviewManager.DO_NOTHING;
     }
 
     /**
@@ -226,7 +237,7 @@ public class InterviewManager extends Observable implements Serializable {
                             + " job posting (id " + this.getBranchJobPosting().getId() + "). It has been automatically" +
                             " set to filled with 0 positions."));
             this.getBranchJobPosting().closeJobPostingNoApplicationsInConsideration();
-        } else if (this.currentRound != 0 && this.isInterviewProcessOver()) {
+        } else if (this.isInterviewProcessOver()) {
             // The check for current round ensures that applicants get at least 1 interview
             this.hireAllApplicants();
         }
@@ -362,8 +373,10 @@ public class InterviewManager extends Observable implements Serializable {
      *
      * @return true iff the next interview round is a group interview.
      */
-    private boolean isNextRoundGroupInterview() {
-        return this.interviewConfiguration.get(this.currentRound + 1)[1].equals(Interview.GROUP);
+    private boolean isCurrentRoundGroupInterviewUnscheduled() {
+        Interview lastInterview = this.applicationsInConsideration.get(0).getLastInterview();
+        return this.interviewConfiguration.get(this.currentRound)[0].equals(Interview.GROUP) &&
+                (lastInterview == null || lastInterview.getRoundNumber() < this.currentRound);
     }
 
 
@@ -385,7 +398,7 @@ public class InterviewManager extends Observable implements Serializable {
      */
     private boolean isInterviewProcessOver() {
         return this.currentRoundIsOver() && (this.isNumApplicationsUnderOrAtThreshold() |
-                this.currentRound == this.interviewConfiguration.size());
+                this.currentRound == this.getFinalRoundNumber());
     }
 
     /**

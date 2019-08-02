@@ -14,7 +14,7 @@ public class Notification implements Serializable {
 
     // === Static Variables ===
     // The date retrieved from JobApplicationSystem
-    static LocalDate sdate = LocalDate.now();
+    static LocalDate today = LocalDate.now();
 
     // === Constructors ===
 
@@ -54,10 +54,10 @@ public class Notification implements Serializable {
     // === Static ===
 
     static public void setDate(LocalDate date){
-        sdate = date;
+        today = date;
     }
 
     static public LocalDate getDateStatic(){
-        return sdate;
+        return today;
     }
 }

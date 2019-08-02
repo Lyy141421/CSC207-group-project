@@ -43,8 +43,8 @@ class HRBackend {
      * @return the array list of branch job postings.
      */
     ArrayList<BranchJobPosting> getJPToReview() {
-        BranchJobPostingManager JPManager = this.hr.getBranch().getJobPostingManager();
-        return JPManager.getJobPostingsRecentlyClosedForReferences(this.jobAppSystem.getToday());
+        BranchJobPostingManager jpManager = this.hr.getBranch().getJobPostingManager();
+        return jpManager.getJobPostingsRecentlyClosedForReferences(this.jobAppSystem.getToday());
     }
 
     /**
@@ -52,8 +52,8 @@ class HRBackend {
      * @return the array list of branch job postings.
      */
     ArrayList<BranchJobPosting> getJPToSchedule() {
-        BranchJobPostingManager JPManager = this.hr.getBranch().getJobPostingManager();
-        return JPManager.getJobPostingsThatNeedGroupInterviewsScheduled(this.jobAppSystem.getToday());
+        BranchJobPostingManager jpManager = this.hr.getBranch().getJobPostingManager();
+        return jpManager.getJobPostingsThatNeedGroupInterviewsScheduled(this.jobAppSystem.getToday());
     }
 
     /**
@@ -61,8 +61,8 @@ class HRBackend {
      * @return the array list of branch job postings.
      */
     ArrayList<BranchJobPosting> getJPToHire() {
-        BranchJobPostingManager JPManager = this.hr.getBranch().getJobPostingManager();
-        return JPManager.getJobPostingsThatNeedHRSelectionForHiring(this.jobAppSystem.getToday());
+        BranchJobPostingManager jpManager = this.hr.getBranch().getJobPostingManager();
+        return jpManager.getJobPostingsThatNeedHRSelectionForHiring(this.jobAppSystem.getToday());
     }
 
     /**
@@ -70,9 +70,9 @@ class HRBackend {
      *
      * @return the array list of all branch job postings.
      */
-    ArrayList<BranchJobPosting> getAllJP() {
-        BranchJobPostingManager JPManager = this.hr.getBranch().getJobPostingManager();
-        return JPManager.getBranchJobPostings();
+    ArrayList<BranchJobPosting> getAllUnfilledJP() {
+        BranchJobPostingManager jpManager = this.hr.getBranch().getJobPostingManager();
+        return jpManager.getAllUnfilledJobPostings();
     }
 
 
@@ -193,9 +193,8 @@ class HRBackend {
      *
      * @param jobApps   The job applications NOT getting interviews.
      */
-    void rejectApplicationForFirstRound(ArrayList<JobApplication> jobApps) {
-        BranchJobPosting jobPosting = jobApps.get(0).getJobPosting();
-        jobPosting.getInterviewManager().reject(jobApps);
+    void rejectApplicationForFirstRound(BranchJobPosting branchJobPosting, ArrayList<JobApplication> jobApps) {
+        branchJobPosting.getInterviewManager().rejectApplicationsForFirstRound(jobApps);
     }
 
 

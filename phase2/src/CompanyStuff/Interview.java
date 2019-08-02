@@ -37,6 +37,8 @@ public class Interview implements Serializable {
     private InterviewManager interviewManager;
     // The interview type
     private String[] typeAndDescription;
+    // The interview round number
+    private int roundNumber;
 
     // === Representation invariants ===
     // ID >= 1
@@ -53,6 +55,7 @@ public class Interview implements Serializable {
         }};
         this.interviewManager = interviewManager;
         this.typeAndDescription = this.interviewManager.getCurrentRoundTypeAndDescription();
+        this.roundNumber = this.interviewManager.getCurrentRound();
     }
 
     Interview(ArrayList<JobApplication> jobApplications, Interviewer interviewCoordinator,
@@ -66,6 +69,7 @@ public class Interview implements Serializable {
         this.setOtherInterviewersToNotes(otherInterviewers);
         this.interviewManager = interviewManager;
         this.typeAndDescription = this.interviewManager.getCurrentRoundTypeAndDescription();
+        this.roundNumber = this.interviewManager.getCurrentRound();
     }
 
     // === Public methods ===
@@ -104,6 +108,10 @@ public class Interview implements Serializable {
 
     public HashMap<Interviewer, String> getOtherInterviewersToNotes() {
         return this.otherInterviewersToNotes;
+    }
+
+    public int getRoundNumber() {
+        return roundNumber;
     }
 
     // === Setters ===
