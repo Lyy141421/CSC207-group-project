@@ -200,6 +200,11 @@ public class InterviewManager extends Observable implements Serializable {
             }
             return InterviewManager.SELECT_APPS_FOR_FIRST_ROUND;
         } else if (!this.isInterviewProcessOver() && this.isNextRoundGroupInterview()) {
+            if (!this.branchJobPosting.getBranch().hasInterviewerForField(this.branchJobPosting.getField())) {
+                this.notifyAllObservers(new Notification("No Interviewers For Field", "There are no interviewers" +
+                        "at your branch for this field. Group interviews cannot be set for round " + this.currentRound +
+                        " of interviews for " + this.branchJobPosting.getTitle() + "."));
+            }
             return InterviewManager.SCHEDULE_GROUP_INTERVIEWS;
         } else if (this.isInterviewProcessOver() && !this.isNumApplicationsUnderOrAtThreshold()) {
             return InterviewManager.SELECT_APPS_TO_HIRE;
@@ -215,7 +220,6 @@ public class InterviewManager extends Observable implements Serializable {
      */
     public void updateJobPostingFilledStatus() {
         if (this.hasNoJobApplicationsInConsideration()) {
-            // TODO move to closeJobPostingNoApplicationsInConsideration in BranchJobPosting!!!
             this.updateObserverList();
             this.notifyAllObservers(new Notification("Warning: No Applications in Consideration",
                     "There are no applications in consideration for the" + this.getBranchJobPosting().getTitle()
@@ -235,9 +239,15 @@ public class InterviewManager extends Observable implements Serializable {
     public void setUpOneOnOneInterviews() {
         for (JobApplication jobApp : this.applicationsInConsideration) {
             String field = this.branchJobPosting.getField();
-            Interviewer interviewer = this.branchJobPosting.getBranch().findInterviewerByField(field);
-            Interview interview = new Interview(jobApp, interviewer, this);
-            this.updateParticipantsOfNewInterview(interview);
+            if (this.branchJobPosting.getBranch().hasInterviewerForField(field)) {
+                Interviewer interviewer = this.branchJobPosting.getBranch().findInterviewerByField(field);
+                Interview interview = new Interview(jobApp, interviewer, this);
+                this.updateParticipantsOfNewInterview(interview);
+            } else {
+                this.notifyAllObservers(new Notification("No Interviewers For Field", "There are no interviewers" +
+                        "at your branch for this field. One-on-One interviews cannot be set for round " + this.currentRound +
+                        " of interviews for " + this.branchJobPosting.getTitle() + "."));
+            }
         }
     }
 

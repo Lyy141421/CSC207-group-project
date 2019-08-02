@@ -163,7 +163,7 @@ class HRAddOrUpdatePostingForm extends HRPanel {
         this.add(requiredDocumentsEntry);
 
         rect.x = X_COLUMN_3_HALF;
-        documentInputInstructions = "Enter the documents in a semi-colon separated list with no spaces. (e.g: 3 reference letters;Transcript)";
+        documentInputInstructions = "Enter the other documents in a semi-colon separated list with no spaces. (e.g: 3 reference letters;Transcript)";
         JScrollPane extraDocumentsEntryScrollPane = new GUIElementsCreator().createTextAreaWithScrollBar(documentInputInstructions, true);
         extraDocumentsEntryScrollPane.setBounds(rect);
         this.add(extraDocumentsEntryScrollPane);
@@ -179,7 +179,7 @@ class HRAddOrUpdatePostingForm extends HRPanel {
         this.add(tagsEntry);
 
         rect.x = X_COLUMN_3_HALF;
-        tagsInputInstructions = "Enter the tags in a semi-colon separated list with no spaces. (e.g: University of Toronto;Java)";
+        tagsInputInstructions = "Enter the other tags in a semi-colon separated list with no spaces. (e.g: University of Toronto;Java)";
         JScrollPane extraTagsEntryScrollPane = new GUIElementsCreator().createTextAreaWithScrollBar(tagsInputInstructions, true);
         extraTagsEntryScrollPane.setBounds(rect);
         this.add(extraTagsEntryScrollPane);
@@ -449,11 +449,22 @@ class HRAddOrUpdatePostingForm extends HRPanel {
 
     private void addJobPosting(Optional<String[]> defaultFields, Object[] mandatoryFields) {
         if (!defaultFields.isPresent()) {
-            hrBackend.implementJobPosting(selectedJP, mandatoryFields);
+            if (!hrBackend.implementJobPosting(selectedJP, mandatoryFields, false)) {
+                // TODO show warning that no interviewer in field selected
+//                if ("HR selects ok") {
+//                    hrBackend.implementJobPosting(selectedJP, mandatoryFields, true);
+//                    JOptionPane.showMessageDialog(containerPane, "Job posting has been added.");
+//                }
+            }
         } else {
-            hrBackend.addJobPosting(mandatoryFields, defaultFields.get());
+            if (!hrBackend.addJobPosting(mandatoryFields, defaultFields.get(), false)) {
+                // TODO show warning that no interviewer in field selected
+//                if ("HR selects ok") {
+//                    hrBackend.addJobPosting(mandatoryFields, defaultFields.get(), true);
+//                    JOptionPane.showMessageDialog(containerPane, "Job posting has been added.");
+//                }
+            }
         }
-        JOptionPane.showMessageDialog(containerPane, "Job posting has been added.");
     }
 
     private void updateJobPosting(Object[] mandatoryFields) {

@@ -80,14 +80,17 @@ class HRBackend {
      * Add a job posting to the branch and check if there is an interviewer for that field.
      * @param mandatoryFields  The fields that must be entered regardless of method of adding JP.
      * @param defaultFields The fields that are set by default in company posting mode.
+     * @param isForced Whether or not the hr is forcing the add, that is, they already know there is no
+     *                 interviewer for that field
      * @return true iff there is an interviewer for the field that this job posting is being added to.
      */
-    // TODO force job posting creation
-    boolean addJobPosting(Object[] mandatoryFields, String[] defaultFields) {
+    boolean addJobPosting(Object[] mandatoryFields, String[] defaultFields, boolean isForced) {
         String title = defaultFields[0];
         String field = defaultFields[1];
-        if (!this.hr.getBranch().hasInterviewerForField(field)) {
-            return false;
+        if (!isForced) {
+            if (!this.hr.getBranch().hasInterviewerForField(field)) {
+                return false;
+            }
         }
         String description = defaultFields[2];
         ArrayList<String> requirements = new ArrayList<>(Arrays.asList(defaultFields[3].split(";")));
@@ -100,11 +103,17 @@ class HRBackend {
         return true;
     }
 
-    void implementJobPosting(CompanyJobPosting cjp, Object[] jobPostingFields) {
+    boolean implementJobPosting(CompanyJobPosting cjp, Object[] jobPostingFields, boolean isForced) {
+        if (!isForced) {
+            if (!this.hr.getBranch().hasInterviewerForField(cjp.getField())) {
+                return false;
+            }
+        }
         int numPositions = (int) jobPostingFields[0];
         LocalDate applicationCloseDate = (LocalDate) jobPostingFields[1];
         LocalDate referenceCloseDate = (LocalDate) jobPostingFields[2];
         this.hr.implementJobPosting(cjp, numPositions, jobAppSystem.getToday(), applicationCloseDate, referenceCloseDate);
+        return true;
     }
 
     void updateJobPosting(BranchJobPosting jobPosting, Object[] jobPostingFields) {
