@@ -1,35 +1,23 @@
 package GUIClasses.HRInterface;
 
-import ApplicantStuff.Applicant;
-import ApplicantStuff.JobApplication;
-import ApplicantStuff.JobApplicationDocument;
-import ApplicantStuff.Reference;
 import CompanyStuff.Branch;
-import CompanyStuff.Company;
 import CompanyStuff.HRCoordinator;
-import CompanyStuff.Interviewer;
-import CompanyStuff.JobPostings.BranchJobPosting;
-import CompanyStuff.JobPostings.BranchJobPostingManager;
 import FileLoadingAndStoring.DataLoaderAndStorer;
 import GUIClasses.ActionListeners.LogoutActionListener;
 import GUIClasses.CommonUserGUI.UserPanel;
 import GUIClasses.CommonUserGUI.UserProfilePanel;
-import GUIClasses.InterviewerInterface.InterviewerMain;
 import Main.JobApplicationSystem;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.File;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
 
 public class HRMain extends UserPanel {
 
     HRBackend hrBackend;
     JPanel cards = new JPanel(new CardLayout());
 
-    private HRMain(HRCoordinator hrCoordinator, JobApplicationSystem jobAppSystem, LogoutActionListener logoutActionListener) {
+    public HRMain(HRCoordinator hrCoordinator, JobApplicationSystem jobAppSystem, LogoutActionListener logoutActionListener) {
         this.hrBackend = new HRBackend(jobAppSystem, hrCoordinator);
         this.setLayout(new GridBagLayout());
         this.setCards();
@@ -54,7 +42,8 @@ public class HRMain extends UserPanel {
         cards.add(new HRViewPosting(this.hrBackend, cards, true), HRPanel.HIGH_PRIORITY_POSTINGS, 2);
         cards.add(new HRViewPosting(this.hrBackend, cards, false), HRPanel.BROWSE_POSTINGS, 3);
         cards.add(new HRSearchApplicant(this.hrBackend, cards), HRPanel.SEARCH_APPLICANT, 4);
-        cards.add(new HRAddPostingForm(this.hrBackend), HRPanel.ADD_POSTING, 5);
+        cards.add(new HRAddOrUpdatePostingForm(this.hrBackend, true, null), HRPanel.ADD_POSTING, 5);
+        cards.add(new HRViewJobPostingThatCanBeUpdated(this.hrBackend, cards), HRPanel.UPDATE_POSTING, 6);
         //cards.add(new HRViewApp(this, this.hrBackend
         //, this.today, new HashMap<>()), HRPanel.APPLICATION);
     }

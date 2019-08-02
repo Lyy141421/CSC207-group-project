@@ -73,6 +73,11 @@ public class HRCoordinator extends User {
         return branchJobPosting;
     }
 
+    public void updateJobPosting(BranchJobPosting jobPosting, int numPositions, LocalDate applicationCloseDate,
+                                 LocalDate referenceCloseDate) {
+        jobPosting.updateFields(numPositions, applicationCloseDate, referenceCloseDate);
+    }
+
     /**
      * Choose the interview configuration for this job posting.
      *

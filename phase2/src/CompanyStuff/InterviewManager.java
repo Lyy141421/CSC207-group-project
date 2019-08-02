@@ -20,7 +20,7 @@ public class InterviewManager extends Observable implements Serializable {
     static final long serialVersionUID = 1L;
     // Integers that represent the task the HR Coordinator needs to accomplish
     private static final int DO_NOTHING = 0;
-    private static final int EXTEND_APPLICATION_DEADLINE = 1;
+    public static final int EXTEND_APPLICATION_DEADLINE = 1;
     public static final int SELECT_APPS_FOR_FIRST_ROUND = 2;
     public static final int SCHEDULE_GROUP_INTERVIEWS = 3;
     public static final int SELECT_APPS_TO_HIRE = 4;
@@ -138,9 +138,22 @@ public class InterviewManager extends Observable implements Serializable {
      *
      * @param jobApplication The application to be rejected.
      */
-    public void reject(JobApplication jobApplication) {
+    void reject(JobApplication jobApplication) {
         this.applicationsInConsideration.remove(jobApplication);
         this.applicationsRejected.add(jobApplication);
+    }
+
+    /**
+     * Reject the applications in this list for this job. Called when HR first selects applications to advance to first
+     * round.
+     *
+     * @param jobApps The job applications to be rejected.
+     */
+    public void reject(ArrayList<JobApplication> jobApps) {
+        for (JobApplication jobApp : jobApps) {
+            this.reject(jobApp);
+        }
+        this.chosenApplicantsForFirstRound = true;
     }
 
     /**
@@ -197,7 +210,7 @@ public class InterviewManager extends Observable implements Serializable {
      * Note: this will be called every time someone logs in
      *
      */
-    public void updateJobPostingStatus() {
+    public void updateJobPostingFilledStatus() {
         if (this.hasNoJobApplicationsInConsideration()) {
             this.updateObserverList();
             this.notifyAllObservers(new Notification("Warning: No Applications in Consideration",
@@ -205,7 +218,7 @@ public class InterviewManager extends Observable implements Serializable {
                             + " job posting (id " + this.getBranchJobPosting().getId() + "). It has been automatically" +
                             " set to filled with 0 positions."));
             this.getBranchJobPosting().closeJobPostingNoApplicationsInConsideration();
-        } else if (this.currentRound != 0 | this.isInterviewProcessOver()) {
+        } else if (this.currentRound != 0 && this.isInterviewProcessOver()) {
             // The check for current round ensures that applicants get at least 1 interview
             this.hireAllApplicants();
         }

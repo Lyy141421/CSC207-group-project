@@ -14,7 +14,7 @@ public class CompanyJobPosting extends Observable implements Serializable {
     // The total number of job postings created
     private static int totalNumOfJobPostings;
     // The list of recommended documents for submission
-    public static String[] RECOMMENDED_DOCUMENTS = new String[]{"CV/Resume", "Cover letter", "Reference letter"};
+    public static String[] RECOMMENDED_DOCUMENTS = new String[]{"CV", "Cover letter", "Reference letter"};
     // The list of recommended tags
     public static String[] RECOMMENDED_TAGS = new String[]{"Computer science", "Bachelor's degree", "Prior work experience",
             "Team-oriented"};
@@ -96,12 +96,47 @@ public class CompanyJobPosting extends Observable implements Serializable {
         this.branches.add(branch);
     }
 
-    public String getTagsString(){
-        return tags.toString().replace("[", "").replace("]", "").replace(", ", ";");
+    private String getListComplementString(ArrayList<String> actualList, String[] recommendedList) {
+        ArrayList<String> listComplement = (ArrayList<String>) actualList.clone();
+        for (String item : recommendedList) {
+            for (String item2 : actualList) {
+                if (item2.equalsIgnoreCase(item)) {
+                    listComplement.remove(item2);
+                    break;
+                }
+            }
+        }
+        return listComplement.toString().replace("[", "").replace("]",
+                "").replace(", ", ";");
     }
 
-    public String getDocsString(){
-        return requiredDocuments.toString().replace("[", "").replace("]", "").replace(", ", ";");
+    public String getTagsStringNoRecommended() {
+        return this.getListComplementString(this.getTags(), CompanyJobPosting.RECOMMENDED_TAGS);
+    }
+
+    public String getDocsStringNoRecommended() {
+        return this.getListComplementString(this.getRequiredDocuments(), CompanyJobPosting.RECOMMENDED_DOCUMENTS);
+    }
+
+    private ArrayList<String> getListIntersection(ArrayList<String> actualList, String[] recommendedList) {
+        ArrayList<String> listIntersection = new ArrayList<>();
+        for (String item : recommendedList) {
+            for (String item2 : actualList) {
+                if (item.equalsIgnoreCase(item2)) {
+                    listIntersection.add(item);
+                    break;
+                }
+            }
+        }
+        return listIntersection;
+    }
+
+    public ArrayList<String> getRecommendedTagsUsed() {
+        return this.getListIntersection(this.getTags(), CompanyJobPosting.RECOMMENDED_TAGS);
+    }
+
+    public ArrayList<String> getRecommendedDocumentsUsed() {
+        return this.getListIntersection(this.getRequiredDocuments(), CompanyJobPosting.RECOMMENDED_DOCUMENTS);
     }
 
     private String getStringForList(ArrayList<String> list) {
