@@ -210,7 +210,7 @@ public class InterviewManager extends Observable implements Serializable {
                 return InterviewManager.EXTEND_APPLICATION_DEADLINE;
             }
             return InterviewManager.SELECT_APPS_FOR_FIRST_ROUND;
-        } else if (!this.isInterviewProcessOver() && this.isNextRoundGroupInterview()) {
+        } else if (!this.isInterviewProcessOver() && this.isCurrentRoundGroupInterviewUnscheduled()) {
             if (!this.branchJobPosting.getBranch().hasInterviewerForField(this.branchJobPosting.getField())) {
                 this.notifyAllObservers(new Notification("No Interviewers For Field", "There are no interviewers" +
                         "at your branch for this field. Group interviews cannot be set for round " + this.currentRound +
@@ -373,8 +373,10 @@ public class InterviewManager extends Observable implements Serializable {
      *
      * @return true iff the next interview round is a group interview.
      */
-    private boolean isNextRoundGroupInterview() {
-        return this.interviewConfiguration.get(this.currentRound + 1)[1].equals(Interview.GROUP);
+    private boolean isCurrentRoundGroupInterviewUnscheduled() {
+        Interview lastInterview = this.applicationsInConsideration.get(0).getLastInterview();
+        return this.interviewConfiguration.get(this.currentRound)[0].equals(Interview.GROUP) &&
+                (lastInterview == null || lastInterview.getRoundNumber() < this.currentRound);
     }
 
 
