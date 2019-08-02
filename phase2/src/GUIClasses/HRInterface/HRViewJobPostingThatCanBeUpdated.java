@@ -53,7 +53,7 @@ class HRViewJobPostingThatCanBeUpdated extends HRPanel {
                 String selectedTitle = jobPostingList.getSelectedValue();
                 BranchJobPosting selectedJP = updatableJPs.get(selectedTitle);
                 info.setText(selectedJP.toString());
-                updateButton.setEnabled(false);
+                updateButton.setEnabled(true);
             }
         });
     }
@@ -67,10 +67,10 @@ class HRViewJobPostingThatCanBeUpdated extends HRPanel {
                 String selectedTitle = jobPostingList.getSelectedValue();
                 BranchJobPosting selectedJP = updatableJPs.get(selectedTitle);
                 HRAddOrUpdatePostingForm updateForm = new HRAddOrUpdatePostingForm(hrBackend, false, selectedJP);
-                if (parent.getComponents().length > 8) {
-                    parent.remove(8);
+                if (parent.getComponents().length > 7) {
+                    parent.remove(7);
                 }
-                parent.add(updateForm, HRPanel.UPDATE_POSTING_FORM, 8);
+                parent.add(updateForm, HRPanel.UPDATE_POSTING_FORM, 7);
                 ((CardLayout) parent.getLayout()).show(parent, HRPanel.UPDATE_POSTING_FORM);
             }
         });

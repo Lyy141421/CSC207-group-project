@@ -8,6 +8,8 @@ import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
 import net.sourceforge.jdatepicker.impl.UtilDateModel;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -61,7 +63,7 @@ class HRAddOrUpdatePostingForm extends HRPanel {
     private String documentInputInstructions;
     private JTextArea extraTagsEntry;
     private String tagsInputInstructions;
-    private ArrayList<String> fullOptionalSelectionInput = new ArrayList<>();
+    private ArrayList<StringBuilder> fullOptionalSelectionInput = new ArrayList<>();
     private CompanyJobPosting selectedJP;
     private boolean toAdd;
 
@@ -72,14 +74,14 @@ class HRAddOrUpdatePostingForm extends HRPanel {
     HRAddOrUpdatePostingForm(HRBackend hrBackend, boolean toAdd, BranchJobPosting jobPostingToUpdate) {
         super(hrBackend);
         this.setLayout(null);
-        this.addFieldsAndSubmitButton();
-        this.addText();
-        this.setCompanyPostingListListener();
-        this.setJobTitleActionListener();
         if (jobPostingToUpdate != null) {
             selectedJP = jobPostingToUpdate;
         }
         this.toAdd = toAdd;
+        this.addFieldsAndSubmitButton();
+        this.addText();
+        this.setCompanyPostingListListener();
+        this.setJobTitleDocumentListener();
     }
 
     private void addText() {
@@ -214,20 +216,38 @@ class HRAddOrUpdatePostingForm extends HRPanel {
         this.companyPostingList.setEditable(true);
         this.setCompanyJPMap(this.hrBackend.getHR().getBranch().getCompany().getCompanyJobPostings());
         this.companyPostingModel = new DefaultComboBoxModel<>(companyJPMap.keySet().toArray(new String[companyJPMap.size()]));
-        this.companyPostingModel.setSelectedItem(null);
+        if (toAdd) {
+            this.companyPostingModel.setSelectedItem(null);
+        } else {
+            this.companyPostingList.setSelectedItem(selectedJP);
+        }
         this.companyPostingList.setModel(this.companyPostingModel);
     }
 
-    private void setJobTitleActionListener() {
-        this.companyPostingList.addActionListener(new ActionListener() {
+    private void setJobTitleDocumentListener() {
+        ((JTextComponent) ((JComboBox) entryBoxes.get(0)).getEditor().getEditorComponent()).getDocument().addDocumentListener(new DocumentListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {
-                String jobTitleText = ((JTextComponent) ((JComboBox) entryBoxes.get(0)).getEditor().getEditorComponent()).getText();
-                if (!companyJPMap.keySet().contains(jobTitleText)) {
-                    enableAndClearAllInput();
-                }
+            public void insertUpdate(DocumentEvent e) {
+                resetForm();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                resetForm();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+
             }
         });
+    }
+
+    private void resetForm() {
+        String jobTitleText = ((JTextComponent) ((JComboBox) entryBoxes.get(0)).getEditor().getEditorComponent()).getText();
+        if (!companyJPMap.keySet().contains(jobTitleText)) {
+            enableAndClearAllInput();
+        }
     }
 
     private void enableAndClearAllInput() {
@@ -250,15 +270,17 @@ class HRAddOrUpdatePostingForm extends HRPanel {
                 //                         3. input new title
                 //                         4. select posting again
                 String selectedTitle = (String) companyPostingList.getSelectedItem();
-                if (companyJPMap.containsKey(selectedTitle)) {
-                    selectedJP = companyJPMap.get(selectedTitle);
-                    //0.title, 1.field, 2.description, 3.required documents, 4.tags, 5.numOfPos, 6.close date, 7.reference close date
-                    //Company default： 0, 1, 2, 3, 4
-                    fillDefaultValues();
-                    disableDefaultFields();
-                } else if (toAdd) {
-                    addFieldsAndSubmitButton();
-                    enableAndClearAllInput();
+                if (toAdd) {
+                    if (companyJPMap.containsKey(selectedTitle)) {
+                        selectedJP = companyJPMap.get(selectedTitle);
+                        //0.title, 1.field, 2.description, 3.required documents, 4.tags, 5.numOfPos, 6.close date, 7.reference close date
+                        //Company default： 0, 1, 2, 3, 4
+                        fillDefaultValues();
+                        disableDefaultFields();
+                    } else {
+                        addFieldsAndSubmitButton();
+                        enableAndClearAllInput();
+                    }
                 }
             }
         });
@@ -324,7 +346,7 @@ class HRAddOrUpdatePostingForm extends HRPanel {
 
     private JDatePickerImpl createDatePicker() {
         UtilDateModel dateModel = new UtilDateModel();
-        int[] todayComponents = hrBackend.getTodayComponents();
+        int[] todayComponents = hrBackend.getTomorrowComponents();
         dateModel.setDate(todayComponents[0], todayComponents[1] - 1, todayComponents[2]);
         dateModel.setSelected(true);
         JDatePanelImpl datePanel = new JDatePanelImpl(dateModel);
@@ -340,10 +362,10 @@ class HRAddOrUpdatePostingForm extends HRPanel {
 
     private JScrollPane createSelectionBox(String[] recommended) {
         JPanel recommendedPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        String checkedInput = "";
+        StringBuilder checkedInput = new StringBuilder();
         for (String label : recommended) {
             JCheckBox checkBox = new JCheckBox(label);
-            checkedInput = this.addCheckBoxItemListener(checkBox);
+            this.addCheckBoxItemListener(checkBox, checkedInput);
             recommendedPanel.add(checkBox);
         }
         JScrollPane labelPane = new JScrollPane(recommendedPanel);
@@ -354,25 +376,22 @@ class HRAddOrUpdatePostingForm extends HRPanel {
     }
 
     private void setAllSelectedAndInputtedItems(int index, JTextArea textInput, String instructions) {
-        String fullTextInput = this.fullOptionalSelectionInput.get(index);
-        if (fullTextInput.startsWith(";")) {
-            fullTextInput = fullTextInput.substring(1);
+        StringBuilder fullTextInput = this.fullOptionalSelectionInput.get(index);
+        if (fullTextInput.charAt(0) == ';') {
+            fullTextInput.deleteCharAt(0);
         }
         if (!textInput.getText().equals(instructions)) {
-            if (!fullTextInput.endsWith(";")) {
-                fullTextInput += ";";
+            if (fullTextInput.charAt(fullTextInput.length() - 1) != ';') {
+                fullTextInput.append(';');
             }
-            fullTextInput += textInput.getText();
-            if (fullTextInput.endsWith(";")) {
-                fullTextInput = fullTextInput.substring(0, fullTextInput.length() - 1);
+            fullTextInput.append(textInput.getText());
+            if (fullTextInput.charAt(fullTextInput.length() - 1) == ';') {
+                fullTextInput.deleteCharAt(fullTextInput.length() - 1);
             }
         }
-        this.fullOptionalSelectionInput.remove(index);
-        this.fullOptionalSelectionInput.add(index, fullTextInput);
     }
 
-    private String addCheckBoxItemListener(JCheckBox checkBox) {
-        StringBuilder checkedInput = new StringBuilder();
+    private void addCheckBoxItemListener(JCheckBox checkBox, StringBuilder checkedInput) {
         checkBox.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
@@ -390,7 +409,6 @@ class HRAddOrUpdatePostingForm extends HRPanel {
                 checkedInput.append(currText);
             }
         });
-        return checkedInput.toString();
     }
 
     private void addSubmitButton(Rectangle rect) {
@@ -446,8 +464,8 @@ class HRAddOrUpdatePostingForm extends HRPanel {
         return Optional.of(new String[]{jobTitleText,  // title
                 ((JTextField) entryBoxes.get(1)).getText(),  // field
                 ((JTextArea) entryBoxes.get(2)).getText(),   // description
-                (this.fullOptionalSelectionInput.get(0)),   // documents
-                (this.fullOptionalSelectionInput.get(1)),   // tags
+                (this.fullOptionalSelectionInput.get(0).toString()),   // documents
+                (this.fullOptionalSelectionInput.get(1).toString()),   // tags
         });
     }
 

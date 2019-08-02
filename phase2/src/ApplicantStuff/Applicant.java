@@ -4,6 +4,7 @@ import CompanyStuff.Branch;
 import CompanyStuff.JobPostings.BranchJobPosting;
 import CompanyStuff.Company;
 import DocumentManagers.ApplicantDocumentManager;
+import DocumentManagers.DocumentManager;
 import DocumentManagers.DocumentManagerFactory;
 import CompanyStuff.JobPostings.BranchJobPostingManager;
 import Main.JobApplicationSystem;
@@ -28,7 +29,7 @@ public class Applicant extends User {
     // The applicant's job application manager
     private JobApplicationManager jobApplicationManager;
     // The applicant's document manager
-    private ApplicantDocumentManager documentManager;
+    private DocumentManager documentManager;
 
     // === Public methods ===
     // === Constructor ===
@@ -37,7 +38,7 @@ public class Applicant extends User {
         super(username, password, legalName, email, dateCreated);
         this.cma = cma;
         this.jobApplicationManager = new JobApplicationManager();
-        this.documentManager = new DocumentManagerFactory().createApplicantDocumentManager(this);
+        this.documentManager = new DocumentManagerFactory().createDocumentManager(this);
     }
 
     // === Getters ===
@@ -50,7 +51,7 @@ public class Applicant extends User {
     }
 
     public ApplicantDocumentManager getDocumentManager() {
-        return this.documentManager;
+        return (ApplicantDocumentManager) this.documentManager;
     }
 
     // === Other methods ===

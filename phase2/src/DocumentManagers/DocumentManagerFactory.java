@@ -10,23 +10,18 @@ public class DocumentManagerFactory {
      */
 
     /**
-     * Creates a company document manager.
+     * Creates a document manager.
      *
-     * @param company The company that the manager is for.
-     * @return the company document manager for this company.
-     */
-    public CompanyDocumentManager createCompanyDocumentManager(Company company) {
-        return new CompanyDocumentManager(company);
-    }
-
-    /**
-     * Creates an applicant document manager.
-     *
-     * @param applicant The applicant that the manager is for.
+     * @param object    The object that the manager is for.
      * @return the applicant document manager for this applicant.
      */
-    public ApplicantDocumentManager createApplicantDocumentManager(Applicant applicant) {
-        return new ApplicantDocumentManager(applicant);
+    public DocumentManager createDocumentManager(Object object) {
+        if (object instanceof Company) {
+            return new CompanyDocumentManager((Company) object);
+        } else if (object instanceof Applicant) {
+            return new ApplicantDocumentManager((Applicant) object);
+        }
+        return null;
     }
 
 }
