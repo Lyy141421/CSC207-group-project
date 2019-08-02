@@ -126,7 +126,7 @@ public class InterviewManager extends Observable implements Serializable {
         return false;
     }
 
-    public boolean hasInterviewProcessBegun() {
+    public boolean interviewProcessHasBegun() {
         return this.getCurrentRound() > -1;
     }
 
@@ -154,17 +154,14 @@ public class InterviewManager extends Observable implements Serializable {
      * Reject the applications in this list for this job. Called when HR first selects applications to advance to first
      * round.
      *
-     * @param jobApps The job applications to be rejected.
+     * @param jobApplications The job applications to be rejected.
      */
-    public void reject(ArrayList<JobApplication> jobApps) {
-        for (JobApplication jobApp : jobApps) {
+    public void rejectApplicationsForFirstRound(ArrayList<JobApplication> jobApplications) {
+        for (JobApplication jobApp : jobApplications) {
             this.reject(jobApp);
         }
         this.chosenApplicantsForFirstRound = true;
-    }
 
-    public void rejectApplicationsForFirstRound(ArrayList<JobApplication> jobApplications) {
-        this.reject(jobApplications);
         for (JobApplication jobApp : this.applicationsInConsideration) {
             jobApp.getStatus().advanceStatus();
         }
@@ -233,13 +230,13 @@ public class InterviewManager extends Observable implements Serializable {
         if (this.hasNoJobApplicationsInConsideration()) {
             this.updateObserverList();
             this.notifyAllObservers(new Notification("Warning: No Applications in Consideration",
-                    "There are no applications in consideration for the" + this.getBranchJobPosting().getTitle()
+                    "There are no applications in consideration for the " + this.getBranchJobPosting().getTitle()
                             + " job posting (id " + this.getBranchJobPosting().getId() + "). It has been automatically" +
                             " set to filled with 0 positions."));
             this.getBranchJobPosting().closeJobPostingNoApplicationsInConsideration();
         } else if (this.isInterviewProcessOver()) {
             // The check for current round ensures that applicants get at least 1 interview
-            this.hireAllApplicants();
+            this.hireApplicants(this.applicationsInConsideration);
         }
     }
 
@@ -419,21 +416,14 @@ public class InterviewManager extends Observable implements Serializable {
      * @param jobAppsToHire The job applications of those to be hired.
      */
     public void hireApplicants(ArrayList<JobApplication> jobAppsToHire) {
+        this.notifyAllObservers(new Notification("AutoHiring All Applicants",
+                "All applicants in " + this.getBranchJobPosting().getTitle()
+                        + " have been auto-hired"));
         for (JobApplication jobApp : jobAppsToHire) {
             jobApp.getStatus().setHired();
         }
         this.branchJobPosting.setFilled();
         this.archiveRejected();
-    }
-
-    /**
-     * Hire all the applicants
-     */
-    private void hireAllApplicants() {
-        this.notifyAllObservers(new Notification("AutoHiring All Applicants",
-                "All applicants in " + this.getBranchJobPosting().getTitle()
-                        + " have been auto-hired"));
-        this.hireApplicants(this.applicationsInConsideration);
     }
 
     @Override

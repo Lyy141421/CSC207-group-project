@@ -87,6 +87,11 @@ public class BranchJobPosting extends CompanyJobPosting implements JobPostingObs
         //TODO notify HR
     }
 
+    //TODO: remove after testing
+    public void setInterviewManager(InterviewManager interviewManager) {
+        this.interviewManager = interviewManager;
+    }
+
     // === Other methods ===
 
     /**
@@ -208,7 +213,7 @@ public class BranchJobPosting extends CompanyJobPosting implements JobPostingObs
         }
         InterviewManager interviewManager = this.getInterviewManager();
         if (interviewManager.getCurrentRound() < interviewManager.getFinalRoundNumber()) {
-            if (!interviewManager.hasInterviewProcessBegun() || interviewManager.currentRoundIsOver()) {
+            if (!interviewManager.interviewProcessHasBegun() || interviewManager.currentRoundIsOver()) {
                 interviewManager.advanceRound();
                 this.notifyAllObservers(new Notification("Advance to Next Round",
                         "You have advanced to the next round in " + super.getTitle()));

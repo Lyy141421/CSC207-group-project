@@ -60,7 +60,9 @@ public class InterviewManagerTest {
         ArrayList<JobApplication> applicationsInConsideration = new ArrayList<>();
         applicationsInConsideration.add(this.application1);
         applicationsInConsideration.add(this.application2);
-        return new InterviewManager(this.branchJobPosting1, applicationsInConsideration);
+        InterviewManager interviewManager = new InterviewManager(this.branchJobPosting1, applicationsInConsideration);
+        branchJobPosting1.setInterviewManager(interviewManager);
+        return interviewManager;
     }
 
     void createSecondBJP(HRCoordinator hrc) {
@@ -75,7 +77,9 @@ public class InterviewManagerTest {
         ArrayList<JobApplication> applicationsInConsideration = new ArrayList<>();
         applicationsInConsideration.add(this.application4);
         applicationsInConsideration.add(this.application5);
-        return new InterviewManager(this.branchJobPosting2, applicationsInConsideration);
+        InterviewManager interviewManager = new InterviewManager(this.branchJobPosting2, applicationsInConsideration);
+        branchJobPosting2.setInterviewManager(interviewManager);
+        return interviewManager;
     }
 
     InterviewManager createInterviewManagerNoInterviewers() {
@@ -93,6 +97,7 @@ public class InterviewManagerTest {
         ArrayList<JobApplication> applicationsInConsideration = new ArrayList<>();
         applicationsInConsideration.add(this.application1);
         applicationsInConsideration.add(this.application2);
+        branchJobPosting1.setInterviewManager(interviewManager);
         assert interviewManager.getApplicationsInConsideration().equals(applicationsInConsideration);
         assert interviewManager.getApplicationsRejected().isEmpty();
         assert interviewManager.getInterviewConfiguration().isEmpty();
@@ -114,6 +119,17 @@ public class InterviewManagerTest {
     scope of InterviewManager. */
 
     @Test
+    void testSetUpInterviewNoApplicationsInConsideration() {
+        interviewManager1 = testConstructor();
+        ArrayList<JobApplication> applicationsRejected = new ArrayList<>();
+        applicationsRejected.add(application1);
+        applicationsRejected.add(application2);
+        interviewManager1.rejectApplicationsForFirstRound(applicationsRejected);
+        interviewManager1.updateJobPostingFilledStatus();
+        assert this.hrc.getAllNotifications().size() == 1;
+    }
+
+    @Test
     void testGetEarliestTimeAvailableForAllInterviewersBusyAfterEarliestTime() {
         InterviewTime time1 = new InterviewTime(LocalDate.now().plusDays(7), "4-5 pm");
         InterviewTime time2 = new InterviewTime(LocalDate.now().plusDays(8), "10-11 am");
@@ -125,6 +141,8 @@ public class InterviewManagerTest {
         interviewManager2 = createInterviewManagerFromSecondBJP();
 
         testSetInterviewConfigurationGroupSecondBJP();
+
+        branchJobPosting2.advanceInterviewRound();
 
         ArrayList<Interviewer> otherInterviewers = new ArrayList<>();
         otherInterviewers.add(interviewer2);
@@ -147,6 +165,8 @@ public class InterviewManagerTest {
 
         testSetInterviewConfigurationGroupSecondBJP();
 
+        branchJobPosting2.advanceInterviewRound();
+
         ArrayList<Interviewer> otherInterviewers = new ArrayList<>();
         otherInterviewers.add(interviewer2);
         otherInterviewers.add(interviewer3);
@@ -167,6 +187,8 @@ public class InterviewManagerTest {
         interviewManager2 = createInterviewManagerFromSecondBJP();
 
         testSetInterviewConfigurationGroupSecondBJP();
+
+        branchJobPosting2.advanceInterviewRound();
 
         ArrayList<Interviewer> otherInterviewers = new ArrayList<>();
         otherInterviewers.add(interviewer2);
@@ -189,6 +211,8 @@ public class InterviewManagerTest {
 
         testSetInterviewConfigurationGroupSecondBJP();
 
+        branchJobPosting2.advanceInterviewRound();
+
         ArrayList<Interviewer> otherInterviewers = new ArrayList<>();
         otherInterviewers.add(interviewer2);
         otherInterviewers.add(interviewer3);
@@ -210,6 +234,8 @@ public class InterviewManagerTest {
 
         testSetInterviewConfigurationGroupSecondBJP();
 
+        branchJobPosting2.advanceInterviewRound();
+
         ArrayList<Interviewer> otherInterviewers = new ArrayList<>();
         otherInterviewers.add(interviewer2);
         otherInterviewers.add(interviewer3);
@@ -226,6 +252,8 @@ public class InterviewManagerTest {
                 "carol@gmail.com", branch, "HR", LocalDate.now());
 
         testSetInterviewConfigurationOneOnOne();
+
+        branchJobPosting1.advanceInterviewRound();
 
         testSetUpOneOnOneInterviews();
 
@@ -259,7 +287,7 @@ public class InterviewManagerTest {
 
         testApplicationListsUpdatedAfterRoundVer1();
 
-        testHireApplicants();
+        testUpdateJobPostingFilledStatus();
     }
 
     @Test
@@ -267,6 +295,8 @@ public class InterviewManagerTest {
         interviewManager1 = testConstructor();
 
         testSetInterviewConfigurationGroup();
+
+        branchJobPosting1.advanceInterviewRound();
 
         testSetUpGroupInterview();
 
@@ -278,7 +308,7 @@ public class InterviewManagerTest {
 
         testApplicationListsUpdatedAfterRoundVer1();
 
-        testHireApplicants();
+        testUpdateJobPostingFilledStatus();
     }
 
     @Test
@@ -288,6 +318,8 @@ public class InterviewManagerTest {
         interviewManager1.getApplicationsInConsideration().add(application3);
 
         testSetInterviewConfigurationGroupThenOneOnOne();
+
+        branchJobPosting1.advanceInterviewRound();
 
         testSetUpGroupInterview();
 
@@ -316,7 +348,7 @@ public class InterviewManagerTest {
 
         testApplicationListsUpdatedAfterRoundVer3();
 
-        testHireApplicants();
+        testUpdateJobPostingFilledStatus();
     }
 
     @Test
@@ -354,7 +386,7 @@ public class InterviewManagerTest {
 
     @Test
     private void testSetUpOneOnOneInterviews() {
-        interviewManager1.setUpOneOnOneInterviews();
+        branchJobPosting1.advanceInterviewRound();
         assert interviewer1.getInterviews().size() == 1;
         assert interviewer2.getInterviews().size() == 1;
     }
@@ -426,8 +458,8 @@ public class InterviewManagerTest {
     }
 
     @Test
-    private void testHireApplicants() {
-        interviewManager1.hireApplicants(interviewManager1.getApplicationsInConsideration());
+    private void testUpdateJobPostingFilledStatus() {
+        interviewManager1.updateJobPostingFilledStatus();
         assert interviewManager1.getBranchJobPosting().isFilled();
         assert application1.getStatus().isArchived();
         assert application2.getStatus().isHired();
