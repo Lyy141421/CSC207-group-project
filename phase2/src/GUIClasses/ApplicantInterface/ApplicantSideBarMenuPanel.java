@@ -1,5 +1,6 @@
 package GUIClasses.ApplicantInterface;
 
+import GUIClasses.ActionListeners.LogoutActionListener;
 import GUIClasses.CommonUserGUI.SideBarMenuCreator;
 
 import javax.swing.*;
@@ -13,11 +14,13 @@ public class ApplicantSideBarMenuPanel extends JPanel {
     // === Instance variable ===
     private CardLayout affectedLayout;
     private JPanel cards;
+    private LogoutActionListener logout;
 
     // === Constructor ===
-    ApplicantSideBarMenuPanel(JPanel cards, CardLayout layout) {
+    ApplicantSideBarMenuPanel(JPanel cards, CardLayout layout, LogoutActionListener logout) {
         this.affectedLayout = layout;
         this.cards = cards;
+        this.logout = logout;
         TreeMap<String, Object> fullMenu = this.createFullMenu();
         this.setLayout(new BorderLayout());
         this.add(new SideBarMenuCreator(fullMenu).createMenuBar());
@@ -48,11 +51,7 @@ public class ApplicantSideBarMenuPanel extends JPanel {
         fullMenu.put("6. Withdraw Application", new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {affectedLayout.show(cards, "MANAGE");}});
-        fullMenu.put("7. Logout", new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                //TODO
-            }});
+        fullMenu.put("7. Logout", logout);
         return fullMenu;
     }
 

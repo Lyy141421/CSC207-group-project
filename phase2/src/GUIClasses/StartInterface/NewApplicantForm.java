@@ -15,40 +15,40 @@ class NewApplicantForm extends JPanel {
     private void addFields() {
         JPasswordField appPassEntry = new JPasswordField();
         appPassEntry.setName("password");
-        appPassEntry.setBounds(437, 10, 150, 30);
+        appPassEntry.setBounds(437, 8, 150, 30);
         this.add(appPassEntry);
 
         JTextField appNameEntry = new JTextField();
         appNameEntry.setName("name");
-        appNameEntry.setBounds(437, 60, 150, 30);
+        appNameEntry.setBounds(437, 43, 150, 30);
         this.add(appNameEntry);
 
         JTextField appEmailEntry = new JTextField();
         appEmailEntry.setName("email");
-        appEmailEntry.setBounds(437, 110, 150, 30);
+        appEmailEntry.setBounds(437, 77, 150, 30);
         this.add(appEmailEntry);
 
         JTextField postalCodeEntry = new JTextField();
         postalCodeEntry.setName("postalCode");
-        postalCodeEntry.setBounds(437, 160, 150, 30);
+        postalCodeEntry.setBounds(437, 112, 150, 30);
         this.add(postalCodeEntry);
     }
 
     private void addText(){
         JLabel appPassText = new JLabel("Password: ", SwingConstants.CENTER);
-        appPassText.setBounds(267, 10, 150, 30);
+        appPassText.setBounds(267, 8, 150, 30);
         this.add(appPassText);
 
         JLabel appNameText = new JLabel("Legal Name: ", SwingConstants.CENTER);
-        appNameText.setBounds(267, 60, 150, 30);
+        appNameText.setBounds(267, 43, 150, 30);
         this.add(appNameText);
 
         JLabel appEmailText = new JLabel("Email Address: ", SwingConstants.CENTER);
-        appEmailText.setBounds(267, 110, 150, 30);
+        appEmailText.setBounds(267, 77, 150, 30);
         this.add(appEmailText);
 
         JLabel postalCodeText = new JLabel("Postal Code: ", SwingConstants.CENTER);
-        postalCodeText.setBounds(267, 160, 150, 30);
+        postalCodeText.setBounds(267, 112, 150, 30);
         this.add(postalCodeText);
     }
 }

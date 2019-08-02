@@ -1,9 +1,14 @@
 package GUIClasses.StartInterface;
 
 import ApplicantStuff.Applicant;
+import ApplicantStuff.Reference;
 import CompanyStuff.HRCoordinator;
 import CompanyStuff.Interviewer;
+import GUIClasses.ActionListeners.LogoutActionListener;
+import GUIClasses.ApplicantInterface.ApplicantPanel;
+import GUIClasses.InterviewerInterface.InterviewerMain;
 import GUIClasses.MainFrame;
+import GUIClasses.ReferenceInterface.ReferenceMain;
 import Main.JobApplicationSystem;
 import Main.User;
 
@@ -23,8 +28,10 @@ public class LoginMain extends JPanel {
     private Container parent;
     private MainFrame mainframe;
     private NewUserPanel newUserRef;
+    private JobApplicationSystem jobAppSystem;
 
-    public LoginMain(NewUserPanel newUserRef, Container parent, CardLayout masterLayout, JobApplicationSystem jobAppSystem) {
+    public LoginMain(NewUserPanel newUserRef, Container parent, CardLayout masterLayout,
+                     JobApplicationSystem jobAppSystem) {
         this.parent = parent;
         this.masterLayout = masterLayout;
         this.mainframe = (MainFrame) this.parent.getParent().getParent().getParent();
@@ -33,6 +40,7 @@ public class LoginMain extends JPanel {
         this.addTextItems();
         this.addEntryItems();
         this.backend = new LoginBackend(jobAppSystem);
+        this.jobAppSystem = jobAppSystem;
     }
 
     /**
@@ -229,19 +237,23 @@ public class LoginMain extends JPanel {
      */
     private void GUILogin(String username) {
         User user = this.backend.findUserByUsername(username);
+        //TODO date
         if(user instanceof Applicant) {
-//            ApplicantMain newAppPanel = new ApplicantMain((Applicant)user);
-            //TODO: get date
-//            this.parent.add(newAppPanel, "APPLICANT");
+            ApplicantPanel newAppPanel = new ApplicantPanel((Applicant)user, this.jobAppSystem,
+                    this.createLogoutListener());
+            this.parent.add(newAppPanel, "APPLICANT");
             this.masterLayout.show(parent, "APPLICANT");
         } else if(user instanceof HRCoordinator) {
-            //TODO: Handle
+            //TODO: Handle when HR panel is done
         } else if(user instanceof Interviewer) {
-            //TODO: Handle
+            InterviewerMain newIntPanel = new InterviewerMain((Interviewer)user, jobAppSystem,
+                    this.createLogoutListener());
+            this.parent.add(newIntPanel, "INTERVIEWER");
+            this.masterLayout.show(parent, "INTERVIEWER");
         } else { //Reference
-//            ReferencePanel newRefPanel = new ReferencePanel(username, this.backend.getJobAppSystem(), parent, masterLayout);
-//            this.parent.add(newRefPanel, "REFERENCE");
-//            this.masterLayout.show(parent, "REFERENCE");
+            ReferenceMain newRefPanel = new ReferenceMain((Reference)user, jobAppSystem, this.createLogoutListener());
+            this.parent.add(newRefPanel, "REFERENCE");
+            this.masterLayout.show(parent, "REFERENCE");
         }
         this.newUserRef.setNewUsername(null);
     }
@@ -254,5 +266,9 @@ public class LoginMain extends JPanel {
         this.hidePassError();
         this.newUserRef.setNewUsername(username);
         this.masterLayout.show(parent, "NEWUSER");
+    }
+
+    private LogoutActionListener createLogoutListener() {
+        return new LogoutActionListener(mainframe, masterLayout, jobAppSystem);
     }
 }

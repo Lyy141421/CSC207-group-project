@@ -17,6 +17,8 @@ class ApplicantViewApps extends JPanel {
     private Applicant applicant;
     private ApplicantBackend backend;
 
+    ApplicantViewApps() {}
+
     ApplicantViewApps(Applicant applicant) {
         this.applicant = applicant;
         this.backend = new ApplicantBackend(applicant);

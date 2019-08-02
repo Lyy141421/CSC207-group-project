@@ -34,10 +34,10 @@ class NewHRCForm extends JPanel {
         this.add(hrcCompanyEntry);
 
         // TODO how to handle a branch?
-        JTextField hrcBranchEntry = new JTextField();
-        hrcBranchEntry.setName("branch");
-        hrcBranchEntry.setBounds(437, 146, 150, 30);
-        this.add(hrcBranchEntry);
+//        JTextField hrcBranchEntry = new JTextField();
+//        hrcBranchEntry.setName("branch");
+//        hrcBranchEntry.setBounds(437, 146, 150, 30);
+//        this.add(hrcBranchEntry);
     }
 
     private void addText() {
@@ -58,8 +58,8 @@ class NewHRCForm extends JPanel {
         this.add(hrcCompanyText);
 
         // TODO how to handle branch?
-        JLabel hrcBranchText = new JLabel("Branch: ", SwingConstants.CENTER);
-        hrcBranchText.setBounds(267, 146, 150, 30);
-        this.add(hrcBranchText);
+//        JLabel hrcBranchText = new JLabel("Branch: ", SwingConstants.CENTER);
+//        hrcBranchText.setBounds(267, 146, 150, 30);
+//        this.add(hrcBranchText);
     }
 }

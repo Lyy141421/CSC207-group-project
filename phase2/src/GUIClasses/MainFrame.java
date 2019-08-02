@@ -19,8 +19,7 @@ public class MainFrame extends JFrame {
     private LocalDate getToday;
     private JobApplicationSystem jobAppSystem;
     private CardLayout layoutManager = new CardLayout();
-    //private JPanel homePanel;
-    NewUserPanel newUserRef;
+    private NewUserPanel newUserRef;
 
     public MainFrame(JobApplicationSystem jobAppSystem) {
         super("GET A JOB");
@@ -70,13 +69,6 @@ public class MainFrame extends JFrame {
         NewUserPanel newUserRef = new NewUserPanel(this.getContentPane(), this.layoutManager, this.jobAppSystem);
         this.add(newUserRef, "NEWUSER");
         this.add(new LoginMain(this.newUserRef, this.getContentPane(), this.layoutManager, this.jobAppSystem), "LOGIN");
-        // got User object from login/signup
-        //interface = new InterfaceFactory.create(User)
-        //if User instanceOf ...
-        //(cast to xxxInterface) interface
-//        this.add(new HRPanel(this.getContentPane(), interface, getToday), "HR");
-//        this.add(new InterviewerPanel(this.getContentPane(), interface, getToday), "INTERVIEWER");
-//        this.add(new ApplicantPanel(), "APPLICANT");
     }
 
     public static void main(String[] args) {
