@@ -77,13 +77,18 @@ class HRBackend {
 
 
     /**
-     * Add a job posting for this company.
+     * Add a job posting to the branch and check if there is an interviewer for that field.
      * @param mandatoryFields  The fields that must be entered regardless of method of adding JP.
      * @param defaultFields The fields that are set by default in company posting mode.
+     * @return true iff there is an interviewer for the field that this job posting is being added to.
      */
-    void addJobPosting(Object[] mandatoryFields, String[] defaultFields) {
+    // TODO force job posting creation
+    boolean addJobPosting(Object[] mandatoryFields, String[] defaultFields) {
         String title = defaultFields[0];
         String field = defaultFields[1];
+        if (!this.hr.getBranch().hasInterviewerForField(field)) {
+            return false;
+        }
         String description = defaultFields[2];
         ArrayList<String> requirements = new ArrayList<>(Arrays.asList(defaultFields[3].split(";")));
         ArrayList<String> tags = new ArrayList<>(Arrays.asList(defaultFields[4].split(";")));
@@ -92,6 +97,7 @@ class HRBackend {
         LocalDate referenceCloseDate = (LocalDate) mandatoryFields[2];
         this.hr.addJobPosting(title, field, description, requirements, tags, numPositions, jobAppSystem.getToday(), applicationCloseDate,
                 referenceCloseDate);
+        return true;
     }
 
     void implementJobPosting(CompanyJobPosting cjp, Object[] jobPostingFields) {
@@ -235,16 +241,12 @@ class HRBackend {
         return jobApp.getAllInterviewNotesForApplication();
     }
 
-    void closeJobPostingNotFilled(BranchJobPosting jobPosting) {
-        jobPosting.closeJobPostingNoApplicationsInConsideration();
+    ArrayList<CompanyJobPosting> getCompanyJobPostingsThatCanBeExtended() {
+        return this.hr.getBranch().getJobPostingManager().getExtendableCompanyJobPostings();
     }
 
     ArrayList<BranchJobPosting> getJPThatCanBeUpdated() {
-        BranchJobPostingManager jpm = this.hr.getBranch().getJobPostingManager();
-        ArrayList<BranchJobPosting> jobPostingsThatCanBeUpdated = new ArrayList<>();
-        jobPostingsThatCanBeUpdated.addAll(jpm.getOpenJobPostings(this.jobAppSystem.getToday()));
-        jobPostingsThatCanBeUpdated.addAll(jpm.getJobPostingsThatNeedDeadlineExtensions(this.jobAppSystem.getToday()));
-        return jobPostingsThatCanBeUpdated;
+        return this.hr.getBranch().getJobPostingManager().getUpdatableJobPostings(this.jobAppSystem.getToday());
     }
 
 }

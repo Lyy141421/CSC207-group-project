@@ -144,7 +144,7 @@ public class CompanyJobPosting extends Observable implements Serializable {
         return this.getListIntersection(this.getRequiredDocuments(), CompanyJobPosting.RECOMMENDED_DOCUMENTS);
     }
 
-    private String getStringForList(ArrayList<String> list) {
+    String getStringForList(ArrayList<String> list) {
         String s = "";
         for (String item : list) {
             s += item + ", ";
@@ -193,7 +193,7 @@ public class CompanyJobPosting extends Observable implements Serializable {
         s += "Title: " + this.title + "\n\n";
         s += "Field: " + this.field + "\n\n";
         s += "Description: " + this.description + "\n\n";
-//        s += "Branches: " + branches + "\n";
+//        s += "Branches: " + branches + "\n";  // TODO this should be displayed for applicant no?
         s += "Required Documents: " + this.getStringForList(this.requiredDocuments) + "\n\n";
         s += "Tags: " + this.getStringForList(this.tags) + "\n\n";
         s += "Company: " + this.company.getName() + "\n\n";

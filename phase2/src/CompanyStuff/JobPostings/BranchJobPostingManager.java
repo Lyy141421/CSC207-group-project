@@ -220,6 +220,29 @@ public class BranchJobPostingManager implements Serializable {
         return applicants;
     }
 
+    /**
+     * Get a list of company job postings that this branch has not yet extended.
+     *
+     * @return a list of company job postings that this branch has not yet extended.
+     */
+    public ArrayList<CompanyJobPosting> getExtendableCompanyJobPostings() {
+        ArrayList<CompanyJobPosting> cjpThatCanBeExtended = new ArrayList<>();
+        ArrayList<CompanyJobPosting> companyJobPostings = this.getBranch().getCompany().getCompanyJobPostings();
+        for (CompanyJobPosting companyJobPosting : companyJobPostings) {
+            if (!companyJobPosting.getBranches().contains(this.getBranch())) {
+                cjpThatCanBeExtended.add(companyJobPosting);
+            }
+        }
+        return cjpThatCanBeExtended;
+    }
+
+    public ArrayList<BranchJobPosting> getUpdatableJobPostings(LocalDate today) {
+        ArrayList<BranchJobPosting> jobPostingsThatCanBeUpdated = new ArrayList<>();
+        jobPostingsThatCanBeUpdated.addAll(this.getOpenJobPostings(today));
+        jobPostingsThatCanBeUpdated.addAll(this.getJobPostingsThatNeedDeadlineExtensions(today));
+        return jobPostingsThatCanBeUpdated;
+    }
+
     // ============================================================================================================== //
     // === Package-private methods ===
 

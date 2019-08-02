@@ -74,6 +74,9 @@ public class HRCoordinator extends User {
     public void updateJobPosting(BranchJobPosting jobPosting, int numPositions, LocalDate applicationCloseDate,
                                  LocalDate referenceCloseDate) {
         jobPosting.updateFields(numPositions, applicationCloseDate, referenceCloseDate);
+        if (!jobPosting.getBranches().contains(this.getBranch())) { // TODO very weird please help!
+            jobPosting.addBranch(this.getBranch());
+        }
     }
 
     /**

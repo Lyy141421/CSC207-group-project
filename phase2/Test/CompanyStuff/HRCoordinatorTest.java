@@ -1,7 +1,7 @@
 package CompanyStuff;
 
-import NotificationSystem.NotificationManager;
-import UsersAndJobObjects.JobPosting;
+import CompanyStuff.JobPostings.BranchJobPosting;
+import CompanyStuff.JobPostings.CompanyJobPosting;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
@@ -49,13 +49,13 @@ class HRCoordinatorTest {
         hrcord.addJobPosting("Sales Person For Hire", "Jobbing", "A Job", new ArrayList<>(),
                 new ArrayList<>(), 3, today, today.plusDays(5), today.plusDays(5));
         hrcord.getBranch().getJobPostingManager().getBranchJobPostings().get(0).createInterviewManager();
-        hrcord.getBranch().getJobPostingManager().getBranchJobPostings().get(0).getInterviewManager().updateJobPostingStatus();
+        hrcord.getBranch().getJobPostingManager().getBranchJobPostings().get(0).getInterviewManager().updateJobPostingFilledStatus();
         assertEquals(hrcord.getAllNotifications().size(), 1);
         assertEquals(hrcord.getAllNotifications().get(0).getMessage(),
               "There are no applications in consideration for theSales Person For Hire job posting (id " +
                       hrcord.getBranch().getJobPostingManager().getBranchJobPostings().get(0).getId()
                       + "). It has been automatically set to filled with 0 positions.");
-        hrcord.getBranch().getJobPostingManager().getBranchJobPostings().get(0).getInterviewManager().updateJobPostingStatus();
+        hrcord.getBranch().getJobPostingManager().getBranchJobPostings().get(0).getInterviewManager().updateJobPostingFilledStatus();
         assertEquals(hrcord.getAllNotifications().size(), 2);
         hrcord.removeAllNotifications();
         assertEquals(hrcord.getAllNotifications().size(), 0);

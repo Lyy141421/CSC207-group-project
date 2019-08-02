@@ -82,6 +82,7 @@ class HRAddOrUpdatePostingForm extends HRPanel {
         this.addText();
         this.setCompanyPostingListListener();
         this.setJobTitleDocumentListener();
+        this.resetForm();
     }
 
     private void addText() {
@@ -214,12 +215,16 @@ class HRAddOrUpdatePostingForm extends HRPanel {
     private void addJobTitleSelection() {
         this.companyPostingList = new JComboBox<>();
         this.companyPostingList.setEditable(true);
-        this.setCompanyJPMap(this.hrBackend.getHR().getBranch().getCompany().getCompanyJobPostings());
+        if (this.toAdd) {
+            this.setCompanyJPMap(this.hrBackend.getCompanyJobPostingsThatCanBeExtended());
+        } else {
+            this.setCompanyJPMap(new ArrayList<>(Arrays.asList(selectedJP)));
+        }
         this.companyPostingModel = new DefaultComboBoxModel<>(companyJPMap.keySet().toArray(new String[companyJPMap.size()]));
         if (toAdd) {
-            this.companyPostingModel.setSelectedItem(null);
+            this.companyPostingModel.setSelectedItem(null); // default no item selected
         } else {
-            this.companyPostingList.setSelectedItem(selectedJP);
+            this.companyPostingList.setSelectedItem(toCompanyJPTitle(selectedJP));
         }
         this.companyPostingList.setModel(this.companyPostingModel);
     }
@@ -228,7 +233,6 @@ class HRAddOrUpdatePostingForm extends HRPanel {
         ((JTextComponent) ((JComboBox) entryBoxes.get(0)).getEditor().getEditorComponent()).getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
-                resetForm();
             }
 
             @Override
@@ -238,15 +242,23 @@ class HRAddOrUpdatePostingForm extends HRPanel {
 
             @Override
             public void changedUpdate(DocumentEvent e) {
-
             }
         });
     }
 
     private void resetForm() {
         String jobTitleText = ((JTextComponent) ((JComboBox) entryBoxes.get(0)).getEditor().getEditorComponent()).getText();
-        if (!companyJPMap.keySet().contains(jobTitleText)) {
-            enableAndClearAllInput();
+        if (companyJPMap.keySet().contains(jobTitleText)) {
+            if (!this.toAdd) {
+                companyPostingList.setEditable(false);
+                companyPostingList.setEnabled(false);
+            }
+            fillDefaultValues();
+            disableDefaultFields();
+        } else {
+            if (!this.entryBoxes.get(1).isEnabled()) {
+                enableAndClearAllInput();
+            }
         }
     }
 
@@ -255,32 +267,27 @@ class HRAddOrUpdatePostingForm extends HRPanel {
             component.setEnabled(true);
             if (component instanceof JTextComponent) {
                 ((JTextComponent) component).setText("");
+                component.revalidate();
             }
         }
         enableAllCheckBoxes(requiredDocumentsEntry);
+        requiredDocumentsEntry.revalidate();
         enableAllCheckBoxes(tagsEntry);
+        tagsEntry.revalidate();
+        extraDocumentsEntry.setText(documentInputInstructions);
+        extraDocumentsEntry.revalidate();
+        extraTagsEntry.setText(tagsInputInstructions);
+        extraTagsEntry.revalidate();
     }
 
     private void setCompanyPostingListListener() {
         this.companyPostingList.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
-                //TODO: this needs testing 1. select an existing posting
-                //                         2. select a different posting
-                //                         3. input new title
-                //                         4. select posting again
                 String selectedTitle = (String) companyPostingList.getSelectedItem();
-                if (toAdd) {
-                    if (companyJPMap.containsKey(selectedTitle)) {
-                        selectedJP = companyJPMap.get(selectedTitle);
-                        //0.title, 1.field, 2.description, 3.required documents, 4.tags, 5.numOfPos, 6.close date, 7.reference close date
-                        //Company default： 0, 1, 2, 3, 4
-                        fillDefaultValues();
-                        disableDefaultFields();
-                    } else {
-                        addFieldsAndSubmitButton();
-                        enableAndClearAllInput();
-                    }
+                if (companyJPMap.containsKey(selectedTitle)) {
+                    selectedJP = companyJPMap.get(selectedTitle);
+                    resetForm();
                 }
             }
         });

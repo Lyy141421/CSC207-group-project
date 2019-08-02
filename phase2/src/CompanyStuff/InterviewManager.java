@@ -131,6 +131,9 @@ public class InterviewManager extends Observable implements Serializable {
      */
     public void advanceRound() {
         this.currentRound++;
+        if (this.getCurrentRoundTypeAndDescription()[0].equals(Interview.ONE_ON_ONE)) {
+            this.setUpOneOnOneInterviews();
+        }
     }
 
     /**
@@ -212,6 +215,7 @@ public class InterviewManager extends Observable implements Serializable {
      */
     public void updateJobPostingFilledStatus() {
         if (this.hasNoJobApplicationsInConsideration()) {
+            // TODO move to closeJobPostingNoApplicationsInConsideration in BranchJobPosting!!!
             this.updateObserverList();
             this.notifyAllObservers(new Notification("Warning: No Applications in Consideration",
                     "There are no applications in consideration for the" + this.getBranchJobPosting().getTitle()

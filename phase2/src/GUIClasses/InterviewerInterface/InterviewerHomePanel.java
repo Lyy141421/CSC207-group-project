@@ -72,7 +72,8 @@ class InterviewerHomePanel extends AbstractInterviewerPanel {
             data[i] = unscheduledInterviews.get(i).getCategoryValuesForInterviewerUnscheduledOrIncomplete();
         }
 
-        return new GUIElementsCreator().createTablePanel(Interview.getCategoryNamesForInterviewerUnscheduledOrIncomplete(), data);
+        return new GUIElementsCreator().createTablePanel(Interview.CATEGORY_NAMES_FOR_INTERVIEWER_UNSCHEDULED_OR_INCOMPLETE
+                , data);
     }
 
     /**
@@ -100,7 +101,7 @@ class InterviewerHomePanel extends AbstractInterviewerPanel {
             data[i] = scheduledInterviews.get(i).getCategoryValuesForInterviewerScheduled();
         }
 
-        return new GUIElementsCreator().createTablePanel(Interview.getCategoryNamesForInterviewerScheduled(), data);
+        return new GUIElementsCreator().createTablePanel(Interview.CATEGORY_NAMES_FOR_INTERVIEWER_SCHEDULED, data);
     }
 
     /**
@@ -128,6 +129,6 @@ class InterviewerHomePanel extends AbstractInterviewerPanel {
             data[i] = incompleteInterviews.get(i).getCategoryValuesForInterviewerUnscheduledOrIncomplete();
         }
 
-        return new GUIElementsCreator().createTablePanel(Interview.getCategoryNamesForInterviewerUnscheduledOrIncomplete(), data);
+        return new GUIElementsCreator().createTablePanel(Interview.CATEGORY_NAMES_FOR_INTERVIEWER_UNSCHEDULED_OR_INCOMPLETE, data);
     }
 }

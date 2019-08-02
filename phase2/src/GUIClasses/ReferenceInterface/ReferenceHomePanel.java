@@ -71,7 +71,7 @@ class ReferenceHomePanel extends JPanel {
             data[i] = jobApps.get(i).getCategoryValuesForReference();
         }
 
-        return new GUIElementsCreator().createTablePanel(JobApplication.categoryNamesForReference(), data);
+        return new GUIElementsCreator().createTablePanel(JobApplication.CATEGORY_NAMES_FOR_REFERENCE, data);
     }
 
 }

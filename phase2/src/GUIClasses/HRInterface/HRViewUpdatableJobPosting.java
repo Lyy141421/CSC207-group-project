@@ -11,7 +11,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
 
-class HRViewJobPostingThatCanBeUpdated extends HRPanel {
+class HRViewUpdatableJobPosting extends HRPanel {
 
     private HashMap<String, BranchJobPosting> updatableJPs;
 
@@ -20,7 +20,7 @@ class HRViewJobPostingThatCanBeUpdated extends HRPanel {
     private JList<String> jobPostingList = new JList<>();
     private JPanel parent;
 
-    HRViewJobPostingThatCanBeUpdated(HRBackend hrBackend, JPanel parent) {
+    HRViewUpdatableJobPosting(HRBackend hrBackend, JPanel parent) {
         super(hrBackend);
         this.parent = parent;
         this.setLayout(new BorderLayout());

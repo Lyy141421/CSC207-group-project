@@ -19,6 +19,8 @@ public class JobApplication implements Serializable {
     static final long serialVersionUID = 1L;
     // Total number of applications in the system
     private static int totalNumOfApplications;
+    // The category names for Reference
+    public static final String[] CATEGORY_NAMES_FOR_REFERENCE = new String[]{"Referee", "Job Posting", "Submission start date", "Submission Deadline"};
 
     // === Instance variables ===
     // Unique identifier for a submitted job application
@@ -181,15 +183,6 @@ public class JobApplication implements Serializable {
         s += "Job Posting: " + this.getJobPosting().getTitle() + "   ";
         s += "Submission Deadline: " + this.getJobPosting().getReferenceCloseDate().toString();
         return s;
-    }
-
-    /**
-     * Get the job application category names for a table to be displayed in the reference GUI.
-     *
-     * @return a list of job application category names.
-     */
-    public static String[] categoryNamesForReference() {
-        return new String[]{"Referee", "Job Posting", "Submission start date", "Submission Deadline"};
     }
 
     /**

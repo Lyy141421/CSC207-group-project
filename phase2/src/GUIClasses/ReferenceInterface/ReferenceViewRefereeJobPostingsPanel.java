@@ -133,7 +133,7 @@ class ReferenceViewRefereeJobPostingsPanel extends JPanel {
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 0;
         c.gridy = 0;
-        for (String label : BranchJobPosting.getCategoryLabelsForReference()) {
+        for (String label : BranchJobPosting.CATEGORY_LABELS_FOR_REFERENCE) {
             mainPanel.add(new JLabel("  " + label + ": "), c);
             c.gridy++;
         }
