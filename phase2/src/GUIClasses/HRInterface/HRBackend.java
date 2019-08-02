@@ -193,9 +193,8 @@ class HRBackend {
      *
      * @param jobApps   The job applications NOT getting interviews.
      */
-    void rejectApplicationForFirstRound(ArrayList<JobApplication> jobApps) {
-        BranchJobPosting jobPosting = jobApps.get(0).getJobPosting();
-        jobPosting.getInterviewManager().reject(jobApps);
+    void rejectApplicationForFirstRound(BranchJobPosting branchJobPosting, ArrayList<JobApplication> jobApps) {
+        branchJobPosting.getInterviewManager().rejectApplicationsForFirstRound(jobApps);
     }
 
 

@@ -77,7 +77,7 @@ public class InterviewerMain extends UserPanel {
         new DataLoaderAndStorer(jobApplicationSystem).loadAllData();
         Branch branch = jobApplicationSystem.getCompanies().get(0).getBranches().get(0);
         Interviewer interviewer = branch.getFieldToInterviewers().get("field").get(0);
-        jobApplicationSystem.setToday(LocalDate.of(2019, 8, 23));
+        jobApplicationSystem.setToday(LocalDate.of(2019, 8, 24));
         LogoutActionListener logoutActionListener = new LogoutActionListener(new Container(), new CardLayout(), jobApplicationSystem);
         JFrame frame = new JFrame();
         frame.add(new InterviewerMain(interviewer, jobApplicationSystem, logoutActionListener));
@@ -96,13 +96,16 @@ public class InterviewerMain extends UserPanel {
 //        interviewConfiguration.add(new String[]{Interview.ONE_ON_ONE, "Phone interview"});
 //        BranchJobPosting jobPosting = branch.getJobPostingManager().getBranchJobPostings().get(0);
 //        BranchJobPosting jobPosting2 = branch.getJobPostingManager().getBranchJobPostings().get(1);
+//        jobPosting.getInterviewManager().rejectApplicationsForFirstRound(new ArrayList<>());
 //        jobPosting.getInterviewManager().setInterviewConfiguration(interviewConfiguration);
-//        jobPosting.getInterviewManager().setUpOneOnOneInterviews();
-//        Interviewer interviewCoordinator = new Interviewer("Interview Coordinator", "password", "Bobby 2", "email", branch, "field", LocalDate.of(2019, 7, 10));
+////        jobPosting.getInterviewManager().setUpOneOnOneInterviews();
+////        Interviewer interviewCoordinator = new Interviewer("Interview Coordinator", "password", "Bobby 2", "email", branch, "field", LocalDate.of(2019, 7, 10));
+//        jobPosting2.getInterviewManager().rejectApplicationsForFirstRound(new ArrayList<>());
 //        ArrayList<String[]> interviewConfiguration2 = new ArrayList<>();
 //        interviewConfiguration2.add(new String[]{Interview.GROUP, "In-person"});
 //        jobPosting2.getInterviewManager().setInterviewConfiguration(interviewConfiguration2);
-//        jobPosting2.getInterviewManager().setUpGroupInterview(interviewCoordinator, new ArrayList<>(Arrays.asList(interviewer)), LocalDate.of(2019, 8, 10), 2);
+//        branch.getJobPostingManager().updateAllClosedUnfilledJobPostings(LocalDate.of(2019, 8 ,12));
+////        jobPosting2.getInterviewManager().setUpGroupInterview(interviewCoordinator, new ArrayList<>(Arrays.asList(interviewer)), LocalDate.of(2019, 8, 10), 2);
 //        jobApplicationSystem.setToday(LocalDate.of(2019, 8, 20));
 //        LogoutActionListener logoutActionListener = new LogoutActionListener(new Container(), new CardLayout(), jobApplicationSystem);
 //        JFrame frame = new JFrame();
