@@ -42,8 +42,8 @@ public class HRMain extends UserPanel {
         cards.add(new HRViewPosting(this.hrBackend, cards, true), HRPanel.HIGH_PRIORITY_POSTINGS, 2);
         cards.add(new HRViewPosting(this.hrBackend, cards, false), HRPanel.BROWSE_POSTINGS, 3);
         cards.add(new HRSearchApplicant(this.hrBackend, cards), HRPanel.SEARCH_APPLICANT, 4);
-        cards.add(new HRAddOrUpdatePostingForm(this.hrBackend, false, null), HRPanel.ADD_POSTING, 5);
-        cards.add(new HRViewJobPostingThatCanBeUpdated(hrBackend, this), HRPanel.UPDATE_POSTING, 6);
+        cards.add(new HRAddOrUpdatePostingForm(this.hrBackend, true, null), HRPanel.ADD_POSTING, 5);
+        cards.add(new HRViewJobPostingThatCanBeUpdated(this.hrBackend, cards), HRPanel.UPDATE_POSTING, 6);
         //cards.add(new HRViewApp(this, this.hrBackend
         //, this.today, new HashMap<>()), HRPanel.APPLICATION);
     }

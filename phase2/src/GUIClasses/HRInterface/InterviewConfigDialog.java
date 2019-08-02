@@ -106,7 +106,7 @@ class InterviewConfigDialog extends JDialog {
             @Override
             public void actionPerformed(ActionEvent e) {
                 hrBackend.setInterviewConfiguration(branchJobPosting, getIsOneOnOne(), getDescriptions());
-                JOptionPane.showInternalMessageDialog(container, "The interview configurations have been set.");
+                JOptionPane.showMessageDialog(container, "The interview configurations have been set.");
                 returnButton.setVisible(true);
                 dispose();
             }

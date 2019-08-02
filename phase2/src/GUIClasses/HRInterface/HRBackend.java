@@ -33,8 +33,9 @@ class HRBackend {
         return this.jobAppSystem.getToday();
     }
 
-    int[] getTodayComponents() {
-        return new int[]{this.getToday().getYear(), this.getToday().getMonthValue(), this.getToday().getDayOfMonth()};
+    int[] getTomorrowComponents() {
+        LocalDate tomorrow = this.getToday().plusDays(1);
+        return new int[]{tomorrow.getYear(), tomorrow.getMonthValue(), tomorrow.getDayOfMonth()};
     }
 
     /**
