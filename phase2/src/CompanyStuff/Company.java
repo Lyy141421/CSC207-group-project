@@ -153,6 +153,11 @@ public class Company implements Serializable {
             branchJobPostingManager.updateJobPostingsClosedForApplications(today);
             branchJobPostingManager.updateJobPostingsClosedForReferences(today);
             branchJobPostingManager.updateAllClosedUnfilledJobPostings(today);
+            for (BranchJobPosting branchJobPosting : branchJobPostingManager.getBranchJobPostings()) {
+                if (branchJobPosting.isClosedForApplications(today)) {
+                    branchJobPosting.notifyAllJobPostings(branch);
+                }
+            }
         }
     }
 

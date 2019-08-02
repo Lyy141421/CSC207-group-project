@@ -3,6 +3,7 @@ package CompanyStuff.JobPostings;
 import CompanyStuff.Branch;
 import CompanyStuff.Company;
 import NotificationSystem.Observable;
+import NotificationSystem.Observer;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -50,7 +51,6 @@ public class CompanyJobPosting extends Observable implements Serializable {
         this.company = company;
         this.branches = new ArrayList<>();
         this.branches.add(branch);
-        this.company.addCompanyJobPosting(this);
     }
 
     // === Public methods ===
@@ -94,6 +94,11 @@ public class CompanyJobPosting extends Observable implements Serializable {
      */
     public void addBranch(Branch branch) {
         this.branches.add(branch);
+    }
+
+    public void removeBranch(Branch branch) {
+        if (this.branches.contains(branch))
+            this.branches.remove(branch);
     }
 
     private String getListComplementString(ArrayList<String> actualList, String[] recommendedList) {
