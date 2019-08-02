@@ -33,7 +33,7 @@ public abstract class User implements Serializable, Observer {
     // The date the account was created
     private LocalDate dateCreated;
     // The Notification Manager
-    private NotificationManager notification_manager = new NotificationManager();
+    private NotificationManager notificationManager = new NotificationManager();
 
     // === Public methods ===
 
@@ -79,7 +79,7 @@ public abstract class User implements Serializable, Observer {
     }
 
     public NotificationManager getNotificationManager(){
-        return this.notification_manager;
+        return this.notificationManager;
     }
 
     // === Setters ===
@@ -130,7 +130,7 @@ public abstract class User implements Serializable, Observer {
      * @return - ArrayList of Notifications
      */
     public ArrayList<Notification> getAllNotifications(){
-        return this.notification_manager.getNotifications();
+        return this.notificationManager.getNotifications();
     }
 
     /**
@@ -154,9 +154,7 @@ public abstract class User implements Serializable, Observer {
      * Removes all Notifications from this user
      */
     public void removeAllNotifications(){
-        for(Notification notification : (ArrayList<Notification>)this.getAllNotifications().clone()){
-            removeNotification(notification);
-        }
+        this.getNotificationManager().getNotifications().clear();
     }
 
     @Override

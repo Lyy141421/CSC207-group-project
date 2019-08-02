@@ -15,14 +15,19 @@ public class InterviewManagerTest {
     private HRCoordinator hrc;
     private Interviewer interviewer1;
     private Interviewer interviewer2;
+    private Interviewer interviewer3;
     private Applicant applicant1;
     private Applicant applicant2;
     private Applicant applicant3;
     private BranchJobPosting branchJobPosting1;
+    private BranchJobPosting branchJobPosting2;
     private JobApplication application1;
     private JobApplication application2;
     private JobApplication application3;
-    private InterviewManager interviewManager;
+    private JobApplication application4;
+    private JobApplication application5;
+    private InterviewManager interviewManager1;
+    private InterviewManager interviewManager2;
 
     void createHRCAndTwoInterviewers() {
         this.hrc = new HRCoordinator("horace", "ABC", "Horace Businessman",
@@ -31,13 +36,6 @@ public class InterviewManagerTest {
                 branch, "HR", LocalDate.now());
         this.interviewer2 = new Interviewer("bob", "ABC", "Bob Mann", "bob@gmail.com",
                 branch, "HR", LocalDate.now());
-    }
-
-    InterviewManager createInterviewManagerFromBJPWithTwoApplications() {
-        ArrayList<JobApplication> applicationsInConsideration = new ArrayList<>();
-        applicationsInConsideration.add(this.application1);
-        applicationsInConsideration.add(this.application2);
-        return new InterviewManager(this.branchJobPosting1, applicationsInConsideration);
     }
 
     void createBJPWithTwoApplications(HRCoordinator hrc) {
@@ -58,6 +56,35 @@ public class InterviewManagerTest {
         this.application3 = new JobApplication(applicant3, branchJobPosting1, LocalDate.now());
     }
 
+    InterviewManager createInterviewManagerFromBJPWithTwoApplications() {
+        ArrayList<JobApplication> applicationsInConsideration = new ArrayList<>();
+        applicationsInConsideration.add(this.application1);
+        applicationsInConsideration.add(this.application2);
+        return new InterviewManager(this.branchJobPosting1, applicationsInConsideration);
+    }
+
+    void createSecondBJP(HRCoordinator hrc) {
+        this.branchJobPosting2 = hrc.addJobPosting("Second Job", "HR", "This is a job.",
+                new ArrayList<>(), new ArrayList<>(), 1, LocalDate.now(), LocalDate.now().plusDays(3),
+                LocalDate.now().plusDays(4));
+        this.application4 = new JobApplication(applicant1, branchJobPosting2, LocalDate.now());
+        this.application5 = new JobApplication(applicant2, branchJobPosting2, LocalDate.now());
+    }
+
+    InterviewManager createInterviewManagerFromSecondBJP() {
+        ArrayList<JobApplication> applicationsInConsideration = new ArrayList<>();
+        applicationsInConsideration.add(this.application4);
+        applicationsInConsideration.add(this.application5);
+        return new InterviewManager(this.branchJobPosting2, applicationsInConsideration);
+    }
+
+    InterviewManager createInterviewManagerNoInterviewers() {
+        this.hrc = new HRCoordinator("horace", "ABC", "Horace Businessman",
+                "horace@gmail.com", branch, LocalDate.now());
+        createBJPWithTwoApplications(this.hrc);
+        return createInterviewManagerFromBJPWithTwoApplications();
+    }
+
     @Test
     InterviewManager testConstructor() {
         createHRCAndTwoInterviewers();
@@ -73,8 +100,147 @@ public class InterviewManagerTest {
     }
 
     @Test
+    void testSetUpOneOnOneInterviewNoInterviewers() {
+        interviewManager1 = createInterviewManagerNoInterviewers();
+
+        testSetInterviewConfigurationOneOnOne();
+
+        interviewManager1.setUpOneOnOneInterviews();
+
+        assert hrc.getAllNotifications().size() == 1;
+    }
+
+    /* Note: The check that prevents HR from setting up group interviews with no interviewers happens outside of the
+    scope of InterviewManager. */
+
+    @Test
+    void testGetEarliestTimeAvailableForAllInterviewersBusyAfterEarliestTime() {
+        InterviewTime time1 = new InterviewTime(LocalDate.now().plusDays(7), "4-5 pm");
+        InterviewTime time2 = new InterviewTime(LocalDate.now().plusDays(8), "10-11 am");
+        InterviewTime time3 = new InterviewTime(LocalDate.now().plusDays(8), "1-2 pm");
+
+        setUpEarliestTimeTest(time1, time2, time3);
+
+        createSecondBJP(this.hrc);
+        interviewManager2 = createInterviewManagerFromSecondBJP();
+
+        testSetInterviewConfigurationGroupSecondBJP();
+
+        ArrayList<Interviewer> otherInterviewers = new ArrayList<>();
+        otherInterviewers.add(interviewer2);
+        otherInterviewers.add(interviewer3);
+        interviewManager2.setUpGroupInterview(interviewer1, otherInterviewers, LocalDate.now().plusDays(5), 2);
+        Interview interview4 = interviewer1.getInterviews().get(1);
+        assert interview4.getTime().equals(new InterviewTime(LocalDate.now().plusDays(7), "9-10 am"));
+    }
+
+    @Test
+    void testGetEarliestTimeAvailableForAllInterviewersBusySameDaySameTime() {
+        InterviewTime time1 = new InterviewTime(LocalDate.now().plusDays(7), "9-10 am");
+        InterviewTime time2 = new InterviewTime(LocalDate.now().plusDays(7), "9-10 am");
+        InterviewTime time3 = new InterviewTime(LocalDate.now().plusDays(7), "9-10 am");
+
+        setUpEarliestTimeTest(time1, time2, time3);
+
+        createSecondBJP(this.hrc);
+        interviewManager2 = createInterviewManagerFromSecondBJP();
+
+        testSetInterviewConfigurationGroupSecondBJP();
+
+        ArrayList<Interviewer> otherInterviewers = new ArrayList<>();
+        otherInterviewers.add(interviewer2);
+        otherInterviewers.add(interviewer3);
+        interviewManager2.setUpGroupInterview(interviewer1, otherInterviewers, LocalDate.now().plusDays(5), 2);
+        Interview interview4 = interviewer1.getInterviews().get(1);
+        assert interview4.getTime().equals(new InterviewTime(LocalDate.now().plusDays(7), "10-11 am"));
+    }
+
+    @Test
+    void testGetEarliestTimeAvailableForAllInterviewersBusySameDayConsecutiveTimes() {
+        InterviewTime time1 = new InterviewTime(LocalDate.now().plusDays(7), "9-10 am");
+        InterviewTime time2 = new InterviewTime(LocalDate.now().plusDays(7), "10-11 am");
+        InterviewTime time3 = new InterviewTime(LocalDate.now().plusDays(7), "11 am - 12 pm");
+
+        setUpEarliestTimeTest(time1, time2, time3);
+
+        createSecondBJP(this.hrc);
+        interviewManager2 = createInterviewManagerFromSecondBJP();
+
+        testSetInterviewConfigurationGroupSecondBJP();
+
+        ArrayList<Interviewer> otherInterviewers = new ArrayList<>();
+        otherInterviewers.add(interviewer2);
+        otherInterviewers.add(interviewer3);
+        interviewManager2.setUpGroupInterview(interviewer1, otherInterviewers, LocalDate.now().plusDays(5), 2);
+        Interview interview4 = interviewer1.getInterviews().get(1);
+        assert interview4.getTime().equals(new InterviewTime(LocalDate.now().plusDays(7), "12-1 pm"));
+    }
+
+    @Test
+    void testGetEarliestTimeAvailableForAllInterviewersBusySameDayNonConsecutiveTimes() {
+        InterviewTime time1 = new InterviewTime(LocalDate.now().plusDays(7), "9-10 am");
+        InterviewTime time2 = new InterviewTime(LocalDate.now().plusDays(7), "3-4 pm");
+        InterviewTime time3 = new InterviewTime(LocalDate.now().plusDays(7), "12-1 pm");
+
+        setUpEarliestTimeTest(time1, time2, time3);
+
+        createSecondBJP(this.hrc);
+        interviewManager2 = createInterviewManagerFromSecondBJP();
+
+        testSetInterviewConfigurationGroupSecondBJP();
+
+        ArrayList<Interviewer> otherInterviewers = new ArrayList<>();
+        otherInterviewers.add(interviewer2);
+        otherInterviewers.add(interviewer3);
+        interviewManager2.setUpGroupInterview(interviewer1, otherInterviewers, LocalDate.now().plusDays(5), 2);
+        Interview interview4 = interviewer1.getInterviews().get(1);
+        assert interview4.getTime().equals(new InterviewTime(LocalDate.now().plusDays(7), "10-11 am"));
+    }
+
+    @Test
+    void testGetEarliestTimeAvailableForAllInterviewersBusyDifferentDays() {
+        InterviewTime time1 = new InterviewTime(LocalDate.now().plusDays(7), "9-10 am");
+        InterviewTime time2 = new InterviewTime(LocalDate.now().plusDays(8), "10-11 am");
+        InterviewTime time3 = new InterviewTime(LocalDate.now().plusDays(9), "11 am - 12 pm");
+
+        setUpEarliestTimeTest(time1, time2, time3);
+
+        createSecondBJP(this.hrc);
+        interviewManager2 = createInterviewManagerFromSecondBJP();
+
+        testSetInterviewConfigurationGroupSecondBJP();
+
+        ArrayList<Interviewer> otherInterviewers = new ArrayList<>();
+        otherInterviewers.add(interviewer2);
+        otherInterviewers.add(interviewer3);
+        interviewManager2.setUpGroupInterview(interviewer1, otherInterviewers, LocalDate.now().plusDays(5), 2);
+        Interview interview4 = interviewer1.getInterviews().get(1);
+        assert interview4.getTime().equals(new InterviewTime(LocalDate.now().plusDays(7), "10-11 am"));
+    }
+
+    private void setUpEarliestTimeTest(InterviewTime time1, InterviewTime time2, InterviewTime time3) {
+        interviewManager1 = testConstructor();
+        createThirdApplication();
+        interviewManager1.getApplicationsInConsideration().add(application3);
+        this.interviewer3 = new Interviewer("carol", "ABC", "Carol Mann",
+                "carol@gmail.com", branch, "HR", LocalDate.now());
+
+        testSetInterviewConfigurationOneOnOne();
+
+        testSetUpOneOnOneInterviews();
+
+        Interview interview1 = interviewer1.getInterviews().get(0);
+        Interview interview2 = interviewer2.getInterviews().get(0);
+        Interview interview3 = interviewer3.getInterviews().get(0);
+
+        interviewer1.scheduleInterview(interview1, time1);
+        interviewer2.scheduleInterview(interview2, time2);
+        interviewer3.scheduleInterview(interview3, time3);
+    }
+
+    @Test
     void testOneRoundInterviewConfigurationOneOnOne() {
-        interviewManager = testConstructor();
+        interviewManager1 = testConstructor();
 
         testSetInterviewConfigurationOneOnOne();
 
@@ -91,7 +257,6 @@ public class InterviewManagerTest {
         testUpdateInterviewersOfInterviewCompletionOrCancellation(interview1);
         testUpdateInterviewersOfInterviewCompletionOrCancellation(interview2);
 
-        interviewManager.reject(application1); //TODO: remove
         testApplicationListsUpdatedAfterRoundVer1();
 
         testHireApplicants();
@@ -99,7 +264,7 @@ public class InterviewManagerTest {
 
     @Test
     void testOneRoundInterviewConfigurationGroup() {
-        interviewManager = testConstructor();
+        interviewManager1 = testConstructor();
 
         testSetInterviewConfigurationGroup();
 
@@ -111,7 +276,6 @@ public class InterviewManagerTest {
 
         testUpdateInterviewersOfInterviewCompletionOrCancellation(interview);
 
-        interviewManager.reject(application1); //TODO: remove
         testApplicationListsUpdatedAfterRoundVer1();
 
         testHireApplicants();
@@ -119,8 +283,9 @@ public class InterviewManagerTest {
 
     @Test
     void testTwoRoundInterviewConfigurationGroupThenOneOnOne() {
-        interviewManager = testConstructor();
+        interviewManager1 = testConstructor();
         createThirdApplication();
+        interviewManager1.getApplicationsInConsideration().add(application3);
 
         testSetInterviewConfigurationGroupThenOneOnOne();
 
@@ -128,11 +293,10 @@ public class InterviewManagerTest {
 
         Interview interview = interviewer1.getInterviews().get(0);
 
-        testCurrentRoundIsOverGroup(interview);
+        testCurrentRoundIsOverGroupThreeApplications(interview);
 
         testUpdateInterviewersOfInterviewCompletionOrCancellation(interview);
 
-        interviewManager.reject(application3); //TODO: remove
         testApplicationListsUpdatedAfterRoundVer2();
 
         branchJobPosting1.advanceInterviewRound();
@@ -150,7 +314,6 @@ public class InterviewManagerTest {
         testUpdateInterviewersOfInterviewCompletionOrCancellation(interview1);
         testUpdateInterviewersOfInterviewCompletionOrCancellation(interview2);
 
-        interviewManager.reject(application1); //TODO: remove
         testApplicationListsUpdatedAfterRoundVer3();
 
         testHireApplicants();
@@ -160,16 +323,24 @@ public class InterviewManagerTest {
     private void testSetInterviewConfigurationOneOnOne() {
         ArrayList<String[]> interviewConfiguration = new ArrayList<>();
         interviewConfiguration.add(new String[]{Interview.ONE_ON_ONE, "In-person interview"});
-        interviewManager.setInterviewConfiguration(interviewConfiguration);
-        assert interviewManager.getFinalRoundNumber() == 0;
+        interviewManager1.setInterviewConfiguration(interviewConfiguration);
+        assert interviewManager1.getFinalRoundNumber() == 0;
     }
 
     @Test
     private void testSetInterviewConfigurationGroup() {
         ArrayList<String[]> interviewConfiguration = new ArrayList<>();
         interviewConfiguration.add(new String[]{Interview.GROUP, "Group interview"});
-        interviewManager.setInterviewConfiguration(interviewConfiguration);
-        assert interviewManager.getFinalRoundNumber() == 0;
+        interviewManager1.setInterviewConfiguration(interviewConfiguration);
+        assert interviewManager1.getFinalRoundNumber() == 0;
+    }
+
+    @Test
+    private void testSetInterviewConfigurationGroupSecondBJP() {
+        ArrayList<String[]> interviewConfiguration = new ArrayList<>();
+        interviewConfiguration.add(new String[]{Interview.GROUP, "Group interview"});
+        interviewManager2.setInterviewConfiguration(interviewConfiguration);
+        assert interviewManager2.getFinalRoundNumber() == 0;
     }
 
     @Test
@@ -177,13 +348,13 @@ public class InterviewManagerTest {
         ArrayList<String[]> interviewConfiguration = new ArrayList<>();
         interviewConfiguration.add(new String[]{Interview.GROUP, "Group interview"});
         interviewConfiguration.add(new String[]{Interview.ONE_ON_ONE, "One-on-one interview"});
-        interviewManager.setInterviewConfiguration(interviewConfiguration);
-        assert interviewManager.getFinalRoundNumber() == 1;
+        interviewManager1.setInterviewConfiguration(interviewConfiguration);
+        assert interviewManager1.getFinalRoundNumber() == 1;
     }
 
     @Test
     private void testSetUpOneOnOneInterviews() {
-        interviewManager.setUpOneOnOneInterviews();
+        interviewManager1.setUpOneOnOneInterviews();
         assert interviewer1.getInterviews().size() == 1;
         assert interviewer2.getInterviews().size() == 1;
     }
@@ -192,7 +363,7 @@ public class InterviewManagerTest {
     private void testSetUpGroupInterview() {
         ArrayList<Interviewer> otherInterviewers = new ArrayList<>();
         otherInterviewers.add(interviewer2);
-        interviewManager.setUpGroupInterview(interviewer1, otherInterviewers, LocalDate.now().plusDays(5), 2);
+        interviewManager1.setUpGroupInterview(interviewer1, otherInterviewers, LocalDate.now().plusDays(5), 2);
         assert interviewer1.getInterviews().size() == 1;
         assert interviewer2.getInterviews().size() == 1;
         assert interviewer1.getInterviews().get(0).equals(interviewer2.getInterviews().get(0));
@@ -203,7 +374,7 @@ public class InterviewManagerTest {
     private void testCurrentRoundIsOverOneOnOne(Interview interview1, Interview interview2) {
         interview2.setResult(application1, false);
         interview1.setResult(application2, true);
-        assert interviewManager.currentRoundIsOver();
+        assert interviewManager1.currentRoundIsOver();
     }
 
     @Test
@@ -212,12 +383,22 @@ public class InterviewManagerTest {
         resultsMap.put(application1, false);
         resultsMap.put(application2, true);
         interview.setResults(resultsMap);
-        assert interviewManager.currentRoundIsOver();
+        assert interviewManager1.currentRoundIsOver();
+    }
+
+    @Test
+    private void testCurrentRoundIsOverGroupThreeApplications(Interview interview) {
+        HashMap<JobApplication, Boolean> resultsMap = new HashMap<>();
+        resultsMap.put(application1, true);
+        resultsMap.put(application2, true);
+        resultsMap.put(application3, false);
+        interview.setResults(resultsMap);
+        assert interviewManager1.currentRoundIsOver();
     }
 
     @Test
     private void testUpdateInterviewersOfInterviewCompletionOrCancellation(Interview interview) {
-        interviewManager.updateInterviewersOfInterviewCompletionOrCancellation(interview);
+        interviewManager1.updateInterviewersOfInterviewCompletionOrCancellation(interview);
         boolean interviewersUpdated = true;
         for (Interviewer interviewer : interview.getAllInterviewers()) {
             if (!interviewer.getInterviews().isEmpty())
@@ -228,26 +409,26 @@ public class InterviewManagerTest {
 
     @Test
     private void testApplicationListsUpdatedAfterRoundVer1() {
-        assert interviewManager.getApplicationsInConsideration().equals(Collections.singletonList(application2));
-        assert interviewManager.getApplicationsRejected().equals(Collections.singletonList(application1));
+        assert interviewManager1.getApplicationsInConsideration().equals(Collections.singletonList(application2));
+        assert interviewManager1.getApplicationsRejected().equals(Collections.singletonList(application1));
     }
 
     @Test
     private void testApplicationListsUpdatedAfterRoundVer2() {
-        assert interviewManager.getApplicationsInConsideration().equals(Arrays.asList(application1, application2));
-        assert interviewManager.getApplicationsRejected().equals(Collections.singletonList(application3));
+        assert interviewManager1.getApplicationsInConsideration().equals(Arrays.asList(application1, application2));
+        assert interviewManager1.getApplicationsRejected().equals(Collections.singletonList(application3));
     }
 
     @Test
     private void testApplicationListsUpdatedAfterRoundVer3() {
-        assert interviewManager.getApplicationsInConsideration().equals(Collections.singletonList(application2));
-        assert interviewManager.getApplicationsRejected().equals(Arrays.asList(application3, application1));
+        assert interviewManager1.getApplicationsInConsideration().equals(Collections.singletonList(application2));
+        assert interviewManager1.getApplicationsRejected().equals(Arrays.asList(application3, application1));
     }
 
     @Test
     private void testHireApplicants() {
-        interviewManager.hireApplicants(interviewManager.getApplicationsInConsideration());
-        assert interviewManager.getBranchJobPosting().isFilled();
+        interviewManager1.hireApplicants(interviewManager1.getApplicationsInConsideration());
+        assert interviewManager1.getBranchJobPosting().isFilled();
         assert application1.getStatus().isArchived();
         assert application2.getStatus().isHired();
     }

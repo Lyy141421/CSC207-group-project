@@ -237,16 +237,17 @@ public class InterviewManager extends Observable implements Serializable {
      * Note: Interviewer would set the date/time
      */
     public void setUpOneOnOneInterviews() {
-        for (JobApplication jobApp : this.applicationsInConsideration) {
-            String field = this.branchJobPosting.getField();
-            if (this.branchJobPosting.getBranch().hasInterviewerForField(field)) {
+        String field = this.branchJobPosting.getField();
+        if (!this.branchJobPosting.getBranch().hasInterviewerForField(field)) {
+            this.notifyAllObservers(new Notification("No Interviewers For Field", "There are no interviewers" +
+                    "at your branch for field " + field + ". One-on-One interviews cannot be set for round "
+                    + this.currentRound + " of interviews for " + this.branchJobPosting.getTitle() + "."));
+        }
+        else {
+            for (JobApplication jobApp : this.applicationsInConsideration) {
                 Interviewer interviewer = this.branchJobPosting.getBranch().findInterviewerByField(field);
                 Interview interview = new Interview(jobApp, interviewer, this);
                 this.updateParticipantsOfNewInterview(interview);
-            } else {
-                this.notifyAllObservers(new Notification("No Interviewers For Field", "There are no interviewers" +
-                        "at your branch for this field. One-on-One interviews cannot be set for round " + this.currentRound +
-                        " of interviews for " + this.branchJobPosting.getTitle() + "."));
             }
         }
     }
@@ -304,7 +305,6 @@ public class InterviewManager extends Observable implements Serializable {
      * @param earliestDate    The earliest date that this group interview can be scheduled.
      * @return the earliest InterviewTime when all these interviewers are available.
      */
-    // TODO THIS METHOD REQUIRES A LOT OF TESTING!!!!!!
     private InterviewTime getEarliestTimeAvailableForAllInterviewers(ArrayList<Interviewer> allInterviewers,
                                                                      LocalDate earliestDate) {
         Interviewer interviewer1 = allInterviewers.get(0);
