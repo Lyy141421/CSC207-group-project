@@ -36,7 +36,7 @@ class InterviewTest {
     }
 
     Applicant createApplicant(String name) {
-        return new Applicant(name, "ABC123", "Legal Name",
+        return new Applicant(name, "ABC123", name + " Legal Name",
                 name + "@gmail.com", today.plusDays(-5), "Toronto");
     }
 
@@ -224,29 +224,47 @@ class InterviewTest {
 
     @Test
     void removeApplication() {
+        Interview interview = createInterviewGroup();
+        assertEquals(interview.getJobApplications().size(), 2);
+        interview.removeApplication(interview.getJobApplications().get(0));
+        assertEquals(interview.getJobApplications().size(), 1);
+
     }
 
     @Test
     void findJobAppById() {
+        Interview interview = createInterviewGroup();
+        assertEquals(interview.findJobAppById(interview.getJobApplications().get(0).getId()), interview.getJobApplications().get(0));
     }
 
     @Test
     void hasAlreadyWrittenNotesForInterview() {
+        Interview interview = createInterviewGroup();
+        assertFalse(interview.hasAlreadyWrittenNotesForInterview(interview.getOtherInterviewers().get(0)));
+        assertFalse(interview.hasAlreadyWrittenNotesForInterview(interview.getOtherInterviewers().get(1)));
+        assertFalse(interview.hasAlreadyWrittenNotesForInterview(interview.getInterviewCoordinator()));
+        interview.setOtherInterviewNotes(interview.getOtherInterviewers().get(0), "Bad");
+        assertTrue(interview.hasAlreadyWrittenNotesForInterview(interview.getOtherInterviewers().get(0)));
+        assertFalse(interview.hasAlreadyWrittenNotesForInterview(interview.getOtherInterviewers().get(1)));
+        interview.setInterviewCoordinatorNotes("Great");
+        assertTrue(interview.hasAlreadyWrittenNotesForInterview(interview.getInterviewCoordinator()));
     }
 
     @Test
     void getIntervieweeNames() {
+        Interview interview = createInterviewGroup();
+        assertEquals(interview.getIntervieweeNames(), "Will Legal Name, Hannah Legal Name");
     }
 
-    @Test
-    void getCategoryValuesForInterviewerUnscheduledOrIncomplete() {
-    }
-
-    @Test
-    void getCategoryValuesForInterviewerScheduled() {
-    }
-
-    @Test
-    void getMiniDescriptionForHR() {
-    }
+//    @Test
+//    void getCategoryValuesForInterviewerUnscheduledOrIncomplete() {
+//    }
+//
+//    @Test
+//    void getCategoryValuesForInterviewerScheduled() {
+//    }
+//
+//    @Test
+//    void getMiniDescriptionForHR() {
+//    }
 }
