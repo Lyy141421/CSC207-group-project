@@ -6,16 +6,24 @@ import CompanyStuff.HRCoordinator;
 import CompanyStuff.Interviewer;
 import GUIClasses.ActionListeners.LogoutActionListener;
 import GUIClasses.ApplicantInterface.ApplicantPanel;
+import GUIClasses.HRInterface.HRMain;
 import GUIClasses.InterviewerInterface.InterviewerMain;
 import GUIClasses.MainFrame;
 import GUIClasses.ReferenceInterface.ReferenceMain;
 import Main.JobApplicationSystem;
 import Main.User;
+import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
+import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
+import net.sourceforge.jdatepicker.impl.UtilDateModel;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 
 /**
  * REMEMBER:
@@ -89,7 +97,7 @@ public class LoginMain extends JPanel {
         loginButton.setBounds(367, 300, 120, 22);
         loginButton.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
-                login(userNameEntry, passwordEntry);
+                getDate(userNameEntry, passwordEntry);
             }
         });
 
@@ -204,10 +212,39 @@ public class LoginMain extends JPanel {
     }
 
     /**
+     *
+     */
+    private void getDate(JTextField userNameEntry, JPasswordField passwordEntry) {
+        JDialog popup = new JDialog();
+        popup.setLayout(new BorderLayout());
+
+        JLabel instructions = new JLabel("Please enter today's date.");
+        popup.add(instructions, SwingConstants.NORTH);
+
+        UtilDateModel model = new UtilDateModel();
+        JDatePanelImpl datePanel = new JDatePanelImpl(model);
+        JDatePickerImpl datePicker = new JDatePickerImpl(datePanel);
+        popup.add(datePicker, SwingConstants.CENTER);
+
+        JButton submit = new JButton("Submit");
+        submit.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                LocalDate today = ((Date) ((JDatePickerImpl) datePicker).getModel().getValue()).
+                        toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                login(userNameEntry, passwordEntry, today);
+            }
+        });
+        popup.add(submit, SwingConstants.SOUTH);
+
+        this.add(popup);
+    }
+
+    /**
      * attempts login with the provided information
      * Cases: 0 - blank field, 1 - no user exists, 2 - successful login, 3 - wrong pass
      */
-    private void login(JTextField userNameEntry, JPasswordField passwordEntry) {
+    private void login(JTextField userNameEntry, JPasswordField passwordEntry, LocalDate today) {
         int result = backend.login(userNameEntry.getText(), new String(passwordEntry.getPassword()));
         switch(result) {
             case 1: this.showCreateNew();
@@ -221,7 +258,7 @@ public class LoginMain extends JPanel {
             case 2: this.hideCreateNew();
                     this.hidePassError();
                     this.hideBlankField();
-                    this.GUILogin(userNameEntry.getText());
+                    this.GUILogin(userNameEntry.getText(), today);
                     userNameEntry.setText("");
                     passwordEntry.setText("");
                     break;
@@ -235,16 +272,17 @@ public class LoginMain extends JPanel {
     /**
      * Attempts a login through the GUI
      */
-    private void GUILogin(String username) {
+    private void GUILogin(String username, LocalDate today) {
         User user = this.backend.findUserByUsername(username);
-        //TODO date
         if(user instanceof Applicant) {
             ApplicantPanel newAppPanel = new ApplicantPanel((Applicant)user, this.jobAppSystem,
                     this.createLogoutListener());
             this.parent.add(newAppPanel, "APPLICANT");
             this.masterLayout.show(parent, "APPLICANT");
         } else if(user instanceof HRCoordinator) {
-            //TODO: Handle when HR panel is done
+            HRMain newHRPanel = new HRMain((HRCoordinator)user, this.jobAppSystem, this.createLogoutListener());
+            this.parent.add(newHRPanel, "HRC");
+            this.masterLayout.show(parent, "HRC");
         } else if(user instanceof Interviewer) {
             InterviewerMain newIntPanel = new InterviewerMain((Interviewer)user, jobAppSystem,
                     this.createLogoutListener());
@@ -268,6 +306,9 @@ public class LoginMain extends JPanel {
         this.masterLayout.show(parent, "NEWUSER");
     }
 
+    /**
+     * creates the appropriate action listener to logout
+     */
     private LogoutActionListener createLogoutListener() {
         return new LogoutActionListener(mainframe, masterLayout, jobAppSystem);
     }
