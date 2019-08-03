@@ -63,22 +63,26 @@ class ApplicantBackend {
     /**
      * Returns an arraylist containing all the job postings that apply to the applicant
      */
-    ArrayList<CompanyJobPosting> findApplicablePostings(String field, String companyName, String id, String tags) {
+    ArrayList<CompanyJobPosting> findApplicablePostings(String field, String companyName, String id, String tags, boolean
+            byLocation) {
         String[] tagsArray = tags.split(", ");
         int idInteger = Integer.valueOf(id);
 
         ArrayList<CompanyJobPosting> applicableJobPostings = jobAppSystem.getAllOpenCompanyJobPostings();
-        if (id != null) {
+        if (!id.isEmpty()) {
             return new ArrayList<>(Arrays.asList(jobAppSystem.getCompanyJobPostingWithID(idInteger)));
         }
-        if (companyName != null) {
+        if (!companyName.isEmpty()) {
             this.keepIntersection(applicableJobPostings, jobAppSystem.getOpenCompanyJobPostingsInCompany(companyName));
         }
-        if (field != null) {
+        if (!field.isEmpty()) {
             this.keepIntersection(applicableJobPostings, jobAppSystem.getOpenCompanyJobPostingsInField(field));
         }
-        if (tags != null) {
+        if (!tags.isEmpty()) {
             this.keepIntersection(applicableJobPostings, jobAppSystem.getCompanyJobPostingsWithTags(tagsArray));
+        }
+        if (byLocation) {
+            this.keepIntersection(applicableJobPostings, jobAppSystem.getCompanyJobPostingsInCMA(this.applicant));
         }
         return applicableJobPostings;
     }
