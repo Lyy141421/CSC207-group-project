@@ -1,7 +1,9 @@
 package GUIClasses.HRInterface;
 
+import ApplicantStuff.Applicant;
 import ApplicantStuff.JobApplication;
 import CompanyStuff.JobPostings.BranchJobPosting;
+import GUIClasses.CommonUserGUI.GUIElementsCreator;
 
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
@@ -15,6 +17,9 @@ import java.util.HashMap;
 
 class HRViewPosting extends HRPanel {
 
+    private static final String OVERVIEW = "Overview";
+    private static final String REJECT_LIST = "Rejected list";
+
     private HashMap<String, BranchJobPosting> unreviewedJP;
     private HashMap<String, BranchJobPosting> scheduleJP;
     private HashMap<String, BranchJobPosting> hiringJP;
@@ -26,9 +31,11 @@ class HRViewPosting extends HRPanel {
     private HRViewPosting containerPane = this;
     private JPanel parent;
     private boolean isHighPriority;
-    private JTextArea info;
+    private JTabbedPane infoPane;
+    private JTextArea overview;
     private JButton scheduleButton;
     private JList<String> jobPostingList = new JList<>();
+    private BranchJobPosting selectedJP;
 
 
     HRViewPosting(HRBackend hrBackend, JPanel parent, boolean isHighPriority) {
@@ -47,7 +54,7 @@ class HRViewPosting extends HRPanel {
         JSplitPane splitDisplay = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
         splitDisplay.setDividerLocation(250);
         this.setJobPostingList(splitDisplay);
-        this.setInfoBox(splitDisplay);
+        this.setInfoPane(splitDisplay);
 
         JPanel buttons = new JPanel(new FlowLayout());
         buttons.add(this.createScheduleButton());
@@ -81,8 +88,8 @@ class HRViewPosting extends HRPanel {
             @Override
             public void valueChanged(ListSelectionEvent e) {
                 String selectedTitle = jobPostingList.getSelectedValue();
-                BranchJobPosting selectedJP = currJPs.get(selectedTitle);
-                info.setText(getStatus(selectedTitle) + selectedJP.toString());
+                selectedJP = currJPs.get(selectedTitle);
+                overview.setText(getStatus() + selectedJP.toString());
                 if (scheduleJP.containsKey(selectedTitle)) {
                     scheduleButton.setEnabled(true);
                     scheduleButton.setVisible(true);
@@ -99,8 +106,6 @@ class HRViewPosting extends HRPanel {
         this.scheduleButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String selectedTitle = jobPostingList.getSelectedValue();
-                BranchJobPosting selectedJP = currJPs.get(selectedTitle);
                 JFrame frame = (JFrame) SwingUtilities.windowForComponent(containerPane);
                 new GroupInterviewDialog(frame, hrBackend, selectedJP, containerPane);
             }
@@ -116,13 +121,35 @@ class HRViewPosting extends HRPanel {
         splitDisplay.setLeftComponent(new JScrollPane(this.jobPostingList));
     }
 
-    private void setInfoBox (JSplitPane splitDisplay) {
-        this.info = new JTextArea("Select a job posting to view information.");
-        this.info.setEditable(false);
-        this.info.setBorder(new EtchedBorder(EtchedBorder.LOWERED));
-
-        splitDisplay.setRightComponent(new JScrollPane(this.info));
+    private void setOverview() {
+        this.overview = new JTextArea("Select a job posting to view information.");
+        this.overview.setEditable(false);
+        this.overview.setBorder(new EtchedBorder(EtchedBorder.LOWERED));
     }
+
+    private JPanel createRejectListPanel() {
+        JPanel rejectedPanel = new JPanel(new BorderLayout());
+        ArrayList<Applicant> rejectList = this.hrBackend.getRejectedApplicantsForJobPosting(selectedJP);
+        Object[][] data = new Object[rejectList.size()][];
+
+        for (int i = 0; i < rejectList.size(); i++) {
+            data[i] = rejectList.get(i).getCategoryValuesForRejectList();
+        }
+        JPanel panelTitle = new GUIElementsCreator().createLabelPanel("Rejection List", 20, true);
+        rejectedPanel.add(panelTitle, BorderLayout.NORTH);
+        JPanel rejectListPanel = new GUIElementsCreator().createTablePanel(Applicant.REJECT_LIST_CATEGORIES, data);
+        rejectedPanel.add(rejectListPanel, BorderLayout.CENTER);
+        return rejectedPanel;
+    }
+
+    private void setInfoPane(JSplitPane splitDisplay) {
+        this.infoPane = new JTabbedPane();
+        this.setOverview();
+        this.infoPane.addTab(OVERVIEW, this.overview);
+        this.infoPane.addTab(REJECT_LIST, this.createRejectListPanel());
+        splitDisplay.setRightComponent(this.infoPane);
+    }
+
 
     private JButton createViewAppButton () {
         JButton viewAppsButton = new JButton("View applications");
@@ -141,16 +168,14 @@ class HRViewPosting extends HRPanel {
     }
 
     private void setApplicationPanel() {
-        String selectedTitle = jobPostingList.getSelectedValue();
-        BranchJobPosting selectedJP = currJPs.get(selectedTitle);
-        ArrayList<JobApplication> appsUnderSelectedJP = selectedJP.getJobApplications();
+        ArrayList<JobApplication> appsUnderSelectedJP = this.hrBackend.getApplicationsInConsiderationForJobPosting(selectedJP);
         int mode = 0;
-        if (unreviewedJP.containsKey(selectedTitle)) {
+        if (unreviewedJP.containsValue(selectedJP)) {
             mode = 1;
-            removeFromJPLists(selectedTitle);
-        } else if (hiringJP.containsKey(selectedTitle)) {
+            removeFromJPLists(this.toJPTitle(selectedJP));
+        } else if (hiringJP.containsValue(selectedJP)) {
             mode = 2;
-            removeFromJPLists(selectedTitle);
+            removeFromJPLists(this.toJPTitle(selectedJP));
         }
         HRViewApp appPanel = new HRViewApp(parent, hrBackend, getTitleToAppMap(appsUnderSelectedJP), this.getPreviousPanelKey(), mode);
         if (parent.getComponents().length > 7) {
@@ -186,13 +211,13 @@ class HRViewPosting extends HRPanel {
         this.importantJP.remove(title);
     }
 
-    private String getStatus(String selectedJPTitle) {
+    private String getStatus() {
         String status;
-        if (unreviewedJP.containsKey(selectedJPTitle)) {
+        if (unreviewedJP.containsValue(selectedJP)) {
             status = "Important: Select applicants for the first round of interviews.\n\n";
-        } else if (scheduleJP.containsKey(selectedJPTitle)) {
+        } else if (scheduleJP.containsValue(selectedJP)) {
             status = "Important: Schedule group interviews for the next round.\n\n";
-        } else if (hiringJP.containsKey(selectedJPTitle)) {
+        } else if (hiringJP.containsValue(selectedJP)) {
             status = "Important: Make hiring decisions for final candidates.\n\n";
         } else {
             status = "Low priority.\n\n";

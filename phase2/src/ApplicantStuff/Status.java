@@ -1,6 +1,6 @@
 package ApplicantStuff;
 
-import NotificationSystem.Notification;
+import NotificationSystem.NotificationFactory;
 import NotificationSystem.Observable;
 import NotificationSystem.Observer;
 
@@ -73,9 +73,7 @@ public class Status extends Observable implements Serializable {
      */
     public void setHired() {
         this.setValue(this.hired);
-        notifyAllObservers(new Notification("You've Been Hired!",
-                "You have been hired at " + this.jobApplication.getJobPosting().getBranch().getName() + "," +
-                        " make sure to check your email."));
+        notifyAllObservers(new NotificationFactory().createNotification(NotificationFactory.HIRED, this.jobApplication));
     }
 
     /**

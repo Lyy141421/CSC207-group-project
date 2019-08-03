@@ -75,6 +75,30 @@ class HRBackend {
         return jpManager.getAllUnfilledJobPostings();
     }
 
+    /**
+     * Gets an array list of all the applications in consideration for this job posting.
+     *
+     * @param jobPosting The job posting selected by the HR coordinator.
+     * @return the list of applications in consideration for this job posting.
+     */
+    ArrayList<JobApplication> getApplicationsInConsiderationForJobPosting(BranchJobPosting jobPosting) {
+        return jobPosting.getInterviewManager().getApplicationsInConsideration();
+    }
+
+    /**
+     * Gets an array list of all the applicants rejected for this job posting.
+     *
+     * @param jobPosting The job posting selected by the HR coordinator.
+     * @return the list of applicants rejected for this job posting.
+     */
+    ArrayList<Applicant> getRejectedApplicantsForJobPosting(BranchJobPosting jobPosting) {
+        ArrayList<Applicant> rejectedApplicants = new ArrayList<>();
+        for (JobApplication jobApplication : jobPosting.getInterviewManager().getApplicationsRejected()) {
+            rejectedApplicants.add(jobApplication.getApplicant());
+        }
+        return rejectedApplicants;
+    }
+
 
     /**
      * Add a job posting to the branch and check if there is an interviewer for that field.

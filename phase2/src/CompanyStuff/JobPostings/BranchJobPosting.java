@@ -5,7 +5,7 @@ import ApplicantStuff.JobApplication;
 import ApplicantStuff.Reference;
 import CompanyStuff.Branch;
 import CompanyStuff.InterviewManager;
-import NotificationSystem.Notification;
+import NotificationSystem.NotificationFactory;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -215,24 +215,11 @@ public class BranchJobPosting extends CompanyJobPosting implements JobPostingObs
         if (interviewManager.getCurrentRound() < interviewManager.getFinalRoundNumber()) {
             if (!interviewManager.interviewProcessHasBegun() || interviewManager.currentRoundIsOver()) {
                 interviewManager.advanceRound();
-                this.notifyAllObservers(new Notification("Advance to Next Round",
-                        "You have advanced to the next round in " + super.getTitle()));
+                this.notifyAllObservers(new NotificationFactory().createNotification(NotificationFactory.ADVANCE_ROUND,
+                        this));
             }
         }
     }
-
-//    /**
-//     * Get a list of emails of applicants rejected.
-//     *
-//     * @return a list of emails of applicants rejected.
-//     */
-//    public ArrayList<String> getEmailsForRejectList() {
-//        ArrayList<String> emails = new ArrayList<>();
-//        for (JobApplication jobApp : this.jobApplications) {
-//            emails.add(jobApp.getApplicant().getEmail());
-//        }
-//        return emails;
-//    }
 
     /**
      * Remove this job application for this job posting.

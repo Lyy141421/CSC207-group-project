@@ -22,6 +22,8 @@ public class Applicant extends User {
     static final long serialVersionUID = 1L;
     // Number of days passed for user account to be deemed inActive
     public static final int INACTIVE_DAYS = 30;
+    // The category names for the reject list
+    public static final String[] REJECT_LIST_CATEGORIES = new String[]{"Legal Name", "Username", "Email"};
 
     // === Instance variables ===
     // The Census Metropolitan Area or Census Agglomeration that this applicant is assumed to be closest to
@@ -137,6 +139,9 @@ public class Applicant extends User {
         return this.jobApplicationManager.getNumDaysSinceMostRecentCloseDate(today) >= Applicant.INACTIVE_DAYS;
     }
 
+    public String[] getCategoryValuesForRejectList() {
+        return new String[]{this.getLegalName(), this.getUsername(), this.getEmail()};
+    }
 
     @Override
     public String[] getDisplayedProfileCategories() {

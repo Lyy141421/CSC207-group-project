@@ -3,7 +3,7 @@ package CompanyStuff;
 import ApplicantStuff.JobApplication;
 import CompanyStuff.JobPostings.BranchJobPosting;
 import Miscellaneous.InterviewTime;
-import NotificationSystem.Notification;
+import NotificationSystem.NotificationFactory;
 import NotificationSystem.Observable;
 import NotificationSystem.Observer;
 
@@ -40,6 +40,8 @@ public class InterviewManager extends Observable implements Serializable {
     private int maxNumberOfRounds;
     // Whether or not the applicants have been weeded out before the first round of interviews
     private boolean chosenApplicantsForFirstRound = false;
+    // The notification factory
+    private NotificationFactory notificationFactory = new NotificationFactory();
 
     // === Representation invariants ===
     // The list of interviews for each applicant is sorted by date.
@@ -209,9 +211,7 @@ public class InterviewManager extends Observable implements Serializable {
             return InterviewManager.SELECT_APPS_FOR_FIRST_ROUND;
         } else if (!this.isInterviewProcessOver() && this.isCurrentRoundGroupInterviewUnscheduled()) {
             if (!this.branchJobPosting.getBranch().hasInterviewerForField(this.branchJobPosting.getField())) {
-                this.notifyAllObservers(new Notification("No Interviewers For Field", "There are no interviewers" +
-                        "at your branch for this field. Group interviews cannot be set for round " + this.currentRound +
-                        " of interviews for " + this.branchJobPosting.getTitle() + "."));
+                this.notifyAllObservers(notificationFactory.createNotification(NotificationFactory.NO_INTERVIEWERS_IN_FIELD, this));
             } else {
                 return InterviewManager.SCHEDULE_GROUP_INTERVIEWS;
             }
@@ -229,15 +229,15 @@ public class InterviewManager extends Observable implements Serializable {
     public void updateJobPostingFilledStatus() {
         if (this.hasNoJobApplicationsInConsideration()) {
             this.updateObserverList();
-            this.notifyAllObservers(new Notification("Warning: No Applications in Consideration",
-                    "There are no applications in consideration for the " + this.getBranchJobPosting().getTitle()
-                            + " job posting (id " + this.getBranchJobPosting().getId() + "). It has been automatically" +
-                            " set to filled with 0 positions."));
+            this.notifyAllObservers(notificationFactory.createNotification(
+                    NotificationFactory.NO_APPS_IN_CONSIDERATION, this.getBranchJobPosting()));
             this.getBranchJobPosting().closeJobPostingNoApplicationsInConsideration();
         } else if (this.isInterviewProcessOver()) {
             // The check for current round ensures that applicants get at least 1 interview
             this.cancelAllIncompleteInterviews();
             this.hireApplicants(this.applicationsInConsideration);
+            this.notifyAllObservers(notificationFactory.createNotification(NotificationFactory.AUTO_HIRING,
+                    this.getBranchJobPosting()));
         }
     }
 
@@ -260,9 +260,7 @@ public class InterviewManager extends Observable implements Serializable {
     public void setUpOneOnOneInterviews() {
         String field = this.branchJobPosting.getField();
         if (!this.branchJobPosting.getBranch().hasInterviewerForField(field)) {
-            this.notifyAllObservers(new Notification("No Interviewers For Field", "There are no interviewers" +
-                    "at your branch for field " + field + ". One-on-One interviews cannot be set for round "
-                    + this.currentRound + " of interviews for " + this.branchJobPosting.getTitle() + "."));
+            this.notifyAllObservers(notificationFactory.createNotification(NotificationFactory.NO_INTERVIEWERS_IN_FIELD, this));
         }
         else {
             for (JobApplication jobApp : this.applicationsInConsideration) {
@@ -429,9 +427,6 @@ public class InterviewManager extends Observable implements Serializable {
      * @param jobAppsToHire The job applications of those to be hired.
      */
     public void hireApplicants(ArrayList<JobApplication> jobAppsToHire) {
-        this.notifyAllObservers(new Notification("AutoHiring All Applicants",
-                "All applicants in " + this.getBranchJobPosting().getTitle()
-                        + " have been auto-hired"));
         for (JobApplication jobApp : jobAppsToHire) {
             jobApp.getStatus().setHired();
         }
