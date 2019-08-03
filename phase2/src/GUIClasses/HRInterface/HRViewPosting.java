@@ -41,6 +41,7 @@ class HRViewPosting extends HRPanel {
     private JButton scheduleButton;
     private JButton updateButton;
     private JList<String> jobPostingList = new JList<>();
+    private JPanel rejectedPanel = new JPanel();
     private BranchJobPosting selectedJP;
 
 
@@ -101,6 +102,7 @@ class HRViewPosting extends HRPanel {
                 String selectedTitle = jobPostingList.getSelectedValue();
                 selectedJP = currJPs.get(selectedTitle);
                 overview.setText(getStatus() + selectedJP.toString());
+                setRejectListPanel();
                 scheduleButton.setVisible(scheduleJP.containsKey(selectedTitle));
             }
         });
@@ -151,8 +153,8 @@ class HRViewPosting extends HRPanel {
         this.overview.setBorder(new EtchedBorder(EtchedBorder.LOWERED));
     }
 
-    private JPanel createRejectListPanel() {
-        JPanel rejectedPanel = new JPanel(new BorderLayout());
+    private void setRejectListPanel() {
+        rejectedPanel = new JPanel(new BorderLayout());
         ArrayList<Applicant> rejectList = this.hrBackend.getRejectedApplicantsForJobPosting(selectedJP);
         Object[][] data = new Object[rejectList.size()][];
 
@@ -163,14 +165,13 @@ class HRViewPosting extends HRPanel {
         rejectedPanel.add(panelTitle, BorderLayout.NORTH);
         JPanel rejectListPanel = new GUIElementsCreator().createTablePanel(Applicant.REJECT_LIST_CATEGORIES, data);
         rejectedPanel.add(rejectListPanel, BorderLayout.CENTER);
-        return rejectedPanel;
     }
 
     private void setInfoPane(JSplitPane splitDisplay) {
         this.infoPane = new JTabbedPane();
         this.setOverview();
         this.infoPane.addTab(OVERVIEW, this.overview);
-        this.infoPane.addTab(REJECT_LIST, this.createRejectListPanel());
+        this.infoPane.addTab(REJECT_LIST, rejectedPanel);
         splitDisplay.setRightComponent(this.infoPane);
     }
 

@@ -2,6 +2,7 @@ package ApplicantStuff;
 
 import CompanyStuff.Interview;
 import CompanyStuff.JobPostings.BranchJobPosting;
+import CompanyStuff.JobPostings.CompanyJobPosting;
 import Miscellaneous.InterviewTimeComparator;
 import Miscellaneous.CloseDateComparator;
 
@@ -126,8 +127,8 @@ public class JobApplicationManager implements Serializable {
     /**
      * Above, but returning their postings
      */
-    public ArrayList<BranchJobPosting> getCurrentJobAppsPostings() {
-        ArrayList<BranchJobPosting> currentJobApps = new ArrayList<>();
+    public ArrayList<CompanyJobPosting> getCurrentJobAppsPostings() {
+        ArrayList<CompanyJobPosting> currentJobApps = new ArrayList<>();
         for (JobApplication jobApplication : this.getJobApplications()) {
             if (!this.getPreviousJobApplications().contains(jobApplication)) {
                 currentJobApps.add(jobApplication.getJobPosting());

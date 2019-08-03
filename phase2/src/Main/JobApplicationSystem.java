@@ -1,10 +1,10 @@
 package Main;
 
 import CompanyStuff.Company;
-//import UIClasses.UserInterface;
 import ApplicantStuff.Applicant;
 import CompanyStuff.JobPostings.CompanyJobPosting;
 import FileLoadingAndStoring.DataLoaderAndStorer;
+import GUIClasses.MainFrame;
 import NotificationSystem.Notification;
 
 import java.time.LocalDate;
@@ -24,22 +24,10 @@ public class JobApplicationSystem {
 
     // === Main method ===
     public static void main(String[] args) {
-        //JobApplicationSystem.run();
-    }
-
-
-    // === Class methods ===
-    public static void run() {
         JobApplicationSystem jobAppSystem = new JobApplicationSystem();
         DataLoaderAndStorer dataLoaderAndStorer = new DataLoaderAndStorer(jobAppSystem);
         dataLoaderAndStorer.loadAllData();
-        while (true) {
-            // Create and run the main frame
-            // TODO these method calls would have to be called after user selects date but before login
-            jobAppSystem.applicant30Day();
-            jobAppSystem.getUserManager().deleteAllEmptyReferenceAccounts();
-            jobAppSystem.updateAllJobPostings();
-        }
+        new MainFrame(jobAppSystem);
     }
 
     // === Public methods ===
