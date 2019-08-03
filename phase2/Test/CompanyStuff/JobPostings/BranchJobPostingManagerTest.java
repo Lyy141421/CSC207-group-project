@@ -3,10 +3,7 @@ package CompanyStuff.JobPostings;
 import ApplicantStuff.Applicant;
 import ApplicantStuff.JobApplication;
 import ApplicantStuff.Reference;
-import CompanyStuff.Branch;
-import CompanyStuff.Company;
-import CompanyStuff.HRCoordinator;
-import CompanyStuff.Interview;
+import CompanyStuff.*;
 import org.junit.jupiter.api.Test;
 
 import java.sql.Ref;
@@ -130,18 +127,35 @@ class BranchJobPostingManagerTest {
     void getJobPostingsThatNeedGroupInterviewsScheduled() {
         BranchJobPosting posting_single = createJobPostingHR();
         BranchJobPosting posting_group = createJobPostingHRGroup();
-        branch.getJobPostingManager().getBranchJobPostings().get(0).createInterviewManager();
-        branch.getJobPostingManager().getBranchJobPostings().get(1).createInterviewManager();
+
         Applicant app1 = createApplicant("Phil");
         Applicant app2 = createApplicant("Will");
-        assertEquals(branch.getJobPostingManager().getJobPostingsThatNeedGroupInterviewsScheduled(today.plusDays(7)).size(), 0);
-        posting_group.addJobApplication(createJobApplication(app1, posting_single));
-        assertEquals(branch.getJobPostingManager().getJobPostingsThatNeedGroupInterviewsScheduled(today.plusDays(7)).size(), 0);
-        posting_group.addJobApplication(createJobApplication(app1, posting_group));
-        assertEquals(branch.getJobPostingManager().getJobPostingsThatNeedGroupInterviewsScheduled(today.plusDays(7)).size(), 0);
-        posting_group.addJobApplication(createJobApplication(app2, posting_group));
-        assertEquals(branch.getJobPostingManager().getJobPostingsThatNeedGroupInterviewsScheduled(today.plusDays(7)).size(), 1);
+        Interviewer interviewer1 = new Interviewer("anne", "ABC", "Anne Mann", "anne@gmail.com",
+                branch, "field", LocalDate.now());
+        Interviewer interviewer2 = new Interviewer("bob", "ABC", "Bob Mann", "bob@gmail.com",
+                branch, "field", LocalDate.now());
 
+        createJobApplication(app1, posting_single);
+        createJobApplication(app1, posting_group);
+        createJobApplication(app2, posting_group);
+
+        posting_single.createInterviewManager();
+        posting_group.createInterviewManager();
+
+        ArrayList<JobApplication> applicationsRejected1 = new ArrayList<>();
+        ArrayList<JobApplication> applicationsRejected2 = new ArrayList<>();
+        posting_single.getInterviewManager().rejectApplicationsForFirstRound(applicationsRejected1);
+        posting_group.getInterviewManager().rejectApplicationsForFirstRound(applicationsRejected2);
+
+        ArrayList<String[]> interviewConfigurationOneOnOne = new ArrayList<>();
+        interviewConfigurationOneOnOne.add(new String[]{Interview.ONE_ON_ONE, "In-person interview"});
+        ArrayList<String[]> interviewConfigurationGroup = new ArrayList<>();
+        interviewConfigurationGroup.add(new String[]{Interview.GROUP, "Group interview"});
+        posting_single.getInterviewManager().setInterviewConfiguration(interviewConfigurationOneOnOne);
+        posting_group.getInterviewManager().setInterviewConfiguration(interviewConfigurationGroup);
+
+        branch.getJobPostingManager().updateAllClosedUnfilledJobPostings(today.plusDays(7));
+        assertEquals(branch.getJobPostingManager().getJobPostingsThatNeedGroupInterviewsScheduled(today.plusDays(7)).size(), 1);
     }
 
     @Test
