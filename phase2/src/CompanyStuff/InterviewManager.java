@@ -236,7 +236,20 @@ public class InterviewManager extends Observable implements Serializable {
             this.getBranchJobPosting().closeJobPostingNoApplicationsInConsideration();
         } else if (this.isInterviewProcessOver()) {
             // The check for current round ensures that applicants get at least 1 interview
+            this.cancelAllIncompleteInterviews();
             this.hireApplicants(this.applicationsInConsideration);
+        }
+    }
+
+    /**
+     * Cancel all incomplete interviews before remaining applicants are automatically hired.
+     */
+    private void cancelAllIncompleteInterviews() {
+        for (JobApplication jobApp : this.applicationsInConsideration) {
+            Interview lastInterview = jobApp.getLastInterview();
+            if (lastInterview.isIncomplete()) {
+                this.updateInterviewersOfInterviewCompletionOrCancellation(lastInterview);
+            }
         }
     }
 
