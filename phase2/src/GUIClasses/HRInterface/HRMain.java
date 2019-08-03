@@ -49,11 +49,11 @@ public class HRMain extends UserPanel {
     public void setCards() {
         cards.add(new HRHome(this.hrBackend), UserPanel.HOME, 0);
         cards.add(new UserProfilePanel(this.hrBackend.getHR()), UserPanel.PROFILE, 1);
-        cards.add(new HRViewPosting(this.hrBackend, cards, true), HRPanel.HIGH_PRIORITY_POSTINGS, 2);
-        cards.add(new HRViewPosting(this.hrBackend, cards, false), HRPanel.BROWSE_POSTINGS, 3);
+        cards.add(new HRViewPosting(this.hrBackend, cards, HRViewPosting.HIGH_PRIORITY), HRPanel.HIGH_PRIORITY_POSTINGS, 2);
+        cards.add(new HRViewPosting(this.hrBackend, cards, HRViewPosting.ALL), HRPanel.BROWSE_POSTINGS, 3);
         cards.add(new HRSearchApplicant(this.hrBackend, cards), HRPanel.SEARCH_APPLICANT, 4);
         cards.add(new HRAddOrUpdatePostingForm(this.hrBackend, true, null), HRPanel.ADD_POSTING, 5);
-        cards.add(new HRViewUpdatableJobPosting(this.hrBackend, cards), HRPanel.UPDATE_POSTING, 6);
+        cards.add(new HRViewPosting(this.hrBackend, cards, HRViewPosting.UPDATABLE), HRPanel.UPDATE_POSTING, 6);
         //cards.add(new HRViewApp(this, this.hrBackend
         //, this.today, new HashMap<>()), HRPanel.APPLICATION);
     }
