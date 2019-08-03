@@ -6,6 +6,7 @@ import ApplicantStuff.Reference;
 import CompanyStuff.Branch;
 import CompanyStuff.Company;
 import CompanyStuff.HRCoordinator;
+import CompanyStuff.Interview;
 import org.junit.jupiter.api.Test;
 
 import java.sql.Ref;
@@ -151,7 +152,10 @@ class BranchJobPostingManagerTest {
     void updateAllClosedUnfilledJobPostings() {
         createJobPostingHR();
         branch.getJobPostingManager().getBranchJobPostings().get(0).createInterviewManager();
-        branch.getJobPostingManager().getBranchJobPostings().get(0).getInterviewManager().setInterviewConfiguration(new ArrayList<>(5));
+        ArrayList<String[]> interviewConfiguration = new ArrayList<>();
+        interviewConfiguration.add(new String[]{Interview.ONE_ON_ONE, "In-person interview"});
+        branch.getJobPostingManager().getBranchJobPostings().get(0).getInterviewManager().
+                setInterviewConfiguration(interviewConfiguration);
         branch.getJobPostingManager().updateAllClosedUnfilledJobPostings(today);
         assertEquals(branch.getJobPostingManager().getBranchJobPostings().get(0).getInterviewManager().getCurrentRound(), -1);
         branch.getJobPostingManager().updateAllClosedUnfilledJobPostings(today.plusDays(7));
