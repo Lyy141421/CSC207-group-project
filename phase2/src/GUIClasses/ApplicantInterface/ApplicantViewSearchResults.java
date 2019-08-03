@@ -20,7 +20,8 @@ class ApplicantViewSearchResults extends JPanel {
 
         JPanel viewJobs0 = this.buildViewJobs0(jobPostings); viewJobs.add(viewJobs0);
         JPanel viewJobs1 = this.buildViewJobs1(jobPostings); viewJobs.add(viewJobs1);
-        JPanel viewJobs2 = this.buildViewJobs2(jobPostings); viewJobs.add(viewJobs2);
+        JPanel viewJobs2 = this.buildViewJobs2(new ArrayList<>());
+        viewJobs.add(viewJobs2); // TODO fix to have branch job postings
 
         JList<String> jobTitlesList = new JList<>();
         for(Component c : viewJobs0.getComponents()) {
