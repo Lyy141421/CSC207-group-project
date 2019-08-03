@@ -16,6 +16,7 @@ public class ReturnHomeActionListener implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         JPanel cards = new PanelGetter().getCardLayoutFromMenuItemDirectlyOnMenuBar(e);
         CardLayout cl = (CardLayout) cards.getLayout();
+        ((UserMain) cards.getParent()).refresh();
         cl.show(cards, UserMain.HOME);
     }
 }
