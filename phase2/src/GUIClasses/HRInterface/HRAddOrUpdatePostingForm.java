@@ -448,22 +448,24 @@ class HRAddOrUpdatePostingForm extends HRPanel {
     }
 
     private void addJobPosting(Optional<String[]> defaultFields, Object[] mandatoryFields) {
-        if (!defaultFields.isPresent()) {
-            if (!hrBackend.implementJobPosting(selectedJP, mandatoryFields, false)) {
-                // TODO show warning that no interviewer in field selected
-//                if ("HR selects ok") {
-//                    hrBackend.implementJobPosting(selectedJP, mandatoryFields, true);
-//                    JOptionPane.showMessageDialog(containerPane, "Job posting has been added.");
-//                }
-            }
+        String field;
+        if (defaultFields.isPresent()) {
+            field = defaultFields.get()[1];
         } else {
-            if (!hrBackend.addJobPosting(mandatoryFields, defaultFields.get(), false)) {
-                // TODO show warning that no interviewer in field selected
-//                if ("HR selects ok") {
-//                    hrBackend.addJobPosting(mandatoryFields, defaultFields.get(), true);
-//                    JOptionPane.showMessageDialog(containerPane, "Job posting has been added.");
-//                }
+            field = selectedJP.getField();
+        }
+        boolean create = true;
+        if (!hrBackend.hasInterviewerOfField(field)) {
+            create = JOptionPane.showConfirmDialog(containerPane, "There are no interviewers for the field you entered. Would you like to create the job posting anyways?",
+                    "Warning", JOptionPane.YES_NO_OPTION)==JOptionPane.YES_OPTION;
+        }
+        if (create) {
+            if (!defaultFields.isPresent()) {
+                hrBackend.implementJobPosting(selectedJP, mandatoryFields);
+            } else {
+                hrBackend.addJobPosting(mandatoryFields, defaultFields.get());
             }
+            JOptionPane.showMessageDialog(containerPane, "Job posting has been added.");
         }
     }
 
