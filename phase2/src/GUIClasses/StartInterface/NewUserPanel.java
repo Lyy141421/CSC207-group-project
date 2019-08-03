@@ -150,7 +150,7 @@ public class NewUserPanel extends JPanel {
     private JPanel getPanelByName(JPanel panel, String name) {
         JPanel ret = new JPanel();
         for (Component c : panel.getComponents()) {
-            if (c instanceof JPanel && c.getName().equals(name)) {
+            if (c instanceof JPanel && c.getName() != null && c.getName().equals(name)) {
                 ret = (JPanel) c;
             }
         }

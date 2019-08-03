@@ -80,7 +80,7 @@ class LoginBackend {
         String password = inputs.get("password");
         String name = inputs.get("name");
         String email = inputs.get("email");
-        String postalCode = inputs.get("postalCode");   // TODO edit inputs
+        String postalCode = inputs.get("postalCode");
         if (!isEverythingValid(username, name, email, postalCode)) {
             return 1;
         } else if (name.equals("") || password.equals("")) {
