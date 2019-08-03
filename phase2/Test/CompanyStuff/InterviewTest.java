@@ -28,6 +28,12 @@ class InterviewTest {
                 today.plusDays(-5), today.plusDays(-3), today.plusDays(-3));
     }
 
+    BranchJobPosting createJobPostingHRGroup() {
+        return hrcoordinator.addJobPosting("Title", "Sales", "description",
+                new ArrayList<>(Arrays.asList("CV", "Cover Letter", "Reference Letter")), new ArrayList<>(), 2,
+                today.plusDays(-5), today.plusDays(-3), today.plusDays(-3));
+    }
+
     Applicant createApplicant(String name) {
         return new Applicant(name, "ABC123", "Legal Name",
                 name + "@gmail.com", today.plusDays(-5), "Toronto");
@@ -65,6 +71,25 @@ class InterviewTest {
         posting.getInterviewManager().setInterviewConfiguration(config);
         posting.getInterviewManager().advanceRound();
         return new Interview(app, interviewer, posting.getInterviewManager());
+    }
+
+    Interview createInterviewGroup(String name) {
+        ArrayList<Interviewer> interviewer_list = new ArrayList<>();
+        interviewer_list.add(createInterviewer("Jonathan"));
+        interviewer_list.add(createInterviewer("Riley"));
+        BranchJobPosting posting = createJobPostingHRGroup();
+        JobApplication app = createJobApplication(createApplicant("Will"), posting);
+        JobApplication app2 = createJobApplication(createApplicant("Hannah"), posting);
+        ArrayList<JobApplication> app_list = new ArrayList<>();
+        app_list.add(app);
+        app_list.add(app2);
+        posting.createInterviewManager();
+        ArrayList<String[]> config = new ArrayList<>();
+        config.add(new String[]{Interview.ONE_ON_ONE, "In-person interview"});
+        config.add(new String[]{Interview.ONE_ON_ONE, "Over The Phone"});
+        posting.getInterviewManager().setInterviewConfiguration(config);
+        posting.getInterviewManager().advanceRound();
+        return new Interview(app_list, interviewer, interviewer_list, posting.getInterviewManager());
     }
 
     @Test
