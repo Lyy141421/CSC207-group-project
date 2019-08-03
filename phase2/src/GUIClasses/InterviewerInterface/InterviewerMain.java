@@ -6,7 +6,7 @@ import CompanyStuff.Interviewer;
 import CompanyStuff.JobPostings.BranchJobPosting;
 import FileLoadingAndStoring.DataLoaderAndStorer;
 import GUIClasses.ActionListeners.LogoutActionListener;
-import GUIClasses.CommonUserGUI.UserPanel;
+import GUIClasses.CommonUserGUI.UserMain;
 import GUIClasses.CommonUserGUI.UserProfilePanel;
 import Main.JobApplicationSystem;
 
@@ -14,9 +14,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 
-public class InterviewerMain extends UserPanel {
+public class InterviewerMain extends UserMain {
     /**
      * The main panel for Interviewer GUI.
      */

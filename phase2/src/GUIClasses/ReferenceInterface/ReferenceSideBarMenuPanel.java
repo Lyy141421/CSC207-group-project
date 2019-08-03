@@ -3,7 +3,7 @@ package GUIClasses.ReferenceInterface;
 import GUIClasses.ActionListeners.LogoutActionListener;
 import GUIClasses.ActionListeners.ProfileActionListener;
 import GUIClasses.ActionListeners.ReturnHomeActionListener;
-import GUIClasses.CommonUserGUI.UserPanel;
+import GUIClasses.CommonUserGUI.UserMain;
 import GUIClasses.CommonUserGUI.SideBarMenuCreator;
 
 import javax.swing.*;
@@ -40,14 +40,14 @@ class ReferenceSideBarMenuPanel extends JPanel {
         fullMenu.put("3. Submit Reference Letter", new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ((UserPanel) cards.getParent()).refresh();
+                ((UserMain) cards.getParent()).refresh();
                 ((CardLayout) cards.getLayout()).show(cards, ReferenceMain.SUBMIT_REFERENCE_LETTER);
             }
         });
         fullMenu.put("4. View Referee Job Postings", new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ((UserPanel) cards.getParent()).refresh();
+                ((UserMain) cards.getParent()).refresh();
                 ((CardLayout) cards.getLayout()).show(cards, ReferenceMain.VIEW_REFEREE_JOB_POSTINGS);
             }
         });

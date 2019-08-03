@@ -1,6 +1,6 @@
 package GUIClasses.ActionListeners;
 
-import GUIClasses.CommonUserGUI.UserPanel;
+import GUIClasses.CommonUserGUI.UserMain;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,9 +14,9 @@ public class ProfileActionListener implements ActionListener {
 
 
     public void actionPerformed(ActionEvent e) {
-        JPanel cards = new CardLayoutPanelGetter().fromMenuItemDirectlyOnMenuBar(e);
+        JPanel cards = new PanelGetter().getCardLayoutFromMenuItemDirectlyOnMenuBar(e);
         CardLayout cl = (CardLayout) cards.getLayout();
-        cl.show(cards, UserPanel.PROFILE);
+        cl.show(cards, UserMain.PROFILE);
     }
 
 }

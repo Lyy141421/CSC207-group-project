@@ -43,7 +43,7 @@ public abstract class User implements Serializable, Observer {
 
     public User(String email, LocalDate dateCreated) {
         this.username = email;
-        this.password = this.generateRandomPassword();
+        this.password = email;
         this.email = email;
         this.dateCreated = dateCreated;
     }
@@ -92,22 +92,6 @@ public abstract class User implements Serializable, Observer {
     }
 
     // === Other methods ===
-
-    /**
-     * Generates a random password of 8 characters.
-     *
-     * @return a random password of 8 characters.
-     * @author https://stackoverflow.com/questions/20536566/creating-a-random-string-with-a-z-and-0-9-in-java
-     */
-    private String generateRandomPassword() {
-        StringBuilder passwordSB = new StringBuilder();
-        Random random = new Random();
-        while (passwordSB.length() < PASSWORD_LENGTH) { // length of the random string.
-            int index = (int) (random.nextFloat() * PASSWORD_CHARS.length());
-            passwordSB.append(PASSWORD_CHARS.charAt(index));
-        }
-        return passwordSB.toString();
-    }
 
     public abstract String[] getDisplayedProfileCategories();
 

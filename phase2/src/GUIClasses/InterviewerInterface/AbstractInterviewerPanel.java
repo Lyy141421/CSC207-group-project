@@ -1,7 +1,7 @@
 package GUIClasses.InterviewerInterface;
 
 import CompanyStuff.Interview;
-import GUIClasses.CommonUserGUI.UserPanel;
+import GUIClasses.CommonUserGUI.UserMain;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -65,7 +65,7 @@ abstract class AbstractInterviewerPanel extends JPanel {
      * Refreshes all the cards in InterviewerMain when any changes are made.
      */
     void refresh() {
-        ((UserPanel) this.getParent().getParent()).refresh();
+        ((UserMain) this.getParent().getParent()).refresh();
     }
 }
 

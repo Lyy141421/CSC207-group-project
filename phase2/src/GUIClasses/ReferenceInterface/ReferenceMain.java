@@ -11,7 +11,7 @@ import CompanyStuff.JobPostings.BranchJobPosting;
 import CompanyStuff.JobPostings.BranchJobPostingManager;
 import FileLoadingAndStoring.DataLoaderAndStorer;
 import GUIClasses.ActionListeners.LogoutActionListener;
-import GUIClasses.CommonUserGUI.UserPanel;
+import GUIClasses.CommonUserGUI.UserMain;
 import Main.JobApplicationSystem;
 import GUIClasses.CommonUserGUI.UserProfilePanel;
 
@@ -22,7 +22,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class ReferenceMain extends UserPanel {
+public class ReferenceMain extends UserMain {
     /**
      * The main reference panel.
      */
@@ -59,8 +59,8 @@ public class ReferenceMain extends UserPanel {
      * Add the cards to the card layout panel
      */
     public void setCards() {
-        cards.add(new ReferenceHomePanel(this.referenceBackEnd), UserPanel.HOME);
-        cards.add(new UserProfilePanel(this.referenceBackEnd.getReference()), UserPanel.PROFILE);
+        cards.add(new ReferenceHomePanel(this.referenceBackEnd), UserMain.HOME);
+        cards.add(new UserProfilePanel(this.referenceBackEnd.getReference()), UserMain.PROFILE);
         cards.add(new ReferenceSubmitLetterPanel(this.referenceBackEnd), SUBMIT_REFERENCE_LETTER);
         cards.add(new ReferenceViewRefereeJobPostingsPanel(this.referenceBackEnd), VIEW_REFEREE_JOB_POSTINGS);
     }

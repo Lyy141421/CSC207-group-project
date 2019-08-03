@@ -6,7 +6,7 @@ import ApplicantStuff.JobApplicationDocument;
 import ApplicantStuff.Reference;
 import DocumentManagers.ApplicantDocumentManager;
 import DocumentManagers.CompanyDocumentManager;
-import GUIClasses.CommonUserGUI.UserPanel;
+import GUIClasses.CommonUserGUI.UserMain;
 import Main.User;
 
 import javax.swing.*;
@@ -34,9 +34,9 @@ public class SubmitDocumentsActionListener implements ActionListener {
         this.updateFileStorage();
         JPanel parent = (JPanel) ((JButton) e.getSource()).getParent();
         JOptionPane.showMessageDialog(parent, "You have successfully submitted " + filesToSubmit.size() + " files.");
-        JPanel cards = new CardLayoutPanelGetter().fromSubmitFilesButton(e);
-        UserPanel userPanel = (UserPanel) cards.getParent();
-        userPanel.refresh(); // Update all the cards
+        JPanel cards = new PanelGetter().getCardLayoutFromSubmitFilesButton(e);
+        UserMain userMain = (UserMain) cards.getParent();
+        userMain.refresh(); // Update all the cards
     }
 
     /**

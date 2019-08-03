@@ -19,35 +19,42 @@ class HRViewPosting extends HRPanel {
 
     private static final String OVERVIEW = "Overview";
     private static final String REJECT_LIST = "Rejected list";
+    public static int HIGH_PRIORITY = 0;
+    public static int ALL = 1;
+    public static int UPDATABLE = 2;
 
     private HashMap<String, BranchJobPosting> unreviewedJP;
     private HashMap<String, BranchJobPosting> scheduleJP;
     private HashMap<String, BranchJobPosting> hiringJP;
-    private HashMap<String, BranchJobPosting> filledJP;
+    private HashMap<String, BranchJobPosting> archivedJP;
     private HashMap<String, BranchJobPosting> importantJP = new HashMap<>();
+    private HashMap<String, BranchJobPosting> updatableJPs;
     private HashMap<String, BranchJobPosting> allJP;
 
     private HashMap<String, BranchJobPosting> currJPs;
 
     private HRViewPosting containerPane = this;
     private JPanel parent;
-    private boolean isHighPriority;
+    private int jpType;
     private JTabbedPane infoPane;
     private JTextArea overview;
     private JButton scheduleButton;
+    private JButton updateButton;
     private JList<String> jobPostingList = new JList<>();
     private BranchJobPosting selectedJP;
 
 
-    HRViewPosting(HRBackend hrBackend, JPanel parent, boolean isHighPriority) {
+    HRViewPosting(HRBackend hrBackend, JPanel parent, int jpType) {
         super(hrBackend);
         this.parent = parent;
-        this.isHighPriority = isHighPriority;
+        this.jpType = jpType;
         this.setJPLists();
-        if (isHighPriority) {
+        if (jpType == HIGH_PRIORITY) {
             this.currJPs = importantJP;
-        } else {
+        } else if (jpType == ALL) {
             this.currJPs = allJP;
+        } else {
+            this.currJPs = updatableJPs;
         }
 
         this.setLayout(new BorderLayout());
@@ -58,7 +65,10 @@ class HRViewPosting extends HRPanel {
         this.setInfoPane(splitDisplay);
 
         JPanel buttons = new JPanel(new FlowLayout());
-        buttons.add(this.createScheduleButton());
+        this.createScheduleButton();
+        buttons.add(this.scheduleButton);
+        this.createUpdateButton();
+        buttons.add(this.updateButton);
         buttons.add(this.createViewAppButton());
 
         this.add(splitDisplay, BorderLayout.CENTER);
@@ -91,12 +101,7 @@ class HRViewPosting extends HRPanel {
                 String selectedTitle = jobPostingList.getSelectedValue();
                 selectedJP = currJPs.get(selectedTitle);
                 overview.setText(getStatus() + selectedJP.toString());
-                if (scheduleJP.containsKey(selectedTitle)) {
-                    scheduleButton.setEnabled(true);
-                    scheduleButton.setVisible(true);
-                } else {
-                    scheduleButton.setEnabled(false);
-                }
+                scheduleButton.setVisible(scheduleJP.containsKey(selectedTitle));
             }
         });
     }
@@ -113,6 +118,24 @@ class HRViewPosting extends HRPanel {
         });
 
         return scheduleButton;
+    }
+
+    private void createUpdateButton() {
+        this.updateButton = new JButton("Update job posting");
+        this.updateButton.setVisible(jpType == UPDATABLE);
+        this.updateButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String selectedTitle = jobPostingList.getSelectedValue();
+                BranchJobPosting selectedJP = updatableJPs.get(selectedTitle);
+                HRAddOrUpdatePostingForm updateForm = new HRAddOrUpdatePostingForm(hrBackend, false, selectedJP);
+                if (parent.getComponents().length > 7) {
+                    parent.remove(7);
+                }
+                parent.add(updateForm, HRPanel.UPDATE_POSTING_FORM, 7);
+                ((CardLayout) parent.getLayout()).show(parent, HRPanel.UPDATE_POSTING_FORM);
+            }
+        });
     }
 
     private void setJobPostingList (JSplitPane splitDisplay) {
@@ -187,10 +210,12 @@ class HRViewPosting extends HRPanel {
     }
 
     private String getPreviousPanelKey() {
-        if (isHighPriority) {
+        if (jpType == HIGH_PRIORITY) {
             return HRPanel.HIGH_PRIORITY_POSTINGS;
-        } else {
+        } else if (jpType == ALL) {
             return HRPanel.BROWSE_POSTINGS;
+        } else {
+            return HRPanel.UPDATE_POSTING;
         }
     }
 
@@ -198,7 +223,8 @@ class HRViewPosting extends HRPanel {
         this.unreviewedJP = this.getTitleToJPMap(hrBackend.getJPToReview());
         this.scheduleJP = this.getTitleToJPMap(hrBackend.getJPToSchedule());
         this.hiringJP = this.getTitleToJPMap(hrBackend.getJPToHire());
-        this.filledJP = this.getTitleToJPMap(hrBackend.getAllFilledJP());
+        this.archivedJP = this.getTitleToJPMap(hrBackend.getAllFilledJP());
+        this.updatableJPs = this.getTitleToJPMap(hrBackend.getJPThatCanBeUpdated());
         this.allJP = this.getTitleToJPMap(hrBackend.getAllJP());
 
         this.importantJP.putAll(this.unreviewedJP);
@@ -221,8 +247,8 @@ class HRViewPosting extends HRPanel {
             status = "Important: Schedule group interviews for the next round.\n\n";
         } else if (hiringJP.containsValue(selectedJP)) {
             status = "Important: Make hiring decisions for final candidates.\n\n";
-        } else if (filledJP.containsValue(selectedJP)) {
-            status = "Archived.";
+        } else if (archivedJP.containsValue(selectedJP)) {
+            status = "Archived.\n\n";
         } else {
             status = "Low priority.\n\n";
         }

@@ -1,15 +1,8 @@
 package GUIClasses.StartInterface;
 
-import ApplicantStuff.Applicant;
-import ApplicantStuff.Reference;
-import CompanyStuff.HRCoordinator;
-import CompanyStuff.Interviewer;
 import GUIClasses.ActionListeners.LogoutActionListener;
-import GUIClasses.ApplicantInterface.ApplicantPanel;
-import GUIClasses.HRInterface.HRMain;
-import GUIClasses.InterviewerInterface.InterviewerMain;
+import GUIClasses.CommonUserGUI.UserMain;
 import GUIClasses.MainFrame;
-import GUIClasses.ReferenceInterface.ReferenceMain;
 import Main.JobApplicationSystem;
 import Main.User;
 import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
@@ -17,7 +10,6 @@ import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
 import net.sourceforge.jdatepicker.impl.UtilDateModel;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -37,9 +29,12 @@ public class LoginMain extends JPanel {
     private MainFrame mainframe;
     private NewUserPanel newUserRef;
     private JobApplicationSystem jobAppSystem;
+    private LogoutActionListener logout;
 
-    public LoginMain(NewUserPanel newUserRef, Container parent, CardLayout masterLayout,
-                     JobApplicationSystem jobAppSystem) {
+    public LoginMain(NewUserPanel newUserRef, Container parent, CardLayout masterLayout, JobApplicationSystem jobAppSystem) {
+        this.backend = new LoginBackend(jobAppSystem);
+        this.jobAppSystem = jobAppSystem;
+        this.logout = new LogoutActionListener(parent, masterLayout, jobAppSystem);
         this.parent = parent;
         this.masterLayout = masterLayout;
         this.mainframe = (MainFrame) this.parent.getParent().getParent().getParent();
@@ -47,8 +42,14 @@ public class LoginMain extends JPanel {
         this.setLayout(null);
         this.addTextItems();
         this.addEntryItems();
-        this.backend = new LoginBackend(jobAppSystem);
-        this.jobAppSystem = jobAppSystem;
+    }
+
+    private void updateSystem(LocalDate inputtedDate) {
+        this.jobAppSystem.setPreviousLoginDate(inputtedDate);
+        this.jobAppSystem.setToday(inputtedDate);
+        jobAppSystem.applicant30Day();
+        jobAppSystem.getUserManager().deleteAllEmptyReferenceAccounts();
+        jobAppSystem.updateAllJobPostings();
     }
 
     /**
@@ -232,7 +233,10 @@ public class LoginMain extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 LocalDate today = ((Date) ((JDatePickerImpl) datePicker).getModel().getValue()).
                         toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-                login(userNameEntry, passwordEntry, today);
+                if (backend.isValidDate(today)) {
+                    updateSystem(today);
+                    login(userNameEntry, passwordEntry);
+                }
             }
         });
         popup.add(submit, SwingConstants.SOUTH);
@@ -244,7 +248,7 @@ public class LoginMain extends JPanel {
      * attempts login with the provided information
      * Cases: 0 - blank field, 1 - no user exists, 2 - successful login, 3 - wrong pass
      */
-    private void login(JTextField userNameEntry, JPasswordField passwordEntry, LocalDate today) {
+    private void login(JTextField userNameEntry, JPasswordField passwordEntry) {
         int result = backend.login(userNameEntry.getText(), new String(passwordEntry.getPassword()));
         switch(result) {
             case 1: this.showCreateNew();
@@ -258,7 +262,7 @@ public class LoginMain extends JPanel {
             case 2: this.hideCreateNew();
                     this.hidePassError();
                     this.hideBlankField();
-                    this.GUILogin(userNameEntry.getText(), today);
+                this.GUILogin(userNameEntry.getText());
                     userNameEntry.setText("");
                     passwordEntry.setText("");
                     break;
@@ -272,27 +276,11 @@ public class LoginMain extends JPanel {
     /**
      * Attempts a login through the GUI
      */
-    private void GUILogin(String username, LocalDate today) {
+    private void GUILogin(String username) {
         User user = this.backend.findUserByUsername(username);
-        if(user instanceof Applicant) {
-            ApplicantPanel newAppPanel = new ApplicantPanel((Applicant)user, this.jobAppSystem,
-                    this.createLogoutListener());
-            this.parent.add(newAppPanel, "APPLICANT");
-            this.masterLayout.show(parent, "APPLICANT");
-        } else if(user instanceof HRCoordinator) {
-            HRMain newHRPanel = new HRMain((HRCoordinator)user, this.jobAppSystem, this.createLogoutListener());
-            this.parent.add(newHRPanel, "HRC");
-            this.masterLayout.show(parent, "HRC");
-        } else if(user instanceof Interviewer) {
-            InterviewerMain newIntPanel = new InterviewerMain((Interviewer)user, jobAppSystem,
-                    this.createLogoutListener());
-            this.parent.add(newIntPanel, "INTERVIEWER");
-            this.masterLayout.show(parent, "INTERVIEWER");
-        } else { //Reference
-            ReferenceMain newRefPanel = new ReferenceMain((Reference)user, jobAppSystem, this.createLogoutListener());
-            this.parent.add(newRefPanel, "REFERENCE");
-            this.masterLayout.show(parent, "REFERENCE");
-        }
+        UserMain userMain = new UserMainFactory(user, jobAppSystem, logout).createPanel();
+        this.parent.add(userMain, MainFrame.USER_PANEL);
+        this.masterLayout.show(parent, MainFrame.USER_PANEL);
         this.newUserRef.setNewUsername(null);
     }
 
@@ -303,13 +291,6 @@ public class LoginMain extends JPanel {
         this.hideCreateNew();
         this.hidePassError();
         this.newUserRef.setNewUsername(username);
-        this.masterLayout.show(parent, "NEWUSER");
-    }
-
-    /**
-     * creates the appropriate action listener to logout
-     */
-    private LogoutActionListener createLogoutListener() {
-        return new LogoutActionListener(mainframe, masterLayout, jobAppSystem);
+        this.masterLayout.show(parent, MainFrame.NEW_USER);
     }
 }

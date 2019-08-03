@@ -2,7 +2,7 @@ package GUIClasses.CommonUserGUI;
 
 import javax.swing.*;
 
-abstract public class UserPanel extends JPanel {
+abstract public class UserMain extends JPanel {
     /**
      * A user panel.
      */

@@ -16,10 +16,14 @@ import java.util.Date;
 
 public class MainFrame extends JFrame {
 
-    private LocalDate getToday;
+    public static final String LOGIN = "LOGIN";
+    public static final String NEW_USER = "NEW_USER";
+    public static final String USER_PANEL = "USER_PANEL";
+
+    private LocalDate getToday; // TODO delete
     private JobApplicationSystem jobAppSystem;
     private CardLayout layoutManager = new CardLayout();
-    private NewUserPanel newUserRef;
+    private NewUserPanel newUserRef;    // TODO delete?
 
     public MainFrame(JobApplicationSystem jobAppSystem) {
         super("GET A JOB");
@@ -47,16 +51,17 @@ public class MainFrame extends JFrame {
         setVisible(true);
         setResizable(false);
 
-        LocalDate actualToday = LocalDate.now();
-        UtilDateModel dateModel = new UtilDateModel();
-        dateModel.setDate(actualToday.getYear(), actualToday.getMonthValue()-1, actualToday.getDayOfMonth());
-        dateModel.setSelected(true);
-        JDatePanelImpl datePanel = new JDatePanelImpl(dateModel);
-        JDatePickerImpl manualToday = new JDatePickerImpl(datePanel);
-
-        // When confirmed this is the date they want:
-        // This converts the Date object from JDatePicker to a LocalDate object
-        getToday = ((Date) manualToday.getModel().getValue()).toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        // TODO delete
+//        LocalDate actualToday = LocalDate.now();
+//        UtilDateModel dateModel = new UtilDateModel();
+//        dateModel.setDate(actualToday.getYear(), actualToday.getMonthValue()-1, actualToday.getDayOfMonth());
+//        dateModel.setSelected(true);
+//        JDatePanelImpl datePanel = new JDatePanelImpl(dateModel);
+//        JDatePickerImpl manualToday = new JDatePickerImpl(datePanel);
+//
+//        // When confirmed this is the date they want:
+//        // This converts the Date object from JDatePicker to a LocalDate object
+//        getToday = ((Date) manualToday.getModel().getValue()).toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
     }
 
     /**
@@ -66,8 +71,8 @@ public class MainFrame extends JFrame {
     private void addCards () {
         // We need to be careful with when these cards get constructed, in case it's missing arguments to run methods
         NewUserPanel newUserRef = new NewUserPanel(this.getContentPane(), this.layoutManager, this.jobAppSystem);
-        this.add(newUserRef, "NEWUSER");
-        this.add(new LoginMain(this.newUserRef, this.getContentPane(), this.layoutManager, this.jobAppSystem), "LOGIN");
+        this.add(newUserRef, MainFrame.NEW_USER);
+        this.add(new LoginMain(this.newUserRef, this.getContentPane(), this.layoutManager, this.jobAppSystem), MainFrame.LOGIN);
     }
 
     public static void main(String[] args) {

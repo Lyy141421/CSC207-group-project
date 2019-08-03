@@ -15,7 +15,7 @@ abstract class HRPanel extends JPanel {
     static final String BROWSE_POSTINGS = "BROWSE_POSTINGS";
     static final String APPLICATION = "APPLICATION";
     static final String SEARCH_APPLICANT = "SEARCH_APPLICANT";
-    static final String ADD_POSTING = "ADDPOSTING";
+    static final String ADD_POSTING = "ADD_POSTING";
     static final String UPDATE_POSTING = "UPDATE_POSTING";
     static final String UPDATE_POSTING_FORM = "UPDATE_POSTING_FORM";
 
