@@ -24,7 +24,7 @@ public class LogoutActionListener implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         new DataLoaderAndStorer(jobApplicationSystem).storeAllData();
-        masterLayout.show(parent, "LOGIN");
-        masterLayout.removeLayoutComponent(new PanelGetter().getUserPanelFromMenuItemDirectlyOnMenuBar(e));
+        masterLayout.show(parent, MainFrame.LOGIN);
+        parent.remove(new PanelGetter().getUserPanelFromMenuItemDirectlyOnMenuBar(e));
     }
 }

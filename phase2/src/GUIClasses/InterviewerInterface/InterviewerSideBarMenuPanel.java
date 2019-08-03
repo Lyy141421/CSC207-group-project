@@ -3,7 +3,7 @@ package GUIClasses.InterviewerInterface;
 import GUIClasses.ActionListeners.LogoutActionListener;
 import GUIClasses.ActionListeners.ProfileActionListener;
 import GUIClasses.ActionListeners.ReturnHomeActionListener;
-import GUIClasses.CommonUserGUI.UserPanel;
+import GUIClasses.CommonUserGUI.UserMain;
 import GUIClasses.CommonUserGUI.SideBarMenuCreator;
 
 import javax.swing.*;
@@ -42,21 +42,21 @@ class InterviewerSideBarMenuPanel extends JPanel {
         fullMenu.put("3. Schedule Interviews", new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ((UserPanel) cards.getParent()).refresh();
+                ((UserMain) cards.getParent()).refresh();
                 ((CardLayout) cards.getLayout()).show(cards, InterviewerMain.SCHEDULE);
             }
         });
         fullMenu.put("4. View Interviewees", new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ((UserPanel) cards.getParent()).refresh();
+                ((UserMain) cards.getParent()).refresh();
                 ((CardLayout) cards.getLayout()).show(cards, InterviewerMain.INCOMPLETE);
             }
         });
         fullMenu.put("5. Complete Interviews", new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ((UserPanel) cards.getParent()).refresh();
+                ((UserMain) cards.getParent()).refresh();
                 ((CardLayout) cards.getLayout()).show(cards, InterviewerMain.COMPLETE);
             }
         });

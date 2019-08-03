@@ -1,28 +1,18 @@
 package GUIClasses.HRInterface;
 
-import ApplicantStuff.Applicant;
-import ApplicantStuff.JobApplication;
-import ApplicantStuff.JobApplicationDocument;
-import ApplicantStuff.Reference;
 import CompanyStuff.Branch;
-import CompanyStuff.Company;
 import CompanyStuff.HRCoordinator;
-import CompanyStuff.JobPostings.BranchJobPosting;
-import CompanyStuff.JobPostings.BranchJobPostingManager;
 import FileLoadingAndStoring.DataLoaderAndStorer;
 import GUIClasses.ActionListeners.LogoutActionListener;
-import GUIClasses.CommonUserGUI.UserPanel;
+import GUIClasses.CommonUserGUI.UserMain;
 import GUIClasses.CommonUserGUI.UserProfilePanel;
 import Main.JobApplicationSystem;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.File;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
 
-public class HRMain extends UserPanel {
+public class HRMain extends UserMain {
 
     HRBackend hrBackend;
     JPanel cards = new JPanel(new CardLayout());
@@ -47,8 +37,8 @@ public class HRMain extends UserPanel {
     //=====Add component methods=====
 
     public void setCards() {
-        cards.add(new HRHome(this.hrBackend), UserPanel.HOME, 0);
-        cards.add(new UserProfilePanel(this.hrBackend.getHR()), UserPanel.PROFILE, 1);
+        cards.add(new HRHome(this.hrBackend), UserMain.HOME, 0);
+        cards.add(new UserProfilePanel(this.hrBackend.getHR()), UserMain.PROFILE, 1);
         cards.add(new HRViewPosting(this.hrBackend, cards, true), HRPanel.HIGH_PRIORITY_POSTINGS, 2);
         cards.add(new HRViewPosting(this.hrBackend, cards, false), HRPanel.BROWSE_POSTINGS, 3);
         cards.add(new HRSearchApplicant(this.hrBackend, cards), HRPanel.SEARCH_APPLICANT, 4);

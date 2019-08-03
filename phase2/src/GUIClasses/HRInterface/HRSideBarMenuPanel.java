@@ -4,7 +4,7 @@ import GUIClasses.ActionListeners.LogoutActionListener;
 import GUIClasses.ActionListeners.ProfileActionListener;
 import GUIClasses.ActionListeners.ReturnHomeActionListener;
 import GUIClasses.CommonUserGUI.SideBarMenuCreator;
-import GUIClasses.CommonUserGUI.UserPanel;
+import GUIClasses.CommonUserGUI.UserMain;
 
 import javax.swing.*;
 import java.awt.*;
@@ -39,35 +39,35 @@ class HRSideBarMenuPanel extends JPanel {
         fullMenu.put("3. High priority tasks", new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ((UserPanel) cards.getParent()).refresh();
+                ((UserMain) cards.getParent()).refresh();
                 ((CardLayout) cards.getLayout()).show(cards, HRPanel.HIGH_PRIORITY_POSTINGS);
             }
         });
         fullMenu.put("4. Add Job Posting", new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ((UserPanel) cards.getParent()).refresh();
+                ((UserMain) cards.getParent()).refresh();
                 ((CardLayout) cards.getLayout()).show(cards, HRPanel.ADD_POSTING);
             }
         });
         fullMenu.put("5. Update Job Posting", new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ((UserPanel) cards.getParent()).refresh();
+                ((UserMain) cards.getParent()).refresh();
                 ((CardLayout) cards.getLayout()).show(cards, HRPanel.UPDATE_POSTING);
             }
         });
         fullMenu.put("6. Browse Job Postings", new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ((UserPanel) cards.getParent()).refresh();
+                ((UserMain) cards.getParent()).refresh();
                 ((CardLayout) cards.getLayout()).show(cards, HRPanel.BROWSE_POSTINGS);
             }
         });
         fullMenu.put("7. Search applicant", new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ((UserPanel) cards.getParent()).refresh();
+                ((UserMain) cards.getParent()).refresh();
                 ((CardLayout) cards.getLayout()).show(cards, HRPanel.SEARCH_APPLICANT);
             }
         });

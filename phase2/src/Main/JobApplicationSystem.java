@@ -1,15 +1,11 @@
 package Main;
 
-import ApplicantStuff.JobApplication;
-import CompanyStuff.Branch;
-import CompanyStuff.JobPostings.BranchJobPosting;
 import CompanyStuff.Company;
 //import UIClasses.UserInterface;
 import ApplicantStuff.Applicant;
 import FileLoadingAndStoring.DataLoaderAndStorer;
 import NotificationSystem.Notification;
 
-import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -39,7 +35,6 @@ public class JobApplicationSystem {
         while (true) {
             // Create and run the main frame
             // TODO these method calls would have to be called after user selects date but before login
-            jobAppSystem.notificationDate(jobAppSystem.getToday());
             jobAppSystem.applicant30Day();
             jobAppSystem.getUserManager().deleteAllEmptyReferenceAccounts();
             jobAppSystem.updateAllJobPostings();
@@ -70,8 +65,9 @@ public class JobApplicationSystem {
         this.companies = companies;
     }
 
-    public void setToday(LocalDate new_date) {
-        this.today = new_date;
+    public void setToday(LocalDate newDate) {
+        this.today = newDate;
+        Notification.setDate(newDate);
     }
 
     public void setPreviousLoginDate(LocalDate date) {
@@ -107,19 +103,10 @@ public class JobApplicationSystem {
         return company;
     }
 
-    static  void notificationDate(LocalDate date) {
-        if (!Notification.getDateStatic().equals(date)){
-            Notification.setDate(date);
-        }
-    }
-
-    // ============================================================================================================== //
-    // === Private methods ===
-
     /**
      * Methods that removes the files from one's account if user has not been active for at least 30 days.
      */
-    private void applicant30Day() {
+    public void applicant30Day() {
         for (Applicant app : this.userManager.getAllApplicants()) {
             app.getDocumentManager().removeFilesFromAccountIfInactive(this.today);
         }
@@ -128,7 +115,7 @@ public class JobApplicationSystem {
     /**
      * Updates all the interview rounds that have been completed.
      */
-    private void updateAllJobPostings() {
+    public void updateAllJobPostings() {
         for (Company company : this.companies) {
             company.updateJobPostings(this.getToday());
         }

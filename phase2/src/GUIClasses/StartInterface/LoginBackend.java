@@ -62,13 +62,8 @@ class LoginBackend {
     /**
      * Get and set today's date as inputted by the user.
      */
-    private boolean isValidDate(LocalDate inputtedDate) {
-        if (this.jobAppSystem.getPreviousLoginDate() == null || !inputtedDate.isBefore(this.jobAppSystem.getPreviousLoginDate())) {
-            this.jobAppSystem.setPreviousLoginDate(inputtedDate);
-            this.jobAppSystem.setToday(inputtedDate);
-            return true;
-        }
-        return false;
+    boolean isValidDate(LocalDate inputtedDate) {
+        return this.jobAppSystem.getPreviousLoginDate() == null || !inputtedDate.isBefore(this.jobAppSystem.getPreviousLoginDate());
     }
 
     private boolean isEverythingValid(String username, String legalName, String email, String postalCode) {

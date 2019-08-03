@@ -95,17 +95,14 @@ public class UserManager {
      * @param emails The emails of the referees that the applicant submitted.
      * @return a map of new references' emails to their passwords
      */
-    public HashMap<String, String> addReferences(JobApplication jobApp, ArrayList<String> emails) {
-        HashMap<String, String> emailToPassword = new HashMap<>();
+    public void addReferences(JobApplication jobApp, ArrayList<String> emails) {
         for (String email : emails) {
             Reference reference = (Reference) this.findUserByEmail(email);
             if (reference == null) {
                 reference = this.createReference(email, jobApp.getApplicationDate());
-                emailToPassword.put(email, reference.getPassword());
             }
             reference.addJobApplication(jobApp);
         }
-        return emailToPassword;
     }
 
 

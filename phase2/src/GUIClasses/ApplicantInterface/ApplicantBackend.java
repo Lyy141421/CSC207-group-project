@@ -6,7 +6,7 @@ import CompanyStuff.JobPostings.*;
 import Main.JobApplicationSystem;
 import Main.User;
 
-import java.time.LocalDate;
+import java.io.File;
 import java.util.ArrayList;
 
 class ApplicantBackend {
@@ -39,6 +39,7 @@ class ApplicantBackend {
     /**
      * Returns an arraylist containing all the job postings that apply to the applicant
      */
+    // TODO fix
     ArrayList<BranchJobPosting> findApplicablePostings(String field,
                                                        String companyName, String ID, String Tags) {
         ArrayList<BranchJobPosting> openJobPostings =
@@ -54,6 +55,10 @@ class ApplicantBackend {
             }
         }
         return ret;
+    }
+
+    File getApplicantFolder() {
+        return this.applicant.getDocumentManager().getFolder();
     }
 
     /**
