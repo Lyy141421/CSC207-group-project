@@ -1,6 +1,7 @@
 package GUIClasses.ActionListeners;
 
 import FileLoadingAndStoring.DataLoaderAndStorer;
+import GUIClasses.MainFrame;
 import Main.JobApplicationSystem;
 
 import java.awt.*;
@@ -23,7 +24,7 @@ public class LogoutActionListener implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         new DataLoaderAndStorer(jobApplicationSystem).storeAllData();
-        System.exit(0);
-        // masterLayout.show(parent, "LOGIN");
+        masterLayout.show(parent, "LOGIN");
+        masterLayout.removeLayoutComponent(new PanelGetter().getUserPanelFromMenuItemDirectlyOnMenuBar(e));
     }
 }

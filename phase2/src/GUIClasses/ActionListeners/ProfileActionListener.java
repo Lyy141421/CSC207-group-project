@@ -14,7 +14,7 @@ public class ProfileActionListener implements ActionListener {
 
 
     public void actionPerformed(ActionEvent e) {
-        JPanel cards = new CardLayoutPanelGetter().fromMenuItemDirectlyOnMenuBar(e);
+        JPanel cards = new PanelGetter().getCardLayoutFromMenuItemDirectlyOnMenuBar(e);
         CardLayout cl = (CardLayout) cards.getLayout();
         cl.show(cards, UserPanel.PROFILE);
     }

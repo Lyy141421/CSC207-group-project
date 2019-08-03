@@ -92,7 +92,7 @@ class LoginBackend {
             return 0;
         } else {
             jobAppSystem.getUserManager().createApplicant(
-                    username, password, name, email, LocalDate.now(), postalCode);
+                    username, password, name, email, jobAppSystem.getToday(), postalCode);
             return 3;
         }
     }
