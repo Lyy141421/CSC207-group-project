@@ -114,6 +114,15 @@ public class CompanyJobPosting extends Observable implements Serializable {
         return branchJobPostings;
     }
 
+    public boolean hasBranchJobPostingInCma(String cma, LocalDate today) {
+        for (BranchJobPosting branchJobPosting : this.getOpenBranchJobPostingList(today)) {
+            if (branchJobPosting.getBranch().getCma().equals(cma)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private String getListComplementString(ArrayList<String> actualList, String[] recommendedList) {
         ArrayList<String> listComplement = (ArrayList<String>) actualList.clone();
         for (String item : recommendedList) {

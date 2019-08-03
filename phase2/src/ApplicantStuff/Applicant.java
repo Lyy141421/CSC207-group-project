@@ -123,24 +123,6 @@ public class Applicant extends User {
     }
 
     /**
-     * Get a list of open job postings not yet applied to.
-     *
-     * @return a list of open job postings not yet applied to.
-     */
-    public ArrayList<BranchJobPosting> getOpenJobPostingsNotAppliedTo(JobApplicationSystem jobAppSystem) {
-        ArrayList<BranchJobPosting> jobPostings = new ArrayList<>();
-        for (Company company : jobAppSystem.getCompanies())
-            for (Branch branch : company.getBranches()) {
-                BranchJobPostingManager jpm = branch.getJobPostingManager();
-                ArrayList<BranchJobPosting> openPostings = jpm.getOpenJobPostings(jobAppSystem.getToday());
-                openPostings.retainAll(jpm.getJobPostingsNotAppliedToByApplicant(this));
-                jobPostings.addAll(openPostings);
-            }
-        return jobPostings;
-    }
-
-
-    /**
      * Report whether the date that the last job posting this applicant applied to was 30 days ago from getToday.
      *
      * @param today Today's date.

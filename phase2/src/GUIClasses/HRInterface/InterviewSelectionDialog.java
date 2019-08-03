@@ -4,6 +4,7 @@ import ApplicantStuff.JobApplication;
 import CompanyStuff.JobPostings.BranchJobPosting;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -24,7 +25,7 @@ class InterviewSelectionDialog extends SelectionDialog {
             @Override
             public void actionPerformed(ActionEvent e) {
                 hrBackend.rejectApplicationForFirstRound(branchJobPosting, getApplicantsDeselected());
-                new InterviewConfigDialog(parent, hrBackend, branchJobPosting, returnButton);
+                JDialog configDialog = new InterviewConfigDialog(parent, hrBackend, branchJobPosting, returnButton);
                 dispose();
             }
         });
