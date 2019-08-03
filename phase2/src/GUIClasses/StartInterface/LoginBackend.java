@@ -9,6 +9,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.time.LocalDate;
 import java.util.HashMap;
+import java.util.regex.Pattern;
 
 class LoginBackend {
     /*
@@ -30,18 +31,49 @@ class LoginBackend {
     // === Private methods ===
 
     /**
-     * Get an e-mail address as input from the user. E-mail address must be in valid format.
+     * Check whether email address is valid.
      *
-     * @return the e-mail address inputted by the user.
+     * @return true iff the email address is valid.
      */
-    private boolean checkValidEmail(String email) {
-        if (!email.contains("@") || email.charAt(0) == '@')
-            return false;
-        else {
-            String[] splitInput = email.split("@", 2);
-            return !(!splitInput[1].contains(".") || splitInput[1].charAt(0) == '.'
-                    || splitInput[1].charAt(splitInput[1].length()-1) == '.');
+    private boolean isValidEmail(String email) {
+        String regex = "^([A-Za-z0-9]+(?:([._-])[A-Za-z0-9]+|[A-Za-z0-9]*))+@([A-Za-z0-9]+\\.)+[a-z]+$$";
+        return Pattern.matches(regex, email);
+    }
+
+    /**
+     * Check whether this postal code is valid.
+     *
+     * @param postalCode The postal code inputted by the user.
+     * @return true iff the postal code is a valid Canadian postal code.
+     */
+    private boolean isValidPostalCode(String postalCode) {
+        return Pattern.matches("(^[A-Z][0-9]){3}$", postalCode);
+    }
+
+    private boolean isValidUsername(String username) {
+        return Pattern.matches("^[A-Za-z0-9]+$", username);
+    }
+
+    private boolean isValidLegalName(String legalName) {
+        String regex = "^[A-Z][a-z]+(?:([- ])[A-Z][a-z]+|[a-z]*)+$";
+        return Pattern.matches(regex, legalName);
+    }
+
+    /**
+     * Get and set today's date as inputted by the user.
+     */
+    private boolean isValidDate(LocalDate inputtedDate) {
+        if (this.jobAppSystem.getPreviousLoginDate() == null || !inputtedDate.isBefore(this.jobAppSystem.getPreviousLoginDate())) {
+            this.jobAppSystem.setPreviousLoginDate(inputtedDate);
+            this.jobAppSystem.setToday(inputtedDate);
+            return true;
         }
+        return false;
+    }
+
+    private boolean isEverythingValid(String username, String legalName, String email, String postalCode) {
+        return this.isValidUsername(username) && this.isValidLegalName(legalName) && this.isValidEmail(email) &&
+                this.isValidPostalCode(postalCode);
     }
 
     /**
@@ -54,7 +86,7 @@ class LoginBackend {
         String name = inputs.get("name");
         String email = inputs.get("email");
         String postalCode = inputs.get("postalCode");   // TODO edit inputs
-        if(!this.checkValidEmail(email)) {
+        if (!isEverythingValid(username, name, email, postalCode)) {
             return 1;
         } else if (name.equals("") || password.equals("")) {
             return 0;
@@ -76,7 +108,7 @@ class LoginBackend {
         String email = inputs.get("email");
         Company company = jobAppSystem.getCompany(inputs.get("company"));
         Branch branch = company.getBranch(inputs.get("branch"));
-        if(!this.checkValidEmail(email)) {
+        if (!this.isValidEmail(email)) {
             return 1;
         } else if(company == null) {
             return 2;
@@ -101,7 +133,7 @@ class LoginBackend {
         Company company = jobAppSystem.getCompany(inputs.get("company"));
         Branch branch = company.getBranch(inputs.get("branch"));
         String field = "what the fuck"; //TODO: figure out what to do here
-        if(!this.checkValidEmail(email)) {
+        if (!this.isValidEmail(email)) {
             return 1;
         } else if(name.equals("") || password.equals("")) {
             return 0;

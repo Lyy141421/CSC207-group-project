@@ -15,7 +15,6 @@ class ApplicantBackend {
      */
 
     // === Instance variables ===
-    private LocalDate today;
     private Applicant applicant; // The applicant currently logged in
     private JobApplicationSystem jobAppSystem;
 
@@ -31,8 +30,9 @@ class ApplicantBackend {
     /**
      * Check if there are interviews on the date of login
      */
-    boolean checkUpcomingInterviews(LocalDate today) {
-        ArrayList<Interview> upcomingInterviews = applicant.getJobApplicationManager().getUpcomingInterviews(today);
+    boolean checkUpcomingInterviews() {
+        ArrayList<Interview> upcomingInterviews = applicant.getJobApplicationManager().getUpcomingInterviews(
+                jobAppSystem.getToday());
         return (upcomingInterviews.size() > 0);
     }
 
@@ -42,7 +42,7 @@ class ApplicantBackend {
     ArrayList<BranchJobPosting> findApplicablePostings(String field,
                                                        String companyName, String ID, String Tags) {
         ArrayList<BranchJobPosting> openJobPostings =
-                applicant.getOpenJobPostingsNotAppliedTo(new JobApplicationSystem()); //TODO are you serious
+                applicant.getOpenJobPostingsNotAppliedTo(jobAppSystem); //TODO are you serious
         ArrayList<BranchJobPosting> ret = new ArrayList<>();
         for (BranchJobPosting posting : openJobPostings) {
             String filterField = (field == null) ? posting.getField() : field;
@@ -78,7 +78,7 @@ class ApplicantBackend {
      * Withdraw an application
      */
     boolean withdrawApp(JobApplication application) {
-        return applicant.withdrawJobApplication(today, application.getJobPosting());
+        return applicant.withdrawJobApplication(jobAppSystem.getToday(), application.getJobPosting());
     }
 
     /**
@@ -89,7 +89,7 @@ class ApplicantBackend {
             return ("You have not yet submitted any job applications.");
         else
             return ("It has been " +
-                    applicant.getJobApplicationManager().getNumDaysSinceMostRecentCloseDate(today) +
+                    applicant.getJobApplicationManager().getNumDaysSinceMostRecentCloseDate(jobAppSystem.getToday()) +
                     " days since your most recent application closed.");
     }
 
