@@ -162,11 +162,10 @@ public class InterviewManager extends Observable implements Serializable {
         for (JobApplication jobApp : jobApplications) {
             this.reject(jobApp);
         }
-        this.chosenApplicantsForFirstRound = true;
-
         for (JobApplication jobApp : this.applicationsInConsideration) {
             jobApp.getStatus().advanceStatus();
         }
+        this.chosenApplicantsForFirstRound = true;
     }
 
     /**
@@ -380,7 +379,7 @@ public class InterviewManager extends Observable implements Serializable {
      */
     private boolean isCurrentRoundGroupInterviewUnscheduled() {
         Interview lastInterview = this.applicationsInConsideration.get(0).getLastInterview();
-        return this.interviewConfiguration.get(this.currentRound)[0].equals(Interview.GROUP) &&
+        return this.currentRound > -1 && this.interviewConfiguration.get(this.currentRound)[0].equals(Interview.GROUP) &&
                 (lastInterview == null || lastInterview.getRoundNumber() < this.currentRound);
     }
 
