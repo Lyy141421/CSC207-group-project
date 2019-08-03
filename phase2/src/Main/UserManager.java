@@ -95,7 +95,7 @@ public class UserManager {
      * @param emails The emails of the referees that the applicant submitted.
      * @return a map of new references' emails to their passwords
      */
-    public HashMap<String, String> addReferees(JobApplication jobApp, ArrayList<String> emails) {
+    public HashMap<String, String> addReferences(JobApplication jobApp, ArrayList<String> emails) {
         HashMap<String, String> emailToPassword = new HashMap<>();
         for (String email : emails) {
             Reference reference = (Reference) this.findUserByEmail(email);
