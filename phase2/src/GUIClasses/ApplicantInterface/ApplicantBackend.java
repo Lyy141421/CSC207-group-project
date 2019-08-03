@@ -1,6 +1,7 @@
 package GUIClasses.ApplicantInterface;
 
 import ApplicantStuff.*;
+import CompanyStuff.Branch;
 import CompanyStuff.Interview;
 import CompanyStuff.JobPostings.*;
 import Main.JobApplicationSystem;
@@ -8,6 +9,7 @@ import Main.User;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 class ApplicantBackend {
     /**
@@ -36,26 +38,64 @@ class ApplicantBackend {
         return (upcomingInterviews.size() > 0);
     }
 
-    /**
+    /*
      * Returns an arraylist containing all the job postings that apply to the applicant
      */
     // TODO fix
-    ArrayList<BranchJobPosting> findApplicablePostings(String field,
-                                                       String companyName, String ID, String Tags) {
-        ArrayList<BranchJobPosting> openJobPostings =
-                applicant.getOpenJobPostingsNotAppliedTo(jobAppSystem); //TODO are you serious
-        ArrayList<BranchJobPosting> ret = new ArrayList<>();
-        for (BranchJobPosting posting : openJobPostings) {
-            String filterField = (field == null) ? posting.getField() : field;
-            String filterCompanyName = (companyName == null) ? posting.getBranch().getName() : companyName;
-            //ID, tags
-            if (filterField.equalsIgnoreCase(posting.getField())
-                    && filterCompanyName.equalsIgnoreCase(posting.getBranch().getName())) {
-                ret.add(posting);
+//    ArrayList<BranchJobPosting> findApplicablePostings(String field,
+//                                                       String companyName, String ID, String Tags) {
+//        ArrayList<BranchJobPosting> openJobPostings =
+//                applicant.getOpenJobPostingsNotAppliedTo(jobAppSystem); //TODO are you serious
+//        ArrayList<BranchJobPosting> ret = new ArrayList<>();
+//        for (BranchJobPosting posting : openJobPostings) {
+//            String filterField = (field == null) ? posting.getField() : field;
+//            String filterCompanyName = (companyName == null) ? posting.getBranch().getName() : companyName;
+//            //ID, tags
+//            if (filterField.equalsIgnoreCase(posting.getField())
+//                    && filterCompanyName.equalsIgnoreCase(posting.getBranch().getName())) {
+//                ret.add(posting);
+//            }
+//        }
+//        return ret;
+//    }
+
+
+    /**
+     * Returns an arraylist containing all the job postings that apply to the applicant
+     */
+    ArrayList<CompanyJobPosting> findApplicablePostings(String field, String companyName, String id, String tags) {
+        String[] tagsArray = tags.split(", ");
+        int idInteger = Integer.valueOf(id);
+
+        ArrayList<CompanyJobPosting> applicableJobPostings = jobAppSystem.getAllOpenCompanyJobPostings();
+        if (id != null) {
+            return new ArrayList<>(Arrays.asList(jobAppSystem.getCompanyJobPostingWithID(idInteger)));
+        }
+        if (companyName != null) {
+            this.keepIntersection(applicableJobPostings, jobAppSystem.getOpenCompanyJobPostingsInCompany(companyName));
+        }
+        if (field != null) {
+            this.keepIntersection(applicableJobPostings, jobAppSystem.getOpenCompanyJobPostingsInField(field));
+        }
+        if (tags != null) {
+            this.keepIntersection(applicableJobPostings, jobAppSystem.getCompanyJobPostingsWithTags(tagsArray));
+        }
+        return applicableJobPostings;
+    }
+
+    ArrayList<BranchJobPosting> getApplicableBranchJobPostings(CompanyJobPosting companyJobPosting) {
+        return this.applicant.getApplicableBranchJobPostings(companyJobPosting, jobAppSystem.getToday());
+    }
+
+    private void keepIntersection(ArrayList<CompanyJobPosting> listToBeUpdated, ArrayList<CompanyJobPosting> otherList) {
+        ArrayList<CompanyJobPosting> listToBeUpdatedClone = (ArrayList<CompanyJobPosting>) listToBeUpdated.clone();
+        for (CompanyJobPosting jobPosting : listToBeUpdatedClone) {
+            if (!otherList.contains(jobPosting)) {
+                listToBeUpdated.remove(jobPosting);
             }
         }
-        return ret;
     }
+
 
     File getApplicantFolder() {
         return this.applicant.getDocumentManager().getFolder();

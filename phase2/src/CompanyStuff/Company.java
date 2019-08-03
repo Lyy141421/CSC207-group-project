@@ -107,6 +107,49 @@ public class Company implements Serializable {
         return null;
     }
 
+    public ArrayList<CompanyJobPosting> getAllOpenCompanyJobPostings() {
+        ArrayList<CompanyJobPosting> jobPostings = new ArrayList<>();
+        for (CompanyJobPosting jobPosting : this.getCompanyJobPostings()) {
+            if (!jobPosting.getBranches().isEmpty()) {
+                jobPostings.add(jobPosting);
+            }
+        }
+        return jobPostings;
+    }
+
+    public ArrayList<CompanyJobPosting> getAllOpenJobPostingsInField(String field) {
+        ArrayList<CompanyJobPosting> jobPostings = new ArrayList<>();
+        for (CompanyJobPosting jobPosting : this.getAllOpenCompanyJobPostings()) {
+            if (jobPosting.getField().equalsIgnoreCase(field)) {
+                jobPostings.add(jobPosting);
+            }
+        }
+        return jobPostings;
+    }
+
+    public CompanyJobPosting getJobPostingWithID(int id) {
+        for (CompanyJobPosting companyJobPosting : this.getAllOpenCompanyJobPostings()) {
+            if (companyJobPosting.getId() == id) {
+                return companyJobPosting;
+            }
+        }
+        return null;
+    }
+
+    public ArrayList<CompanyJobPosting> getJobPostingsWithTags(String[] tags) {
+        ArrayList<CompanyJobPosting> jobPostings = new ArrayList<>();
+        for (CompanyJobPosting companyJobPosting : this.getAllOpenCompanyJobPostings()) {
+            for (String tag : tags) {
+                if (companyJobPosting.getTags().contains(tag)) {
+                    jobPostings.add(companyJobPosting);
+                    break;
+                }
+            }
+        }
+        return jobPostings;
+    }
+
+
     /**
      * View all applications this applicant has submitted for job postings in this company.
      *

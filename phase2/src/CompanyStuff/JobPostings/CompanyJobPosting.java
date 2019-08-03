@@ -6,6 +6,7 @@ import NotificationSystem.Observable;
 import NotificationSystem.Observer;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class CompanyJobPosting extends Observable implements Serializable {
@@ -99,6 +100,18 @@ public class CompanyJobPosting extends Observable implements Serializable {
     public void removeBranch(Branch branch) {
         if (this.branches.contains(branch))
             this.branches.remove(branch);
+    }
+
+    public ArrayList<BranchJobPosting> getOpenBranchJobPostingList(LocalDate today) {
+        ArrayList<BranchJobPosting> branchJobPostings = new ArrayList<>();
+        for (Branch branch : this.getBranches()) {
+            for (BranchJobPosting branchJobPosting : branch.getJobPostingManager().getOpenJobPostings(today)) {
+                if (branchJobPosting.getCompanyPostingId() == this.id) {
+                    branchJobPostings.add(branchJobPosting);
+                }
+            }
+        }
+        return branchJobPostings;
     }
 
     private String getListComplementString(ArrayList<String> actualList, String[] recommendedList) {

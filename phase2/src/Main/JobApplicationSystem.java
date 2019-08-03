@@ -3,6 +3,7 @@ package Main;
 import CompanyStuff.Company;
 //import UIClasses.UserInterface;
 import ApplicantStuff.Applicant;
+import CompanyStuff.JobPostings.CompanyJobPosting;
 import FileLoadingAndStoring.DataLoaderAndStorer;
 import NotificationSystem.Notification;
 
@@ -119,5 +120,47 @@ public class JobApplicationSystem {
         for (Company company : this.companies) {
             company.updateJobPostings(this.getToday());
         }
+    }
+
+    public ArrayList<CompanyJobPosting> getAllOpenCompanyJobPostings() {
+        ArrayList<CompanyJobPosting> allOpenCompanyJobPostings = new ArrayList<>();
+        for (Company company : this.getCompanies()) {
+            allOpenCompanyJobPostings.addAll(company.getAllOpenCompanyJobPostings());
+        }
+        return allOpenCompanyJobPostings;
+    }
+
+    public ArrayList<CompanyJobPosting> getOpenCompanyJobPostingsInField(String field) {
+        ArrayList<CompanyJobPosting> openCompanyJobPostingsInField = new ArrayList<>();
+        for (Company company : this.getCompanies()) {
+            openCompanyJobPostingsInField.addAll(company.getAllOpenJobPostingsInField(field));
+        }
+        return openCompanyJobPostingsInField;
+    }
+
+    public ArrayList<CompanyJobPosting> getOpenCompanyJobPostingsInCompany(String companyName) {
+        Company company = this.getCompany(companyName);
+        if (company != null) {
+            return company.getAllOpenCompanyJobPostings();
+        }
+        return new ArrayList<>();
+    }
+
+    public CompanyJobPosting getCompanyJobPostingWithID(int id) {
+        for (Company company : this.getCompanies()) {
+            CompanyJobPosting jobPosting = company.getJobPostingWithID(id);
+            if (jobPosting != null) {
+                return jobPosting;
+            }
+        }
+        return null;
+    }
+
+    public ArrayList<CompanyJobPosting> getCompanyJobPostingsWithTags(String[] tags) {
+        ArrayList<CompanyJobPosting> companyJobPostings = new ArrayList<>();
+        for (Company company : this.getCompanies()) {
+            companyJobPostings.addAll(company.getJobPostingsWithTags(tags));
+        }
+        return companyJobPostings;
     }
 }

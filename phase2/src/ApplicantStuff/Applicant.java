@@ -3,6 +3,7 @@ package ApplicantStuff;
 import CompanyStuff.Branch;
 import CompanyStuff.JobPostings.BranchJobPosting;
 import CompanyStuff.Company;
+import CompanyStuff.JobPostings.CompanyJobPosting;
 import DocumentManagers.ApplicantDocumentManager;
 import DocumentManagers.DocumentManager;
 import DocumentManagers.DocumentManagerFactory;
@@ -96,6 +97,16 @@ public class Applicant extends User {
             }
         }
         return false;
+    }
+
+    public ArrayList<BranchJobPosting> getApplicableBranchJobPostings(CompanyJobPosting companyJobPosting, LocalDate today) {
+        ArrayList<BranchJobPosting> applicableBranchJobPostings = new ArrayList<>();
+        for (BranchJobPosting branchJobPosting : companyJobPosting.getOpenBranchJobPostingList(today)) {
+            if (!this.hasAppliedToPosting(branchJobPosting)) {
+                applicableBranchJobPostings.add(branchJobPosting);
+            }
+        }
+        return applicableBranchJobPostings;
     }
 
     /**

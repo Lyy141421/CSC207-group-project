@@ -21,6 +21,7 @@ public class BranchJobPosting extends CompanyJobPosting implements JobPostingObs
     public static final String[] CATEGORY_LABELS_FOR_HR = new String[]{"Title", "Field"};
 
     // === Instance variables ===
+    private int companyPostingId;
     private int numPositions;
     private LocalDate postDate; // The date on which this job posting was listed
     private LocalDate applicantCloseDate; // The date on which this job posting is closed for further applications
@@ -80,8 +81,15 @@ public class BranchJobPosting extends CompanyJobPosting implements JobPostingObs
         return this.filled;
     }
 
+    public int getCompanyPostingId() {
+        return this.companyPostingId;
+    }
 
     // === Setters ===
+    public void setCompanyPostingId(int companyPostingId) {
+        this.companyPostingId = companyPostingId;
+    }
+
     public void setFilled() {
         this.filled = true;
         //TODO notify HR

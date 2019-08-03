@@ -67,6 +67,7 @@ public class HRCoordinator extends User {
                 companyJobPosting.getDescription(), companyJobPosting.getRequiredDocuments(), companyJobPosting.getTags(),
                 numPositions, this.branch, postDate, applicationCloseDate, referenceCloseDate);
         branchJobPosting.attachJobPosting(companyJobPosting);
+        branchJobPosting.setCompanyPostingId(companyJobPosting.getId());
         this.branch.getJobPostingManager().addJobPosting(branchJobPosting);
         return branchJobPosting;
     }
