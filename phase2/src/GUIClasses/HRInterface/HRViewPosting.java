@@ -81,6 +81,8 @@ class HRViewPosting extends HRPanel {
     void reload() {
         this.jobPostingList.removeAll();
         this.jobPostingList.setListData(currJPs.keySet().toArray(new String[currJPs.size()]));
+        revalidate();
+        repaint();
     }
 
     public HashMap<String, BranchJobPosting> getImportantJP() {
@@ -99,11 +101,17 @@ class HRViewPosting extends HRPanel {
         this.jobPostingList.addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
-                String selectedTitle = jobPostingList.getSelectedValue();
-                selectedJP = currJPs.get(selectedTitle);
-                overview.setText(getStatus() + selectedJP.toString());
-                setRejectListPanel();
-                scheduleButton.setVisible(scheduleJP.containsKey(selectedTitle));
+                if (jobPostingList.isSelectionEmpty()) {
+                    overview.setText("Select a job posting to view information.");
+                    setRejectListPanel();
+                    scheduleButton.setVisible(false);
+                } else {
+                    String selectedTitle = jobPostingList.getSelectedValue();
+                    selectedJP = currJPs.get(selectedTitle);
+                    overview.setText(getStatus() + selectedJP.toString());
+                    setRejectListPanel();
+                    scheduleButton.setVisible(scheduleJP.containsKey(selectedTitle));
+                }
             }
         });
     }
@@ -208,6 +216,7 @@ class HRViewPosting extends HRPanel {
         }
         parent.add(appPanel, HRPanel.APPLICATION, 7);
         ((CardLayout) parent.getLayout()).show(parent, HRPanel.APPLICATION);
+        reload();
     }
 
     private String getPreviousPanelKey() {

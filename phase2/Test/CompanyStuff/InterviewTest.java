@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -35,7 +36,7 @@ class InterviewTest {
     }
 
     Applicant createApplicant(String name) {
-        return new Applicant(name, "ABC123", "Legal Name",
+        return new Applicant(name, "ABC123", name + " Legal Name",
                 name + "@gmail.com", today.plusDays(-5), "Toronto");
     }
 
@@ -144,61 +145,126 @@ class InterviewTest {
 
     @Test
     void setResults() {
+        Interview interview = createInterviewGroup();
+        HashMap<JobApplication, Boolean> map = new HashMap<>();
+        map.put(branch.getJobPostingManager().getBranchJobPostings().get(0).getJobApplications().get(0), true);
+        map.put(branch.getJobPostingManager().getBranchJobPostings().get(0).getJobApplications().get(1), false);
+        interview.setResults(map);
+        assertTrue(interview.isPassed(branch.getJobPostingManager().getBranchJobPostings().get(0).getJobApplications().get(0)));
+        assertFalse(interview.isPassed(branch.getJobPostingManager().getBranchJobPostings().get(0).getJobApplications().get(1)));
     }
 
     @Test
     void setResult() {
+        Interview interview = createInterview("Mack");
+        interview.setResult(interview.getJobApplications().get(0), true);
+        assertTrue(interview.isPassed(branch.getJobPostingManager().getBranchJobPostings().get(0).getJobApplications().get(0)));
+        interview.setResult(interview.getJobApplications().get(0), false);
+        assertFalse(interview.isPassed(branch.getJobPostingManager().getBranchJobPostings().get(0).getJobApplications().get(0)));
     }
 
     @Test
     void getAllInterviewersToNotes() {
+        Interview interview = createInterviewGroup();
+        interview.setOtherInterviewNotes(interview.getOtherInterviewers().get(0), "Bad");
+        interview.setOtherInterviewNotes(interview.getOtherInterviewers().get(1), "Sad");
+        interview.setInterviewCoordinatorNotes("Great");
+        assertEquals(interview.getAllInterviewersToNotes().get(interview.getOtherInterviewers().get(0)), "Bad");
+        assertEquals(interview.getAllInterviewersToNotes().get(interview.getOtherInterviewers().get(1)), "Sad");
+        assertEquals(interview.getAllInterviewersToNotes().get(interview.getInterviewCoordinator()), "Great");
     }
 
     @Test
     void getAllNotes() {
+        Interview interview = createInterviewGroup();
+        interview.setOtherInterviewNotes(interview.getOtherInterviewers().get(0), "Bad");
+        interview.setOtherInterviewNotes(interview.getOtherInterviewers().get(1), "Sad");
+        interview.setInterviewCoordinatorNotes("Great");
+        assertTrue(interview.getAllNotes().contains("Bad"));
+        assertTrue(interview.getAllNotes().contains("Sad"));
+        assertTrue(interview.getAllNotes().contains("Great"));
+        assertTrue(interview.getAllNotes().size() == 3);
     }
 
     @Test
     void isPassed() {
+        Interview interview = createInterview("Mack");
+        interview.setResult(interview.getJobApplications().get(0), true);
+        assertTrue(interview.isPassed(interview.getJobApplications().get(0)));
     }
 
     @Test
     void isIncomplete() {
+        Interview interview = createInterviewGroup();
+        assertTrue(interview.isIncomplete());
+        HashMap<JobApplication, Boolean> map = new HashMap<>();
+        map.put(interview.getJobApplications().get(0), true);
+        map.put(interview.getJobApplications().get(1), false);
+        interview.setResults(map);
+        assertFalse(interview.isIncomplete());
     }
 
     @Test
     void isScheduled() {
+        Interview interview = createInterview("Nick");
+        assertFalse(interview.isScheduled());
+        InterviewTime time = new InterviewTime(today, InterviewTime.ELEVEN_AM_TO_NOON);
+        interview.setTime(time);
+        assertTrue(interview.isScheduled());
     }
 
     @Test
     void getAllInterviewers() {
+        Interview interview = createInterviewGroup();
+        assertTrue(interview.getAllInterviewers().size() == 3);
+        assertTrue(interview.getAllInterviewers().contains(interview.getInterviewCoordinator()));
+        assertTrue(interview.getAllInterviewers().contains(interview.getOtherInterviewers().get(0)));
+        assertTrue(interview.getAllInterviewers().contains(interview.getOtherInterviewers().get(0)));
     }
 
     @Test
     void removeApplication() {
+        Interview interview = createInterviewGroup();
+        assertEquals(interview.getJobApplications().size(), 2);
+        interview.removeApplication(interview.getJobApplications().get(0));
+        assertEquals(interview.getJobApplications().size(), 1);
+
     }
 
     @Test
     void findJobAppById() {
+        Interview interview = createInterviewGroup();
+        assertEquals(interview.findJobAppById(interview.getJobApplications().get(0).getId()), interview.getJobApplications().get(0));
     }
 
     @Test
     void hasAlreadyWrittenNotesForInterview() {
+        Interview interview = createInterviewGroup();
+        assertFalse(interview.hasAlreadyWrittenNotesForInterview(interview.getOtherInterviewers().get(0)));
+        assertFalse(interview.hasAlreadyWrittenNotesForInterview(interview.getOtherInterviewers().get(1)));
+        assertFalse(interview.hasAlreadyWrittenNotesForInterview(interview.getInterviewCoordinator()));
+        interview.setOtherInterviewNotes(interview.getOtherInterviewers().get(0), "Bad");
+        assertTrue(interview.hasAlreadyWrittenNotesForInterview(interview.getOtherInterviewers().get(0)));
+        assertFalse(interview.hasAlreadyWrittenNotesForInterview(interview.getOtherInterviewers().get(1)));
+        interview.setInterviewCoordinatorNotes("Great");
+        assertTrue(interview.hasAlreadyWrittenNotesForInterview(interview.getInterviewCoordinator()));
     }
 
     @Test
     void getIntervieweeNames() {
+        Interview interview = createInterviewGroup();
+        assertEquals(interview.getIntervieweeNames(), "Will Legal Name, Hannah Legal Name");
     }
 
-    @Test
-    void getCategoryValuesForInterviewerUnscheduledOrIncomplete() {
-    }
-
-    @Test
-    void getCategoryValuesForInterviewerScheduled() {
-    }
-
-    @Test
-    void getMiniDescriptionForHR() {
-    }
+//    @Test
+//    void getCategoryValuesForInterviewerUnscheduledOrIncomplete() {
+//    }
+//
+//    @Test
+//    void getCategoryValuesForInterviewerScheduled() {
+//    }
+//
+//    @Test
+//    void getMiniDescriptionForHR() {
+//    }
 }
