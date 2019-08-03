@@ -39,8 +39,8 @@ public class HRMain extends UserMain {
     public void setCards() {
         cards.add(new HRHome(this.hrBackend), UserMain.HOME, 0);
         cards.add(new UserProfilePanel(this.hrBackend.getHR()), UserMain.PROFILE, 1);
-        cards.add(new HRViewPosting(this.hrBackend, cards, true), HRPanel.HIGH_PRIORITY_POSTINGS, 2);
-        cards.add(new HRViewPosting(this.hrBackend, cards, false), HRPanel.BROWSE_POSTINGS, 3);
+        cards.add(new HRViewPosting(this.hrBackend, cards, HRViewPosting.HIGH_PRIORITY), HRPanel.HIGH_PRIORITY_POSTINGS, 2);
+        cards.add(new HRViewPosting(this.hrBackend, cards, HRViewPosting.ALL), HRPanel.BROWSE_POSTINGS, 3);
         cards.add(new HRSearchApplicant(this.hrBackend, cards), HRPanel.SEARCH_APPLICANT, 4);
         cards.add(new HRAddOrUpdatePostingForm(this.hrBackend, true, null), HRPanel.ADD_POSTING, 5);
         cards.add(new HRViewUpdatableJobPosting(this.hrBackend, cards), HRPanel.UPDATE_POSTING, 6);
