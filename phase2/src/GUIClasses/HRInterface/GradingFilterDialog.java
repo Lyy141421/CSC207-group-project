@@ -7,6 +7,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -74,9 +76,16 @@ class GradingFilterDialog extends JDialog {
                 String textInput = ((JTextArea) keywordInput.getViewport().getView()).getText();
                 ArrayList<String> keywords = new ArrayList<>(Arrays.asList(textInput.split(";")));
                 ArrayList<JobApplication> sortedApplications = hrBackend.getJobApplicationInNonDecreasingOrder(applications.get(0).getJobPosting(), keywords);
-                new InterviewSelectionDialog(parent, hrBackend, sortedApplications,
+                setVisible(false);
+                JDialog reviewDialog = new InterviewSelectionDialog(parent, hrBackend, sortedApplications,
                         returnButton, ((SpinnerNumberModel)numberToSelect.getModel()).getNumber().intValue());
-                dispose();
+                reviewDialog.addWindowListener(new WindowAdapter() {
+                    @Override
+                    public void windowClosed(WindowEvent e) {
+                        dispose();
+                    }
+                });
+
             }
         });
         confirmButtonPanel.add(confirmButton);

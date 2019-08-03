@@ -1,7 +1,9 @@
 package GUIClasses.HRInterface;
 
 import ApplicantStuff.JobApplication;
+import CompanyStuff.Branch;
 import CompanyStuff.Interviewer;
+import CompanyStuff.JobPostings.BranchJobPosting;
 import GUIClasses.CommonUserGUI.DocumentViewer;
 import GUIClasses.CommonUserGUI.GUIElementsCreator;
 
@@ -10,8 +12,7 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -55,15 +56,26 @@ class HRViewApp extends HRPanel {
         this.setInfoPane(splitDisplay);
         this.setListSelectionListener();
         this.add(splitDisplay);
-        this.setButtons(mode);
+        this.setButtons();
+        this.setMode(mode);
     }
 
     void reload () {
+        //TODO: check if applications are from list still in consideration.
+        this.currApps = this.getAppsInConsideration();
         this.applicationList.removeAll();
         this.applicationList.setListData(this.currApps.keySet().toArray(new String[this.currApps.size()]));
+        revalidate();
+        repaint();
     }
 
-    private void setButtons(int mode) {
+    private HashMap<String, JobApplication> getAppsInConsideration() {
+        BranchJobPosting branchJP = ((JobApplication)this.currApps.values().toArray()[0]).getJobPosting();
+        ArrayList<JobApplication> applications = branchJP.getInterviewManager().getApplicationsInConsideration();
+        return getTitleToAppMap(applications);
+    }
+
+    private void setButtons() {
         JPanel buttons = new JPanel(new FlowLayout());
         this.createHireButton();
         buttons.add(this.hireButton);
@@ -72,17 +84,7 @@ class HRViewApp extends HRPanel {
         this.createReturnButton();
         buttons.add(this.returnButton);
 
-        switch (mode) {
-            case 0:
-                this.setViewOnlyMode();
-                break;
-            case 1:
-                this.setSelectMode();
-                break;
-            case 2:
-                this.setHireMode();
-                break;
-        }
+
         this.add(buttons, BorderLayout.SOUTH);
     }
 
@@ -98,13 +100,17 @@ class HRViewApp extends HRPanel {
         this.applicationList.addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
-                String selectedTitle = applicationList.getSelectedValue();
-                jobAppSelected = currApps.get(selectedTitle);
-                overview.setText(jobAppSelected.toString());
-                documentViewer.removeAll();
-                documentViewer.add(createDocumentViewer(jobAppSelected));
-                interviewNotesPanel.removeAll();
-                setInterviewNotesPanel();
+                if (applicationList.isSelectionEmpty()) {
+                    overview.setText("Select an application to view overview.");
+                } else {
+                    String selectedTitle = applicationList.getSelectedValue();
+                    jobAppSelected = currApps.get(selectedTitle);
+                    overview.setText(jobAppSelected.toString());
+                    documentViewer.removeAll();
+                    documentViewer.add(createDocumentViewer(jobAppSelected));
+                    interviewNotesPanel.removeAll();
+                    setInterviewNotesPanel();
+                }
             }
         });
     }
@@ -163,6 +169,20 @@ class HRViewApp extends HRPanel {
         this.interviewNotesPanel.add(Box.createRigidArea(new Dimension(0, 25)));
     }
 
+    private void setMode(int mode) {
+        switch (mode) {
+            case 0:
+                this.returnButton.setVisible(true);
+                break;
+            case 1:
+                this.selectButton.setVisible(true);;
+                break;
+            case 2:
+                this.hireButton.setVisible(true);
+                break;
+        }
+    }
+
     private void createReturnButton() {
         this.returnButton = new JButton("Return");
         this.returnButton.setVisible(false);
@@ -174,10 +194,6 @@ class HRViewApp extends HRPanel {
         });
     }
 
-    private void setViewOnlyMode() {
-        this.returnButton.setVisible(true);
-    }
-
     private void createHireButton() {
         this.hireButton = new JButton("Select candidates to hire");
         this.hireButton.setVisible(false);
@@ -185,13 +201,16 @@ class HRViewApp extends HRPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JFrame frame = (JFrame) SwingUtilities.windowForComponent(parent);
-                new HiringSelectionDialog(frame, hrBackend, new ArrayList<>(currApps.values()), returnButton);
+                JDialog hiringDialog = new HiringSelectionDialog(frame, hrBackend, new ArrayList<>(currApps.values()), returnButton);
+                hiringDialog.addWindowListener(new WindowAdapter() {
+                    @Override
+                    public void windowClosed(WindowEvent e) {
+                        hireButton.setVisible(false);
+                        reload();
+                    }
+                });
             }
         });
-    }
-
-    void setHireMode() {
-        this.hireButton.setVisible(true);
     }
 
     private void createSelectButton() {
@@ -201,12 +220,15 @@ class HRViewApp extends HRPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JFrame frame = (JFrame) SwingUtilities.windowForComponent(parent);
-                new GradingFilterDialog(frame, hrBackend, new ArrayList<>(currApps.values()), returnButton);
+                JDialog filterDialog = new GradingFilterDialog(frame, hrBackend, new ArrayList<>(currApps.values()), returnButton);
+                filterDialog.addWindowListener(new WindowAdapter() {
+                    @Override
+                    public void windowClosed(WindowEvent e) {
+                        selectButton.setVisible(false);
+                        reload();
+                    }
+                });
             }
         });
-    }
-
-    void setSelectMode() {
-        this.selectButton.setVisible(true);
     }
 }
