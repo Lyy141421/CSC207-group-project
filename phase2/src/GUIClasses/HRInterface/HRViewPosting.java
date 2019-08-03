@@ -23,6 +23,7 @@ class HRViewPosting extends HRPanel {
     private HashMap<String, BranchJobPosting> unreviewedJP;
     private HashMap<String, BranchJobPosting> scheduleJP;
     private HashMap<String, BranchJobPosting> hiringJP;
+    private HashMap<String, BranchJobPosting> filledJP;
     private HashMap<String, BranchJobPosting> importantJP = new HashMap<>();
     private HashMap<String, BranchJobPosting> allJP;
 
@@ -197,7 +198,8 @@ class HRViewPosting extends HRPanel {
         this.unreviewedJP = this.getTitleToJPMap(hrBackend.getJPToReview());
         this.scheduleJP = this.getTitleToJPMap(hrBackend.getJPToSchedule());
         this.hiringJP = this.getTitleToJPMap(hrBackend.getJPToHire());
-        this.allJP = this.getTitleToJPMap(hrBackend.getAllUnfilledJP());
+        this.filledJP = this.getTitleToJPMap(hrBackend.getAllFilledJP());
+        this.allJP = this.getTitleToJPMap(hrBackend.getAllJP());
 
         this.importantJP.putAll(this.unreviewedJP);
         this.importantJP.putAll(this.scheduleJP);
@@ -219,10 +221,11 @@ class HRViewPosting extends HRPanel {
             status = "Important: Schedule group interviews for the next round.\n\n";
         } else if (hiringJP.containsValue(selectedJP)) {
             status = "Important: Make hiring decisions for final candidates.\n\n";
+        } else if (filledJP.containsValue(selectedJP)) {
+            status = "Archived.";
         } else {
             status = "Low priority.\n\n";
         }
-
         return status;
     }
 }

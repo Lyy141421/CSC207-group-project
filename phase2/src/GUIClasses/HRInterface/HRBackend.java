@@ -65,14 +65,18 @@ class HRBackend {
         return jpManager.getJobPostingsThatNeedHRSelectionForHiring(this.jobAppSystem.getToday());
     }
 
+    ArrayList<BranchJobPosting> getAllJP() {
+        return this.hr.getBranch().getJobPostingManager().getBranchJobPostings();
+    }
+
     /**
      * Gets an array list of all branch job postings.
      *
      * @return the array list of all branch job postings.
      */
-    ArrayList<BranchJobPosting> getAllUnfilledJP() {
+    ArrayList<BranchJobPosting> getAllFilledJP() {
         BranchJobPostingManager jpManager = this.hr.getBranch().getJobPostingManager();
-        return jpManager.getAllUnfilledJobPostings();
+        return jpManager.getAllFilledJobPostings();
     }
 
     /**

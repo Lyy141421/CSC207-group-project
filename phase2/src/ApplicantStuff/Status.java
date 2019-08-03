@@ -16,7 +16,6 @@ public class Status extends Observable implements Serializable {
     private static final int ARCHIVED = -3;
     private static final int SUBMITTED = -2;
     private static final int UNDER_REVIEW = -1;
-    private static final int FIRST_ROUND = 0;
     // Map of statuses and their identifying integers
     private TreeMap<Integer, String> descriptions = new TreeMap<Integer, String>() {{
         put(Status.ARCHIVED, "Archived");
@@ -48,7 +47,7 @@ public class Status extends Observable implements Serializable {
     // === Setters ===
     public void setDescriptions(ArrayList<String[]> interviewConfiguration) {
         for (int i = 0; i < interviewConfiguration.size(); i++) {
-            this.descriptions.put(i, interviewConfiguration.get(i)[0]);
+            this.descriptions.put(i, interviewConfiguration.get(i)[0] + " (" + interviewConfiguration.get(i)[1] + ")");
         }
         this.descriptions.put(interviewConfiguration.size(), "Hired");
         this.lastRound = interviewConfiguration.size() - 1;

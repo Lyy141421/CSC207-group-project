@@ -14,8 +14,8 @@ public class Interview implements Serializable {
     // The total number of interviews conducted
     private static int totalNumOfInterviews;
     // The interview types allowed
-    public static String ONE_ON_ONE = "One-on-One";
-    public static String GROUP = "Group";
+    public static String ONE_ON_ONE = "One-on-One Interview";
+    public static String GROUP = "Group Interview";
     // The category names for interviewer for unscheduled/incomplete interviews
     public static final String[] CATEGORY_NAMES_FOR_INTERVIEWER_UNSCHEDULED_OR_INCOMPLETE = new String[]{"Interviewee", "Job Posting"};
     // The category names for interviewer for scheduled interviews

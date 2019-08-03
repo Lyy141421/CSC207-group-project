@@ -189,14 +189,14 @@ public class BranchJobPostingManager implements Serializable {
     }
 
     /**
-     * Get all unfilled job postings.
+     * Get all filled job postings.
      *
-     * @return all unfilled job postings.
+     * @return all filled job postings.
      */
-    public ArrayList<BranchJobPosting> getAllUnfilledJobPostings() {
+    public ArrayList<BranchJobPosting> getAllFilledJobPostings() {
         ArrayList<BranchJobPosting> jobPostings = new ArrayList<>();
         for (BranchJobPosting jobPosting : this.branchJobPostings) {
-            if (!jobPosting.isFilled()) {
+            if (jobPosting.isFilled()) {
                 jobPostings.add(jobPosting);
             }
         }
