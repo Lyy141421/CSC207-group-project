@@ -73,7 +73,7 @@ class InterviewTest {
         return new Interview(app, interviewer, posting.getInterviewManager());
     }
 
-    Interview createInterviewGroup(String name) {
+    Interview createInterviewGroup() {
         ArrayList<Interviewer> interviewer_list = new ArrayList<>();
         interviewer_list.add(createInterviewer("Jonathan"));
         interviewer_list.add(createInterviewer("Riley"));
@@ -94,46 +94,52 @@ class InterviewTest {
 
     @Test
     void getId() {
+        assertNotEquals(createInterview("Al").getId(), createInterview("Bill").getId());
     }
 
     @Test
     void getInterviewCoordinatorToNotes() {
+        Interview interview = createInterview("Al");
+        interview.setInterviewCoordinatorNotes("Help");
+        assertEquals(interview.getInterviewCoordinatorToNotes().get(interviewer), "Help");
     }
 
     @Test
     void getInterviewCoordinator() {
+        assertEquals(createInterview("Al").getInterviewCoordinator(), interviewer);
     }
 
     @Test
     void getTime() {
+        Interview interview = createInterview("Al");
+        InterviewTime time = new InterviewTime(today, InterviewTime.NINE_TO_TEN_AM);
+        interviewer.scheduleInterview(interview, time);
+        assertEquals(interview.getTime(), time);
     }
 
     @Test
     void getJobApplications() {
+        Interview interview = createInterview("Samantha");
+        assertEquals(interview.getJobApplications().get(0).getApplicant().getUsername(), "Samantha");
     }
 
     @Test
     void getOtherInterviewers() {
+        Interview interview = createInterviewGroup();
+        assertEquals(interview.getOtherInterviewers().size(), 2);
     }
 
     @Test
     void getOtherInterviewersToNotes() {
+        Interview interview = createInterviewGroup();
+        interview.setOtherInterviewNotes(interview.getOtherInterviewers().get(0), "Bad");
+        assertEquals(interview.getOtherInterviewersToNotes().get(interview.getOtherInterviewers().get(0)), "Bad");
     }
 
     @Test
     void getRoundNumber() {
-    }
-
-    @Test
-    void setTime() {
-    }
-
-    @Test
-    void setInterviewCoordinatorNotes() {
-    }
-
-    @Test
-    void setOtherInterviewNotes() {
+        Interview interview = createInterview("Samantha");
+        assertEquals(interview.getRoundNumber(), 0);
     }
 
     @Test
