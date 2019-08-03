@@ -234,10 +234,7 @@ public class InterviewManager extends Observable implements Serializable {
             this.getBranchJobPosting().closeJobPostingNoApplicationsInConsideration();
         } else if (this.isInterviewProcessOver()) {
             // The check for current round ensures that applicants get at least 1 interview
-            this.cancelAllIncompleteInterviews();
-            this.hireApplicants(this.applicationsInConsideration);
-            this.notifyAllObservers(notificationFactory.createNotification(NotificationFactory.AUTO_HIRING,
-                    this.getBranchJobPosting()));
+            this.hireAllApplicants();
         }
     }
 
@@ -432,6 +429,18 @@ public class InterviewManager extends Observable implements Serializable {
         }
         this.branchJobPosting.setFilled();
         this.archiveRejected();
+    }
+
+    private void hireAllApplicants() {
+        this.cancelAllIncompleteInterviews();
+        this.hireApplicants(this.applicationsInConsideration);
+        if (this.getNumOpenPositions() > 1) {
+            this.notifyAllObservers(notificationFactory.createNotification(NotificationFactory.AUTO_HIRING_LESS,
+                    this.getBranchJobPosting()));
+        } else {
+            this.notifyAllObservers(notificationFactory.createNotification(NotificationFactory.AUTO_HIRING_EXACT,
+                    this.getBranchJobPosting()));
+        }
     }
 
     @Override
