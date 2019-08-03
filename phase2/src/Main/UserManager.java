@@ -155,4 +155,17 @@ public class UserManager {
         }
         return ret;
     }
+
+    /**
+     * Delete all reference accounts that have no applications they need to submit reference letters for.
+     */
+    public void deleteAllEmptyReferenceAccounts() {
+        for (User user : (ArrayList<User>) this.allUsers.clone()) {
+            if (user instanceof Reference) {
+                if (((Reference) user).getJobAppsForReference().isEmpty()) {
+                    this.allUsers.remove(user);
+                }
+            }
+        }
+    }
 }

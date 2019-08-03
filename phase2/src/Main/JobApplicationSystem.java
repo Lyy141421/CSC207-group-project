@@ -38,9 +38,10 @@ public class JobApplicationSystem {
         dataLoaderAndStorer.loadAllData();
         while (true) {
             // Create and run the main frame
-            // TODO these method calls would have to appear in main frame after user selects date
+            // TODO these method calls would have to be called after user selects date but before login
             jobAppSystem.notificationDate(jobAppSystem.getToday());
             jobAppSystem.applicant30Day();
+            jobAppSystem.getUserManager().deleteAllEmptyReferenceAccounts();
             jobAppSystem.updateAllJobPostings();
         }
     }
