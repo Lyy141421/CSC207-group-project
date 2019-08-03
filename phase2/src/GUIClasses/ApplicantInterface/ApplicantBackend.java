@@ -143,7 +143,7 @@ class ApplicantBackend {
      * //     * @param jobPostings the postings in question
      * //
      */
-    String[] getListNames(ArrayList<BranchJobPosting> jobPostings) {
+    String[] getListNames(ArrayList<CompanyJobPosting> jobPostings) {
         int len = jobPostings.size();
         String[] ret = new String[len];
 

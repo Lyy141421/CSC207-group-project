@@ -2,6 +2,7 @@ package GUIClasses.ApplicantInterface;
 
 import ApplicantStuff.Applicant;
 import CompanyStuff.JobPostings.BranchJobPosting;
+import CompanyStuff.JobPostings.CompanyJobPosting;
 import Main.JobApplicationSystem;
 
 import javax.swing.*;
@@ -72,7 +73,7 @@ class ApplicantBrowsePostings extends JPanel {
         searchButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ArrayList<BranchJobPosting> postings =
+                ArrayList<CompanyJobPosting> postings =
                         backend.findApplicablePostings(fields[0], fields[1], fields[2], fields[3]);
                 masterPanel.add(new ApplicantViewSearchResults(postings, backend), "SearchResults");
                 ((CardLayout)masterPanel.getLayout()).show(masterPanel, "SearchResults");

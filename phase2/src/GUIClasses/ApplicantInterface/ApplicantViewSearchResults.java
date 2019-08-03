@@ -1,6 +1,7 @@
 package GUIClasses.ApplicantInterface;
 
 import CompanyStuff.JobPostings.BranchJobPosting;
+import CompanyStuff.JobPostings.CompanyJobPosting;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -11,10 +12,10 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 class ApplicantViewSearchResults extends JPanel {
-    private ApplicantBackend BackEnd;
+    private ApplicantBackend backEnd;
 
-    ApplicantViewSearchResults(ArrayList<BranchJobPosting> jobPostings, ApplicantBackend BackEnd) {
-        this.BackEnd = BackEnd;
+    ApplicantViewSearchResults(ArrayList<CompanyJobPosting> jobPostings, ApplicantBackend BackEnd) {
+        this.backEnd = BackEnd;
         JPanel viewJobs = new JPanel(new GridLayout(1, 3));
 
         JPanel viewJobs0 = this.buildViewJobs0(jobPostings); viewJobs.add(viewJobs0);
@@ -43,10 +44,10 @@ class ApplicantViewSearchResults extends JPanel {
     /**
      * Builds the panel which allows navigation when viewing jobs
      */
-    private JPanel buildViewJobs0(ArrayList<BranchJobPosting> jobPostings) {
+    private JPanel buildViewJobs0(ArrayList<CompanyJobPosting> jobPostings) {
         JPanel viewJobsList = new JPanel(null);
 
-        String[] jobTitleArray = BackEnd.getListNames(jobPostings);
+        String[] jobTitleArray = backEnd.getListNames(jobPostings);
         JList<String> jobTitlesList = new JList<>(jobTitleArray);
         jobTitlesList.setBounds(25, 40, 234, 360);
         viewJobsList.add(jobTitlesList);
@@ -70,10 +71,10 @@ class ApplicantViewSearchResults extends JPanel {
     /**
      * Builds and returns the panel which contains all job titles, company and descriptions
      */
-    private JPanel buildViewJobs1(ArrayList<BranchJobPosting> jobPostings) {
+    private JPanel buildViewJobs1(ArrayList<CompanyJobPosting> jobPostings) {
         JPanel viewJobs1 = new JPanel(new CardLayout());
 
-        for(BranchJobPosting j : jobPostings) {
+        for (CompanyJobPosting j : jobPostings) {
             JPanel viewJobsAdded = new JPanel(null);
 
             JLabel viewJobTitle = new JLabel(j.getTitle());
@@ -81,7 +82,7 @@ class ApplicantViewSearchResults extends JPanel {
             viewJobTitle.setBounds(17, 70, 150, 40);
             viewJobsAdded.add(viewJobTitle);
 
-            JLabel viewJobCompany = new JLabel(j.getBranch().getName());
+            JLabel viewJobCompany = new JLabel(j.getCompany().getName());
             viewJobCompany.setFont(new Font("Serif", Font.BOLD, 15));
             viewJobCompany.setBounds(17, 100, 150, 30);
             viewJobsAdded.add(viewJobCompany);
@@ -96,6 +97,9 @@ class ApplicantViewSearchResults extends JPanel {
 
         return viewJobs1;
     }
+
+    // TODO build panel that shows list of branches
+    // When a branch is selected, redirect to panel with more specific details
 
     /**
      * Returns the panel containing the remainder of the details for each job posting

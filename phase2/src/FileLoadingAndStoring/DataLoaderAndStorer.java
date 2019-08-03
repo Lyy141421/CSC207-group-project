@@ -124,6 +124,7 @@ public class DataLoaderAndStorer {
 
             this.jobApplicationSystem.getUserManager().setAllUsers((ArrayList<User>) input.readObject());
             input.close();
+        } catch (EOFException eof) {    // empty file
         } catch (IOException | ClassNotFoundException ex) {
             ex.printStackTrace();
         }
@@ -141,6 +142,7 @@ public class DataLoaderAndStorer {
 
             this.jobApplicationSystem.setCompanies((ArrayList<Company>) input.readObject());
             input.close();
+        } catch (EOFException eof) {    // empty file
         } catch (IOException | ClassNotFoundException ex) {
             ex.printStackTrace();
         }
@@ -155,6 +157,7 @@ public class DataLoaderAndStorer {
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             LocalDate date = LocalDate.parse(dateString, dtf);
             this.jobApplicationSystem.setPreviousLoginDate(date);
+        } catch (NullPointerException npe) {    // empty file
         } catch (IOException ex) {
             ex.printStackTrace();
         }

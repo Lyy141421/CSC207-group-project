@@ -1,6 +1,7 @@
 package GUIClasses.StartInterface;
 
 import GUIClasses.ActionListeners.LogoutActionListener;
+import GUIClasses.CommonUserGUI.GUIElementsCreator;
 import GUIClasses.CommonUserGUI.UserMain;
 import GUIClasses.MainFrame;
 import Main.JobApplicationSystem;
@@ -219,14 +220,18 @@ public class LoginMain extends JPanel {
         JDialog popup = new JDialog();
         popup.setLayout(new BorderLayout());
 
-        JLabel instructions = new JLabel("Please enter today's date.");
-        popup.add(instructions, SwingConstants.NORTH);
+        JPanel instructions = new GUIElementsCreator().createLabelPanel("Please enter today's date", 15, true);
+        instructions.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        popup.add(instructions, BorderLayout.NORTH);
 
+        JPanel fullDatePickerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         UtilDateModel model = new UtilDateModel();
         JDatePanelImpl datePanel = new JDatePanelImpl(model);
         JDatePickerImpl datePicker = new JDatePickerImpl(datePanel);
-        popup.add(datePicker, SwingConstants.CENTER);
+        fullDatePickerPanel.add(datePicker);
+        popup.add(fullDatePickerPanel, BorderLayout.CENTER);
 
+        JPanel buttonPanel = new JPanel();
         JButton submit = new JButton("Submit");
         submit.addActionListener(new ActionListener() {
             @Override
@@ -236,13 +241,19 @@ public class LoginMain extends JPanel {
                 if (backend.isValidDate(today)) {
                     updateSystem(today);
                     login(userNameEntry, passwordEntry);
+                    popup.dispose();
+                } else {
+                    JOptionPane.showMessageDialog(popup, "Invalid date. Please pick again");
                 }
             }
         });
-        popup.add(submit, SwingConstants.SOUTH);
-
-        this.add(popup);
+        buttonPanel.add(submit);
+        popup.add(buttonPanel, BorderLayout.SOUTH);
+        popup.setSize(new Dimension(500, 300));
+        popup.setResizable(false);
+        popup.setVisible(true);
     }
+
 
     /**
      * attempts login with the provided information
