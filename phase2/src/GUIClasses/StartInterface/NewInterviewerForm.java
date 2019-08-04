@@ -6,8 +6,12 @@ import javax.swing.*;
  * Form shown when creating a new interviewer
  */
 class NewInterviewerForm extends JPanel {
+
+    static final String NAME = "InterviewerCard";
+
     NewInterviewerForm() {
         this.setLayout(null);
+        this.setName(NAME);
         this.addFields();
         this.addText();
     }

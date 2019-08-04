@@ -2,9 +2,13 @@ package GUIClasses.StartInterface;
 
 import javax.swing.*;
 
-public class NewReferenceForm extends JPanel {
+class NewReferenceForm extends JPanel {
+
+    static final String NAME = "ReferenceCard";
+
     NewReferenceForm() {
         this.setLayout(null);
+        this.setName(NAME);
 
         JLabel refEmailText = new JLabel("Email: ", SwingConstants.CENTER);
         refEmailText.setBounds(267, 60, 150, 30);

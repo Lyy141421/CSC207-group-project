@@ -1,10 +1,7 @@
 package Main;
 
-import CompanyStuff.Branch;
 import CompanyStuff.Company;
 import ApplicantStuff.Applicant;
-import CompanyStuff.JobPostings.BranchJobPosting;
-import CompanyStuff.JobPostings.BranchJobPostingManager;
 import CompanyStuff.JobPostings.CompanyJobPosting;
 import FileLoadingAndStoring.DataLoaderAndStorer;
 import GUIClasses.MainFrame;

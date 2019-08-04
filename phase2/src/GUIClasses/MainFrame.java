@@ -58,8 +58,9 @@ public class MainFrame extends JFrame {
     private void addCards () {
         // We need to be careful with when these cards get constructed, in case it's missing arguments to run methods
         newUserRef = new NewUserPanel(this.getContentPane(), this.layoutManager, this.jobAppSystem);
-        this.add(new LoginMain(newUserRef, this.getContentPane(), this.layoutManager, this.jobAppSystem), MainFrame.LOGIN);
         this.add(newUserRef, MainFrame.NEW_USER);
+        this.add(new LoginMain(newUserRef, this.getContentPane(), this.layoutManager, this.jobAppSystem), MainFrame.LOGIN);
+        layoutManager.show(this.getContentPane(), MainFrame.LOGIN);
     }
 
     public static void main(String[] args) {

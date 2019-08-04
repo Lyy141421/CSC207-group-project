@@ -6,8 +6,12 @@ import javax.swing.*;
  * Form shown when creating a new applicant
  */
 class NewApplicantForm extends JPanel {
+
+    static final String NAME = "ApplicantCard";
+
     NewApplicantForm() {
         this.setLayout(null);
+        this.setName(NAME);
         this.addFields();
         this.addText();
     }

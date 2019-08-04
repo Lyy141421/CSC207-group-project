@@ -13,6 +13,9 @@ import java.awt.event.ActionListener;
  */
 
 public class NewUserPanel extends JPanel {
+
+    private static String FORM_PANEL_NAME = "formPanel";
+
     private LoginBackend backend;
     private CardLayout masterLayout;
     private Container parent;
@@ -49,7 +52,7 @@ public class NewUserPanel extends JPanel {
      */
     private JPanel buildForms() {
         JPanel formPanel = new JPanel(new CardLayout());
-        formPanel.setName("formPanel");
+        formPanel.setName(FORM_PANEL_NAME);
 
         formPanel.add(new NewApplicantForm(), "Applicant");
         formPanel.add(new NewInterviewerForm(), "Interviewer");
@@ -127,20 +130,20 @@ public class NewUserPanel extends JPanel {
      * @return 0 - blank entry, 1 - bad email, 2 - bad company, 3 - success
      */
     private int createApplicant() {
-        JPanel forms = this.getPanelByName(this, "formPanel");
-        Component[] items = this.getPanelByName(forms, "applicantCard").getComponents();
+        JPanel forms = this.getPanelByName(this, FORM_PANEL_NAME);
+        Component[] items = this.getPanelByName(forms, NewApplicantForm.NAME).getComponents();
         return backend.createNewApplicant(this.backend.getInputs(items, this.newUsername));
     }
 
     private int createInterviewer() {
-        JPanel forms = this.getPanelByName(this, "formPanel");
-        Component[] items = this.getPanelByName(forms, "interviewerCard").getComponents();
+        JPanel forms = this.getPanelByName(this, FORM_PANEL_NAME);
+        Component[] items = this.getPanelByName(forms, NewInterviewerForm.NAME).getComponents();
         return backend.createNewInterviewer(this.backend.getInputs(items, this.newUsername));
     }
 
     private int createHRC() {
-        JPanel forms = this.getPanelByName(this, "formPanel");
-        Component[] items = this.getPanelByName(forms, "HRCCard").getComponents();
+        JPanel forms = this.getPanelByName(this, FORM_PANEL_NAME);
+        Component[] items = this.getPanelByName(forms, NewHRCForm.NAME).getComponents();
         return backend.createNewHRC(this.backend.getInputs(items, this.newUsername));
     }
 

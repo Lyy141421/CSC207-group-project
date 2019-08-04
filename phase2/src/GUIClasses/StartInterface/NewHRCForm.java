@@ -6,8 +6,12 @@ import javax.swing.*;
  * Form shown when creating a new HR Coordinator
  */
 class NewHRCForm extends JPanel {
+
+    static final String NAME = "HRCard";
+
     NewHRCForm() {
         this.setLayout(null);
+        this.setName(NAME);
         this.addFields();
         this.addText();
     }
