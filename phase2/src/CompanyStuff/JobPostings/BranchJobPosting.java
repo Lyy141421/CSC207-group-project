@@ -198,20 +198,6 @@ public class BranchJobPosting extends CompanyJobPosting implements JobPostingObs
         this.interviewManager = interviewManager;
     }
 
-//    /**
-//     * Check whether this job posting has had any interviews.
-//     *
-//     * @return true iff this job posting has had an interview.
-//     */
-//    public boolean hasInterviews() {
-//        for (JobApplication jobApp : this.getJobApplications()) {
-//            if (!jobApp.getInterviews().isEmpty()) {
-//                return true;
-//            }
-//        }
-//        return false;
-//    }
-
     /**
      * Advance the round of interviews for this job posting.
      */
@@ -244,7 +230,6 @@ public class BranchJobPosting extends CompanyJobPosting implements JobPostingObs
     public void closeJobPostingNoApplicationsInConsideration() {
         this.setFilled();
         this.numPositions = 0;
-        //TODO notify HR
     }
 
     /**

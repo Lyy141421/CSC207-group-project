@@ -238,6 +238,7 @@ public class Interviewer extends User {
     public boolean scheduleInterview(Interview interview, InterviewTime interviewTime) {
         if (this.isAvailable(interviewTime)) {
             interview.setTime(interviewTime);
+            interview.getInterviewManager().addInterviewForJobApplications(interview);
             return true;
         }
         return false;

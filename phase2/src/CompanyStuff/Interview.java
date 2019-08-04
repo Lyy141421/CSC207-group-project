@@ -114,6 +114,14 @@ public class Interview implements Serializable {
         return roundNumber;
     }
 
+    public String getType() {
+        return this.typeAndDescription[0];
+    }
+
+    public InterviewManager getInterviewManager() {
+        return this.interviewManager;
+    }
+
     // === Setters ===
 
     public void setTime(InterviewTime time) {

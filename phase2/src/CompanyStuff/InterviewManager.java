@@ -147,7 +147,7 @@ public class InterviewManager extends Observable implements Serializable {
      *
      * @param jobApplication The application to be rejected.
      */
-    void reject(JobApplication jobApplication) {
+    private void reject(JobApplication jobApplication) {
         this.applicationsInConsideration.remove(jobApplication);
         this.applicationsRejected.add(jobApplication);
     }
@@ -159,11 +159,9 @@ public class InterviewManager extends Observable implements Serializable {
      * @param jobApplications The job applications to be rejected.
      */
     public void rejectApplicationsForFirstRound(ArrayList<JobApplication> jobApplications) {
+        this.branchJobPosting.reviewJobApplications();
         for (JobApplication jobApp : jobApplications) {
             this.reject(jobApp);
-        }
-        for (JobApplication jobApp : this.applicationsInConsideration) {
-            jobApp.getStatus().advanceStatus();
         }
         this.chosenApplicantsForFirstRound = true;
     }
@@ -261,8 +259,7 @@ public class InterviewManager extends Observable implements Serializable {
         else {
             for (JobApplication jobApp : this.applicationsInConsideration) {
                 Interviewer interviewer = this.branchJobPosting.getBranch().findInterviewerByField(field);
-                Interview interview = new Interview(jobApp, interviewer, this);
-                this.updateParticipantsOfNewInterview(interview);
+                new Interview(jobApp, interviewer, this);
             }
         }
     }
@@ -355,7 +352,7 @@ public class InterviewManager extends Observable implements Serializable {
      *
      * @param interview The interview that was set up.
      */
-    private void addInterviewForJobApplications(Interview interview) {
+    public void addInterviewForJobApplications(Interview interview) {
         for (JobApplication jobApp : interview.getJobApplications()) {
             jobApp.addInterview(interview);
             jobApp.getStatus().advanceStatus();
@@ -369,7 +366,9 @@ public class InterviewManager extends Observable implements Serializable {
      */
     private void updateParticipantsOfNewInterview(Interview interview) {
         this.addInterviewForInterviewers(interview);
-        this.addInterviewForJobApplications(interview);
+        if (interview.getType().equals(Interview.GROUP)) {
+            this.addInterviewForJobApplications(interview);
+        }
     }
 
     /**

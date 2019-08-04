@@ -110,19 +110,6 @@ public class Applicant extends User {
     }
 
     /**
-     * Checks whether this applicant has already applied to this branch.
-     *
-     * @param branch The branch in question.
-     * @return true iff this applicant has already applied to this branch
-     */
-    public boolean hasAppliedToBranch(Branch branch) {
-        for (BranchJobPosting posting : branch.getJobPostingManager().getBranchJobPostings())
-            if (this.hasAppliedToPosting(posting))
-                return true;
-        return false;
-    }
-
-    /**
      * Report whether the date that the last job posting this applicant applied to was 30 days ago from getToday.
      *
      * @param today Today's date.

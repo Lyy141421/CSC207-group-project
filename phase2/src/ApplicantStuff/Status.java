@@ -36,10 +36,6 @@ public class Status extends Observable implements Serializable {
     }
 
     // === Getters ===
-    public int getValue() {
-        return this.value;
-    }
-
     String getDescription() {
         return this.descriptions.get(this.value);
     }
