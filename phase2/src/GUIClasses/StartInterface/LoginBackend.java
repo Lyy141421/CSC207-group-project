@@ -85,7 +85,6 @@ class LoginBackend {
      * @return a constant representing the status of the login
      */
     int createNewUser(HashMap<String, String> inputs) {
-        String username = inputs.get("username");
         String password = inputs.get("password");
         String name = inputs.get("name");
         String email = inputs.get("email");

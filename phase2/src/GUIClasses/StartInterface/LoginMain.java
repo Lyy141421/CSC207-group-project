@@ -31,6 +31,7 @@ public class LoginMain extends JPanel {
     private NewUserPanel newUserRef;
     private JobApplicationSystem jobAppSystem;
     private LogoutActionListener logout;
+    private boolean dateInputted = false;
 
     public LoginMain(NewUserPanel newUserRef, Container parent, CardLayout masterLayout, JobApplicationSystem jobAppSystem) {
         this.backend = new LoginBackend(jobAppSystem);
@@ -106,7 +107,10 @@ public class LoginMain extends JPanel {
         loginButton.setBounds(367, 300, 120, 22);
         loginButton.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
-                getDate(userNameEntry, passwordEntry);
+                if (!dateInputted) {
+                    getDate();
+                }
+                login(userNameEntry, passwordEntry);
             }
         });
 
@@ -253,7 +257,7 @@ public class LoginMain extends JPanel {
     /**
      *
      */
-    private void getDate(JTextField userNameEntry, JPasswordField passwordEntry) {
+    private void getDate() {
         JDialog popup = new JDialog();
         popup.setLayout(new BorderLayout());
 
@@ -277,8 +281,8 @@ public class LoginMain extends JPanel {
                         toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
                 if (backend.isValidDate(today)) {
                     updateSystem(today);
-                    login(userNameEntry, passwordEntry);
                     popup.dispose();
+                    dateInputted = true;
                 } else {
                     JOptionPane.showMessageDialog(popup, "Invalid date. Please pick again");
                 }
@@ -316,8 +320,6 @@ public class LoginMain extends JPanel {
                     this.hideBlankField();
                 this.hideInvalidUsername();
                 this.GUILogin(userNameEntry.getText());
-                    userNameEntry.setText("");
-                    passwordEntry.setText("");
                     break;
             case LoginBackend.WRONG_PASSWORD:
                 this.showPassError();

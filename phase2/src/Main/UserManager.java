@@ -37,7 +37,7 @@ public class UserManager {
     public Applicant createApplicant(String username, String password, String legalName, String email, String postalCode,
                                      LocalDate dateCreated) {
         HashMap<String, String> fsaHashMap = DataLoaderAndStorer.loadFSAHashMap();
-        String cma = fsaHashMap.get(postalCode.substring(0,4).toUpperCase());
+        String cma = fsaHashMap.get(postalCode.substring(0, 3).toUpperCase());
         Applicant newApplicant = new Applicant(username, password, legalName, email, cma, dateCreated);
         this.allUsers.add(newApplicant);
         return newApplicant;
