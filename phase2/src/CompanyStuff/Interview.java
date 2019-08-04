@@ -289,8 +289,12 @@ public class Interview implements Serializable {
     }
 
     public String getMiniDescriptionForHR() {
+        String description = "";
+        if (!this.typeAndDescription[1].isEmpty()) {
+            description = " (" + this.typeAndDescription[1] + ")";
+        }
         return "Job posting: " + this.getJobApplications().get(0).getJobPosting().getTitle() + " -- " +
-                this.typeAndDescription[0] + " (" + this.typeAndDescription[1] + ")";
+                this.typeAndDescription[0] + description;
     }
 
     private String getOtherInterviewersNames() {
@@ -307,7 +311,9 @@ public class Interview implements Serializable {
         String s = "Interview ID: " + this.getId() + "\n";
         s += "Job Posting: " + this.getJobApplications().get(0).getJobPosting().getTitle() + "\n";
         s += "Interview Type: " + this.typeAndDescription[0] + "\n";
-        s += "Interview Description: " + this.typeAndDescription[1] + "\n";
+        if (!this.typeAndDescription[1].isEmpty()) {
+            s += "Interview Description: " + this.typeAndDescription[1] + "\n";
+        }
         s += "Interview Coordinator: " + this.getInterviewCoordinator().getLegalName() + "\n";
         if (!this.getOtherInterviewers().isEmpty()) {
             s += "Secondary Interviewers: " + this.getOtherInterviewersNames() + "\n";
