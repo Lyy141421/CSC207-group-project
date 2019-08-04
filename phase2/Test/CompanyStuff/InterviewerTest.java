@@ -213,7 +213,9 @@ class InterviewerTest {
         ArrayList<Interview> lst = new ArrayList<>();
         lst.add(createInterview(interviewer));
         interviewer.setInterviews(lst);
-        assertTrue(interviewer.findJobAppById(interviewer.getInterviews().get(0).getJobApplications().get(0).getId()) instanceof JobApplication);
+        createInterview(interviewer);
+        assertEquals(interviewer.findJobAppById(interviewer.getInterviews().get(0).getJobApplications().get(0).getId()),
+                interviewer.getInterviews().get(0).getJobApplications().get(0));
     }
 
     @Test
