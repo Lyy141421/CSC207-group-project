@@ -15,6 +15,8 @@ import java.util.ArrayList;
 class ApplicantSchedule extends JPanel {
 
     ApplicantSchedule(Applicant applicant, JobApplicationSystem jobAppSystem) {
+        this.setLayout(null);
+        
         JLabel titleText = new JLabel("Schedule for " + applicant.getLegalName(), SwingConstants.CENTER);
         titleText.setBounds(170, 35, 300, 40);
         titleText.setFont(new Font("Serif", Font.PLAIN, 27));
