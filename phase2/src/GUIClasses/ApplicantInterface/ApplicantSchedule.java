@@ -3,6 +3,7 @@ package GUIClasses.ApplicantInterface;
 import ApplicantStuff.Applicant;
 import CompanyStuff.Interview;
 import CompanyStuff.InterviewManager;
+import GUIClasses.CommonUserGUI.GUIElementsCreator;
 import Main.JobApplicationSystem;
 
 import javax.swing.*;
@@ -14,16 +15,15 @@ import java.util.ArrayList;
  */
 class ApplicantSchedule extends JPanel {
 
-    ApplicantSchedule(Applicant applicant, JobApplicationSystem jobAppSystem) {
+    ApplicantSchedule(ApplicantBackend applicantBackend) {
         this.setLayout(null);
-        
-        JLabel titleText = new JLabel("Schedule for " + applicant.getLegalName(), SwingConstants.CENTER);
+
+        JLabel titleText = new JLabel("Schedule for " + applicantBackend.getApplicant().getLegalName(), SwingConstants.CENTER);
         titleText.setBounds(170, 35, 300, 40);
         titleText.setFont(new Font("Serif", Font.PLAIN, 27));
         this.add(titleText);
 
-        ArrayList<Interview> interviews = applicant.getJobApplicationManager().
-                getUpcomingInterviews(jobAppSystem.getToday());
+        ArrayList<Interview> interviews = applicantBackend.getUpcomingInterviews();
         this.buildTable(interviews);
     }
 
@@ -34,7 +34,7 @@ class ApplicantSchedule extends JPanel {
         Object[][] data = this.getInterviewData(interviews);
         String[] columnNames = {"Position", "Company", "Time", "Current Round"};
 
-        JTable table = new JTable(data, columnNames);
+        JPanel table = new GUIElementsCreator().createTablePanel(columnNames, data);
         table.setBounds(170, 150, 300, data.length * 25);
         this.add(table);
     }

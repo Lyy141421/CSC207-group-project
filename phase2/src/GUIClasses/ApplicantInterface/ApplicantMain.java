@@ -22,13 +22,13 @@ import java.util.Arrays;
 class ApplicantMain extends JPanel {
     private Applicant applicant;
     private ApplicantPanel masterPanel;
-    private JobApplicationSystem jobAppSystem;
+    private ApplicantBackend applicantBackend;
 
     ApplicantMain(Applicant applicant, ApplicantPanel masterPanel,
                   JobApplicationSystem jobAppSystem, LogoutActionListener logout) {
+        applicantBackend = new ApplicantBackend(applicant, jobAppSystem);
         this.applicant = applicant;
         this.masterPanel = masterPanel;
-        this.jobAppSystem = jobAppSystem;
 
         setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
@@ -57,10 +57,10 @@ class ApplicantMain extends JPanel {
     private JPanel getApplicantCards() {
         JPanel ret = new JPanel(new CardLayout());
         ret.add(new ApplicantHome(applicant), "HOME");
-        ret.add(new ApplicantBrowsePostings(applicant, masterPanel, jobAppSystem), "POSTINGS");
+        ret.add(new ApplicantBrowsePostings(applicantBackend, masterPanel), "POSTINGS");
         ret.add(new UserProfilePanel(applicant), "PROFILE");
         ret.add(new DocumentViewer(applicant.getDocumentManager().getFolder()), "DOCUMENTS");
-        ret.add(new ApplicantSchedule(applicant, jobAppSystem), "SCHEDULE");
+        ret.add(new ApplicantSchedule(applicantBackend), "SCHEDULE");
         ret.add(new ApplicantViewApps(applicant), "MANAGE");
         return ret;
     }

@@ -18,8 +18,8 @@ class ApplicantBrowsePostings extends JPanel {
     private ApplicantPanel masterPanel;
     private ApplicantBrowsePostings thisPanel = this;
 
-    ApplicantBrowsePostings(Applicant applicant, ApplicantPanel masterPanel, JobApplicationSystem jobAppSystem) {
-        this.backend = new ApplicantBackend(applicant, jobAppSystem);
+    ApplicantBrowsePostings(ApplicantBackend backend, ApplicantPanel masterPanel) {
+        this.backend = backend;
         this.masterPanel = masterPanel;
         this.setLayout(null);
         this.addText();

@@ -117,6 +117,10 @@ class ApplicantBackend {
         return applicant.getJobApplicationManager().getJobApplications();
     }
 
+    ArrayList<Interview> getUpcomingInterviews() {
+        return applicant.getJobApplicationManager().getUpcomingInterviews(jobAppSystem.getToday());
+    }
+
     /**
      * Returns a list of applicant's application's jobpostings
      */
