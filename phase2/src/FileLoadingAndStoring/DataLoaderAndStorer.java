@@ -18,11 +18,11 @@ import java.util.Iterator;
 public class DataLoaderAndStorer {
 
     // File names of storage files
-    private static final String FILES_FOLDER_PATH = "C:\\Users\\snowl\\Documents\\CS\\group_0131\\phase2\\files";
-    private static final String USER_FILE_PATH = FILES_FOLDER_PATH + "\\users.ser";
-    private static final String COMPANY_FILE_PATH = FILES_FOLDER_PATH + "\\companies.ser";
-    private static final String DATE_FILE_PATH = FILES_FOLDER_PATH + "\\previousLoginDate.txt";
-    private static final String FSA_TO_CMA_PATH = FILES_FOLDER_PATH + "\\CMA_per_FSA_Centroid.json";
+    private static final String FILES_FOLDER_PATH = "./files";
+    private static final String USER_FILE_PATH = FILES_FOLDER_PATH + "/users.ser";
+    private static final String COMPANY_FILE_PATH = FILES_FOLDER_PATH + "/companies.ser";
+    private static final String DATE_FILE_PATH = FILES_FOLDER_PATH + "/previousLoginDate.txt";
+    private static final String FSA_TO_CMA_PATH = FILES_FOLDER_PATH + "/CMA_per_FSA_Centroid.json";
 
     // === Instance variable ===
     private JobApplicationSystem jobApplicationSystem;
