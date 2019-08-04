@@ -1,25 +1,24 @@
 package GUIClasses.ApplicantInterface;
 
 import ApplicantStuff.Applicant;
-import CompanyStuff.JobPostings.BranchJobPosting;
 import CompanyStuff.JobPostings.CompanyJobPosting;
 import Main.JobApplicationSystem;
 
 import javax.swing.*;
+import javax.swing.text.NumberFormatter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.regex.Pattern;
 
 class ApplicantBrowsePostings extends JPanel {
     private ApplicantBackend backend;
-    private Applicant applicant;
     private ApplicantPanel masterPanel;
-    private JobApplicationSystem jobAppSystem;
+    private ApplicantBrowsePostings thisPanel = this;
 
     ApplicantBrowsePostings(Applicant applicant, ApplicantPanel masterPanel, JobApplicationSystem jobAppSystem) {
-        this.applicant = applicant;
         this.backend = new ApplicantBackend(applicant, jobAppSystem);
         this.masterPanel = masterPanel;
         this.setLayout(null);
@@ -43,7 +42,7 @@ class ApplicantBrowsePostings extends JPanel {
         JLabel idText = new JLabel("ID Number :", SwingConstants.CENTER);
         idText.setBounds(145, 230, 100, 30);
 
-        JLabel tagsText = new JLabel("Tag(s) :", SwingConstants.CENTER);
+        JLabel tagsText = new JLabel("Tag(s) (e.g: Tag1, Tag2):", SwingConstants.CENTER);
         tagsText.setBounds(145, 290, 100, 30);
 
         this.add(companyText); this.add(fieldText); this.add(idText); this.add(tagsText);
@@ -56,15 +55,14 @@ class ApplicantBrowsePostings extends JPanel {
         JTextField fieldField = new JTextField();
         fieldField.setBounds(235, 170, 225, 30);
 
-        JTextField idField = new JTextField();
+        JFormattedTextField idField = new JFormattedTextField(new NumberFormatter(NumberFormat.getIntegerInstance()));
         idField.setBounds(235, 230, 225, 30);
 
         JTextField tagsField = new JTextField();
         tagsField.setBounds(235, 290, 225, 30);
 
         this.add(companyField); this.add(fieldField); this.add(idField); this.add(tagsField);
-        String[] ret = {companyField.getText(), fieldField.getText(), idField.getText(), tagsField.getText()};
-        return ret;
+        return new String[]{companyField.getText(), fieldField.getText(), idField.getText(), tagsField.getText()};
     }
 
     private void addSearchButton(String[] fields) {
@@ -73,10 +71,14 @@ class ApplicantBrowsePostings extends JPanel {
         searchButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ArrayList<CompanyJobPosting> postings =
-                        backend.findApplicablePostings(fields[0], fields[1], fields[2], fields[3]);
-                masterPanel.add(new ApplicantViewSearchResults(postings, backend), "SearchResults");
-                ((CardLayout)masterPanel.getLayout()).show(masterPanel, "SearchResults");
+                if (!Pattern.matches("^[A-Za-z'\\- ]*(, [A-Za-z'\\- ]+)*$", fields[3])) {
+                    JOptionPane.showMessageDialog(thisPanel, "Tags are not written in the correct format");
+                } else {
+                    ArrayList<CompanyJobPosting> postings = // TODO change the true
+                            backend.findApplicablePostings(fields[0], fields[1], fields[2], fields[3], true);
+                    masterPanel.add(new ApplicantViewSearchResults(postings, backend), "SearchResults");
+                    ((CardLayout) masterPanel.getLayout()).show(masterPanel, "SearchResults");
+                }
             }
         });
         this.add(searchButton);
