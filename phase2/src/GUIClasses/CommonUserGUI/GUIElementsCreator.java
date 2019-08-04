@@ -56,7 +56,9 @@ public class GUIElementsCreator {
         this.resizeColumnWidth(table);
 
         JScrollPane scrollPane = new JScrollPane(table);
-        scrollPane.setMinimumSize(new Dimension(500, 70));
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.setPreferredSize(new Dimension(600, 125));
         tablePanel.add(scrollPane);
         return tablePanel;
     }
@@ -104,8 +106,7 @@ public class GUIElementsCreator {
         textArea.setLineWrap(true);
         textArea.setWrapStyleWord(true);
         JScrollPane areaScrollPane = new JScrollPane(textArea);
-        areaScrollPane.setVerticalScrollBarPolicy(
-                JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        areaScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         areaScrollPane.setPreferredSize(new Dimension(250, 250));
         return areaScrollPane;
     }
