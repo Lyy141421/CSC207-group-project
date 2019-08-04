@@ -1,12 +1,10 @@
 package GUIClasses.HRInterface;
 
 import ApplicantStuff.JobApplication;
-import CompanyStuff.Branch;
 import CompanyStuff.Interviewer;
 import CompanyStuff.JobPostings.BranchJobPosting;
 import GUIClasses.CommonUserGUI.DocumentViewer;
 import GUIClasses.CommonUserGUI.GUIElementsCreator;
-import GUIClasses.CommonUserGUI.UserMain;
 
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
@@ -221,7 +219,7 @@ class HRViewApp extends HRPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JFrame frame = (JFrame) SwingUtilities.windowForComponent(parent);
-                JDialog filterDialog = new GradingFilterDialog(frame, parent, hrBackend, new ArrayList<>(currApps.values()), returnButton);
+                JDialog filterDialog = new GradingFilterDialog(frame, hrBackend, new ArrayList<>(currApps.values()), returnButton);
                 filterDialog.addWindowListener(new WindowAdapter() {
                     @Override
                     public void windowClosed(WindowEvent e) {

@@ -15,7 +15,6 @@ class InterviewConfigDialog extends JDialog {
     HRBackend hrBackend;
     private BranchJobPosting branchJobPosting;
     private JFrame parent;
-    private HRMain hrMain;
 
     private JDialog container = this;
 
@@ -29,13 +28,12 @@ class InterviewConfigDialog extends JDialog {
 
     private JButton returnButton;
 
-    InterviewConfigDialog(JFrame parent, JPanel cardPanel, HRBackend hrBackend, BranchJobPosting branchJobPosting, JButton returnButton) {
+    InterviewConfigDialog(JFrame parent, HRBackend hrBackend, BranchJobPosting branchJobPosting, JButton returnButton) {
         super(parent, "Set interview formats");
         this.parent = parent;
         this.hrBackend = hrBackend;
         this.branchJobPosting = branchJobPosting;
         this.returnButton = returnButton;
-        this.hrMain = (HRMain) cardPanel.getParent();
 
         this.setLayout(new BorderLayout());
         this.formatPanel.setLayout(new BoxLayout(this.formatPanel, BoxLayout.Y_AXIS));
@@ -111,7 +109,6 @@ class InterviewConfigDialog extends JDialog {
                 JOptionPane.showMessageDialog(container, "The interview configurations have been set.");
                 returnButton.setVisible(true);
                 dispose();
-                hrMain.refresh();
             }
         });
         submitPanel.add(submitButton);
