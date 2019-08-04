@@ -30,7 +30,7 @@ class GroupInterviewDialog extends JDialog {
     HashMap<Interviewer, JCheckBox> interviewerToCheckBoxMap = new HashMap<>();
 
     GroupInterviewDialog(JFrame parent, HRBackend hrBackend, BranchJobPosting branchJobPosting, HRViewPosting postingPanel) {
-        super(parent, "Select interviewers for group interview");
+        super(parent, "Please select interviewers for group interview");
         this.parent = parent;
         this.hrBackend = hrBackend;
         this.branchJobPosting = branchJobPosting;
@@ -40,11 +40,19 @@ class GroupInterviewDialog extends JDialog {
 
         this.setLayout(new BorderLayout());
 
+        JPanel promptPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JLabel prompt = new JLabel("Please select interviewers for group interview");
+        JLabel daysLabel = new JLabel("Minimum days to notify interviewers: ");
         this.daysSpinner = new JSpinner(new SpinnerNumberModel(1, 1, MAX_DAYS, 1));
-        this.add(this.daysSpinner, BorderLayout.NORTH);
+        promptPanel.add(daysLabel);
+        promptPanel.add(this.daysSpinner);
+        this.add(promptPanel, BorderLayout.PAGE_START);
 
-        this.add(new JScrollPane(this.createInterviewers()), BorderLayout.EAST);
-        this.add(this.createCoordinator(), BorderLayout.WEST);
+        JSplitPane splitDisplay = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+        splitDisplay.setDividerLocation(100);
+        splitDisplay.setLeftComponent(this.createCoordinator());
+        splitDisplay.setRightComponent(new JScrollPane(this.createInterviewers()));
+        this.add(splitDisplay, BorderLayout.CENTER);
         this.setButtons();
 
         this.setSize(300, 200);
@@ -58,7 +66,6 @@ class GroupInterviewDialog extends JDialog {
         this.coordinatorSelection.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
-                //TODO: enable deselected, disable selection of coordinator
                 String name = (String) e.getItem();
                 Interviewer selectedInterviewer = nameToInterviewerMap.get(name);
                 JCheckBox interviewerCheckBox = interviewerToCheckBoxMap.get(selectedInterviewer);
@@ -74,7 +81,9 @@ class GroupInterviewDialog extends JDialog {
 
     private JPanel createInterviewers() {
         JPanel interviewerPanel = new JPanel(new GridBagLayout());
+        interviewerPanel.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED), "Select interviewer(s)"));
         GridBagConstraints c = new GridBagConstraints();
+        c.insets = new Insets(2, 4, 2, 4);
         c.gridx = -1;
         c.gridy = 0;
         for (String name: this.nameToInterviewerMap.keySet()) {
@@ -102,6 +111,14 @@ class GroupInterviewDialog extends JDialog {
     }
 
     private void setButtons() {
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        buttonPanel.add(createConfirmButton());
+        buttonPanel.add(createCancelButton());
+
+        this.add(buttonPanel, BorderLayout.PAGE_END);
+    }
+
+    private JButton createConfirmButton() {
         JButton confirmButton = new JButton("Confirm");
         confirmButton.addActionListener(new ActionListener() {
             @Override
@@ -110,20 +127,24 @@ class GroupInterviewDialog extends JDialog {
                         nameToInterviewerMap.get((String)coordinatorSelection.getSelectedItem()),
                         getSelectedInterviewers(), (int)daysSpinner.getValue());
                 parentPanel.removeFromJPLists(parentPanel.toJPTitle(branchJobPosting));
-                parentPanel.reload();
                 dispose();
             }
         });
+        return confirmButton;
+    }
+
+    private JButton createCancelButton() {
         JButton cancelButton = new JButton("Cancel");
         cancelButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 dispose();
-                parentPanel.reload();
             }
         });
-        this.add(confirmButton, BorderLayout.SOUTH);
+        return cancelButton;
     }
+
+
 
     private ArrayList<Interviewer> getSelectedInterviewers() {
         ArrayList<Interviewer> selectedInterviewer = new ArrayList<>();

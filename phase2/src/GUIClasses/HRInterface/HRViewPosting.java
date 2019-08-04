@@ -12,6 +12,8 @@ import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -123,7 +125,13 @@ class HRViewPosting extends HRPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JFrame frame = (JFrame) SwingUtilities.windowForComponent(containerPane);
-                new GroupInterviewDialog(frame, hrBackend, selectedJP, containerPane);
+                JDialog groupDialog = new GroupInterviewDialog(frame, hrBackend, selectedJP, containerPane);
+                groupDialog.addWindowListener(new WindowAdapter() {
+                    @Override
+                    public void windowClosed(WindowEvent e) {
+                        reload();
+                    }
+                });
             }
         });
 

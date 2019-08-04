@@ -73,10 +73,10 @@ class GradingFilterDialog extends JDialog {
         confirmButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                setVisible(false);
                 String textInput = ((JTextArea) keywordInput.getViewport().getView()).getText();
                 ArrayList<String> keywords = new ArrayList<>(Arrays.asList(textInput.split(";")));
                 ArrayList<JobApplication> sortedApplications = hrBackend.getJobApplicationInNonDecreasingOrder(applications.get(0).getJobPosting(), keywords);
-                setVisible(false);
                 JDialog reviewDialog = new InterviewSelectionDialog(parent, hrBackend, sortedApplications,
                         returnButton, ((SpinnerNumberModel)numberToSelect.getModel()).getNumber().intValue());
                 reviewDialog.addWindowListener(new WindowAdapter() {
