@@ -48,6 +48,12 @@ class InterviewerTest {
 
     Interview createInterview(Interviewer interviewer){
         JobApplication jobApplication = createJobApplication(interviewer);
+        ArrayList<JobApplication> list = new ArrayList<>();
+        list.add(jobApplication);
+        jobApplication.getJobPosting().setInterviewManager(new InterviewManager(jobApplication.getJobPosting(), list));
+        ArrayList<String[]> interviewConfigurationOneOnOne = new ArrayList<>();
+        interviewConfigurationOneOnOne.add(new String[]{Interview.ONE_ON_ONE, "In-person interview"});
+        jobApplication.getJobPosting().getInterviewManager().setInterviewConfiguration(interviewConfigurationOneOnOne);
         return new Interview(jobApplication, interviewer, jobApplication.getJobPosting().getInterviewManager());
     }
 
@@ -133,6 +139,7 @@ class InterviewerTest {
         interviewer.update(new Notification("TestN", "TestN text"));
         interviewer.update(new Notification("TestN2", "TestN text2"));
         assertTrue(interviewer.getAllNotifications().size() == 2);
+        assertEquals(interviewer.getAllNotifications().get(0).getTitle(), "TestN");
     }
 
     @Test
@@ -206,7 +213,7 @@ class InterviewerTest {
         ArrayList<Interview> lst = new ArrayList<>();
         lst.add(createInterview(interviewer));
         interviewer.setInterviews(lst);
-        assertTrue(interviewer.findJobAppById(interviewer.getInterviews().get(0).getId()) instanceof JobApplication);
+        assertTrue(interviewer.findJobAppById(interviewer.getInterviews().get(0).getJobApplications().get(0).getId()) instanceof JobApplication);
     }
 
     @Test
