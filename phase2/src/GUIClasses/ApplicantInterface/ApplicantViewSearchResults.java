@@ -1,5 +1,7 @@
 package GUIClasses.ApplicantInterface;
 
+import ApplicantStuff.Applicant;
+import ApplicantStuff.JobApplication;
 import CompanyStuff.JobPostings.BranchJobPosting;
 import CompanyStuff.JobPostings.CompanyJobPosting;
 
@@ -135,7 +137,9 @@ class ApplicantViewSearchResults extends JPanel {
             applyForJob.setBounds(45, 300, 100, 20);
             applyForJob.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    JPanel docPanel = new ApplicantTextDocSubmission();
+                    // TODO option of creating text doc submission or file submission
+                    JobApplication jobApp = backEnd.createJobApplication(j);
+                    JPanel docPanel = new ApplicantTextDocSubmission(jobApp);
                     add(docPanel, "FORMS");
                     ((CardLayout)getLayout()).show(getThis(), "FORMS");
                 }
