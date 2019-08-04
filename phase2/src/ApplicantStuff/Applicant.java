@@ -36,8 +36,7 @@ public class Applicant extends User {
 
     // === Public methods ===
     // === Constructor ===
-    public Applicant(String username, String password, String legalName, String email, LocalDate dateCreated,
-                     String cma) {
+    public Applicant(String username, String password, String legalName, String email, String cma, LocalDate dateCreated) {
         super(username, password, legalName, email, dateCreated);
         this.cma = cma;
         this.jobApplicationManager = new JobApplicationManager();

@@ -30,7 +30,7 @@ class ApplicantTest {
 
     Applicant createApplicant(String name) {
         return new Applicant(name, "password", "John Smith",
-                "john_smith@gmail.com", LocalDate.of(2019, 7, 20), "Toronto");
+                "john_smith@gmail.com", "Toronto", LocalDate.of(2019, 7, 20));
     }
 
     Applicant createApplicantWithOneApplicationAndOneReference() {

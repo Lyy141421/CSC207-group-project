@@ -86,7 +86,7 @@ class CompanyDocumentManagerTest {
     @Test
     void testCreateApplicationFolder() {
         Applicant applicant = new Applicant("ApplicantTest", "password", "John Smith",
-                "john_smith@gmail.com", LocalDate.of(2019, 7, 20), "Toronto");
+                "john_smith@gmail.com", "Toronto", LocalDate.of(2019, 7, 20));
         Company company = this.createCompany();
         Branch branch = company.createBranch("BranchTest", "L4B4P8");
         HRCoordinator hrc = new HRCoordinator("hr", "password", "name", "email", branch,
@@ -112,7 +112,7 @@ class CompanyDocumentManagerTest {
     @Test
     void testGetFolderForJobApplicationNoJobPostingForJobApp() {
         Applicant applicant = new Applicant("ApplicantTest", "password", "John Smith",
-                "john_smith@gmail.com", LocalDate.of(2019, 7, 20), "Toronto");
+                "john_smith@gmail.com", "Toronto", LocalDate.of(2019, 7, 20));
         Company company = this.createCompany();
         Branch branch = company.createBranch("BranchTest", "L4B4P8");
         HRCoordinator hrc = new HRCoordinator("hr", "password", "name", "email", branch,
@@ -134,7 +134,7 @@ class CompanyDocumentManagerTest {
     @Test
     void testGetFolderForJobApplicationHasJobPostingNotJobApp() {
         Applicant applicant = new Applicant("ApplicantTest", "password", "John Smith",
-                "john_smith@gmail.com", LocalDate.of(2019, 7, 20), "Toronto");
+                "john_smith@gmail.com", "Toronto", LocalDate.of(2019, 7, 20));
         Company company = this.createCompany();
         Branch branch = company.createBranch("BranchTest", "L4B4P8");
         HRCoordinator hrc = new HRCoordinator("hr", "password", "name", "email", branch,
@@ -156,7 +156,7 @@ class CompanyDocumentManagerTest {
     @Test
     void testGetFolderForJobApplicationHasApplicantDifferentJobPosting() {
         Applicant applicant = new Applicant("ApplicantTest", "password", "John Smith",
-                "john_smith@gmail.com", LocalDate.of(2019, 7, 20), "Toronto");
+                "john_smith@gmail.com", "Toronto", LocalDate.of(2019, 7, 20));
         Company company = this.createCompany();
         Branch branch = company.createBranch("BranchTest", "L4B4P8");
         HRCoordinator hrc = new HRCoordinator("hr", "password", "name", "email", branch,
@@ -186,7 +186,7 @@ class CompanyDocumentManagerTest {
     @Test
     void testGetFolderForJobApplicationHasJobApp() {
         Applicant applicant = new Applicant("ApplicantTest", "password", "John Smith",
-                "john_smith@gmail.com", LocalDate.of(2019, 7, 20), "Toronto");
+                "john_smith@gmail.com", "Toronto", LocalDate.of(2019, 7, 20));
         Company company = this.createCompany();
         Branch branch = company.createBranch("BranchTest", "L4B4P8");
         HRCoordinator hrc = new HRCoordinator("hr", "password", "name", "email", branch,
@@ -211,7 +211,7 @@ class CompanyDocumentManagerTest {
     @Test
     void testGetFilesForJobApplicationNoPostingForJobApp() {
         Applicant applicant = new Applicant("ApplicantTest", "password", "John Smith",
-                "john_smith@gmail.com", LocalDate.of(2019, 7, 20), "Toronto");
+                "john_smith@gmail.com", "Toronto", LocalDate.of(2019, 7, 20));
         Company company = this.createCompany();
         Branch branch = company.createBranch("BranchTest", "L4B4P8");
         HRCoordinator hrc = new HRCoordinator("hr", "password", "name", "email", branch,
@@ -233,7 +233,7 @@ class CompanyDocumentManagerTest {
     @Test
     void testGetFilesForJobApplicationHasJobPostingNotJobApp() {
         Applicant applicant = new Applicant("ApplicantTest", "password", "John Smith",
-                "john_smith@gmail.com", LocalDate.of(2019, 7, 20), "Toronto");
+                "john_smith@gmail.com", "Toronto", LocalDate.of(2019, 7, 20));
         Company company = this.createCompany();
         Branch branch = company.createBranch("BranchTest", "L4B4P8");
         HRCoordinator hrc = new HRCoordinator("hr", "password", "name", "email", branch,
@@ -255,7 +255,7 @@ class CompanyDocumentManagerTest {
     @Test
     void testGetFilesForJobApplicationHasApplicantDifferentJobPosting() {
         Applicant applicant = new Applicant("ApplicantTest", "password", "John Smith",
-                "john_smith@gmail.com", LocalDate.of(2019, 7, 20), "Toronto");
+                "john_smith@gmail.com", "Toronto", LocalDate.of(2019, 7, 20));
         Company company = this.createCompany();
         Branch branch = company.createBranch("BranchTest", "L4B4P8");
         HRCoordinator hrc = new HRCoordinator("hr", "password", "name", "email", branch,
@@ -285,7 +285,7 @@ class CompanyDocumentManagerTest {
     @Test
     void testGetFilesForJobApplicationHasJobAppEmptyFolder() {
         Applicant applicant = new Applicant("ApplicantTest", "password", "John Smith",
-                "john_smith@gmail.com", LocalDate.of(2019, 7, 20), "Toronto");
+                "john_smith@gmail.com", "Toronto", LocalDate.of(2019, 7, 20));
         Company company = this.createCompany();
         Branch branch = company.createBranch("BranchTest", "L4B4P8");
         HRCoordinator hrc = new HRCoordinator("hr", "password", "name", "email", branch,
@@ -310,7 +310,7 @@ class CompanyDocumentManagerTest {
     @Test
     void testGetFilesForJobApplicationHasJobAppNonEmptyFolder() {
         Applicant applicant = new Applicant("ApplicantTest", "password", "John Smith",
-                "john_smith@gmail.com", LocalDate.of(2019, 7, 20), "Toronto");
+                "john_smith@gmail.com", "Toronto", LocalDate.of(2019, 7, 20));
         Company company = this.createCompany();
         Branch branch = company.createBranch("BranchTest", "L4B4P8");
         HRCoordinator hrc = new HRCoordinator("hr", "password", "name", "email", branch,
@@ -351,7 +351,7 @@ class CompanyDocumentManagerTest {
                 LocalDate.of(2019, 8, 10));
         company.getDocumentManager().createBranchJobPostingFolder(jobPosting);
         Applicant applicant = new Applicant("ApplicantTest", "password", "John Smith",
-                "john_smith@gmail.com", LocalDate.of(2019, 7, 20), "Toronto");
+                "john_smith@gmail.com", "Toronto", LocalDate.of(2019, 7, 20));
         JobApplication jobApplication = new JobApplication(applicant, jobPosting, LocalDate.of(2019, 7, 29));
         File branchFolder = new File(company.getDocumentManager().getFolder().getPath() + "/" + branch.getName());
         File branchJobPostingFolder = new File(branchFolder.getPath() + "/" + jobPosting.getId() + "_" + jobPosting.getTitle());
@@ -377,7 +377,7 @@ class CompanyDocumentManagerTest {
     @Test
     void testAddFilesForJobApplicationHasJobAppFolder() {
         Applicant applicant = new Applicant("ApplicantTest", "password", "John Smith",
-                "john_smith@gmail.com", LocalDate.of(2019, 7, 20), "Toronto");
+                "john_smith@gmail.com", "Toronto", LocalDate.of(2019, 7, 20));
         Company company = this.createCompany();
         Branch branch = company.createBranch("BranchTest", "L4B4P8");
         HRCoordinator hrc = new HRCoordinator("hr", "password", "name", "email", branch,
@@ -488,9 +488,9 @@ class CompanyDocumentManagerTest {
         File branchFolder = new File(company.getDocumentManager().getFolder().getPath() + "/" + branch.getName());
         File branchJobPostingFolder = new File(branchFolder.getPath() + "/" + jobPosting.getId() + "_" + jobPosting.getTitle());
         Applicant applicant = new Applicant("ApplicantTest", "password", "John Smith",
-                "john_smith@gmail.com", LocalDate.of(2019, 7, 20), "Toronto");
-        Applicant applicant2 = new Applicant("ApplicantTest2", "password", "John Smith",
-                "john_smith@gmail.com", LocalDate.of(2019, 7, 20), "Toronto");
+                "john_smith@gmail.com", "Toronto", LocalDate.of(2019, 7, 20));
+        Applicant applicant2 = new Applicant("ApplicantTest", "password", "John Smith",
+                "john_smith@gmail.com", "Toronto", LocalDate.of(2019, 7, 20));
         JobApplication jobApplication = new JobApplication(applicant, jobPosting, LocalDate.of(2019, 7, 29));
         JobApplication jobApplication2 = new JobApplication(applicant2, jobPosting, LocalDate.of(2019, 7, 29));
 

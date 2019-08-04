@@ -16,7 +16,7 @@ class JobApplicationManagerTest {
 
     Applicant createApplicant() {
         return new Applicant("jsmith", "password", "John Smith",
-                "john_smith@gmail.com", LocalDate.of(2019, 7, 20), "Toronto");
+                "john_smith@gmail.com", "Toronto", LocalDate.of(2019, 7, 20));
     }
 
     JobApplication createJobApplication(Applicant applicant, BranchJobPosting jobPosting) {

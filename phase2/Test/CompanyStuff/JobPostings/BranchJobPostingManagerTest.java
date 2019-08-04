@@ -52,7 +52,7 @@ class BranchJobPostingManagerTest {
 
     Applicant createApplicant(String name) {
         return new Applicant(name, "ABC123", "Legal Name",
-                name + "@gmail.com", today, "Toronto");
+                name + "@gmail.com", "Toronto", today);
     }
 
     JobApplication createJobApplication(Applicant app, BranchJobPosting posting){

@@ -56,7 +56,7 @@ class CompanyTest {
                 new ArrayList<>(), new ArrayList<>(), 1, LocalDate.now(), LocalDate.now().plusDays(3),
                 LocalDate.now().plusDays(4));
         Applicant applicant = new Applicant("dudebro7", "ABC", "DudeBro Smith",
-                "dudebro@gmail.com", LocalDate.now(), "Toronto");
+                "dudebro@gmail.com", "Toronto", LocalDate.now());
         JobApplication application1 = new JobApplication(applicant, branchJobPosting1, LocalDate.now());
         Branch branch2 = company.createBranch("South Branch", "N9G0A3");
         HRCoordinator hrc2 = new HRCoordinator("boris", "ABC", "Boris Businessman",

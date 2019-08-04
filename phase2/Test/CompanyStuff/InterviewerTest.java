@@ -33,7 +33,7 @@ class InterviewerTest {
 
     Applicant createApplicant(String name) {
         return new Applicant(name, "ABC123", name + " Lastname",
-                name + "@gmail.com", today, "Toronto");
+                name + "@gmail.com", "Toronto", today);
     }
 
     BranchJobPosting createPosting(String name){

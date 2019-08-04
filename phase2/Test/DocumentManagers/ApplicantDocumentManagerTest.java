@@ -23,7 +23,7 @@ class ApplicantDocumentManagerTest {
 
     private ApplicantDocumentManager createApplicantDocumentManager() {
         Applicant applicant = new Applicant("ApplicantTest", "password", "John Smith",
-                "john_smith@gmail.com", LocalDate.of(2019, 7, 20), "Toronto");
+                "john_smith@gmail.com", "Toronto", LocalDate.of(2019, 7, 20));
         return applicant.getDocumentManager();
     }
 
@@ -147,7 +147,7 @@ class ApplicantDocumentManagerTest {
     @Test
     void testRemoveFilesFromAccountIfInactiveTwoFilesWithinApplicant30Days() {
         Applicant applicant = new Applicant("ApplicantTest", "password", "John Smith",
-                "john_smith@gmail.com", LocalDate.of(2019, 7, 20), "Toronto");
+                "john_smith@gmail.com", "Toronto", LocalDate.of(2019, 7, 20));
         ApplicantDocumentManager applicantDocumentManager = applicant.getDocumentManager();
         Branch branch = this.createCompanyBranchEmployeesAndJobPostings();
         BranchJobPosting jobPosting1 = branch.getJobPostingManager().getBranchJobPostings().get(0);
@@ -177,7 +177,7 @@ class ApplicantDocumentManagerTest {
     @Test
     void testRemoveFilesFromAccountIfInactiveTwoFilesOnExactlyApplicant30Days() {
         Applicant applicant = new Applicant("ApplicantTest", "password", "John Smith",
-                "john_smith@gmail.com", LocalDate.of(2019, 7, 20), "Toronto");
+                "john_smith@gmail.com", "Toronto", LocalDate.of(2019, 7, 20));
         ApplicantDocumentManager applicantDocumentManager = applicant.getDocumentManager();
         Branch branch = this.createCompanyBranchEmployeesAndJobPostings();
         BranchJobPosting jobPosting1 = branch.getJobPostingManager().getBranchJobPostings().get(0);
@@ -207,7 +207,7 @@ class ApplicantDocumentManagerTest {
     @Test
     void testRemoveFilesFromAccountIfInactiveOneFileWithinOneFileAfter() {
         Applicant applicant = new Applicant("ApplicantTest", "password", "John Smith",
-                "john_smith@gmail.com", LocalDate.of(2019, 7, 20), "Toronto");
+                "john_smith@gmail.com", "Toronto", LocalDate.of(2019, 7, 20));
         ApplicantDocumentManager applicantDocumentManager = applicant.getDocumentManager();
         Branch branch = this.createCompanyBranchEmployeesAndJobPostings();
         BranchJobPosting jobPosting1 = branch.getJobPostingManager().getBranchJobPostings().get(0);

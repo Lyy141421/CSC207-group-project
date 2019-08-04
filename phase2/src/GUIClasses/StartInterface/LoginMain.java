@@ -80,8 +80,15 @@ public class LoginMain extends JPanel {
         blankEntry.setBounds(337, 185, 180, 30);
         blankEntry.setVisible(false);
 
+        JLabel invalidUsername = new JLabel("Invalid username", SwingConstants.CENTER);
+        invalidUsername.setBounds(337, 185, 180, 30);
+        invalidUsername.setVisible(false);
+
         this.add(welcomeLabel); this.add(userNameText); this.add(passwordText);
-        this.add(createNewText); this.add(wrongPass); this.add(blankEntry);
+        this.add(createNewText);
+        this.add(wrongPass);
+        this.add(blankEntry);
+        this.add(invalidUsername);
     }
 
     /**
@@ -214,6 +221,36 @@ public class LoginMain extends JPanel {
     }
 
     /**
+     * Shows invalid username warning
+     */
+    private void showInvalidUsername() {
+        Component[] components = this.getComponents();
+        for (Component c : components) {
+            if (c instanceof JLabel) {
+                if (((JLabel) c).getText().equals("Invalid username")) {
+                    c.setVisible(true);
+                    break;
+                }
+            }
+        }
+    }
+
+    /**
+     * Hides blank field warning
+     */
+    private void hideInvalidUsername() {
+        Component[] components = this.getComponents();
+        for (Component c : components) {
+            if (c instanceof JLabel) {
+                if (((JLabel) c).getText().equals("Invalid username")) {
+                    c.setVisible(false);
+                    break;
+                }
+            }
+        }
+    }
+
+    /**
      *
      */
     private void getDate(JTextField userNameEntry, JPasswordField passwordEntry) {
@@ -257,29 +294,42 @@ public class LoginMain extends JPanel {
 
     /**
      * attempts login with the provided information
-     * Cases: 0 - blank field, 1 - no user exists, 2 - successful login, 3 - wrong pass
      */
     private void login(JTextField userNameEntry, JPasswordField passwordEntry) {
         int result = backend.login(userNameEntry.getText(), new String(passwordEntry.getPassword()));
         switch(result) {
-            case 1: this.showCreateNew();
+            case LoginBackend.USER_NONEXISTENT:
+                this.showCreateNew();
                     this.hidePassError();
                     this.hideBlankField();
+                this.hideInvalidUsername();
                     break;
-            case 0: this.showBlankField();
+            case LoginBackend.BLANK_ENTRY:
+                this.showBlankField();
                     this.hideCreateNew();
                     this.hidePassError();
+                this.hideInvalidUsername();
                     break;
-            case 2: this.hideCreateNew();
+            case LoginBackend.SUCCESS:
+                this.hideCreateNew();
                     this.hidePassError();
                     this.hideBlankField();
+                this.hideInvalidUsername();
                 this.GUILogin(userNameEntry.getText());
                     userNameEntry.setText("");
                     passwordEntry.setText("");
                     break;
-            case 3: this.showPassError();
+            case LoginBackend.WRONG_PASSWORD:
+                this.showPassError();
                     this.hideCreateNew();
                     this.hideBlankField();
+                this.hideInvalidUsername();
+                break;
+            case LoginBackend.INVALID_USERNAME:
+                this.showInvalidUsername();
+                this.hideCreateNew();
+                this.hideBlankField();
+                this.hidePassError();
                     break;
         }
     }
@@ -301,6 +351,7 @@ public class LoginMain extends JPanel {
     private void createUser(String username) {
         this.hideCreateNew();
         this.hidePassError();
+        this.hideInvalidUsername();
         this.newUserRef.setNewUsername(username);
         this.masterLayout.show(parent, MainFrame.NEW_USER);
     }

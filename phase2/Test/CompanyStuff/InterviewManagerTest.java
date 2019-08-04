@@ -43,16 +43,16 @@ public class InterviewManagerTest {
                 new ArrayList<>(), new ArrayList<>(), 1, LocalDate.now(), LocalDate.now().plusDays(3),
                 LocalDate.now().plusDays(4));
         this.applicant1 = new Applicant("steve", "ABC", "Steve Dude", "steve@gmail.com",
-                LocalDate.now(), "Toronto");
+                "Toronto", LocalDate.now());
         this.applicant2 = new Applicant("bob", "ABC", "Bob Dude", "bob@gmail.com",
-                LocalDate.now(), "London");
+                "London", LocalDate.now());
         this.application1 = new JobApplication(applicant1, branchJobPosting1, LocalDate.now());
         this.application2 = new JobApplication(applicant2, branchJobPosting1, LocalDate.now());
     }
 
     void createThirdApplication() {
         this.applicant3 = new Applicant("josie", "ABC", "Josie Dude", "josie@gmail.com",
-                LocalDate.now(), "Windsor");
+                "Windsor", LocalDate.now());
         this.application3 = new JobApplication(applicant3, branchJobPosting1, LocalDate.now());
     }
 

@@ -49,7 +49,7 @@ public class BranchTest {
                 branch, "HR", LocalDate.now());
 
         Applicant applicant = new Applicant("jsmith", "password", "John Smith",
-                "john_smith@gmail.com", LocalDate.of(2019, 7, 20), "L4B3Z9");
+                "john_smith@gmail.com", "Toronto", LocalDate.of(2019, 7, 20));
 
         BranchJobPosting jobPosting = new BranchJobPosting("Title", "field", "descriptionhujedk",
                 new ArrayList<>(Arrays.asList("CV", "Cover Letter", "Reference Letter")), new ArrayList<>(),

@@ -1,5 +1,6 @@
 package GUIClasses.StartInterface;
 
+import GUIClasses.MainFrame;
 import Main.JobApplicationSystem;
 
 import javax.swing.*;
@@ -84,25 +85,35 @@ public class NewUserPanel extends JPanel {
         backButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 clearEntries();
-                masterLayout.show(parent, "LOGIN");
+                masterLayout.show(parent, MainFrame.LOGIN);
             }
         });
         buttonPanel.add(backButton);
 
-        JLabel blankError = new JLabel("Error - Blank Entry");
+        JLabel blankError = new JLabel("Error - Blank entry");
         blankError.setBounds(522, 15, 200, 20);
         blankError.setVisible(false);
         buttonPanel.add(blankError);
 
-        JLabel emailError = new JLabel("Error - Invalid Email");
+        JLabel emailError = new JLabel("Error - Invalid email");
         emailError.setBounds(522, 15, 200, 20);
         emailError.setVisible(false);
         buttonPanel.add(emailError);
 
-        JLabel companyError = new JLabel("Error - Branch not Found");
+        JLabel companyError = new JLabel("Error - Branch not found");
         companyError.setBounds(522, 15, 200, 20);
         companyError.setVisible(false);
         buttonPanel.add(companyError);
+
+        JLabel legalNameError = new JLabel("Error - Invalid legal name");
+        legalNameError.setBounds(522, 15, 200, 20);
+        legalNameError.setVisible(false);
+        buttonPanel.add(legalNameError);
+
+        JLabel postalCodeError = new JLabel("Error - Invalid postal code");
+        postalCodeError.setBounds(522, 15, 200, 20);
+        postalCodeError.setVisible(false);
+        buttonPanel.add(postalCodeError);
 
         return buttonPanel;
     }
@@ -163,23 +174,29 @@ public class NewUserPanel extends JPanel {
     /**
      * Updates the GUI's visuals based on the result of an account creation
      *
-     * @param status 0 - blank entry, 1 - bad email, 2 - bad company, 3 - success
+     * @param status the status of the login
      */
     private void postCreation(int status, JDialog success) {
         switch (status) {
-            case 0:
-                this.postUpdater("Error - Blank Entry");
+            case LoginBackend.INVALID_LEGAL_NAME:
+                this.postUpdater("Error - Invalid legal name");
                 break;
-            case 1:
-                this.postUpdater("Error - Invalid Email");
+            case LoginBackend.BLANK_ENTRY:
+                this.postUpdater("Error - Blank entry");
                 break;
-            case 2:
-                this.postUpdater("Error - Branch not Found");
+            case LoginBackend.INVALID_EMAIL:
+                this.postUpdater("Error - Invalid email");
                 break;
-            case 3:
+            case LoginBackend.INVALID_POSTAL_CODE:
+                this.postUpdater("Error - Invalid postal code");
+                break;
+            case LoginBackend.INVALID_BRANCH:
+                this.postUpdater("Error - Branch not found");
+                break;
+            case LoginBackend.SUCCESS:
                 success.setVisible(true);
                 this.clearEntries();
-                this.masterLayout.show(this.parent, "LOGIN");
+                this.masterLayout.show(this.parent, MainFrame.LOGIN);
                 break;
         }
     }
@@ -201,7 +218,7 @@ public class NewUserPanel extends JPanel {
     }
 
     private void clearEntries() {
-        JPanel forms = this.getPanelByName(this, "formPanel");
+        JPanel forms = this.getPanelByName(this, FORM_PANEL_NAME);
         for (Component c : forms.getComponents()) {
             for (Component c2 : ((JPanel) c).getComponents()) {
                 if (c2 instanceof JTextField) {

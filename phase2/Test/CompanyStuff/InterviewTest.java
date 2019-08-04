@@ -37,7 +37,7 @@ class InterviewTest {
 
     Applicant createApplicant(String name) {
         return new Applicant(name, "ABC123", name + " Legal Name",
-                name + "@gmail.com", today.plusDays(-5), "Toronto");
+                name + "@gmail.com", "Toronto", today.plusDays(-5));
     }
 
     Interviewer createInterviewer (String username){
