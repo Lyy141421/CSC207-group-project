@@ -215,10 +215,10 @@ class LoginBackend {
 
     /**
      * Determine status of the login
-     * @return 0 - blank field, 1 - no user exists, 2 - successful login, 3 - wrong pass
+     * @return constants based on the status of the login.
      */
     int login(String username, String password) {
-        if (username.equals("") || password.equals("")) {
+        if (username.isEmpty() || password.isEmpty()) {
             return BLANK_ENTRY;
         } else if (!isValidUsername(username)) {
             return INVALID_USERNAME;

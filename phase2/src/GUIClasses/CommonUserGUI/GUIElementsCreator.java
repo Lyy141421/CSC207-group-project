@@ -31,7 +31,7 @@ public class GUIElementsCreator {
         }
         JPanel titlePanel = new JPanel(new BorderLayout());
         titlePanel.add(title, BorderLayout.PAGE_START);
-        title.setFont(new Font("Serif", Font.BOLD, fontSize));
+        title.setFont(new Font("Century Gothic", Font.BOLD, fontSize));
         title.setHorizontalAlignment(JLabel.CENTER);
         title.revalidate();
         return titlePanel;

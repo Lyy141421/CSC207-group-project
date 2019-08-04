@@ -33,7 +33,6 @@ public class NewUserPanel extends JPanel {
         selector.getSelector().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                clearEntries();
                 JComboBox actor = (JComboBox) e.getSource();
                 CardLayout cl = (CardLayout) forms.getLayout();
                 cl.show(forms, (String) (actor.getSelectedItem()));
