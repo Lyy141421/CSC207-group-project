@@ -19,50 +19,70 @@ class ApplicantHome extends JPanel {
         this.setLayout(null);
         this.applicant = applicant;
 
-        JLabel titleText = new JLabel("Welcome!", SwingConstants.CENTER);
-        titleText.setBounds(170, 35, 300, 40);
-        titleText.setFont(new Font("Serif", Font.PLAIN, 27));
-        this.add(titleText);
+        JPanel notifications = this.buildNotifications();
+        notifications.setBounds(420, 0, 250, 470);
+        this.add(notifications, 0);
 
-        this.buildNotifications();
+        this.addBasicComponents(notifications);
     }
 
     /**
      * Displays notifications, or proper message if none
      */
-    private void buildNotifications() {
+    private JPanel buildNotifications() {
+        JPanel ret = new JPanel(null);
+        ret.setBackground(Color.white);
+        ret.setVisible(false);
+
         ArrayList<Notification> notifications = this.applicant.getAllNotifications();
         if(notifications.size() == 0) {
-            this.noNotifications();
+            this.noNotifications(ret);
         }
         else {
-            int yPos = 100;
+            int yPos = 30;
             for(Notification n : notifications) {
-                addNotification(n, yPos);
-                yPos += 30;
+                addNotification(ret, n, yPos);
+                yPos += 35;
             }
         }
+
+        JButton closeNotifications = new JButton("Close");
+        closeNotifications.setBounds(130, 10, 100, 20);
+        closeNotifications.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ret.setVisible(false);
+                for(Component c: getComponents()) {
+                    if(c instanceof JButton) {
+                        c.setVisible(true);
+                    }
+                }
+            }
+        });
+        ret.add(closeNotifications);
+
+        return ret;
     }
 
     /**
      * Builds text shown if the applicant has no notifications
      */
-    private void noNotifications() {
-        JLabel noNotifications = new JLabel("You have no new notifications.", SwingConstants.CENTER);
-        noNotifications.setBounds(45, 100, 550, 20);
-        this.add(noNotifications);
+    private void noNotifications(JPanel ret) {
+        JLabel noNotifications = new JLabel("<html>You have no new notifications.</html>", SwingConstants.CENTER);
+        noNotifications.setBounds(0, 30, 200, 30);
+        ret.add(noNotifications);
     }
 
     /**
      * Builds the text and clear button for an individual notification
      */
-    private void addNotification(Notification n, int yPos) {
+    private void addNotification(JPanel ret, Notification n, int yPos) {
         JLabel notificationText = new JLabel(n.getMessage(), SwingConstants.LEFT);
-        notificationText.setBounds(140, yPos, 400, 20);
-        this.add(notificationText);
+        notificationText.setBounds(0, yPos, 200, 30);
+        ret.add(notificationText);
 
-        JButton notificationButton = new JButton("Clear");
-        notificationButton.setBounds(40, yPos, 80, 20);
+        JButton notificationButton = new JButton("✓");
+        notificationButton.setBounds(150, yPos + 2, 20, 25);
         notificationButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 applicant.getNotificationManager().remove(n);
@@ -70,6 +90,27 @@ class ApplicantHome extends JPanel {
                 notificationText.setVisible(false);
             }
         } );
-        this.add(notificationButton);
+        ret.add(notificationButton);
+    }
+
+    /**
+     * Adds basic text and buttons
+     */
+    private void addBasicComponents(JPanel notifications) {
+        JLabel titleText = new JLabel("Welcome, " + applicant.getLegalName(), SwingConstants.CENTER);
+        titleText.setBounds(170, 35, 300, 40);
+        titleText.setFont(new Font("Serif", Font.PLAIN, 27));
+        this.add(titleText);
+
+        JButton viewNotifications = new JButton("Alerts: " + applicant.getAllNotifications().size());
+        viewNotifications.setBounds(550, 10, 100, 20);
+        viewNotifications.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                notifications.setVisible(true);
+                viewNotifications.setVisible(false);
+            }
+        });
+        this.add(viewNotifications);
     }
 }

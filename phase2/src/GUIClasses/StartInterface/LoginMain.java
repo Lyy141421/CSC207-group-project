@@ -261,7 +261,7 @@ public class LoginMain extends JPanel {
         JDialog popup = new JDialog();
         popup.setLayout(new BorderLayout());
 
-        JPanel instructions = new GUIElementsCreator().createLabelPanel("Please enter today's date", 15, true);
+        JPanel instructions = new GUIElementsCreator().createLabelPanel("FOR TESTING: Please enter today's date", 15, true);
         instructions.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         popup.add(instructions, BorderLayout.NORTH);
 

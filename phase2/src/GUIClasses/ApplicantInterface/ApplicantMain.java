@@ -1,14 +1,12 @@
 package GUIClasses.ApplicantInterface;
 
 import ApplicantStuff.Applicant;
-import ApplicantStuff.JobApplication;
 import CompanyStuff.Branch;
 import CompanyStuff.Company;
 import CompanyStuff.HRCoordinator;
-import CompanyStuff.JobPostings.BranchJobPosting;
 import FileLoadingAndStoring.DataLoaderAndStorer;
 import GUIClasses.ActionListeners.LogoutActionListener;
-import GUIClasses.CommonUserGUI.DocumentSelector;
+import GUIClasses.CommonUserGUI.DocumentViewer;
 import GUIClasses.CommonUserGUI.UserProfilePanel;
 import Main.JobApplicationSystem;
 
@@ -61,7 +59,7 @@ class ApplicantMain extends JPanel {
         ret.add(new ApplicantHome(applicant), "HOME");
         ret.add(new ApplicantBrowsePostings(applicant, masterPanel, jobAppSystem), "POSTINGS");
         ret.add(new UserProfilePanel(applicant), "PROFILE");
-//        ret.add(new DocumentSelector(), "DOCUMENTS"); //How does this work
+        ret.add(new DocumentViewer(applicant.getDocumentManager().getFolder()), "DOCUMENTS");
         ret.add(new ApplicantSchedule(), "SCHEDULE");
         ret.add(new ApplicantViewApps(applicant), "MANAGE");
         return ret;

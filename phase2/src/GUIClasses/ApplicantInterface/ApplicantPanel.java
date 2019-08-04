@@ -5,6 +5,7 @@ import GUIClasses.ActionListeners.LogoutActionListener;
 import GUIClasses.CommonUserGUI.UserMain;
 import Main.JobApplicationSystem;
 
+import javax.swing.*;
 import java.awt.*;
 
 /**
@@ -27,7 +28,7 @@ public class ApplicantPanel extends UserMain {
     public void setCards() {
         this.add(new ApplicantMain(this.applicant, this, this.jobAppSystem, this.logout), "Main");
         this.add(new ApplicantTextDocSubmission(), "TextApplication");
-        this.add(new ApplicantViewApps(), "SearchResults");
+        this.add(new JPanel(), "SearchResults");
     }
 
     // Abstract method in UserMain
