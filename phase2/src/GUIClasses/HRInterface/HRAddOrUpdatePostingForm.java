@@ -25,24 +25,6 @@ class HRAddOrUpdatePostingForm extends HRPanel {
 
     private static final int MAX_NUM_POSITIONS = 1000;
 
-    // === Bound positions ===
-    private static final int X_COLUMN_1 = 20;
-    private static final int X_COLUMN_2 = 170;
-    private static final int X_COLUMN_3 = 330;
-    private static final int X_COLUMN_3_HALF = 430;
-    private static final int X_COLUMN_4 = 500;
-    private static final int X_CENTER = 270;
-    private static final int STANDARD_WIDTH = 150;
-    private static final int MEDIUM_WIDTH = 225;
-    private static final int LARGER_WIDTH = 300;
-    private static final int Y_START = 10;
-    private static final int STANDARD_Y_INCREMENT = 40;
-    private static final int MEDIUM_Y_INCREMENT = 80;
-    private static final int LARGER_Y_INCREMENT = 110;
-    private static final int STANDARD_HEIGHT = 30;
-    private static final int MEDIUM_HEIGHT = 70;
-    private static final int LARGER_HEIGHT = 100;
-
     // === Labels ===
     private static final String TITLE_LABEL = "Title: ";
     private static final String FIELD_LABEL = "Field: ";
@@ -86,26 +68,26 @@ class HRAddOrUpdatePostingForm extends HRPanel {
     }
 
     private void addText() {
-        Rectangle rect = new Rectangle(X_COLUMN_1, Y_START, STANDARD_WIDTH, STANDARD_HEIGHT);
+        Rectangle rect = new Rectangle(20, 10, 150, 30);
         ArrayList<String> labels = this.getArrayListOfLabels();
 
         for (String text : labels) {
             JLabel label = new JLabel(text, SwingConstants.LEFT);
             if (text.equals(FIELD_LABEL) || text.equals(REFERENCE_CLOSE_DATE_LABEL)) {
                 label = new JLabel(text, SwingConstants.RIGHT);
-                rect.x = X_COLUMN_3;
+                rect.x = 330;
                 label.setBounds(rect);
-                rect.x = X_COLUMN_1;
+                rect.x = 20;
             } else {
                 label.setBounds(rect);
             }
             this.add(label);
             if (text.equals(DESCRIPTION_LABEL)) {
-                rect.y += LARGER_Y_INCREMENT;
+                rect.y += 110;
             } else if (text.equals(DOCUMENTS_LABEL) || text.equals(TAGS_LABEL)) {
-                rect.y += MEDIUM_Y_INCREMENT;
+                rect.y += 80;
             } else if (!(text.equals(TITLE_LABEL) || text.equals(APPLICANT_CLOSE_DATE_LABEL))) {
-                rect.y += STANDARD_Y_INCREMENT;
+                rect.y += 40;
             }
         }
     }
@@ -116,8 +98,8 @@ class HRAddOrUpdatePostingForm extends HRPanel {
     }
 
     private void addFieldsAndSubmitButton() {
-        Rectangle rect = new Rectangle(X_COLUMN_2, Y_START, STANDARD_WIDTH,
-                STANDARD_HEIGHT);
+        Rectangle rect = new Rectangle(170, 10, 150,
+                30);
         this.addJobTitleEntry(rect);
         this.addFieldEntry(rect);
         this.addJobDescriptionEntry(rect);
@@ -137,7 +119,7 @@ class HRAddOrUpdatePostingForm extends HRPanel {
 
     private void addFieldEntry(Rectangle rect) {
         JTextField jobFieldEntry = new JTextField();
-        rect.x = X_COLUMN_4;
+        rect.x = 500;
         jobFieldEntry.setBounds(rect);
         this.add(jobFieldEntry);
         this.entryBoxes.add(jobFieldEntry);
@@ -145,10 +127,10 @@ class HRAddOrUpdatePostingForm extends HRPanel {
 
     private void addJobDescriptionEntry(Rectangle rect) {
         JScrollPane jobDescriptionEntry = new GUIElementsCreator().createTextAreaWithScrollBar("", true);
-        rect.x = X_COLUMN_2;
-        rect.y += STANDARD_Y_INCREMENT;
-        rect.height = LARGER_HEIGHT;
-        rect.width = LARGER_WIDTH;
+        rect.x = 170;
+        rect.y += 40;
+        rect.height = 100;
+        rect.width = 300;
         jobDescriptionEntry.setBounds(rect);
         this.add(jobDescriptionEntry);
         this.entryBoxes.add((JTextArea) jobDescriptionEntry.getViewport().getView());
@@ -156,13 +138,13 @@ class HRAddOrUpdatePostingForm extends HRPanel {
 
     private void addRequiredDocumentsEntry(Rectangle rect) {
         requiredDocumentsEntry = this.createSelectionBox(CompanyJobPosting.RECOMMENDED_DOCUMENTS);
-        rect.height = MEDIUM_HEIGHT;
-        rect.width = MEDIUM_WIDTH;
-        rect.y += LARGER_Y_INCREMENT;
+        rect.height = 70;
+        rect.width = 225;
+        rect.y += 110;
         requiredDocumentsEntry.setBounds(rect);
         this.add(requiredDocumentsEntry);
 
-        rect.x = X_COLUMN_3_HALF;
+        rect.x = 430;
         documentInputInstructions = "Enter the other documents in a semi-colon separated list with no spaces. (e.g: 3 reference letters;Transcript)";
         JScrollPane extraDocumentsEntryScrollPane = new GUIElementsCreator().createTextAreaWithScrollBar(documentInputInstructions, true);
         extraDocumentsEntryScrollPane.setBounds(rect);
@@ -173,12 +155,12 @@ class HRAddOrUpdatePostingForm extends HRPanel {
 
     private void addTagsEntry(Rectangle rect) {
         tagsEntry = this.createSelectionBox(CompanyJobPosting.RECOMMENDED_TAGS);
-        rect.x = X_COLUMN_2;
-        rect.y += MEDIUM_Y_INCREMENT;
+        rect.x = 170;
+        rect.y += 80;
         tagsEntry.setBounds(rect);
         this.add(tagsEntry);
 
-        rect.x = X_COLUMN_3_HALF;
+        rect.x = 430;
         tagsInputInstructions = "Enter the other tags in a semi-colon separated list with no spaces. (e.g: University of Toronto;Java)";
         JScrollPane extraTagsEntryScrollPane = new GUIElementsCreator().createTextAreaWithScrollBar(tagsInputInstructions, true);
         extraTagsEntryScrollPane.setBounds(rect);
@@ -189,10 +171,10 @@ class HRAddOrUpdatePostingForm extends HRPanel {
 
     private void addNumberOfPositionsEntry(Rectangle rect) {
         JSpinner numPositionsEntry = this.createNumField();
-        rect.x = X_COLUMN_2;
-        rect.height = STANDARD_HEIGHT;
-        rect.width = STANDARD_WIDTH;
-        rect.y += MEDIUM_Y_INCREMENT;
+        rect.x = 170;
+        rect.height = 30;
+        rect.width = 150;
+        rect.y += 80;
         numPositionsEntry.setBounds(rect);
         this.add(numPositionsEntry);
         this.entryBoxes.add(numPositionsEntry);
@@ -200,13 +182,13 @@ class HRAddOrUpdatePostingForm extends HRPanel {
 
     private void addCloseDateEntries(Rectangle rect) {
         JDatePickerImpl applicantCloseDateEntry = this.createDatePicker();
-        rect.y += STANDARD_Y_INCREMENT;
+        rect.y += 40;
         applicantCloseDateEntry.setBounds(rect);
         this.add(applicantCloseDateEntry);
         this.entryBoxes.add(applicantCloseDateEntry);
 
         JDatePickerImpl referenceCloseDateEntry = this.createDatePicker();
-        rect.x = X_COLUMN_4;
+        rect.x = 500;
         referenceCloseDateEntry.setBounds(rect);
         this.add(referenceCloseDateEntry);
         this.entryBoxes.add(referenceCloseDateEntry);
@@ -420,8 +402,8 @@ class HRAddOrUpdatePostingForm extends HRPanel {
 
     private void addSubmitButton(Rectangle rect) {
         JButton submitButton = this.createSubmitButton();
-        rect.x = X_CENTER;
-        rect.y += STANDARD_Y_INCREMENT;
+        rect.x = 270;
+        rect.y += 40;
         submitButton.setBounds(rect);
         this.add(submitButton);
     }

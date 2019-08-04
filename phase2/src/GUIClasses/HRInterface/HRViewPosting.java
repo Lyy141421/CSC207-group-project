@@ -139,8 +139,8 @@ class HRViewPosting extends HRPanel {
                 String selectedTitle = jobPostingList.getSelectedValue();
                 BranchJobPosting selectedJP = updatableJPs.get(selectedTitle);
                 HRAddOrUpdatePostingForm updateForm = new HRAddOrUpdatePostingForm(hrBackend, false, selectedJP);
-                if (parent.getComponents().length > 7) {
-                    parent.remove(7);
+                if (parent.getComponents().length > HRMain.NUM_CARDS) {
+                    parent.remove(HRMain.NUM_CARDS);
                 }
                 parent.add(updateForm, HRPanel.UPDATE_POSTING_FORM, 7);
                 ((CardLayout) parent.getLayout()).show(parent, HRPanel.UPDATE_POSTING_FORM);
