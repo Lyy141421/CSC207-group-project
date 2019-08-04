@@ -60,7 +60,7 @@ class ApplicantMain extends JPanel {
         ret.add(new ApplicantBrowsePostings(applicant, masterPanel, jobAppSystem), "POSTINGS");
         ret.add(new UserProfilePanel(applicant), "PROFILE");
         ret.add(new DocumentViewer(applicant.getDocumentManager().getFolder()), "DOCUMENTS");
-        ret.add(new ApplicantSchedule(), "SCHEDULE");
+        ret.add(new ApplicantSchedule(applicant, jobAppSystem), "SCHEDULE");
         ret.add(new ApplicantViewApps(applicant), "MANAGE");
         return ret;
     }

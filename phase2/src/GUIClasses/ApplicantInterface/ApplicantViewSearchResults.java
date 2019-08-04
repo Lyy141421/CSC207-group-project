@@ -1,5 +1,6 @@
 package GUIClasses.ApplicantInterface;
 
+import ApplicantStuff.Applicant;
 import CompanyStuff.JobPostings.BranchJobPosting;
 import CompanyStuff.JobPostings.CompanyJobPosting;
 
@@ -13,9 +14,10 @@ import java.util.ArrayList;
 
 class ApplicantViewSearchResults extends JPanel {
     private ApplicantBackend backEnd;
+    private Applicant applicant;
 
-    ApplicantViewSearchResults(ArrayList<CompanyJobPosting> jobPostings, ApplicantBackend backEnd) {
-        this.backEnd = backEnd;
+    ApplicantViewSearchResults(ArrayList<CompanyJobPosting> jobPostings, ApplicantBackend backEnd, Applicant applicant) {
+        this.backEnd = backEnd; this.applicant = applicant;
         JPanel viewJobs = new JPanel(new GridLayout(1, 3));
 
         JPanel viewJobs0 = this.buildViewJobs0(jobPostings); viewJobs.add(viewJobs0);
@@ -135,9 +137,9 @@ class ApplicantViewSearchResults extends JPanel {
             applyForJob.setBounds(45, 300, 100, 20);
             applyForJob.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    JPanel docPanel = new ApplicantTextDocSubmission();
-                    add(docPanel, "FORMS");
-                    ((CardLayout)getLayout()).show(getThis(), "FORMS");
+//                    JPanel docPanel = new ApplicantTextDocSubmission(applicant); //TODO figure out
+//                    add(docPanel, "FORMS");
+//                    ((CardLayout)getLayout()).show(getThis(), "FORMS");
                 }
             } );
             viewJobsAdded2.add(applyForJob);
