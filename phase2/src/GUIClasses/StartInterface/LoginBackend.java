@@ -16,17 +16,7 @@ class LoginBackend {
      * The general user interface
      */
 
-    static final int INVALID_USERNAME = 0;
-    static final int BLANK_ENTRY = 1;
-    static final int INVALID_LEGAL_NAME = 2;
-    static final int INVALID_EMAIL = 3;
-    static final int INVALID_POSTAL_CODE = 4;
-    static final int INVALID_COMPANY = 5;
-    static final int INVALID_BRANCH = 6;
-    static final int VALID_BASIC = 7;
-    static final int USER_NONEXISTENT = 8;
-    static final int WRONG_PASSWORD = 9;
-    static final int SUCCESS = 10;
+    private static final String VALID_BASIC = "Ok";
 
     private JobApplicationSystem jobAppSystem;
 
@@ -84,16 +74,16 @@ class LoginBackend {
      * @param inputs The input fields
      * @return a constant representing the status of the login
      */
-    int createNewUser(HashMap<String, String> inputs) {
+    private String createNewUser(HashMap<String, String> inputs) {
         String password = inputs.get("password");
         String name = inputs.get("name");
         String email = inputs.get("email");
         if (name.equals("") || password.equals("")) {
-            return BLANK_ENTRY;
+            return NewUserPanel.BLANK_ENTRY;
         } else if (!isValidLegalName(name)) {
-            return INVALID_LEGAL_NAME;
+            return NewUserPanel.INVALID_LEGAL_NAME;
         } else if (!isValidEmail(email)) {
-            return INVALID_EMAIL;
+            return NewUserPanel.INVALID_EMAIL;
         } else {
             return VALID_BASIC;
         }
@@ -103,14 +93,14 @@ class LoginBackend {
      * Create a new Applicant.
      * @return integer constants depending on the validity of the user input.
      */
-    int createNewApplicant(HashMap<String, String> inputs) {
-        int prelimStatus = this.createNewUser(inputs);
-        if (prelimStatus != VALID_BASIC) {
+    String createNewApplicant(HashMap<String, String> inputs) {
+        String prelimStatus = this.createNewUser(inputs);
+        if (prelimStatus.equals(VALID_BASIC)) {
             return prelimStatus;
         }
         String postalCode = inputs.get("postalCode");
         if (!isValidPostalCode(postalCode)) {
-            return INVALID_POSTAL_CODE;
+            return NewUserPanel.INVALID_POSTAL_CODE;
         } else {
             String username = inputs.get("username");
             String password = inputs.get("password");
@@ -118,7 +108,7 @@ class LoginBackend {
             String email = inputs.get("email");
             jobAppSystem.getUserManager().createApplicant(
                     username, password, name, email, postalCode, jobAppSystem.getToday());
-            return SUCCESS;
+            return NewUserPanel.SUCCESS;
         }
     }
 
@@ -126,9 +116,9 @@ class LoginBackend {
      * Create a new HR Coordinator.
      * @return 0 - blank entry, 1 - bad email, 2 - bad company, 3 - success
      */
-    int createNewHRC(HashMap<String, String> inputs) {
-        int prelimStatus = this.createNewUser(inputs);
-        if (prelimStatus != VALID_BASIC) {
+    String createNewHRC(HashMap<String, String> inputs) {
+        String prelimStatus = this.createNewUser(inputs);
+        if (prelimStatus.equals(VALID_BASIC)) {
             return prelimStatus;
         }
         Company company = jobAppSystem.getCompany(inputs.get("company"));
@@ -136,7 +126,7 @@ class LoginBackend {
             company = jobAppSystem.createCompany(inputs.get("company"));
         }
         if (!isValidPostalCode(inputs.get("postalCode"))) {
-            return INVALID_POSTAL_CODE;
+            return NewUserPanel.INVALID_POSTAL_CODE;
         }
         Branch branch = company.getBranch(inputs.get("branch"));
         if (branch == null) {
@@ -148,26 +138,26 @@ class LoginBackend {
         String email = inputs.get("email");
         jobAppSystem.getUserManager().createHRCoordinator(
                 username, password, name, email, branch, jobAppSystem.getToday());
-        return SUCCESS;
+        return NewUserPanel.SUCCESS;
     }
 
     /**
      * Create a new interviewer.
      * @return 0 - blank entry, 1 - bad email, 2 - bad company, 3 - success
      */
-    int createNewInterviewer(HashMap<String, String> inputs) {
-        int prelimStatus = this.createNewUser(inputs);
-        if (prelimStatus != VALID_BASIC) {
+    String createNewInterviewer(HashMap<String, String> inputs) {
+        String prelimStatus = this.createNewUser(inputs);
+        if (prelimStatus.equals(VALID_BASIC)) {
             return prelimStatus;
         }
         Company company = jobAppSystem.getCompany(inputs.get("company"));
         String field = inputs.get("field");
         if (company == null) {
-            return INVALID_COMPANY;
+            return NewUserPanel.INVALID_COMPANY;
         } else {
             Branch branch = company.getBranch(inputs.get("branch"));
             if (branch == null) {
-                return INVALID_BRANCH;
+                return NewUserPanel.INVALID_BRANCH;
             } else {
                 String username = inputs.get("username");
                 String password = inputs.get("password");
@@ -175,7 +165,7 @@ class LoginBackend {
                 String email = inputs.get("email");
                 jobAppSystem.getUserManager().createInterviewer(
                         username, password, name, email, branch, field, jobAppSystem.getToday());
-                return SUCCESS;
+                return NewUserPanel.SUCCESS;
             }
         }
     }
@@ -220,18 +210,18 @@ class LoginBackend {
      * Determine status of the login
      * @return constants based on the status of the login.
      */
-    int login(String username, String password) {
+    String login(String username, String password) {
         if (username.isEmpty() || password.isEmpty()) {
-            return BLANK_ENTRY;
+            return NewUserPanel.BLANK_ENTRY;
         } else if (!isValidUsername(username)) {
-            return INVALID_USERNAME;
+            return LoginMain.INVALID_USERNAME;
         } else if (jobAppSystem.getUserManager().findUserByUsername(username) == null) {
-            return USER_NONEXISTENT;
+            return LoginMain.USER_NOT_FOUND;
         } else {
             if (jobAppSystem.getUserManager().passwordCorrect(username, password)) {
-                return SUCCESS;
+                return NewUserPanel.SUCCESS;
             } else {
-                return WRONG_PASSWORD;
+                return LoginMain.WRONG_PASSWORD;
             }
         }
     }
