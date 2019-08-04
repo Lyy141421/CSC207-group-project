@@ -38,7 +38,7 @@ class LoginBackend {
      * @return true iff the email address is valid.
      */
     private boolean isValidEmail(String email) {
-        String regex = "^([A-Za-z0-9]+(?:([._\\-])[A-Za-z0-9]+|[A-Za-z0-9]*))+@([A-Za-z0-9]+\\.)+[a-z]+$$";
+        String regex = "^([A-Za-z0-9]+(?:([._\\-])[A-Za-z0-9]+|[A-Za-z0-9]*))+@([A-Za-z0-9]+\\.)+[A-Za-z]+$$";
         return Pattern.matches(regex, email);
     }
 

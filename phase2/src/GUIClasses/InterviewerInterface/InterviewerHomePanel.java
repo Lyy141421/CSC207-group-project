@@ -18,29 +18,22 @@ class InterviewerHomePanel extends JLayeredPane {
     // === Constructor ===
     InterviewerHomePanel(InterviewerBackEnd interviewerBackEnd) {
         this.interviewerBackEnd = interviewerBackEnd;
+        this.setLayout(null);
+        JPanel welcomePanel = this.createWelcomePanel();
+        welcomePanel.setBounds(170, 10, 300, 30);
+        this.add(welcomePanel, new Integer(0));
 
-        this.setLayout(new GridBagLayout());
-        GridBagConstraints c = new GridBagConstraints();
-        c.weightx = 0.5;
-        c.gridx = 0;
-        c.gridy = 0;
-        this.add(this.createWelcomePanel(), c);
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.insets = new Insets(10, 10, 0, 10);
-        c.gridy++;
-        c.gridheight = 100;
-        this.add(this.createInterviewsToSchedulePanel(), c);
-        c.gridy = 101;
-        c.gridheight = 100;
-        this.add(this.createUpcomingInterviewsPanel(), c);
-        c.gridy = 201;
-        c.gridheight = 100;
-        c.insets = new Insets(10, 10, 10, 10);
-        this.add(this.createIncompleteInterviewsPanel(), c);
+        int y = 40;
+        for (Object[] titleAndArray : this.createTitleToInterviewsArray()) {
+            JPanel tablePanel = this.createInterviewsTablePanel((String) titleAndArray[0], (ArrayList<Interview>) titleAndArray[1], (Boolean) titleAndArray[2]);
+            tablePanel.setBounds(30, y, 610, 125);
+            this.add(tablePanel, new Integer(0));
+            y += 135;
+        }
 
         NotificationsGUI notifications = new NotificationsGUI(interviewerBackEnd.getInterviewer());
-        this.add(notifications.getNotificationsButton());
-        this.add(notifications.getNotificationsPanel(), new Integer(0));
+        this.add(notifications.getNotificationsButton(), new Integer(1));
+        this.add(notifications.getNotificationsPanel(), new Integer(1));
     }
 
     /**
@@ -53,88 +46,40 @@ class InterviewerHomePanel extends JLayeredPane {
                 this.interviewerBackEnd.getInterviewer().getLegalName(), 20, true);
     }
 
-    /**
-     * Create the full panel that contains information for interviews to schedule.
-     * @return the panel created.
-     */
-    private JPanel createInterviewsToSchedulePanel() {
-        JPanel schedulePanel = new JPanel();
-        schedulePanel.setLayout(new BorderLayout());
-        schedulePanel.add(new GUIElementsCreator().createLabelPanel(
-                "One-on-One interviews to schedule", 17, true), BorderLayout.BEFORE_FIRST_LINE);
-        schedulePanel.add(this.createInterviewsToScheduleTablePanel(), BorderLayout.CENTER);
-        return schedulePanel;
+    private ArrayList<Object[]> createTitleToInterviewsArray() {
+        ArrayList<Object[]> titleToJobPostings = new ArrayList<>();
+        titleToJobPostings.add(new Object[]{"One-on-One Interviews to Schedule", this.interviewerBackEnd.getInterviewsThatNeedScheduling(), false});
+        titleToJobPostings.add(new Object[]{"Upcoming Interviews", this.interviewerBackEnd.getScheduledUpcomingInterviews(), true});
+        titleToJobPostings.add(new Object[]{"Incomplete Interviews", this.interviewerBackEnd.getIncompleteInterviewsAlreadyOccurred(), false});
+        return titleToJobPostings;
     }
 
     /**
-     * Create a panel with a table that contains information for interviews to schedule.
+     * Create the full panel that contains information for jobPostings to schedule.
+     *
      * @return the panel created.
      */
-    private JPanel createInterviewsToScheduleTablePanel() {
-        ArrayList<Interview> unscheduledInterviews = this.interviewerBackEnd.getInterviewsThatNeedScheduling();
-        Object[][] data = new Object[unscheduledInterviews.size()][];
+    private JPanel createInterviewsTablePanel(String tableTitle, ArrayList<Interview> interviews, boolean upcoming) {
+        JPanel applicantSelection = new JPanel();
+        applicantSelection.setLayout(new BorderLayout());
+        applicantSelection.add(new GUIElementsCreator().createLabelPanel(
+                tableTitle, 15, true), BorderLayout.BEFORE_FIRST_LINE);
+        applicantSelection.add(this.createJobPostingsTable(interviews, upcoming), BorderLayout.CENTER);
+        return applicantSelection;
+    }
 
-        for (int i = 0; i < unscheduledInterviews.size(); i++) {
-            data[i] = unscheduledInterviews.get(i).getCategoryValuesForInterviewerUnscheduledOrIncomplete();
+    private JPanel createJobPostingsTable(ArrayList<Interview> interviews, boolean upcoming) {
+        Object[][] data = new Object[interviews.size()][];
+        if (upcoming) {
+            for (int i = 0; i < interviews.size(); i++) {
+                data[i] = interviews.get(i).getCategoryValuesForInterviewerScheduled();
+            }
+            return new GUIElementsCreator().createTablePanel(Interview.CATEGORY_NAMES_FOR_INTERVIEWER_SCHEDULED, data);
+        } else {
+            for (int i = 0; i < interviews.size(); i++) {
+                data[i] = interviews.get(i).getCategoryValuesForInterviewerUnscheduledOrIncomplete();
+            }
+            return new GUIElementsCreator().createTablePanel(Interview.CATEGORY_NAMES_FOR_INTERVIEWER_UNSCHEDULED_OR_INCOMPLETE, data);
         }
-
-        return new GUIElementsCreator().createTablePanel(Interview.CATEGORY_NAMES_FOR_INTERVIEWER_UNSCHEDULED_OR_INCOMPLETE
-                , data);
-    }
-
-    /**
-     * Create the full panel that contains information for upcoming interviews.
-     * @return the panel created.
-     */
-    private JPanel createUpcomingInterviewsPanel() {
-        JPanel schedulePanel = new JPanel();
-        schedulePanel.setLayout(new BorderLayout());
-        schedulePanel.add(new GUIElementsCreator().createLabelPanel(
-                "Upcoming interviews:", 17, true), BorderLayout.BEFORE_FIRST_LINE);
-        schedulePanel.add(this.createUpcomingInterviewsTablePanel(), BorderLayout.CENTER);
-        return schedulePanel;
-    }
-
-    /**
-     * Create a panel with a table that contains information for upcoming interviews.
-     * @return the panel created.
-     */
-    private JPanel createUpcomingInterviewsTablePanel() {
-        ArrayList<Interview> scheduledInterviews = this.interviewerBackEnd.getScheduledUpcomingInterviews();
-        Object[][] data = new Object[scheduledInterviews.size()][];
-
-        for (int i = 0; i < scheduledInterviews.size(); i++) {
-            data[i] = scheduledInterviews.get(i).getCategoryValuesForInterviewerScheduled();
-        }
-
-        return new GUIElementsCreator().createTablePanel(Interview.CATEGORY_NAMES_FOR_INTERVIEWER_SCHEDULED, data);
-    }
-
-    /**
-     * Create the full panel that contains information for incomplete interviews.
-     * @return the panel created.
-     */
-    private JPanel createIncompleteInterviewsPanel() {
-        JPanel schedulePanel = new JPanel();
-        schedulePanel.setLayout(new BorderLayout());
-        schedulePanel.add(new GUIElementsCreator().createLabelPanel(
-                "Incomplete Interviews:", 17, true), BorderLayout.BEFORE_FIRST_LINE);
-        schedulePanel.add(this.createIncompleteInterviewsTablePanel(), BorderLayout.CENTER);
-        return schedulePanel;
-    }
-
-    /**
-     * Create a panel with a table that contains information for incomplete interviews.
-     * @return the panel created.
-     */
-    private JPanel createIncompleteInterviewsTablePanel() {
-        ArrayList<Interview> incompleteInterviews = this.interviewerBackEnd.getIncompleteInterviewsAlreadyOccurred();
-        Object[][] data = new Object[incompleteInterviews.size()][];
-
-        for (int i = 0; i < incompleteInterviews.size(); i++) {
-            data[i] = incompleteInterviews.get(i).getCategoryValuesForInterviewerUnscheduledOrIncomplete();
-        }
-
-        return new GUIElementsCreator().createTablePanel(Interview.CATEGORY_NAMES_FOR_INTERVIEWER_UNSCHEDULED_OR_INCOMPLETE, data);
     }
 }

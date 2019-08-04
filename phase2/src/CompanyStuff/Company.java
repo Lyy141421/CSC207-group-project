@@ -100,7 +100,7 @@ public class Company implements Serializable {
      */
     public Branch getBranch(String name) {
         for (Branch branch : this.getBranches()) {
-            if (branch.getName().equals(name)) {
+            if (branch.getName().equalsIgnoreCase(name)) {
                 return branch;
             }
         }

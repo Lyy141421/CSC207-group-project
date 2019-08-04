@@ -17,10 +17,8 @@ class ApplicantBrowsePostings extends JPanel {
     private ApplicantBackend backend;
     private ApplicantPanel masterPanel;
     private ApplicantBrowsePostings thisPanel = this;
-    private Applicant applicant;
 
     ApplicantBrowsePostings(Applicant applicant, ApplicantPanel masterPanel, JobApplicationSystem jobAppSystem) {
-        this.applicant = applicant;
         this.backend = new ApplicantBackend(applicant, jobAppSystem);
         this.masterPanel = masterPanel;
         this.setLayout(null);
@@ -78,7 +76,7 @@ class ApplicantBrowsePostings extends JPanel {
                 } else {
                     ArrayList<CompanyJobPosting> postings = // TODO change the true
                             backend.findApplicablePostings(fields[0], fields[1], fields[2], fields[3], true);
-                    masterPanel.add(new ApplicantViewSearchResults(postings, backend, applicant), "SearchResults");
+                    masterPanel.add(new ApplicantViewSearchResults(postings, backend), "SearchResults");
                     ((CardLayout) masterPanel.getLayout()).show(masterPanel, "SearchResults");
                 }
             }
