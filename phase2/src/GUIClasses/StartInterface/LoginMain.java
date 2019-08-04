@@ -16,6 +16,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -24,28 +25,47 @@ import java.util.Date;
  */
 
 public class LoginMain extends JPanel {
+
+    // === Error messages ===
+    static final String WRONG_PASSWORD = "Wrong password!";
+    private static final String BLANK_FIELD_ERROR = "Please fill in all fields";
+    static final String INVALID_USERNAME = "Invalid username";
+    static final String USER_NOT_FOUND = "User not found";
+    private static final String CREATE_NEW = "Create?";
+
+    // === GUI elements ===
     private LoginBackend backend;
     private CardLayout masterLayout;
     private Container parent;
-    private MainFrame mainframe;
     private NewUserPanel newUserRef;
+    private boolean dateInputted = false;
+    private ArrayList<JLabel> errors = new ArrayList<>();
+    private JButton createNewButton;
+    private JDatePickerImpl datePicker;
+
+    // === Connection to backend ===
     private JobApplicationSystem jobAppSystem;
     private LogoutActionListener logout;
-    private boolean dateInputted = false;
 
+    // === Constructor ===
     public LoginMain(NewUserPanel newUserRef, Container parent, CardLayout masterLayout, JobApplicationSystem jobAppSystem) {
         this.backend = new LoginBackend(jobAppSystem);
         this.jobAppSystem = jobAppSystem;
         this.logout = new LogoutActionListener(parent, masterLayout, jobAppSystem);
         this.parent = parent;
         this.masterLayout = masterLayout;
-        this.mainframe = (MainFrame) this.parent.getParent().getParent().getParent();
         this.newUserRef = newUserRef;
         this.setLayout(null);
         this.addTextItems();
+        this.addErrorMessages();
         this.addEntryItems();
     }
 
+    /**
+     * Update the job application system with the new date inputted
+     *
+     * @param inputtedDate The date inputted by the user.
+     */
     private void updateSystem(LocalDate inputtedDate) {
         this.jobAppSystem.setPreviousLoginDate(inputtedDate);
         this.jobAppSystem.setToday(inputtedDate);
@@ -56,7 +76,6 @@ public class LoginMain extends JPanel {
 
     /**
      * Adds the text items required for the login screen.
-     * Note "Incorrect password" warning and "User not found" are hidden by default.
      */
     private void addTextItems() {
         JLabel welcomeLabel = new JLabel("CSC207 Summer 2019 Job Application System", SwingConstants.CENTER);
@@ -69,32 +88,29 @@ public class LoginMain extends JPanel {
         JLabel passwordText = new JLabel("Password: ", SwingConstants.CENTER);
         passwordText.setBounds(327, 255, 100, 30);
 
-        JLabel createNewText = new JLabel("User not found.", SwingConstants.CENTER);
-        createNewText.setBounds(327, 335, 100, 20);
-        createNewText.setVisible(false);
-
-        JLabel wrongPass = new JLabel("Wrong password!", SwingConstants.CENTER);
-        wrongPass.setBounds(337, 185, 180, 30);
-        wrongPass.setVisible(false);
-
-        JLabel blankEntry = new JLabel("Please fill in both fields", SwingConstants.CENTER);
-        blankEntry.setBounds(337, 185, 180, 30);
-        blankEntry.setVisible(false);
-
-        JLabel invalidUsername = new JLabel("Invalid username", SwingConstants.CENTER);
-        invalidUsername.setBounds(337, 185, 180, 30);
-        invalidUsername.setVisible(false);
-
         this.add(welcomeLabel); this.add(userNameText); this.add(passwordText);
-        this.add(createNewText);
-        this.add(wrongPass);
-        this.add(blankEntry);
-        this.add(invalidUsername);
+    }
+
+    /**
+     * Adds the error meessages required for the login screen.
+     */
+    private void addErrorMessages() {
+        String[] errorMessages = new String[]{USER_NOT_FOUND, WRONG_PASSWORD, BLANK_FIELD_ERROR, INVALID_USERNAME};
+        for (String error : errorMessages) {
+            JLabel errorLabel = new JLabel(error, SwingConstants.CENTER);
+            if (error.equals(USER_NOT_FOUND)) {
+                errorLabel.setBounds(337, 330, 100, 30);
+            } else {
+                errorLabel.setBounds(337, 185, 180, 30);
+            }
+            errorLabel.setVisible(false);
+            this.add(errorLabel);
+            errors.add(errorLabel);
+        }
     }
 
     /**
      * Adds the interactive items necessary for the login screen.
-     * Note "Create New User" button is hidden by default.
      */
     private void addEntryItems() {
         JTextField userNameEntry = new JTextField();
@@ -113,165 +129,112 @@ public class LoginMain extends JPanel {
                 login(userNameEntry, passwordEntry);
             }
         });
+        this.setCreateNewButton(userNameEntry, passwordEntry);
+        this.add(userNameEntry);
+        this.add(passwordEntry);
+        this.add(createNewButton);
+        this.add(loginButton);
+    }
 
-        JButton createNewButton = new JButton("Create?");
-        createNewButton.setBounds(427, 335, 100, 20);
-        createNewButton.addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent e){
-                hidePassError();
+    /**
+     * Sets the create new user button.
+     * @param userNameEntry The username text field
+     * @param passwordEntry The password field.
+     */
+    private void setCreateNewButton(JTextField userNameEntry, JPasswordField passwordEntry) {
+        createNewButton = new JButton(CREATE_NEW);
+        createNewButton.setBounds(460, 335, 100, 20);
+        createNewButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                hideError(WRONG_PASSWORD);
                 createUser(userNameEntry.getText());
             }
         });
         createNewButton.setVisible(false);
-
-        this.add(userNameEntry); this.add(passwordEntry); this.add(loginButton);
-        this.add(createNewButton);
     }
 
     /**
-     * Shows prompt to create new account
+     * Shows the specified error to the screen.
+     * @param error The error to be shown
      */
-    private void showCreateNew() {
-        Component[] components = this.getComponents();
-        for(Component c : components) {
-            if(c instanceof JButton){
-                if(((JButton) c).getText().equals("Create?")) {
-                    c.setVisible(true);
+    private void showError(String error) {
+        for (JLabel errorLabel : errors) {
+            if (errorLabel.getText().equals(error)) {
+                errorLabel.setVisible(true);
+                if (error.equals(USER_NOT_FOUND)) {
+                    createNewButton.setVisible(true);
                 }
-            } else if(c instanceof JLabel) {
-                if(((JLabel) c).getText().equals("User not found.")) {
-                    c.setVisible(true);
+            } else {
+                errorLabel.setVisible(false);
+                if (errorLabel.getText().equals(USER_NOT_FOUND)) {
+                    createNewButton.setVisible(false);
                 }
             }
         }
     }
 
     /**
-     * Hides prompt to create a new user
+     * Hides all the errors from the screen.
      */
-    private void hideCreateNew() {
-        Component[] components = this.getComponents();
-        for(Component c : components) {
-            if(c instanceof JButton){
-                if(((JButton) c).getText().equals("Create?")) {
-                    c.setVisible(false);
-                }
-            } else if(c instanceof JLabel) {
-                if(((JLabel) c).getText().equals("User not found.")) {
-                    c.setVisible(false);
-                }
+    private void hideAllErrors() {
+        for (JLabel errorLabel : errors) {
+            errorLabel.setVisible(false);
+        }
+        createNewButton.setVisible(false);
+    }
+
+    /**
+     * Hides the specified error
+     * @param error The error to be hidden
+     */
+    private void hideError(String error) {
+        for (JLabel errorLabel : errors) {
+            if (errorLabel.getText().equals(error)) {
+                errorLabel.setVisible(false);
             }
         }
     }
 
     /**
-     * Shows wrong pass warning
-     */
-    private void showPassError() {
-        Component[] components = this.getComponents();
-        for(Component c : components) {
-            if(c instanceof JLabel) {
-                if(((JLabel) c).getText().equals("Wrong password!")) {
-                    c.setVisible(true);
-                    break;
-                }
-            }
-        }
-    }
-
-    /**
-     * Hides wrong pass warning
-     */
-    private void hidePassError() {
-        Component[] components = this.getComponents();
-        for(Component c : components) {
-            if(c instanceof JLabel) {
-                if(((JLabel) c).getText().equals("Wrong password!")) {
-                    c.setVisible(false);
-                    break;
-                }
-            }
-        }
-    }
-
-    /**
-     * Shows blank field warning
-     */
-    private void showBlankField() {
-        Component[] components = this.getComponents();
-        for(Component c : components) {
-            if(c instanceof JLabel) {
-                if(((JLabel) c).getText().equals("Please fill in both fields")) {
-                    c.setVisible(true);
-                    break;
-                }
-            }
-        }
-    }
-
-    /**
-     * Hides blank field warning
-     */
-    private void hideBlankField() {
-        Component[] components = this.getComponents();
-        for(Component c : components) {
-            if(c instanceof JLabel) {
-                if(((JLabel) c).getText().equals("Please fill in both fields")) {
-                    c.setVisible(false);
-                    break;
-                }
-            }
-        }
-    }
-
-    /**
-     * Shows invalid username warning
-     */
-    private void showInvalidUsername() {
-        Component[] components = this.getComponents();
-        for (Component c : components) {
-            if (c instanceof JLabel) {
-                if (((JLabel) c).getText().equals("Invalid username")) {
-                    c.setVisible(true);
-                    break;
-                }
-            }
-        }
-    }
-
-    /**
-     * Hides blank field warning
-     */
-    private void hideInvalidUsername() {
-        Component[] components = this.getComponents();
-        for (Component c : components) {
-            if (c instanceof JLabel) {
-                if (((JLabel) c).getText().equals("Invalid username")) {
-                    c.setVisible(false);
-                    break;
-                }
-            }
-        }
-    }
-
-    /**
-     *
+     *  Get the date inputted by the user.
      */
     private void getDate() {
         JDialog popup = new JDialog();
         popup.setLayout(new BorderLayout());
 
-        JPanel instructions = new GUIElementsCreator().createLabelPanel("FOR TESTING: Please enter today's date", 15, true);
+        JPanel instructions = new GUIElementsCreator().createLabelPanel("Please enter today's date", 18, true);
         instructions.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         popup.add(instructions, BorderLayout.NORTH);
+        popup.add(this.createDatePickerPanel(), BorderLayout.CENTER);
+        JPanel submitButtonPanel = this.createSubmitButtonPanel(popup);
+        submitButtonPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        popup.add(submitButtonPanel, BorderLayout.SOUTH);
+        popup.setSize(new Dimension(500, 300));
+        popup.setResizable(false);
+        popup.setVisible(true);
+    }
 
+    /**
+     * Create the date picker panel.
+     *
+     * @return the panel created.
+     */
+    private JPanel createDatePickerPanel() {
         JPanel fullDatePickerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         UtilDateModel model = new UtilDateModel();
         JDatePanelImpl datePanel = new JDatePanelImpl(model);
-        JDatePickerImpl datePicker = new JDatePickerImpl(datePanel);
+        datePicker = new JDatePickerImpl(datePanel);
         fullDatePickerPanel.add(datePicker);
-        popup.add(fullDatePickerPanel, BorderLayout.CENTER);
+        return fullDatePickerPanel;
+    }
 
+    /**
+     * Create the submit button panel.
+     *
+     * @param popup The dialog popup for the date.
+     * @return the panel created.
+     */
+    private JPanel createSubmitButtonPanel(JDialog popup) {
         JPanel buttonPanel = new JPanel();
         JButton submit = new JButton("Submit");
         submit.addActionListener(new ActionListener() {
@@ -289,54 +252,30 @@ public class LoginMain extends JPanel {
             }
         });
         buttonPanel.add(submit);
-        popup.add(buttonPanel, BorderLayout.SOUTH);
-        popup.setSize(new Dimension(500, 300));
-        popup.setResizable(false);
-        popup.setVisible(true);
+        return buttonPanel;
     }
 
 
     /**
-     * attempts login with the provided information
+     * Attempts login with the provided information
      */
     private void login(JTextField userNameEntry, JPasswordField passwordEntry) {
-        int result = backend.login(userNameEntry.getText(), new String(passwordEntry.getPassword()));
-        switch(result) {
-            case LoginBackend.USER_NONEXISTENT:
-                this.showCreateNew();
-                    this.hidePassError();
-                    this.hideBlankField();
-                this.hideInvalidUsername();
-                    break;
-            case LoginBackend.BLANK_ENTRY:
-                this.showBlankField();
-                    this.hideCreateNew();
-                    this.hidePassError();
-                this.hideInvalidUsername();
-                    break;
-            case LoginBackend.SUCCESS:
-                this.hideCreateNew();
-                    this.hidePassError();
-                    this.hideBlankField();
-                this.hideInvalidUsername();
-                this.GUILogin(userNameEntry.getText());
-                this.clearEntries(userNameEntry, passwordEntry);
-                    break;
-            case LoginBackend.WRONG_PASSWORD:
-                this.showPassError();
-                    this.hideCreateNew();
-                    this.hideBlankField();
-                this.hideInvalidUsername();
-                break;
-            case LoginBackend.INVALID_USERNAME:
-                this.showInvalidUsername();
-                this.hideCreateNew();
-                this.hideBlankField();
-                this.hidePassError();
-                    break;
+        String result = backend.login(userNameEntry.getText(), new String(passwordEntry.getPassword()));
+        if (result.equals(NewUserPanel.SUCCESS)) {
+            this.hideAllErrors();
+            this.GUILogin(userNameEntry.getText());
+            this.clearEntries(userNameEntry, passwordEntry);
+            this.dateInputted = false;
+        } else {
+            this.showError(result);
         }
     }
 
+    /**
+     * Clears the username and password text fields.
+     * @param userNameEntry The username text field.
+     * @param passwordEntry The password text field.
+     */
     private void clearEntries(JTextField userNameEntry, JPasswordField passwordEntry) {
         userNameEntry.setText("");
         passwordEntry.setText("");
@@ -344,6 +283,7 @@ public class LoginMain extends JPanel {
 
     /**
      * Attempts a login through the GUI
+     * @param username The username inputted.
      */
     private void GUILogin(String username) {
         User user = this.backend.findUserByUsername(username);
@@ -354,12 +294,11 @@ public class LoginMain extends JPanel {
     }
 
     /**
-     * passes user to the existing create user class, and requests card change
+     * Passes user to the existing create user class, and requests card change
+     * @param username  The username inputted
      */
     private void createUser(String username) {
-        this.hideCreateNew();
-        this.hidePassError();
-        this.hideInvalidUsername();
+        this.hideAllErrors();
         this.newUserRef.setNewUsername(username);
         this.masterLayout.show(parent, MainFrame.NEW_USER);
     }

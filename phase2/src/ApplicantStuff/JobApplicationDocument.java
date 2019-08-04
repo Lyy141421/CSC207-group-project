@@ -40,7 +40,7 @@ public class JobApplicationDocument implements Serializable {
     }
 
     // === Constructor for applicants submitting cover letter or CV from text box ===
-    JobApplicationDocument(String contents, String fileType, String username) {
+    public JobApplicationDocument(String contents, String fileType, String username) {
         File folder = new File(ApplicantDocumentManager.FOLDER_PATH + "/" + username);
         String filePath = folder.getPath() + "/" + fileType + ".txt";
         if (Paths.get(filePath).toFile().exists()) {

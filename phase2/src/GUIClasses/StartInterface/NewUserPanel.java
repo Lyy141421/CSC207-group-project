@@ -16,6 +16,13 @@ import java.awt.event.ActionListener;
 public class NewUserPanel extends JPanel {
 
     private static String FORM_PANEL_NAME = "formPanel";
+    static final String BLANK_ENTRY = "Error - Blank entry";
+    static final String INVALID_EMAIL = "Error - Invalid email";
+    static final String INVALID_COMPANY = "Error - Company not found";
+    static final String INVALID_BRANCH = "Error - Branch not found";
+    static final String INVALID_LEGAL_NAME = "Error - Invalid legal name";
+    static final String INVALID_POSTAL_CODE = "Error - Invalid postal code";
+    static final String SUCCESS = "Success";
 
     private LoginBackend backend;
     private CardLayout masterLayout;
@@ -73,7 +80,7 @@ public class NewUserPanel extends JPanel {
         submitButton.setBounds(352, 15, 150, 30);
         submitButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                int status = createUser(selector);
+                String status = createUser(selector);
                 postCreation(status, success);
             }
         });
@@ -89,45 +96,24 @@ public class NewUserPanel extends JPanel {
         });
         buttonPanel.add(backButton);
 
-        JLabel blankError = new JLabel("Error - Blank entry");
-        blankError.setBounds(522, 15, 200, 20);
-        blankError.setVisible(false);
-        buttonPanel.add(blankError);
+        String[] errorMessages = new String[]{BLANK_ENTRY, INVALID_EMAIL, INVALID_BRANCH, INVALID_COMPANY, INVALID_LEGAL_NAME,
+                INVALID_POSTAL_CODE};
 
-        JLabel emailError = new JLabel("Error - Invalid email");
-        emailError.setBounds(522, 15, 200, 20);
-        emailError.setVisible(false);
-        buttonPanel.add(emailError);
-
-        JLabel branchError = new JLabel("Error - Branch not found");
-        branchError.setBounds(522, 15, 200, 20);
-        branchError.setVisible(false);
-        buttonPanel.add(branchError);
-
-        JLabel companyError = new JLabel("Error - Company not found");
-        companyError.setBounds(522, 15, 200, 20);
-        companyError.setVisible(false);
-        buttonPanel.add(companyError);
-
-        JLabel legalNameError = new JLabel("Error - Invalid legal name");
-        legalNameError.setBounds(522, 15, 200, 20);
-        legalNameError.setVisible(false);
-        buttonPanel.add(legalNameError);
-
-        JLabel postalCodeError = new JLabel("Error - Invalid postal code");
-        postalCodeError.setBounds(522, 15, 200, 20);
-        postalCodeError.setVisible(false);
-        buttonPanel.add(postalCodeError);
-
+        for (String errorMessage : errorMessages) {
+            JLabel errorLabel = new JLabel(errorMessage);
+            errorLabel.setBounds(522, 15, 200, 20);
+            errorLabel.setVisible(false);
+            buttonPanel.add(errorLabel);
+        }
         return buttonPanel;
     }
 
     /**
      * Attempts to create the selected user type with the given inputs
      *
-     * @return 0 - blank entry, 1 - bad email, 2 - bad company, 3 - success
+     * @return contants based on the login status
      */
-    private int createUser(JComboBox selector) {
+    private String createUser(JComboBox selector) {
         switch (selector.getSelectedItem().toString()) {
             case "Applicant":
                 return this.createApplicant();
@@ -136,27 +122,27 @@ public class NewUserPanel extends JPanel {
             case "HR Coordinator":
                 return this.createHRC();
         }
-        return 0;
+        return BLANK_ENTRY;
     }
 
     /**
      * The below functions simply attempt to instantiate their corresponding user types
      *
-     * @return 0 - blank entry, 1 - bad email, 2 - bad company, 3 - success
+     * @return contants based on the status of the login
      */
-    private int createApplicant() {
+    private String createApplicant() {
         JPanel forms = this.getPanelByName(this, FORM_PANEL_NAME);
         Component[] items = this.getPanelByName(forms, NewApplicantForm.NAME).getComponents();
         return backend.createNewApplicant(this.backend.getInputs(items, this.newUsername));
     }
 
-    private int createInterviewer() {
+    private String createInterviewer() {
         JPanel forms = this.getPanelByName(this, FORM_PANEL_NAME);
         Component[] items = this.getPanelByName(forms, NewInterviewerForm.NAME).getComponents();
         return backend.createNewInterviewer(this.backend.getInputs(items, this.newUsername));
     }
 
-    private int createHRC() {
+    private String createHRC() {
         JPanel forms = this.getPanelByName(this, FORM_PANEL_NAME);
         Component[] items = this.getPanelByName(forms, NewHRCForm.NAME).getComponents();
         return backend.createNewHRC(this.backend.getInputs(items, this.newUsername));
@@ -180,31 +166,13 @@ public class NewUserPanel extends JPanel {
      *
      * @param status the status of the login
      */
-    private void postCreation(int status, JDialog success) {
-        switch (status) {
-            case LoginBackend.INVALID_LEGAL_NAME:
-                this.postUpdater("Error - Invalid legal name");
-                break;
-            case LoginBackend.BLANK_ENTRY:
-                this.postUpdater("Error - Blank entry");
-                break;
-            case LoginBackend.INVALID_EMAIL:
-                this.postUpdater("Error - Invalid email");
-                break;
-            case LoginBackend.INVALID_POSTAL_CODE:
-                this.postUpdater("Error - Invalid postal code");
-                break;
-            case LoginBackend.INVALID_BRANCH:
-                this.postUpdater("Error - Branch not found");
-                break;
-            case LoginBackend.INVALID_COMPANY:
-                this.postUpdater("Error - Company not found");
-                break;
-            case LoginBackend.SUCCESS:
-                success.setVisible(true);
-                this.clearEntries();
-                this.masterLayout.show(this.parent, MainFrame.LOGIN);
-                break;
+    private void postCreation(String status, JDialog success) {
+        if (status.equals(SUCCESS)) {
+            success.setVisible(true);
+            this.clearEntries();
+            this.masterLayout.show(this.parent, MainFrame.LOGIN);
+        } else {
+            this.postUpdater(status);
         }
     }
 

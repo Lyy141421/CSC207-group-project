@@ -14,15 +14,29 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class SubmitDocumentsActionListener implements ActionListener {
 
     private User documentSubmitter;
     private JobApplication jobApp;
-    private ArrayList<File> filesToSubmit;
+    private HashMap<String, String> fileTypeToTextEntry;
+    private ArrayList<File> filesToSubmit = new ArrayList<>();
 
-    // TODO this requires that after the applicant chooses the job to apply to, it automatically creates a job
+    // NOTE: this requires that after the applicant chooses the job to apply to, it automatically creates a job
     // application object so that choosing files will work
+
+    // === Constructor for applicant entries ===
+    public SubmitDocumentsActionListener(User documentSubmitter, JobApplication jobApp, HashMap<String, JTextArea> fileTypeToContents) {
+        this.documentSubmitter = documentSubmitter;
+        this.jobApp = jobApp;
+        this.fileTypeToTextEntry = new HashMap<>();
+        for (String fileType : fileTypeToContents.keySet()) {
+            this.fileTypeToTextEntry.put(fileType, fileTypeToContents.get(fileType).getText());
+        }
+    }
+
+    // === Constructor for file submission ===
     public SubmitDocumentsActionListener(User documentSubmitter, JobApplication jobApp, ArrayList<File> files) {
         this.documentSubmitter = documentSubmitter;
         this.jobApp = jobApp;
@@ -36,7 +50,7 @@ public class SubmitDocumentsActionListener implements ActionListener {
         JOptionPane.showMessageDialog(parent, "You have successfully submitted " + filesToSubmit.size() + " files.");
         JPanel cards = new PanelGetter().getCardLayoutFromSubmitFilesButton(e);
         UserMain userMain = (UserMain) cards.getParent();
-        userMain.refresh(); // Update all the cards
+        userMain.refresh(); // Update all the cards and go back to home
     }
 
     /**
@@ -44,21 +58,41 @@ public class SubmitDocumentsActionListener implements ActionListener {
      */
     private void updateFileStorage() {
         if (this.documentSubmitter instanceof Applicant) {
-            ApplicantDocumentManager applicantDocumentManager = new ApplicantDocumentManager(jobApp.getApplicant());
-            ArrayList<File> filesNotFromAccount = new ArrayList<>();
-            for (File file : filesToSubmit) {
-                if (!applicantDocumentManager.containsFile(file)) {
-                    filesNotFromAccount.add(file);
-                }
+            if (this.filesToSubmit.isEmpty()) {
+                this.uploadTextEntries();
+            } else {
+                this.uploadFiles();
             }
-            ArrayList<JobApplicationDocument> jobAppDocs = applicantDocumentManager.addFilesToAccount(filesNotFromAccount);
-            jobApp.addFiles(jobAppDocs);
         } else {
-            // Remove job application from reference's list
+            // Remove job application from reference's list and submit directly to the company
             Reference reference = (Reference) this.documentSubmitter;
             reference.removeJobApplication(jobApp);
+            CompanyDocumentManager companyDocManager = jobApp.getJobPosting().getCompany().getDocumentManager();
+            companyDocManager.addFilesForJobApplication(jobApp, filesToSubmit);
         }
-        CompanyDocumentManager companyDocManager = jobApp.getJobPosting().getCompany().getDocumentManager();
-        companyDocManager.addFilesForJobApplication(jobApp, filesToSubmit);
+    }
+
+    /**
+     * Upload the files chosen to this applicant's account.
+     */
+    private void uploadFiles() {
+        ApplicantDocumentManager applicantDocumentManager = new ApplicantDocumentManager(jobApp.getApplicant());
+        ArrayList<File> filesNotFromAccount = new ArrayList<>();
+        for (File file : filesToSubmit) {
+            if (!applicantDocumentManager.containsFile(file)) {
+                filesNotFromAccount.add(file);
+            }
+        }
+        ArrayList<JobApplicationDocument> jobAppDocs = applicantDocumentManager.addFilesToAccount(filesNotFromAccount);
+        jobApp.addFiles(jobAppDocs);
+    }
+
+    /**
+     * Upload the text entries to this applicant's account.
+     */
+    private void uploadTextEntries() {
+        ApplicantDocumentManager applicantDocumentManager = new ApplicantDocumentManager(jobApp.getApplicant());
+        ArrayList<JobApplicationDocument> jobAppDocs = applicantDocumentManager.addTextEntriesToAccount(fileTypeToTextEntry);
+        jobApp.addFiles(jobAppDocs);
     }
 }

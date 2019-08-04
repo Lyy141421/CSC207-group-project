@@ -8,6 +8,7 @@ import ApplicantStuff.JobApplicationManager;
 import java.io.File;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class ApplicantDocumentManager extends DocumentManager {
 
@@ -45,6 +46,21 @@ public class ApplicantDocumentManager extends DocumentManager {
         ArrayList<JobApplicationDocument> documentsSubmitted = new ArrayList<>();
         for (File file : filesSubmitted) {
             documentsSubmitted.add(new JobApplicationDocument(file, applicant.getUsername()));
+        }
+        return documentsSubmitted;
+    }
+
+    /**
+     * Add a list of files to this applicant's account.
+     *
+     * @param fileTypeToTextEntries A hashmap of file type to text entry to be added to this applicant's account.
+     * @return the job application document objects of the files submitted.
+     */
+    public ArrayList<JobApplicationDocument> addTextEntriesToAccount(HashMap<String, String> fileTypeToTextEntries) {
+        ArrayList<JobApplicationDocument> documentsSubmitted = new ArrayList<>();
+        for (String fileType : fileTypeToTextEntries.keySet()) {
+            documentsSubmitted.add(new JobApplicationDocument(fileTypeToTextEntries.get(fileType),
+                    fileType, applicant.getUsername()));
         }
         return documentsSubmitted;
     }
