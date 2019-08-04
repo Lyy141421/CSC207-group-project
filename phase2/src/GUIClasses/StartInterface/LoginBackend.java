@@ -67,7 +67,7 @@ class LoginBackend {
     }
 
     private boolean isValidLegalName(String legalName) {
-        String regex = "^[A-Z][a-z]+(?:([- ])[A-Z][a-z]+|[a-z]*)+$";
+        String regex = "^[A-Z][a-z]*((['-][A-Z][a-z]*)?)+( [A-Z][a-z]*((['-][A-Z][a-z]*)?)+)+$";
         return Pattern.matches(regex, legalName);
     }
 
@@ -134,6 +134,9 @@ class LoginBackend {
         Company company = jobAppSystem.getCompany(inputs.get("company"));
         if (company == null) {
             company = jobAppSystem.createCompany(inputs.get("company"));
+        }
+        if (!isValidPostalCode(inputs.get("postalCode"))) {
+            return INVALID_POSTAL_CODE;
         }
         Branch branch = company.getBranch(inputs.get("branch"));
         if (branch == null) {
