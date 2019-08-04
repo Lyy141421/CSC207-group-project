@@ -11,11 +11,12 @@ import java.util.ArrayList;
 
 class InterviewSelectionDialog extends SelectionDialog {
 
+    private JPanel cardPanel;
     private BranchJobPosting branchJobPosting;
 
-    InterviewSelectionDialog(JFrame parent, HRBackend HRInterface, ArrayList<JobApplication> applications, JButton returnButton, int toSelect) {
+    InterviewSelectionDialog(JFrame parent, JPanel cardPanel, HRBackend HRInterface, ArrayList<JobApplication> applications, JButton returnButton, int toSelect) {
         super(parent, HRInterface, applications, returnButton, toSelect);
-
+        this.cardPanel = cardPanel;
         this.branchJobPosting = applications.get(0).getJobPosting();
     }
 
@@ -25,7 +26,7 @@ class InterviewSelectionDialog extends SelectionDialog {
             @Override
             public void actionPerformed(ActionEvent e) {
                 hrBackend.rejectApplicationForFirstRound(branchJobPosting, getApplicantsDeselected());
-                JDialog configDialog = new InterviewConfigDialog(parent, hrBackend, branchJobPosting, returnButton);
+                new InterviewConfigDialog(parent, cardPanel, hrBackend, branchJobPosting, returnButton);
                 dispose();
             }
         });

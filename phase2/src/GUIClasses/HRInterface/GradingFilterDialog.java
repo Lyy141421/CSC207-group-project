@@ -17,6 +17,7 @@ class GradingFilterDialog extends JDialog {
     private static final int MAX_TO_SELECT = 1000;
 
     private JFrame parent;
+    private JPanel cardPanel;
     HRBackend hrBackend;
     private ArrayList<JobApplication> applications;
 
@@ -25,10 +26,11 @@ class GradingFilterDialog extends JDialog {
     private JScrollPane keywordInput;
     private JSpinner numberToSelect;
 
-    GradingFilterDialog(JFrame parent, HRBackend hrBackend, ArrayList<JobApplication> applications, JButton returnButton) {
+    GradingFilterDialog(JFrame parent, JPanel cardPanel, HRBackend hrBackend, ArrayList<JobApplication> applications, JButton returnButton) {
         super(parent,"Sort by keywords");
 
         this.parent = parent;
+        this.cardPanel = cardPanel;
         this.hrBackend = hrBackend;
         this.applications = applications;
         this.returnButton = returnButton;
@@ -77,7 +79,7 @@ class GradingFilterDialog extends JDialog {
                 String textInput = ((JTextArea) keywordInput.getViewport().getView()).getText();
                 ArrayList<String> keywords = new ArrayList<>(Arrays.asList(textInput.split(";")));
                 ArrayList<JobApplication> sortedApplications = hrBackend.getJobApplicationInNonDecreasingOrder(applications.get(0).getJobPosting(), keywords);
-                JDialog reviewDialog = new InterviewSelectionDialog(parent, hrBackend, sortedApplications,
+                JDialog reviewDialog = new InterviewSelectionDialog(parent, cardPanel, hrBackend, sortedApplications,
                         returnButton, ((SpinnerNumberModel)numberToSelect.getModel()).getNumber().intValue());
                 reviewDialog.addWindowListener(new WindowAdapter() {
                     @Override
