@@ -23,6 +23,7 @@ import java.util.Arrays;
 
 public class HRMain extends UserMain {
 
+    static final int NUM_CARDS = 7;
     HRBackend hrBackend;
     JPanel cards = new JPanel(new CardLayout());
 

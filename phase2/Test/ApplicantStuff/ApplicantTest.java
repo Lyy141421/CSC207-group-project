@@ -333,6 +333,12 @@ class ApplicantTest {
         Applicant applicant1 = applicants.get(0);
         Applicant applicant2 = applicants.get(1);
         BranchJobPosting jobPosting = applicant1.getJobApplicationManager().getJobApplications().get(0).getJobPosting();
+        JobApplication jobApp1 = jobPosting.getJobApplications().get(0);
+        JobApplication jobApp2 = jobPosting.getJobApplications().get(1);
+        JobApplication jobApp3 = jobPosting.getJobApplications().get(2);
+        assertEquals("Submitted", jobApp1.getStatus().getDescription());
+        assertEquals("Submitted", jobApp2.getStatus().getDescription());
+        assertEquals("Submitted", jobApp3.getStatus().getDescription());
         jobPosting.getBranch().getJobPostingManager().updateJobPostingsClosedForApplications(LocalDate.of(2019, 7, 31));
         jobPosting.getBranch().getJobPostingManager().updateJobPostingsClosedForReferences(LocalDate.of(2019, 8, 11));
         ArrayList<String[]> interviewConfiguration = new ArrayList<>();
@@ -340,9 +346,6 @@ class ApplicantTest {
         jobPosting.getInterviewManager().rejectApplicationsForFirstRound(new ArrayList<>());
         jobPosting.getInterviewManager().setInterviewConfiguration(interviewConfiguration);
         jobPosting.getInterviewManager().advanceRound();
-        JobApplication jobApp1 = jobPosting.getJobApplications().get(0);
-        JobApplication jobApp2 = jobPosting.getJobApplications().get(1);
-        JobApplication jobApp3 = jobPosting.getJobApplications().get(2);
         assertEquals("Under review", jobApp1.getStatus().getDescription());
         assertEquals("Under review", jobApp2.getStatus().getDescription());
         assertEquals("Under review", jobApp3.getStatus().getDescription());
@@ -367,6 +370,7 @@ class ApplicantTest {
 
         Interview interview = interviewer1.getInterviews().get(0);
         interview.setResult(jobApp3, true);
+        jobPosting.getBranch().getJobPostingManager().updateAllClosedUnfilledJobPostings(LocalDate.of(2019, 8, 15));
         assertEquals("Hired", jobApp3.getStatus().getDescription());
     }
 

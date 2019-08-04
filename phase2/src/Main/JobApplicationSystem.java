@@ -155,22 +155,22 @@ public class JobApplicationSystem {
         return companyJobPostings;
     }
 
-    /**
-     * Get a list of open job postings not yet applied to.
-     *
-     * @return a list of open job postings not yet applied to.
-     */
-    public ArrayList<BranchJobPosting> getOpenJobPostingsNotAppliedTo(Applicant applicant) {
-        ArrayList<BranchJobPosting> jobPostings = new ArrayList<>();
-        for (Company company : this.getCompanies())
-            for (Branch branch : company.getBranches()) {
-                BranchJobPostingManager jpm = branch.getJobPostingManager();
-                ArrayList<BranchJobPosting> openPostings = jpm.getOpenJobPostings(this.getToday());
-                openPostings.retainAll(jpm.getJobPostingsNotAppliedToByApplicant(applicant));
-                jobPostings.addAll(openPostings);
-            }
-        return jobPostings;
-    }
+//    /**
+//     * Get a list of open job postings not yet applied to.
+//     *
+//     * @return a list of open job postings not yet applied to.
+//     */
+//    public ArrayList<BranchJobPosting> getOpenJobPostingsNotAppliedTo(Applicant applicant) {
+//        ArrayList<BranchJobPosting> jobPostings = new ArrayList<>();
+//        for (Company company : this.getCompanies())
+//            for (Branch branch : company.getBranches()) {
+//                BranchJobPostingManager jpm = branch.getJobPostingManager();
+//                ArrayList<BranchJobPosting> openPostings = jpm.getOpenJobPostings(this.getToday());
+//                openPostings.retainAll(jpm.getJobPostingsNotAppliedToByApplicant(applicant));
+//                jobPostings.addAll(openPostings);
+//            }
+//        return jobPostings;
+//    }
 
     public ArrayList<CompanyJobPosting> getCompanyJobPostingsInCMA(Applicant applicant) {
         ArrayList<CompanyJobPosting> companyJobPostings = new ArrayList<>();
