@@ -40,8 +40,6 @@ public class InterviewManager extends Observable implements Serializable {
     private int maxNumberOfRounds;
     // Whether or not the applicants have been weeded out before the first round of interviews
     private boolean chosenApplicantsForFirstRound = false;
-    // The notification factory
-    private NotificationFactory notificationFactory = new NotificationFactory();
 
     // === Representation invariants ===
     // The list of interviews for each applicant is sorted by date.
@@ -101,6 +99,7 @@ public class InterviewManager extends Observable implements Serializable {
         for (JobApplication jobApp : this.applicationsInConsideration) {
             jobApp.getStatus().setDescriptions(interviewConfiguration);
         }
+        this.advanceRound();
     }
 
     // === Other methods ===
@@ -208,7 +207,7 @@ public class InterviewManager extends Observable implements Serializable {
             return InterviewManager.SELECT_APPS_FOR_FIRST_ROUND;
         } else if (!this.isInterviewProcessOver() && this.isCurrentRoundGroupInterviewUnscheduled()) {
             if (!this.branchJobPosting.getBranch().hasInterviewerForField(this.branchJobPosting.getField())) {
-                this.notifyAllObservers(notificationFactory.createNotification(NotificationFactory.NO_INTERVIEWERS_IN_FIELD, this));
+                this.notifyAllObservers(new NotificationFactory().createNotification(NotificationFactory.NO_INTERVIEWERS_IN_FIELD, this));
             } else {
                 return InterviewManager.SCHEDULE_GROUP_INTERVIEWS;
             }
@@ -226,7 +225,7 @@ public class InterviewManager extends Observable implements Serializable {
     public void updateJobPostingFilledStatus() {
         if (this.hasNoJobApplicationsInConsideration()) {
             this.updateObserverList();
-            this.notifyAllObservers(notificationFactory.createNotification(
+            this.notifyAllObservers(new NotificationFactory().createNotification(
                     NotificationFactory.NO_APPS_IN_CONSIDERATION, this.getBranchJobPosting()));
             this.getBranchJobPosting().closeJobPostingNoApplicationsInConsideration();
         } else if (this.isInterviewProcessOver()) {
@@ -254,7 +253,7 @@ public class InterviewManager extends Observable implements Serializable {
     public void setUpOneOnOneInterviews() {
         String field = this.branchJobPosting.getField();
         if (!this.branchJobPosting.getBranch().hasInterviewerForField(field)) {
-            this.notifyAllObservers(notificationFactory.createNotification(NotificationFactory.NO_INTERVIEWERS_IN_FIELD, this));
+            this.notifyAllObservers(new NotificationFactory().createNotification(NotificationFactory.NO_INTERVIEWERS_IN_FIELD, this));
         }
         else {
             for (JobApplication jobApp : this.applicationsInConsideration) {
@@ -433,10 +432,10 @@ public class InterviewManager extends Observable implements Serializable {
         this.cancelAllIncompleteInterviews();
         this.hireApplicants(this.applicationsInConsideration);
         if (this.getNumOpenPositions() > 1) {
-            this.notifyAllObservers(notificationFactory.createNotification(NotificationFactory.AUTO_HIRING_LESS,
+            this.notifyAllObservers(new NotificationFactory().createNotification(NotificationFactory.AUTO_HIRING_LESS,
                     this.getBranchJobPosting()));
         } else {
-            this.notifyAllObservers(notificationFactory.createNotification(NotificationFactory.AUTO_HIRING_EXACT,
+            this.notifyAllObservers(new NotificationFactory().createNotification(NotificationFactory.AUTO_HIRING_EXACT,
                     this.getBranchJobPosting()));
         }
     }
