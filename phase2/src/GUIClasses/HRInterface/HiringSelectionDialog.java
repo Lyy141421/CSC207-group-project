@@ -1,6 +1,7 @@
 package GUIClasses.HRInterface;
 
 import ApplicantStuff.JobApplication;
+import CompanyStuff.JobPostings.BranchJobPosting;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -12,11 +13,12 @@ import java.util.ArrayList;
 class HiringSelectionDialog extends SelectionDialog implements ItemListener {
 
     private int availablePositions;
+    private BranchJobPosting jobPosting;
 
     HiringSelectionDialog(JFrame parent, HRBackend hrBackend, ArrayList<JobApplication> applications, JButton returnButton) {
         super(parent, hrBackend, applications, returnButton, 0);
-
-        this.availablePositions = applications.get(0).getJobPosting().getNumPositions();
+        this.jobPosting = applications.get(0).getJobPosting();
+        this.availablePositions = this.jobPosting.getNumPositions();
         this.addCheckboxListener();
     }
 
@@ -24,7 +26,7 @@ class HiringSelectionDialog extends SelectionDialog implements ItemListener {
         confirmButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                hrBackend.selectApplicantsForHire(getApplicantsSelected());
+                hrBackend.selectApplicantsForHire(jobPosting, getApplicantsSelected());
             }
         });
     }

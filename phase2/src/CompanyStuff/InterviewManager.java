@@ -72,15 +72,15 @@ public class InterviewManager extends Observable implements Serializable {
         return this.maxNumberOfRounds - 1;
     }
 
-    public String[] getCurrentRoundTypeAndDescription() {
+    String[] getCurrentRoundTypeAndDescription() {
         return this.interviewConfiguration.get(this.currentRound);
     }
 
-    public boolean hasChosenApplicantsForFirstRound() {
+    private boolean hasChosenApplicantsForFirstRound() {
         return this.chosenApplicantsForFirstRound;
     }
 
-    public ArrayList<String[]> getInterviewConfiguration() {
+    ArrayList<String[]> getInterviewConfiguration() {
         return this.interviewConfiguration;
     }
 
@@ -103,14 +103,6 @@ public class InterviewManager extends Observable implements Serializable {
     }
 
     // === Other methods ===
-    /**
-     * Get the number of applications still required.
-     *
-     * @return the number of applications still required before completely filling all positions.
-     */
-    public int getNumOpenPositions() {
-        return this.branchJobPosting.getNumPositions() - this.applicationsInConsideration.size();
-    }
 
     /**
      * Checks whether the current round of interviews is over.
@@ -421,8 +413,12 @@ public class InterviewManager extends Observable implements Serializable {
      * @param jobAppsToHire The job applications of those to be hired.
      */
     public void hireApplicants(ArrayList<JobApplication> jobAppsToHire) {
-        for (JobApplication jobApp : jobAppsToHire) {
-            jobApp.getStatus().setHired();
+        for (JobApplication jobApp : this.applicationsInConsideration) {
+            if (jobAppsToHire.contains(jobApp)) {
+                jobApp.getStatus().setHired();
+            } else {
+                this.reject(jobApp);
+            }
         }
         this.branchJobPosting.setFilled();
         this.archiveRejected();
@@ -431,7 +427,7 @@ public class InterviewManager extends Observable implements Serializable {
     private void hireAllApplicants() {
         this.cancelAllIncompleteInterviews();
         this.hireApplicants(this.applicationsInConsideration);
-        if (this.getNumOpenPositions() > 1) {
+        if (this.applicationsInConsideration.size() < this.branchJobPosting.getNumPositions()) {
             this.notifyAllObservers(new NotificationFactory().createNotification(NotificationFactory.AUTO_HIRING_LESS,
                     this.getBranchJobPosting()));
         } else {

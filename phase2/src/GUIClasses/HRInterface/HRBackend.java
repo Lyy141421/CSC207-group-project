@@ -20,11 +20,13 @@ class HRBackend {
     private JobApplicationSystem jobAppSystem;
     private HRCoordinator hr;
 
+    // === Constructor ===
     HRBackend(JobApplicationSystem jobAppSystem, HRCoordinator hr) {
         this.jobAppSystem = jobAppSystem;
         this.hr = hr;
     }
 
+    // === Getters ===
     HRCoordinator getHR() {
         return this.hr;
     }
@@ -37,6 +39,8 @@ class HRBackend {
         LocalDate tomorrow = this.getToday().plusDays(1);
         return new int[]{tomorrow.getYear(), tomorrow.getMonthValue(), tomorrow.getDayOfMonth()};
     }
+
+    // === Other methods ===
 
     /**
      * Gets an array list of branch job postings that are under review for first round of interviews.
@@ -65,6 +69,11 @@ class HRBackend {
         return jpManager.getJobPostingsThatNeedHRSelectionForHiring(this.jobAppSystem.getToday());
     }
 
+    /**
+     * Gets an array list of all the job postings in this branch.
+     *
+     * @return a list of all job postings in this branch.
+     */
     ArrayList<BranchJobPosting> getAllJP() {
         return this.hr.getBranch().getJobPostingManager().getBranchJobPostings();
     }
@@ -122,10 +131,20 @@ class HRBackend {
                 referenceCloseDate);
     }
 
+    /**
+     * Checks whether this branch has an interviewer in this field.
+     * @param field The field in question.
+     * @return true iff this branch has an interviewer in this field.
+     */
     boolean hasInterviewerOfField(String field) {
         return this.hr.getBranch().hasInterviewerForField(field);
     }
 
+    /**
+     * Implement an existing company job posting.
+     * @param cjp   The company job posting to be implemented.
+     * @param jobPostingFields  The job posting fields inputted by hr.
+     */
     void implementJobPosting(CompanyJobPosting cjp, Object[] jobPostingFields) {
         int numPositions = (int) jobPostingFields[0];
         LocalDate applicationCloseDate = (LocalDate) jobPostingFields[1];
@@ -133,6 +152,11 @@ class HRBackend {
         this.hr.implementJobPosting(cjp, numPositions, jobAppSystem.getToday(), applicationCloseDate, referenceCloseDate);
     }
 
+    /**
+     * Update the job posting.
+     * @param jobPosting    The job posting to be updated.
+     * @param jobPostingFields  The fields that were updated.
+     */
     void updateJobPosting(BranchJobPosting jobPosting, Object[] jobPostingFields) {
         int numPositions = (int) jobPostingFields[0];
         LocalDate applicationCloseDate = (LocalDate) jobPostingFields[1];
@@ -154,10 +178,18 @@ class HRBackend {
         return this.getJobAppsByApplicantForCompany(applicant);
     }
 
+    /**
+     * Get all the applicants who have applied to this company.
+     * @return a list of all applicants who have applied to this company.
+     */
     private ArrayList<Applicant> getAllApplicantsWhoHaveAppliedToCompany() {
         return this.hr.getBranch().getCompany().getAllApplicantsWhoHaveAppliedToCompany(jobAppSystem.getToday());
     }
 
+    /**
+     * Get a hash map of applicant names to the applicant object.
+     * @return a hash map of names to applicants
+     */
     HashMap<String, Applicant> getApplicantHashMap() {
         HashMap<String, Applicant> titleToApplicant = new HashMap<>();
         for (Applicant applicant : this.getAllApplicantsWhoHaveAppliedToCompany()) {
@@ -167,30 +199,13 @@ class HRBackend {
         return titleToApplicant;
     }
 
+    /**
+     * Get the job applications that a single applicant has submitted to this company.
+     * @param applicant The applicant who is being reviewed.
+     * @return the job applications that a single applicant has submitted to this company.
+     */
     ArrayList<JobApplication> getJobAppsByApplicantForCompany(Applicant applicant) {
         return this.hr.getBranch().getCompany().getAllApplicationsToCompany(applicant);
-    }
-
-    /**
-     * Hire or reject an application.
-     *
-     * @param jobApp The job application in question.
-     * @param toHire Whether or not the HR Coordinator wants to hire the applicant.
-     * */
-
-    boolean hireOrRejectApplication(JobApplication jobApp, boolean toHire) {
-        if (toHire) {
-            jobApp.getStatus().setHired();
-        } else {
-            jobApp.getStatus().setArchived();
-        }
-        BranchJobPosting jobPosting = jobApp.getJobPosting();
-        jobPosting.setFilled();
-        jobPosting.getInterviewManager().archiveRejected();
-        if (jobPosting.getInterviewManager().getNumOpenPositions() > 0) {
-            return false;
-        }
-        return true;
     }
 
     /**
@@ -198,7 +213,7 @@ class HRBackend {
      *
      * @param jobPosting         The job posting that has recently closed.
      * @param keyWordsAndPhrases The key words and phrases that the HR Coordinator has inputted.
-     * @return
+     * @return a list of job applications sorted in non-decreasing order based for this job posting.
      */
     ArrayList<JobApplication> getJobApplicationInNonDecreasingOrder(BranchJobPosting jobPosting, ArrayList<String> keyWordsAndPhrases) {
         JobApplicationGrader jobAppGrader = new JobApplicationGrader(jobPosting, keyWordsAndPhrases);
@@ -214,11 +229,22 @@ class HRBackend {
         branchJobPosting.getInterviewManager().rejectApplicationsForFirstRound(jobApps);
     }
 
-
+    /**
+     * Get the interviewers who are eligible to interview for this job posting.
+     * @param jobPosting    The job posting in question.
+     * @return the list of interviewers who are eligible to interview for this job posting.
+     */
     ArrayList<Interviewer> getInterviewersInField(BranchJobPosting jobPosting) {
         return this.hr.getBranch().getFieldToInterviewers().get(jobPosting.getField());
     }
 
+    /**
+     * Set the interview configuration for this job posting.
+     * @param jobPosting    The job posting that is being set.
+     * @param isInterviewRoundOneOnOne  A list of whether or not each round configured is one-on-one
+     * @param descriptions  The descriptions for each round
+     * Precondition: isInterviewRoundOneOnOne.size() == descriptions.size()
+     */
     void setInterviewConfiguration(BranchJobPosting jobPosting, ArrayList<Boolean> isInterviewRoundOneOnOne,
                                    ArrayList<String> descriptions) {
         ArrayList<String[]> interviewConfiguration = new ArrayList<>();
@@ -257,19 +283,37 @@ class HRBackend {
                 jobAppSystem.getToday(), minNumDaysNotice);
     }
 
-    void selectApplicantsForHire(ArrayList<JobApplication> jobAppsToHire) {
-        BranchJobPosting jobPosting = jobAppsToHire.get(0).getJobPosting();
-        jobPosting.getInterviewManager().hireApplicants(jobAppsToHire);
+    /**
+     * Select applicants to hire.
+     *
+     * @param branchJobPosting The job posting for which a hiring decision is being made.
+     * @param jobAppsToHire    The list of applicants to hire.
+     */
+    void selectApplicantsForHire(BranchJobPosting branchJobPosting, ArrayList<JobApplication> jobAppsToHire) {
+        branchJobPosting.getInterviewManager().hireApplicants(jobAppsToHire);
     }
 
+    /**
+     * Get all interviewer notes for this job application.
+     * @param jobApp    The job application being viewed.
+     * @return a hash map of the interviewer notes for each round and for each interviewer
+     */
     HashMap<String, HashMap<Interviewer, String>> getAllInterviewNotesForApplication(JobApplication jobApp) {
         return jobApp.getAllInterviewNotesForApplication();
     }
 
+    /**
+     * Get a list of company job postings that can be implemented.
+     * @return a list of company job postigns that can be implemented.
+     */
     ArrayList<CompanyJobPosting> getCompanyJobPostingsThatCanBeExtended() {
         return this.hr.getBranch().getJobPostingManager().getExtendableCompanyJobPostings();
     }
 
+    /**
+     * Get a list of job postings that can be updated.
+     * @return a list of job postings that can be updated.
+     */
     ArrayList<BranchJobPosting> getJPThatCanBeUpdated() {
         return this.hr.getBranch().getJobPostingManager().getUpdatableJobPostings(this.jobAppSystem.getToday());
     }
