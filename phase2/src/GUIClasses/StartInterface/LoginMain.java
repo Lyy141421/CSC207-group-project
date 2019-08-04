@@ -320,6 +320,7 @@ public class LoginMain extends JPanel {
                     this.hideBlankField();
                 this.hideInvalidUsername();
                 this.GUILogin(userNameEntry.getText());
+                this.clearEntries(userNameEntry, passwordEntry);
                     break;
             case LoginBackend.WRONG_PASSWORD:
                 this.showPassError();
@@ -334,6 +335,11 @@ public class LoginMain extends JPanel {
                 this.hidePassError();
                     break;
         }
+    }
+
+    private void clearEntries(JTextField userNameEntry, JPasswordField passwordEntry) {
+        userNameEntry.setText("");
+        passwordEntry.setText("");
     }
 
     /**
