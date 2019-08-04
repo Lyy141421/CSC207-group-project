@@ -21,7 +21,7 @@ class NewUserSelector extends JPanel {
         typeSelector.setBounds(247, 105, 250, 30);
         this.add(typeSelector);
 
-        String[] userTypes = {"Applicant", "Interviewer", "HR Coordinator", "Reference"};
+        String[] userTypes = {"Applicant", "Interviewer", "HR Coordinator"};
         JComboBox selectorBox = new JComboBox(userTypes);
         selectorBox.setBounds(497, 105, 120, 30);
         this.selector = selectorBox;
