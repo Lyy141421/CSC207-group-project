@@ -14,8 +14,8 @@ import java.util.ArrayList;
 class ApplicantViewSearchResults extends JPanel {
     private ApplicantBackend backEnd;
 
-    ApplicantViewSearchResults(ArrayList<CompanyJobPosting> jobPostings, ApplicantBackend BackEnd) {
-        this.backEnd = BackEnd;
+    ApplicantViewSearchResults(ArrayList<CompanyJobPosting> jobPostings, ApplicantBackend backEnd) {
+        this.backEnd = backEnd;
         JPanel viewJobs = new JPanel(new GridLayout(1, 3));
 
         JPanel viewJobs0 = this.buildViewJobs0(jobPostings); viewJobs.add(viewJobs0);

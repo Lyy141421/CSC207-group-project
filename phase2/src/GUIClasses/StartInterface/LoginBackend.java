@@ -133,14 +133,16 @@ class LoginBackend {
         }
         Company company = jobAppSystem.getCompany(inputs.get("company"));
         if (company == null) {
-            jobAppSystem.createCompany(inputs.get("company"));
+            company = jobAppSystem.createCompany(inputs.get("company"));
+        }
+        Branch branch = company.getBranch(inputs.get("branch"));
+        if (branch == null) {
+            branch = company.createBranch(inputs.get("branch"), inputs.get("postalCode"));
         }
         String username = inputs.get("username");
         String password = inputs.get("password");
         String name = inputs.get("name");
         String email = inputs.get("email");
-        company = jobAppSystem.getCompany(inputs.get("company"));
-        Branch branch = company.getBranch(inputs.get("branch"));
         jobAppSystem.getUserManager().createHRCoordinator(
                 username, password, name, email, branch, jobAppSystem.getToday());
         return SUCCESS;
@@ -160,14 +162,18 @@ class LoginBackend {
         if (company == null) {
             return INVALID_COMPANY;
         } else {
-            String username = inputs.get("username");
-            String password = inputs.get("password");
-            String name = inputs.get("name");
-            String email = inputs.get("email");
             Branch branch = company.getBranch(inputs.get("branch"));
-            jobAppSystem.getUserManager().createInterviewer(
-                    username, password, name, email, branch, field, jobAppSystem.getToday());
-            return SUCCESS;
+            if (branch == null) {
+                return INVALID_BRANCH;
+            } else {
+                String username = inputs.get("username");
+                String password = inputs.get("password");
+                String name = inputs.get("name");
+                String email = inputs.get("email");
+                jobAppSystem.getUserManager().createInterviewer(
+                        username, password, name, email, branch, field, jobAppSystem.getToday());
+                return SUCCESS;
+            }
         }
     }
 
@@ -197,6 +203,9 @@ class LoginBackend {
                         break;
                     case "postalCode":
                         ret.put("postalCode", ((JTextField) c).getText());
+                        break;
+                    case "branch":
+                        ret.put("branch", ((JTextField) c).getText());
                         break;
                 }
             }

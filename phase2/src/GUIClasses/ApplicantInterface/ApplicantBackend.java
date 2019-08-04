@@ -65,11 +65,10 @@ class ApplicantBackend {
      */
     ArrayList<CompanyJobPosting> findApplicablePostings(String field, String companyName, String id, String tags, boolean
             byLocation) {
-        String[] tagsArray = tags.split(", ");
-        int idInteger = Integer.valueOf(id);
 
         ArrayList<CompanyJobPosting> applicableJobPostings = jobAppSystem.getAllOpenCompanyJobPostings();
         if (!id.isEmpty()) {
+            int idInteger = Integer.valueOf(id);
             return new ArrayList<>(Arrays.asList(jobAppSystem.getCompanyJobPostingWithID(idInteger)));
         }
         if (!companyName.isEmpty()) {
@@ -79,6 +78,7 @@ class ApplicantBackend {
             this.keepIntersection(applicableJobPostings, jobAppSystem.getOpenCompanyJobPostingsInField(field));
         }
         if (!tags.isEmpty()) {
+            String[] tagsArray = tags.split(", ");
             this.keepIntersection(applicableJobPostings, jobAppSystem.getCompanyJobPostingsWithTags(tagsArray));
         }
         if (byLocation) {

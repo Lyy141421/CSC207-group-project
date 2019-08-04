@@ -42,8 +42,8 @@ class ApplicantBrowsePostings extends JPanel {
         JLabel idText = new JLabel("ID Number :", SwingConstants.CENTER);
         idText.setBounds(145, 230, 100, 30);
 
-        JLabel tagsText = new JLabel("Tag(s) (e.g: Tag1, Tag2):", SwingConstants.CENTER);
-        tagsText.setBounds(145, 290, 100, 30);
+        JLabel tagsText = new JLabel("Tag(s) (e.g: Tag1, Tag2) :", SwingConstants.CENTER);
+        tagsText.setBounds(87, 290, 145, 30);
 
         this.add(companyText); this.add(fieldText); this.add(idText); this.add(tagsText);
     }

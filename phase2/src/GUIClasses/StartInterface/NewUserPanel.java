@@ -33,6 +33,7 @@ public class NewUserPanel extends JPanel {
         selector.getSelector().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                clearEntries();
                 JComboBox actor = (JComboBox) e.getSource();
                 CardLayout cl = (CardLayout) forms.getLayout();
                 cl.show(forms, (String) (actor.getSelectedItem()));
@@ -58,7 +59,6 @@ public class NewUserPanel extends JPanel {
         formPanel.add(new NewApplicantForm(), "Applicant");
         formPanel.add(new NewInterviewerForm(), "Interviewer");
         formPanel.add(new NewHRCForm(), "HR Coordinator");
-        formPanel.add(new NewReferenceForm(), "Reference");
 
         return formPanel;
     }
@@ -100,7 +100,12 @@ public class NewUserPanel extends JPanel {
         emailError.setVisible(false);
         buttonPanel.add(emailError);
 
-        JLabel companyError = new JLabel("Error - Branch not found");
+        JLabel branchError = new JLabel("Error - Branch not found");
+        branchError.setBounds(522, 15, 200, 20);
+        branchError.setVisible(false);
+        buttonPanel.add(branchError);
+
+        JLabel companyError = new JLabel("Error - Company not found");
         companyError.setBounds(522, 15, 200, 20);
         companyError.setVisible(false);
         buttonPanel.add(companyError);
@@ -192,6 +197,9 @@ public class NewUserPanel extends JPanel {
                 break;
             case LoginBackend.INVALID_BRANCH:
                 this.postUpdater("Error - Branch not found");
+                break;
+            case LoginBackend.INVALID_COMPANY:
+                this.postUpdater("Error - Company not found");
                 break;
             case LoginBackend.SUCCESS:
                 success.setVisible(true);

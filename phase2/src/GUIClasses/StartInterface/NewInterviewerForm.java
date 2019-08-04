@@ -19,42 +19,58 @@ class NewInterviewerForm extends JPanel {
     private void addFields() {
         JPasswordField intPassEntry = new JPasswordField();
         intPassEntry.setName("password");
-        intPassEntry.setBounds(437, 8, 150, 30);
+        intPassEntry.setBounds(260, 8, 150, 30);
         this.add(intPassEntry);
-
-        JTextField intEmailEntry = new JTextField();
-        intEmailEntry.setName("email");
-        intEmailEntry.setBounds(437, 77, 150, 30);
-        this.add(intEmailEntry);
-
-        JTextField intCompanyEntry = new JTextField();
-        intCompanyEntry.setName("company");
-        intCompanyEntry.setBounds(437, 112, 150, 30);
-        this.add(intCompanyEntry);
-
-        // TODO how to handle branch?
 
         JTextField intNameEntry = new JTextField();
         intNameEntry.setName("name");
-        intNameEntry.setBounds(437, 43, 150, 30);
+        intNameEntry.setBounds(260, 43, 150, 30);
         this.add(intNameEntry);
+
+        JTextField intEmailEntry = new JTextField();
+        intEmailEntry.setName("email");
+        intEmailEntry.setBounds(260, 77, 150, 30);
+        this.add(intEmailEntry);
+
+        JTextField intFieldEntry = new JTextField();
+        intFieldEntry.setName("field");
+        intFieldEntry.setBounds(555, 8, 150, 30);
+        this.add(intFieldEntry);
+
+        JTextField intCompanyEntry = new JTextField();
+        intCompanyEntry.setName("company");
+        intCompanyEntry.setBounds(555, 43, 150, 30);
+        this.add(intCompanyEntry);
+
+        JTextField intBranchEntry = new JTextField();
+        intBranchEntry.setName("branch");
+        intBranchEntry.setBounds(555, 77, 150, 30);
+        this.add(intBranchEntry);
     }
 
     private void addText() {
         JLabel intPassText = new JLabel("Password: ", SwingConstants.CENTER);
-        intPassText.setBounds(267, 8, 150, 30);
+        intPassText.setBounds(90, 8, 150, 30);
         this.add(intPassText);
 
+        JLabel intNameText = new JLabel("Legal Name: ", SwingConstants.CENTER);
+        intNameText.setBounds(90, 43, 150, 30);
+        this.add(intNameText);
+
         JLabel intEmailText = new JLabel("Email Address: ", SwingConstants.CENTER);
-        intEmailText.setBounds(267, 77, 150, 30);
+        intEmailText.setBounds(90, 77, 150, 30);
         this.add(intEmailText);
 
-        JLabel intCompanyText = new JLabel("Branch: ", SwingConstants.CENTER);
-        intCompanyText.setBounds(267, 112, 150, 30);
+        JLabel intFieldText = new JLabel("Field: ", SwingConstants.CENTER);
+        intFieldText.setBounds(415, 8, 150, 30);
+        this.add(intFieldText);
+
+        JLabel intCompanyText = new JLabel("Company: ", SwingConstants.CENTER);
+        intCompanyText.setBounds(415, 43, 150, 30);
         this.add(intCompanyText);
 
-        JLabel intNameText = new JLabel("Legal Name: ", SwingConstants.CENTER);
-        intNameText.setBounds(267, 43, 150, 30);
-        this.add(intNameText);
+        JLabel intBranchText = new JLabel("Branch: ", SwingConstants.CENTER);
+        intBranchText.setBounds(415, 77, 150, 30);
+        this.add(intBranchText);
     }
 }
