@@ -235,4 +235,16 @@ class ApplicantDocumentManagerTest {
         file2.delete();
         file1.delete();
     }
+
+    @Test
+    void testAddTextEntriesToAccount() {
+        Applicant applicant = new Applicant("ApplicantTest", "password", "John Smith",
+                "john_smith@gmail.com", "Toronto", LocalDate.of(2019, 7, 20));
+        ApplicantDocumentManager applicantDocumentManager = applicant.getDocumentManager();
+        Branch branch = this.createCompanyBranchEmployeesAndJobPostings();
+        BranchJobPosting jobPosting1 = branch.getJobPostingManager().getBranchJobPostings().get(0);
+        BranchJobPosting jobPosting2 = branch.getJobPostingManager().getBranchJobPostings().get(1);
+        JobApplication jobApplication1 = new JobApplication(applicant, jobPosting1, LocalDate.of(2019, 7, 29));
+
+    }
 }

@@ -12,15 +12,9 @@ import java.awt.event.ActionListener;
 import java.time.LocalDate;
 import java.util.HashMap;
 
-public class ApplicantTextDocSubmission extends JPanel {
+class ApplicantTextDocSubmission extends JPanel {
 
-    Applicant applicant;
-    JobApplication jobApp;
-
-    ApplicantTextDocSubmission(Applicant applicant, JobApplication jobApp) {
-        this.applicant = applicant;
-        this.jobApp = jobApp;
-
+    ApplicantTextDocSubmission(JobApplication jobApp) {
         JLabel titleText = new JLabel("Document Submission");
         titleText.setFont(new Font("Serif", Font.PLAIN, 22));
         titleText.setBounds(327, 20, 200, 40);
@@ -46,7 +40,7 @@ public class ApplicantTextDocSubmission extends JPanel {
             put("resume", (JTextArea) resumeScroll.getViewport().getView());
             put("coverLetter", (JTextArea) coverScroll.getViewport().getView());
         }};
-        submit.addActionListener(new SubmitDocumentsActionListener(applicant, jobApp, fileTypeToContents));
+        submit.addActionListener(new SubmitDocumentsActionListener(jobApp.getApplicant(), jobApp, fileTypeToContents));
 
         this.add(titleText); this.add(submit);
         this.add(resumeText); this.add(resumeScroll);

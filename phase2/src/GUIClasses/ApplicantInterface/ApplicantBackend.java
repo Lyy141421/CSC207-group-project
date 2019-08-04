@@ -29,6 +29,11 @@ class ApplicantBackend {
         this.applicant = (Applicant) user;
         this.jobAppSystem = jobAppSystem;
     }
+
+    Applicant getApplicant() {
+        return applicant;
+    }
+
     /**
      * Check if there are interviews on the date of login
      */
@@ -121,6 +126,10 @@ class ApplicantBackend {
             ret.add(app.getJobPosting());
         }
         return ret;
+    }
+
+    JobApplication createJobApplication(BranchJobPosting jobPosting) {
+        return new JobApplication(this.applicant, jobPosting, this.jobAppSystem.getToday());
     }
 
     /**
