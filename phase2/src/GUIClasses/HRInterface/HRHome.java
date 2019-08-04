@@ -2,32 +2,35 @@ package GUIClasses.HRInterface;
 
 import CompanyStuff.JobPostings.BranchJobPosting;
 import GUIClasses.CommonUserGUI.GUIElementsCreator;
+import GUIClasses.CommonUserGUI.NotificationsGUI;
 import GUIClasses.CommonUserGUI.UserMain;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
-class HRHome extends HRPanel {
+class HRHome extends JLayeredPane {
 
-    // TODO add a scroll bar on the right side
+    private HRBackend hrBackend;
 
     HRHome(HRBackend hrBackend) {
-        super(hrBackend);
-        this.setLayout(new GridBagLayout());
-        GridBagConstraints c = new GridBagConstraints();
-        c.weightx = 0.5;
-        c.gridx = 0;
-        c.gridy = 0;
-        this.add(this.createWelcomePanel(), c);
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.insets = new Insets(10, 10, 10, 10);
-        c.gridy = 1;
-        c.gridheight = 75;
+        this.hrBackend = hrBackend;
+        this.setLayout(null);
+        JPanel welcomePanel = this.createWelcomePanel();
+        welcomePanel.setBounds(170, 10, 300, 30);
+        this.add(welcomePanel, new Integer(0));
+        int y = 40;
         for (Object[] titleAndArray : this.createTitleToJobPostingsArray()) {
-            this.add(this.createJobPostingsTablePanel((String) titleAndArray[0], (ArrayList<BranchJobPosting>) titleAndArray[1]), c);
-            c.gridy += c.gridheight;
+            JPanel tablePanel = this.createJobPostingsTablePanel((String) titleAndArray[0], (ArrayList<BranchJobPosting>) titleAndArray[1]);
+            tablePanel.setBounds(30, y, 610, 125);
+            this.add(tablePanel, new Integer(0));
+            y += 135;
         }
+
+        NotificationsGUI notifications = new NotificationsGUI(hrBackend.getHR());
+        this.add(notifications.getNotificationsButton(), new Integer(1));
+        this.add(notifications.getNotificationsPanel(), new Integer(1));
+
     }
 
     private ArrayList<Object[]> createTitleToJobPostingsArray() {
@@ -71,13 +74,6 @@ class HRHome extends HRPanel {
         }
 
         return new GUIElementsCreator().createTablePanel(BranchJobPosting.CATEGORY_LABELS_FOR_HR, data);
-    }
-
-    /**
-     * Refreshes all the cards in InterviewerMain when any changes are made.
-     */
-    void refresh() {
-        ((UserMain) this.getParent().getParent()).refresh();
     }
 
 }

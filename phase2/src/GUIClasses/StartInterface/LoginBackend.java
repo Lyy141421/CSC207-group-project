@@ -38,7 +38,7 @@ class LoginBackend {
      * @return true iff the email address is valid.
      */
     private boolean isValidEmail(String email) {
-        String regex = "^([A-Za-z0-9]+(?:([._-])[A-Za-z0-9]+|[A-Za-z0-9]*))+@([A-Za-z0-9]+\\.)+[a-z]+$$";
+        String regex = "^([A-Za-z0-9]+(?:([._\\-])[A-Za-z0-9]+|[A-Za-z0-9]*))+@([A-Za-z0-9]+\\.)+[a-z]+$$";
         return Pattern.matches(regex, email);
     }
 
@@ -57,7 +57,7 @@ class LoginBackend {
     }
 
     private boolean isValidLegalName(String legalName) {
-        String regex = "^[A-Z][a-z]*((['-][A-Z][a-z]*)?)+( [A-Z][a-z]*((['-][A-Z][a-z]*)?)+)+$";
+        String regex = "^[A-Z][a-z]*(['\\-][A-Z][a-z]*)*( [A-Z][a-z]*(['\\-][A-Z][a-z]*)*)+$";
         return Pattern.matches(regex, legalName);
     }
 
@@ -95,7 +95,7 @@ class LoginBackend {
      */
     String createNewApplicant(HashMap<String, String> inputs) {
         String prelimStatus = this.createNewUser(inputs);
-        if (prelimStatus.equals(VALID_BASIC)) {
+        if (!prelimStatus.equals(VALID_BASIC)) {
             return prelimStatus;
         }
         String postalCode = inputs.get("postalCode");
@@ -118,7 +118,7 @@ class LoginBackend {
      */
     String createNewHRC(HashMap<String, String> inputs) {
         String prelimStatus = this.createNewUser(inputs);
-        if (prelimStatus.equals(VALID_BASIC)) {
+        if (!prelimStatus.equals(VALID_BASIC)) {
             return prelimStatus;
         }
         Company company = jobAppSystem.getCompany(inputs.get("company"));
@@ -147,7 +147,7 @@ class LoginBackend {
      */
     String createNewInterviewer(HashMap<String, String> inputs) {
         String prelimStatus = this.createNewUser(inputs);
-        if (prelimStatus.equals(VALID_BASIC)) {
+        if (!prelimStatus.equals(VALID_BASIC)) {
             return prelimStatus;
         }
         Company company = jobAppSystem.getCompany(inputs.get("company"));

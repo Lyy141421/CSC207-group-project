@@ -12,7 +12,7 @@ import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.util.HashMap;
 
-public class InterviewerViewOnly extends AbstractInterviewerPanel implements ListSelectionListener {
+public class InterviewerViewOnly extends InterviewerPanel implements ListSelectionListener {
     /**
      * Panel for only viewing interview information.
      */
@@ -34,8 +34,8 @@ public class InterviewerViewOnly extends AbstractInterviewerPanel implements Lis
     Interview interviewSelected;    // The interview selected
 
     // === Constructor ===
-    InterviewerViewOnly(InterviewerBackEnd interviewerInterface) {
-        super(interviewerInterface);
+    InterviewerViewOnly(InterviewerBackEnd interviewerBackEnd) {
+        super(interviewerBackEnd);
         this.setInterviews(this.getInterviewMap());
         this.setLayout(new BorderLayout());
 
@@ -53,7 +53,7 @@ public class InterviewerViewOnly extends AbstractInterviewerPanel implements Lis
      * @return the map of interviews to be displayed.
      */
     HashMap<String, Interview> getInterviewMap() {
-        return getTitleToInterviewMap(interviewerInterface.getAllIncompleteInterviews());
+        return getTitleToInterviewMap(interviewerBackEnd.getAllIncompleteInterviews());
     }
 
     /**
@@ -98,7 +98,7 @@ public class InterviewerViewOnly extends AbstractInterviewerPanel implements Lis
                 if (!e.getValueIsAdjusting()) {
                     if (applicantList.getSelectedIndex() != -1) {
                         jobAppSelected = interviewSelected.getJobApplications().get(applicantList.getSelectedIndex());
-                        documentViewer = new DocumentViewer(interviewerInterface.getFolderForJobApplication(jobAppSelected));
+                        documentViewer = new DocumentViewer(interviewerBackEnd.getFolderForJobApplication(jobAppSelected));
                         documentViewerPanel.add(documentViewer, BorderLayout.CENTER);
                         documentViewerPanel.revalidate();
                     }
@@ -132,7 +132,7 @@ public class InterviewerViewOnly extends AbstractInterviewerPanel implements Lis
      * Set the contents of the view notes panel
      */
     private void setViewNotesPanel(Interview interview) {
-        HashMap<Interviewer, String> interviewerToNotes = this.interviewerInterface.getInterviewerToNotes(interview);
+        HashMap<Interviewer, String> interviewerToNotes = this.interviewerBackEnd.getInterviewerToNotes(interview);
         this.viewNotesPanel.removeAll();
         for (Interviewer interviewer : interviewerToNotes.keySet()) {
             if (interviewerToNotes.get(interviewer) != null) {

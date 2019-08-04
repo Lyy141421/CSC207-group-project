@@ -14,7 +14,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
 
-class InterviewerSchedule extends AbstractInterviewerPanel {
+class InterviewerSchedule extends InterviewerPanel {
     /**
      * Panel for scheduling interviews.
      */
@@ -36,9 +36,9 @@ class InterviewerSchedule extends AbstractInterviewerPanel {
     private Interview interviewSelected;    // The interview selected by the interviewer
 
     // === Constructor ===
-    InterviewerSchedule(InterviewerBackEnd interviewerInterface) {
-        super(interviewerInterface);
-        this.interviews = getTitleToInterviewMap(interviewerInterface.getInterviewsThatNeedScheduling());
+    InterviewerSchedule(InterviewerBackEnd interviewerBackEnd) {
+        super(interviewerBackEnd);
+        this.interviews = getTitleToInterviewMap(interviewerBackEnd.getInterviewsThatNeedScheduling());
 
         this.setLayout(new BorderLayout());
         JPanel title = new GUIElementsCreator().createLabelPanel("Schedule Interviews", 20, true);
@@ -118,7 +118,7 @@ class InterviewerSchedule extends AbstractInterviewerPanel {
      */
     private JPanel createSelectDatePanel() {
         JPanel selectDatePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        int[] tomorrow = this.interviewerInterface.getTomorrow();
+        int[] tomorrow = this.interviewerBackEnd.getTomorrow();
         UtilDateModel dateModel = new UtilDateModel();
         dateModel.setDate(tomorrow[0], tomorrow[1] - 1, tomorrow[2]);
         dateModel.setSelected(true);
@@ -146,7 +146,7 @@ class InterviewerSchedule extends AbstractInterviewerPanel {
      */
     private JPanel createSelectTimePanel(LocalDate date) {
         JPanel selectTimePanel = new JPanel(new BorderLayout());
-        selectTimeBox = new JComboBox<>(this.interviewerInterface.getAvailableTimes(date));
+        selectTimeBox = new JComboBox<>(this.interviewerBackEnd.getAvailableTimes(date));
         selectTimePanel.add(selectTimeBox, BorderLayout.CENTER);
         return selectTimePanel;
     }
@@ -178,8 +178,8 @@ class InterviewerSchedule extends AbstractInterviewerPanel {
                 int month = datePicker.getModel().getMonth() + 1;
                 int day = datePicker.getModel().getDay();
                 dateSelected = LocalDate.of(year, month, day);
-                if (interviewerInterface.dateSelectedIsAfterToday(dateSelected)) {
-                    if (interviewerInterface.getAvailableTimes(dateSelected).length == 0) {
+                if (interviewerBackEnd.dateSelectedIsAfterToday(dateSelected)) {
+                    if (interviewerBackEnd.getAvailableTimes(dateSelected).length == 0) {
                         JOptionPane.showMessageDialog(scheduleDateTimePanel, "You have no time slots available on this date.");
                     } else {
                         selectDateButton.setEnabled(false);
@@ -213,7 +213,7 @@ class InterviewerSchedule extends AbstractInterviewerPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String timeSlotString = selectTimeBox.getItemAt(selectTimeBox.getSelectedIndex());
-                boolean canSchedule = interviewerInterface.scheduleInterview(interviewSelected, dateSelected,
+                boolean canSchedule = interviewerBackEnd.scheduleInterview(interviewSelected, dateSelected,
                         timeSlotString);
                 if (canSchedule) {
                     JOptionPane.showMessageDialog(scheduleDateTimePanel, "You have successfully scheduled an interview.");

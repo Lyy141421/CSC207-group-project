@@ -20,8 +20,8 @@ class InterviewerViewAndWriteNotes extends InterviewerViewOnly {
     private JTextArea notes;    // The text area where the notes are written.
 
     // === Constructor ===
-    InterviewerViewAndWriteNotes(InterviewerBackEnd interviewerInterface) {
-        super(interviewerInterface);
+    InterviewerViewAndWriteNotes(InterviewerBackEnd interviewerBackEnd) {
+        super(interviewerBackEnd);
         this.infoPane.addTab("Write notes", this.notesPanel);
     }
 
@@ -32,7 +32,7 @@ class InterviewerViewAndWriteNotes extends InterviewerViewOnly {
      */
     @Override
     HashMap<String, Interview> getInterviewMap() {
-        return getTitleToInterviewMap(interviewerInterface.getIncompleteInterviewsAlreadyOccurred());
+        return getTitleToInterviewMap(interviewerBackEnd.getIncompleteInterviewsAlreadyOccurred());
     }
 
     /**
@@ -50,7 +50,7 @@ class InterviewerViewAndWriteNotes extends InterviewerViewOnly {
      * Set the contents of the panel for writing notes.
      */
     private void setWriteNotesPanel() {
-        if (interviewerInterface.hasAlreadyWrittenNotes(interviewSelected)) {
+        if (interviewerBackEnd.hasAlreadyWrittenNotes(interviewSelected)) {
             notesPanel.setLayout(new BorderLayout());
             JPanel message = new GUIElementsCreator().createLabelPanel("You have already written notes for this interview", 18, false);
             message.setBorder(BorderFactory.createEmptyBorder(100, 20, 20, 20));
@@ -77,7 +77,7 @@ class InterviewerViewAndWriteNotes extends InterviewerViewOnly {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String note = notes.getText();
-                interviewerInterface.storeInterviewNotes(interviewSelected, note);
+                interviewerBackEnd.storeInterviewNotes(interviewSelected, note);
                 JOptionPane.showMessageDialog(notesPanel, "You have successfully written notes for this interview");
                 refresh();
             }

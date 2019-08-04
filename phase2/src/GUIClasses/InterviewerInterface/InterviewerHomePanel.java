@@ -2,19 +2,22 @@ package GUIClasses.InterviewerInterface;
 
 import CompanyStuff.Interview;
 import GUIClasses.CommonUserGUI.GUIElementsCreator;
+import GUIClasses.CommonUserGUI.NotificationsGUI;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
-class InterviewerHomePanel extends AbstractInterviewerPanel {
+class InterviewerHomePanel extends JLayeredPane {
     /**
      * The Home panel of the Interviewer GUI.
      */
 
+    private InterviewerBackEnd interviewerBackEnd;
+
     // === Constructor ===
-    InterviewerHomePanel(InterviewerBackEnd interviewerInterface) {
-        super(interviewerInterface);
+    InterviewerHomePanel(InterviewerBackEnd interviewerBackEnd) {
+        this.interviewerBackEnd = interviewerBackEnd;
 
         this.setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
@@ -34,6 +37,10 @@ class InterviewerHomePanel extends AbstractInterviewerPanel {
         c.gridheight = 100;
         c.insets = new Insets(10, 10, 10, 10);
         this.add(this.createIncompleteInterviewsPanel(), c);
+
+        NotificationsGUI notifications = new NotificationsGUI(interviewerBackEnd.getInterviewer());
+        this.add(notifications.getNotificationsButton());
+        this.add(notifications.getNotificationsPanel(), new Integer(0));
     }
 
     /**
@@ -42,9 +49,8 @@ class InterviewerHomePanel extends AbstractInterviewerPanel {
      * @return the welcome panel created.
      */
     private JPanel createWelcomePanel() {
-        JPanel welcomeMessage = new GUIElementsCreator().createLabelPanel("Welcome " +
-                this.interviewerInterface.getInterviewer().getLegalName(), 20, true);
-        return welcomeMessage;
+        return new GUIElementsCreator().createLabelPanel("Welcome " +
+                this.interviewerBackEnd.getInterviewer().getLegalName(), 20, true);
     }
 
     /**
@@ -65,7 +71,7 @@ class InterviewerHomePanel extends AbstractInterviewerPanel {
      * @return the panel created.
      */
     private JPanel createInterviewsToScheduleTablePanel() {
-        ArrayList<Interview> unscheduledInterviews = this.interviewerInterface.getInterviewsThatNeedScheduling();
+        ArrayList<Interview> unscheduledInterviews = this.interviewerBackEnd.getInterviewsThatNeedScheduling();
         Object[][] data = new Object[unscheduledInterviews.size()][];
 
         for (int i = 0; i < unscheduledInterviews.size(); i++) {
@@ -94,7 +100,7 @@ class InterviewerHomePanel extends AbstractInterviewerPanel {
      * @return the panel created.
      */
     private JPanel createUpcomingInterviewsTablePanel() {
-        ArrayList<Interview> scheduledInterviews = this.interviewerInterface.getScheduledUpcomingInterviews();
+        ArrayList<Interview> scheduledInterviews = this.interviewerBackEnd.getScheduledUpcomingInterviews();
         Object[][] data = new Object[scheduledInterviews.size()][];
 
         for (int i = 0; i < scheduledInterviews.size(); i++) {
@@ -122,7 +128,7 @@ class InterviewerHomePanel extends AbstractInterviewerPanel {
      * @return the panel created.
      */
     private JPanel createIncompleteInterviewsTablePanel() {
-        ArrayList<Interview> incompleteInterviews = this.interviewerInterface.getIncompleteInterviewsAlreadyOccurred();
+        ArrayList<Interview> incompleteInterviews = this.interviewerBackEnd.getIncompleteInterviewsAlreadyOccurred();
         Object[][] data = new Object[incompleteInterviews.size()][];
 
         for (int i = 0; i < incompleteInterviews.size(); i++) {

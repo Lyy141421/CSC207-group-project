@@ -23,8 +23,8 @@ class InterviewerCompleteInterviewFull extends InterviewerViewAndWriteNotes {
     private HashMap<JobApplication, ButtonGroup> jobAppsToButtonGroup = new HashMap<>();
 
     // === Constructor ===
-    InterviewerCompleteInterviewFull(InterviewerBackEnd interviewerInterface) {
-        super(interviewerInterface);
+    InterviewerCompleteInterviewFull(InterviewerBackEnd interviewerBackEnd) {
+        super(interviewerBackEnd);
         this.infoPane.addTab("Set results", this.resultsPanel);
     }
 
@@ -43,7 +43,7 @@ class InterviewerCompleteInterviewFull extends InterviewerViewAndWriteNotes {
      */
     private void setResultsPanelFull() {
         resultsPanel.removeAll();
-        if (!interviewerInterface.isCoordinator(interviewSelected)) {
+        if (!interviewerBackEnd.isCoordinator(interviewSelected)) {
             JPanel message = new GUIElementsCreator().createLabelPanel("You do not have permission to set the " +
                     "results of this interview", 18, false);
             message.setBorder(BorderFactory.createEmptyBorder(100, 20, 20, 20));
@@ -101,7 +101,7 @@ class InterviewerCompleteInterviewFull extends InterviewerViewAndWriteNotes {
                     jobAppToResults.put(jobApp, isAdvanced);
                     JOptionPane.showMessageDialog(resultsPanel, "You have successfully completed this interview.");
                 }
-                interviewerInterface.setInterviewResults(interviewSelected, jobAppToResults);
+                interviewerBackEnd.setInterviewResults(interviewSelected, jobAppToResults);
                 refresh();
             }
         });

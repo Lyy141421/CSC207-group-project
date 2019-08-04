@@ -8,20 +8,20 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 
-abstract class AbstractInterviewerPanel extends JPanel {
+abstract class InterviewerPanel extends JPanel {
     /**
      * Class that contains all shared instance variables/methods among the different cards.
      */
 
     // === Instance variables ===
-    InterviewerBackEnd interviewerInterface;   // Interviewer GUI backend
+    InterviewerBackEnd interviewerBackEnd;   // Interviewer GUI backend
     HashMap<String, Interview> interviews;  // The map of titles to interviews to be displayed on the left-hand side
     JList<String> interviewList = new JList<>();    // The list of interviews to be displayed on the left-hand side
     JSplitPane splitDisplay;    // The split display for the panels.
 
     // === Constructor ===
-    AbstractInterviewerPanel(InterviewerBackEnd interviewerInterface) {
-        this.interviewerInterface = interviewerInterface;
+    InterviewerPanel(InterviewerBackEnd interviewerBackEnd) {
+        this.interviewerBackEnd = interviewerBackEnd;
         splitDisplay = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
         splitDisplay.setDividerLocation(150);
     }

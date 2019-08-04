@@ -168,6 +168,7 @@ public class NewUserPanel extends JPanel {
      */
     private void postCreation(String status, JDialog success) {
         if (status.equals(SUCCESS)) {
+            this.hideErrorMessage();
             success.setVisible(true);
             this.clearEntries();
             this.masterLayout.show(this.parent, MainFrame.LOGIN);
@@ -188,6 +189,15 @@ public class NewUserPanel extends JPanel {
                 } else {
                     c.setVisible(false);
                 }
+            }
+        }
+    }
+
+    private void hideErrorMessage() {
+        JPanel buttons = this.getPanelByName(this, "buttonPanel");
+        for (Component c : buttons.getComponents()) {
+            if (c instanceof JLabel) {
+                c.setVisible(false);
             }
         }
     }

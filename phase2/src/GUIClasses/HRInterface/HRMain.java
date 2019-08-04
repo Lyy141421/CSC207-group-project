@@ -27,7 +27,7 @@ public class HRMain extends UserMain {
 
     static final int NUM_CARDS = 7;
     HRBackend hrBackend;
-    JPanel cards = new JPanel(new CardLayout());
+    private JPanel cards = new JPanel(new CardLayout());
 
     public HRMain(HRCoordinator hrCoordinator, JobApplicationSystem jobAppSystem, LogoutActionListener logoutActionListener) {
         this.hrBackend = new HRBackend(jobAppSystem, hrCoordinator);
@@ -37,12 +37,13 @@ public class HRMain extends UserMain {
         GridBagConstraints c = new GridBagConstraints();
         c.gridx = 0;
         c.gridy = 0;
-        c.weightx = 0.15;
+        c.weightx = 0.7;
         c.weighty = 0.5;
         c.fill = GridBagConstraints.BOTH;
         this.add(new HRSideBarMenuPanel(cards, logoutActionListener), c);
 
         c.gridx++;
+        c.weightx = 1;
         this.add(cards, c);
     }
 

@@ -42,6 +42,8 @@ public class LoginMain extends JPanel {
     private ArrayList<JLabel> errors = new ArrayList<>();
     private JButton createNewButton;
     private JDatePickerImpl datePicker;
+    private JTextField userNameEntry;
+    private JPasswordField passwordEntry;
 
     // === Connection to backend ===
     private JobApplicationSystem jobAppSystem;
@@ -113,10 +115,10 @@ public class LoginMain extends JPanel {
      * Adds the interactive items necessary for the login screen.
      */
     private void addEntryItems() {
-        JTextField userNameEntry = new JTextField();
+        userNameEntry = new JTextField();
         userNameEntry.setBounds(427, 220, 100, 30);
 
-        JPasswordField passwordEntry = new JPasswordField();
+        passwordEntry = new JPasswordField();
         passwordEntry.setBounds(427, 255, 100, 30);
 
         JButton loginButton = new JButton("Login/Register");
@@ -125,23 +127,22 @@ public class LoginMain extends JPanel {
             public void actionPerformed(ActionEvent e){
                 if (!dateInputted) {
                     getDate();
+                } else {
+                    login();
                 }
-                login(userNameEntry, passwordEntry);
             }
         });
-        this.setCreateNewButton(userNameEntry, passwordEntry);
         this.add(userNameEntry);
         this.add(passwordEntry);
+        this.setCreateNewButton();
         this.add(createNewButton);
         this.add(loginButton);
     }
 
     /**
      * Sets the create new user button.
-     * @param userNameEntry The username text field
-     * @param passwordEntry The password field.
      */
-    private void setCreateNewButton(JTextField userNameEntry, JPasswordField passwordEntry) {
+    private void setCreateNewButton() {
         createNewButton = new JButton(CREATE_NEW);
         createNewButton.setBounds(460, 335, 100, 20);
         createNewButton.addActionListener(new ActionListener() {
@@ -246,6 +247,7 @@ public class LoginMain extends JPanel {
                     updateSystem(today);
                     popup.dispose();
                     dateInputted = true;
+                    login();
                 } else {
                     JOptionPane.showMessageDialog(popup, "Invalid date. Please pick again");
                 }
@@ -259,7 +261,7 @@ public class LoginMain extends JPanel {
     /**
      * Attempts login with the provided information
      */
-    private void login(JTextField userNameEntry, JPasswordField passwordEntry) {
+    private void login() {
         String result = backend.login(userNameEntry.getText(), new String(passwordEntry.getPassword()));
         if (result.equals(NewUserPanel.SUCCESS)) {
             this.hideAllErrors();

@@ -27,12 +27,12 @@ public class InterviewerMain extends UserMain {
     static String COMPLETE = "COMPLETE";
 
     // === Instance variables ===
-    private InterviewerBackEnd interviewerInterface;   // The backend class for the Interviewer GUI
+    private InterviewerBackEnd interviewerBackEnd;   // The backend class for the Interviewer GUI
     private JPanel cards = new JPanel(new CardLayout());        // The panel that contains all the Interviewer cards
 
     // === Constructor ===
     public InterviewerMain(Interviewer interviewer, JobApplicationSystem jobAppSystem, LogoutActionListener logoutActionListener) {
-        this.interviewerInterface = new InterviewerBackEnd(jobAppSystem, interviewer);
+        this.interviewerBackEnd = new InterviewerBackEnd(jobAppSystem, interviewer);
         this.setLayout(new GridBagLayout());
         this.setCards();
 
@@ -57,11 +57,11 @@ public class InterviewerMain extends UserMain {
      * Sets the cards for the Interviewer GUI.
      */
     public void setCards() {
-        cards.add(new InterviewerHomePanel(this.interviewerInterface), InterviewerMain.HOME);
-        cards.add(new UserProfilePanel(this.interviewerInterface.getInterviewer()), InterviewerMain.PROFILE);
-        cards.add(new InterviewerSchedule(this.interviewerInterface), InterviewerMain.SCHEDULE);
-        cards.add(new InterviewerViewOnly(this.interviewerInterface), InterviewerMain.INCOMPLETE);
-        cards.add(new InterviewerCompleteInterviewFull(this.interviewerInterface), InterviewerMain.COMPLETE);
+        cards.add(new InterviewerHomePanel(this.interviewerBackEnd), InterviewerMain.HOME);
+        cards.add(new UserProfilePanel(this.interviewerBackEnd.getInterviewer()), InterviewerMain.PROFILE);
+        cards.add(new InterviewerSchedule(this.interviewerBackEnd), InterviewerMain.SCHEDULE);
+        cards.add(new InterviewerViewOnly(this.interviewerBackEnd), InterviewerMain.INCOMPLETE);
+        cards.add(new InterviewerCompleteInterviewFull(this.interviewerBackEnd), InterviewerMain.COMPLETE);
     }
 
     public void refresh() {
