@@ -49,6 +49,7 @@ class ApplicantTextDocSubmission extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 new SubmitDocumentsActionListener(masterPanel, jobApp.getApplicant(), jobApp, fileTypeToContents).actionPerformed(e);
+                ((ApplicantPanel)masterPanel).refresh();
             }
         });
         returnButton.addActionListener(new ActionListener() {

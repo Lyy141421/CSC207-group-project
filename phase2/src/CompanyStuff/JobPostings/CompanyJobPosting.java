@@ -4,7 +4,6 @@ import ApplicantStuff.Applicant;
 import CompanyStuff.Branch;
 import CompanyStuff.Company;
 import NotificationSystem.Observable;
-import NotificationSystem.Observer;
 
 import java.io.Serializable;
 import java.time.LocalDate;
