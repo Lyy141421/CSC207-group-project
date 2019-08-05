@@ -201,36 +201,6 @@ public class JobApplication implements Serializable {
                 this.getJobPosting().getReferenceCloseDate().toString()};
     }
 
-    /**
-     * Get a string of what an applicant should see when viewing their applications.
-     *
-     * @return a string of what an applicant should see when viewing their applications.
-     */
-    public String toStringForApplicant() {
-        String s = "Application ID: " + this.getId() + "\n";
-        s += "Job Posting: " + jobPosting.getTitle() + " -- ID: " + jobPosting.getId() + "\n";
-        s += "Status: " + this.getStatus().getDescription() + "\n";
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        s += "Application date: " + this.getApplicationDate().format(dtf);
-        return s;
-    }
-
-    /**
-     * Get a string of the overview of this job application, including id, applicant name, job posting, status,
-     * and application date.
-     *
-     * @return a string of the overview of this job application.
-     */
-    public String getOverview() {
-        String s = "Application ID: " + this.getId() + "\n";
-        s += "Applicant: " + this.getApplicant().getLegalName() + "(" + this.getApplicant().getUsername() + ")" + "\n";
-        s += "Job Posting: " + this.getJobPosting().getTitle() + " -- ID: " + this.getJobPosting().getId();
-        s += "Status: " + this.status.getDescription() + "\n";
-        s += "Application date: " + this.getApplicationDate().toString();
-
-        return s;
-    }
-
 
     @Override
     public String toString() {
