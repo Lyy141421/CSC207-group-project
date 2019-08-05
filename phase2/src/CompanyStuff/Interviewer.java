@@ -127,7 +127,7 @@ public class Interviewer extends User {
     public LocalDate getFirstDateAvailableOnOrAfterDate(LocalDate date) {
         LocalDate availableDate = date;
         while (!this.isAvailable(availableDate)) {
-            availableDate.plusDays(1);
+            availableDate = availableDate.plusDays(1);
         }
         return availableDate;
     }
