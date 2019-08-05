@@ -1,0 +1,38 @@
+Sofia Martin
+0120 Your Street, Your City, NB
+123-456-7890 | smartin@mail.utoronto.ca
+
+Career Objective
+- To obtain an entry-level positions as a computer systems programmer.
+
+Education
+- University of Toronto
+    - Bachelor of Science, Computer Science     May 2010
+
+Related Courses
+- Data Structures Concepts
+- Object-Oriented Programming Language
+- Computer Organization and Assembly Language
+- Programming Languages and Translation
+- Into to Software Engineering
+- File Structures and Database System
+
+Technical Skills
+- Certifications: CompTIA A+, HDI Helpdesk Certified
+- Languages: Visual Basic, SQL, HTML, ASP, CSS, C++, Perl, Java
+- Operating System: Windows, UNIX, Linux
+- Database Systems: Oracle, ADB2, Relational Databases
+
+Work Experience
+- New Computer Company  Toronto, ON
+    - Customer Service Representative   August 2009 - Present
+        - Assist customers by addressing software installation and operation questions
+        - Provide support to Customer Serivice Traning Program
+        - Participate in extensive product traning program
+        - Prepare monthly reports
+
+Leadership Skills
+- President of the Computer Science Student Union (UofT)    Fall 2009 - Spring 2010
+
+Foreign Language Skills
+- Fluent in English, French, Swahili

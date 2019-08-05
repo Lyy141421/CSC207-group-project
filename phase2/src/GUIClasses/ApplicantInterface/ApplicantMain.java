@@ -59,10 +59,17 @@ class ApplicantMain extends JPanel {
         ret.add(new ApplicantHome(applicant), "HOME");
         ret.add(new ApplicantBrowsePostings(applicantBackend, masterPanel), "POSTINGS");
         ret.add(new UserProfilePanel(applicant), "PROFILE");
-        ret.add(new DocumentViewer(applicant.getDocumentManager().getFolder()), "DOCUMENTS");
+        ret.add(this.createApplicantDocumentViewer(), "DOCUMENTS");
         ret.add(new ApplicantSchedule(applicantBackend), "SCHEDULE");
         ret.add(new ApplicantViewApps(applicant), "MANAGE");
         return ret;
+    }
+
+    private JPanel createApplicantDocumentViewer() {
+        JPanel panel = new JPanel();
+        panel.setLayout(new GridBagLayout());
+        panel.add(new DocumentViewer(applicantBackend.getApplicantFolder()), new GridBagConstraints());
+        return panel;
     }
 
     public static void main(String[] args) {

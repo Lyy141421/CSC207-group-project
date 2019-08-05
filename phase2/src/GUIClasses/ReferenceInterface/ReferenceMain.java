@@ -61,7 +61,7 @@ public class ReferenceMain extends UserMain {
     public void setCards() {
         cards.add(new ReferenceHomePanel(this.referenceBackEnd), UserMain.HOME);
         cards.add(new UserProfilePanel(this.referenceBackEnd.getReference()), UserMain.PROFILE);
-        cards.add(new ReferenceSubmitLetterPanel(this.referenceBackEnd), SUBMIT_REFERENCE_LETTER);
+        cards.add(new ReferenceSubmitLetterPanel(cards, this.referenceBackEnd), SUBMIT_REFERENCE_LETTER);
         cards.add(new ReferenceViewRefereeJobPostingsPanel(this.referenceBackEnd), VIEW_REFEREE_JOB_POSTINGS);
     }
 

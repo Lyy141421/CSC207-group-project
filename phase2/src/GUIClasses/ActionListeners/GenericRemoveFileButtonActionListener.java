@@ -1,5 +1,7 @@
 package GUIClasses.ActionListeners;
 
+import GUIClasses.CommonUserGUI.RemoveFileButtonsPanel;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -8,12 +10,12 @@ import java.io.File;
 public abstract class GenericRemoveFileButtonActionListener<T> implements ActionListener {
 
     private T mainPanel;
-    private JButton buttonToRemove;
+    private RemoveFileButtonsPanel buttonsPanel;
     private File fileToRemove;
 
-    public GenericRemoveFileButtonActionListener(T mainPanel, JButton buttonToRemove, File fileToRemove) {
+    public GenericRemoveFileButtonActionListener(T mainPanel, RemoveFileButtonsPanel buttonsPanel, File fileToRemove) {
         this.mainPanel = mainPanel;
-        this.buttonToRemove = buttonToRemove;
+        this.buttonsPanel = buttonsPanel;
         this.fileToRemove = fileToRemove;
     }
 
@@ -24,11 +26,11 @@ public abstract class GenericRemoveFileButtonActionListener<T> implements Action
         return this.mainPanel;
     }
 
-    JButton getButtonToRemove() {
-        return this.buttonToRemove;
+    File getFileToRemove() {
+        return this.fileToRemove;
     }
 
-    public File getFileToRemove() {
-        return this.fileToRemove;
+    RemoveFileButtonsPanel getButtonsPanel() {
+        return this.buttonsPanel;
     }
 }

@@ -14,7 +14,6 @@ class InterviewConfigDialog extends JDialog {
 
     HRBackend hrBackend;
     private BranchJobPosting branchJobPosting;
-    private JFrame parent;
 
     private JDialog container = this;
 
@@ -30,7 +29,6 @@ class InterviewConfigDialog extends JDialog {
 
     InterviewConfigDialog(JFrame parent, HRBackend hrBackend, BranchJobPosting branchJobPosting, JButton returnButton) {
         super(parent, "Set interview formats");
-        this.parent = parent;
         this.hrBackend = hrBackend;
         this.branchJobPosting = branchJobPosting;
         this.returnButton = returnButton;

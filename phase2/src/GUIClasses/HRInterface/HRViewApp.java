@@ -106,7 +106,7 @@ class HRViewApp extends HRPanel {
                     jobAppSelected = currApps.get(selectedTitle);
                     overview.setText(jobAppSelected.toString());
                     documentViewer.removeAll();
-                    documentViewer.add(createDocumentViewer(jobAppSelected));
+                    documentViewer.add(createDocumentViewer(jobAppSelected), new GridBagConstraints());
                     interviewNotesPanel.removeAll();
                     setInterviewNotesPanel();
                 }
@@ -118,6 +118,7 @@ class HRViewApp extends HRPanel {
         this.infoPane = new JTabbedPane();
         this.infoPane.addTab(OVERVIEW, makeOverviewTab("Select an application to view overview."));
         this.documentViewer = new JPanel();
+        this.documentViewer.setLayout(new GridBagLayout());
         this.infoPane.addTab(FILE, this.documentViewer);
         this.interviewNotesPanel = new JPanel();
         this.infoPane.addTab(INTERVIEW_NOTES, this.interviewNotesPanel);

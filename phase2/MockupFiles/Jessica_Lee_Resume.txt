@@ -1,0 +1,32 @@
+Jessica Lee
+0120 Your Street, Your City, AB
+123-456-7890 | jessica.lee@mail.utoronto.ca
+
+Education
+- University of Toronto
+    - Bachelor of Science, Computer Science Specialist    May 2010
+
+Related Courses
+- Data Structures Concepts
+- Object-Oriented Programming Language
+- Computer Organization and Assembly Language
+- Programming Languages and Translation
+- Into to Software Engineering
+- File Structures and Database System
+- Intro to Software Design
+
+Technical Skills
+- Languages: C++, Java, Python, HTML, Javascript
+- Operating System: Windows, UNIX, Linux
+- Version Control: Git
+
+Programming Skills:
+- Implementing design patterns (e.g: Observer design pattern, Factory Method, Model-View-Controller, etc)
+- Eliminating code smells (e.g: Divergent change, shotgun surgery, long class, lazy class, etc)
+- Developing GUI using Java Swing
+
+Teamwork Skills
+- Developed a mock job application system with four other classmates
+
+Foreign Language Skills
+- Fluent in English, French

@@ -15,7 +15,6 @@ abstract class AbstractDocumentUser extends JPanel implements ActionListener {
     private JList list; // The list of file names that the user can choose from.
     private String[] fileNames; // The file names of files that this user can view.
     private File[] files;   // The files that this user can view
-    GridBagConstraints c;
 
     // === Representation Invariant ===
     // The elements in fileNames and files correspond to each other (ie, fileNames[0] is the file name of files[0])
@@ -27,10 +26,9 @@ abstract class AbstractDocumentUser extends JPanel implements ActionListener {
 
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         label.setAlignmentX(Component.CENTER_ALIGNMENT);
-        label.setBorder(BorderFactory.createEmptyBorder(50, 0, 0, 0));
         this.add(label);
-
-        this.add(this.createListPanel());
+        this.setListScrollPane();
+        this.add(list);
         this.add(Box.createRigidArea(new Dimension(0, 10)));
         this.add(this.createButtonPanel());
     }
@@ -43,7 +41,6 @@ abstract class AbstractDocumentUser extends JPanel implements ActionListener {
         button.setEnabled(false);
         button.setSize(50, 20);
         buttonPanel.add(button);
-        buttonPanel.setBorder(BorderFactory.createEmptyBorder(30, 0, 30, 0));
         buttonPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
         button.addActionListener(this);
         return buttonPanel;
@@ -78,7 +75,7 @@ abstract class AbstractDocumentUser extends JPanel implements ActionListener {
     /**
      * Create the list panel.
      */
-    private JPanel createListPanel() {
+    private void setListScrollPane() {
         list = new JList(this.fileNames);
         list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         list.setSelectedIndex(-1);
@@ -91,11 +88,7 @@ abstract class AbstractDocumentUser extends JPanel implements ActionListener {
             }
         });
 
-        JPanel listPanel = new JPanel();
-        listPanel.add(new JScrollPane(list));
-        listPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
-        listPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        return listPanel;
+        list.setPreferredSize(new Dimension(250, 200));
     }
 
 }

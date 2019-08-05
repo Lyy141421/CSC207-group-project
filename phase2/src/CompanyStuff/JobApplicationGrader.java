@@ -22,7 +22,10 @@ public class JobApplicationGrader {
     // === Constructor ===
     public JobApplicationGrader(BranchJobPosting jobPosting, ArrayList<String> keyWordsAndPhrases) {
         this.jobApps = jobPosting.getJobApplications();
-        this.keyWordsAndPhrases = keyWordsAndPhrases;
+        this.keyWordsAndPhrases = new ArrayList<>();
+        for (String keyWordOrPhrase : keyWordsAndPhrases) {
+            this.keyWordsAndPhrases.add(keyWordOrPhrase.toLowerCase());
+        }
     }
 
     // === Other methods ===

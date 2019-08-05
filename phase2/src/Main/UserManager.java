@@ -97,9 +97,12 @@ public class UserManager {
      */
     public void addReferences(JobApplication jobApp, ArrayList<String> emails) {
         for (String email : emails) {
-            Reference reference = (Reference) this.findUserByEmail(email);
-            if (reference == null) {
+            User user = this.findUserByEmail(email);
+            Reference reference;
+            if (!(user instanceof Reference)) {
                 reference = this.createReference(email, jobApp.getApplicationDate());
+            } else {
+                reference = (Reference) user;
             }
             reference.addJobApplication(jobApp);
         }
