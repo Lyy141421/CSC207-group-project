@@ -3,6 +3,7 @@ package CompanyStuff;
 import ApplicantStuff.Applicant;
 import ApplicantStuff.JobApplication;
 import CompanyStuff.JobPostings.BranchJobPosting;
+import CompanyStuff.JobPostings.CompanyJobPosting;
 import DocumentManagers.DocumentManager;
 import org.junit.jupiter.api.Test;
 
@@ -12,6 +13,20 @@ import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.*;
 
 class CompanyTest {
+
+    private LocalDate today = LocalDate.of(2019, 7, 29);
+
+    Company createCompany(String name){
+        Company company = new Company(name);
+        company.createBranch(name + " Branch", "Toronto");
+        createHR(company, name + "HR");
+        return company;
+    }
+
+    HRCoordinator createHR(Company company, String name) {
+        return new HRCoordinator(name, "ABC123", name + " LeagalName",
+                name + "@gmail.com", company.getBranch(name + " Branch"), today);
+    }
 
     @Test
     void testConstructor() {
