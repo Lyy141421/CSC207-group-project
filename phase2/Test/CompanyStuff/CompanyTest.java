@@ -25,7 +25,7 @@ class CompanyTest {
 
     HRCoordinator createHR(Company company, String name) {
         return new HRCoordinator(name, "ABC123", name + " LeagalName",
-                name + "@gmail.com", company.getBranch(name + " Branch"), today);
+                name + "@gmail.com", company.getBranches().get(0), today);
     }
 
     @Test
@@ -39,6 +39,11 @@ class CompanyTest {
 
     @Test
     void testAddCompanyJobPosting() {
+    }
+
+    @Test
+    void testgetBranch() {
+
     }
 
     @Test
