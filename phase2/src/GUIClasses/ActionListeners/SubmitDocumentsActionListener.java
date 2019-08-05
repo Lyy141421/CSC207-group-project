@@ -48,7 +48,11 @@ public class SubmitDocumentsActionListener implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         this.updateFileStorage();
         JPanel parent = (JPanel) ((JButton) e.getSource()).getParent();
-        JOptionPane.showMessageDialog(parent, "You have successfully submitted " + filesToSubmit.size() + " files.");
+        int value = filesToSubmit.size();
+        if (filesToSubmit.isEmpty()) {
+            value = this.fileTypeToTextEntry.size();
+        }
+        JOptionPane.showMessageDialog(parent, "You have successfully submitted " + value + " files.");
         ((CardLayout) cardPanel.getLayout()).first(cardPanel);
         if (cardPanel.getParent() instanceof UserMain) {
             ((UserMain) cardPanel.getParent()).refresh();

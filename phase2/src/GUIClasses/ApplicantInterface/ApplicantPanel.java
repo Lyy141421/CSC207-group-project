@@ -15,12 +15,15 @@ public class ApplicantPanel extends UserMain {
     private Applicant applicant;
     private JobApplicationSystem jobAppSystem;
     private LogoutActionListener logout;
+    private JPanel cards = new JPanel(new CardLayout());
+    private ApplicantMain applicantMain;
 
     public ApplicantPanel(Applicant applicant, JobApplicationSystem jobAppSystem, LogoutActionListener logout) {
         this.setLayout(new CardLayout());
         this.applicant = applicant;
         this.jobAppSystem = jobAppSystem;
         this.logout = logout;
+
         this.setCards();
     }
 
@@ -29,9 +32,13 @@ public class ApplicantPanel extends UserMain {
         this.add(new ApplicantViewApps(), "SearchResults");
     }
 
-    // Abstract method in UserMain
+    @Override
     public void refresh() {
         this.removeAll();
         this.setCards();
+        ((CardLayout) cards.getLayout()).show(cards, "Main");
+        applicantMain.refresh();
+//        cards.removeAll();
+//        this.setCards();
     }
 }
