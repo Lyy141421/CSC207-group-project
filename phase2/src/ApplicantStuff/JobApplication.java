@@ -60,6 +60,10 @@ public class JobApplication implements Serializable {
     }
 
     // === Getters ===
+    public static int getTotalNumOfApplications() {
+        return totalNumOfApplications;
+    }
+
     public int getId() {
         return this.id;
     }
@@ -90,6 +94,10 @@ public class JobApplication implements Serializable {
 
     public ArrayList<Interview> getInterviews() {
         return this.interviews;
+    }
+
+    public static void setTotalNumOfApplications(int totalNum) {
+        totalNumOfApplications = totalNum;
     }
 
     // === Other methods ===

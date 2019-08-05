@@ -111,7 +111,7 @@ public class JobApplicationSystem {
         }
     }
 
-    public ArrayList<CompanyJobPosting> getAllOpenCompanyJobPostings() {
+    private ArrayList<CompanyJobPosting> getAllOpenCompanyJobPostings() {
         ArrayList<CompanyJobPosting> allOpenCompanyJobPostings = new ArrayList<>();
         for (Company company : this.getCompanies()) {
             allOpenCompanyJobPostings.addAll(company.getAllOpenCompanyJobPostings());
