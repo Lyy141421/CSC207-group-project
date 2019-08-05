@@ -79,9 +79,7 @@ class ApplicantViewApps extends JPanel {
                 public void actionPerformed(ActionEvent e) {
                     if (backend.withdrawApp(app)) {
                         JOptionPane.showMessageDialog(thisPanel, "Application Successfully Withdrawn");
-                        ApplicantPanel applicantPanel = (ApplicantPanel) thisPanel.getParent();
-                        applicantPanel.refresh();
-                        ((CardLayout) applicantPanel.getLayout()).first(applicantPanel);
+                        // TODO refresh not working -- should go back to home page as well
                     } else {
                         JOptionPane.showMessageDialog(thisPanel, "Application Cannot Be Withdrawn");
                     }
