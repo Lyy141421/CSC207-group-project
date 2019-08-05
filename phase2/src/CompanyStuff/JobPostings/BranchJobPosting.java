@@ -37,8 +37,9 @@ public class BranchJobPosting extends CompanyJobPosting implements JobPostingObs
     // === Constructor ===
     public BranchJobPosting(String title, String field, String description, ArrayList<String> requiredDocuments,
                             ArrayList<String> tags, int numPositions, Branch branch,
-                            LocalDate postDate, LocalDate applicantCloseDate, LocalDate referenceCloseDate) {
-        super(title, field, description, requiredDocuments, tags, branch.getCompany(), branch);
+                            LocalDate postDate, LocalDate applicantCloseDate, LocalDate referenceCloseDate,
+                            int companyJobPostingId) {
+        super(title, field, description, requiredDocuments, tags, branch.getCompany());
         this.numPositions = numPositions;
         this.branch = branch;
         this.postDate = postDate;
@@ -46,6 +47,7 @@ public class BranchJobPosting extends CompanyJobPosting implements JobPostingObs
         this.referenceCloseDate = referenceCloseDate;
         this.filled = false;
         this.jobApplications = new ArrayList<>();
+        this.companyPostingId = companyJobPostingId;
     }
 
     // === Getters ===
@@ -86,9 +88,6 @@ public class BranchJobPosting extends CompanyJobPosting implements JobPostingObs
     }
 
     // === Setters ===
-    public void setCompanyPostingId(int companyPostingId) {
-        this.companyPostingId = companyPostingId;
-    }
 
     public void setFilled() {
         this.filled = true;

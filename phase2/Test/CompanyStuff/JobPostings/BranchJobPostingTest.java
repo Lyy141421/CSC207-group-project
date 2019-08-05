@@ -14,9 +14,11 @@ public class BranchJobPostingTest {
     void testConstructor() {
         Company company = new Company("HoraceCorp");
         Branch branch = company.createBranch("HQ", "M5S2E8");
+        CompanyJobPosting companyJobPosting = new CompanyJobPosting("Test Job", "HR", "This is a job.",
+                new ArrayList<>(), new ArrayList<>(), company);
         BranchJobPosting posting = new BranchJobPosting("Test Job", "HR", "This is a job.",
                 new ArrayList<>(), new ArrayList<>(), 1, branch, LocalDate.now(), LocalDate.now().plusDays(3),
-                LocalDate.now().plusDays(4));
+                LocalDate.now().plusDays(4), companyJobPosting.getId());
         assert posting.getTitle().equalsIgnoreCase("Test Job");
         assert posting.getField().equalsIgnoreCase("HR");
         assert posting.getDescription().equalsIgnoreCase("This is a job.");
@@ -41,14 +43,16 @@ public class BranchJobPostingTest {
                 "horace@gmail.com", branch1, LocalDate.now());
         HRCoordinator hrc2 = new HRCoordinator("boris", "ABC", "Boris Businessman",
                 "boris@gmail.com", branch2, LocalDate.now());
+        CompanyJobPosting companyJobPosting = new CompanyJobPosting("Test Job", "HR", "This is a job.",
+                new ArrayList<>(), new ArrayList<>(), company);
         BranchJobPosting posting1 = new BranchJobPosting("Test Job", "HR", "This is a job.",
                 new ArrayList<>(), new ArrayList<>(), 1, branch1, LocalDate.now(), LocalDate.now().plusDays(3),
-                LocalDate.now().plusDays(4));
+                LocalDate.now().plusDays(4), companyJobPosting.getId());
         BranchJobPosting posting2 = new BranchJobPosting("Test Job", "HR", "This is a job.",
                 new ArrayList<>(), new ArrayList<>(), 1, branch1, LocalDate.now(), LocalDate.now().plusDays(3),
-                LocalDate.now().plusDays(4));
+                LocalDate.now().plusDays(4), companyJobPosting.getId());
         CompanyJobPosting posting3 = new CompanyJobPosting("Test Job", "HR", "This is a job.",
-                new ArrayList<>(), new ArrayList<>(), company, branch1);
+                new ArrayList<>(), new ArrayList<>(), company);
         BranchJobPosting posting4 = hrc1.implementJobPosting(posting3, 1, LocalDate.now(),
                 LocalDate.now().plusDays(3), LocalDate.now().plusDays(4));
         BranchJobPosting posting5 = hrc2.implementJobPosting(posting3, 1, LocalDate.now(),

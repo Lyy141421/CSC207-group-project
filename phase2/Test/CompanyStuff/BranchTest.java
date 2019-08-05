@@ -4,6 +4,7 @@ import ApplicantStuff.Applicant;
 import ApplicantStuff.JobApplication;
 import CompanyStuff.JobPostings.BranchJobPosting;
 import CompanyStuff.JobPostings.BranchJobPostingManager;
+import CompanyStuff.JobPostings.CompanyJobPosting;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
@@ -50,10 +51,12 @@ public class BranchTest {
 
         Applicant applicant = new Applicant("jsmith", "password", "John Smith",
                 "john_smith@gmail.com", "Toronto", LocalDate.of(2019, 7, 20));
-
+        CompanyJobPosting companyJobPosting = new CompanyJobPosting("Title", "field", "descriptionhujedk",
+                new ArrayList<>(Arrays.asList("CV", "Cover Letter", "Reference Letter")), new ArrayList<>(), company);
         BranchJobPosting jobPosting = new BranchJobPosting("Title", "field", "descriptionhujedk",
                 new ArrayList<>(Arrays.asList("CV", "Cover Letter", "Reference Letter")), new ArrayList<>(),
-                1, branch, LocalDate.of(2019, 7, 15), LocalDate.of(2019, 7, 30), LocalDate.of(2019, 8, 10));
+                1, branch, LocalDate.of(2019, 7, 15), LocalDate.of(2019, 7, 30), LocalDate.of(2019, 8, 10),
+                companyJobPosting.getId());
         jobPosting.createInterviewManager();
         ArrayList<String[]> interviewConfiguration = new ArrayList<>();
         interviewConfiguration.add(new String[]{Interview.ONE_ON_ONE, "Phone interview"});

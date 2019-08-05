@@ -3,6 +3,7 @@ package CompanyStuff;
 import ApplicantStuff.Applicant;
 import ApplicantStuff.JobApplication;
 import CompanyStuff.JobPostings.BranchJobPosting;
+import CompanyStuff.JobPostings.CompanyJobPosting;
 import Miscellaneous.InterviewTime;
 import NotificationSystem.Notification;
 import NotificationSystem.NotificationManager;
@@ -37,8 +38,10 @@ class InterviewerTest {
     }
 
     BranchJobPosting createPosting(String name){
+        CompanyJobPosting companyJobPosting = new CompanyJobPosting(name, "Sales", "none", new ArrayList<>(),
+                new ArrayList<>(), company_a);
         return new BranchJobPosting(name, "Sales", "none", new ArrayList<>(),
-                new ArrayList<>(), 1, branch_a, today, today.plusDays(5), today.plusDays(5));
+                new ArrayList<>(), 1, branch_a, today, today.plusDays(5), today.plusDays(5), companyJobPosting.getId());
     }
 
     JobApplication createJobApplication(Interviewer interviewer){

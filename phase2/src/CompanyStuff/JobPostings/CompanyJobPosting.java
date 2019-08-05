@@ -41,7 +41,7 @@ public class CompanyJobPosting extends Observable implements Serializable {
 
     // === Constructor ===
     public CompanyJobPosting(String title, String field, String description, ArrayList<String> requiredDocuments,
-                      ArrayList<String> tags, Company company, Branch branch) {
+                             ArrayList<String> tags, Company company) {
         totalNumOfJobPostings++;
         this.id = totalNumOfJobPostings;
         this.title = title;
@@ -51,7 +51,6 @@ public class CompanyJobPosting extends Observable implements Serializable {
         this.tags = tags;
         this.company = company;
         this.branches = new ArrayList<>();
-        this.branches.add(branch);
     }
 
     // === Public methods ===

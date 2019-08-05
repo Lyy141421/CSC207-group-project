@@ -56,7 +56,7 @@ public class HRCoordinator extends User {
                                           ArrayList<String> requiredDocuments, ArrayList<String> tags, int numPositions,
                                           LocalDate postDate, LocalDate applicationCloseDate, LocalDate referenceCloseDate) {
         CompanyJobPosting companyJobPosting = new CompanyJobPosting(jobTitle, jobField, jobDescription, requiredDocuments,
-                tags, this.branch.getCompany(), this.branch);
+                tags, this.branch.getCompany());
         this.branch.getCompany().addCompanyJobPosting(companyJobPosting);
         return this.implementJobPosting(companyJobPosting, numPositions, postDate, applicationCloseDate, referenceCloseDate);
     }
@@ -65,9 +65,9 @@ public class HRCoordinator extends User {
                                                 LocalDate applicationCloseDate, LocalDate referenceCloseDate) {
         BranchJobPosting branchJobPosting = new BranchJobPosting(companyJobPosting.getTitle(), companyJobPosting.getField(),
                 companyJobPosting.getDescription(), companyJobPosting.getRequiredDocuments(), companyJobPosting.getTags(),
-                numPositions, this.branch, postDate, applicationCloseDate, referenceCloseDate);
+                numPositions, this.branch, postDate, applicationCloseDate, referenceCloseDate, companyJobPosting.getId());
+        companyJobPosting.addBranch(this.branch);
         branchJobPosting.attachJobPosting(companyJobPosting);
-        branchJobPosting.setCompanyPostingId(companyJobPosting.getId());
         this.branch.getJobPostingManager().addJobPosting(branchJobPosting);
         return branchJobPosting;
     }

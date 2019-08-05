@@ -16,13 +16,15 @@ class HRCoordinatorTest {
     private Branch branch = company.createBranch("BranchName", "E6H1P9");
 
     BranchJobPosting createPosting(String name){
+        CompanyJobPosting companyJobPosting = this.createCompanyJobPosting();
         return new BranchJobPosting(name, "Sales", "none", new ArrayList<>(),
-                new ArrayList<>(), 1, branch, today, today.plusDays(5), today.plusDays(5));
+                new ArrayList<>(), 1, branch, today, today.plusDays(5), today.plusDays(5),
+                companyJobPosting.getId());
     }
 
     CompanyJobPosting createCompanyJobPosting() {
         return new CompanyJobPosting("A Job Title", "Jobbing", "A Job", new ArrayList<>(),
-                new ArrayList<>(), company, branch);
+                new ArrayList<>(), company);
     }
 
     HRCoordinator createHR(String name) {

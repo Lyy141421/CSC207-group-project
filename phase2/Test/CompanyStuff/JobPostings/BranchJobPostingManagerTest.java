@@ -36,7 +36,7 @@ class BranchJobPostingManagerTest {
     CompanyJobPosting createCompanyJobPosting() {
         CompanyJobPosting posting = new CompanyJobPosting("Title", "field", "description",
         new ArrayList<>(Arrays.asList("CV", "Cover Letter", "Reference Letter")), new ArrayList<String>(),
-                company, branch);
+                company);
         company.addCompanyJobPosting(posting);
         return posting;
     }
@@ -46,8 +46,9 @@ class BranchJobPostingManagerTest {
     }
 
     BranchJobPosting createPosting(String name){
+        CompanyJobPosting companyJobPosting = this.createCompanyJobPosting();
         return new BranchJobPosting(name, "Sales", "none", new ArrayList<>(),
-                new ArrayList<>(), 1, branch, today, today.plusDays(5), today.plusDays(5));
+                new ArrayList<>(), 1, branch, today, today.plusDays(5), today.plusDays(5), companyJobPosting.getId());
     }
 
     Applicant createApplicant(String name) {

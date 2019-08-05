@@ -2,6 +2,7 @@ package ApplicantStuff;
 
 import CompanyStuff.*;
 import CompanyStuff.JobPostings.BranchJobPosting;
+import CompanyStuff.JobPostings.CompanyJobPosting;
 import Miscellaneous.InterviewTime;
 import org.junit.jupiter.api.Test;
 
@@ -17,8 +18,11 @@ class JobApplicationTest {
     BranchJobPosting createJobPosting() {
         Company company = new Company("Company");
         Branch branch = new Branch("Branch", "L4B3Z9", company);
+        CompanyJobPosting companyJobPosting = new CompanyJobPosting("Title", "field", "descriptionhujedk",
+                new ArrayList<>(Arrays.asList("CV", "Cover Letter", "Reference Letter")), new ArrayList<>(), company);
         return new BranchJobPosting("Title", "field", "descriptionhujedk",
-                new ArrayList<>(Arrays.asList("CV", "Cover Letter", "Reference Letter")), new ArrayList<>(), 1, branch, LocalDate.of(2019, 7, 15), LocalDate.of(2019, 7, 30), LocalDate.of(2019, 8, 10));
+                new ArrayList<>(Arrays.asList("CV", "Cover Letter", "Reference Letter")), new ArrayList<>(), 1, branch, LocalDate.of(2019, 7, 15), LocalDate.of(2019, 7, 30), LocalDate.of(2019, 8, 10),
+                companyJobPosting.getId());
     }
 
     JobApplication createJobApp() {

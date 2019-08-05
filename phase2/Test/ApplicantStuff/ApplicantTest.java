@@ -113,8 +113,11 @@ class ApplicantTest {
         Applicant applicant = this.createApplicant("jsmith");
         Company company = new Company("Company");
         Branch branch = new Branch("Branch", "Toronto", company);
+        CompanyJobPosting companyJobPosting = new CompanyJobPosting("Title", "field", "descriptionhujedk",
+                new ArrayList<>(Arrays.asList("CV", "Cover Letter", "Reference Letter")), new ArrayList<>(), company);
         BranchJobPosting jobPosting = new BranchJobPosting("Title", "field", "descriptionhujedk",
-                new ArrayList<>(Arrays.asList("CV", "Cover Letter", "Reference Letter")), new ArrayList<>(), 1, branch, LocalDate.of(2019, 7, 30), LocalDate.of(2019, 8, 10), LocalDate.now());
+                new ArrayList<>(Arrays.asList("CV", "Cover Letter", "Reference Letter")), new ArrayList<>(), 1, branch, LocalDate.of(2019, 7, 30), LocalDate.of(2019, 8, 10), LocalDate.now(),
+                companyJobPosting.getId());
         assertTrue(applicant.getJobApplicationManager().getJobApplications().isEmpty());
         assertTrue(jobPosting.getJobApplications().isEmpty());
         JobApplication jobApp = new JobApplication(applicant, jobPosting, LocalDate.of(2019, 7, 21));

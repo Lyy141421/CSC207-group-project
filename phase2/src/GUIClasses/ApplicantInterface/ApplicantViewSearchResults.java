@@ -173,7 +173,7 @@ class ApplicantViewSearchResults extends JPanel {
         viewJobIDNum.setBounds(17, 230, 250, 20);
         viewJobIDNum.setName(branchName); viewJobsAdded2.add(viewJobIDNum);
 
-        JButton applyViaText = new JButton("Apply now with new documents");
+        JButton applyViaText = new JButton("Apply now with text entry");
         applyViaText.setBounds(25, 270, 230, 25);
         applyViaText.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
