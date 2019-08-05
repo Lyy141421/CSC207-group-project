@@ -1,9 +1,10 @@
 package GUIClasses.ApplicantInterface;
 
-import ApplicantStuff.*;
-import CompanyStuff.Branch;
+import ApplicantStuff.Applicant;
+import ApplicantStuff.JobApplication;
 import CompanyStuff.Interview;
-import CompanyStuff.JobPostings.*;
+import CompanyStuff.JobPostings.BranchJobPosting;
+import CompanyStuff.JobPostings.CompanyJobPosting;
 import Main.JobApplicationSystem;
 import Main.User;
 
@@ -33,37 +34,6 @@ class ApplicantBackend {
     Applicant getApplicant() {
         return applicant;
     }
-
-    /**
-     * Check if there are interviews on the date of login
-     */
-    boolean checkUpcomingInterviews() {
-        ArrayList<Interview> upcomingInterviews = applicant.getJobApplicationManager().getUpcomingInterviews(
-                jobAppSystem.getToday());
-        return (upcomingInterviews.size() > 0);
-    }
-
-    /*
-     * Returns an arraylist containing all the job postings that apply to the applicant
-     */
-    // TODO fix
-//    ArrayList<BranchJobPosting> findApplicablePostings(String field,
-//                                                       String companyName, String ID, String Tags) {
-//        ArrayList<BranchJobPosting> openJobPostings =
-//                applicant.getOpenJobPostingsNotAppliedTo(jobAppSystem); //TODO are you serious
-//        ArrayList<BranchJobPosting> ret = new ArrayList<>();
-//        for (BranchJobPosting posting : openJobPostings) {
-//            String filterField = (field == null) ? posting.getField() : field;
-//            String filterCompanyName = (companyName == null) ? posting.getBranch().getName() : companyName;
-//            //ID, tags
-//            if (filterField.equalsIgnoreCase(posting.getField())
-//                    && filterCompanyName.equalsIgnoreCase(posting.getBranch().getName())) {
-//                ret.add(posting);
-//            }
-//        }
-//        return ret;
-//    }
-
 
     /**
      * Returns an arraylist containing all the job postings that apply to the applicant
@@ -141,18 +111,6 @@ class ApplicantBackend {
      */
     boolean withdrawApp(JobApplication application) {
         return applicant.withdrawJobApplication(jobAppSystem.getToday(), application.getJobPosting());
-    }
-
-    /**
-     * Return status since last job application (none submitted or days since)
-     */
-    String daysSince() {
-        if (applicant.getJobApplicationManager().getJobApplications().isEmpty())
-            return ("You have not yet submitted any job applications.");
-        else
-            return ("It has been " +
-                    applicant.getJobApplicationManager().getNumDaysSinceMostRecentCloseDate(jobAppSystem.getToday()) +
-                    " days since your most recent application closed.");
     }
 
     /**

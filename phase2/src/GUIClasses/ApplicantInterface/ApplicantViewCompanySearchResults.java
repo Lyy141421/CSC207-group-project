@@ -1,6 +1,5 @@
 package GUIClasses.ApplicantInterface;
 
-import ApplicantStuff.Applicant;
 import ApplicantStuff.JobApplication;
 import CompanyStuff.JobPostings.BranchJobPosting;
 import CompanyStuff.JobPostings.CompanyJobPosting;
@@ -13,17 +12,17 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
-class ApplicantViewSearchResults extends JPanel {
+class ApplicantViewCompanySearchResults extends JPanel {
     private ApplicantBackend backEnd;
 
-    ApplicantViewSearchResults(ArrayList<CompanyJobPosting> jobPostings, ApplicantBackend backEnd) {
+    ApplicantViewCompanySearchResults(ArrayList<CompanyJobPosting> jobPostings, ApplicantBackend backEnd) {
         this.backEnd = backEnd;
         JPanel viewJobs = new JPanel(new GridLayout(1, 3));
 
         JPanel viewJobs0 = this.buildViewJobs0(jobPostings); viewJobs.add(viewJobs0);
         JPanel viewJobs1 = this.buildViewJobs1(jobPostings); viewJobs.add(viewJobs1);
         JPanel viewJobs2 = this.buildViewJobs2(new ArrayList<>());
-        viewJobs.add(viewJobs2); // TODO fix to have branch job postings
+        viewJobs.add(viewJobs2);
 
         JList<String> jobTitlesList = new JList<>();
         for(Component c : viewJobs0.getComponents()) {
@@ -101,9 +100,6 @@ class ApplicantViewSearchResults extends JPanel {
         return viewJobs1;
     }
 
-    // TODO build panel that shows list of branches
-    // When a branch is selected, redirect to panel with more specific details
-
     /**
      * Returns the panel containing the remainder of the details for each job posting
      */
@@ -133,18 +129,30 @@ class ApplicantViewSearchResults extends JPanel {
             viewJobIDNum.setBounds(17, 230, 250, 20);
             viewJobsAdded2.add(viewJobIDNum);
 
-            JButton applyForJob = new JButton("Apply now");
-            applyForJob.setBounds(45, 300, 100, 20);
-            applyForJob.addActionListener(new ActionListener() {
+            JButton applyViaText = new JButton("Apply now with new documents");
+            applyViaText.setBounds(45, 225, 250, 20);
+            applyViaText.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    // TODO option of creating text doc submission or file submission
                     JobApplication jobApp = backEnd.createJobApplication(j);
                     JPanel docPanel = new ApplicantTextDocSubmission(jobApp);
                     add(docPanel, "FORMS");
                     ((CardLayout)getLayout()).show(getThis(), "FORMS");
                 }
             } );
-            viewJobsAdded2.add(applyForJob);
+            viewJobsAdded2.add(applyViaText);
+
+            JButton applyViaDocs = new JButton("Apply now with existing files");
+            applyViaDocs.setBounds(45, 255, 250, 20);
+            applyViaDocs.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+//                    JobApplication jobApp = backEnd.createJobApplication(j);
+//                    JPanel docPanel = new DocumentSelector(); //TODO figure this out
+//                    add(docPanel, "PICKDOCUMENT");
+//                    ((CardLayout)getLayout()).show(getThis(), "PICKDOCUMENT");
+                }
+            } );
+            viewJobsAdded2.add(applyViaDocs);
+
             viewJobs2.add(viewJobsAdded2, j.getId());
         }
         return viewJobs2;
@@ -153,7 +161,7 @@ class ApplicantViewSearchResults extends JPanel {
     /**
      * Because action listeners
      */
-    private ApplicantViewSearchResults getThis() {
+    private ApplicantViewCompanySearchResults getThis() {
         return this;
     }
 }
