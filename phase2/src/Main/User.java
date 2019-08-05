@@ -17,9 +17,7 @@ public abstract class User implements Serializable, Observer {
     // === Class variables ===
     static final long serialVersionUID = 1L;
     // The password length of a random generated password
-    private static int PASSWORD_LENGTH = 8;
-    // The characters allowed in the random password
-    private static String PASSWORD_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+    private static String DEFAULT_PASSWORD = "password";
 
     // === Instance variables ===
     // The unique account username
@@ -43,7 +41,7 @@ public abstract class User implements Serializable, Observer {
 
     public User(String email, LocalDate dateCreated) {
         this.username = email;
-        this.password = email;
+        this.password = DEFAULT_PASSWORD;
         this.email = email;
         this.dateCreated = dateCreated;
     }

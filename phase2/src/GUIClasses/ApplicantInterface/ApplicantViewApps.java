@@ -1,6 +1,8 @@
 package GUIClasses.ApplicantInterface;
 
+import ApplicantStuff.Applicant;
 import ApplicantStuff.JobApplication;
+import CompanyStuff.JobPostings.BranchJobPosting;
 
 import javax.swing.*;
 import java.awt.*;

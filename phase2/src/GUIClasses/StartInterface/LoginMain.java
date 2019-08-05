@@ -27,6 +27,7 @@ import java.util.Date;
 public class LoginMain extends JPanel {
 
     // === Error messages ===
+    static final int MAX_NUM_CHARS = 100;
     static final String WRONG_PASSWORD = "Wrong password!";
     private static final String BLANK_FIELD_ERROR = "Please fill in all fields";
     static final String INVALID_USERNAME = "Invalid username";
@@ -115,10 +116,10 @@ public class LoginMain extends JPanel {
      * Adds the interactive items necessary for the login screen.
      */
     private void addEntryItems() {
-        userNameEntry = new JTextField();
+        userNameEntry = new JTextField(MAX_NUM_CHARS);
         userNameEntry.setBounds(427, 220, 100, 30);
 
-        passwordEntry = new JPasswordField();
+        passwordEntry = new JPasswordField(MAX_NUM_CHARS);
         passwordEntry.setBounds(427, 255, 100, 30);
 
         JButton loginButton = new JButton("Login/Register");
