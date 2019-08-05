@@ -118,16 +118,13 @@ public class JobApplication implements Serializable {
      */
     public void addReferences(ArrayList<Reference> referencesToAdd) {
         this.references.addAll(referencesToAdd);
-        for (Reference reference : referencesToAdd) {
-            reference.addJobApplication(this);
-        }
     }
 
     /**
      * Remove this job application from all the references' lists.
      * This is called when an application is withdrawn before the reference close date.
      */
-    public void removeAppFromAllReferences() {
+    void removeAppFromAllReferences() {
         for (Reference reference : this.getReferences()) {
             if (reference.getJobAppsForReference().contains(this)) {
                 reference.removeJobApplication(this);
