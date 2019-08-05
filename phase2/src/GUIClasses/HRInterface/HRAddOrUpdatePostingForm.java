@@ -387,28 +387,11 @@ class HRAddOrUpdatePostingForm extends HRPanel {
         ArrayList<String> listClone = (ArrayList<String>) list.clone();
         list.clear();
         for (String item : listClone) {
-            String itemFormatted = this.formatCase(item);
+            String itemFormatted = hrBackend.formatCase(item);
             if (!list.contains(itemFormatted)) {
                 list.add(itemFormatted);
             }
         }
-    }
-
-    private String formatCase(String s) {
-        String[] words = s.split(" ");
-        for (int i = 0; i < words.length; i++) {
-            String firstChar = words[i].substring(0, 1);
-            String rest = "";
-            if (words[i].length() > 1) {
-                rest = words[i].substring(1);
-            }
-            words[i] = firstChar.toUpperCase() + rest.toLowerCase();
-        }
-        String res = "";
-        for (String word : words) {
-            res += " " + word;
-        }
-        return res.substring(1);
     }
 
     private void addCheckBoxItemListener(JCheckBox checkBox, ArrayList<String> checkedInput) {

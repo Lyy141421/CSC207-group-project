@@ -74,6 +74,10 @@ public class Interview implements Serializable {
 
     // === Public methods ===
     // === Getters ===
+    public static int getTotalNumOfInterviews() {
+        return totalNumOfInterviews;
+    }
+
     public int getId() {
         return this.id;
     }
@@ -123,6 +127,9 @@ public class Interview implements Serializable {
     }
 
     // === Setters ===
+    public static void setTotalNumOfInterviews(int totalNum) {
+        totalNumOfInterviews = totalNum;
+    }
 
     public void setTime(InterviewTime time) {
         this.time = time;

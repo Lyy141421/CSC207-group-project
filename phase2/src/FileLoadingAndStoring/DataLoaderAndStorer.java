@@ -1,6 +1,8 @@
 package FileLoadingAndStoring;
 
 import CompanyStuff.Company;
+import CompanyStuff.Interview;
+import CompanyStuff.JobPostings.CompanyJobPosting;
 import Main.JobApplicationSystem;
 import Main.User;
 import org.json.JSONException;
@@ -21,7 +23,7 @@ public class DataLoaderAndStorer {
     private static final String FILES_FOLDER_PATH = "./files";
     private static final String USER_FILE_PATH = FILES_FOLDER_PATH + "/users.ser";
     private static final String COMPANY_FILE_PATH = FILES_FOLDER_PATH + "/companies.ser";
-    private static final String DATE_FILE_PATH = FILES_FOLDER_PATH + "/previousLoginDate.txt";
+    private static final String MISCELLANEOUS_FILE_PATH = FILES_FOLDER_PATH + "/date_and_static_variables.txt";
     private static final String FSA_TO_CMA_PATH = FILES_FOLDER_PATH + "/CMA_per_FSA_Centroid.json";
 
     // === Instance variable ===
@@ -38,7 +40,7 @@ public class DataLoaderAndStorer {
     public void loadAllData() {
         try {
             this.createFilesFolder();
-            String[] filePaths = new String[]{USER_FILE_PATH, COMPANY_FILE_PATH, DATE_FILE_PATH};
+            String[] filePaths = new String[]{USER_FILE_PATH, COMPANY_FILE_PATH, MISCELLANEOUS_FILE_PATH};
             for (String filePath : filePaths) {
                 File file = new File(filePath);
                 if (file.exists()) {
@@ -78,8 +80,8 @@ public class DataLoaderAndStorer {
             case COMPANY_FILE_PATH:
                 this.loadCompanies();
                 break;
-            case DATE_FILE_PATH:
-                this.loadPreviousLoginDate();
+            case MISCELLANEOUS_FILE_PATH:
+                this.loadPreviousLoginDateAndStaticVariables();
         }
     }
 
@@ -151,12 +153,16 @@ public class DataLoaderAndStorer {
     /**
      * Loads the previous login date saved in "PreviousLoginDate.txt' in memory.
      */
-    private void loadPreviousLoginDate() {
-        try (BufferedReader fileReader = new BufferedReader(new FileReader(DATE_FILE_PATH))) {
+    private void loadPreviousLoginDateAndStaticVariables() {
+        try (BufferedReader fileReader = new BufferedReader(new FileReader(MISCELLANEOUS_FILE_PATH))) {
             String dateString = fileReader.readLine().trim();
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             LocalDate date = LocalDate.parse(dateString, dtf);
             this.jobApplicationSystem.setPreviousLoginDate(date);
+            int totalNumJobPostings = Integer.parseInt(fileReader.readLine().trim());
+            CompanyJobPosting.setTotalNumOfJobPostings(totalNumJobPostings);
+            int totalNumInterviews = Integer.parseInt(fileReader.readLine().trim());
+            Interview.setTotalNumOfInterviews(totalNumInterviews);
         } catch (NullPointerException npe) {    // empty file
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -170,7 +176,7 @@ public class DataLoaderAndStorer {
     public void storeAllData() {
         this.storeUsers();
         this.storeCompanies();
-        this.storePreviousLoginDate();
+        this.storePreviousLoginDateAndStaticVariables();
     }
 
     /**
@@ -211,13 +217,18 @@ public class DataLoaderAndStorer {
      * Stores the previous login date in 'PreviousLoginDate.txt'.
      *
      */
-    private void storePreviousLoginDate() {
-        try (PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(DATE_FILE_PATH)))) {
+    private void storePreviousLoginDateAndStaticVariables() {
+        try (PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(MISCELLANEOUS_FILE_PATH)))) {
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             String dateString = this.jobApplicationSystem.getToday().format(dtf);
             out.println(dateString);
+            int totalNumJobPostings = CompanyJobPosting.getTotalNumOfJobPostings();
+            out.println(totalNumJobPostings);
+            int totalNumInterviews = Interview.getTotalNumOfInterviews();
+            out.println(totalNumInterviews);
         } catch (IOException ioe) {
             ioe.printStackTrace();
         }
     }
+
 }

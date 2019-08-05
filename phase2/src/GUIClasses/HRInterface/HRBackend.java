@@ -114,6 +114,22 @@ class HRBackend {
         return rejectedApplicants;
     }
 
+    String formatCase(String s) {
+        String[] words = s.split(" ");
+        for (int i = 0; i < words.length; i++) {
+            String firstChar = words[i].substring(0, 1);
+            String rest = "";
+            if (words[i].length() > 1) {
+                rest = words[i].substring(1);
+            }
+            words[i] = firstChar.toUpperCase() + rest.toLowerCase();
+        }
+        String res = "";
+        for (String word : words) {
+            res += " " + word;
+        }
+        return res.substring(1);
+    }
 
     /**
      * Add a job posting to the branch.
@@ -122,7 +138,7 @@ class HRBackend {
      */
     void addJobPosting(Object[] mandatoryFields, String[] defaultFields) {
         String title = defaultFields[0];
-        String field = defaultFields[1];
+        String field = this.formatCase(defaultFields[1]);
         String description = defaultFields[2];
         ArrayList<String> requirements = new ArrayList<>(Arrays.asList(defaultFields[3].split(";")));
         ArrayList<String> tags = new ArrayList<>(Arrays.asList(defaultFields[4].split(";")));
@@ -139,7 +155,8 @@ class HRBackend {
      * @return true iff this branch has an interviewer in this field.
      */
     boolean hasInterviewerOfField(String field) {
-        return this.hr.getBranch().hasInterviewerForField(field);
+        String fieldFormatted = this.formatCase(field);
+        return this.hr.getBranch().hasInterviewerForField(fieldFormatted);
     }
 
     /**

@@ -1,5 +1,6 @@
 package Main;
 
+import CompanyStuff.Branch;
 import CompanyStuff.Company;
 import ApplicantStuff.Applicant;
 import CompanyStuff.JobPostings.CompanyJobPosting;

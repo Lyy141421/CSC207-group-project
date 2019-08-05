@@ -57,6 +57,10 @@ public class CompanyJobPosting extends Observable implements Serializable {
     // === Public methods ===
 
     // === Getters ===
+    public static int getTotalNumOfJobPostings() {
+        return totalNumOfJobPostings;
+    }
+
     public int getId() {
         return this.id;
     }
@@ -86,6 +90,10 @@ public class CompanyJobPosting extends Observable implements Serializable {
     }
 
     public ArrayList<Branch> getBranches() {return this.branches;}
+
+    public static void setTotalNumOfJobPostings(int totalNum) {
+        totalNumOfJobPostings = totalNum;
+    }
 
     // === Other methods ===
     /**
