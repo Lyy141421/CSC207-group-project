@@ -17,6 +17,7 @@ class LoginBackend {
      */
 
     private static final String VALID_BASIC = "Ok";
+    private static final String EMAIL_REGEX = "^([A-Za-z0-9]+(?:([._\\-])[A-Za-z0-9]+|[A-Za-z0-9]*))+@([A-Za-z0-9]+\\.)+[A-Za-z]+$";
 
     private JobApplicationSystem jobAppSystem;
 
@@ -38,8 +39,7 @@ class LoginBackend {
      * @return true iff the email address is valid.
      */
     private boolean isValidEmail(String email) {
-        String regex = "^([A-Za-z0-9]+(?:([._\\-])[A-Za-z0-9]+|[A-Za-z0-9]*))+@([A-Za-z0-9]+\\.)+[A-Za-z]+$";
-        return Pattern.matches(regex, email);
+        return Pattern.matches(EMAIL_REGEX, email);
     }
 
     /**
@@ -53,7 +53,7 @@ class LoginBackend {
     }
 
     private boolean isValidUsername(String username) {
-        return Pattern.matches("^[A-Za-z0-9]+$", username);
+        return Pattern.matches("^[A-Za-z0-9]+$", username) || Pattern.matches(EMAIL_REGEX, username);
     }
 
     private boolean isValidLegalName(String legalName) {

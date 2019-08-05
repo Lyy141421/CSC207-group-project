@@ -27,7 +27,9 @@ class ReferenceHomePanel extends JPanel {
         this.add(this.createWelcomePanel(), c);
         c.gridy++;
         c.gridheight = 100;
-        this.add(this.createReminderPanel(), c);
+        JPanel tablePanel = this.createReminderPanel();
+        tablePanel.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
+        this.add(tablePanel, c);
     }
 
     /**
