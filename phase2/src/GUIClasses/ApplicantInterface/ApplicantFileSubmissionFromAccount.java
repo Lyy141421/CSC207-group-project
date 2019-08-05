@@ -35,7 +35,7 @@ class ApplicantFileSubmissionFromAccount extends JPanel {
     private JLabel createTitle() {
         JLabel titleText = new JLabel("Document Submission", SwingConstants.CENTER);
         titleText.setFont(new Font("Serif", Font.PLAIN, 22));
-        titleText.setBounds(227, 20, 200, 40);
+        titleText.setBounds(227, 20, 400, 40);
         return titleText;
     }
 
@@ -60,6 +60,7 @@ class ApplicantFileSubmissionFromAccount extends JPanel {
                 } else {
                     new SubmitDocumentsActionListener(masterPanel, applicantBackend.getApplicant(), jobApp,
                             documentSelector.getFilesToSubmit()).actionPerformed(e);
+                    ((ApplicantPanel)masterPanel).refresh();
                 }
             }
         });

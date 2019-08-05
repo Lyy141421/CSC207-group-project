@@ -26,7 +26,7 @@ class ApplicantFileSubmissionFromLocal extends JPanel {
     }
 
     private JLabel createTitle() {
-        JLabel titleText = new JLabel("Document Submission", SwingConstants.CENTER);
+        JLabel titleText = new JLabel("Local Document Submission", SwingConstants.CENTER);
         titleText.setFont(new Font("Serif", Font.PLAIN, 22));
         titleText.setBounds(227, 20, 400, 35);
         return titleText;

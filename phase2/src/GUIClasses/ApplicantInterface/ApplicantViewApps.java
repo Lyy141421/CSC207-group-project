@@ -1,8 +1,6 @@
 package GUIClasses.ApplicantInterface;
 
-import ApplicantStuff.Applicant;
 import ApplicantStuff.JobApplication;
-import CompanyStuff.JobPostings.BranchJobPosting;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,10 +14,11 @@ import java.util.ArrayList;
 class ApplicantViewApps extends JPanel {
     private ApplicantBackend backend;
     private JPanel thisPanel = this;
+    private JPanel masterPanel;
 
     ApplicantViewApps() {}
 
-    ApplicantViewApps(ApplicantBackend applicantBackend) {
+    ApplicantViewApps(ApplicantBackend applicantBackend, JPanel masterPanel) {
         this.backend = applicantBackend;
         this.setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
@@ -79,9 +78,7 @@ class ApplicantViewApps extends JPanel {
                 public void actionPerformed(ActionEvent e) {
                     if (backend.withdrawApp(app)) {
                         JOptionPane.showMessageDialog(thisPanel, "Application Successfully Withdrawn");
-                        ApplicantPanel applicantPanel = (ApplicantPanel) thisPanel.getParent();
-                        applicantPanel.refresh();
-                        ((CardLayout) applicantPanel.getLayout()).first(applicantPanel);
+                        ((ApplicantPanel)masterPanel).refresh();
                     } else {
                         JOptionPane.showMessageDialog(thisPanel, "Application Cannot Be Withdrawn");
                     }
