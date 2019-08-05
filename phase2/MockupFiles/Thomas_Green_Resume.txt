@@ -1,0 +1,32 @@
+Thomas Green
+0120 Your Street, Your City, BC
+123-456-7890 | thomas.green@gmail.com
+
+Education
+- University of Waterloo
+    - Bachelor of Science, Computer Science Major    May 2010
+- University of Toronto
+    - Master of Science, Computer Science (Focus in Artificial Intelligence)    May 2014
+
+Related Courses
+- Data Structures Concepts
+- Object-Oriented Programming Language
+- Computer Organization and Assembly Language
+- Programming Languages and Translation
+- File Structures and Database System
+- Natural Language Processing
+- Machine Learning
+- Deep Learning
+- Computational Linguistics
+
+
+Technical Skills
+- Languages: C++, Java, Python, Verilog
+- Operating System: Windows, UNIX, Linux
+- Version Control: Git
+
+Work Experience
+- Google        Silicon Valley, CA
+    - Developed web applications using Artificial Intelligence
+- Facebook      Silicon Valley, CA
+    - Software Engineer

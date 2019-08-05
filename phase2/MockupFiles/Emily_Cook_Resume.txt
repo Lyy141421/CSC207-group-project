@@ -1,0 +1,22 @@
+Emily Cook
+0120 Your Street, Your City, ON
+123-456-7890 | emily.cook@mail.utoronto.ca
+
+Education
+- University of Toronto
+    - Bachelor of Science, Computer Science Minor    May 2013
+
+Related Courses
+- Data Structures Concepts
+- Object-Oriented Programming Language
+- Intro to Software Design
+- Intro to Theory and Computation
+
+Technical Skills
+- Languages: Java, Python
+
+Programming Skills:
+- Object-oriented design
+- Implementing design patters
+- Eliminating code smells
+- SOLID principles

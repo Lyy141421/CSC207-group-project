@@ -1,0 +1,43 @@
+Thomas Green
+Sometown, NJ 55555 | (555) 555-5555 | bh@somedomain.com
+
+October 4, 2017
+
+
+Ms. Lori Hopkins
+VP of Information Technology
+ABC Corporation
+245 Maple St.
+Sometown, NJ 55555
+
+Dear Ms. Hopkins:
+
+I found your posting on Get A Job for a network administrator and knew I wanted to apply immediately.
+ABC Corporation’s reputation for responsive service and proactive support differentiates your company from the rest,
+and I would like to be part of your dynamic team.
+
+Since graduating from XYZ College with a BS in computer science, I have worked for three years as a network administrator
+for DEF Company. In this role, I am valued as a solutions-focused manager of networks, IT systems, user support functions
+and technology projects. I have experience in all areas covered in your job ad, including:
+
+- Network and Server Design and Administration
+- LAN, WAN, VPN, SAN and VoIP Infrastructure
+- Network Analysis and Optimization
+- System Security, Disaster Recovery and Business Continuity Plans
+- Cloud Computing and Data Storage
+- Enterprise System and Software Implementations
+
+Known as a keen technical trouble-shooter, I am dedicated to providing cost-effective and expedient solutions optimizing
+network stability and security; improving performance of systems and equipment; and resolving issues such as network crashes,
+system slowdowns and virus outbreaks.
+
+At DEF Company, I provide world-class service technical support in an enterprise environment, and I am confident I would
+quickly become a productive network administrator at ABC Corporation. If you agree, please call me at (555) 555-5555 to
+set up an interview.
+
+I look forward to your response.
+
+Sincerely,
+
+Thomas Green
+
