@@ -163,10 +163,11 @@ class HRViewPosting extends HRPanel {
         splitDisplay.setLeftComponent(new JScrollPane(this.jobPostingList));
     }
 
-    private void setOverview() {
-        this.overview = new JTextArea("Select a job posting to view information.");
-        this.overview.setEditable(false);
+    private JScrollPane createOverviewScroll() {
+        JScrollPane overviewScroll = new GUIElementsCreator().createTextAreaWithScrollBar("Select a job posting to view information.", false);
+        this.overview = (JTextArea) overviewScroll.getViewport().getView();
         this.overview.setBorder(new EtchedBorder(EtchedBorder.LOWERED));
+        return overviewScroll;
     }
 
     private void setRejectListPanel() {
@@ -185,8 +186,7 @@ class HRViewPosting extends HRPanel {
 
     private void setInfoPane(JSplitPane splitDisplay) {
         this.infoPane = new JTabbedPane();
-        this.setOverview();
-        this.infoPane.addTab(OVERVIEW, this.overview);
+        this.infoPane.addTab(OVERVIEW, this.createOverviewScroll());
         this.infoPane.addTab(REJECT_LIST, rejectedPanel);
         splitDisplay.setRightComponent(this.infoPane);
     }

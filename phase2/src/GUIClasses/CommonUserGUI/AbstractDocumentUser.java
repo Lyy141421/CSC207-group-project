@@ -27,6 +27,7 @@ abstract class AbstractDocumentUser extends JPanel implements ActionListener {
 
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         label.setAlignmentX(Component.CENTER_ALIGNMENT);
+        label.setBorder(BorderFactory.createEmptyBorder(50, 0, 0, 0));
         this.add(label);
 
         this.add(this.createListPanel());

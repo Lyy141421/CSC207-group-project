@@ -3,6 +3,7 @@ package GUIClasses.HRInterface;
 import CompanyStuff.JobPostings.BranchJobPosting;
 import CompanyStuff.JobPostings.CompanyJobPosting;
 import GUIClasses.CommonUserGUI.GUIElementsCreator;
+import GUIClasses.CommonUserGUI.UserMain;
 import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
 import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
 import net.sourceforge.jdatepicker.impl.UtilDateModel;
@@ -45,7 +46,7 @@ class HRAddOrUpdatePostingForm extends HRPanel {
     private String documentInputInstructions;
     private JTextArea extraTagsEntry;
     private String tagsInputInstructions;
-    private ArrayList<StringBuilder> fullOptionalSelectionInput = new ArrayList<>();
+    private ArrayList<ArrayList<String>> fullOptionalSelectionInput = new ArrayList<>();
     private CompanyJobPosting selectedJP;
     private boolean toAdd;
 
@@ -351,7 +352,7 @@ class HRAddOrUpdatePostingForm extends HRPanel {
 
     private JScrollPane createSelectionBox(String[] recommended) {
         JPanel recommendedPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        StringBuilder checkedInput = new StringBuilder();
+        ArrayList<String> checkedInput = new ArrayList<>();
         for (String label : recommended) {
             JCheckBox checkBox = new JCheckBox(label);
             this.addCheckBoxItemListener(checkBox, checkedInput);
@@ -365,37 +366,60 @@ class HRAddOrUpdatePostingForm extends HRPanel {
     }
 
     private void setAllSelectedAndInputtedItems(int index, JTextArea textInput, String instructions) {
-        StringBuilder fullTextInput = this.fullOptionalSelectionInput.get(index);
-        if (fullTextInput.charAt(0) == ';') {
-            fullTextInput.deleteCharAt(0);
-        }
-        if (!textInput.getText().equals(instructions)) {
-            if (fullTextInput.charAt(fullTextInput.length() - 1) != ';') {
-                fullTextInput.append(';');
+        String text = textInput.getText();
+        if (!text.equals(instructions)) {
+            if (text.charAt(text.length() - 1) == ';') {
+                text = text.substring(0, text.length() - 1);
             }
-            fullTextInput.append(textInput.getText());
-            if (fullTextInput.charAt(fullTextInput.length() - 1) == ';') {
-                fullTextInput.deleteCharAt(fullTextInput.length() - 1);
+        } else {
+            text = "";
+        }
+        String[] inputtedItems = text.split(";");
+        for (String item : inputtedItems) {
+            if (!item.isEmpty()) {
+                fullOptionalSelectionInput.get(index).add(item);
+            }
+        }
+        this.removeListDuplicates(fullOptionalSelectionInput.get(index));
+    }
+
+    private void removeListDuplicates(ArrayList<String> list) {
+        ArrayList<String> listClone = (ArrayList<String>) list.clone();
+        list.clear();
+        for (String item : listClone) {
+            String itemFormatted = this.formatCase(item);
+            if (!list.contains(itemFormatted)) {
+                list.add(itemFormatted);
             }
         }
     }
 
-    private void addCheckBoxItemListener(JCheckBox checkBox, StringBuilder checkedInput) {
+    private String formatCase(String s) {
+        String[] words = s.split(" ");
+        for (int i = 0; i < words.length; i++) {
+            String firstChar = words[i].substring(0, 1);
+            String rest = "";
+            if (words[i].length() > 1) {
+                rest = words[i].substring(1);
+            }
+            words[i] = firstChar.toUpperCase() + rest.toLowerCase();
+        }
+        String res = "";
+        for (String word : words) {
+            res += " " + word;
+        }
+        return res.substring(1);
+    }
+
+    private void addCheckBoxItemListener(JCheckBox checkBox, ArrayList<String> checkedInput) {
         checkBox.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
-                String currText = checkedInput.toString();
                 if (e.getStateChange() == ItemEvent.SELECTED) {
-                    if (!currText.endsWith(";")) {
-                        currText += ";";
-                    }
-                    currText += checkBox.getText() + ";";
+                    checkedInput.add(checkBox.getText());
                 } else if (e.getStateChange() == ItemEvent.DESELECTED) {
-                    if (currText.contains(checkBox.getText())) {
-                        currText = currText.replaceAll(checkBox.getText() + ";*", "");
-                    }
+                    checkedInput.remove(checkBox.getText());
                 }
-                checkedInput.append(currText);
             }
         });
     }
@@ -421,6 +445,7 @@ class HRAddOrUpdatePostingForm extends HRPanel {
                     } else {
                         updateJobPosting(mandatoryFields);
                     }
+                    ((UserMain) containerPane.getParent().getParent()).refresh();
                 } else {
                     JOptionPane.showMessageDialog(containerPane, "One or more fields have illegal input.");
                 }
@@ -466,9 +491,20 @@ class HRAddOrUpdatePostingForm extends HRPanel {
         return Optional.of(new String[]{jobTitleText,  // title
                 ((JTextField) entryBoxes.get(1)).getText(),  // field
                 ((JTextArea) entryBoxes.get(2)).getText(),   // description
-                (this.fullOptionalSelectionInput.get(0).toString()),   // documents
-                (this.fullOptionalSelectionInput.get(1).toString()),   // tags
+                (this.convertListToString(this.fullOptionalSelectionInput.get(0))),   // documents
+                (this.convertListToString(this.fullOptionalSelectionInput.get(1))),   // tags
         });
+    }
+
+    private String convertListToString(ArrayList<String> items) {
+        String s = "";
+        for (String item : items) {
+            s += ";" + item;
+        }
+        if (!s.isEmpty()) {
+            s = s.substring(1);
+        }
+        return s;
     }
 
     private Object[] getMandatoryFields() {

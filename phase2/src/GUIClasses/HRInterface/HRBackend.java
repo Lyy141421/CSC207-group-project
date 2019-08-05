@@ -106,8 +106,10 @@ class HRBackend {
      */
     ArrayList<Applicant> getRejectedApplicantsForJobPosting(BranchJobPosting jobPosting) {
         ArrayList<Applicant> rejectedApplicants = new ArrayList<>();
-        for (JobApplication jobApplication : jobPosting.getInterviewManager().getApplicationsRejected()) {
-            rejectedApplicants.add(jobApplication.getApplicant());
+        if (jobPosting.getInterviewManager() != null && jobPosting.isClosedForReferences(jobAppSystem.getToday())) {
+            for (JobApplication jobApplication : jobPosting.getInterviewManager().getApplicationsRejected()) {
+                rejectedApplicants.add(jobApplication.getApplicant());
+            }
         }
         return rejectedApplicants;
     }
