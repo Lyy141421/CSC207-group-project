@@ -186,7 +186,7 @@ class ApplicantViewSearchResults extends JPanel {
         applyViaText.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 JobApplication jobApp = backEnd.createJobApplication(j);
-                JPanel docPanel = new ApplicantTextDocSubmission(masterPanel, jobApp);
+                JPanel docPanel = new ApplicantTextDocSubmission(masterPanel, backEnd, jobApp);
                 masterPanel.add(docPanel, "FORMS");
                 ((CardLayout)masterPanel.getLayout()).show(masterPanel, "FORMS");
             }
@@ -222,10 +222,4 @@ class ApplicantViewSearchResults extends JPanel {
         applyViaNewDocs.setName(branchName); viewJobsAdded2.add(applyViaNewDocs);
     }
 
-    /**
-     * Because action listeners
-     */
-    private ApplicantViewSearchResults getThis() {
-        return this;
-    }
 }

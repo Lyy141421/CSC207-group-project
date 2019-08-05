@@ -75,6 +75,9 @@ class ApplicantBackend {
         }
     }
 
+    void addReferences(JobApplication jobApp, ArrayList<String> emails) {
+        jobAppSystem.getUserManager().addReferences(jobApp, emails);
+    }
 
     File getApplicantFolder() {
         return this.applicant.getDocumentManager().getFolder();

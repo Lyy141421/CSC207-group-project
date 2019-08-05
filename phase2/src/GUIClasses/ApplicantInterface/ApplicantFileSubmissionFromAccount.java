@@ -27,6 +27,7 @@ class ApplicantFileSubmissionFromAccount extends JPanel {
         this.add(this.createTitle());
         this.setFullDocumentSelectorPanel();
 
+        this.createAddReferencesButton();
         this.createSubmitButton();
         this.add(this.createReturnButtonPanel(masterPanel));
     }
@@ -62,7 +63,7 @@ class ApplicantFileSubmissionFromAccount extends JPanel {
                 }
             }
         });
-        submitButton.setBounds(380, 370, 100, 30);
+        submitButton.setBounds(470, 400, 100, 30);
         this.add(submitButton);
     }
 
@@ -78,5 +79,18 @@ class ApplicantFileSubmissionFromAccount extends JPanel {
         returnPanel.add(returnButton);
         returnPanel.setBounds(20, 20, 80, 40);
         return returnPanel;
+    }
+
+    private void createAddReferencesButton() {
+        JButton referencesButton = new JButton("Add References");
+        referencesButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFrame frame = (JFrame) SwingUtilities.windowForComponent(masterPanel);
+                new AddReferencesDialog(frame, applicantBackend, jobApp);
+            }
+        });
+        referencesButton.setBounds(300, 400, 150, 30);
+        this.add(referencesButton);
     }
 }
