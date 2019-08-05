@@ -15,8 +15,6 @@ public class ApplicantPanel extends UserMain {
     private Applicant applicant;
     private JobApplicationSystem jobAppSystem;
     private LogoutActionListener logout;
-    private JPanel cards = new JPanel(new CardLayout());
-    private ApplicantMain applicantMain;
 
     public ApplicantPanel(Applicant applicant, JobApplicationSystem jobAppSystem, LogoutActionListener logout) {
         this.setLayout(new CardLayout());
@@ -36,9 +34,6 @@ public class ApplicantPanel extends UserMain {
     public void refresh() {
         this.removeAll();
         this.setCards();
-        ((CardLayout) cards.getLayout()).show(cards, "Main");
-        applicantMain.refresh();
-//        cards.removeAll();
-//        this.setCards();
+        ((CardLayout)this.getLayout()).show(this, "Main");
     }
 }
