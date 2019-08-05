@@ -22,7 +22,7 @@ class ApplicantViewSearchResults extends JPanel {
 
         JPanel viewJobs0 = this.buildViewJobs0(jobPostings); this.add(viewJobs0);
         JPanel viewJobs1 = this.buildViewJobs1(jobPostings); this.add(viewJobs1);
-        JPanel viewJobs2 = this.buildViewJobs2(new ArrayList<>()); this.add(viewJobs2);
+        JPanel viewJobs2 = this.buildViewJobs2(jobPostings); this.add(viewJobs2);
 
         JList<String> jobTitlesList = new JList<>();
         for(Component c : viewJobs0.getComponents()) {
@@ -89,8 +89,8 @@ class ApplicantViewSearchResults extends JPanel {
             viewJobCompany.setBounds(17, 100, 150, 30);
             viewJobsAdded.add(viewJobCompany);
 
-            JLabel viewJobDesc = new JLabel(j.getDescription());
-            viewJobDesc.setBounds(17, 150, 250, 200);
+            JLabel viewJobDesc = new JLabel("<html>" + j.getDescription() + "</html>");
+            viewJobDesc.setBounds(17, 150, 255, 200);
             viewJobDesc.setVerticalAlignment(JLabel.TOP);
             viewJobsAdded.add(viewJobDesc);
 
@@ -103,73 +103,113 @@ class ApplicantViewSearchResults extends JPanel {
     /**
      * Returns the panel containing the remainder of the details for each job posting
      */
-    private JPanel buildViewJobs2(ArrayList<BranchJobPosting> jobpostings) {
+    private JPanel buildViewJobs2(ArrayList<CompanyJobPosting> companyJobPostings) {
         JPanel viewJobs2 = new JPanel(new CardLayout());
 
-        for(BranchJobPosting j : jobpostings) {
+        for(CompanyJobPosting c : companyJobPostings) {
             JPanel viewJobsAdded2 = new JPanel(null);
 
-            JLabel viewJobReqs = new JLabel("Requirements: " + j.getRequiredDocuments());
-            viewJobReqs.setBounds(17, 150, 250, 20);
-            viewJobsAdded2.add(viewJobReqs);
+            ArrayList<BranchJobPosting> jobpostings = backEnd.getApplicableBranchJobPostings(c);
+            ArrayList<String> branches = new ArrayList<>();
+            for(BranchJobPosting j: jobpostings) {
+                branches.add(j.getBranch().getName());
+            }
 
-            JLabel viewJobPos = new JLabel("# Of Positions: " + j.getNumPositions());
-            viewJobPos.setBounds(17, 170, 250, 20);
-            viewJobsAdded2.add(viewJobPos);
+            JLabel branchText = new JLabel("Branch:", SwingConstants.CENTER);
+            branchText.setBounds(17, 100, 100, 20);
+            branchText.setName("STATIC"); viewJobsAdded2.add(branchText);
 
-            JLabel viewJobDatePosted = new JLabel("Date Posted: " + j.getPostDate().toString());
-            viewJobDatePosted.setBounds(17, 190, 250, 20);
-            viewJobsAdded2.add(viewJobDatePosted);
+            for(BranchJobPosting j: jobpostings) {
+                buildViewJobs2Helper(j, viewJobsAdded2);
+            }
 
-            JLabel viewJobDeadline = new JLabel("Deadline to Apply: " + j.getApplicantCloseDate().toString());
-            viewJobDeadline.setBounds(17, 210, 250, 20);
-            viewJobsAdded2.add(viewJobDeadline);
-
-            JLabel viewJobIDNum = new JLabel("Posting ID: " + j.getId());
-            viewJobIDNum.setBounds(17, 230, 250, 20);
-            viewJobsAdded2.add(viewJobIDNum);
-
-            JButton applyViaText = new JButton("Apply now with new documents");
-            applyViaText.setBounds(45, 225, 250, 20);
-            applyViaText.addActionListener(new ActionListener() {
+            JComboBox branchSelector = new JComboBox(branches.toArray());
+            branchSelector.setBounds(117, 100, 150, 20);
+            branchSelector.addActionListener(new ActionListener() {
+                @Override
                 public void actionPerformed(ActionEvent e) {
-                    JobApplication jobApp = backEnd.createJobApplication(j);
-                    JPanel docPanel = new ApplicantTextDocSubmission(jobApp);
-                    add(docPanel, "FORMS");
-                    ((CardLayout)getLayout()).show(getThis(), "FORMS");
-                }
-            } );
-            viewJobsAdded2.add(applyViaText);
-
-            JButton applyViaExistingDocs = new JButton("Apply now with existing files");
-            applyViaExistingDocs.setBounds(45, 255, 250, 20);
-            applyViaExistingDocs.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    if (!backEnd.hasFilesInAccount()) {
-                        JOptionPane.showMessageDialog(viewJobsAdded2, "You have no documents in your account");
-                    } else {
-                        JPanel docPanel = new ApplicantFileSubmission(backEnd, j);
-                        add(docPanel, "PICKDOCUMENT");
-                        ((CardLayout) getLayout()).show(getThis(), "PICKDOCUMENT");
+                    String branchName = ((JComboBox)e.getSource()).getSelectedItem().toString();
+                    for(Component c: viewJobsAdded2.getComponents()) {
+                        if(c.getName().equals("STATIC")) {
+                            c.setVisible(true);
+                        } else if(c.getName().equals(branchName)) {
+                            c.setVisible(true);
+                        } else {
+                            c.setVisible(false);
+                        }
                     }
                 }
-            } );
-            viewJobsAdded2.add(applyViaExistingDocs);
+            });
+            branchSelector.setName("STATIC"); viewJobsAdded2.add(branchSelector);
 
-            JButton applyViaNewDocs = new JButton("Apply now with new files");
-            applyViaNewDocs.setBounds(45, 255, 250, 20);
-            applyViaNewDocs.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
+            viewJobs2.add(viewJobsAdded2, String.valueOf(c.getId()));
+        }
+        return viewJobs2;
+    }
+
+    /**
+     * Info of each individual branchposting
+     */
+    private void buildViewJobs2Helper(BranchJobPosting j, JPanel viewJobsAdded2) {
+        String branchName = j.getBranch().getName();
+
+        JLabel viewJobReqs = new JLabel("Requirements: " + j.getRequiredDocuments());
+        viewJobReqs.setBounds(17, 150, 250, 20);
+        viewJobReqs.setName(branchName); viewJobsAdded2.add(viewJobReqs);
+
+        JLabel viewJobPos = new JLabel("# Of Positions: " + j.getNumPositions());
+        viewJobPos.setBounds(17, 170, 250, 20);
+        viewJobPos.setName(branchName); viewJobsAdded2.add(viewJobPos);
+
+        JLabel viewJobDatePosted = new JLabel("Date Posted: " + j.getPostDate().toString());
+        viewJobDatePosted.setBounds(17, 190, 250, 20);
+        viewJobDatePosted.setName(branchName); viewJobsAdded2.add(viewJobDatePosted);
+
+        JLabel viewJobDeadline = new JLabel("Deadline to Apply: " + j.getApplicantCloseDate().toString());
+        viewJobDeadline.setBounds(17, 210, 250, 20);
+        viewJobDeadline.setName(branchName); viewJobsAdded2.add(viewJobDeadline);
+
+        JLabel viewJobIDNum = new JLabel("Posting ID: " + j.getId());
+        viewJobIDNum.setBounds(17, 230, 250, 20);
+        viewJobIDNum.setName(branchName); viewJobsAdded2.add(viewJobIDNum);
+
+        JButton applyViaText = new JButton("Apply now with new documents");
+        applyViaText.setBounds(25, 255, 230, 20);
+        applyViaText.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                JobApplication jobApp = backEnd.createJobApplication(j);
+                JPanel docPanel = new ApplicantTextDocSubmission(jobApp);
+                add(docPanel, "FORMS");
+                ((CardLayout)masterPanel.getLayout()).show(masterPanel, "FORMS");
+            }
+        } );
+        applyViaText.setName(branchName); viewJobsAdded2.add(applyViaText);
+
+        JButton applyViaExistingDocs = new JButton("Apply now with existing files");
+        applyViaExistingDocs.setBounds(25, 285, 230, 20);
+        applyViaExistingDocs.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if (!backEnd.hasFilesInAccount()) {
+                    JOptionPane.showMessageDialog(viewJobsAdded2, "You have no documents in your account");
+                } else {
                     JPanel docPanel = new ApplicantFileSubmission(backEnd, j);
                     add(docPanel, "PICKDOCUMENT");
                     ((CardLayout) getLayout()).show(getThis(), "PICKDOCUMENT");
                 }
-            });
-            viewJobsAdded2.add(applyViaNewDocs);
+            }
+        } );
+        applyViaExistingDocs.setName(branchName); viewJobsAdded2.add(applyViaExistingDocs);
 
-            viewJobs2.add(viewJobsAdded2, String.valueOf(j.getId()));
-        }
-        return viewJobs2;
+        JButton applyViaNewDocs = new JButton("Apply now with new files");
+        applyViaNewDocs.setBounds(25, 315, 230, 20);
+        applyViaNewDocs.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                JPanel docPanel = new ApplicantFileSubmission(backEnd, j);
+                add(docPanel, "PICKDOCUMENT");
+                ((CardLayout) masterPanel.getLayout()).show(masterPanel, "PICKDOCUMENT");
+            }
+        });
+        applyViaNewDocs.setName(branchName); viewJobsAdded2.add(applyViaNewDocs);
     }
 
     /**
