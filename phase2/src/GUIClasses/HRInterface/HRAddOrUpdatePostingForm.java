@@ -506,7 +506,7 @@ class HRAddOrUpdatePostingForm extends HRPanel {
         if (defaultFields.isPresent()) {
             int i = 0;
             String[] defaultEntries = defaultFields.get();
-            while (valid && i <= 4) {
+            while (valid && i < 3) {
                 if (defaultEntries[i].equals("")) {
                     valid = false;
                 }
