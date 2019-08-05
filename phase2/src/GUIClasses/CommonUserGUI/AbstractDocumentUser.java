@@ -15,35 +15,37 @@ abstract class AbstractDocumentUser extends JPanel implements ActionListener {
     private JList list; // The list of file names that the user can choose from.
     private String[] fileNames; // The file names of files that this user can view.
     private File[] files;   // The files that this user can view
+    GridBagConstraints c;
 
     // === Representation Invariant ===
     // The elements in fileNames and files correspond to each other (ie, fileNames[0] is the file name of files[0])
 
     // === Constructor ===
-    public AbstractDocumentUser(File folder) {
+    AbstractDocumentUser(File folder) {
         this.fileNames = folder.list();
         this.files = folder.listFiles();
 
-        this.setLayout(new BorderLayout());
-        label.setHorizontalAlignment(JLabel.CENTER);
-        label.setBorder(BorderFactory.createEmptyBorder(30, 0, 0, 0));
-        this.add(label, BorderLayout.NORTH);
+        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        label.setAlignmentX(Component.CENTER_ALIGNMENT);
+        this.add(label);
 
-        this.createListPanel();
-        this.createButtonPanel();
+        this.add(this.createListPanel());
+        this.add(Box.createRigidArea(new Dimension(0, 10)));
+        this.add(this.createButtonPanel());
     }
 
     /**
      * Create the button panel with an action listener.
      */
-    void createButtonPanel() {
+    private JPanel createButtonPanel() {
         JPanel buttonPanel = new JPanel();
         button.setEnabled(false);
         button.setSize(50, 20);
         buttonPanel.add(button);
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(30, 0, 30, 0));
+        buttonPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
         button.addActionListener(this);
-        this.add(buttonPanel, BorderLayout.PAGE_END);
+        return buttonPanel;
     }
 
     // === Getters ===
@@ -75,7 +77,7 @@ abstract class AbstractDocumentUser extends JPanel implements ActionListener {
     /**
      * Create the list panel.
      */
-    private void createListPanel() {
+    private JPanel createListPanel() {
         list = new JList(this.fileNames);
         list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         list.setSelectedIndex(-1);
@@ -91,7 +93,8 @@ abstract class AbstractDocumentUser extends JPanel implements ActionListener {
         JPanel listPanel = new JPanel();
         listPanel.add(new JScrollPane(list));
         listPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
-        this.add(listPanel, BorderLayout.CENTER);
+        listPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        return listPanel;
     }
 
 }

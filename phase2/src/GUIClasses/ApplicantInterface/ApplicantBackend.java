@@ -102,6 +102,10 @@ class ApplicantBackend {
         return ret;
     }
 
+    boolean hasFilesInAccount() {
+        return this.applicant.getDocumentManager().getFolder().listFiles().length > 0;
+    }
+
     JobApplication createJobApplication(BranchJobPosting jobPosting) {
         return new JobApplication(this.applicant, jobPosting, this.jobAppSystem.getToday());
     }

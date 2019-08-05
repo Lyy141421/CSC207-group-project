@@ -15,19 +15,16 @@ public class DocumentSelector extends AbstractDocumentUser {
 
     // === Instance variables ==
     // The files chosen for submission
-    ArrayList<File> filesToSubmit = new ArrayList<>();
+    private ArrayList<File> filesToSubmit = new ArrayList<>();
     // The panel for removing files selected
-    RemoveFileButtonsPanel removeFileButtonsPanel;
+    private RemoveFileButtonsPanel removeFileButtonsPanel;
 
     // === Constructor ===
     public DocumentSelector(File folder) {
         super(folder);
         this.setButton("Select");
         this.setPanelTitle("Select a file to submit");
-
         removeFileButtonsPanel = new RemoveFileButtonsPanel();
-        removeFileButtonsPanel.setBorder(BorderFactory.createEmptyBorder(30, 0, 0, 100));
-        this.add(removeFileButtonsPanel, BorderLayout.EAST);
     }
 
     // === Getter ===
@@ -35,7 +32,7 @@ public class DocumentSelector extends AbstractDocumentUser {
         return filesToSubmit;
     }
 
-    public JPanel getRemoveFileButtonsPanel() {
+    public RemoveFileButtonsPanel getRemoveFileButtonsPanel() {
         return this.removeFileButtonsPanel;
     }
 
@@ -44,8 +41,10 @@ public class DocumentSelector extends AbstractDocumentUser {
     public void actionPerformed(ActionEvent e) {
         File file = this.getFiles()[this.getList().getSelectedIndex()];
         JButton removeFileButton = removeFileButtonsPanel.addButton(file);
+        removeFileButtonsPanel.revalidate();
         removeFileButton.addActionListener(
                 new DocumentSelectorRemoveFileButtonActionListener(this, removeFileButton, file));
         this.getButton().setEnabled(true);
+        filesToSubmit.add(file);
     }
 }

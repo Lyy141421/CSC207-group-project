@@ -141,17 +141,31 @@ class ApplicantViewCompanySearchResults extends JPanel {
             } );
             viewJobsAdded2.add(applyViaText);
 
-            JButton applyViaDocs = new JButton("Apply now with existing files");
-            applyViaDocs.setBounds(45, 255, 250, 20);
-            applyViaDocs.addActionListener(new ActionListener() {
+            JButton applyViaExistingDocs = new JButton("Apply now with existing files");
+            applyViaExistingDocs.setBounds(45, 255, 250, 20);
+            applyViaExistingDocs.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-//                    JobApplication jobApp = backEnd.createJobApplication(j);
-//                    JPanel docPanel = new DocumentSelector(); //TODO figure this out
-//                    add(docPanel, "PICKDOCUMENT");
-//                    ((CardLayout)getLayout()).show(getThis(), "PICKDOCUMENT");
+                    if (!backEnd.hasFilesInAccount()) {
+                        JOptionPane.showMessageDialog(viewJobsAdded2, "You have no documents in your account");
+                    } else {
+                        JPanel docPanel = new ApplicantFileSubmission(backEnd, j);
+                        add(docPanel, "PICKDOCUMENT");
+                        ((CardLayout) getLayout()).show(getThis(), "PICKDOCUMENT");
+                    }
                 }
             } );
-            viewJobsAdded2.add(applyViaDocs);
+            viewJobsAdded2.add(applyViaExistingDocs);
+
+            JButton applyViaNewDocs = new JButton("Apply now with new files");
+            applyViaNewDocs.setBounds(45, 255, 250, 20);
+            applyViaNewDocs.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    JPanel docPanel = new ApplicantFileSubmission(backEnd, j);
+                    add(docPanel, "PICKDOCUMENT");
+                    ((CardLayout) getLayout()).show(getThis(), "PICKDOCUMENT");
+                }
+            });
+            viewJobsAdded2.add(applyViaNewDocs);
 
             viewJobs2.add(viewJobsAdded2, j.getId());
         }
