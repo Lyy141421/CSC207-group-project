@@ -87,12 +87,14 @@ public class GUIElementsCreator {
     public JScrollPane createTextAreaWithScrollBar(String text, boolean isEditable) {
         JTextArea textArea = new JTextArea();
         textArea.setText(text);
+        textArea.setForeground(Color.GRAY);
         textArea.setEditable(isEditable);
         textArea.addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) {
                 if (textArea.getText().equals(text) && isEditable) {
                     textArea.setText("");
+                    textArea.setForeground(Color.BLACK);
                 }
             }
 
@@ -100,6 +102,7 @@ public class GUIElementsCreator {
             public void focusLost(FocusEvent e) {
                 if (textArea.getText().equals("") && isEditable) {
                     textArea.setText(text);
+                    textArea.setForeground(Color.GRAY);
                 }
             }
         });
