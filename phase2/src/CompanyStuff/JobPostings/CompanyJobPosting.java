@@ -51,6 +51,7 @@ public class CompanyJobPosting extends Observable implements Serializable {
         this.tags = tags;
         this.company = company;
         this.branches = new ArrayList<>();
+        company.addCompanyJobPosting(this);
     }
 
     // === Public methods ===
