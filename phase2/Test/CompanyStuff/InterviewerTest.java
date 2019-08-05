@@ -153,6 +153,9 @@ class InterviewerTest {
     void removeNotification() {
         Interviewer interviewer = this.createInterviewer("Phillip");
         Notification notification = new Notification("TestN", "TestN text");
+        assertTrue(interviewer.getNotificationManager().getNotifications().size() == 0);
+        interviewer.removeNotification(notification);
+        assertTrue(interviewer.getNotificationManager().getNotifications().size() == 0);
         interviewer.addNotification(notification);
         assertTrue(interviewer.getNotificationManager().getNotifications().size() == 1);
         interviewer.removeNotification(notification);
@@ -202,9 +205,42 @@ class InterviewerTest {
     }
 
     @Test
-    void getEarliestTimeAvailableForNewInterview() { //todo test this more
+    void getEarliestTimeAvailableForNewInterview() {
         Interviewer interviewer = this.createInterviewer("Phillip");
         assertEquals(interviewer.getEarliestTimeAvailableForNewInterview(today, 5).getDate(), today.plusDays(5));
+        ArrayList<Interview> lst = new ArrayList<>();
+        assertEquals(interviewer.getEarliestTimeAvailableForNewInterview(today, 0).getDate(), today.plusDays(0));
+
+        Interview interview = createInterview(interviewer);
+        lst.add(interview);
+        Interview interview2 = createInterview(interviewer);
+        lst.add(interview2);
+        Interview interview3 = createInterview(interviewer);
+        lst.add(interview3);
+        Interview interview4 = createInterview(interviewer);
+        lst.add(interview4);
+        Interview interview5 = createInterview(interviewer);
+        lst.add(interview5);
+        Interview interview6 = createInterview(interviewer);
+        lst.add(interview6);
+        Interview interview7 = createInterview(interviewer);
+        lst.add(interview7);
+        Interview interview8 = createInterview(interviewer);
+        lst.add(interview8);
+
+        interviewer.setInterviews(lst);
+        interviewer.scheduleInterview(interview, new InterviewTime(today.plusDays(1), InterviewTime.timeSlots.get(0)));
+        interviewer.scheduleInterview(interview2, new InterviewTime(today.plusDays(1), InterviewTime.timeSlots.get(1)));
+        interviewer.scheduleInterview(interview3, new InterviewTime(today.plusDays(1), InterviewTime.timeSlots.get(2)));
+        interviewer.scheduleInterview(interview4, new InterviewTime(today.plusDays(1), InterviewTime.timeSlots.get(3)));
+        interviewer.scheduleInterview(interview5, new InterviewTime(today.plusDays(1), InterviewTime.timeSlots.get(4)));
+        interviewer.scheduleInterview(interview6, new InterviewTime(today.plusDays(1), InterviewTime.timeSlots.get(5)));
+        interviewer.scheduleInterview(interview7, new InterviewTime(today.plusDays(1), InterviewTime.timeSlots.get(6)));
+        interviewer.scheduleInterview(interview8, new InterviewTime(today.plusDays(1), InterviewTime.timeSlots.get(7)));
+
+        assertEquals(interviewer.getEarliestTimeAvailableForNewInterview(today, 0).getDate(), today.plusDays(0));
+        assertEquals(interviewer.getEarliestTimeAvailableForNewInterview(today, 1).getDate(), today.plusDays(2));
+        assertEquals(interviewer.getEarliestTimeAvailableForNewInterview(today, 2).getDate(), today.plusDays(2));
     }
 
     @Test
@@ -213,6 +249,7 @@ class InterviewerTest {
         ArrayList<Interview> lst = new ArrayList<>();
         lst.add(createInterview(interviewer));
         interviewer.setInterviews(lst);
+        assertNull(interviewer.findJobAppById(1));
         createInterview(interviewer);
         assertEquals(interviewer.findJobAppById(interviewer.getInterviews().get(0).getJobApplications().get(0).getId()),
                 interviewer.getInterviews().get(0).getJobApplications().get(0));
@@ -244,9 +281,24 @@ class InterviewerTest {
         Interviewer interviewer = this.createInterviewer("Phillip");
         ArrayList<Interview> lst = new ArrayList<>();
         lst.add(createInterview(interviewer));
+        lst.add(createInterview(interviewer));
+        lst.add(createInterview(interviewer));
+        lst.add(createInterview(interviewer));
+        lst.add(createInterview(interviewer));
+        lst.add(createInterview(interviewer));
+        lst.add(createInterview(interviewer));
+        lst.add(createInterview(interviewer));
         interviewer.setInterviews(lst);
         interviewer.getInterviews().get(0).setTime(new InterviewTime(today, InterviewTime.NINE_TO_TEN_AM));
         assertTrue(interviewer.getFirstDateAvailableOnOrAfterDate(today) == today);
+        interviewer.getInterviews().get(1).setTime(new InterviewTime(today, InterviewTime.TWO_TO_THREE_PM));
+        interviewer.getInterviews().get(2).setTime(new InterviewTime(today, InterviewTime.THREE_TO_FOUR_PM));
+        interviewer.getInterviews().get(3).setTime(new InterviewTime(today, InterviewTime.TEN_TO_ELEVEN_AM));
+        interviewer.getInterviews().get(4).setTime(new InterviewTime(today, InterviewTime.NOON_TO_ONE_PM));
+        interviewer.getInterviews().get(5).setTime(new InterviewTime(today, InterviewTime.ELEVEN_AM_TO_NOON));
+        interviewer.getInterviews().get(6).setTime(new InterviewTime(today, InterviewTime.ONE_TO_TWO_PM));
+        interviewer.getInterviews().get(7).setTime(new InterviewTime(today, InterviewTime.FOUR_TO_FIVE_PM));
+        assertEquals(interviewer.getFirstDateAvailableOnOrAfterDate(today), today.plusDays(1));
     }
 
     @Test
@@ -257,6 +309,7 @@ class InterviewerTest {
         interviewer.setInterviews(lst);
         interviewer.getInterviews().get(0).setTime(new InterviewTime(today, InterviewTime.NINE_TO_TEN_AM));
         assertEquals(interviewer.getTimeSlotsFilledOnDate(today).get(0), "9-10 am");
+        assertEquals(interviewer.getTimeSlotsFilledOnDate(today).size(), 1);
     }
 
     @Test
@@ -278,6 +331,7 @@ class InterviewerTest {
         interviewer.setInterviews(lst);
         interviewer.removeInterview(interview);
         assertTrue(interviewer.getInterviews().size() == 0);
+        interviewer.removeInterview(interview);
     }
 
     @Test
@@ -323,9 +377,10 @@ class InterviewerTest {
         lst.add(interview);
         interviewer.setInterviews(lst);
         assertEquals(interviewer.getAllIncompleteInterviews().size(), 1);
-        //todo check completed interview changes size
+        interviewer.getAllIncompleteInterviews().get(0).setResult(interviewer.getAllIncompleteInterviews().get(0).getJobApplications().get(0), true);
+        assertEquals(interviewer.getAllIncompleteInterviews().size(), 0);
     }
-//
+
 //    @Test
 //    void getIncompleteInterviewsAlreadyOccurred() {
 //    }
@@ -357,5 +412,6 @@ class InterviewerTest {
         assertEquals(interviewer.getInterviews().size(), 0);
         interviewer.addInterview(interview);
         assertEquals(interviewer.getInterviews().size(), 1);
+        assertEquals(interviewer.getInterviews().get(0), interview);
     }
 }
