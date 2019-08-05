@@ -12,17 +12,17 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
-class ApplicantViewCompanySearchResults extends JPanel {
+class ApplicantViewSearchResults extends JPanel {
     private ApplicantBackend backEnd;
+    private JPanel masterPanel;
 
-    ApplicantViewCompanySearchResults(ArrayList<CompanyJobPosting> jobPostings, ApplicantBackend backEnd) {
-        this.backEnd = backEnd;
-        JPanel viewJobs = new JPanel(new GridLayout(1, 3));
+    ApplicantViewSearchResults(ArrayList<CompanyJobPosting> jobPostings, ApplicantBackend backEnd, JPanel masterPanel) {
+        this.backEnd = backEnd; this.masterPanel = masterPanel;
+        this.setLayout(new GridLayout(1, 3));
 
-        JPanel viewJobs0 = this.buildViewJobs0(jobPostings); viewJobs.add(viewJobs0);
-        JPanel viewJobs1 = this.buildViewJobs1(jobPostings); viewJobs.add(viewJobs1);
-        JPanel viewJobs2 = this.buildViewJobs2(new ArrayList<>());
-        viewJobs.add(viewJobs2);
+        JPanel viewJobs0 = this.buildViewJobs0(jobPostings); this.add(viewJobs0);
+        JPanel viewJobs1 = this.buildViewJobs1(jobPostings); this.add(viewJobs1);
+        JPanel viewJobs2 = this.buildViewJobs2(new ArrayList<>()); this.add(viewJobs2);
 
         JList<String> jobTitlesList = new JList<>();
         for(Component c : viewJobs0.getComponents()) {
@@ -62,7 +62,7 @@ class ApplicantViewCompanySearchResults extends JPanel {
         viewJobsExit.setBounds(92, 415, 100, 20);
         viewJobsExit.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
-                ((CardLayout)getLayout()).show(getThis(), "applicantStart");
+                ((CardLayout)masterPanel.getLayout()).show(masterPanel, "Main");
             }
         });
         viewJobsList.add(viewJobsExit);
@@ -94,7 +94,7 @@ class ApplicantViewCompanySearchResults extends JPanel {
             viewJobDesc.setVerticalAlignment(JLabel.TOP);
             viewJobsAdded.add(viewJobDesc);
 
-            viewJobs1.add(viewJobsAdded, j.getId());
+            viewJobs1.add(viewJobsAdded, String.valueOf(j.getId()));
         }
 
         return viewJobs1;
@@ -167,7 +167,7 @@ class ApplicantViewCompanySearchResults extends JPanel {
             });
             viewJobsAdded2.add(applyViaNewDocs);
 
-            viewJobs2.add(viewJobsAdded2, j.getId());
+            viewJobs2.add(viewJobsAdded2, String.valueOf(j.getId()));
         }
         return viewJobs2;
     }
@@ -175,7 +175,7 @@ class ApplicantViewCompanySearchResults extends JPanel {
     /**
      * Because action listeners
      */
-    private ApplicantViewCompanySearchResults getThis() {
+    private ApplicantViewSearchResults getThis() {
         return this;
     }
 }

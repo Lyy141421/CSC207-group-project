@@ -29,7 +29,6 @@ public class ApplicantPanel extends UserMain {
 
     public void setCards() {
         cards.add(new ApplicantMain(this.applicant, this, this.jobAppSystem, this.logout), "Main");
-        //this.add(new ApplicantTextDocSubmission(this.applicant, this,jobAppSystem.getToday()), "TextApplication");
         cards.add(new ApplicantViewApps(), "SearchResults");
     }
 

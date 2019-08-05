@@ -79,7 +79,8 @@ class ApplicantBrowsePostings extends JPanel {
                 } else {
                     ArrayList<CompanyJobPosting> postings = backend.findApplicablePostings(fields[0],
                             fields[1], fields[2], fields[3], Boolean.parseBoolean(fields[4]));
-                    masterPanel.add(new ApplicantViewCompanySearchResults(postings, backend), "SearchResults");
+                    masterPanel.add(new ApplicantViewSearchResults(postings, backend,
+                            masterPanel), "SearchResults");
                     ((CardLayout) masterPanel.getLayout()).show(masterPanel, "SearchResults");
                 }
             }
