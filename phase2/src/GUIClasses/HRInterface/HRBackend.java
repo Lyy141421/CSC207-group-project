@@ -95,7 +95,10 @@ class HRBackend {
      * @return the list of applications in consideration for this job posting.
      */
     ArrayList<JobApplication> getApplicationsInConsiderationForJobPosting(BranchJobPosting jobPosting) {
-        return jobPosting.getInterviewManager().getApplicationsInConsideration();
+        if (jobPosting.getInterviewManager() != null) {
+            return jobPosting.getInterviewManager().getApplicationsInConsideration();
+        }
+        return new ArrayList<>();
     }
 
     /**

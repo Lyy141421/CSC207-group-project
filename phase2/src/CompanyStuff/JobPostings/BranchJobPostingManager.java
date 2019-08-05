@@ -133,7 +133,7 @@ public class BranchJobPostingManager implements Serializable {
     public ArrayList<BranchJobPosting> getJobPostingsRecentlyClosedForReferences(LocalDate today) {
         ArrayList<BranchJobPosting> jobPostings = new ArrayList<>();
         for (BranchJobPosting jobPosting : this.getClosedJobPostingsNotFilled(today)) {
-            if (jobPosting.getInterviewManager().getHrTask() == InterviewManager.SELECT_APPS_FOR_FIRST_ROUND) {
+            if (jobPosting.getInterviewManager() != null && jobPosting.getInterviewManager().getHrTask() == InterviewManager.SELECT_APPS_FOR_FIRST_ROUND) {
                 jobPostings.add(jobPosting);
             }
         }
@@ -149,7 +149,7 @@ public class BranchJobPostingManager implements Serializable {
     public ArrayList<BranchJobPosting> getJobPostingsThatNeedDeadlineExtensions(LocalDate getToday) {
         ArrayList<BranchJobPosting> jobPostings = new ArrayList<>();
         for (BranchJobPosting jobPosting : this.getClosedJobPostingsNotFilled(getToday)) {
-            if (jobPosting.getInterviewManager().getHrTask() == InterviewManager.EXTEND_APPLICATION_DEADLINE) {
+            if (jobPosting.getInterviewManager() != null && jobPosting.getInterviewManager().getHrTask() == InterviewManager.EXTEND_APPLICATION_DEADLINE) {
                 jobPostings.add(jobPosting);
             }
         }
@@ -165,7 +165,7 @@ public class BranchJobPostingManager implements Serializable {
     public ArrayList<BranchJobPosting> getJobPostingsThatNeedGroupInterviewsScheduled(LocalDate today) {
         ArrayList<BranchJobPosting> jobPostings = new ArrayList<>();
         for (BranchJobPosting jobPosting : this.getClosedJobPostingsNotFilled(today)) {
-            if (jobPosting.getInterviewManager().getHrTask() == InterviewManager.SCHEDULE_GROUP_INTERVIEWS) {
+            if (jobPosting.getInterviewManager() != null && jobPosting.getInterviewManager().getHrTask() == InterviewManager.SCHEDULE_GROUP_INTERVIEWS) {
                 jobPostings.add(jobPosting);
             }
         }
@@ -181,7 +181,7 @@ public class BranchJobPostingManager implements Serializable {
     public ArrayList<BranchJobPosting> getJobPostingsThatNeedHRSelectionForHiring(LocalDate today) {
         ArrayList<BranchJobPosting> jobPostings = new ArrayList<>();
         for (BranchJobPosting jobPosting : this.getClosedJobPostingsNotFilled(today)) {
-            if (jobPosting.getInterviewManager().getHrTask() == InterviewManager.SELECT_APPS_TO_HIRE) {
+            if (jobPosting.getInterviewManager() != null && jobPosting.getInterviewManager().getHrTask() == InterviewManager.SELECT_APPS_TO_HIRE) {
                 jobPostings.add(jobPosting);
             }
         }
