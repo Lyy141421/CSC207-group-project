@@ -17,6 +17,8 @@ public class ReferenceSubmitLetterPanel extends JPanel implements ActionListener
      */
 
     // === Instance variables ===
+    // The card panel
+    private JPanel cardPanel;
     // The reference back end
     private ReferenceBackEnd referenceBackEnd;
     // The button for selecting a job application
@@ -27,9 +29,10 @@ public class ReferenceSubmitLetterPanel extends JPanel implements ActionListener
     private FileChooser fileChooser;
 
     // === Constructor ===
-    ReferenceSubmitLetterPanel(ReferenceBackEnd referenceBackEnd) {
+    ReferenceSubmitLetterPanel(JPanel cardPanel, ReferenceBackEnd referenceBackEnd) {
+        this.cardPanel = cardPanel;
         this.referenceBackEnd = referenceBackEnd;
-        this.fileChooser = new FileChooser(this.referenceBackEnd.getReference(), null);    // So that the file chooser is on the panel
+        this.fileChooser = new FileChooser(cardPanel, this.referenceBackEnd.getReference(), null);    // So that the file chooser is on the panel
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         this.add(new GUIElementsCreator().createLabelPanel("Submit Reference Letter", 20, true));
@@ -98,7 +101,7 @@ public class ReferenceSubmitLetterPanel extends JPanel implements ActionListener
         JobApplication jobAppSelected = referenceBackEnd.getJobAppsForReference().get(selectedIndex);
         if (referenceBackEnd.isTodayAfterApplicationCloseDate(jobAppSelected)) {
             this.remove(fileChooser);
-            fileChooser = new FileChooser(referenceBackEnd.getReference(), jobAppSelected);
+            fileChooser = new FileChooser(cardPanel, referenceBackEnd.getReference(), jobAppSelected);
             fileChooser.enableUploadButton();
             this.add(fileChooser);
             this.revalidate();

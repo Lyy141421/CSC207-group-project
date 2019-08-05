@@ -64,12 +64,14 @@ public class FileChooser extends JPanel implements ActionListener {
     private String uploadButtonIconPath = "./Open16.gif";   // The icon image for uploading a document
     private ArrayList<File> filesToSubmit = new ArrayList<>();  // The list of files to submit
 
+    private JPanel cardPanel;
     private User user;  // The user who logged in
     private JobApplication jobApp;  // The job application for this document submission
 
     // === Constructor ===
-    public FileChooser(User user, JobApplication jobApp) {
+    public FileChooser(JPanel cardPanel, User user, JobApplication jobApp) {
         super(new BorderLayout());
+        this.cardPanel = cardPanel;
         this.user = user;
         this.jobApp = jobApp;
 
@@ -81,7 +83,7 @@ public class FileChooser extends JPanel implements ActionListener {
     }
 
     // === Getters ===
-    public JPanel getRemoveFileButtonsPanel() {
+    public RemoveFileButtonsPanel getRemoveFileButtonsPanel() {
         return this.removeFileButtonsPanel;
     }
 
@@ -132,7 +134,7 @@ public class FileChooser extends JPanel implements ActionListener {
     private void setSubmitButtonPanel() {
         submitButton = new JButton("Submit");
         submitButton.setEnabled(false);
-        submitButton.addActionListener(new SubmitDocumentsActionListener(this.user, this.jobApp, this.filesToSubmit));
+        submitButton.addActionListener(new SubmitDocumentsActionListener(this.cardPanel, this.user, this.jobApp, this.filesToSubmit));
 
         JPanel submitButtonPanel = new JPanel();
         submitButtonPanel.add(submitButton);
@@ -162,7 +164,7 @@ public class FileChooser extends JPanel implements ActionListener {
         File file = fc.getSelectedFile();
         JButton removeFileButton = removeFileButtonsPanel.addButton(file);
         removeFileButton.addActionListener(
-                new FileChooserRemoveFileButtonActionListener(this, removeFileButton, file));
+                new FileChooserRemoveFileButtonActionListener(this, removeFileButtonsPanel, file));
         filesToSubmit.add(file);
         submitButton.setEnabled(true);
     }

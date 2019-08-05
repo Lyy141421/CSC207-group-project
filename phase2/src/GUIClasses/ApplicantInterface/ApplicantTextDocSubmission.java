@@ -14,7 +14,9 @@ import java.util.HashMap;
 
 class ApplicantTextDocSubmission extends JPanel {
 
-    ApplicantTextDocSubmission(JobApplication jobApp) {
+    ApplicantTextDocSubmission(JPanel masterPanel, JobApplication jobApp) {
+        this.setLayout(null);
+
         JLabel titleText = new JLabel("Document Submission");
         titleText.setFont(new Font("Serif", Font.PLAIN, 22));
         titleText.setBounds(327, 20, 200, 40);
@@ -36,14 +38,26 @@ class ApplicantTextDocSubmission extends JPanel {
         JButton submit = new JButton("Apply!");
         submit.setBounds(387, 400, 80, 30);
 
+        JButton returnButton = new JButton("Back");
+        returnButton.setBounds(20, 20, 80, 30);
+
         HashMap<String, JTextArea> fileTypeToContents = new HashMap<String, JTextArea>() {{
             put("resume", (JTextArea) resumeScroll.getViewport().getView());
             put("coverLetter", (JTextArea) coverScroll.getViewport().getView());
         }};
-        submit.addActionListener(new SubmitDocumentsActionListener(jobApp.getApplicant(), jobApp, fileTypeToContents));
+        submit.addActionListener(new SubmitDocumentsActionListener(masterPanel, jobApp.getApplicant(), jobApp, fileTypeToContents));
+
+        returnButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ((CardLayout) masterPanel.getLayout()).previous(masterPanel);
+            }
+        });
 
         this.add(titleText); this.add(submit);
         this.add(resumeText); this.add(resumeScroll);
-        this.add(coverText); this.add(coverScroll);
+        this.add(coverText);
+        this.add(coverScroll);
+        this.add(returnButton);
     }
 }

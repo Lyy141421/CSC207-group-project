@@ -10,6 +10,7 @@ import GUIClasses.CommonUserGUI.UserMain;
 import Main.User;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -18,16 +19,15 @@ import java.util.HashMap;
 
 public class SubmitDocumentsActionListener implements ActionListener {
 
+    private JPanel cardPanel;
     private User documentSubmitter;
     private JobApplication jobApp;
     private HashMap<String, String> fileTypeToTextEntry;
     private ArrayList<File> filesToSubmit = new ArrayList<>();
 
-    // NOTE: this requires that after the applicant chooses the job to apply to, it automatically creates a job
-    // application object so that choosing files will work
-
     // === Constructor for applicant entries ===
-    public SubmitDocumentsActionListener(User documentSubmitter, JobApplication jobApp, HashMap<String, JTextArea> fileTypeToContents) {
+    public SubmitDocumentsActionListener(JPanel cardPanel, User documentSubmitter, JobApplication jobApp, HashMap<String, JTextArea> fileTypeToContents) {
+        this.cardPanel = cardPanel;
         this.documentSubmitter = documentSubmitter;
         this.jobApp = jobApp;
         this.fileTypeToTextEntry = new HashMap<>();
@@ -37,7 +37,8 @@ public class SubmitDocumentsActionListener implements ActionListener {
     }
 
     // === Constructor for file submission ===
-    public SubmitDocumentsActionListener(User documentSubmitter, JobApplication jobApp, ArrayList<File> files) {
+    public SubmitDocumentsActionListener(JPanel cardPanel, User documentSubmitter, JobApplication jobApp, ArrayList<File> files) {
+        this.cardPanel = cardPanel;
         this.documentSubmitter = documentSubmitter;
         this.jobApp = jobApp;
         this.filesToSubmit = files;
@@ -48,9 +49,10 @@ public class SubmitDocumentsActionListener implements ActionListener {
         this.updateFileStorage();
         JPanel parent = (JPanel) ((JButton) e.getSource()).getParent();
         JOptionPane.showMessageDialog(parent, "You have successfully submitted " + filesToSubmit.size() + " files.");
-        JPanel cards = new PanelGetter().getCardLayoutFromSubmitFilesButton(e);
-        UserMain userMain = (UserMain) cards.getParent();
-        userMain.refresh(); // Update all the cards and go back to home
+        ((CardLayout) cardPanel.getLayout()).first(cardPanel);
+        if (cardPanel.getParent() instanceof UserMain) {
+            ((UserMain) cardPanel.getParent()).refresh();
+        }
     }
 
     /**

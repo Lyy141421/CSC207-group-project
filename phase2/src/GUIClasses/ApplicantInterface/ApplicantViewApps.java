@@ -85,7 +85,7 @@ class ApplicantViewApps extends JPanel {
 
             subRet.add(companyText1); subRet.add(titleText1); subRet.add(statusText1);
             subRet.add(withdrawButton1);
-            ret.add(subRet, app.getJobPosting().getId());
+            ret.add(subRet, String.valueOf(app.getJobPosting().getId()));
         }
 
         return ret;

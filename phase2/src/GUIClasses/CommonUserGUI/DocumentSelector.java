@@ -3,7 +3,6 @@ package GUIClasses.CommonUserGUI;
 import GUIClasses.ActionListeners.DocumentSelectorRemoveFileButtonActionListener;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.util.ArrayList;
@@ -43,7 +42,7 @@ public class DocumentSelector extends AbstractDocumentUser {
         JButton removeFileButton = removeFileButtonsPanel.addButton(file);
         removeFileButtonsPanel.revalidate();
         removeFileButton.addActionListener(
-                new DocumentSelectorRemoveFileButtonActionListener(this, removeFileButton, file));
+                new DocumentSelectorRemoveFileButtonActionListener(this, removeFileButtonsPanel, file));
         this.getButton().setEnabled(true);
         filesToSubmit.add(file);
     }
