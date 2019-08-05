@@ -63,7 +63,7 @@ class ApplicantViewSearchResults extends JPanel {
         viewJobsExit.setBounds(92, 413, 100, 20);
         viewJobsExit.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
-                ((CardLayout) masterPanel.getLayout()).previous(masterPanel);
+                ((CardLayout) masterPanel.getLayout()).show(masterPanel, "Main");
             }
         });
         viewJobsList.add(viewJobsExit);
