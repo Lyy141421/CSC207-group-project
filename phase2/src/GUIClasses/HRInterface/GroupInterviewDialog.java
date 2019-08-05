@@ -40,22 +40,23 @@ class GroupInterviewDialog extends JDialog {
 
         this.setLayout(new BorderLayout());
 
-        JPanel promptPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         JLabel prompt = new JLabel("Please select interviewers for group interview");
+        this.add(prompt, BorderLayout.PAGE_START);
+        JPanel spinnerPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         JLabel daysLabel = new JLabel("Minimum days to notify interviewers: ");
         this.daysSpinner = new JSpinner(new SpinnerNumberModel(1, 1, MAX_DAYS, 1));
-        promptPanel.add(daysLabel);
-        promptPanel.add(this.daysSpinner);
-        this.add(promptPanel, BorderLayout.PAGE_START);
+        spinnerPanel.add(daysLabel);
+        spinnerPanel.add(this.daysSpinner);
+        this.add(spinnerPanel, BorderLayout.NORTH);
 
         JSplitPane splitDisplay = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-        splitDisplay.setDividerLocation(100);
+        splitDisplay.setDividerLocation(150);
         splitDisplay.setLeftComponent(this.createCoordinator());
         splitDisplay.setRightComponent(new JScrollPane(this.createInterviewers()));
         this.add(splitDisplay, BorderLayout.CENTER);
         this.setButtons();
 
-        this.setSize(300, 200);
+        this.setSize(600, 400);
         this.setVisible(true);
     }
 

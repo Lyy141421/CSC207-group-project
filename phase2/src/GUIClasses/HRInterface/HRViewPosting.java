@@ -224,6 +224,8 @@ class HRViewPosting extends HRPanel {
         }
         parent.add(appPanel, HRPanel.APPLICATION, 7);
         ((CardLayout) parent.getLayout()).show(parent, HRPanel.APPLICATION);
+        //TODO: new Group interview doesn't show up until switch panel.
+        // if (hrBackend.needsGroupInterview(selectedJP)
         reload();
     }
 

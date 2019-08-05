@@ -456,6 +456,7 @@ class HRAddOrUpdatePostingForm extends HRPanel {
                 hrBackend.addJobPosting(mandatoryFields, defaultFields.get());
             }
             JOptionPane.showMessageDialog(containerPane, "Job posting has been added.");
+            this.resetForm();
         }
     }
 
