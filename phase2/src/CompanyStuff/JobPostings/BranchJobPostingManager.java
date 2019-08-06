@@ -114,8 +114,13 @@ public class BranchJobPostingManager implements Serializable {
      * @return a list of recently closed job postings for applicants.
      */
     public ArrayList<BranchJobPosting> getJobPostingsRecentlyClosedForApplications(LocalDate today) {
+        System.out.println("Recently closed job postings getter is called");
         ArrayList<BranchJobPosting> jobPostings = new ArrayList<>();
+        System.out.println("Number of job postings in branch: " + this.getBranchJobPostings().size());
         for (BranchJobPosting jobPosting : this.getBranchJobPostings()) {
+            System.out.println("Is closed: " + jobPosting.isClosed(today));
+            boolean assertion = jobPosting.getInterviewManager() == null;
+            System.out.println("Interview manager doesn't exist " + assertion);
             if (jobPosting.isClosed(today) && jobPosting.getInterviewManager() == null) {
                 jobPostings.add(jobPosting);
             }
@@ -262,6 +267,7 @@ public class BranchJobPostingManager implements Serializable {
      * @param today Today's date.
      */
     public void updateJobPostingsClosedForApplications(LocalDate today) {
+        System.out.println("Update job postings closed for applications is called");
         CompanyDocumentManager companyDocManager = this.getBranch().getCompany().getDocumentManager();
         for (BranchJobPosting jobPosting : this.getJobPostingsRecentlyClosedForApplications(today)) {
             if (jobPosting.hasNoApplicationsSubmitted()) {

@@ -14,6 +14,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -49,7 +50,7 @@ class HRViewPosting extends HRPanel {
 
     HRViewPosting(HRBackend hrBackend, JPanel parent, int jpType) {
         super(hrBackend);
-        System.out.println(SwingUtilities.isEventDispatchThread());
+        assert SwingUtilities.isEventDispatchThread();
         this.parent = parent;
         this.jpType = jpType;
         this.setJPLists();
@@ -130,7 +131,21 @@ class HRViewPosting extends HRPanel {
                 groupDialog.addWindowListener(new WindowAdapter() {
                     @Override
                     public void windowClosed(WindowEvent e) {
-                        reload();
+                        Thread newThread = new Thread() {
+                            public void run() {
+                                try {
+                                    SwingUtilities.invokeAndWait(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            reload();
+                                        }
+                                    });
+                                } catch (InterruptedException | InvocationTargetException ex) {
+                                    ex.printStackTrace();
+                                }
+                            }
+                        };
+                        newThread.start();
                     }
                 });
             }
@@ -232,7 +247,21 @@ class HRViewPosting extends HRPanel {
         ((CardLayout) parent.getLayout()).show(parent, HRPanel.APPLICATION);
         //TODO: new Group interview doesn't show up until switch panel.
         // if (hrBackend.needsGroupInterview(selectedJP)
-        reload();
+        Thread newThread = new Thread() {
+            public void run() {
+                try {
+                    SwingUtilities.invokeAndWait(new Runnable() {
+                        @Override
+                        public void run() {
+                            reload();
+                        }
+                    });
+                } catch (InterruptedException | InvocationTargetException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        };
+        newThread.start();
     }
 
     private String getPreviousPanelKey() {

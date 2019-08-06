@@ -29,16 +29,12 @@ public class JobApplicationSystem {
         JobApplicationSystem jobAppSystem = new JobApplicationSystem();
         DataLoaderAndStorer dataLoaderAndStorer = new DataLoaderAndStorer(jobAppSystem);
         dataLoaderAndStorer.loadAllData();
-        try {
-            SwingUtilities.invokeAndWait(new Runnable() {
-                @Override
-                public void run() {
-                    new MainFrame(jobAppSystem);
-                }
-            });
-        } catch (InterruptedException | InvocationTargetException e) {
-            e.printStackTrace();
-        }
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                new MainFrame(jobAppSystem);
+            }
+        });
     }
 
     // === Public methods ===

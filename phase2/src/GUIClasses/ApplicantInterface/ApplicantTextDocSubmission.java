@@ -2,11 +2,13 @@ package GUIClasses.ApplicantInterface;
 
 import ApplicantStuff.JobApplication;
 import GUIClasses.ActionListeners.SubmitDocumentsActionListener;
+import GUIClasses.CommonUserGUI.UserMain;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 
 class ApplicantTextDocSubmission extends JPanel {
@@ -49,7 +51,21 @@ class ApplicantTextDocSubmission extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 new SubmitDocumentsActionListener(masterPanel, jobApp.getApplicant(), jobApp, fileTypeToContents).actionPerformed(e);
-                ((ApplicantPanel)masterPanel).refresh();
+                Thread newThread = new Thread() {
+                    public void run() {
+                        try {
+                            SwingUtilities.invokeAndWait(new Runnable() {
+                                @Override
+                                public void run() {
+                                    ((UserMain) masterPanel).refresh();
+                                }
+                            });
+                        } catch (InterruptedException | InvocationTargetException ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+                };
+                newThread.start();
             }
         });
         returnButton.addActionListener(new ActionListener() {

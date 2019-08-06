@@ -17,6 +17,7 @@ class ApplicantViewSearchResults extends JPanel {
     private JPanel masterPanel;
 
     ApplicantViewSearchResults(ArrayList<CompanyJobPosting> jobPostings, ApplicantBackend backEnd, JPanel masterPanel) {
+        assert SwingUtilities.isEventDispatchThread();
         this.backEnd = backEnd; this.masterPanel = masterPanel;
         this.setLayout(new GridLayout(1, 3));
 

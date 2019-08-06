@@ -9,7 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.TreeMap;
 
-public class ApplicantSideBarMenuPanel extends JPanel {
+class ApplicantSideBarMenuPanel extends JPanel {
 
     // === Instance variable ===
     private CardLayout affectedLayout;

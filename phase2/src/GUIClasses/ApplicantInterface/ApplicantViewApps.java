@@ -1,11 +1,13 @@
 package GUIClasses.ApplicantInterface;
 
 import ApplicantStuff.JobApplication;
+import GUIClasses.CommonUserGUI.UserMain;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 
 /**
@@ -87,7 +89,21 @@ class ApplicantViewApps extends JPanel {
                 public void actionPerformed(ActionEvent e) {
                     if (backend.withdrawApp(app)) {
                         JOptionPane.showMessageDialog(thisPanel, "Application Successfully Withdrawn");
-                        ((ApplicantPanel)masterPanel).refresh();
+                        Thread newThread = new Thread() {
+                            public void run() {
+                                try {
+                                    SwingUtilities.invokeAndWait(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            ((UserMain) masterPanel).refresh();
+                                        }
+                                    });
+                                } catch (InterruptedException | InvocationTargetException ex) {
+                                    ex.printStackTrace();
+                                }
+                            }
+                        };
+                        newThread.start();
                     } else {
                         JOptionPane.showMessageDialog(thisPanel, "Application Cannot Be Withdrawn");
                     }

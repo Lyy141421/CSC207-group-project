@@ -10,6 +10,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.lang.reflect.InvocationTargetException;
 import java.util.TreeMap;
 
 class ReferenceSideBarMenuPanel extends JPanel {
@@ -40,19 +41,36 @@ class ReferenceSideBarMenuPanel extends JPanel {
         fullMenu.put("3. Submit Reference Letter", new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ((UserMain) cards.getParent()).refresh();
-                ((CardLayout) cards.getLayout()).show(cards, ReferenceMain.SUBMIT_REFERENCE_LETTER);
+                createNewThread(ReferenceMain.SUBMIT_REFERENCE_LETTER).start();
             }
         });
         fullMenu.put("4. View Referee Job Postings", new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ((UserMain) cards.getParent()).refresh();
-                ((CardLayout) cards.getLayout()).show(cards, ReferenceMain.VIEW_REFEREE_JOB_POSTINGS);
+                createNewThread(ReferenceMain.VIEW_REFEREE_JOB_POSTINGS).start();
             }
         });
         fullMenu.put("5. Logout", logoutActionListener);
         return fullMenu;
+    }
+
+    private Thread createNewThread(String key) {
+        Thread newThread = new Thread() {
+            public void run() {
+                try {
+                    SwingUtilities.invokeAndWait(new Runnable() {
+                        @Override
+                        public void run() {
+                            ((UserMain) cards.getParent()).refresh();
+                            ((CardLayout) cards.getLayout()).show(cards, key);
+                        }
+                    });
+                } catch (InterruptedException | InvocationTargetException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        };
+        return newThread;
     }
 
 }

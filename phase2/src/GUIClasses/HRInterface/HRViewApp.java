@@ -13,6 +13,7 @@ import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -43,6 +44,7 @@ class HRViewApp extends HRPanel {
     //      2 hiring
     HRViewApp(JPanel parent, HRBackend hrBackend, HashMap<String, JobApplication> currApps, String previousPanel, int mode) {
         super(hrBackend);
+        assert SwingUtilities.isEventDispatchThread();
         this.parent = parent;
         this.currApps = currApps;
         this.previousPanel = previousPanel;
@@ -206,7 +208,21 @@ class HRViewApp extends HRPanel {
                     @Override
                     public void windowClosed(WindowEvent e) {
                         hireButton.setVisible(false);
-                        reload();
+                        Thread newThread = new Thread() {
+                            public void run() {
+                                try {
+                                    SwingUtilities.invokeAndWait(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            reload();
+                                        }
+                                    });
+                                } catch (InterruptedException | InvocationTargetException ex) {
+                                    ex.printStackTrace();
+                                }
+                            }
+                        };
+                        newThread.start();
                     }
                 });
             }
@@ -225,7 +241,21 @@ class HRViewApp extends HRPanel {
                     @Override
                     public void windowClosed(WindowEvent e) {
                         selectButton.setVisible(false);
-                        reload();
+                        Thread newThread = new Thread() {
+                            public void run() {
+                                try {
+                                    SwingUtilities.invokeAndWait(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            reload();
+                                        }
+                                    });
+                                } catch (InterruptedException | InvocationTargetException ex) {
+                                    ex.printStackTrace();
+                                }
+                            }
+                        };
+                        newThread.start();
                     }
                 });
             }
