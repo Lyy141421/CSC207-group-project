@@ -5,8 +5,7 @@ import ApplicantStuff.JobApplication;
 import ApplicantStuff.JobApplicationDocument;
 import ApplicantStuff.Reference;
 import DocumentManagers.ApplicantDocumentManager;
-import DocumentManagers.CompanyDocumentManager;
-import GUIClasses.ApplicantInterface.ApplicantPanel;
+import DocumentManagers.ReferenceLetterDocumentManager;
 import GUIClasses.CommonUserGUI.UserMain;
 import Main.User;
 
@@ -74,13 +73,17 @@ public class SubmitDocumentsActionListener implements ActionListener {
             }
             ((Applicant) this.documentSubmitter).getJobApplicationManager().addJobApplication(jobApp);
         } else {
-            // Remove job application from reference's list and submit directly to the company
-            Reference reference = (Reference) this.documentSubmitter;
-            reference.removeJobApplication(jobApp);
-            jobApp.removeReference(reference);
-            CompanyDocumentManager companyDocManager = jobApp.getJobPosting().getCompany().getDocumentManager();
-            companyDocManager.addFilesForJobApplication(jobApp, filesToSubmit);
+            // Reference
+            this.uploadReferenceLetters();
         }
+    }
+
+    private void uploadReferenceLetters() {
+        Reference reference = (Reference) this.documentSubmitter;
+        reference.removeJobApplication(jobApp);
+        jobApp.removeReference(reference);
+        ReferenceLetterDocumentManager referenceLetterDocManager = jobApp.getReferenceLetterDocManager();
+        referenceLetterDocManager.addFileToFolder(filesToSubmit);
     }
 
     /**

@@ -99,14 +99,10 @@ public class ReferenceSubmitLetterPanel extends JPanel implements ActionListener
     public void actionPerformed(ActionEvent e) {
         int selectedIndex = jobAppList.getSelectedIndex();
         JobApplication jobAppSelected = referenceBackEnd.getJobAppsForReference().get(selectedIndex);
-        if (referenceBackEnd.isTodayAfterApplicationCloseDate(jobAppSelected)) {
-            this.remove(fileChooser);
-            fileChooser = new FileChooser(cardPanel, referenceBackEnd.getReference(), jobAppSelected);
-            fileChooser.enableUploadButton();
-            this.add(fileChooser);
-            this.revalidate();
-        } else {
-            JOptionPane.showMessageDialog(this, "Reference letter submission has not yet opened for this job posting");
-        }
+        this.remove(fileChooser);
+        fileChooser = new FileChooser(cardPanel, referenceBackEnd.getReference(), jobAppSelected);
+        fileChooser.enableUploadButton();
+        this.add(fileChooser);
+        this.revalidate();
     }
 }

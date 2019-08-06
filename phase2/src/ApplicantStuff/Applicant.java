@@ -64,14 +64,11 @@ public class Applicant extends User {
     public boolean withdrawJobApplication(LocalDate today, BranchJobPosting jobPosting) {
         JobApplication jobApp = jobPosting.findJobApplication(this);
         if (this.hasAppliedToPosting(jobPosting) && !jobPosting.isFilled()) {
-            if (!jobPosting.isClosedForApplications(today)) {   // Company still does not have access to application
+            if (!jobPosting.isClosed(today)) {   // Company still does not have access to application
                 jobPosting.removeJobApplication(jobApp);
+                jobApp.removeAppFromAllReferences();    // Cancel reference letter submissions
             } else {    // Company has access to application
                 jobPosting.getInterviewManager().updateForApplicationWithdrawal(jobApp);   // Update application from the company end
-            }
-            if (!jobPosting.isClosedForReferences(today)) {
-                // Company has access to application, but reference letters may not all be submitted
-                jobApp.removeAppFromAllReferences();    // Cancel reference letter submissions
             }
             this.jobApplicationManager.removeJobApplication(jobPosting);    // Remove this application from applicant end
             return true;

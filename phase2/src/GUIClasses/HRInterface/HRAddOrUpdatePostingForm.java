@@ -34,7 +34,6 @@ class HRAddOrUpdatePostingForm extends HRPanel {
     private static final String TAGS_LABEL = "Tag(s): ";
     private static final String POSITIONS_LABEL = "Number of Positions: ";
     private static final String APPLICANT_CLOSE_DATE_LABEL = "Applicant Close Date: ";
-    private static final String REFERENCE_CLOSE_DATE_LABEL = "Reference Close Date: ";
 
     // === Instance variables ===
     private JPanel containerPane = this;    // The container pane from which message dialogs will pop up from
@@ -69,12 +68,12 @@ class HRAddOrUpdatePostingForm extends HRPanel {
     }
 
     private void addText() {
-        Rectangle rect = new Rectangle(20, 10, 150, 30);
+        Rectangle rect = new Rectangle(20, 40, 150, 30);
         ArrayList<String> labels = this.getArrayListOfLabels();
 
         for (String text : labels) {
             JLabel label = new JLabel(text, SwingConstants.LEFT);
-            if (text.equals(FIELD_LABEL) || text.equals(REFERENCE_CLOSE_DATE_LABEL)) {
+            if (text.equals(FIELD_LABEL) || text.equals(APPLICANT_CLOSE_DATE_LABEL)) {
                 label = new JLabel(text, SwingConstants.RIGHT);
                 rect.x = 330;
                 label.setBounds(rect);
@@ -87,7 +86,7 @@ class HRAddOrUpdatePostingForm extends HRPanel {
                 rect.y += 110;
             } else if (text.equals(DOCUMENTS_LABEL) || text.equals(TAGS_LABEL)) {
                 rect.y += 80;
-            } else if (!(text.equals(TITLE_LABEL) || text.equals(APPLICANT_CLOSE_DATE_LABEL))) {
+            } else if (!(text.equals(TITLE_LABEL) || text.equals(POSITIONS_LABEL))) {
                 rect.y += 40;
             }
         }
@@ -95,19 +94,18 @@ class HRAddOrUpdatePostingForm extends HRPanel {
 
     private ArrayList<String> getArrayListOfLabels() {
         return new ArrayList<>(Arrays.asList(TITLE_LABEL, FIELD_LABEL, DESCRIPTION_LABEL, DOCUMENTS_LABEL,
-                TAGS_LABEL, POSITIONS_LABEL, APPLICANT_CLOSE_DATE_LABEL, REFERENCE_CLOSE_DATE_LABEL));
+                TAGS_LABEL, POSITIONS_LABEL, APPLICANT_CLOSE_DATE_LABEL));
     }
 
     private void addFieldsAndSubmitButton() {
-        Rectangle rect = new Rectangle(170, 10, 150,
-                30);
+        Rectangle rect = new Rectangle(170, 40, 150, 30);
         this.addJobTitleEntry(rect);
         this.addFieldEntry(rect);
         this.addJobDescriptionEntry(rect);
         this.addRequiredDocumentsEntry(rect);
         this.addTagsEntry(rect);
         this.addNumberOfPositionsEntry(rect);
-        this.addCloseDateEntries(rect);
+        this.addCloseDateEntry(rect);
         this.addSubmitButton(rect);
     }
 
@@ -181,18 +179,12 @@ class HRAddOrUpdatePostingForm extends HRPanel {
         this.entryBoxes.add(numPositionsEntry);
     }
 
-    private void addCloseDateEntries(Rectangle rect) {
+    private void addCloseDateEntry(Rectangle rect) {
         JDatePickerImpl applicantCloseDateEntry = this.createDatePicker();
-        rect.y += 40;
+        rect.x = 500;
         applicantCloseDateEntry.setBounds(rect);
         this.add(applicantCloseDateEntry);
         this.entryBoxes.add(applicantCloseDateEntry);
-
-        JDatePickerImpl referenceCloseDateEntry = this.createDatePicker();
-        rect.x = 500;
-        referenceCloseDateEntry.setBounds(rect);
-        this.add(referenceCloseDateEntry);
-        this.entryBoxes.add(referenceCloseDateEntry);
     }
 
     private void addJobTitleSelection() {
@@ -494,10 +486,7 @@ class HRAddOrUpdatePostingForm extends HRPanel {
     private Object[] getMandatoryFields() {
         return new Object[]{((SpinnerNumberModel) ((JSpinner) entryBoxes.get(5)).getModel()).getNumber(),
                 ((Date) ((JDatePickerImpl) entryBoxes.get(6)).getModel().getValue()).toInstant().
-                        atZone(ZoneId.systemDefault()).toLocalDate(),
-                ((Date) ((JDatePickerImpl) entryBoxes.get(7)).getModel().getValue()).toInstant().
-                        atZone(ZoneId.systemDefault()).toLocalDate(),
-        };
+                        atZone(ZoneId.systemDefault()).toLocalDate()};
     }
 
     private boolean isValidInput(Object[] mandatoryFields, Optional<String[]> defaultFields) {
@@ -506,7 +495,7 @@ class HRAddOrUpdatePostingForm extends HRPanel {
         if (defaultFields.isPresent()) {
             int i = 0;
             String[] defaultEntries = defaultFields.get();
-            while (valid && i < 3) {
+            while (valid && i < 2) {
                 if (defaultEntries[i].equals("")) {
                     valid = false;
                 }
@@ -516,10 +505,7 @@ class HRAddOrUpdatePostingForm extends HRPanel {
 
         if (!this.hrBackend.getToday().isBefore(((LocalDate) mandatoryFields[1]))) {
             valid = false;
-        } else if (((LocalDate) mandatoryFields[2]).isBefore(((LocalDate) mandatoryFields[1]))) {
-            valid = false;
         }
-
         return valid;
     }
 }

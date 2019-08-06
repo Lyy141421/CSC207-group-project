@@ -50,30 +50,28 @@ public class HRCoordinator extends User {
      * @param numPositions      The number of positions for this job.
      * @param postDate          The date this job posting was posted.
      * @param applicationCloseDate  The last day for application submissions.
-     * @param referenceCloseDate    The last day for reference letter submissions.
      */
     public BranchJobPosting addJobPosting(String jobTitle, String jobField, String jobDescription,
                                           ArrayList<String> requiredDocuments, ArrayList<String> tags, int numPositions,
-                                          LocalDate postDate, LocalDate applicationCloseDate, LocalDate referenceCloseDate) {
+                                          LocalDate postDate, LocalDate applicationCloseDate) {
         CompanyJobPosting companyJobPosting = new CompanyJobPosting(jobTitle, jobField, jobDescription, requiredDocuments,
                 tags, this.branch.getCompany());
         this.branch.getCompany().addCompanyJobPosting(companyJobPosting);
-        return this.implementJobPosting(companyJobPosting, numPositions, postDate, applicationCloseDate, referenceCloseDate);
+        return this.implementJobPosting(companyJobPosting, numPositions, postDate, applicationCloseDate);
     }
 
     public BranchJobPosting implementJobPosting(CompanyJobPosting companyJobPosting, int numPositions, LocalDate postDate,
-                                                LocalDate applicationCloseDate, LocalDate referenceCloseDate) {
+                                                LocalDate applicationCloseDate) {
         BranchJobPosting branchJobPosting = new BranchJobPosting(companyJobPosting.getTitle(), companyJobPosting.getField(),
                 companyJobPosting.getDescription(), companyJobPosting.getRequiredDocuments(), companyJobPosting.getTags(),
-                numPositions, this.branch, postDate, applicationCloseDate, referenceCloseDate, companyJobPosting.getId());
+                numPositions, this.branch, postDate, applicationCloseDate, companyJobPosting.getId());
         companyJobPosting.addBranch(this.branch);
         this.branch.getJobPostingManager().addJobPosting(branchJobPosting);
         return branchJobPosting;
     }
 
-    public void updateJobPosting(BranchJobPosting jobPosting, int numPositions, LocalDate applicationCloseDate,
-                                 LocalDate referenceCloseDate) {
-        jobPosting.updateFields(numPositions, applicationCloseDate, referenceCloseDate);
+    public void updateJobPosting(BranchJobPosting jobPosting, int numPositions, LocalDate applicationCloseDate) {
+        jobPosting.updateFields(numPositions, applicationCloseDate);
         CompanyJobPosting companyJobPosting = this.getBranch().getCompany().getJobPostingWithID(jobPosting.getCompanyPostingId());
         if (!companyJobPosting.getBranches().contains(this.getBranch())) {
             jobPosting.addBranch(this.getBranch());

@@ -130,22 +130,6 @@ public class CompanyDocumentManager extends DocumentManager {
     }
 
     /**
-     * Add files for this job application in the respective branch's folder.
-     *
-     * @param jobApp         The job application that has been submitted.
-     * @param filesSubmitted The list of files to be submitted along with the application.
-     */
-    public void addFilesForJobApplication(JobApplication jobApp, ArrayList<File> filesSubmitted) {
-        File folder = this.getFolderForJobApplication(jobApp);
-        if (folder != null) {
-            for (File fileToSubmit : filesSubmitted) {
-                JobApplicationDocument document = new JobApplicationDocument(fileToSubmit);
-                document.copyFile(folder + "/" + fileToSubmit.getName());
-            }
-        }
-    }
-
-    /**
      * Check whether documents have already been transferred for this job posting.
      *
      * @param jobPosting The job posting in question.
@@ -168,7 +152,7 @@ public class CompanyDocumentManager extends DocumentManager {
         ArrayList<JobApplication> jobApps = branchJobPosting.getJobApplications();
         for (JobApplication jobApp : jobApps) {
             File applicationFolder = this.createApplicationFolder(jobPostingFolder, jobApp);
-            for (JobApplicationDocument jobAppDoc : jobApp.getFilesSubmitted()) {
+            for (JobApplicationDocument jobAppDoc : jobApp.getAllFilesSubmitted()) {
                 String destinationPath = applicationFolder.getPath() + "/" + jobAppDoc.getFile().getName();
                 jobAppDoc.copyFile(destinationPath);
             }

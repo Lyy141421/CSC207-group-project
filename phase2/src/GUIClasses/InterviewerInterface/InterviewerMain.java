@@ -86,7 +86,6 @@ public class InterviewerMain extends UserMain {
         new DataLoaderAndStorer(jobApplicationSystem).loadAllData();
         Branch branch = jobApplicationSystem.getCompanies().get(0).getBranches().get(0);
         branch.getJobPostingManager().updateJobPostingsClosedForApplications(LocalDate.of(2019, 7, 31));
-        branch.getJobPostingManager().updateJobPostingsClosedForReferences(LocalDate.of(2019, 8, 11));
         Interviewer interviewer = new Interviewer("Interviewer", "password", "Bobby", "email", branch, "field", LocalDate.of(2019, 7, 10));
         ArrayList<String[]> interviewConfiguration = new ArrayList<>();
         interviewConfiguration.add(new String[]{Interview.ONE_ON_ONE, "Phone interview"});

@@ -193,7 +193,7 @@ class ApplicantDocumentManagerTest {
         jobApplication.addFiles(files);
 
         assertEquals(2, applicantDocumentManager.getFolder().listFiles().length);
-        applicantDocumentManager.removeFilesFromAccountIfInactive(jobPosting1.getApplicantCloseDate().plusDays(Applicant.INACTIVE_DAYS));
+        applicantDocumentManager.removeFilesFromAccountIfInactive(jobPosting1.getCloseDate().plusDays(Applicant.INACTIVE_DAYS));
         assertEquals(0, applicantDocumentManager.getFolder().listFiles().length);
         for (File file : applicantDocumentManager.getFolder().listFiles()) {
             assertTrue(file.delete());
@@ -227,9 +227,9 @@ class ApplicantDocumentManagerTest {
         jobApplication2.addFiles(files2);
 
         assertEquals(2, applicantDocumentManager.getFolder().listFiles().length);
-        applicantDocumentManager.removeFilesFromAccountIfInactive(jobPosting1.getApplicantCloseDate().plusDays(Applicant.INACTIVE_DAYS));
+        applicantDocumentManager.removeFilesFromAccountIfInactive(jobPosting1.getCloseDate().plusDays(Applicant.INACTIVE_DAYS));
         assertEquals(2, applicantDocumentManager.getFolder().listFiles().length);
-        applicantDocumentManager.removeFilesFromAccountIfInactive(jobPosting2.getApplicantCloseDate().plusDays(Applicant.INACTIVE_DAYS));
+        applicantDocumentManager.removeFilesFromAccountIfInactive(jobPosting2.getCloseDate().plusDays(Applicant.INACTIVE_DAYS));
         assertEquals(0, applicantDocumentManager.getFolder().listFiles().length);
         assertTrue(applicantDocumentManager.getFolder().delete());
         file2.delete();

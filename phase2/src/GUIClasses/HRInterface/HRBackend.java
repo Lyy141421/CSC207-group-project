@@ -48,7 +48,7 @@ class HRBackend {
      */
     ArrayList<BranchJobPosting> getJPToReview() {
         BranchJobPostingManager jpManager = this.hr.getBranch().getJobPostingManager();
-        return jpManager.getJobPostingsRecentlyClosedForReferences(this.jobAppSystem.getToday());
+        return jpManager.getJobPostingsRecentlyClosedForApplications(this.jobAppSystem.getToday());
     }
 
     /**
@@ -109,7 +109,7 @@ class HRBackend {
      */
     ArrayList<Applicant> getRejectedApplicantsForJobPosting(BranchJobPosting jobPosting) {
         ArrayList<Applicant> rejectedApplicants = new ArrayList<>();
-        if (jobPosting.getInterviewManager() != null && jobPosting.isClosedForReferences(jobAppSystem.getToday())) {
+        if (jobPosting.getInterviewManager() != null) {
             for (JobApplication jobApplication : jobPosting.getInterviewManager().getApplicationsRejected()) {
                 rejectedApplicants.add(jobApplication.getApplicant());
             }
@@ -147,9 +147,7 @@ class HRBackend {
         ArrayList<String> tags = new ArrayList<>(Arrays.asList(defaultFields[4].split(";")));
         int numPositions = (Integer) mandatoryFields[0];
         LocalDate applicationCloseDate = (LocalDate) mandatoryFields[1];
-        LocalDate referenceCloseDate = (LocalDate) mandatoryFields[2];
-        this.hr.addJobPosting(title, field, description, requirements, tags, numPositions, jobAppSystem.getToday(), applicationCloseDate,
-                referenceCloseDate);
+        this.hr.addJobPosting(title, field, description, requirements, tags, numPositions, jobAppSystem.getToday(), applicationCloseDate);
     }
 
     /**
@@ -158,8 +156,7 @@ class HRBackend {
      * @return true iff this branch has an interviewer in this field.
      */
     boolean hasInterviewerOfField(String field) {
-        String fieldFormatted = this.formatCase(field);
-        return this.hr.getBranch().hasInterviewerForField(fieldFormatted);
+        return this.hr.getBranch().hasInterviewerForField(field);
     }
 
     /**
@@ -170,8 +167,7 @@ class HRBackend {
     void implementJobPosting(CompanyJobPosting cjp, Object[] jobPostingFields) {
         int numPositions = (int) jobPostingFields[0];
         LocalDate applicationCloseDate = (LocalDate) jobPostingFields[1];
-        LocalDate referenceCloseDate = (LocalDate) jobPostingFields[2];
-        this.hr.implementJobPosting(cjp, numPositions, jobAppSystem.getToday(), applicationCloseDate, referenceCloseDate);
+        this.hr.implementJobPosting(cjp, numPositions, jobAppSystem.getToday(), applicationCloseDate);
     }
 
     /**
@@ -182,8 +178,7 @@ class HRBackend {
     void updateJobPosting(BranchJobPosting jobPosting, Object[] jobPostingFields) {
         int numPositions = (int) jobPostingFields[0];
         LocalDate applicationCloseDate = (LocalDate) jobPostingFields[1];
-        LocalDate referenceCloseDate = (LocalDate) jobPostingFields[2];
-        this.hr.updateJobPosting(jobPosting, numPositions, applicationCloseDate, referenceCloseDate);
+        this.hr.updateJobPosting(jobPosting, numPositions, applicationCloseDate);
     }
 
     /**

@@ -1,6 +1,7 @@
 package ApplicantStuff;
 
 import DocumentManagers.ApplicantDocumentManager;
+import DocumentManagers.ReferenceLetterDocumentManager;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -22,8 +23,11 @@ public class JobApplicationDocument implements Serializable {
     /*
      * Precondition: the file must already be created.
      */
-    public JobApplicationDocument(File file) {
+    public JobApplicationDocument(File file, File destinationFolder) {
         this.file = file;
+        String filePath = destinationFolder.getPath() + "/" + file.getName();
+        this.copyFile(file, filePath);
+        this.file = new File(filePath);
         this.file.setReadOnly();
     }
 

@@ -3,12 +3,17 @@ package ApplicantStuff;
 import CompanyStuff.Interview;
 import CompanyStuff.Interviewer;
 import CompanyStuff.JobPostings.BranchJobPosting;
+import DocumentManagers.DocumentManager;
+import DocumentManagers.DocumentManagerFactory;
+import DocumentManagers.ReferenceLetterDocumentManager;
 
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Set;
 
 public class JobApplication implements Serializable {
     /**
@@ -20,7 +25,7 @@ public class JobApplication implements Serializable {
     // Total number of applications in the system
     private static int totalNumOfApplications;
     // The category names for Reference
-    public static final String[] CATEGORY_NAMES_FOR_REFERENCE = new String[]{"Referee", "Job Posting", "Submission start date", "Submission Deadline"};
+    public static final String[] CATEGORY_NAMES_FOR_REFERENCE = new String[]{"Referee", "Job Posting", "Submission Deadline"};
 
     // === Instance variables ===
     // Unique identifier for a submitted job application
@@ -35,8 +40,10 @@ public class JobApplication implements Serializable {
     private Status status;
     // The date this application was submitted
     private LocalDate applicationDate;
-    // The references that this applicant has chosen
-    private ArrayList<Reference> references = new ArrayList<>();
+    // The referencesToLetters that this applicant has chosen
+    private HashMap<Reference, JobApplicationDocument> referencesToLetters = new HashMap<>();
+    // The reference letter document manager
+    private DocumentManager referenceLetterDocManager;
     // The interviews conducted for this application
     private ArrayList<Interview> interviews = new ArrayList<>();
 
@@ -55,6 +62,7 @@ public class JobApplication implements Serializable {
         this.jobPosting = jobPosting;
         this.applicationDate = applicationDate;
         this.jobPosting.addJobApplication(this);
+        this.referenceLetterDocManager = new DocumentManagerFactory().createDocumentManager(this);
         this.status = new Status(this.getApplicant(), this);
     }
 
@@ -75,8 +83,15 @@ public class JobApplication implements Serializable {
         return this.jobPosting;
     }
 
-    public ArrayList<JobApplicationDocument> getFilesSubmitted() {
-        return this.filesSubmitted;
+    public ArrayList<JobApplicationDocument> getAllFilesSubmitted() {
+        ArrayList<JobApplicationDocument> allFiles = (ArrayList<JobApplicationDocument>) this.filesSubmitted.clone();
+        Collection<JobApplicationDocument> referenceLetters = this.referencesToLetters.values();
+        for (JobApplicationDocument letter : referenceLetters) {
+            if (letter != null) {
+                allFiles.add(letter);
+            }
+        }
+        return allFiles;
     }
 
     public Status getStatus() {
@@ -87,8 +102,12 @@ public class JobApplication implements Serializable {
         return this.applicationDate;
     }
 
-    public ArrayList<Reference> getReferences() {
-        return this.references;
+    public Set<Reference> getReferences() {
+        return this.referencesToLetters.keySet();
+    }
+
+    public ReferenceLetterDocumentManager getReferenceLetterDocManager() {
+        return (ReferenceLetterDocumentManager) referenceLetterDocManager;
     }
 
     public ArrayList<Interview> getInterviews() {
@@ -102,7 +121,7 @@ public class JobApplication implements Serializable {
     // === Other methods ===
 
     public void removeReference(Reference reference) {
-        this.references.remove(reference);
+        this.referencesToLetters.remove(reference);
     }
 
     /**
@@ -115,24 +134,34 @@ public class JobApplication implements Serializable {
     }
 
     /**
-     * Add references for this job application.
+     * Add referencesToLetters for this job application.
      *
-     * @param referencesToAdd The references chosen by the applicant.
+     * @param referencesToAdd The referencesToLetters chosen by the applicant.
      */
     public void addReferences(ArrayList<Reference> referencesToAdd) {
-        this.references.addAll(referencesToAdd);
+        for (Reference reference : referencesToAdd) {
+            this.referencesToLetters.put(reference, null);
+        }
+    }
+
+    public void addReferenceLetters(Reference reference, JobApplicationDocument letter) {
+        this.referencesToLetters.replace(reference, letter);
     }
 
     /**
-     * Remove this job application from all the references' lists.
+     * Remove this job application from all the referencesToLetters' lists.
      * This is called when an application is withdrawn before the reference close date.
      */
     void removeAppFromAllReferences() {
-        for (Reference reference : this.getReferences()) {
+        for (Reference reference : this.referencesToLetters.keySet()) {
             if (reference.getJobAppsForReference().contains(this)) {
                 reference.removeJobApplication(this);
+                if (this.referencesToLetters.get(reference) != null) {
+                    this.referencesToLetters.get(reference).getFile().delete();
+                }
             }
         }
+        this.referenceLetterDocManager.getFolder().delete();
     }
 
 
@@ -189,7 +218,7 @@ public class JobApplication implements Serializable {
     public String getMiniDescriptionForReference() {
         String s = "Referee: " + this.getApplicant().getLegalName() + "   ";
         s += "Job Posting: " + this.getJobPosting().getTitle() + "   ";
-        s += "Submission Deadline: " + this.getJobPosting().getReferenceCloseDate().toString();
+        s += "Submission Deadline: " + this.getJobPosting().getCloseDate().toString();
         return s;
     }
 
@@ -200,8 +229,7 @@ public class JobApplication implements Serializable {
      */
     public String[] getCategoryValuesForReference() {
         return new String[]{this.getApplicant().getLegalName(), this.getJobPosting().getTitle(),
-                this.getJobPosting().getApplicantCloseDate().plusDays(1).toString(),
-                this.getJobPosting().getReferenceCloseDate().toString()};
+                this.getJobPosting().getCloseDate().toString()};
     }
 
 

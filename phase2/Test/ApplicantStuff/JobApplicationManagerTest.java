@@ -5,7 +5,6 @@ import CompanyStuff.JobPostings.BranchJobPosting;
 import Miscellaneous.InterviewTime;
 import org.junit.jupiter.api.Test;
 
-import java.io.File;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -190,7 +189,7 @@ class JobApplicationManagerTest {
         Branch branch = this.createCompanyBranchEmployeesAndJobPostings();
         BranchJobPosting jobPosting = branch.getJobPostingManager().getBranchJobPostings().get(0);
         this.createJobApplication(applicant, jobPosting);
-        assertEquals(0, applicant.getJobApplicationManager().getNumDaysSinceMostRecentCloseDate(jobPosting.getApplicantCloseDate().minusDays(3)));
+        assertEquals(0, applicant.getJobApplicationManager().getNumDaysSinceMostRecentCloseDate(jobPosting.getCloseDate().minusDays(3)));
     }
 
     @Test
@@ -199,7 +198,7 @@ class JobApplicationManagerTest {
         Branch branch = this.createCompanyBranchEmployeesAndJobPostings();
         BranchJobPosting jobPosting = branch.getJobPostingManager().getBranchJobPostings().get(0);
         this.createJobApplication(applicant, jobPosting);
-        assertEquals(3, applicant.getJobApplicationManager().getNumDaysSinceMostRecentCloseDate(jobPosting.getApplicantCloseDate().plusDays(3)));
+        assertEquals(3, applicant.getJobApplicationManager().getNumDaysSinceMostRecentCloseDate(jobPosting.getCloseDate().plusDays(3)));
     }
 
     @Test
@@ -210,7 +209,7 @@ class JobApplicationManagerTest {
         BranchJobPosting jobPosting2 = branch.getJobPostingManager().getBranchJobPostings().get(1);
         this.createJobApplication(applicant, jobPosting);
         this.createJobApplication(applicant, jobPosting2);
-        assertEquals(0, applicant.getJobApplicationManager().getNumDaysSinceMostRecentCloseDate(jobPosting.getApplicantCloseDate().plusDays(2)));
+        assertEquals(0, applicant.getJobApplicationManager().getNumDaysSinceMostRecentCloseDate(jobPosting.getCloseDate().plusDays(2)));
     }
 
     @Test

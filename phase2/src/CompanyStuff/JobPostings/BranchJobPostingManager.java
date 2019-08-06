@@ -67,7 +67,7 @@ public class BranchJobPostingManager implements Serializable {
     public ArrayList<BranchJobPosting> getOpenJobPostings(LocalDate today) {
         ArrayList<BranchJobPosting> jobPostings = new ArrayList<>();
         for (BranchJobPosting jobPosting : this.branchJobPostings) {
-            if (!(jobPosting.isClosedForApplications(today))) {
+            if (!(jobPosting.isClosed(today))) {
                 jobPostings.add(jobPosting);
             }
         }
@@ -83,7 +83,7 @@ public class BranchJobPostingManager implements Serializable {
     private ArrayList<BranchJobPosting> getAllClosedJobPostings(LocalDate today) {
         ArrayList<BranchJobPosting> closedPostings = new ArrayList<>();
         for (BranchJobPosting branchJobPosting : this.branchJobPostings) {
-            if ((branchJobPosting.isClosedForReferences(today))) {
+            if ((branchJobPosting.isClosed(today))) {
                 closedPostings.add(branchJobPosting);
             }
         }
@@ -98,8 +98,8 @@ public class BranchJobPostingManager implements Serializable {
      */
     public ArrayList<BranchJobPosting> getClosedJobPostingsNotFilled(LocalDate today) {
         ArrayList<BranchJobPosting> requestedPostings = new ArrayList<>();
-        for (BranchJobPosting branchJobPosting : this.branchJobPostings) {
-            if ((branchJobPosting.isClosedForReferences(today)) && !(branchJobPosting.isFilled())) {
+        for (BranchJobPosting branchJobPosting : this.getAllClosedJobPostings(today)) {
+            if (!(branchJobPosting.isFilled())) {
                 requestedPostings.add(branchJobPosting);
             }
         }
@@ -116,24 +116,7 @@ public class BranchJobPostingManager implements Serializable {
     public ArrayList<BranchJobPosting> getJobPostingsRecentlyClosedForApplications(LocalDate today) {
         ArrayList<BranchJobPosting> jobPostings = new ArrayList<>();
         for (BranchJobPosting jobPosting : this.getBranchJobPostings()) {
-            if (jobPosting.isClosedForApplications(today) && jobPosting.getInterviewManager() == null) {
-                jobPostings.add(jobPosting);
-            }
-        }
-        return jobPostings;
-    }
-
-    /**
-     * Get a list of job postings for this branch that have recently closed for reference letters, ie, applicants still
-     * need to be chosen for the first round.
-     *
-     * @param today Today's date.
-     * @return a list of recently closed job postings for references.
-     */
-    public ArrayList<BranchJobPosting> getJobPostingsRecentlyClosedForReferences(LocalDate today) {
-        ArrayList<BranchJobPosting> jobPostings = new ArrayList<>();
-        for (BranchJobPosting jobPosting : this.getClosedJobPostingsNotFilled(today)) {
-            if (jobPosting.getInterviewManager() != null && jobPosting.getInterviewManager().getHrTask() == InterviewManager.SELECT_APPS_FOR_FIRST_ROUND) {
+            if (jobPosting.isClosed(today) && jobPosting.getInterviewManager() == null) {
                 jobPostings.add(jobPosting);
             }
         }
@@ -291,23 +274,12 @@ public class BranchJobPostingManager implements Serializable {
             if (!companyDocManager.applicationDocumentsTransferred(jobPosting)) {
                 companyDocManager.transferApplicationDocuments(jobPosting);
             }
-        }
-    }
-
-    /**
-     * Update the references of job postings that are closed for further reference letter submissions.
-     *
-     * @param today Today's date.
-     */
-    public void updateJobPostingsClosedForReferences(LocalDate today) {
-        for (BranchJobPosting jobPosting : this.getJobPostingsRecentlyClosedForReferences(today)) {
-            if (jobPosting.isClosedForReferences(today)) {
-                for (Reference reference : jobPosting.getAllReferences()) {
-                    // If the reference still has not yet submitted their reference letter for a job app for this job
-                    // posting, remove it from their list
-                    reference.removeJobPosting(jobPosting);
-                }
+            for (Reference reference : jobPosting.getAllReferences()) {
+                // If the reference still has not yet submitted their reference letter for a job app for this job
+                // posting, remove it from their list
+                reference.removeJobPosting(jobPosting);
             }
+            jobPosting.notifyAllJobPostings(branch);
         }
     }
 }

@@ -37,9 +37,9 @@ class JobApplicationTest {
         JobApplication jobApp = this.createJobApp();
         assertEquals("jsmith", jobApp.getApplicant().getUsername());
         assertEquals("Title", jobApp.getJobPosting().getTitle());
-        assertTrue(jobApp.getFilesSubmitted().isEmpty());
+        assertTrue(jobApp.getAllFilesSubmitted().isEmpty());
         assertEquals(jobApp.getApplicationDate(), LocalDate.of(2019, 7, 21));
-        assertTrue(jobApp.getReferences().isEmpty());
+        assertTrue(jobApp.getReferencesToLetters().isEmpty());
         assertTrue(jobApp.getInterviews().isEmpty());
         assertNotNull(jobApp.getStatus());
     }
@@ -52,7 +52,7 @@ class JobApplicationTest {
         JobApplicationDocument jobAppDoc3 = new JobApplicationDocument(new File("./sample.txt"));
         jobApp.addFiles(new ArrayList<>(Arrays.asList(jobAppDoc1, jobAppDoc2, jobAppDoc3)));
 
-        assertEquals(3, jobApp.getFilesSubmitted().size());
+        assertEquals(3, jobApp.getAllFilesSubmitted().size());
     }
 
     @Test
@@ -62,9 +62,9 @@ class JobApplicationTest {
         Reference reference2 = new Reference("bob2@gmail.com", LocalDate.of(2019, 8, 1));
         jobApp.addReferences(new ArrayList<>(Arrays.asList(reference1, reference2)));
 
-        assertEquals(2, jobApp.getReferences().size());
-        assertEquals("bob@gmail.com", jobApp.getReferences().get(0).getEmail());
-        assertEquals("bob2@gmail.com", jobApp.getReferences().get(1).getEmail());
+        assertEquals(2, jobApp.getReferencesToLetters().size());
+        assertEquals("bob@gmail.com", jobApp.getReferencesToLetters().get(0).getEmail());
+        assertEquals("bob2@gmail.com", jobApp.getReferencesToLetters().get(1).getEmail());
         assertEquals(1, reference1.getJobAppsForReference().size());
         assertEquals(1, reference2.getJobAppsForReference().size());
         assertEquals("jsmith", reference1.getJobAppsForReference().get(0).getApplicant().getUsername());
@@ -81,7 +81,7 @@ class JobApplicationTest {
 
         assertTrue(reference1.getJobAppsForReference().isEmpty());
         assertTrue(reference2.getJobAppsForReference().isEmpty());
-        assertEquals(2, jobApp.getReferences().size());
+        assertEquals(2, jobApp.getReferencesToLetters().size());
     }
 
     @Test

@@ -27,7 +27,7 @@ public class BranchJobPostingTest {
         assert posting.getNumPositions() == 1;
         assert posting.getBranch().equals(branch);
         assert posting.getPostDate().equals(LocalDate.now());
-        assert posting.getApplicantCloseDate().equals(LocalDate.now().plusDays(3));
+        assert posting.getCloseDate().equals(LocalDate.now().plusDays(3));
         assert posting.getReferenceCloseDate().equals(LocalDate.now().plusDays(4));
         assert !posting.isFilled();
         assert posting.getJobApplications().isEmpty();

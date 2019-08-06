@@ -89,7 +89,7 @@ public class JobApplicationManager implements Serializable {
         if (this.getLastClosedJobApp() == null) {
             return 0;
         } else {
-            LocalDate closeDate = this.getLastClosedJobApp().getJobPosting().getApplicantCloseDate();
+            LocalDate closeDate = this.getLastClosedJobApp().getJobPosting().getCloseDate();
             return Math.max(0, DAYS.between(closeDate, today));
         }
     }

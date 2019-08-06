@@ -171,7 +171,7 @@ class ApplicantViewSearchResults extends JPanel {
         viewJobDatePosted.setBounds(17, 190, 250, 20);
         viewJobDatePosted.setName(branchName); viewJobsAdded2.add(viewJobDatePosted);
 
-        JLabel viewJobDeadline = new JLabel("Deadline to Apply: " + j.getApplicantCloseDate().toString());
+        JLabel viewJobDeadline = new JLabel("Deadline to Apply: " + j.getCloseDate().toString());
         viewJobDeadline.setVisible(false);
         viewJobDeadline.setBounds(17, 210, 250, 20);
         viewJobDeadline.setName(branchName); viewJobsAdded2.add(viewJobDeadline);

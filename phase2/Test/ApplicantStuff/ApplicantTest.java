@@ -8,7 +8,6 @@ import Main.JobApplicationSystem;
 import Miscellaneous.InterviewTime;
 import org.junit.jupiter.api.Test;
 
-import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -134,7 +133,7 @@ class ApplicantTest {
         applicant.withdrawJobApplication(LocalDate.of(2019, 7, 28), jobPosting);
         assertTrue(applicant.getJobApplicationManager().getJobApplications().isEmpty());
         assertTrue(jobPosting.getJobApplications().isEmpty());
-        assertTrue(jobApp.getReferences().get(0).getJobAppsForReference().isEmpty());
+        assertTrue(jobApp.getReferencesToLetters().get(0).getJobAppsForReference().isEmpty());
     }
 
     @Test
@@ -146,7 +145,7 @@ class ApplicantTest {
         applicant.withdrawJobApplication(LocalDate.of(2019, 7, 30), jobPosting);
         assertTrue(applicant.getJobApplicationManager().getJobApplications().isEmpty());
         assertTrue(jobPosting.getJobApplications().isEmpty());
-        assertTrue(jobApp.getReferences().get(0).getJobAppsForReference().isEmpty());
+        assertTrue(jobApp.getReferencesToLetters().get(0).getJobAppsForReference().isEmpty());
     }
 
     @Test
@@ -160,7 +159,7 @@ class ApplicantTest {
         assertEquals(1, jobPosting.getJobApplications().size());
         assertTrue(jobPosting.getInterviewManager().getApplicationsInConsideration().isEmpty());
         assertEquals(1, jobPosting.getInterviewManager().getApplicationsRejected().size());
-        assertTrue(jobApp.getReferences().get(0).getJobAppsForReference().isEmpty());
+        assertTrue(jobApp.getReferencesToLetters().get(0).getJobAppsForReference().isEmpty());
     }
 
     @Test
@@ -175,7 +174,7 @@ class ApplicantTest {
         assertEquals(1, jobPosting.getJobApplications().size());
         assertTrue(jobPosting.getInterviewManager().getApplicationsInConsideration().isEmpty());
         assertEquals(1, jobPosting.getInterviewManager().getApplicationsRejected().size());
-        assertTrue(jobApp.getReferences().get(0).getJobAppsForReference().isEmpty());
+        assertTrue(jobApp.getReferencesToLetters().get(0).getJobAppsForReference().isEmpty());
     }
 
     @Test
