@@ -26,29 +26,6 @@ abstract class HRPanel extends JPanel {
         this.hrBackend = hrBackend;
     }
 
-    /**
-     * Gets a hash map of titles to branch job postings from a list of job postings.
-     * @param JPList a list of job postings.
-     * @return the hash map of titles to branch job postings.
-     */
-    HashMap<String, BranchJobPosting> getTitleToJPMap(ArrayList<BranchJobPosting> JPList) {
-        HashMap<String, BranchJobPosting> titleToJPMap = new HashMap<>();
-        for (BranchJobPosting JP : JPList) {
-            titleToJPMap.put(this.toJPTitle(JP), JP);
-        }
-
-        return titleToJPMap;
-    }
-
-    /**
-     * Gets a string representation of the title of this branch job posting.
-     * @param branchJobPosting a branch job posting.
-     * @return the title to be displayed of this branch job posting.
-     */
-    String toJPTitle(BranchJobPosting branchJobPosting) {
-        return branchJobPosting.getId() + "-" + branchJobPosting.getTitle();
-    }
-
     HashMap<String, JobApplication> getTitleToAppMap(ArrayList<JobApplication> appList) {
         HashMap<String, JobApplication> titleToAppMap = new HashMap<>();
         for (JobApplication app : appList) {

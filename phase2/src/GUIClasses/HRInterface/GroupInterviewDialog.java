@@ -143,7 +143,7 @@ class GroupInterviewDialog extends JDialog {
                 hrBackend.setUpGroupInterviews(branchJobPosting,
                         nameToInterviewerMap.get((String)coordinatorSelection.getSelectedItem()),
                         getSelectedInterviewers(), (int)daysSpinner.getValue());
-                parentPanel.removeFromJPLists(parentPanel.toJPTitle(branchJobPosting));
+                parentPanel.main.removeFromJPLists(branchJobPosting);
                 dispose();
             }
         });

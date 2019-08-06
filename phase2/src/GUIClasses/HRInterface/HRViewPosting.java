@@ -26,17 +26,18 @@ class HRViewPosting extends HRPanel {
     public static int ALL = 1;
     public static int UPDATABLE = 2;
 
-    private HashMap<String, BranchJobPosting> unreviewedJP;
+    /*private HashMap<String, BranchJobPosting> unreviewedJP;
     private HashMap<String, BranchJobPosting> scheduleJP;
     private HashMap<String, BranchJobPosting> hiringJP;
     private HashMap<String, BranchJobPosting> archivedJP;
     private HashMap<String, BranchJobPosting> importantJP = new HashMap<>();
     private HashMap<String, BranchJobPosting> updatableJPs;
-    private HashMap<String, BranchJobPosting> allJP;
+    private HashMap<String, BranchJobPosting> allJP;*/
 
     private HashMap<String, BranchJobPosting> currJPs;
 
     private HRViewPosting containerPane = this;
+    HRMain main;
     private JPanel parent;
     private int jpType;
     private JTabbedPane infoPane;
@@ -52,14 +53,15 @@ class HRViewPosting extends HRPanel {
         super(hrBackend);
         assert SwingUtilities.isEventDispatchThread();
         this.parent = parent;
+        this.main = (HRMain) parent.getParent();
         this.jpType = jpType;
-        this.setJPLists();
+        // this.setJPLists();
         if (jpType == HIGH_PRIORITY) {
-            this.currJPs = importantJP;
+            this.currJPs = main.getImportantJP();
         } else if (jpType == ALL) {
-            this.currJPs = allJP;
+            this.currJPs = main.getAllJP();
         } else {
-            this.currJPs = updatableJPs;
+            this.currJPs = main.getUpdatableJPs();
         }
 
         this.setLayout(new BorderLayout());
@@ -89,18 +91,6 @@ class HRViewPosting extends HRPanel {
         repaint();
     }
 
-    public HashMap<String, BranchJobPosting> getImportantJP() {
-        return this.importantJP;
-    }
-
-    public HashMap<String, BranchJobPosting> getAllJP() {
-        return this.allJP;
-    }
-
-    public void setCurrJPs(HashMap<String, BranchJobPosting> currJPs) {
-        this.currJPs = currJPs;
-    }
-
     private void setListSelectionListener() {
         this.jobPostingList.addListSelectionListener(new ListSelectionListener() {
             @Override
@@ -114,7 +104,7 @@ class HRViewPosting extends HRPanel {
                     selectedJP = currJPs.get(selectedTitle);
                     overview.setText(getStatus() + selectedJP.toString());
                     setRejectListPanel();
-                    scheduleButton.setVisible(scheduleJP.containsKey(selectedTitle));
+                    scheduleButton.setVisible(main.getScheduleJP().containsKey(selectedTitle));
                 }
             }
         });
@@ -161,7 +151,7 @@ class HRViewPosting extends HRPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String selectedTitle = jobPostingList.getSelectedValue();
-                BranchJobPosting selectedJP = updatableJPs.get(selectedTitle);
+                BranchJobPosting selectedJP = currJPs.get(selectedTitle);
                 HRAddOrUpdatePostingForm updateForm = new HRAddOrUpdatePostingForm(hrBackend, false, selectedJP);
                 if (parent.getComponents().length > HRMain.NUM_CARDS) {
                     parent.remove(HRMain.NUM_CARDS);
@@ -232,12 +222,12 @@ class HRViewPosting extends HRPanel {
     private void setApplicationPanel() {
         ArrayList<JobApplication> appsUnderSelectedJP = this.hrBackend.getApplicationsInConsiderationForJobPosting(selectedJP);
         int mode = 0;
-        if (unreviewedJP.containsValue(selectedJP)) {
+        if (main.getUnreviewedJP().containsValue(selectedJP)) {
             mode = 1;
-            removeFromJPLists(this.toJPTitle(selectedJP));
-        } else if (hiringJP.containsValue(selectedJP)) {
+            main.removeFromJPLists(selectedJP);
+        } else if (main.getHiringJP().containsValue(selectedJP)) {
             mode = 2;
-            removeFromJPLists(this.toJPTitle(selectedJP));
+            main.removeFromJPLists(selectedJP);
         }
         HRViewApp appPanel = new HRViewApp(parent, hrBackend, getTitleToAppMap(appsUnderSelectedJP), this.getPreviousPanelKey(), mode);
         if (parent.getComponents().length > 7) {
@@ -274,7 +264,7 @@ class HRViewPosting extends HRPanel {
         }
     }
 
-    private void setJPLists() {
+    /*private void setJPLists() {
         this.unreviewedJP = this.getTitleToJPMap(hrBackend.getJPToReview());
         this.scheduleJP = this.getTitleToJPMap(hrBackend.getJPToSchedule());
         this.hiringJP = this.getTitleToJPMap(hrBackend.getJPToHire());
@@ -285,24 +275,24 @@ class HRViewPosting extends HRPanel {
         this.importantJP.putAll(this.unreviewedJP);
         this.importantJP.putAll(this.scheduleJP);
         this.importantJP.putAll(this.hiringJP);
-    }
+    }*/
 
-    void removeFromJPLists(String title) {
+    /*void removeFromJPLists(String title) {
         this.unreviewedJP.remove(title);
         this.scheduleJP.remove(title);
         this.hiringJP.remove(title);
         this.importantJP.remove(title);
-    }
+    }*/
 
     private String getStatus() {
         String status;
-        if (unreviewedJP.containsValue(selectedJP)) {
+        if (main.getUnreviewedJP().containsValue(selectedJP)) {
             status = "Important: Select applicants for the first round of interviews.\n\n";
-        } else if (scheduleJP.containsValue(selectedJP)) {
+        } else if (main.getScheduleJP().containsValue(selectedJP)) {
             status = "Important: Schedule group interviews for the next round.\n\n";
-        } else if (hiringJP.containsValue(selectedJP)) {
+        } else if (main.getHiringJP().containsValue(selectedJP)) {
             status = "Important: Make hiring decisions for final candidates.\n\n";
-        } else if (archivedJP.containsValue(selectedJP)) {
+        } else if (main.getArchivedJP().containsValue(selectedJP)) {
             status = "Archived.\n\n";
         } else {
             status = "Low priority.\n\n";
