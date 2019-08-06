@@ -41,7 +41,7 @@ public class JobApplicationManager implements Serializable {
      *
      * @param application The application being added.
      */
-    void addJobApplication(JobApplication application) {
+    public void addJobApplication(JobApplication application) {
         this.jobApplications.add(application);
         this.jobApplications.sort(new CloseDateComparator());
     }

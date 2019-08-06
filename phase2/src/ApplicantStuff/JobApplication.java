@@ -55,7 +55,6 @@ public class JobApplication implements Serializable {
         this.jobPosting = jobPosting;
         this.applicationDate = applicationDate;
         this.jobPosting.addJobApplication(this);
-        applicant.getJobApplicationManager().addJobApplication(this);
         this.status = new Status(this.getApplicant(), this);
     }
 

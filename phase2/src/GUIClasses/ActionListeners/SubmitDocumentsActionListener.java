@@ -72,6 +72,7 @@ public class SubmitDocumentsActionListener implements ActionListener {
             } else {
                 this.uploadFiles();
             }
+            ((Applicant) this.documentSubmitter).getJobApplicationManager().addJobApplication(jobApp);
         } else {
             // Remove job application from reference's list and submit directly to the company
             Reference reference = (Reference) this.documentSubmitter;
