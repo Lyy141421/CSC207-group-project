@@ -299,7 +299,7 @@ public class BranchJobPostingManager implements Serializable {
                     // posting, remove it from their list
                     reference.removeJobPosting(jobPosting);
                 }
-                jobPosting.notifyAllJobPostings(branch);
+                branch.getCompany().getJobPostingWithID(jobPosting.getCompanyPostingId()).removeBranch(branch);
             }
         }
     }
