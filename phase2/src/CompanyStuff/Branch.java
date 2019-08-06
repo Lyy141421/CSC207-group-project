@@ -91,7 +91,12 @@ public class Branch implements Serializable {
      * @return true iff this company has an interviewer or this job field.
      */
     public boolean hasInterviewerForField(String field) {
-        return this.getFieldToInterviewers().keySet().contains(field);
+        for (String fieldName : this.fieldToInterviewers.keySet()) {
+            if (fieldName.equalsIgnoreCase(field)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

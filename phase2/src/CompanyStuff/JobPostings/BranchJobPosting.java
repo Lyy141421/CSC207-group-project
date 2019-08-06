@@ -4,6 +4,7 @@ import ApplicantStuff.Applicant;
 import ApplicantStuff.JobApplication;
 import ApplicantStuff.Reference;
 import CompanyStuff.Branch;
+import CompanyStuff.Interview;
 import CompanyStuff.InterviewManager;
 import NotificationSystem.NotificationFactory;
 
@@ -205,9 +206,7 @@ public class BranchJobPosting extends CompanyJobPosting implements JobPostingObs
             return;
         }
         InterviewManager interviewManager = this.getInterviewManager();
-        if (!interviewManager.interviewProcessHasBegun()) {
-            interviewManager.advanceRound();
-        } else if (interviewManager.getCurrentRound() < interviewManager.getFinalRoundNumber()) {
+        if (interviewManager.interviewProcessHasBegun() && interviewManager.getCurrentRound() < interviewManager.getFinalRoundNumber()) {
             if (interviewManager.currentRoundIsOver()) {
                 interviewManager.advanceRound();
                 this.notifyAllObservers(new NotificationFactory().createNotification(NotificationFactory.ADVANCE_ROUND,
