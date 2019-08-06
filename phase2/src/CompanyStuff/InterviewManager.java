@@ -128,8 +128,10 @@ public class InterviewManager extends Observable implements Serializable {
      */
     public void advanceRound() {
         this.currentRound++;
-        if (this.getCurrentRoundTypeAndDescription()[0].equals(Interview.ONE_ON_ONE)) {
-            this.setUpOneOnOneInterviews();
+        if (!this.interviewConfiguration.isEmpty()) {
+            if (this.getCurrentRoundTypeAndDescription()[0].equals(Interview.ONE_ON_ONE)) {
+                this.setUpOneOnOneInterviews();
+            }
         }
     }
 
