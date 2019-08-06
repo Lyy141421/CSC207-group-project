@@ -54,7 +54,10 @@ public class SubmitDocumentsActionListener implements ActionListener {
             value = this.fileTypeToTextEntry.size();
         }
         JOptionPane.showMessageDialog(parent, "You have successfully submitted " + value + " files.");
-        ((UserMain) cardPanel.getParent()).refresh();
+        ((CardLayout) cardPanel.getLayout()).first(cardPanel);
+        if (cardPanel.getParent() instanceof UserMain) {
+            ((UserMain) cardPanel.getParent()).refresh();
+        }
     }
 
     /**
