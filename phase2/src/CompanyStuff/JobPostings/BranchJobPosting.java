@@ -10,7 +10,7 @@ import NotificationSystem.NotificationFactory;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-public class BranchJobPosting extends CompanyJobPosting implements JobPostingObservable{
+public class BranchJobPosting extends CompanyJobPosting {
 
     // === Class variables ===
     static final long serialVersionUID = 1L;
@@ -259,17 +259,5 @@ public class BranchJobPosting extends CompanyJobPosting implements JobPostingObs
         for (JobApplication job_application : this.interviewManager.getApplicationsRejected()){
             this.detach(job_application.getApplicant());
         }
-    }
-
-    @Override
-    public void attachJobPosting(CompanyJobPosting companyJobPosting) {
-        if (!this.observerList.contains(companyJobPosting))
-            this.observerList.add(companyJobPosting);
-    }
-
-    @Override
-    public void notifyAllJobPostings(Branch branch) {
-        for (CompanyJobPosting companyJobPosting : observerList)
-            companyJobPosting.removeBranch(branch);
     }
 }
