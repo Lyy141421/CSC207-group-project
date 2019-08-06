@@ -101,6 +101,10 @@ public class JobApplication implements Serializable {
 
     // === Other methods ===
 
+    public void removeReference(Reference reference) {
+        this.references.remove(reference);
+    }
+
     /**
      * Add files to this job application.
      *

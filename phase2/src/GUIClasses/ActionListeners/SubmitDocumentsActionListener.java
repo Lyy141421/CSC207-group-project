@@ -77,6 +77,7 @@ public class SubmitDocumentsActionListener implements ActionListener {
             // Remove job application from reference's list and submit directly to the company
             Reference reference = (Reference) this.documentSubmitter;
             reference.removeJobApplication(jobApp);
+            jobApp.removeReference(reference);
             CompanyDocumentManager companyDocManager = jobApp.getJobPosting().getCompany().getDocumentManager();
             companyDocManager.addFilesForJobApplication(jobApp, filesToSubmit);
         }
