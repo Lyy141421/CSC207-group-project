@@ -66,6 +66,44 @@ public class HRMain extends UserMain {
         this.repaint();
     }
 
+//    public static void main(String[] args) {//Phillips Test For Lif Cycle 2
+//        LocalDate refdate = LocalDate.now();
+//        JFrame frame = new JFrame("HR Main");
+//        JobApplicationSystem jobApplicationSystem = new JobApplicationSystem();
+//        new DataLoaderAndStorer(jobApplicationSystem).loadAllData();
+//        jobApplicationSystem.setToday(refdate.plusDays(7));
+//        jobApplicationSystem.setPreviousLoginDate(refdate.plusDays(-1));
+//        Reference reference = jobApplicationSystem.getUserManager().createReference("ref@gmail.com", refdate.plusDays(-1));
+//        Company company = jobApplicationSystem.createCompany("Segufix");
+//        Branch branch = company.createBranch("Segufix Canada", "E6H1P9");
+//        Applicant applicant = jobApplicationSystem.getUserManager().createApplicant("Fran", "1", "Hannah J", "Fran@mail.com", "E6H1P9", refdate.plusDays(-1));
+//        Applicant applicant1 = jobApplicationSystem.getUserManager().createApplicant("Will", "1", "Will W", "Will@mail.com", "E6H1P9", refdate.plusDays(-1));
+//        Applicant applicant2 = jobApplicationSystem.getUserManager().createApplicant("Jon", "1", "Jon J", "Jon@mail.com", "E6H1P9", refdate.plusDays(-1));
+//        HRCoordinator hrc = new HRCoordinator("Phil", "1", "Phillip Soetebeer", "email@gmail.com", branch, refdate.plusDays(-1));
+//        BranchJobPosting jobPosting = hrc.addJobPosting("Posting 1", "Sales", "A Poor Choice",
+//                new ArrayList<>(Arrays.asList("CV", "Cover Letter", "Reference Letter")), new ArrayList<>(Arrays.asList("Tags", "Tag2")), 2, refdate, refdate.plusDays(5));
+//        JobApplication jobApp = new JobApplication(applicant, jobPosting, refdate);
+//        JobApplication jobApp1 = new JobApplication(applicant1, jobPosting, refdate);
+//        JobApplication jobApp2 = new JobApplication(applicant2, jobPosting, refdate);
+//        JobApplicationDocument doc = new JobApplicationDocument(new File("./sample.txt"), applicant.getUsername());
+//        JobApplicationDocument doc2 = new JobApplicationDocument(new File("./sample.txt"), applicant.getUsername());
+//        jobApp.addFiles(new ArrayList<>(Arrays.asList(doc, doc2)));
+//        jobApp1.addFiles(new ArrayList<>(Arrays.asList(doc, doc2)));
+//        jobApp2.addFiles(new ArrayList<>(Arrays.asList(doc, doc2)));
+//        reference.addJobApplication(jobApp);
+//        reference.addJobApplication(jobApp1);
+//        reference.addJobApplication(jobApp2);
+//        BranchJobPostingManager branchJobPostingManager = branch.getJobPostingManager();
+//        branchJobPostingManager.updateJobPostingsClosedForApplications(refdate.plusDays(6));
+//        LogoutActionListener logoutActionListener = new LogoutActionListener(new Container(), new CardLayout(), jobApplicationSystem);
+//        frame.add(new HRMain(hrc, jobApplicationSystem, logoutActionListener));
+//        frame.setSize(854, 480);
+//        frame.setVisible(true);
+//        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//
+//    }
+
+
 //    public static void main(String[] args) {
 //        JFrame frame = new JFrame("HR Main");
 //        JobApplicationSystem jobApplicationSystem = new JobApplicationSystem();
