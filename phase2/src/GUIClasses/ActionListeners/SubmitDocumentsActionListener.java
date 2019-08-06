@@ -57,6 +57,8 @@ public class SubmitDocumentsActionListener implements ActionListener {
         ((CardLayout) cardPanel.getLayout()).first(cardPanel);
         if (cardPanel.getParent() instanceof UserMain) {
             ((UserMain) cardPanel.getParent()).refresh();
+        } else {
+            ((UserMain) cardPanel).refresh();
         }
     }
 

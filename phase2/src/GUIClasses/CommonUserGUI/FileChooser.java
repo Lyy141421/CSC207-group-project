@@ -83,9 +83,6 @@ public class FileChooser extends JPanel implements ActionListener {
     }
 
     // === Getters ===
-    public RemoveFileButtonsPanel getRemoveFileButtonsPanel() {
-        return this.removeFileButtonsPanel;
-    }
 
     public ArrayList<File> getFilesToSubmit() {
         return this.filesToSubmit;

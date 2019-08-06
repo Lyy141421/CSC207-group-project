@@ -211,8 +211,10 @@ public class BranchJobPostingManager implements Serializable {
      */
     public void updateAllClosedUnfilledJobPostings(LocalDate today) {
         for (BranchJobPosting jobPosting : this.getClosedJobPostingsNotFilled(today)) {
-            jobPosting.getInterviewManager().updateJobPostingFilledStatus();
-            jobPosting.advanceInterviewRound();
+            if (jobPosting.getInterviewManager() != null) {
+                jobPosting.getInterviewManager().updateJobPostingFilledStatus();
+                jobPosting.advanceInterviewRound();
+            }
         }
     }
 
