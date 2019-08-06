@@ -88,6 +88,7 @@ public class NotificationsGUI {
                 user.getNotificationManager().remove(n);
                 notificationButton.setVisible(false);
                 notificationText.setVisible(false);
+                notificationsButton.setText("Alerts: " + user.getAllNotifications().size());
             }
         });
         notificationsPanel.add(notificationButton);

@@ -197,6 +197,7 @@ public class Company implements Serializable {
             branchJobPostingManager.updateJobPostingsClosedForReferences(today);
             branchJobPostingManager.updateAllClosedUnfilledJobPostings(today);
             for (BranchJobPosting branchJobPosting : branchJobPostingManager.getBranchJobPostings()) {
+                // TODO this is going to be true until the job posting is filled
                 if (branchJobPosting.isClosedForApplications(today)) {
                     branchJobPosting.notifyAllJobPostings(branch);
                 }
