@@ -80,7 +80,8 @@ public class HRMain extends UserMain {
 //        Applicant applicant = jobApplicationSystem.getUserManager().createApplicant("Fran", "1", "Hannah J", "Fran@mail.com", "E6H1P9", refdate.plusDays(-1));
 //        Applicant applicant1 = jobApplicationSystem.getUserManager().createApplicant("Will", "1", "Will W", "Will@mail.com", "E6H1P9", refdate.plusDays(-1));
 //        Applicant applicant2 = jobApplicationSystem.getUserManager().createApplicant("Jon", "1", "Jon J", "Jon@mail.com", "E6H1P9", refdate.plusDays(-1));
-//        HRCoordinator hrc = new HRCoordinator("Phil", "1", "Phillip Soetebeer", "email@gmail.com", branch, refdate.plusDays(-1));
+//        Interviewer interviewer = jobApplicationSystem.getUserManager().createInterviewer("Stacy", "1", "Stacy O", "Stacy@mail.com", branch, "Sales", refdate.plusDays(-1));
+//        HRCoordinator hrc = jobApplicationSystem.getUserManager().createHRCoordinator("Phil", "1", "Phillip Soetebeer", "email@gmail.com", branch, refdate.plusDays(-1));
 //        BranchJobPosting jobPosting = hrc.addJobPosting("Posting 1", "Sales", "A Poor Choice",
 //                new ArrayList<>(Arrays.asList("CV", "Cover Letter", "Reference Letter")), new ArrayList<>(Arrays.asList("Tags", "Tag2")), 2, refdate, refdate.plusDays(5));
 //        JobApplication jobApp = new JobApplication(applicant, jobPosting, refdate);
@@ -96,12 +97,12 @@ public class HRMain extends UserMain {
 //        reference.addJobApplication(jobApp2);
 //        BranchJobPostingManager branchJobPostingManager = branch.getJobPostingManager();
 //        branchJobPostingManager.updateJobPostingsClosedForApplications(refdate.plusDays(6));
+//        System.out.println("AAAAAAAAAAAAAAAA:"+branch.getJobPostingManager().getBranchJobPostings().get(0).getInterviewManager().getHrTask());
 //        LogoutActionListener logoutActionListener = new LogoutActionListener(new Container(), new CardLayout(), jobApplicationSystem);
 //        frame.add(new HRMain(hrc, jobApplicationSystem, logoutActionListener));
 //        frame.setSize(854, 480);
 //        frame.setVisible(true);
 //        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//
 //    }
 
 
