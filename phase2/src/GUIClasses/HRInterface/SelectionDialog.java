@@ -8,11 +8,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.Flow;
 
 abstract class SelectionDialog extends JDialog{
 
     HRBackend hrBackend;
     JFrame parent;
+    ArrayList<JobApplication> applications;
 
     HashMap<JCheckBox, JobApplication> checkBoxToAppMap = new HashMap<>();
     GridBagConstraints c = new GridBagConstraints();
@@ -24,31 +26,41 @@ abstract class SelectionDialog extends JDialog{
         super(parent, "Select");
         this.parent = parent;
         this.hrBackend = hrBackend;
+        this.applications = applications;
         this.returnButton = returnButton;
 
-        this.setLayout(new GridBagLayout());
+        this.setLayout(new BorderLayout());
 
-        this.addApplicants(applications, toSelect);
-        this.addConfirmButton();
-        this.addCancelButton();
         this.addPrompt();
+        this.addApplicants(applications, toSelect);
+        this.addButtons();
 
-        this.setSize(500, 350);
-        this.setResizable(false);
+
+        this.setDialogProperties();
         this.setVisible(true);
     }
 
+    private void setDialogProperties() {
+        this.setSize(500, 350);
+        this.setResizable(false);
+        this.setLocationRelativeTo(parent);
+        this.setAlwaysOnTop(true);
+        this.setModal(true);
+        this.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+    }
+
     private void addPrompt() {
-        c.gridx = 0;
-        c.gridy = 0;
-        c.fill = GridBagConstraints.HORIZONTAL;
-        JLabel prompt = new JLabel("Please select from the following applicants");
-        this.add(prompt, c);
+        JPanel promptPanel = new JPanel();
+        JLabel prompt = new JLabel("Please select from the following applicants:");
+        promptPanel.add(prompt);
+        this.add(promptPanel, BorderLayout.PAGE_START);
     }
 
     private void addApplicants(ArrayList<JobApplication> applications, int toSelect) {
+        JPanel applicantPanel = new JPanel(new GridBagLayout());
+        GridBagConstraints c = new GridBagConstraints();
         c.gridx = -1;
-        c.gridy = 1;
+        c.gridy = 0;
         for (int i=0; i<applications.size(); i++) {
             JCheckBox checkBox = new JCheckBox(applications.get(i).getApplicant().getLegalName());
             checkBoxToAppMap.put(checkBox, applications.get(i));
@@ -57,30 +69,27 @@ abstract class SelectionDialog extends JDialog{
             }
             c.gridy += (c.gridx+1)/3;
             c.gridx = (c.gridx+1)%3;
-            this.add(checkBox, c);
+            applicantPanel.add(checkBox, c);
         }
+        this.add(applicantPanel, BorderLayout.CENTER);
     }
 
-    private void addConfirmButton() {
-        c.gridy++;
-        c.gridx = 1;
+    private void addButtons() {
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         this.confirmButton = new JButton("Confirm");
         this.addConfirmListener();
-        this.add(confirmButton, c);
-    }
-
-    abstract void addConfirmListener();
-
-    private void addCancelButton() {
-        c.gridx = 2;
-        JButton cancelButton = new JButton("Cancel");
-        cancelButton.addActionListener(new ActionListener() {
+        buttonPanel.add(confirmButton);
+        /*this.cancelButton = new JButton("Cancel");
+        this.cancelButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 returnButton.setVisible(false);
                 dispose();
             }
         });
-        this.add(cancelButton, c);
+        buttonPanel.add(cancelButton);*/
+        this.add(buttonPanel, BorderLayout.PAGE_END);
     }
+
+    abstract void addConfirmListener();
 }
