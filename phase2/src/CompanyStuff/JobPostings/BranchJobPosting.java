@@ -175,15 +175,13 @@ public class BranchJobPosting extends CompanyJobPosting implements JobPostingObs
      * Advance the round of interviews for this job posting.
      */
     public void advanceInterviewRound() {
-        if (interviewManager == null) {
+        if (this.interviewManager == null || !interviewManager.hasChosenApplicantsForFirstRound()) {
             return;
         }
-        InterviewManager interviewManager = this.getInterviewManager();
-        if (interviewManager.interviewProcessHasBegun() && interviewManager.getCurrentRound() < interviewManager.getFinalRoundNumber()) {
-            if (interviewManager.currentRoundIsOver()) {
-                interviewManager.advanceRound();
-                this.notifyAllObservers(new NotificationFactory().createNotification(NotificationFactory.ADVANCE_ROUND,
-                        this));
+        if (this.interviewManager.interviewProcessHasBegun() && this.interviewManager.getCurrentRound() < this.interviewManager.getFinalRoundNumber()) {
+            if (this.interviewManager.currentRoundIsOver()) {
+                this.interviewManager.advanceRound();
+                this.notifyAllObservers(new NotificationFactory().createNotification(NotificationFactory.ADVANCE_ROUND, this));
             }
         }
     }

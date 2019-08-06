@@ -76,7 +76,7 @@ public class InterviewManager extends Observable implements Serializable {
         return this.interviewConfiguration.get(this.currentRound);
     }
 
-    private boolean hasChosenApplicantsForFirstRound() {
+    public boolean hasChosenApplicantsForFirstRound() {
         return this.chosenApplicantsForFirstRound;
     }
 
