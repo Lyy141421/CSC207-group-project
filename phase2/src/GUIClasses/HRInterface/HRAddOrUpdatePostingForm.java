@@ -510,11 +510,15 @@ class HRAddOrUpdatePostingForm extends HRPanel {
         if (defaultFields.isPresent()) {
             int i = 0;
             String[] defaultEntries = defaultFields.get();
-            while (valid && i < 2) {
+            while (valid && i < 3) {
                 if (defaultEntries[i].equals("")) {
                     valid = false;
                 }
                 i++;
+            }
+            //TODO: regex to match something other than ; or " ".
+            if (defaultEntries[4].equals("")) {
+                valid = false;
             }
         }
 
