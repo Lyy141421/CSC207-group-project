@@ -6,6 +6,7 @@ import ApplicantStuff.JobApplicationDocument;
 import ApplicantStuff.Reference;
 import DocumentManagers.ApplicantDocumentManager;
 import DocumentManagers.CompanyDocumentManager;
+import GUIClasses.ApplicantInterface.ApplicantPanel;
 import GUIClasses.CommonUserGUI.UserMain;
 import Main.User;
 
@@ -53,10 +54,7 @@ public class SubmitDocumentsActionListener implements ActionListener {
             value = this.fileTypeToTextEntry.size();
         }
         JOptionPane.showMessageDialog(parent, "You have successfully submitted " + value + " files.");
-        ((CardLayout) cardPanel.getLayout()).first(cardPanel);
-        if (cardPanel.getParent() instanceof UserMain) {
-            ((UserMain) cardPanel.getParent()).refresh();
-        }
+        ((UserMain) cardPanel.getParent()).refresh();
     }
 
     /**
