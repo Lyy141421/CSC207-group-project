@@ -74,7 +74,12 @@ public class LoginMain extends JPanel {
         this.jobAppSystem.setPreviousLoginDate(inputtedDate);
         this.jobAppSystem.setToday(inputtedDate);
         jobAppSystem.applicant30Day();
-        jobAppSystem.updateAllJobPostings();
+        Runnable updateJP = new Runnable() {
+            public void run() {
+                jobAppSystem.updateAllJobPostings();
+            }
+        };
+        SwingUtilities.invokeLater(updateJP);
         jobAppSystem.getUserManager().deleteAllEmptyReferenceAccounts();
     }
 

@@ -62,6 +62,8 @@ public class HRMain extends UserMain {
     public void refresh() {
         cards.removeAll();
         this.setCards();
+        this.revalidate();
+        this.repaint();
     }
 
 //    public static void main(String[] args) {
