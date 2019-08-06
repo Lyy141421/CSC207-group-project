@@ -33,13 +33,21 @@ class GradingFilterDialog extends JDialog {
         this.applications = applications;
         this.returnButton = returnButton;
 
-        this.setSize(500, 350);
-        this.setResizable(false);
+        this.setDialogProperties();
 
         this.setKeywordInput();
         this.setSelectNumber();
         this.setButtons();
         this.setVisible(true);
+    }
+
+    void setDialogProperties() {
+        this.setSize(500, 350);
+        this.setResizable(false);
+        this.setLocationRelativeTo(parent);
+        this.setAlwaysOnTop(true);
+        this.setModal(true);
+        this.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
     }
 
     void setKeywordInput() {
