@@ -139,16 +139,12 @@ public class Company implements Serializable {
     public ArrayList<CompanyJobPosting> getJobPostingsWithTags(String[] tags) {
         ArrayList<CompanyJobPosting> jobPostings = new ArrayList<>();
         for (CompanyJobPosting companyJobPosting : this.getAllOpenCompanyJobPostings()) {
-            for (String tag : tags) {
-                if (companyJobPosting.getTags().contains(tag)) {
-                    jobPostings.add(companyJobPosting);
-                    break;
-                }
+            if (companyJobPosting.containsTags(tags)) {
+                jobPostings.add(companyJobPosting);
             }
         }
         return jobPostings;
     }
-
 
     /**
      * View all applications this applicant has submitted for job postings in this company.

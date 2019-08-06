@@ -1,19 +1,12 @@
 package GUIClasses;
 
-import GUIClasses.ActionListeners.LogoutActionListener;
 import GUIClasses.StartInterface.LoginMain;
 import Main.JobApplicationSystem;
-import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
-import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
-import net.sourceforge.jdatepicker.impl.UtilDateModel;
 
 import GUIClasses.StartInterface.NewUserPanel;
 
 import javax.swing.*;
 import java.awt.*;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Date;
 
 public class MainFrame extends JFrame {
 
@@ -28,14 +21,6 @@ public class MainFrame extends JFrame {
     public MainFrame(JobApplicationSystem jobAppSystem) {
         super("GET A JOB");
         this.jobAppSystem = jobAppSystem;
-        initUI();
-        addCards();
-    }
-
-    private MainFrame () {
-        super("TESTING INSTANTIATOR DONT USE");
-        //this.homePanel = new JPanel(this.layoutManager);
-        //this.add(homePanel);
         initUI();
         addCards();
     }
@@ -62,9 +47,5 @@ public class MainFrame extends JFrame {
         this.add(newUserRef, MainFrame.NEW_USER);
         this.add(new LoginMain(newUserRef, this.getContentPane(), this.layoutManager, this.jobAppSystem), MainFrame.LOGIN);
         layoutManager.show(this.getContentPane(), MainFrame.LOGIN);
-    }
-
-    public static void main(String[] args) {
-        MainFrame test = new MainFrame();
     }
 }

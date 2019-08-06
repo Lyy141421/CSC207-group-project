@@ -193,17 +193,15 @@ public class CompanyJobPosting extends Observable implements Serializable {
         return s;
     }
 
-    public boolean containsTag(String tag){
-        return tags.contains(tag);
-    }
-
-    public boolean containsTag(ArrayList<String> tags){
-        for(String t : tags){
-            if(!containsTag(t)){
-                return false;
+    public boolean containsTags(String[] tags) {
+        for (String postingTag : this.getTags()) {
+            for (String tag : tags) {
+                if (tag.equalsIgnoreCase(postingTag)) {
+                    return true;
+                }
             }
         }
-        return true;
+        return false;
     }
 
     @Override

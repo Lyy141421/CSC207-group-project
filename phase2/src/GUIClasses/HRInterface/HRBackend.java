@@ -232,8 +232,16 @@ class HRBackend {
      * @param keyWordsAndPhrases The key words and phrases that the HR Coordinator has inputted.
      * @return a list of job applications sorted in non-decreasing order based for this job posting.
      */
-    ArrayList<JobApplication> getJobApplicationInNonDecreasingOrder(BranchJobPosting jobPosting, ArrayList<String> keyWordsAndPhrases) {
-        JobApplicationGrader jobAppGrader = new JobApplicationGrader(jobPosting, keyWordsAndPhrases);
+    ArrayList<JobApplication> getJobApplicationInNonDecreasingOrder(BranchJobPosting jobPosting, String[] keyWordsAndPhrases) {
+        ArrayList<String> keyWordsArrayList = new ArrayList<>();
+        if (keyWordsAndPhrases.length > 0) {
+            for (String item : keyWordsAndPhrases) {
+                if (!item.isEmpty()) {
+                    keyWordsArrayList.add(item);
+                }
+            }
+        }
+        JobApplicationGrader jobAppGrader = new JobApplicationGrader(jobPosting, keyWordsArrayList);
         return jobAppGrader.getSortedJobApps();
     }
 

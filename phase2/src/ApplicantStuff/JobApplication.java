@@ -41,7 +41,7 @@ public class JobApplication implements Serializable {
     // The date this application was submitted
     private LocalDate applicationDate;
     // The referencesToLetters that this applicant has chosen
-    private HashMap<Reference, JobApplicationDocument> referencesToLetters = new HashMap<>();
+    private HashMap<Reference, ArrayList<JobApplicationDocument>> referencesToLetters = new HashMap<>();
     // The reference letter document manager
     private DocumentManager referenceLetterDocManager;
     // The interviews conducted for this application
@@ -85,11 +85,9 @@ public class JobApplication implements Serializable {
 
     public ArrayList<JobApplicationDocument> getAllFilesSubmitted() {
         ArrayList<JobApplicationDocument> allFiles = (ArrayList<JobApplicationDocument>) this.filesSubmitted.clone();
-        Collection<JobApplicationDocument> referenceLetters = this.referencesToLetters.values();
-        for (JobApplicationDocument letter : referenceLetters) {
-            if (letter != null) {
-                allFiles.add(letter);
-            }
+        for (Reference reference : this.referencesToLetters.keySet()) {
+            ArrayList<JobApplicationDocument> letters = this.referencesToLetters.get(reference);
+            allFiles.addAll(letters);
         }
         return allFiles;
     }
@@ -120,10 +118,6 @@ public class JobApplication implements Serializable {
 
     // === Other methods ===
 
-    public void removeReference(Reference reference) {
-        this.referencesToLetters.remove(reference);
-    }
-
     /**
      * Add files to this job application.
      *
@@ -140,12 +134,12 @@ public class JobApplication implements Serializable {
      */
     public void addReferences(ArrayList<Reference> referencesToAdd) {
         for (Reference reference : referencesToAdd) {
-            this.referencesToLetters.put(reference, null);
+            this.referencesToLetters.put(reference, new ArrayList<>());
         }
     }
 
-    public void addReferenceLetters(Reference reference, JobApplicationDocument letter) {
-        this.referencesToLetters.replace(reference, letter);
+    public void addReferenceLetters(Reference reference, ArrayList<JobApplicationDocument> letters) {
+        this.referencesToLetters.get(reference).addAll(letters);
     }
 
     /**
@@ -157,7 +151,9 @@ public class JobApplication implements Serializable {
             if (reference.getJobAppsForReference().contains(this)) {
                 reference.removeJobApplication(this);
                 if (this.referencesToLetters.get(reference) != null) {
-                    this.referencesToLetters.get(reference).getFile().delete();
+                    for (JobApplicationDocument letter : this.referencesToLetters.get(reference)) {
+                        letter.getFile().delete();
+                    }
                 }
             }
         }

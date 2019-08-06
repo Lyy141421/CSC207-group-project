@@ -81,9 +81,9 @@ public class SubmitDocumentsActionListener implements ActionListener {
     private void uploadReferenceLetters() {
         Reference reference = (Reference) this.documentSubmitter;
         reference.removeJobApplication(jobApp);
-        jobApp.removeReference(reference);
         ReferenceLetterDocumentManager referenceLetterDocManager = jobApp.getReferenceLetterDocManager();
-        referenceLetterDocManager.addFileToFolder(filesToSubmit);
+        ArrayList<JobApplicationDocument> letters = referenceLetterDocManager.addFileToFolder(filesToSubmit);
+        jobApp.addReferenceLetters(reference, letters);
     }
 
     /**

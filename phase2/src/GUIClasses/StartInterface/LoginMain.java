@@ -73,8 +73,8 @@ public class LoginMain extends JPanel {
         this.jobAppSystem.setPreviousLoginDate(inputtedDate);
         this.jobAppSystem.setToday(inputtedDate);
         jobAppSystem.applicant30Day();
-        jobAppSystem.getUserManager().deleteAllEmptyReferenceAccounts();
         jobAppSystem.updateAllJobPostings();
+        jobAppSystem.getUserManager().deleteAllEmptyReferenceAccounts();
     }
 
     /**
@@ -95,7 +95,7 @@ public class LoginMain extends JPanel {
     }
 
     /**
-     * Adds the error meessages required for the login screen.
+     * Adds the error messages required for the login screen.
      */
     private void addErrorMessages() {
         String[] errorMessages = new String[]{USER_NOT_FOUND, WRONG_PASSWORD, BLANK_FIELD_ERROR, INVALID_USERNAME};

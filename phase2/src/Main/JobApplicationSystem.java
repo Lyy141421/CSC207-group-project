@@ -1,6 +1,5 @@
 package Main;
 
-import CompanyStuff.Branch;
 import CompanyStuff.Company;
 import ApplicantStuff.Applicant;
 import CompanyStuff.JobPostings.CompanyJobPosting;
@@ -8,6 +7,7 @@ import FileLoadingAndStoring.DataLoaderAndStorer;
 import GUIClasses.MainFrame;
 import NotificationSystem.Notification;
 
+import javax.swing.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -28,7 +28,12 @@ public class JobApplicationSystem {
         JobApplicationSystem jobAppSystem = new JobApplicationSystem();
         DataLoaderAndStorer dataLoaderAndStorer = new DataLoaderAndStorer(jobAppSystem);
         dataLoaderAndStorer.loadAllData();
-        new MainFrame(jobAppSystem);
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                new MainFrame(jobAppSystem);
+            }
+        });
     }
 
     // === Public methods ===
