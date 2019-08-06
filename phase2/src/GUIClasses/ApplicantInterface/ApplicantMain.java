@@ -37,8 +37,7 @@ class ApplicantMain extends JPanel {
         c = new GridBagConstraints();
 
         this.setApplicantCards();
-        ApplicantSideBarMenuPanel sidebar = new ApplicantSideBarMenuPanel(cards,
-                (CardLayout)cards.getLayout(), logout);
+        ApplicantSideBarMenuPanel sidebar = new ApplicantSideBarMenuPanel(cards, (CardLayout) cards.getLayout(), logout);
 
         c.weightx = 0.5;
         c.weighty = 0.5;
@@ -70,8 +69,6 @@ class ApplicantMain extends JPanel {
     void refresh() {
         cards.removeAll();
         this.setApplicantCards();
-        this.add(cards, c);
-        ((CardLayout) cards.getLayout()).show(cards, UserMain.HOME);
     }
 
     private JPanel createApplicantDocumentViewer() {

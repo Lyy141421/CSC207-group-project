@@ -17,6 +17,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.*;
@@ -420,7 +421,21 @@ class HRAddOrUpdatePostingForm extends HRPanel {
                     } else {
                         updateJobPosting(mandatoryFields);
                     }
-                    ((UserMain) containerPane.getParent().getParent()).refresh();
+                    Thread newThread = new Thread() {
+                        public void run() {
+                            try {
+                                SwingUtilities.invokeAndWait(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        ((UserMain) containerPane.getParent().getParent()).refresh();
+                                    }
+                                });
+                            } catch (InterruptedException | InvocationTargetException ex) {
+                                ex.printStackTrace();
+                            }
+                        }
+                    };
+                    newThread.start();
                 } else {
                     JOptionPane.showMessageDialog(containerPane, "One or more fields have illegal input.");
                 }

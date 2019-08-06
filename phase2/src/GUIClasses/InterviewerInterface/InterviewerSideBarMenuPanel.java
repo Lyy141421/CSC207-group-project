@@ -10,6 +10,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.lang.reflect.InvocationTargetException;
 import java.util.TreeMap;
 
 class InterviewerSideBarMenuPanel extends JPanel {
@@ -42,25 +43,41 @@ class InterviewerSideBarMenuPanel extends JPanel {
         fullMenu.put("3. Schedule Interviews", new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ((UserMain) cards.getParent()).refresh();
-                ((CardLayout) cards.getLayout()).show(cards, InterviewerMain.SCHEDULE);
+                createNewThread(InterviewerMain.SCHEDULE).start();
             }
         });
         fullMenu.put("4. View Interviewees", new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ((UserMain) cards.getParent()).refresh();
-                ((CardLayout) cards.getLayout()).show(cards, InterviewerMain.INCOMPLETE);
+                createNewThread(InterviewerMain.INCOMPLETE).start();
             }
         });
         fullMenu.put("5. Complete Interviews", new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ((UserMain) cards.getParent()).refresh();
-                ((CardLayout) cards.getLayout()).show(cards, InterviewerMain.COMPLETE);
+                createNewThread(InterviewerMain.COMPLETE).start();
             }
         });
         fullMenu.put("7. Logout", logoutActionListener);
         return fullMenu;
+    }
+
+    private Thread createNewThread(String key) {
+        Thread newThread = new Thread() {
+            public void run() {
+                try {
+                    SwingUtilities.invokeAndWait(new Runnable() {
+                        @Override
+                        public void run() {
+                            ((UserMain) cards.getParent()).refresh();
+                            ((CardLayout) cards.getLayout()).show(cards, key);
+                        }
+                    });
+                } catch (InterruptedException | InvocationTargetException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        };
+        return newThread;
     }
 }

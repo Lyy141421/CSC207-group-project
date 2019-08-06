@@ -5,11 +5,13 @@ import CompanyStuff.JobPostings.BranchJobPosting;
 import GUIClasses.ActionListeners.SubmitDocumentsActionListener;
 import GUIClasses.CommonUserGUI.DocumentSelector;
 import GUIClasses.CommonUserGUI.RemoveFileButtonsPanel;
+import GUIClasses.CommonUserGUI.UserMain;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.lang.reflect.InvocationTargetException;
 
 class ApplicantFileSubmissionFromAccount extends JPanel {
 
@@ -60,7 +62,21 @@ class ApplicantFileSubmissionFromAccount extends JPanel {
                 } else {
                     new SubmitDocumentsActionListener(masterPanel, applicantBackend.getApplicant(), jobApp,
                             documentSelector.getFilesToSubmit()).actionPerformed(e);
-                    ((ApplicantPanel)masterPanel).refresh();
+                    Thread newThread = new Thread() {
+                        public void run() {
+                            try {
+                                SwingUtilities.invokeAndWait(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        ((UserMain) masterPanel).refresh();
+                                    }
+                                });
+                            } catch (InterruptedException | InvocationTargetException ex) {
+                                ex.printStackTrace();
+                            }
+                        }
+                    };
+                    newThread.start();
                 }
             }
         });

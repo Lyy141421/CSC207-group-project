@@ -4,9 +4,11 @@ import FileLoadingAndStoring.DataLoaderAndStorer;
 import GUIClasses.MainFrame;
 import Main.JobApplicationSystem;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.lang.reflect.InvocationTargetException;
 
 public class LogoutActionListener implements ActionListener {
 
@@ -23,8 +25,22 @@ public class LogoutActionListener implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        new DataLoaderAndStorer(jobApplicationSystem).storeAllData();
-        masterLayout.show(parent, MainFrame.LOGIN);
-        parent.remove(new PanelGetter().getUserPanelFromMenuItemDirectlyOnMenuBar(e));
+        Thread newThread = new Thread() {
+            public void run() {
+                try {
+                    SwingUtilities.invokeAndWait(new Runnable() {
+                        @Override
+                        public void run() {
+                            new DataLoaderAndStorer(jobApplicationSystem).storeAllData();
+                            masterLayout.show(parent, MainFrame.LOGIN);
+                            parent.remove(new PanelGetter().getUserPanelFromMenuItemDirectlyOnMenuBar(e));
+                        }
+                    });
+                } catch (InterruptedException | InvocationTargetException ex) {
+                    System.out.println("Something when wrong");
+                }
+            }
+        };
+        newThread.start();
     }
 }

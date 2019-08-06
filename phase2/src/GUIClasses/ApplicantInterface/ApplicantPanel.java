@@ -5,6 +5,7 @@ import GUIClasses.ActionListeners.LogoutActionListener;
 import GUIClasses.CommonUserGUI.UserMain;
 import Main.JobApplicationSystem;
 
+import javax.swing.*;
 import java.awt.*;
 
 /**
@@ -17,6 +18,7 @@ public class ApplicantPanel extends UserMain {
     private LogoutActionListener logout;
 
     public ApplicantPanel(Applicant applicant, JobApplicationSystem jobAppSystem, LogoutActionListener logout) {
+        assert SwingUtilities.isEventDispatchThread();
         this.setLayout(new CardLayout());
         this.applicant = applicant;
         this.jobAppSystem = jobAppSystem;
