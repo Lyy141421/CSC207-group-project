@@ -13,6 +13,8 @@ import java.util.ArrayList;
 
 class InterviewSelectionDialog extends SelectionDialog {
 
+    private JDialog thisDialog = this;
+
     InterviewSelectionDialog(JFrame parent, HRBackend HRInterface, ArrayList<JobApplication> applications, JButton returnButton, int toSelect) {
         super(parent, HRInterface, applications, returnButton, toSelect);
     }
@@ -24,13 +26,14 @@ class InterviewSelectionDialog extends SelectionDialog {
             public void actionPerformed(ActionEvent e) {
                 BranchJobPosting branchJobPosting = applications.get(0).getJobPosting();
                 hrBackend.rejectApplicationForFirstRound(branchJobPosting, getApplicantsDeselected());
-                JDialog interviewConfig = new InterviewConfigDialog(parent, hrBackend, branchJobPosting, returnButton);
-                interviewConfig.addWindowListener(new WindowAdapter() {
-                    @Override
-                    public void windowClosed(WindowEvent e) {
-                        dispose();
-                    }
-                });
+                new InterviewConfigDialog(parent, hrBackend, branchJobPosting, returnButton);
+//                interviewConfig.addWindowListener(new WindowAdapter() {
+//                    @Override
+//                    public void windowClosed(WindowEvent e) {
+//                        dispose();
+//                    }
+//                });
+                dispose();
             }
         });
     }

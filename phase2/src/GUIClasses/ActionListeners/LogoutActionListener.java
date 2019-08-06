@@ -31,9 +31,11 @@ public class LogoutActionListener implements ActionListener {
                     SwingUtilities.invokeAndWait(new Runnable() {
                         @Override
                         public void run() {
-                            new DataLoaderAndStorer(jobApplicationSystem).storeAllData();
-                            masterLayout.show(parent, MainFrame.LOGIN);
+                            DataLoaderAndStorer dataLoaderAndStorer = new DataLoaderAndStorer(jobApplicationSystem);
+                            dataLoaderAndStorer.storeAllData();
                             parent.remove(new PanelGetter().getUserPanelFromMenuItemDirectlyOnMenuBar(e));
+                            dataLoaderAndStorer.loadAllData();
+                            masterLayout.show(parent, MainFrame.LOGIN);
                         }
                     });
                 } catch (InterruptedException | InvocationTargetException ex) {

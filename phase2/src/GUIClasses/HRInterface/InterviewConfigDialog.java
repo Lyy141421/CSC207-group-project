@@ -14,9 +14,8 @@ class InterviewConfigDialog extends JDialog {
 
     HRBackend hrBackend;
     private JFrame parent;
-    private BranchJobPosting branchJobPosting;
-
     private JDialog container = this;
+    private BranchJobPosting branchJobPosting;
 
     private int rounds = 0;
 
@@ -115,9 +114,9 @@ class InterviewConfigDialog extends JDialog {
             @Override
             public void actionPerformed(ActionEvent e) {
                 hrBackend.setInterviewConfiguration(branchJobPosting, getIsOneOnOne(), getDescriptions());
-                JOptionPane.showMessageDialog(container, "The interview configurations have been set.");
                 returnButton.setVisible(true);
-                dispose();
+                JOptionPane.showMessageDialog(container, "Interview Configuration Has Been Set");
+                container.dispose();
             }
         });
         submitPanel.add(submitButton);
