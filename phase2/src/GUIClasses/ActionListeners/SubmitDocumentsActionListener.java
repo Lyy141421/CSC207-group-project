@@ -33,7 +33,9 @@ public class SubmitDocumentsActionListener implements ActionListener {
         this.jobApp = jobApp;
         this.fileTypeToTextEntry = new HashMap<>();
         for (String fileType : fileTypeToContents.keySet()) {
-            this.fileTypeToTextEntry.put(fileType, fileTypeToContents.get(fileType).getText());
+            if (!fileTypeToContents.get(fileType).getText().isEmpty()) {
+                this.fileTypeToTextEntry.put(fileType, fileTypeToContents.get(fileType).getText());
+            }
         }
     }
 
