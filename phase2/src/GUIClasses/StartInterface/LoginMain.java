@@ -14,6 +14,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -74,12 +75,12 @@ public class LoginMain extends JPanel {
         this.jobAppSystem.setPreviousLoginDate(inputtedDate);
         this.jobAppSystem.setToday(inputtedDate);
         jobAppSystem.applicant30Day();
-        Runnable updateJP = new Runnable() {
-            public void run() {
+//        Runnable updateJP = new Runnable() {
+//            public void run() {
                 jobAppSystem.updateAllJobPostings();
-            }
-        };
-        SwingUtilities.invokeLater(updateJP);
+//            }
+//        };
+//        SwingUtilities.invokeLater(updateJP);
         jobAppSystem.getUserManager().deleteAllEmptyReferenceAccounts();
     }
 
@@ -251,7 +252,21 @@ public class LoginMain extends JPanel {
                 LocalDate today = ((Date) ((JDatePickerImpl) datePicker).getModel().getValue()).
                         toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
                 if (backend.isValidDate(today)) {
-                    updateSystem(today);
+                    Thread newThread = new Thread() {
+                        public void run() {
+                            try {
+                                SwingUtilities.invokeAndWait(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        updateSystem(today);
+                                    }
+                                });
+                            } catch (InterruptedException | InvocationTargetException ex) {
+                                ex.printStackTrace();
+                            }
+                        }
+                    };
+                    newThread.start();
                     popup.dispose();
                     dateInputted = true;
                     login();

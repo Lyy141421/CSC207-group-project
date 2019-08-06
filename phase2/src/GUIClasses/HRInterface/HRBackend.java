@@ -49,7 +49,7 @@ class HRBackend {
     ArrayList<BranchJobPosting> getJPToReview() {
         System.out.println("Get jp to review is called");
         BranchJobPostingManager jpManager = this.hr.getBranch().getJobPostingManager();
-        return jpManager.getJobPostingsRecentlyClosedForApplications(this.jobAppSystem.getToday());
+        return jpManager.getJobPostingsToReview(this.jobAppSystem.getToday());
     }
 
     /**

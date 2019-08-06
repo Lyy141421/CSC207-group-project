@@ -22,7 +22,11 @@ abstract class AbstractDocumentUser extends JPanel implements ActionListener {
     // === Constructor ===
     AbstractDocumentUser(File folder) {
         this.fileNames = folder.list();
-        this.files = folder.listFiles();
+        if (folder.listFiles().length == 0) {
+            this.files = new File[0];
+        } else {
+            this.files = folder.listFiles();
+        }
 
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         label.setAlignmentX(Component.CENTER_ALIGNMENT);

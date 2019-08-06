@@ -48,15 +48,15 @@ public class BranchJobPostingManager implements Serializable {
         this.branchJobPostings.add(posting);
     }
 
-    public ArrayList<BranchJobPosting> getJobPostingsNotAppliedToByApplicant(Applicant applicant) {
-        ArrayList<BranchJobPosting> requestedPostings = new ArrayList<>();
-        for (BranchJobPosting posting : branchJobPostings) {
-            if (!(applicant.hasAppliedToPosting(posting)))
-                requestedPostings.add(posting);
-
-        }
-        return requestedPostings;
-    }
+//    public ArrayList<BranchJobPosting> getJobPostingsNotAppliedToByApplicant(Applicant applicant) {
+//        ArrayList<BranchJobPosting> requestedPostings = new ArrayList<>();
+//        for (BranchJobPosting posting : branchJobPostings) {
+//            if (!(applicant.hasAppliedToPosting(posting)))
+//                requestedPostings.add(posting);
+//
+//        }
+//        return requestedPostings;
+//    }
 
     /**
      * Get a list of open job postings for this branch.
@@ -122,6 +122,22 @@ public class BranchJobPostingManager implements Serializable {
             boolean assertion = jobPosting.getInterviewManager() == null;
             System.out.println("Interview manager doesn't exist " + assertion);
             if (jobPosting.isClosed(today) && jobPosting.getInterviewManager() == null) {
+                jobPostings.add(jobPosting);
+            }
+        }
+        return jobPostings;
+    }
+
+    /**
+     * Get a list of job postings that have closed with no applications submitted and thus, may need an extension.
+     *
+     * @param getToday Today's date
+     * @return a list of job postings with no applications submitted.
+     */
+    public ArrayList<BranchJobPosting> getJobPostingsToReview(LocalDate getToday) {
+        ArrayList<BranchJobPosting> jobPostings = new ArrayList<>();
+        for (BranchJobPosting jobPosting : this.getClosedJobPostingsNotFilled(getToday)) {
+            if (jobPosting.getInterviewManager() == null || jobPosting.getInterviewManager().getHrTask() == InterviewManager.SELECT_APPS_FOR_FIRST_ROUND) {
                 jobPostings.add(jobPosting);
             }
         }
@@ -270,22 +286,21 @@ public class BranchJobPostingManager implements Serializable {
         System.out.println("Update job postings closed for applications is called");
         CompanyDocumentManager companyDocManager = this.getBranch().getCompany().getDocumentManager();
         for (BranchJobPosting jobPosting : this.getJobPostingsRecentlyClosedForApplications(today)) {
-            if (jobPosting.hasNoApplicationsSubmitted()) {
-                // HR Coordinator has the option to reopen the job posting
-                return;
+            if (!jobPosting.hasNoApplicationsSubmitted()) {
+                // HR Coordinator has the option to reopen the job posting if closed
+//                 Creates an interview manager so that if applicant withdraws their application from this point on,
+//                 they are automatically rejected.
+                jobPosting.createInterviewManager();
+                if (!companyDocManager.applicationDocumentsTransferred(jobPosting)) {
+                    companyDocManager.transferApplicationDocuments(jobPosting);
+                }
+                for (Reference reference : jobPosting.getAllReferences()) {
+                    // If the reference still has not yet submitted their reference letter for a job app for this job
+                    // posting, remove it from their list
+                    reference.removeJobPosting(jobPosting);
+                }
+                jobPosting.notifyAllJobPostings(branch);
             }
-            // Creates an interview manager so that if applicant withdraws their application from this point on,
-            // they are automatically rejected.
-            jobPosting.createInterviewManager();
-            if (!companyDocManager.applicationDocumentsTransferred(jobPosting)) {
-                companyDocManager.transferApplicationDocuments(jobPosting);
-            }
-            for (Reference reference : jobPosting.getAllReferences()) {
-                // If the reference still has not yet submitted their reference letter for a job app for this job
-                // posting, remove it from their list
-                reference.removeJobPosting(jobPosting);
-            }
-            jobPosting.notifyAllJobPostings(branch);
         }
     }
 }

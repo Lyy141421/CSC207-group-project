@@ -97,8 +97,11 @@ public class ReferenceMain extends UserMain {
         reference.addJobApplication(jobApp);
         reference.addJobApplication(jobApp2);
         BranchJobPostingManager branchJobPostingManager = branch.getJobPostingManager();
-        branchJobPostingManager.updateJobPostingsClosedForApplications(LocalDate.of(2019, 7, 20));
-        branchJobPostingManager.updateJobPostingsClosedForApplications(LocalDate.of(2019, 7, 21));
+        jobApplicationSystem.updateAllJobPostings();
+        jobApplicationSystem.setToday(LocalDate.of(2019, 7, 21));
+        jobApplicationSystem.updateAllJobPostings();
+//        branchJobPostingManager.updateJobPostingsClosedForApplications(LocalDate.of(2019, 7, 20));
+//        branchJobPostingManager.updateJobPostingsClosedForApplications(LocalDate.of(2019, 7, 21));
 //        LogoutActionListener logoutActionListener = new LogoutActionListener(new Container(), new CardLayout(), jobApplicationSystem);
 //        frame.add(new ReferenceMain(reference, jobApplicationSystem, logoutActionListener));
 //        frame.setSize(854, 480);
