@@ -1,9 +1,9 @@
 package CompanyStuff.JobPostings;
 
+import ApplicantStuff.Applicant;
 import CompanyStuff.Branch;
 import CompanyStuff.Company;
 import NotificationSystem.Observable;
-import NotificationSystem.Observer;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -120,6 +120,15 @@ public class CompanyJobPosting extends Observable implements Serializable {
             }
         }
         return branchJobPostings;
+    }
+
+    public boolean hasApplicantAppliedToAllBranchJobPostings(Applicant applicant, LocalDate today) {
+        for (BranchJobPosting branchJobPosting : this.getOpenBranchJobPostingList(today)) {
+            if (!applicant.hasAppliedToPosting(branchJobPosting)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public boolean hasBranchJobPostingInCma(String cma, LocalDate today) {

@@ -64,7 +64,7 @@ class ApplicantMain extends JPanel {
         cards.add(new UserProfilePanel(applicant), UserMain.PROFILE);
         cards.add(this.createApplicantDocumentViewer(), "DOCUMENTS");
         cards.add(new ApplicantSchedule(applicantBackend), "SCHEDULE");
-        cards.add(new ApplicantViewApps(applicantBackend), "MANAGE");
+        cards.add(new ApplicantViewApps(applicantBackend, masterPanel), "MANAGE");
     }
 
     void refresh() {

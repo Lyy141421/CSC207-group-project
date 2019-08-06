@@ -111,12 +111,28 @@ public class JobApplicationSystem {
         }
     }
 
-    public ArrayList<CompanyJobPosting> getAllOpenCompanyJobPostings() {
+    private ArrayList<CompanyJobPosting> getAllOpenCompanyJobPostings() {
         ArrayList<CompanyJobPosting> allOpenCompanyJobPostings = new ArrayList<>();
         for (Company company : this.getCompanies()) {
             allOpenCompanyJobPostings.addAll(company.getAllOpenCompanyJobPostings());
         }
         return allOpenCompanyJobPostings;
+    }
+
+    /**
+     * Get a list of open job postings not yet applied to.
+     *
+     * @return a list of open job postings not yet applied to.
+     */
+    public ArrayList<CompanyJobPosting> getOpenCompanyJobPostingsNotAppliedTo(Applicant applicant) {
+        ArrayList<CompanyJobPosting> allOpenCompanyJobPostingsNotAppliedTo = (ArrayList<CompanyJobPosting>)
+                this.getAllOpenCompanyJobPostings().clone();
+        for (CompanyJobPosting companyJobPosting : this.getAllOpenCompanyJobPostings()) {
+            if (companyJobPosting.hasApplicantAppliedToAllBranchJobPostings(applicant, this.getToday())) {
+                allOpenCompanyJobPostingsNotAppliedTo.remove(companyJobPosting);
+            }
+        }
+        return allOpenCompanyJobPostingsNotAppliedTo;
     }
 
     public ArrayList<CompanyJobPosting> getOpenCompanyJobPostingsInField(String field) {

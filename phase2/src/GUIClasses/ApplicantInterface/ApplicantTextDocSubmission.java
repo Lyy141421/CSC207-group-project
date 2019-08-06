@@ -14,9 +14,9 @@ class ApplicantTextDocSubmission extends JPanel {
     ApplicantTextDocSubmission(JPanel masterPanel, ApplicantBackend backend, JobApplication jobApp) {
         this.setLayout(null);
 
-        JLabel titleText = new JLabel("Document Submission");
+        JLabel titleText = new JLabel("Document Submission", SwingConstants.CENTER);
         titleText.setFont(new Font("Serif", Font.PLAIN, 22));
-        titleText.setBounds(327, 20, 200, 40);
+        titleText.setBounds(227, 20, 400, 40);
 
         JLabel resumeText = new JLabel("Please paste your resume here:");
         resumeText.setBounds(150, 75, 554, 20);
@@ -49,12 +49,13 @@ class ApplicantTextDocSubmission extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 new SubmitDocumentsActionListener(masterPanel, jobApp.getApplicant(), jobApp, fileTypeToContents).actionPerformed(e);
+                ((ApplicantPanel)masterPanel).refresh();
             }
         });
         returnButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ((CardLayout) masterPanel.getLayout()).previous(masterPanel);
+                ((CardLayout) masterPanel.getLayout()).show(masterPanel, "SearchResults");
             }
         });
         addReferencesButton.addActionListener(new ActionListener() {

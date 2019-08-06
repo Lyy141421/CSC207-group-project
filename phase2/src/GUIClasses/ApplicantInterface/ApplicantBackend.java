@@ -43,27 +43,22 @@ class ApplicantBackend {
      * Returns an arraylist containing all the job postings that apply to the applicant
      */
     ArrayList<CompanyJobPosting> findApplicablePostings(ArrayList<Object> inputs) {
-        String field = (String) inputs.get(0);
-        String companyName = (String) inputs.get(1);
+        String companyName = (String) inputs.get(0);
+        String field = (String) inputs.get(1);
         String id = (String) inputs.get(2);
         String tags = (String) inputs.get(3);
         Boolean byLocation = (Boolean) inputs.get(4);
 
-        ArrayList<CompanyJobPosting> applicableJobPostings = jobAppSystem.getAllOpenCompanyJobPostings();
-        if (!id.isEmpty()) {
-            int idInteger = Integer.valueOf(id);
-            CompanyJobPosting companyJobPosting = jobAppSystem.getCompanyJobPostingWithID(idInteger);
-            if (companyJobPosting != null) {
-                return new ArrayList<>(Arrays.asList(companyJobPosting));
-            } else {
-                return new ArrayList<>();
-            }
-        }
+        ArrayList<CompanyJobPosting> applicableJobPostings = jobAppSystem.getOpenCompanyJobPostingsNotAppliedTo(this.applicant);
         if (!companyName.isEmpty()) {
             applicableJobPostings.retainAll(jobAppSystem.getOpenCompanyJobPostingsInCompany(companyName));
         }
         if (!field.isEmpty()) {
             applicableJobPostings.retainAll(jobAppSystem.getOpenCompanyJobPostingsInField(field));
+        }
+        if (!id.isEmpty()) {
+            int idInteger = Integer.valueOf(id);
+            applicableJobPostings.retainAll(new ArrayList<>(Arrays.asList(jobAppSystem.getCompanyJobPostingWithID(idInteger))));
         }
         if (!tags.isEmpty()) {
             String[] tagsArray = tags.split(", ");
