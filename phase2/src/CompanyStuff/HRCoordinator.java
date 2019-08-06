@@ -57,6 +57,7 @@ public class HRCoordinator extends User {
                                           LocalDate postDate, LocalDate applicationCloseDate, LocalDate referenceCloseDate) {
         CompanyJobPosting companyJobPosting = new CompanyJobPosting(jobTitle, jobField, jobDescription, requiredDocuments,
                 tags, this.branch.getCompany());
+        this.branch.getCompany().addCompanyJobPosting(companyJobPosting);
         return this.implementJobPosting(companyJobPosting, numPositions, postDate, applicationCloseDate, referenceCloseDate);
     }
 

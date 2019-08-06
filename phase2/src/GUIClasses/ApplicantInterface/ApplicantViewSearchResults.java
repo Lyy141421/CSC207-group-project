@@ -35,11 +35,12 @@ class ApplicantViewSearchResults extends JPanel {
             @Override
             public void valueChanged(ListSelectionEvent e) {
                 JList actor =(JList)e.getSource();
-                String cardFromActor = actor.getSelectedValue().toString().replaceAll("[^\\d.]", "");
+                String title = actor.getSelectedValue().toString();
+                String index = title.substring(title.length() - 1);
                 CardLayout c1 = (CardLayout)viewJobs1.getLayout();
-                c1.show(viewJobs1, cardFromActor);
+                c1.show(viewJobs1, index);
                 CardLayout c2 = (CardLayout)viewJobs2.getLayout();
-                c2.show(viewJobs2, cardFromActor);
+                c2.show(viewJobs2, index);
             }
         });
     }

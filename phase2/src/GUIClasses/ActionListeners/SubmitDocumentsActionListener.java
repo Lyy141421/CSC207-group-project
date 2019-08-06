@@ -6,6 +6,7 @@ import ApplicantStuff.JobApplicationDocument;
 import ApplicantStuff.Reference;
 import DocumentManagers.ApplicantDocumentManager;
 import DocumentManagers.CompanyDocumentManager;
+import GUIClasses.ApplicantInterface.ApplicantPanel;
 import GUIClasses.CommonUserGUI.UserMain;
 import Main.User;
 
@@ -56,6 +57,8 @@ public class SubmitDocumentsActionListener implements ActionListener {
         ((CardLayout) cardPanel.getLayout()).first(cardPanel);
         if (cardPanel.getParent() instanceof UserMain) {
             ((UserMain) cardPanel.getParent()).refresh();
+        } else {
+            ((UserMain) cardPanel).refresh();
         }
     }
 
