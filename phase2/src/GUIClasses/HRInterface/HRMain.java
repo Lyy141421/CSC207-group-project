@@ -64,7 +64,7 @@ public class HRMain extends UserMain {
         this.setCards();
     }
 
-    public static void main(String[] args) {
+//    public static void main(String[] args) {
 //        JFrame frame = new JFrame("HR Main");
 //        JobApplicationSystem jobApplicationSystem = new JobApplicationSystem();
 //        //new DataLoaderAndStorer(jobApplicationSystem).loadAllData();
@@ -101,33 +101,33 @@ public class HRMain extends UserMain {
         // Run this!
         // This instantiates 2 applicants who apply to a single job posting
         // Also instantiates an hr and interviewer in that company
-        JobApplicationSystem jobApplicationSystem = new JobApplicationSystem();
-        new DataLoaderAndStorer(jobApplicationSystem).loadAllData();
-        jobApplicationSystem.setToday(LocalDate.of(2019, 7, 19));
-        Company company = jobApplicationSystem.createCompany("Company");
-        Branch branch = company.createBranch("Branch", "Toronto");
-        Applicant applicant = jobApplicationSystem.getUserManager().createApplicant("username", "password", "Legal Name", "email@gmail.com", "L4B4P8", LocalDate.now());
-        HRCoordinator hrc = new HRCoordinator("HR", "password", "HRC", "email@gmail.com", branch, LocalDate.of(2019, 7, 19));
-        BranchJobPosting jobPosting = hrc.addJobPosting("title", "field", "descriptionhujedkfnvsgrhjegskamkagjrwuiladkvmkajgirwouskvmzkjgiskdzvn,mkngs\niznvjgsirklzngjslitw4gsijlkznjsirtwtrsigjlzknvmJDEI0   IPUOwrahektdznmv\nlpox-98uy7gufhvnb tmwkeafoisCXU*yygchbvn    4mk2RWFsvzx\nwgudkngrhadkjn\nwhaegkjsc\ngwaeihfkncMZ<ghaecsknm,z\n",
-                new ArrayList<>(Arrays.asList("CV", "Cover Letter", "Reference Letter")), new ArrayList<>(), 1, LocalDate.of(2019, 7, 19), LocalDate.of(2019, 7, 19));
-        JobApplication jobApp = new JobApplication(applicant, jobPosting, LocalDate.now());
-        JobApplicationDocument doc = new JobApplicationDocument(new File("./sample.txt"), applicant.getUsername());
-        JobApplicationDocument doc2 = new JobApplicationDocument(new File("./sample.txt"), applicant.getUsername());
-        jobApp.addFiles(new ArrayList<>(Arrays.asList(doc, doc2)));
-        Applicant applicant2 = jobApplicationSystem.getUserManager().createApplicant("username2", "password", "Legal Name2", "email@gmail.com", "L4B4P8", LocalDate.of(2019, 7, 19));
-        BranchJobPosting jobPosting2 = hrc.addJobPosting("title2", "field", "description",
-                new ArrayList<>(Arrays.asList("CV", "Cover Letter", "Reference Letter")), new ArrayList<>(), 1, LocalDate.of(2019, 7, 20), LocalDate.of(2019, 7, 20));
-        JobApplication jobApp2 = new JobApplication(applicant2, jobPosting2, LocalDate.of(2019, 7, 19));
-        JobApplicationDocument doc3 = new JobApplicationDocument(new File("./sample.txt"), applicant.getUsername());
-        jobApp2.addFiles(new ArrayList<>(Arrays.asList(doc3)));
-        jobApplicationSystem.setToday(LocalDate.of(2019, 8, 25));
-        new Interviewer("Interviewer", "password", "Bobby", "email", branch, "field", LocalDate.of(2019, 7, 10));
-        jobApplicationSystem.updateAllJobPostings();
-        LogoutActionListener logoutActionListener = new LogoutActionListener(new Container(), new CardLayout(), jobApplicationSystem);
-        JFrame frame = new JFrame();
-        frame.add(new HRMain(hrc, jobApplicationSystem, logoutActionListener));
-        frame.setSize(854, 480);
-        frame.setVisible(true);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    }
+//        JobApplicationSystem jobApplicationSystem = new JobApplicationSystem();
+//        new DataLoaderAndStorer(jobApplicationSystem).loadAllData();
+//        jobApplicationSystem.setToday(LocalDate.of(2019, 7, 19));
+//        Company company = jobApplicationSystem.createCompany("Company");
+//        Branch branch = company.createBranch("Branch", "Toronto");
+//        Applicant applicant = jobApplicationSystem.getUserManager().createApplicant("username", "password", "Legal Name", "email@gmail.com", "L4B4P8", LocalDate.now());
+//        HRCoordinator hrc = new HRCoordinator("HR", "password", "HRC", "email@gmail.com", branch, LocalDate.of(2019, 7, 19));
+//        BranchJobPosting jobPosting = hrc.addJobPosting("title", "field", "descriptionhujedkfnvsgrhjegskamkagjrwuiladkvmkajgirwouskvmzkjgiskdzvn,mkngs\niznvjgsirklzngjslitw4gsijlkznjsirtwtrsigjlzknvmJDEI0   IPUOwrahektdznmv\nlpox-98uy7gufhvnb tmwkeafoisCXU*yygchbvn    4mk2RWFsvzx\nwgudkngrhadkjn\nwhaegkjsc\ngwaeihfkncMZ<ghaecsknm,z\n",
+//                new ArrayList<>(Arrays.asList("CV", "Cover Letter", "Reference Letter")), new ArrayList<>(), 1, LocalDate.of(2019, 7, 19), LocalDate.of(2019, 7, 19));
+//        JobApplication jobApp = new JobApplication(applicant, jobPosting, LocalDate.now());
+//        JobApplicationDocument doc = new JobApplicationDocument(new File("./sample.txt"), applicant.getUsername());
+//        JobApplicationDocument doc2 = new JobApplicationDocument(new File("./sample.txt"), applicant.getUsername());
+//        jobApp.addFiles(new ArrayList<>(Arrays.asList(doc, doc2)));
+//        Applicant applicant2 = jobApplicationSystem.getUserManager().createApplicant("username2", "password", "Legal Name2", "email@gmail.com", "L4B4P8", LocalDate.of(2019, 7, 19));
+//        BranchJobPosting jobPosting2 = hrc.addJobPosting("title2", "field", "description",
+//                new ArrayList<>(Arrays.asList("CV", "Cover Letter", "Reference Letter")), new ArrayList<>(), 1, LocalDate.of(2019, 7, 20), LocalDate.of(2019, 7, 20));
+//        JobApplication jobApp2 = new JobApplication(applicant2, jobPosting2, LocalDate.of(2019, 7, 19));
+//        JobApplicationDocument doc3 = new JobApplicationDocument(new File("./sample.txt"), applicant.getUsername());
+//        jobApp2.addFiles(new ArrayList<>(Arrays.asList(doc3)));
+//        jobApplicationSystem.setToday(LocalDate.of(2019, 8, 25));
+//        new Interviewer("Interviewer", "password", "Bobby", "email", branch, "field", LocalDate.of(2019, 7, 10));
+//        jobApplicationSystem.updateAllJobPostings();
+//        LogoutActionListener logoutActionListener = new LogoutActionListener(new Container(), new CardLayout(), jobApplicationSystem);
+//        JFrame frame = new JFrame();
+//        frame.add(new HRMain(hrc, jobApplicationSystem, logoutActionListener));
+//        frame.setSize(854, 480);
+//        frame.setVisible(true);
+//        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//    }
 }

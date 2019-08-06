@@ -49,6 +49,7 @@ class HRViewPosting extends HRPanel {
 
     HRViewPosting(HRBackend hrBackend, JPanel parent, int jpType) {
         super(hrBackend);
+        System.out.println(SwingUtilities.isEventDispatchThread());
         this.parent = parent;
         this.jpType = jpType;
         this.setJPLists();

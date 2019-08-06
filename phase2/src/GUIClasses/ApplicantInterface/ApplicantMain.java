@@ -81,21 +81,21 @@ class ApplicantMain extends JPanel {
         return panel;
     }
 
-    public static void main(String[] args) {
-        JobApplicationSystem jobApplicationSystem = new JobApplicationSystem();
-        new DataLoaderAndStorer(jobApplicationSystem).loadAllData();
-        jobApplicationSystem.setToday(LocalDate.of(2019, 7, 19));
-        Company company = jobApplicationSystem.createCompany("Company");
-        Branch branch = company.createBranch("Branch", "L4B4P8");
-        Applicant applicant = jobApplicationSystem.getUserManager().createApplicant("username", "password", "Legal Name", "email@gmail.com", "L4B4P8", LocalDate.now());
-        HRCoordinator hrc = new HRCoordinator("HR", "password", "HRC", "email@gmail.com", branch, LocalDate.of(2019, 7, 19));
-        hrc.addJobPosting("title", "field", "descriptionhujedkfnvsgrhjegskamkagjrwuiladkvmkajgirwouskvmzkjgiskdzvn,mkngs\niznvjgsirklzngjslitw4gsijlkznjsirtwtrsigjlzknvmJDEI0   IPUOwrahektdznmv\nlpox-98uy7gufhvnb tmwkeafoisCXU*yygchbvn    4mk2RWFsvzx\nwgudkngrhadkjn\nwhaegkjsc\ngwaeihfkncMZ<ghaecsknm,z\n",
-                new ArrayList<>(Arrays.asList("CV", "Cover Letter", "Reference Letter")), new ArrayList<>(), 1, LocalDate.of(2019, 7, 19), LocalDate.of(2019, 7, 19));
-        JFrame frame = new JFrame();
-        LogoutActionListener logoutActionListener = new LogoutActionListener(new Container(), new CardLayout(), jobApplicationSystem);
-        frame.add(new ApplicantPanel(applicant, jobApplicationSystem, logoutActionListener));
-        frame.setSize(854, 480);
-        frame.setResizable(false);
-        frame.setVisible(true);
-    }
+//    public static void main(String[] args) {
+//        JobApplicationSystem jobApplicationSystem = new JobApplicationSystem();
+//        new DataLoaderAndStorer(jobApplicationSystem).loadAllData();
+//        jobApplicationSystem.setToday(LocalDate.of(2019, 7, 19));
+//        Company company = jobApplicationSystem.createCompany("Company");
+//        Branch branch = company.createBranch("Branch", "L4B4P8");
+//        Applicant applicant = jobApplicationSystem.getUserManager().createApplicant("username", "password", "Legal Name", "email@gmail.com", "L4B4P8", LocalDate.now());
+//        HRCoordinator hrc = new HRCoordinator("HR", "password", "HRC", "email@gmail.com", branch, LocalDate.of(2019, 7, 19));
+//        hrc.addJobPosting("title", "field", "descriptionhujedkfnvsgrhjegskamkagjrwuiladkvmkajgirwouskvmzkjgiskdzvn,mkngs\niznvjgsirklzngjslitw4gsijlkznjsirtwtrsigjlzknvmJDEI0   IPUOwrahektdznmv\nlpox-98uy7gufhvnb tmwkeafoisCXU*yygchbvn    4mk2RWFsvzx\nwgudkngrhadkjn\nwhaegkjsc\ngwaeihfkncMZ<ghaecsknm,z\n",
+//                new ArrayList<>(Arrays.asList("CV", "Cover Letter", "Reference Letter")), new ArrayList<>(), 1, LocalDate.of(2019, 7, 19), LocalDate.of(2019, 7, 19));
+//        JFrame frame = new JFrame();
+//        LogoutActionListener logoutActionListener = new LogoutActionListener(new Container(), new CardLayout(), jobApplicationSystem);
+//        frame.add(new ApplicantPanel(applicant, jobApplicationSystem, logoutActionListener));
+//        frame.setSize(854, 480);
+//        frame.setResizable(false);
+//        frame.setVisible(true);
+//    }
 }

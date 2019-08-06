@@ -8,6 +8,7 @@ import GUIClasses.MainFrame;
 import NotificationSystem.Notification;
 
 import javax.swing.*;
+import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -28,12 +29,16 @@ public class JobApplicationSystem {
         JobApplicationSystem jobAppSystem = new JobApplicationSystem();
         DataLoaderAndStorer dataLoaderAndStorer = new DataLoaderAndStorer(jobAppSystem);
         dataLoaderAndStorer.loadAllData();
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                new MainFrame(jobAppSystem);
-            }
-        });
+        try {
+            SwingUtilities.invokeAndWait(new Runnable() {
+                @Override
+                public void run() {
+                    new MainFrame(jobAppSystem);
+                }
+            });
+        } catch (InterruptedException | InvocationTargetException e) {
+            e.printStackTrace();
+        }
     }
 
     // === Public methods ===

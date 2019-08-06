@@ -73,36 +73,36 @@ public class ReferenceMain extends UserMain {
         this.setCards();
     }
 
-    public static void main(String[] args) {
-        JFrame frame = new JFrame("Reference Home Page");
-        JobApplicationSystem jobApplicationSystem = new JobApplicationSystem();
-        new DataLoaderAndStorer(jobApplicationSystem).loadAllData();
-        jobApplicationSystem.setToday(LocalDate.of(2019, 7, 20));
-        jobApplicationSystem.setPreviousLoginDate(LocalDate.of(2019, 7, 19));
-        Reference reference = jobApplicationSystem.getUserManager().createReference("bob@gmail.com", LocalDate.of(2019, 7, 19));
-        Company company = jobApplicationSystem.createCompany("Company");
-        Branch branch = company.createBranch("Branch", "Toronto");
-        Applicant applicant = jobApplicationSystem.getUserManager().createApplicant("username", "password", "Legal Name", "email@gmail.com", "L4B4P8", LocalDate.now());
-        HRCoordinator hrc = new HRCoordinator("HR", "password", "HRC", "email@gmail.com", branch, LocalDate.of(2019, 7, 19));
-        BranchJobPosting jobPosting = hrc.addJobPosting("title", "field", "descriptionhujedkfnvsgrhjegskamkagjrwuiladkvmkajgirwouskvmzkjgiskdzvn,mkngs\niznvjgsirklzngjslitw4gsijlkznjsirtwtrsigjlzknvmJDEI0   IPUOwrahektdznmv\nlpox-98uy7gufhvnb tmwkeafoisCXU*yygchbvn    4mk2RWFsvzx\nwgudkngrhadkjn\nwhaegkjsc\ngwaeihfkncMZ<ghaecsknm,z\n",
-                new ArrayList<>(Arrays.asList("CV", "Cover Letter", "Reference Letter")), new ArrayList<>(), 1, LocalDate.of(2019, 7, 19), LocalDate.of(2019, 7, 19));
-        JobApplication jobApp = new JobApplication(applicant, jobPosting, LocalDate.now());
-        JobApplicationDocument doc = new JobApplicationDocument(new File("./sample.txt"), applicant.getUsername());
-        JobApplicationDocument doc2 = new JobApplicationDocument(new File("./sample.txt"), applicant.getUsername());
-        jobApp.addFiles(new ArrayList<>(Arrays.asList(doc, doc2)));
-        Applicant applicant2 = jobApplicationSystem.getUserManager().createApplicant("username2", "password", "Legal Name2", "email@gmail.com", "L4B4P8", LocalDate.of(2019, 7, 19));
-        BranchJobPosting jobPosting2 = hrc.addJobPosting("title2", "field", "description",
-                new ArrayList<>(Arrays.asList("CV", "Cover Letter", "Reference Letter")), new ArrayList<>(), 1, LocalDate.of(2019, 7, 20), LocalDate.of(2019, 7, 20));
-        JobApplication jobApp2 = new JobApplication(applicant2, jobPosting2, LocalDate.of(2019, 7, 19));
-        reference.addJobApplication(jobApp);
-        reference.addJobApplication(jobApp2);
-        BranchJobPostingManager branchJobPostingManager = branch.getJobPostingManager();
-        branchJobPostingManager.updateJobPostingsClosedForApplications(LocalDate.now());
-        LogoutActionListener logoutActionListener = new LogoutActionListener(new Container(), new CardLayout(), jobApplicationSystem);
-        frame.add(new ReferenceMain(reference, jobApplicationSystem, logoutActionListener));
-        frame.setSize(854, 480);
-        frame.setVisible(true);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    }
+//    public static void main(String[] args) {
+//        JFrame frame = new JFrame("Reference Home Page");
+//        JobApplicationSystem jobApplicationSystem = new JobApplicationSystem();
+//        new DataLoaderAndStorer(jobApplicationSystem).loadAllData();
+//        jobApplicationSystem.setToday(LocalDate.of(2019, 7, 20));
+//        jobApplicationSystem.setPreviousLoginDate(LocalDate.of(2019, 7, 19));
+//        Reference reference = jobApplicationSystem.getUserManager().createReference("bob@gmail.com", LocalDate.of(2019, 7, 19));
+//        Company company = jobApplicationSystem.createCompany("Company");
+//        Branch branch = company.createBranch("Branch", "Toronto");
+//        Applicant applicant = jobApplicationSystem.getUserManager().createApplicant("username", "password", "Legal Name", "email@gmail.com", "L4B4P8", LocalDate.now());
+//        HRCoordinator hrc = new HRCoordinator("HR", "password", "HRC", "email@gmail.com", branch, LocalDate.of(2019, 7, 19));
+//        BranchJobPosting jobPosting = hrc.addJobPosting("title", "field", "descriptionhujedkfnvsgrhjegskamkagjrwuiladkvmkajgirwouskvmzkjgiskdzvn,mkngs\niznvjgsirklzngjslitw4gsijlkznjsirtwtrsigjlzknvmJDEI0   IPUOwrahektdznmv\nlpox-98uy7gufhvnb tmwkeafoisCXU*yygchbvn    4mk2RWFsvzx\nwgudkngrhadkjn\nwhaegkjsc\ngwaeihfkncMZ<ghaecsknm,z\n",
+//                new ArrayList<>(Arrays.asList("CV", "Cover Letter", "Reference Letter")), new ArrayList<>(), 1, LocalDate.of(2019, 7, 19), LocalDate.of(2019, 7, 19));
+//        JobApplication jobApp = new JobApplication(applicant, jobPosting, LocalDate.now());
+//        JobApplicationDocument doc = new JobApplicationDocument(new File("./sample.txt"), applicant.getUsername());
+//        JobApplicationDocument doc2 = new JobApplicationDocument(new File("./sample.txt"), applicant.getUsername());
+//        jobApp.addFiles(new ArrayList<>(Arrays.asList(doc, doc2)));
+//        Applicant applicant2 = jobApplicationSystem.getUserManager().createApplicant("username2", "password", "Legal Name2", "email@gmail.com", "L4B4P8", LocalDate.of(2019, 7, 19));
+//        BranchJobPosting jobPosting2 = hrc.addJobPosting("title2", "field", "description",
+//                new ArrayList<>(Arrays.asList("CV", "Cover Letter", "Reference Letter")), new ArrayList<>(), 1, LocalDate.of(2019, 7, 20), LocalDate.of(2019, 7, 20));
+//        JobApplication jobApp2 = new JobApplication(applicant2, jobPosting2, LocalDate.of(2019, 7, 19));
+//        reference.addJobApplication(jobApp);
+//        reference.addJobApplication(jobApp2);
+//        BranchJobPostingManager branchJobPostingManager = branch.getJobPostingManager();
+//        branchJobPostingManager.updateJobPostingsClosedForApplications(LocalDate.now());
+//        LogoutActionListener logoutActionListener = new LogoutActionListener(new Container(), new CardLayout(), jobApplicationSystem);
+//        frame.add(new ReferenceMain(reference, jobApplicationSystem, logoutActionListener));
+//        frame.setSize(854, 480);
+//        frame.setVisible(true);
+//        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//    }
 
 }
