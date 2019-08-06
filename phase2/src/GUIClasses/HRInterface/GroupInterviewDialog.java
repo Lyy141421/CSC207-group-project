@@ -40,6 +40,24 @@ class GroupInterviewDialog extends JDialog {
 
         this.setLayout(new BorderLayout());
 
+        this.setHeader();
+        this.setSplitPane();
+        this.setButtons();
+
+        this.setDialogProperties();
+        this.setVisible(true);
+    }
+
+    private void setDialogProperties() {
+        this.setSize(500, 350);
+        this.setResizable(false);
+        this.setLocationRelativeTo(parent);
+        this.setAlwaysOnTop(true);
+        this.setModal(true);
+        this.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+    }
+
+    private void setHeader() {
         JLabel prompt = new JLabel("Please select interviewers for group interview");
         this.add(prompt, BorderLayout.PAGE_START);
         JPanel spinnerPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -48,19 +66,17 @@ class GroupInterviewDialog extends JDialog {
         spinnerPanel.add(daysLabel);
         spinnerPanel.add(this.daysSpinner);
         this.add(spinnerPanel, BorderLayout.NORTH);
+    }
 
+    private void setSplitPane() {
         JSplitPane splitDisplay = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
         splitDisplay.setDividerLocation(150);
         splitDisplay.setLeftComponent(this.createCoordinator());
         splitDisplay.setRightComponent(new JScrollPane(this.createInterviewers()));
         this.add(splitDisplay, BorderLayout.CENTER);
-        this.setButtons();
-
-        this.setSize(600, 400);
-        this.setVisible(true);
     }
 
-    JPanel createCoordinator() {
+    private JPanel createCoordinator() {
         JPanel coordinatorPanel = new JPanel();
         coordinatorPanel.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED), "Select coordinator"));
         this.coordinatorSelection = new JComboBox<>(this.nameToInterviewerMap.keySet().toArray(new String[this.nameToInterviewerMap.size()]));

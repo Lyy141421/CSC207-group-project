@@ -13,6 +13,7 @@ import java.util.ArrayList;
 class InterviewConfigDialog extends JDialog {
 
     HRBackend hrBackend;
+    private JFrame parent;
     private BranchJobPosting branchJobPosting;
 
     private JDialog container = this;
@@ -30,6 +31,7 @@ class InterviewConfigDialog extends JDialog {
     InterviewConfigDialog(JFrame parent, HRBackend hrBackend, BranchJobPosting branchJobPosting, JButton returnButton) {
         super(parent, "Set interview formats");
         this.hrBackend = hrBackend;
+        this.parent = parent;
         this.branchJobPosting = branchJobPosting;
         this.returnButton = returnButton;
 
@@ -42,8 +44,17 @@ class InterviewConfigDialog extends JDialog {
         this.addSelectPanel();
         this.addNewRoundButton();
         this.createSubmitButton();
-        this.setSize(new Dimension(500, 350));
+        this.setDialogProperties();
+        this.setVisible(true);
+    }
+
+    private void setDialogProperties() {
+        this.setSize(500, 350);
         this.setResizable(false);
+        this.setLocationRelativeTo(parent);
+        this.setAlwaysOnTop(true);
+        this.setModal(true);
+        this.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
     }
 
     private void addSelectPanel() {
@@ -74,7 +85,7 @@ class InterviewConfigDialog extends JDialog {
         selectPanel.add(descriptionLabel, c);
         c.gridx++;
         c.gridwidth = 2;
-        JTextField descriptionInput = new JTextField(null, 30);
+        JTextField descriptionInput = new JTextField(30);
         this.descriptionInputList.add(descriptionInput);
         selectPanel.add(descriptionInput, c);
 

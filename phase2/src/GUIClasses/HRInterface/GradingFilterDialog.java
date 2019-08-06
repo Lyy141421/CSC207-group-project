@@ -41,7 +41,7 @@ class GradingFilterDialog extends JDialog {
         this.setVisible(true);
     }
 
-    void setDialogProperties() {
+    private void setDialogProperties() {
         this.setSize(500, 350);
         this.setResizable(false);
         this.setLocationRelativeTo(parent);
@@ -50,7 +50,7 @@ class GradingFilterDialog extends JDialog {
         this.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
     }
 
-    void setKeywordInput() {
+    private void setKeywordInput() {
         JPanel keywordPanel = new JPanel();
         keywordPanel.setLayout(new BoxLayout(keywordPanel, BoxLayout.Y_AXIS));
         JLabel keywordPrompt = new JLabel("Keywords to search for:");
