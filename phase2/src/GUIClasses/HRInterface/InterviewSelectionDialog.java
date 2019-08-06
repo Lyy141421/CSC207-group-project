@@ -11,11 +11,8 @@ import java.util.ArrayList;
 
 class InterviewSelectionDialog extends SelectionDialog {
 
-    private BranchJobPosting branchJobPosting;
-
     InterviewSelectionDialog(JFrame parent, HRBackend HRInterface, ArrayList<JobApplication> applications, JButton returnButton, int toSelect) {
         super(parent, HRInterface, applications, returnButton, toSelect);
-        this.branchJobPosting = applications.get(0).getJobPosting();
     }
 
     @Override
@@ -23,6 +20,7 @@ class InterviewSelectionDialog extends SelectionDialog {
         this.confirmButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                BranchJobPosting branchJobPosting = applications.get(0).getJobPosting();
                 hrBackend.rejectApplicationForFirstRound(branchJobPosting, getApplicantsDeselected());
                 new InterviewConfigDialog(parent, hrBackend, branchJobPosting, returnButton);
                 dispose();
