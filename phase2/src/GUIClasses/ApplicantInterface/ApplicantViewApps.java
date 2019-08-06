@@ -1,8 +1,6 @@
 package GUIClasses.ApplicantInterface;
 
-import ApplicantStuff.Applicant;
 import ApplicantStuff.JobApplication;
-import CompanyStuff.JobPostings.BranchJobPosting;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,18 +12,19 @@ import java.util.ArrayList;
  * Panel in which an applicant can view and withdraw from their open applications
  */
 class ApplicantViewApps extends JPanel {
-    private Applicant applicant;
     private ApplicantBackend backend;
+    private JPanel thisPanel = this;
+    private JPanel masterPanel;
 
     ApplicantViewApps() {}
 
-    ApplicantViewApps(Applicant applicant) {
-        this.applicant = applicant;
-        this.backend = new ApplicantBackend(applicant);
+    ApplicantViewApps(ApplicantBackend applicantBackend, JPanel masterPanel) {
+        this.masterPanel = masterPanel;
+        this.backend = applicantBackend;
         this.setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
 
-        JPanel applicationInfo = this.makeAppInfo(applicant.getJobApplicationManager().getJobApplications());
+        JPanel applicationInfo = this.makeAppInfo(applicantBackend.getApps());
         JPanel staticItems = this.makeStaticPanel(applicationInfo);
 
         c.weightx = 0.5; c.weighty = 0.3;
@@ -46,7 +45,7 @@ class ApplicantViewApps extends JPanel {
         titleText.setBounds(170, 35, 300, 40);
         titleText.setFont(new Font("Serif", Font.PLAIN, 27));
 
-        String[] postings = backend.getListNames(applicant.getJobApplicationManager().getCurrentJobAppsPostings());
+        String[] postings = backend.getListNames(backend.getCurrentJobPostings());
         JComboBox selector = new JComboBox(postings);
         selector.setBounds(220, 100, 200, 30);
         selector.addActionListener(new ActionListener() {
@@ -56,7 +55,15 @@ class ApplicantViewApps extends JPanel {
             }
         });
 
-        ret.add(titleText); ret.add(selector);
+        if(postings.length != 0) {
+            ret.add(selector);
+        } else {
+            JLabel noneToWithdraw = new JLabel("No open applications!", SwingConstants.CENTER);
+            noneToWithdraw.setBounds(220, 100, 200, 30);
+            ret.add(noneToWithdraw);
+        }
+
+        ret.add(titleText);
         return ret;
     }
 
@@ -78,7 +85,12 @@ class ApplicantViewApps extends JPanel {
             JButton withdrawButton1 = new JButton("Withdraw");
             withdrawButton1.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    backend.withdrawApp(app);
+                    if (backend.withdrawApp(app)) {
+                        JOptionPane.showMessageDialog(thisPanel, "Application Successfully Withdrawn");
+                        ((ApplicantPanel)masterPanel).refresh();
+                    } else {
+                        JOptionPane.showMessageDialog(thisPanel, "Application Cannot Be Withdrawn");
+                    }
                 }
             } );
             withdrawButton1.setBounds(270, 200, 100, 30);

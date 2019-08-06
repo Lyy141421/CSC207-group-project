@@ -35,44 +35,43 @@ class ApplicantBackend {
         return applicant;
     }
 
+    ArrayList<CompanyJobPosting> getCurrentJobPostings() {
+        return applicant.getJobApplicationManager().getCurrentJobAppsPostings();
+    }
+
     /**
      * Returns an arraylist containing all the job postings that apply to the applicant
      */
-    ArrayList<CompanyJobPosting> findApplicablePostings(String field, String companyName, String id, String tags, boolean
-            byLocation) {
+    ArrayList<CompanyJobPosting> findApplicablePostings(ArrayList<Object> inputs) {
+        String companyName = (String) inputs.get(0);
+        String field = (String) inputs.get(1);
+        String id = (String) inputs.get(2);
+        String tags = (String) inputs.get(3);
+        Boolean byLocation = (Boolean) inputs.get(4);
 
-        ArrayList<CompanyJobPosting> applicableJobPostings = jobAppSystem.getAllOpenCompanyJobPostings();
-        if (!id.isEmpty()) {
-            int idInteger = Integer.valueOf(id);
-            return new ArrayList<>(Arrays.asList(jobAppSystem.getCompanyJobPostingWithID(idInteger)));
-        }
+        ArrayList<CompanyJobPosting> applicableJobPostings = jobAppSystem.getOpenCompanyJobPostingsNotAppliedTo(this.applicant);
         if (!companyName.isEmpty()) {
-            this.keepIntersection(applicableJobPostings, jobAppSystem.getOpenCompanyJobPostingsInCompany(companyName));
+            applicableJobPostings.retainAll(jobAppSystem.getOpenCompanyJobPostingsInCompany(companyName));
         }
         if (!field.isEmpty()) {
-            this.keepIntersection(applicableJobPostings, jobAppSystem.getOpenCompanyJobPostingsInField(field));
+            applicableJobPostings.retainAll(jobAppSystem.getOpenCompanyJobPostingsInField(field));
+        }
+        if (!id.isEmpty()) {
+            int idInteger = Integer.valueOf(id);
+            applicableJobPostings.retainAll(new ArrayList<>(Arrays.asList(jobAppSystem.getCompanyJobPostingWithID(idInteger))));
         }
         if (!tags.isEmpty()) {
             String[] tagsArray = tags.split(", ");
-            this.keepIntersection(applicableJobPostings, jobAppSystem.getCompanyJobPostingsWithTags(tagsArray));
+            applicableJobPostings.retainAll(jobAppSystem.getCompanyJobPostingsWithTags(tagsArray));
         }
         if (byLocation) {
-            this.keepIntersection(applicableJobPostings, jobAppSystem.getCompanyJobPostingsInCMA(this.applicant));
+            applicableJobPostings.retainAll(jobAppSystem.getCompanyJobPostingsInCMA(this.applicant));
         }
         return applicableJobPostings;
     }
 
     ArrayList<BranchJobPosting> getApplicableBranchJobPostings(CompanyJobPosting companyJobPosting) {
         return this.applicant.getApplicableBranchJobPostings(companyJobPosting, jobAppSystem.getToday());
-    }
-
-    private void keepIntersection(ArrayList<CompanyJobPosting> listToBeUpdated, ArrayList<CompanyJobPosting> otherList) {
-        ArrayList<CompanyJobPosting> listToBeUpdatedClone = (ArrayList<CompanyJobPosting>) listToBeUpdated.clone();
-        for (CompanyJobPosting jobPosting : listToBeUpdatedClone) {
-            if (!otherList.contains(jobPosting)) {
-                listToBeUpdated.remove(jobPosting);
-            }
-        }
     }
 
     void addReferences(JobApplication jobApp, ArrayList<String> emails) {
@@ -121,8 +120,8 @@ class ApplicantBackend {
     }
 
     /**
-     * //     * Takes a list of postings and converts them to Name - ID form for card/navigation purposes
-     * //     * @param jobPostings the postings in question
+     * Takes a list of postings and converts them to Name - ID form for card/navigation purposes
+     * @param jobPostings the postings in question
      * //
      */
     String[] getListNames(ArrayList<CompanyJobPosting> jobPostings) {

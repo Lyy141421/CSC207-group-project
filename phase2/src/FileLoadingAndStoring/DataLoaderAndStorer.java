@@ -1,5 +1,6 @@
 package FileLoadingAndStoring;
 
+import ApplicantStuff.JobApplication;
 import CompanyStuff.Company;
 import CompanyStuff.Interview;
 import CompanyStuff.JobPostings.CompanyJobPosting;
@@ -163,6 +164,8 @@ public class DataLoaderAndStorer {
             CompanyJobPosting.setTotalNumOfJobPostings(totalNumJobPostings);
             int totalNumInterviews = Integer.parseInt(fileReader.readLine().trim());
             Interview.setTotalNumOfInterviews(totalNumInterviews);
+            int totalNumApplications = Integer.parseInt(fileReader.readLine().trim());
+            JobApplication.setTotalNumOfApplications(totalNumApplications);
         } catch (NullPointerException npe) {    // empty file
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -226,6 +229,8 @@ public class DataLoaderAndStorer {
             out.println(totalNumJobPostings);
             int totalNumInterviews = Interview.getTotalNumOfInterviews();
             out.println(totalNumInterviews);
+            int totalNumApplications = JobApplication.getTotalNumOfApplications();
+            out.println(totalNumApplications);
         } catch (IOException ioe) {
             ioe.printStackTrace();
         }

@@ -7,6 +7,7 @@ import CompanyStuff.HRCoordinator;
 import FileLoadingAndStoring.DataLoaderAndStorer;
 import GUIClasses.ActionListeners.LogoutActionListener;
 import GUIClasses.CommonUserGUI.DocumentViewer;
+import GUIClasses.CommonUserGUI.UserMain;
 import GUIClasses.CommonUserGUI.UserProfilePanel;
 import Main.JobApplicationSystem;
 
@@ -23,6 +24,8 @@ class ApplicantMain extends JPanel {
     private Applicant applicant;
     private ApplicantPanel masterPanel;
     private ApplicantBackend applicantBackend;
+    private JPanel cards;
+    private GridBagConstraints c;
 
     ApplicantMain(Applicant applicant, ApplicantPanel masterPanel,
                   JobApplicationSystem jobAppSystem, LogoutActionListener logout) {
@@ -31,9 +34,9 @@ class ApplicantMain extends JPanel {
         this.masterPanel = masterPanel;
 
         setLayout(new GridBagLayout());
-        GridBagConstraints c = new GridBagConstraints();
+        c = new GridBagConstraints();
 
-        JPanel cards = this.getApplicantCards();
+        this.setApplicantCards();
         ApplicantSideBarMenuPanel sidebar = new ApplicantSideBarMenuPanel(cards,
                 (CardLayout)cards.getLayout(), logout);
 
@@ -54,15 +57,21 @@ class ApplicantMain extends JPanel {
      * Builds the cards that are switched between by the sidebar
      * Shows notifications by default
      */
-    private JPanel getApplicantCards() {
-        JPanel ret = new JPanel(new CardLayout());
-        ret.add(new ApplicantHome(applicant), "HOME");
-        ret.add(new ApplicantBrowsePostings(applicantBackend, masterPanel), "POSTINGS");
-        ret.add(new UserProfilePanel(applicant), "PROFILE");
-        ret.add(this.createApplicantDocumentViewer(), "DOCUMENTS");
-        ret.add(new ApplicantSchedule(applicantBackend), "SCHEDULE");
-        ret.add(new ApplicantViewApps(applicant), "MANAGE");
-        return ret;
+    private void setApplicantCards() {
+        cards = new JPanel(new CardLayout());
+        cards.add(new ApplicantHome(applicant), UserMain.HOME);
+        cards.add(new ApplicantBrowsePostings(applicantBackend, masterPanel), "POSTINGS");
+        cards.add(new UserProfilePanel(applicant), UserMain.PROFILE);
+        cards.add(this.createApplicantDocumentViewer(), "DOCUMENTS");
+        cards.add(new ApplicantSchedule(applicantBackend), "SCHEDULE");
+        cards.add(new ApplicantViewApps(applicantBackend, masterPanel), "MANAGE");
+    }
+
+    void refresh() {
+        cards.removeAll();
+        this.setApplicantCards();
+        this.add(cards, c);
+        ((CardLayout) cards.getLayout()).show(cards, UserMain.HOME);
     }
 
     private JPanel createApplicantDocumentViewer() {

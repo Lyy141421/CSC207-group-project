@@ -3,6 +3,7 @@ package CompanyStuff;
 import ApplicantStuff.Applicant;
 import ApplicantStuff.JobApplication;
 import CompanyStuff.JobPostings.BranchJobPosting;
+import CompanyStuff.JobPostings.CompanyJobPosting;
 import DocumentManagers.DocumentManager;
 import org.junit.jupiter.api.Test;
 
@@ -12,6 +13,20 @@ import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.*;
 
 class CompanyTest {
+
+    private LocalDate today = LocalDate.of(2019, 7, 29);
+
+    Company createCompany(String name){
+        Company company = new Company(name);
+        company.createBranch(name + " Branch", "Toronto");
+        createHR(company, name + "HR");
+        return company;
+    }
+
+    HRCoordinator createHR(Company company, String name) {
+        return new HRCoordinator(name, "ABC123", name + " LeagalName",
+                name + "@gmail.com", company.getBranches().get(0), today);
+    }
 
     @Test
     void testConstructor() {
@@ -24,14 +39,33 @@ class CompanyTest {
 
     @Test
     void testAddCompanyJobPosting() {
+        Company company = createCompany("Segufix");
+        assertTrue(company.getCompanyJobPostings().size() == 0);
+        CompanyJobPosting posting1 = new CompanyJobPosting("Title", "Field", "Description",
+                new ArrayList<String>(), new ArrayList<String>(), company);
+        assertTrue(company.getCompanyJobPostings().size() == 1);
+        //todo check if test below is valid
+//        BranchJobPosting posting2 = new BranchJobPosting("Title", "Field", "Description",
+//                new ArrayList<String>(), new ArrayList<String>(), 1, company.getBranches().get(0),
+//                today, today.plusDays(5), today.plusDays(5), 1);
+//        company.addCompanyJobPosting(posting1);
+//        assertTrue(company.getCompanyJobPostings().size() == 1);
+//        company.addCompanyJobPosting(posting2);
+//        assertTrue(company.getCompanyJobPostings().size() == 1);
+    }
+
+    @Test
+    void testgetBranch() {
+        Company company = createCompany("Segufix");
+        assertNull(company.getBranch("ABC"));
+        assertEquals(company.getBranches().get(0), company.getBranch("Segufix Branch"));
+
     }
 
     @Test
     void testGetDocumentManager() {
-    }
-
-    @Test
-    void testAddBranch() {
+        Company company = createCompany("Segufix");
+        assertTrue(company.getDocumentManager() instanceof DocumentManager);
     }
 
     @Test
@@ -75,6 +109,8 @@ class CompanyTest {
     void equals() {
         Company company1 = new Company("HoraceCorp");
         Company company2 = new Company("HORACECORP");
+        Company company3 = new Company("NotHoraceCorp");
         assertEquals(company1, company2);
+        assertNotEquals(company1, company3);
     }
 }

@@ -205,8 +205,10 @@ public class BranchJobPosting extends CompanyJobPosting implements JobPostingObs
             return;
         }
         InterviewManager interviewManager = this.getInterviewManager();
-        if (interviewManager.getCurrentRound() < interviewManager.getFinalRoundNumber()) {
-            if (!interviewManager.interviewProcessHasBegun() || interviewManager.currentRoundIsOver()) {
+        if (!interviewManager.interviewProcessHasBegun()) {
+            interviewManager.advanceRound();
+        } else if (interviewManager.getCurrentRound() < interviewManager.getFinalRoundNumber()) {
+            if (interviewManager.currentRoundIsOver()) {
                 interviewManager.advanceRound();
                 this.notifyAllObservers(new NotificationFactory().createNotification(NotificationFactory.ADVANCE_ROUND,
                         this));

@@ -63,7 +63,7 @@ class AddReferencesDialog extends JDialog {
 
     private void addNewReferenceButton() {
         JPanel buttonPanel = new JPanel();
-        JButton newReferenceButton = new JButton("Add reference");
+        JButton newReferenceButton = new JButton("Add another reference");
         newReferenceButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

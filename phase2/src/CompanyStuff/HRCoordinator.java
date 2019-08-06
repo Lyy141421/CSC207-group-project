@@ -57,7 +57,6 @@ public class HRCoordinator extends User {
                                           LocalDate postDate, LocalDate applicationCloseDate, LocalDate referenceCloseDate) {
         CompanyJobPosting companyJobPosting = new CompanyJobPosting(jobTitle, jobField, jobDescription, requiredDocuments,
                 tags, this.branch.getCompany());
-        this.branch.getCompany().addCompanyJobPosting(companyJobPosting);
         return this.implementJobPosting(companyJobPosting, numPositions, postDate, applicationCloseDate, referenceCloseDate);
     }
 
@@ -67,7 +66,6 @@ public class HRCoordinator extends User {
                 companyJobPosting.getDescription(), companyJobPosting.getRequiredDocuments(), companyJobPosting.getTags(),
                 numPositions, this.branch, postDate, applicationCloseDate, referenceCloseDate, companyJobPosting.getId());
         companyJobPosting.addBranch(this.branch);
-        branchJobPosting.attachJobPosting(companyJobPosting);
         this.branch.getJobPostingManager().addJobPosting(branchJobPosting);
         return branchJobPosting;
     }
@@ -75,7 +73,8 @@ public class HRCoordinator extends User {
     public void updateJobPosting(BranchJobPosting jobPosting, int numPositions, LocalDate applicationCloseDate,
                                  LocalDate referenceCloseDate) {
         jobPosting.updateFields(numPositions, applicationCloseDate, referenceCloseDate);
-        if (!jobPosting.getBranches().contains(this.getBranch())) { // TODO very weird please help!
+        CompanyJobPosting companyJobPosting = this.getBranch().getCompany().getJobPostingWithID(jobPosting.getCompanyPostingId());
+        if (!companyJobPosting.getBranches().contains(this.getBranch())) {
             jobPosting.addBranch(this.getBranch());
         }
     }

@@ -93,9 +93,9 @@ public class UserManager {
      *
      * @param jobApp The job application that will need reference letters.
      * @param emails The emails of the referees that the applicant submitted.
-     * @return a map of new references' emails to their passwords
      */
     public void addReferences(JobApplication jobApp, ArrayList<String> emails) {
+        ArrayList<Reference> references = new ArrayList<>();
         for (String email : emails) {
             User user = this.findUserByEmail(email);
             Reference reference;
@@ -105,7 +105,9 @@ public class UserManager {
                 reference = (Reference) user;
             }
             reference.addJobApplication(jobApp);
+            references.add(reference);
         }
+        jobApp.addReferences(references);
     }
 
 

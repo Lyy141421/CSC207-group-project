@@ -33,9 +33,9 @@ class ApplicantFileSubmissionFromAccount extends JPanel {
     }
 
     private JLabel createTitle() {
-        JLabel titleText = new JLabel("Document Submission");
+        JLabel titleText = new JLabel("Document Submission", SwingConstants.CENTER);
         titleText.setFont(new Font("Serif", Font.PLAIN, 22));
-        titleText.setBounds(327, 20, 200, 40);
+        titleText.setBounds(227, 20, 400, 40);
         return titleText;
     }
 
@@ -60,6 +60,7 @@ class ApplicantFileSubmissionFromAccount extends JPanel {
                 } else {
                     new SubmitDocumentsActionListener(masterPanel, applicantBackend.getApplicant(), jobApp,
                             documentSelector.getFilesToSubmit()).actionPerformed(e);
+                    ((ApplicantPanel)masterPanel).refresh();
                 }
             }
         });
@@ -73,7 +74,7 @@ class ApplicantFileSubmissionFromAccount extends JPanel {
         returnButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ((CardLayout) masterPanel.getLayout()).previous(masterPanel);
+                ((CardLayout) masterPanel.getLayout()).show(masterPanel, "SearchResults");
             }
         });
         returnPanel.add(returnButton);
