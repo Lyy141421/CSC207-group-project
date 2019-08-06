@@ -75,12 +75,12 @@ public class LoginMain extends JPanel {
         this.jobAppSystem.setPreviousLoginDate(inputtedDate);
         this.jobAppSystem.setToday(inputtedDate);
         jobAppSystem.applicant30Day();
-//        Runnable updateJP = new Runnable() {
-//            public void run() {
+        Runnable updateJP = new Runnable() {
+            public void run() {
                 jobAppSystem.updateAllJobPostings();
-//            }
-//        };
-//        SwingUtilities.invokeLater(updateJP);
+            }
+        };
+        SwingUtilities.invokeLater(updateJP);
         jobAppSystem.getUserManager().deleteAllEmptyReferenceAccounts();
     }
 
@@ -254,16 +254,7 @@ public class LoginMain extends JPanel {
                 if (backend.isValidDate(today)) {
                     Thread newThread = new Thread() {
                         public void run() {
-                            try {
-                                SwingUtilities.invokeAndWait(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        updateSystem(today);
-                                    }
-                                });
-                            } catch (InterruptedException | InvocationTargetException ex) {
-                                ex.printStackTrace();
-                            }
+                            updateSystem(today);
                         }
                     };
                     newThread.start();
@@ -314,6 +305,21 @@ public class LoginMain extends JPanel {
         UserMain userMain = new UserMainFactory(user, jobAppSystem, logout).createPanel();
         this.parent.add(userMain, MainFrame.USER_PANEL);
         this.masterLayout.show(parent, MainFrame.USER_PANEL);
+//        Thread newThread = new Thread() {
+//            public void run() {
+//                try {
+//                    SwingUtilities.invokeAndWait(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            userMain.refresh();
+//                        }
+//                    });
+//                } catch (InvocationTargetException | InterruptedException ex) {
+//                    ex.printStackTrace();
+//                }
+//            }
+//        };
+//        newThread.start();
         this.newUserRef.setNewUsername(null);
     }
 
