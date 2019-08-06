@@ -7,6 +7,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 
 class InterviewSelectionDialog extends SelectionDialog {
@@ -22,8 +24,13 @@ class InterviewSelectionDialog extends SelectionDialog {
             public void actionPerformed(ActionEvent e) {
                 BranchJobPosting branchJobPosting = applications.get(0).getJobPosting();
                 hrBackend.rejectApplicationForFirstRound(branchJobPosting, getApplicantsDeselected());
-                new InterviewConfigDialog(parent, hrBackend, branchJobPosting, returnButton);
-                dispose();
+                JDialog interviewConfig = new InterviewConfigDialog(parent, hrBackend, branchJobPosting, returnButton);
+                interviewConfig.addWindowListener(new WindowAdapter() {
+                    @Override
+                    public void windowClosed(WindowEvent e) {
+                        dispose();
+                    }
+                });
             }
         });
     }
