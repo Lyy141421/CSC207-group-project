@@ -415,7 +415,8 @@ public class InterviewManager extends Observable implements Serializable {
      * @param jobAppsToHire The job applications of those to be hired.
      */
     public void hireApplicants(ArrayList<JobApplication> jobAppsToHire) {
-        for (JobApplication jobApp : this.applicationsInConsideration) {
+        ArrayList<JobApplication> applications = (ArrayList<JobApplication>)this.applicationsInConsideration.clone();
+        for (JobApplication jobApp : applications) {
             if (jobAppsToHire.contains(jobApp)) {
                 jobApp.getStatus().setHired();
             } else {

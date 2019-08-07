@@ -4,37 +4,35 @@ import ApplicantStuff.JobApplication;
 import CompanyStuff.JobPostings.BranchJobPosting;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.ArrayList;
 
-class HiringSelectionDialog extends SelectionDialog implements ItemListener {
+class HiringSelectionDialog extends SelectionDialog {
 
-    private int availablePositions;
-    private BranchJobPosting jobPosting;
 
     HiringSelectionDialog(JFrame parent, HRBackend hrBackend, ArrayList<JobApplication> applications, JButton returnButton) {
         super(parent, hrBackend, applications, returnButton, 0);
-        this.jobPosting = applications.get(0).getJobPosting();
-        this.availablePositions = this.jobPosting.getNumPositions();
-        this.addCheckboxListener();
     }
 
     void addConfirmListener() {
+        Component component = this;
         confirmButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                hrBackend.selectApplicantsForHire(jobPosting, getApplicantsSelected());
+                int applicantsSelected = getApplicantsSelected().size();
+                if (applicantsSelected > applications.get(0).getJobPosting().getNumPositions()) {
+                    JOptionPane.showMessageDialog(component, "Selection exceeded number of positions available.");
+                }
+                else {
+                    hrBackend.selectApplicantsForHire(applications.get(0).getJobPosting(), getApplicantsSelected());
+                    dispose();
+                }
             }
         });
-    }
-
-    private void addCheckboxListener() {
-        for (JCheckBox checkBox : this.checkBoxToAppMap.keySet()) {
-            checkBox.addItemListener(this);
-        }
     }
 
     ArrayList<JobApplication> getApplicantsSelected() {
@@ -46,20 +44,5 @@ class HiringSelectionDialog extends SelectionDialog implements ItemListener {
         }
 
         return appsSelected;
-    }
-
-    @Override
-    public void itemStateChanged(ItemEvent e) {
-        JCheckBox changedSelection = (JCheckBox) e.getItemSelectable();
-        if (e.getStateChange() == ItemEvent.SELECTED) {
-            availablePositions--;
-            if (availablePositions <0) {
-                changedSelection.setSelected(false);
-                availablePositions++;
-                JOptionPane.showMessageDialog(this, "Selection exceeded number of positions available.");
-            }
-        } else {
-            availablePositions++;
-        }
     }
 }
