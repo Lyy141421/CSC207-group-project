@@ -232,18 +232,17 @@ public class BranchJobPosting extends CompanyJobPosting implements Serializable 
      *
      * @return a string representation of this job posting.
      */
-    // TODO uncomment after testing
-//    @Override
-//    public String toString() {
-//        String s = "Job ID: " + this.id + "\n\n";
-//        s += "Title: " + this.getTitle() + "\n\n";
-//        s += "Field: " + this.getField() + "\n\n";
-//        s += "Description: " + this.getDescription() + "\n\n";
-//        s += "Required Documents: " + this.getStringForList(this.getRequiredDocuments()) + "\n\n";
-//        s += "Tags: " + this.getStringForList(this.getTags()) + "\n\n";
-//        s += "Close date: " + this.getCloseDate().toString() + "\n\n";
-//        return s;
-//    }
+    @Override
+    public String toString() {
+        String s = "Job ID: " + this.id + "\n\n";
+        s += "Title: " + this.getTitle() + "\n\n";
+        s += "Field: " + this.getField() + "\n\n";
+        s += "Description: " + this.getDescription() + "\n\n";
+        s += "Required Documents: " + this.getStringForList(this.getRequiredDocuments()) + "\n\n";
+        s += "Tags: " + this.getStringForList(this.getTags()) + "\n\n";
+        s += "Close date: " + this.getCloseDate().toString() + "\n\n";
+        return s;
+    }
 
     @Override
     public boolean equals(Object obj) {

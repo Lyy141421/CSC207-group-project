@@ -49,6 +49,16 @@ public class Interviewer extends User {
         return this.interviews;
     }
 
+    // === Setter ===
+
+    public void setBranch(Branch branch) {
+        this.branch = branch;
+    }
+
+    public void setInterviews(ArrayList<Interview> interviews) {
+        this.interviews = interviews;
+    }
+
     // === Other methods ===
 
     /**

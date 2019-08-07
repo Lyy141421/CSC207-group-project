@@ -25,20 +25,25 @@ class HRBackend {
     HRBackend(JobApplicationSystem jobAppSystem, HRCoordinator hr) {
         this.jobAppSystem = jobAppSystem;
         this.hr = hr;
-        this.resetJobPostingManager();
-        this.resetInterviewManagers();
+//        this.resetJobPostingManager();
+//        this.resetInterviewManagers();
+//        this.resetInterviewers();
     }
 
-    private void resetInterviewManagers() {
-        for (BranchJobPosting jobPosting : this.hr.getBranch().getJobPostingManager().getBranchJobPostings()) {
-            jobPosting.setInterviewManager(this.jobAppSystem.getBranch(hr.getBranch()).getJobPostingManager().
-                    getBranchJobPosting(jobPosting.getId()).getInterviewManager());
-        }
-    }
-
-    private void resetJobPostingManager() {
-        this.hr.getBranch().setJobPostingManager(this.jobAppSystem.getBranch(hr.getBranch()).getJobPostingManager());
-    }
+//    private void resetInterviewManagers() {
+//        for (BranchJobPosting jobPosting : this.hr.getBranch().getJobPostingManager().getBranchJobPostings()) {
+//            jobPosting.setInterviewManager(this.jobAppSystem.getBranch(hr.getBranch()).getJobPostingManager().
+//                    getBranchJobPosting(jobPosting.getId()).getInterviewManager());
+//        }
+//    }
+//
+//    private void resetJobPostingManager() {
+//        this.hr.getBranch().setJobPostingManager(this.jobAppSystem.getBranch(hr.getBranch()).getJobPostingManager());
+//    }
+//
+//    private void resetInterviewers() {
+//        this.hr.getBranch().setFieldToInterviewers(this.jobAppSystem.getBranch(hr.getBranch()).getFieldToInterviewers());
+//    }
 
     // === Getters ===
     HRCoordinator getHR() {
@@ -287,6 +292,11 @@ class HRBackend {
      * @return the list of interviewers who are eligible to interview for this job posting.
      */
     ArrayList<Interviewer> getInterviewersInField(BranchJobPosting jobPosting) {
+        if (this.hr.getBranch().getFieldToInterviewers().keySet().contains(jobPosting.getField())) {
+            for (Interviewer interviewer : this.hr.getBranch().getFieldToInterviewers().get(jobPosting.getField())) {
+                System.out.println(interviewer);
+            }
+        }
         return this.hr.getBranch().getFieldToInterviewers().get(jobPosting.getField());
     }
 

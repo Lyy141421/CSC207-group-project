@@ -66,6 +66,17 @@ public class Branch implements Serializable {
         return this.jobPostingManager;
     }
 
+    public Interviewer getInterviewer(Interviewer interviewer) {
+        for (String field : this.fieldToInterviewers.keySet()) {
+            for (Interviewer interviewer1 : this.fieldToInterviewers.get(field)) {
+                if (interviewer1.equals(interviewer)) {
+                    return interviewer1;
+                }
+            }
+        }
+        return null;
+    }
+
     // === Setter ===
     public void setJobPostingManager(BranchJobPostingManager jobPostingManager) {
         this.jobPostingManager = jobPostingManager;
@@ -73,6 +84,10 @@ public class Branch implements Serializable {
 
     public void addJobPostingManager() {
         jobPostingManager = new BranchJobPostingManager(this);
+    }
+
+    public void setFieldToInterviewers(HashMap<String, ArrayList<Interviewer>> fieldToInterviewers) {
+        this.fieldToInterviewers = fieldToInterviewers;
     }
 
     // === Other methods ===

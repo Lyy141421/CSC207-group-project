@@ -49,7 +49,6 @@ public class LogoutActionListener implements ActionListener {
             System.out.println("Company: " + company.getName());
             for (Branch branch : company.getBranches()) {
                 System.out.println("Branch: " + branch.getName());
-                System.out.println("HR: " + branch.getHrCoordinators().toString());
                 System.out.println("Interviewers: " + branch.getFieldToInterviewers().toString());
                 BranchJobPostingManager branchJobPostingManager = branch.getJobPostingManager();
                 for (BranchJobPosting jobPosting : branchJobPostingManager.getBranchJobPostings()) {

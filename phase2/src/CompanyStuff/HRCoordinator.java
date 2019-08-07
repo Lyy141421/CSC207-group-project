@@ -38,6 +38,11 @@ public class HRCoordinator extends User {
         return this.branch;
     }
 
+    // === Setters ===
+    public void setBranch(Branch branch) {
+        this.branch = branch;
+    }
+
     // === Other methods ===
     /**
      * Create and add a job posting to the system.

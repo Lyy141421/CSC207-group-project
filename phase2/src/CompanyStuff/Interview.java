@@ -68,6 +68,7 @@ public class Interview implements Serializable {
         }};
         this.setOtherInterviewersToNotes(otherInterviewers);
         this.interviewManager = interviewManager;
+        interviewManager.addInterviewForJobApplications(this);
         this.typeAndDescription = this.interviewManager.getCurrentRoundTypeAndDescription();
         this.roundNumber = this.interviewManager.getCurrentRound();
     }

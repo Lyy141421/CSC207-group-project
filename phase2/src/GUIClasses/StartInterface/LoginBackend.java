@@ -1,9 +1,7 @@
 package GUIClasses.StartInterface;
 
 import ApplicantStuff.Applicant;
-import CompanyStuff.Branch;
-import CompanyStuff.Company;
-import CompanyStuff.HRCoordinator;
+import CompanyStuff.*;
 import CompanyStuff.JobPostings.BranchJobPosting;
 import Main.JobApplicationSystem;
 import Main.User;
@@ -29,13 +27,24 @@ class LoginBackend {
         this.jobAppSystem = jobAppSystem;
     }
 
-
     User findUserByUsername(String username) {
         User user = jobAppSystem.getUserManager().findUserByUsername(username);
-//        if (user instanceof HRCoordinator) {
-//            HRCoordinator hr = (HRCoordinator) user;
-//            for (BranchJobPosting jobPosting : hr.getBranch().getJobPostingManager().getBranchJobPostings()) {
-//                System.out.println(jobPosting.getInterviewManager());
+        if (user instanceof HRCoordinator) {
+            ((HRCoordinator) user).setBranch(this.jobAppSystem.getBranch(((HRCoordinator) user).getBranch()));
+        } else if (user instanceof Interviewer) {
+            Interviewer interviewer = (Interviewer) user;
+            Branch branch = this.jobAppSystem.getBranch(interviewer.getBranch());
+            interviewer.setBranch(branch);
+            interviewer.setInterviews(branch.getInterviewer(interviewer).getInterviews());
+        }
+//        System.out.println("From login backend");
+//        System.out.println("Branch ID from HR : " + ((HRCoordinator) user).getBranch());
+//        System.out.println(((HRCoordinator) user).getBranch().getFieldToInterviewers());
+//        System.out.println("From job application system: ");
+//        for (Company company : jobAppSystem.getCompanies()) {
+//            for (Branch branch : company.getBranches()) {
+//                System.out.println(branch);
+//                System.out.println(branch.getFieldToInterviewers().toString());
 //            }
 //        }
         return user;

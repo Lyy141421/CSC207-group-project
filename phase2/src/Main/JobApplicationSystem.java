@@ -27,18 +27,11 @@ public class JobApplicationSystem implements Serializable {
 
     // === Main method ===
     public static void main(String[] args) {
-        System.out.println("From main method in job application system");
-        System.out.println(Thread.activeCount());
-        System.out.println(Thread.getAllStackTraces());
         JobApplicationSystem jobAppSystem = new JobApplicationSystem();
-        System.out.println("Job application system ID: " + jobAppSystem);
         new DataLoaderAndStorer(jobAppSystem).loadAllData();
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                System.out.println("From invoke and wait in main method of job application system");
-                System.out.println(Thread.activeCount());
-                System.out.println(Thread.getAllStackTraces());
                 new MainFrame(jobAppSystem);
             }
         });
