@@ -12,9 +12,12 @@ import java.util.ArrayList;
 class HRHome extends JLayeredPane {
 
     private HRBackend hrBackend;
+    private HRMain main;
+    private JPanel cards;
 
-    HRHome(HRBackend hrBackend) {
+    HRHome(HRBackend hrBackend, JPanel parent) {
         this.hrBackend = hrBackend;
+        this.cards = parent;
         this.setLayout(null);
         JPanel welcomePanel = this.createWelcomePanel();
         welcomePanel.setBounds(170, 10, 300, 30);
@@ -34,10 +37,12 @@ class HRHome extends JLayeredPane {
     }
 
     private ArrayList<Object[]> createTitleToJobPostingsArray() {
+        this.main = (HRMain) this.cards.getParent();
         ArrayList<Object[]> titleToJobPostings = new ArrayList<>();
-        titleToJobPostings.add(new Object[]{"Job Postings To Review", this.hrBackend.getJPToReview()});
-        titleToJobPostings.add(new Object[]{"Job Postings That Need Group Interviews Scheduled", this.hrBackend.getJPToSchedule()});
-        titleToJobPostings.add(new Object[]{"Job Postings That Need Final Hiring Decision", this.hrBackend.getJPToHire()});
+        //TODO: main is null.
+        titleToJobPostings.add(new Object[]{"Job Postings To Review", new ArrayList<>(main.getUnreviewedJP().values())});
+        titleToJobPostings.add(new Object[]{"Job Postings That Need Group Interviews Scheduled", new ArrayList<>(main.getScheduleJP().values())});
+        titleToJobPostings.add(new Object[]{"Job Postings That Need Final Hiring Decision", new ArrayList<>(main.getHiringJP().values())});
         return titleToJobPostings;
     }
 

@@ -226,8 +226,8 @@ class HRViewApp extends HRPanel {
                 filterDialog.addWindowListener(new WindowAdapter() {
                     @Override
                     public void windowClosed(WindowEvent e) {
-//                        reload();
                         selectButton.setVisible(false);
+                        reload();
                     }
                 });
             }
