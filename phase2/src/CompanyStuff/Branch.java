@@ -2,6 +2,7 @@ package CompanyStuff;
 
 import CompanyStuff.JobPostings.BranchJobPosting;
 import CompanyStuff.JobPostings.BranchJobPostingManager;
+import Main.JobApplicationSystem;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -10,7 +11,7 @@ import java.util.HashMap;
 public class Branch implements Serializable {
 
     // === Class variables ===
-    static final long serialVersionUID = 1L;
+    static final long serialVersionUID = 2L;
 
     // === Instance variables ===
     // The name of this branch
@@ -24,7 +25,7 @@ public class Branch implements Serializable {
     // The interviewers in this branch
     private HashMap<String, ArrayList<Interviewer>> fieldToInterviewers;
     // The branch job posting manager for this branch
-    private BranchJobPostingManager jobPostingManager;
+    private volatile BranchJobPostingManager jobPostingManager;
 
     // === Public methods ===
     // === Constructor ===
@@ -34,7 +35,6 @@ public class Branch implements Serializable {
         this.company = company;
         this.hrCoordinators = new ArrayList<>();
         this.fieldToInterviewers = new HashMap<>();
-        this.jobPostingManager = new BranchJobPostingManager(this);
     }
 
     // === Getters ==
@@ -66,21 +66,23 @@ public class Branch implements Serializable {
         return this.jobPostingManager;
     }
 
-    // === Other methods ===
-    public BranchJobPosting getBranchJobPosting(int id) {
-        for (BranchJobPosting posting : this.jobPostingManager.getBranchJobPostings()) {
-            if (posting.getId() == id)
-                return posting;
-        }
-        return null;
+    // === Setter ===
+    public void setJobPostingManager(BranchJobPostingManager jobPostingManager) {
+        this.jobPostingManager = jobPostingManager;
     }
+
+    public void addJobPostingManager() {
+        jobPostingManager = new BranchJobPostingManager(this);
+    }
+
+    // === Other methods ===
 
     /**
      * Adds the HR Coordinator to the company.
      *
      * @param hrCoordinator The HR Coordinator to be added.
      */
-    void addHRCoordinator(HRCoordinator hrCoordinator) {
+    public void addHRCoordinator(HRCoordinator hrCoordinator) {
         this.hrCoordinators.add(hrCoordinator);
     }
 
@@ -104,7 +106,7 @@ public class Branch implements Serializable {
      *
      * @param interviewer The interviewer to be added.
      */
-    void addInterviewer(Interviewer interviewer) {
+    public void addInterviewer(Interviewer interviewer) {
         String field = interviewer.getField();
         for (String fieldName : this.fieldToInterviewers.keySet()) {
             if (field.equalsIgnoreCase(fieldName)) {
@@ -112,6 +114,7 @@ public class Branch implements Serializable {
             }
         }
         this.fieldToInterviewers.put(field, new ArrayList<>());
+        this.fieldToInterviewers.get(field).add(interviewer);
     }
 
     @Override

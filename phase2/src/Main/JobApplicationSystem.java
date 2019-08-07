@@ -1,5 +1,6 @@
 package Main;
 
+import CompanyStuff.Branch;
 import CompanyStuff.Company;
 import ApplicantStuff.Applicant;
 import CompanyStuff.JobPostings.CompanyJobPosting;
@@ -8,11 +9,11 @@ import GUIClasses.MainFrame;
 import NotificationSystem.Notification;
 
 import javax.swing.*;
-import java.lang.reflect.InvocationTargetException;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-public class JobApplicationSystem {
+public class JobApplicationSystem implements Serializable {
 
     // === Instance variables ===
     // List of companies registered in the system
@@ -26,18 +27,21 @@ public class JobApplicationSystem {
 
     // === Main method ===
     public static void main(String[] args) {
+        System.out.println("From main method in job application system");
+        System.out.println(Thread.activeCount());
+        System.out.println(Thread.getAllStackTraces());
         JobApplicationSystem jobAppSystem = new JobApplicationSystem();
+        System.out.println("Job application system ID: " + jobAppSystem);
         new DataLoaderAndStorer(jobAppSystem).loadAllData();
-        try {
-            SwingUtilities.invokeAndWait(new Runnable() {
-                @Override
-                public void run() {
-                    new MainFrame(jobAppSystem);
-                }
-            });
-        } catch (InterruptedException | InvocationTargetException ex) {
-            System.out.println("Something went wrong");
-        }
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                System.out.println("From invoke and wait in main method of job application system");
+                System.out.println(Thread.activeCount());
+                System.out.println(Thread.getAllStackTraces());
+                new MainFrame(jobAppSystem);
+            }
+        });
     }
 
     // === Public methods ===
@@ -85,6 +89,17 @@ public class JobApplicationSystem {
         for (Company company : this.companies) {
             if (company.getName().equalsIgnoreCase(name))
                 return company;
+        }
+        return null;
+    }
+
+    public Branch getBranch(Branch branch) {
+        for (Company company : this.companies) {
+            for (Branch b : company.getBranches()) {
+                if (branch.equals(b)) {
+                    return b;
+                }
+            }
         }
         return null;
     }

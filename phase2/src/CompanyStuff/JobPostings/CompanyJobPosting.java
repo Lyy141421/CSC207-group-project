@@ -223,16 +223,16 @@ public class CompanyJobPosting extends Observable implements Serializable {
      *
      * @return a string representation of this job posting.
      */
-    @Override
-    public String toString() {
-        String s = "Job ID: " + this.id + "\n\n";
-        s += "Title: " + this.title + "\n\n";
-        s += "Field: " + this.field + "\n\n";
-        s += "Description: " + this.description + "\n\n";
-//        s += "Branches: " + branches + "\n";  // TODO this should be displayed for applicant no?
-        s += "Required Documents: " + this.getStringForList(this.requiredDocuments) + "\n\n";
-        s += "Tags: " + this.getStringForList(this.tags) + "\n\n";
-        s += "Company: " + this.company.getName() + "\n\n";
-        return s;
-    }
+//    @Override // TODO uncomment after testing
+//    public String toString() {
+//        String s = "Job ID: " + this.id + "\n\n";
+//        s += "Title: " + this.title + "\n\n";
+//        s += "Field: " + this.field + "\n\n";
+//        s += "Description: " + this.description + "\n\n";
+////        s += "Branches: " + branches + "\n";  // TODO this should be displayed for applicant no?
+//        s += "Required Documents: " + this.getStringForList(this.requiredDocuments) + "\n\n";
+//        s += "Tags: " + this.getStringForList(this.tags) + "\n\n";
+//        s += "Company: " + this.company.getName() + "\n\n";
+//        return s;
+//    }
 }

@@ -4,8 +4,10 @@ import ApplicantStuff.Applicant;
 import ApplicantStuff.JobApplication;
 import ApplicantStuff.Reference;
 import CompanyStuff.Branch;
+import CompanyStuff.Company;
 import CompanyStuff.InterviewManager;
 import DocumentManagers.CompanyDocumentManager;
+import Main.JobApplicationSystem;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -23,14 +25,13 @@ public class BranchJobPostingManager implements Serializable {
     // The branch that this job posting manager is for
     private Branch branch;
     // The BranchJobPostings stored in this job posting manager
-    private ArrayList<BranchJobPosting> branchJobPostings;
+    private volatile ArrayList<BranchJobPosting> branchJobPostings = new ArrayList<>();
 
     // === Public methods ===
 
     // === Constructors ===
     public BranchJobPostingManager(Branch branch) {
         this.branch = branch;
-        this.branchJobPostings = new ArrayList<>();
     }
 
     public BranchJobPosting getBranchJobPosting(int id) {
@@ -257,11 +258,6 @@ public class BranchJobPostingManager implements Serializable {
         return this.branch;
     }
 
-    // === Setters ===
-    void setBranch(Branch branch) {
-        this.branch = branch;
-    }
-
     /**
      * Update the job postings that are closed for further applications and create an interview manager.
      *
@@ -283,7 +279,7 @@ public class BranchJobPostingManager implements Serializable {
                     // posting, remove it from their list
                     reference.removeJobPosting(jobPosting);
                 }
-                branch.getCompany().getJobPostingWithID(jobPosting.getCompanyPostingId()).removeBranch(branch);
+                this.getBranch().getCompany().getJobPostingWithID(jobPosting.getCompanyPostingId()).removeBranch(this.getBranch());
             }
         }
     }

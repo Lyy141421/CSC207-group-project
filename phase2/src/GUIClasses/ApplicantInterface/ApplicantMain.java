@@ -37,7 +37,7 @@ public class ApplicantMain extends JPanel {
         c = new GridBagConstraints();
 
         this.setApplicantCards();
-        ApplicantSideBarMenuPanel sidebar = new ApplicantSideBarMenuPanel(cards, (CardLayout) cards.getLayout(), logout);
+        ApplicantSideBarMenuPanel sidebar = new ApplicantSideBarMenuPanel(cards, applicantBackend, jobAppSystem, (CardLayout) cards.getLayout(), logout);
 
         c.weightx = 0.5;
         c.weighty = 0.5;

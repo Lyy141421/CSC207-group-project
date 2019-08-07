@@ -7,6 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.lang.reflect.InvocationTargetException;
 
 /**
  * REMEMBER:
@@ -80,6 +81,9 @@ public class NewUserPanel extends JPanel {
         submitButton.setBounds(352, 15, 150, 30);
         submitButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                System.out.println("From submit button action listener");
+                System.out.println(Thread.activeCount());
+                System.out.println(Thread.getAllStackTraces());
                 String status = createUser(selector);
                 postCreation(status, success);
             }
@@ -111,7 +115,7 @@ public class NewUserPanel extends JPanel {
     /**
      * Attempts to create the selected user type with the given inputs
      *
-     * @return contants based on the login status
+     * @return constants based on the login status
      */
     private String createUser(JComboBox selector) {
         switch (selector.getSelectedItem().toString()) {

@@ -1,10 +1,16 @@
 package GUIClasses.HRInterface;
 
+import ApplicantStuff.JobApplication;
+import CompanyStuff.*;
+import CompanyStuff.JobPostings.BranchJobPosting;
+import CompanyStuff.JobPostings.BranchJobPostingManager;
 import GUIClasses.ActionListeners.LogoutActionListener;
 import GUIClasses.ActionListeners.ProfileActionListener;
 import GUIClasses.ActionListeners.ReturnHomeActionListener;
 import GUIClasses.CommonUserGUI.SideBarMenuCreator;
 import GUIClasses.CommonUserGUI.UserMain;
+import Main.JobApplicationSystem;
+import Main.User;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,11 +23,13 @@ class HRSideBarMenuPanel extends JPanel {
 
     // === Instance variable ===
     private JPanel cards;
+    private HRBackend hrBackend;
     private LogoutActionListener logoutActionListener;
 
     // === Constructor ===
-    HRSideBarMenuPanel(JPanel cards, LogoutActionListener logoutActionListener) {
+    HRSideBarMenuPanel(JPanel cards, HRBackend hrBackend, LogoutActionListener logoutActionListener) {
         this.cards = cards;
+        this.hrBackend = hrBackend;
         this.logoutActionListener = logoutActionListener;
         TreeMap<String, Object> fullMenu = this.createFullMenu();
         this.setLayout(new BorderLayout());
@@ -72,27 +80,43 @@ class HRSideBarMenuPanel extends JPanel {
                 ((CardLayout) cards.getLayout()).show(cards, HRPanel.SEARCH_APPLICANT);
             }
         });
-        fullMenu.put("8. Logout", logoutActionListener);
+        fullMenu.put("8. Logout", new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                printAllData();
+                logoutActionListener.actionPerformed(e);
+            }
+        });
         return fullMenu;
     }
 
-    /*private Thread createNewThread(String key) {
-        Thread newThread = new Thread() {
-            public void run() {
-                try {
-                    SwingUtilities.invokeAndWait(new Runnable() {
-                        @Override
-                        public void run() {
-
+    private void printAllData() {
+        System.out.println("From job application system");
+        for (Company company : this.hrBackend.getJobAppSystem().getCompanies()) {
+            for (Branch branch : company.getBranches()) {
+                BranchJobPostingManager branchJobPostingManager = branch.getJobPostingManager();
+                for (BranchJobPosting branchJobPosting : branchJobPostingManager.getBranchJobPostings()) {
+                    InterviewManager interviewManager = branchJobPosting.getInterviewManager();
+                    System.out.println("Interview manager ID: " + interviewManager);
+                    if (interviewManager != null) {
+                        for (JobApplication jobApp : interviewManager.getApplicationsInConsideration()) {
+                            System.out.println(jobApp);
                         }
-                    });
-                } catch (InterruptedException | InvocationTargetException ex) {
-                    ex.printStackTrace();
+                    }
                 }
-                ((UserMain) cards.getParent()).refresh();
-                ((CardLayout) cards.getLayout()).show(cards, key);
             }
-        };
-        return newThread;
-    }*/
+        }
+        System.out.println("From hr");
+        Branch branch = this.hrBackend.getHR().getBranch();
+        BranchJobPostingManager branchJobPostingManager = branch.getJobPostingManager();
+        for (BranchJobPosting branchJobPosting : branchJobPostingManager.getBranchJobPostings()) {
+            InterviewManager interviewManager = branchJobPosting.getInterviewManager();
+            System.out.println("Interview manager ID: " + interviewManager);
+            if (interviewManager != null) {
+                for (JobApplication jobApp : interviewManager.getApplicationsInConsideration()) {
+                    System.out.println(jobApp);
+                }
+            }
+        }
+    }
 }

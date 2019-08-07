@@ -25,6 +25,19 @@ class HRBackend {
     HRBackend(JobApplicationSystem jobAppSystem, HRCoordinator hr) {
         this.jobAppSystem = jobAppSystem;
         this.hr = hr;
+        this.resetJobPostingManager();
+        this.resetInterviewManagers();
+    }
+
+    private void resetInterviewManagers() {
+        for (BranchJobPosting jobPosting : this.hr.getBranch().getJobPostingManager().getBranchJobPostings()) {
+            jobPosting.setInterviewManager(this.jobAppSystem.getBranch(hr.getBranch()).getJobPostingManager().
+                    getBranchJobPosting(jobPosting.getId()).getInterviewManager());
+        }
+    }
+
+    private void resetJobPostingManager() {
+        this.hr.getBranch().setJobPostingManager(this.jobAppSystem.getBranch(hr.getBranch()).getJobPostingManager());
     }
 
     // === Getters ===

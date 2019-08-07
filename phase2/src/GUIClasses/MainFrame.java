@@ -42,7 +42,7 @@ public class MainFrame extends JFrame {
      * Constructs each of the JPanels used within the JFrame
      */
     // Call methods that create each interface and add to main frame.
-    private void addCards () {
+    public void addCards() {
         // We need to be careful with when these cards get constructed, in case it's missing arguments to run methods
         newUserRef = new NewUserPanel(this.getContentPane(), this.layoutManager, this.jobAppSystem);
         this.add(newUserRef, MainFrame.NEW_USER);

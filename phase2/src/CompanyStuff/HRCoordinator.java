@@ -2,6 +2,7 @@ package CompanyStuff;
 
 import CompanyStuff.JobPostings.BranchJobPosting;
 import CompanyStuff.JobPostings.CompanyJobPosting;
+import Main.JobApplicationSystem;
 import Main.User;
 
 import java.time.LocalDate;
@@ -19,23 +20,22 @@ public class HRCoordinator extends User {
     // The branch that this HR Coordinator works for
     private Branch branch;
 
-
     // === Public methods ===
-    public HRCoordinator(String username, String password, String legalName, String email, Branch branch,
-                         LocalDate dateCreated) {
+//    public HRCoordinator(String username, String password, String legalName, String email, Branch branch,
+//                         LocalDate dateCreated) {
+//        super(username, password, legalName, email, dateCreated);
+//        this.branch = branch;
+//        branch.addHRCoordinator(this);
+//    }
+
+    public HRCoordinator(String username, String password, String legalName, String email, Branch branch, LocalDate dateCreated) {
         super(username, password, legalName, email, dateCreated);
         this.branch = branch;
-        branch.addHRCoordinator(this);
     }
 
     // === Getters ===
     public Branch getBranch() {
         return this.branch;
-    }
-
-    // === Setters ===
-    public void setBranch(Branch branch) {
-        this.branch = branch;
     }
 
     // === Other methods ===
@@ -55,8 +55,8 @@ public class HRCoordinator extends User {
                                           ArrayList<String> requiredDocuments, ArrayList<String> tags, int numPositions,
                                           LocalDate postDate, LocalDate applicationCloseDate) {
         CompanyJobPosting companyJobPosting = new CompanyJobPosting(jobTitle, jobField, jobDescription, requiredDocuments,
-                tags, this.branch.getCompany());
-        this.branch.getCompany().addCompanyJobPosting(companyJobPosting);
+                tags, this.getBranch().getCompany());
+        this.getBranch().getCompany().addCompanyJobPosting(companyJobPosting);
         return this.implementJobPosting(companyJobPosting, numPositions, postDate, applicationCloseDate);
     }
 
@@ -64,9 +64,9 @@ public class HRCoordinator extends User {
                                                 LocalDate applicationCloseDate) {
         BranchJobPosting branchJobPosting = new BranchJobPosting(companyJobPosting.getTitle(), companyJobPosting.getField(),
                 companyJobPosting.getDescription(), companyJobPosting.getRequiredDocuments(), companyJobPosting.getTags(),
-                numPositions, this.branch, postDate, applicationCloseDate, companyJobPosting.getId());
-        companyJobPosting.addBranch(this.branch);
-        this.branch.getJobPostingManager().addJobPosting(branchJobPosting);
+                numPositions, this.getBranch(), postDate, applicationCloseDate, companyJobPosting.getId());
+        companyJobPosting.addBranch(this.getBranch());
+        this.getBranch().getJobPostingManager().addJobPosting(branchJobPosting);
         return branchJobPosting;
     }
 
@@ -76,16 +76,6 @@ public class HRCoordinator extends User {
         if (!companyJobPosting.getBranches().contains(this.getBranch())) {
             jobPosting.addBranch(this.getBranch());
         }
-    }
-
-    /**
-     * Choose the interview configuration for this job posting.
-     *
-     * @param jobPosting    The job posting in question.
-     * @param configuration The configuration chosen.
-     */
-    public void chooseInterviewConfiguration(BranchJobPosting jobPosting, ArrayList<String[]> configuration) {
-        jobPosting.getInterviewManager().setInterviewConfiguration(configuration);
     }
 
     @Override
