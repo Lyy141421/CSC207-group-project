@@ -106,10 +106,12 @@ public class Branch implements Serializable {
      */
     void addInterviewer(Interviewer interviewer) {
         String field = interviewer.getField();
-        if (!this.fieldToInterviewers.containsKey(field)) {
-            this.fieldToInterviewers.put(field, new ArrayList<>());
+        for (String fieldName : this.fieldToInterviewers.keySet()) {
+            if (field.equalsIgnoreCase(fieldName)) {
+                this.fieldToInterviewers.get(fieldName).add(interviewer);
+            }
         }
-        this.fieldToInterviewers.get(field).add(interviewer);
+        this.fieldToInterviewers.put(field, new ArrayList<>());
     }
 
     @Override

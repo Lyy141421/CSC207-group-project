@@ -9,9 +9,7 @@ import CompanyStuff.JobPostings.CompanyJobPosting;
 import FileLoadingAndStoring.DataLoaderAndStorer;
 import Main.JobApplicationSystem;
 
-import javax.swing.*;
-import java.io.File;
-import java.lang.reflect.InvocationTargetException;
+import java.io.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -156,38 +154,6 @@ class HRBackend {
         int numPositions = (Integer) mandatoryFields[0];
         LocalDate applicationCloseDate = (LocalDate) mandatoryFields[1];
         this.hr.addJobPosting(title, field, description, requirements, tags, numPositions, jobAppSystem.getToday(), applicationCloseDate);
-        Thread newThread = new Thread() {
-            public void run() {
-                try {
-                    SwingUtilities.invokeAndWait(new Runnable() {
-                        @Override
-                        public void run() {
-                            new DataLoaderAndStorer(jobAppSystem).refreshAllData();
-                        }
-                    });
-                } catch (InterruptedException | InvocationTargetException ex) {
-                    ex.printStackTrace();
-                }
-            }
-        };
-        newThread.start();
-        this.testing();
-    }
-
-    private void testing() {
-        System.out.println("Testing is called");
-        JobApplicationSystem jobApplicationSystem = new JobApplicationSystem();
-        new DataLoaderAndStorer(jobApplicationSystem).loadAllData();
-        for (Company company : jobApplicationSystem.getCompanies()) {
-            System.out.println(company.getName());
-            for (Branch branch : company.getBranches()) {
-                System.out.println(branch.getName());
-                BranchJobPostingManager branchJobPostingManager = branch.getJobPostingManager();
-                for (BranchJobPosting branchJobPosting : branchJobPostingManager.getBranchJobPostings()) {
-                    System.out.println(branchJobPosting);
-                }
-            }
-        }
     }
 
     /**
