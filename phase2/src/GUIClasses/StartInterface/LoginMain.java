@@ -77,7 +77,7 @@ public class LoginMain extends JPanel {
         Runnable updateJP = new Runnable() {
             public void run() {
                 jobAppSystem.updateAllJobPostings();
-                new DataLoaderAndStorer(jobAppSystem).storeAllData();
+                new DataLoaderAndStorer(jobAppSystem).refreshAllData();
                 new DataLoaderAndStorer(jobAppSystem).loadAllData();
             }
         };

@@ -48,16 +48,6 @@ public class BranchJobPostingManager implements Serializable {
         this.branchJobPostings.add(posting);
     }
 
-//    public ArrayList<BranchJobPosting> getJobPostingsNotAppliedToByApplicant(Applicant applicant) {
-//        ArrayList<BranchJobPosting> requestedPostings = new ArrayList<>();
-//        for (BranchJobPosting posting : branchJobPostings) {
-//            if (!(applicant.hasAppliedToPosting(posting)))
-//                requestedPostings.add(posting);
-//
-//        }
-//        return requestedPostings;
-//    }
-
     /**
      * Get a list of open job postings for this branch.
      *

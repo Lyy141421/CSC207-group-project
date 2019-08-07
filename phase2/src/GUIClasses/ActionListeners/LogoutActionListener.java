@@ -8,7 +8,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.lang.reflect.InvocationTargetException;
 
 public class LogoutActionListener implements ActionListener {
 
@@ -25,7 +24,7 @@ public class LogoutActionListener implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        new DataLoaderAndStorer(jobApplicationSystem).storeAllData();
+        new DataLoaderAndStorer(jobApplicationSystem).refreshAllData();
         parent.remove(this.getUserPanelFromMenuItemDirectlyOnMenuBar(e));
         masterLayout.show(parent, MainFrame.LOGIN);
     }

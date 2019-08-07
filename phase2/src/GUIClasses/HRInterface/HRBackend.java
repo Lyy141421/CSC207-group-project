@@ -9,7 +9,9 @@ import CompanyStuff.JobPostings.CompanyJobPosting;
 import FileLoadingAndStoring.DataLoaderAndStorer;
 import Main.JobApplicationSystem;
 
+import javax.swing.*;
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,6 +32,10 @@ class HRBackend {
     // === Getters ===
     HRCoordinator getHR() {
         return this.hr;
+    }
+
+    JobApplicationSystem getJobAppSystem() {
+        return this.jobAppSystem;
     }
 
     LocalDate getToday() {
@@ -150,7 +156,38 @@ class HRBackend {
         int numPositions = (Integer) mandatoryFields[0];
         LocalDate applicationCloseDate = (LocalDate) mandatoryFields[1];
         this.hr.addJobPosting(title, field, description, requirements, tags, numPositions, jobAppSystem.getToday(), applicationCloseDate);
-        new DataLoaderAndStorer(jobAppSystem).storeAllData();
+        Thread newThread = new Thread() {
+            public void run() {
+                try {
+                    SwingUtilities.invokeAndWait(new Runnable() {
+                        @Override
+                        public void run() {
+                            new DataLoaderAndStorer(jobAppSystem).refreshAllData();
+                        }
+                    });
+                } catch (InterruptedException | InvocationTargetException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        };
+        newThread.start();
+        this.testing();
+    }
+
+    private void testing() {
+        System.out.println("Testing is called");
+        JobApplicationSystem jobApplicationSystem = new JobApplicationSystem();
+        new DataLoaderAndStorer(jobApplicationSystem).loadAllData();
+        for (Company company : jobApplicationSystem.getCompanies()) {
+            System.out.println(company.getName());
+            for (Branch branch : company.getBranches()) {
+                System.out.println(branch.getName());
+                BranchJobPostingManager branchJobPostingManager = branch.getJobPostingManager();
+                for (BranchJobPosting branchJobPosting : branchJobPostingManager.getBranchJobPostings()) {
+                    System.out.println(branchJobPosting);
+                }
+            }
+        }
     }
 
     /**
@@ -171,7 +208,7 @@ class HRBackend {
         int numPositions = (int) jobPostingFields[0];
         LocalDate applicationCloseDate = (LocalDate) jobPostingFields[1];
         this.hr.implementJobPosting(cjp, numPositions, jobAppSystem.getToday(), applicationCloseDate);
-        new DataLoaderAndStorer(jobAppSystem).storeAllData();
+        new DataLoaderAndStorer(jobAppSystem).refreshAllData();
     }
 
     /**
@@ -183,7 +220,7 @@ class HRBackend {
         int numPositions = (int) jobPostingFields[0];
         LocalDate applicationCloseDate = (LocalDate) jobPostingFields[1];
         this.hr.updateJobPosting(jobPosting, numPositions, applicationCloseDate);
-        new DataLoaderAndStorer(jobAppSystem).storeAllData();
+        new DataLoaderAndStorer(jobAppSystem).refreshAllData();
     }
 
     /**
@@ -257,7 +294,7 @@ class HRBackend {
      */
     void rejectApplicationForFirstRound(BranchJobPosting branchJobPosting, ArrayList<JobApplication> jobApps) {
         branchJobPosting.getInterviewManager().rejectApplicationsForFirstRound(jobApps);
-        new DataLoaderAndStorer(jobAppSystem).storeAllData();
+        new DataLoaderAndStorer(jobAppSystem).refreshAllData();
     }
 
     /**
@@ -289,7 +326,7 @@ class HRBackend {
             i++;
         }
         jobPosting.getInterviewManager().setInterviewConfiguration(interviewConfiguration);
-        new DataLoaderAndStorer(jobAppSystem).storeAllData();
+        new DataLoaderAndStorer(jobAppSystem).refreshAllData();
     }
 
     /**
@@ -313,7 +350,7 @@ class HRBackend {
                               ArrayList<Interviewer> otherInterviewers, int minNumDaysNotice) {
         jobPosting.getInterviewManager().setUpGroupInterview(interviewCoordinator, otherInterviewers,
                 jobAppSystem.getToday(), minNumDaysNotice);
-        new DataLoaderAndStorer(jobAppSystem).storeAllData();
+        new DataLoaderAndStorer(jobAppSystem).refreshAllData();
     }
 
     /**
@@ -324,7 +361,7 @@ class HRBackend {
      */
     void selectApplicantsForHire(BranchJobPosting branchJobPosting, ArrayList<JobApplication> jobAppsToHire) {
         branchJobPosting.getInterviewManager().hireApplicants(jobAppsToHire);
-        new DataLoaderAndStorer(jobAppSystem).storeAllData();
+        new DataLoaderAndStorer(jobAppSystem).refreshAllData();
     }
 
     /**
@@ -338,7 +375,7 @@ class HRBackend {
 
     /**
      * Get a list of company job postings that can be implemented.
-     * @return a list of company job postigns that can be implemented.
+     * @return a list of company job postings that can be implemented.
      */
     ArrayList<CompanyJobPosting> getCompanyJobPostingsThatCanBeExtended() {
         return this.hr.getBranch().getJobPostingManager().getExtendableCompanyJobPostings();

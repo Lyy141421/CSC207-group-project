@@ -2,6 +2,7 @@ package GUIClasses.HRInterface;
 
 import CompanyStuff.JobPostings.BranchJobPosting;
 import CompanyStuff.JobPostings.CompanyJobPosting;
+import FileLoadingAndStoring.DataLoaderAndStorer;
 import GUIClasses.CommonUserGUI.GUIElementsCreator;
 import GUIClasses.CommonUserGUI.UserMain;
 import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
@@ -447,6 +448,7 @@ class HRAddOrUpdatePostingForm extends HRPanel {
             } else {
                 hrBackend.addJobPosting(mandatoryFields, defaultFields.get());
             }
+            new DataLoaderAndStorer(hrBackend.getJobAppSystem()).refreshAllData();
             JOptionPane.showMessageDialog(containerPane, "Job posting has been added.");
             this.resetForm();
             ((UserMain) containerPane.getParent().getParent()).refresh();
@@ -455,6 +457,7 @@ class HRAddOrUpdatePostingForm extends HRPanel {
 
     private void updateJobPosting(Object[] mandatoryFields) {
         hrBackend.updateJobPosting((BranchJobPosting) selectedJP, mandatoryFields);
+        new DataLoaderAndStorer(hrBackend.getJobAppSystem()).refreshAllData();
         JOptionPane.showMessageDialog(containerPane, "Job posting has been updated.");
     }
 

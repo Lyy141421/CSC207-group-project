@@ -109,7 +109,7 @@ class LoginBackend {
             String email = inputs.get("email");
             jobAppSystem.getUserManager().createApplicant(
                     username, password, name, email, postalCode, jobAppSystem.getToday());
-            new DataLoaderAndStorer(jobAppSystem).storeAllData();
+            new DataLoaderAndStorer(jobAppSystem).refreshAllData();
             return NewUserPanel.SUCCESS;
         }
     }
@@ -140,7 +140,7 @@ class LoginBackend {
         String email = inputs.get("email");
         jobAppSystem.getUserManager().createHRCoordinator(
                 username, password, name, email, branch, jobAppSystem.getToday());
-        new DataLoaderAndStorer(jobAppSystem).storeAllData();
+        new DataLoaderAndStorer(jobAppSystem).refreshAllData();
         return NewUserPanel.SUCCESS;
     }
 
@@ -168,7 +168,7 @@ class LoginBackend {
                 String email = inputs.get("email");
                 jobAppSystem.getUserManager().createInterviewer(
                         username, password, name, email, branch, field, jobAppSystem.getToday());
-                new DataLoaderAndStorer(jobAppSystem).storeAllData();
+                new DataLoaderAndStorer(jobAppSystem).refreshAllData();
                 return NewUserPanel.SUCCESS;
             }
         }

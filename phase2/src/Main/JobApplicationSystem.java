@@ -27,17 +27,21 @@ public class JobApplicationSystem {
     // === Main method ===
     public static void main(String[] args) {
         JobApplicationSystem jobAppSystem = new JobApplicationSystem();
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                new MainFrame(jobAppSystem);
-            }
-        });
+        new DataLoaderAndStorer(jobAppSystem).loadAllData();
+        try {
+            SwingUtilities.invokeAndWait(new Runnable() {
+                @Override
+                public void run() {
+                    new MainFrame(jobAppSystem);
+                }
+            });
+        } catch (InterruptedException | InvocationTargetException ex) {
+            System.out.println("Something went wrong");
+        }
     }
 
     // === Public methods ===
     // === Getters ===
-
     public UserManager getUserManager() {
         return this.userManager;
     }

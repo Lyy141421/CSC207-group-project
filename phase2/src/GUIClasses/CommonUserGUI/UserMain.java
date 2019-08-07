@@ -1,6 +1,5 @@
 package GUIClasses.CommonUserGUI;
 
-import ApplicantStuff.JobApplication;
 import FileLoadingAndStoring.DataLoaderAndStorer;
 import Main.JobApplicationSystem;
 
@@ -32,8 +31,7 @@ abstract public class UserMain extends JPanel {
      */
     public void refresh() {
         DataLoaderAndStorer dataLoaderAndStorer = new DataLoaderAndStorer(jobAppSystem);
-        dataLoaderAndStorer.storeAllData();
-        dataLoaderAndStorer.loadAllData();
+        dataLoaderAndStorer.refreshAllData();
     }
 
 }

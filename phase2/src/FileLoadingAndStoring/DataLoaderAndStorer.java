@@ -1,8 +1,12 @@
 package FileLoadingAndStoring;
 
 import ApplicantStuff.JobApplication;
+import CompanyStuff.Branch;
 import CompanyStuff.Company;
+import CompanyStuff.HRCoordinator;
 import CompanyStuff.Interview;
+import CompanyStuff.JobPostings.BranchJobPosting;
+import CompanyStuff.JobPostings.BranchJobPostingManager;
 import CompanyStuff.JobPostings.CompanyJobPosting;
 import Main.JobApplicationSystem;
 import Main.User;
@@ -85,7 +89,6 @@ public class DataLoaderAndStorer {
             case MISCELLANEOUS_FILE_PATH:
                 this.loadPreviousLoginDateAndStaticVariables();
         }
-        System.out.println("Store all data is called");
     }
 
     /**
@@ -174,11 +177,17 @@ public class DataLoaderAndStorer {
         }
     }
 
+    public void refreshAllData() {
+        this.storeAllData();
+        this.loadAllData();
+    }
+
     /**
      * Saves all the data to the appropriate files.
      *
      */
-    public void storeAllData() {
+    void storeAllData() {
+        System.out.println("Store all data is called");
         this.storeUsers();
         this.storeCompanies();
         this.storePreviousLoginDateAndStaticVariables();
@@ -238,4 +247,16 @@ public class DataLoaderAndStorer {
         }
     }
 
+    public static void main(String[] args) {
+        JobApplicationSystem jobApplicationSystem = new JobApplicationSystem();
+        new DataLoaderAndStorer(jobApplicationSystem).loadAllData();
+        for (Company company : jobApplicationSystem.getCompanies()) {
+            for (Branch branch : company.getBranches()) {
+                BranchJobPostingManager branchJobPostingManager = branch.getJobPostingManager();
+                for (BranchJobPosting branchJobPosting : branchJobPostingManager.getBranchJobPostings()) {
+                    System.out.println(branchJobPosting);
+                }
+            }
+        }
+    }
 }

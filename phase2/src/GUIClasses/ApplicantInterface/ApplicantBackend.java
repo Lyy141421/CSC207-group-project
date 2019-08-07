@@ -73,7 +73,7 @@ class ApplicantBackend {
 
     void addReferences(JobApplication jobApp, ArrayList<String> emails) {
         jobAppSystem.getUserManager().addReferences(jobApp, emails);
-        new DataLoaderAndStorer(jobAppSystem).storeAllData();
+        new DataLoaderAndStorer(jobAppSystem).refreshAllData();
     }
 
     File getApplicantFolder() {
@@ -108,7 +108,7 @@ class ApplicantBackend {
 
     JobApplication createJobApplication(BranchJobPosting jobPosting) {
         JobApplication jobApp = new JobApplication(this.applicant, jobPosting, this.jobAppSystem.getToday());
-        new DataLoaderAndStorer(jobAppSystem).storeAllData();
+        new DataLoaderAndStorer(jobAppSystem).refreshAllData();
         return jobApp;
     }
 
@@ -118,7 +118,7 @@ class ApplicantBackend {
     boolean withdrawApp(JobApplication application) {
         boolean canWithdraw = applicant.withdrawJobApplication(jobAppSystem.getToday(), application.getJobPosting());
         if (canWithdraw) {
-            new DataLoaderAndStorer(jobAppSystem).storeAllData();
+            new DataLoaderAndStorer(jobAppSystem).refreshAllData();
         }
         return canWithdraw;
     }
