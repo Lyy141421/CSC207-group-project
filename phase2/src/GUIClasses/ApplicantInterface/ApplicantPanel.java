@@ -18,7 +18,7 @@ public class ApplicantPanel extends UserMain {
     private LogoutActionListener logout;
 
     public ApplicantPanel(Applicant applicant, JobApplicationSystem jobAppSystem, LogoutActionListener logout) {
-        assert SwingUtilities.isEventDispatchThread();
+        super(jobAppSystem);
         this.setLayout(new CardLayout());
         this.applicant = applicant;
         this.jobAppSystem = jobAppSystem;
@@ -34,6 +34,7 @@ public class ApplicantPanel extends UserMain {
 
     @Override
     public void refresh() {
+        super.refresh();
         this.removeAll();
         this.setCards();
         ((CardLayout)this.getLayout()).show(this, "Main");

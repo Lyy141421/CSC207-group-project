@@ -1,6 +1,8 @@
 package GUIClasses.ActionListeners;
 
+import GUIClasses.ApplicantInterface.ApplicantMain;
 import GUIClasses.CommonUserGUI.UserMain;
+import Main.User;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,12 +12,14 @@ import java.lang.reflect.InvocationTargetException;
 
 public class ReturnHomeActionListener implements ActionListener {
 
-    public ReturnHomeActionListener() {
+    private JPanel cards;
+
+    public ReturnHomeActionListener(JPanel cards) {
+        this.cards = cards;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        JPanel cards = new PanelGetter().getCardLayoutFromMenuItemDirectlyOnMenuBar(e);
         CardLayout cl = (CardLayout) cards.getLayout();
         Thread newThread = new Thread() {
             public void run() {
@@ -23,7 +27,11 @@ public class ReturnHomeActionListener implements ActionListener {
                     SwingUtilities.invokeAndWait(new Runnable() {
                         @Override
                         public void run() {
-                            ((UserMain) cards.getParent()).refresh();
+                            if (cards.getParent() instanceof UserMain) {
+                                ((UserMain) cards.getParent()).refresh();
+                            } else {
+                                ((ApplicantMain) cards.getParent()).refresh();
+                            }
                         }
                     });
                 } catch (InterruptedException | InvocationTargetException ex) {

@@ -32,6 +32,7 @@ public class InterviewerMain extends UserMain {
 
     // === Constructor ===
     public InterviewerMain(Interviewer interviewer, JobApplicationSystem jobAppSystem, LogoutActionListener logoutActionListener) {
+        super(jobAppSystem);
         this.interviewerBackEnd = new InterviewerBackEnd(jobAppSystem, interviewer);
         this.setLayout(new GridBagLayout());
         this.setCards();
@@ -62,6 +63,7 @@ public class InterviewerMain extends UserMain {
     }
 
     public void refresh() {
+        super.refresh();
         cards.removeAll();
         this.setCards();
     }

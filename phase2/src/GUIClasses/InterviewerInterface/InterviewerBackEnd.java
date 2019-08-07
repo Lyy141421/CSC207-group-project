@@ -3,6 +3,7 @@ package GUIClasses.InterviewerInterface;
 import ApplicantStuff.JobApplication;
 import CompanyStuff.Interview;
 import CompanyStuff.Interviewer;
+import FileLoadingAndStoring.DataLoaderAndStorer;
 import Main.JobApplicationSystem;
 import Miscellaneous.InterviewTime;
 
@@ -127,6 +128,7 @@ class InterviewerBackEnd {
      */
     void setInterviewResults(Interview interview, HashMap<JobApplication, Boolean> jobAppToResult) {
         interview.setResults(jobAppToResult);
+        new DataLoaderAndStorer(jobAppSystem).storeAllData();
     }
 
     /**
@@ -141,6 +143,7 @@ class InterviewerBackEnd {
         } else {
             interview.setOtherInterviewNotes(interviewer, notes);
         }
+        new DataLoaderAndStorer(jobAppSystem).storeAllData();
     }
 
     /**
@@ -179,6 +182,8 @@ class InterviewerBackEnd {
      */
     boolean scheduleInterview(Interview interview, LocalDate date, String timeSlot) {
         InterviewTime interviewTime = new InterviewTime(date, timeSlot);
-        return this.interviewer.scheduleInterview(interview, interviewTime);
+        boolean canSchedule = this.interviewer.scheduleInterview(interview, interviewTime);
+        new DataLoaderAndStorer(jobAppSystem).storeAllData();
+        return canSchedule;
     }
 }

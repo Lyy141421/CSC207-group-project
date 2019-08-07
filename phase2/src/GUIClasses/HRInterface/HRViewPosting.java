@@ -237,21 +237,7 @@ class HRViewPosting extends HRPanel {
         ((CardLayout) parent.getLayout()).show(parent, HRPanel.APPLICATION);
         //TODO: new Group interview doesn't show up until switch panel.
         // if (hrBackend.needsGroupInterview(selectedJP)
-        Thread newThread = new Thread() {
-            public void run() {
-                try {
-                    SwingUtilities.invokeAndWait(new Runnable() {
-                        @Override
-                        public void run() {
-                            reload();
-                        }
-                    });
-                } catch (InterruptedException | InvocationTargetException ex) {
-                    ex.printStackTrace();
-                }
-            }
-        };
-        newThread.start();
+        reload();
     }
 
     private String getPreviousPanelKey() {

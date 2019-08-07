@@ -1,6 +1,8 @@
 package GUIClasses.ApplicantInterface;
 
 import GUIClasses.ActionListeners.LogoutActionListener;
+import GUIClasses.ActionListeners.ProfileActionListener;
+import GUIClasses.ActionListeners.ReturnHomeActionListener;
 import GUIClasses.CommonUserGUI.SideBarMenuCreator;
 
 import javax.swing.*;
@@ -33,22 +35,18 @@ class ApplicantSideBarMenuPanel extends JPanel {
      */
     private TreeMap<String, Object> createFullMenu() {
         TreeMap<String, Object> fullMenu = new TreeMap<>();
-        fullMenu.put("1. Home", new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {affectedLayout.show(cards, "HOME");}});
+        fullMenu.put("1. Home", new ReturnHomeActionListener(cards));
         fullMenu.put("2. Browse Postings", new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {affectedLayout.show(cards, "POSTINGS");}});
-        fullMenu.put("3. Profile", new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {affectedLayout.show(cards, "PROFILE");}});
+        fullMenu.put("3. Profile", new ProfileActionListener(cards));
         fullMenu.put("4. View Uploaded Documents", new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {affectedLayout.show(cards, "DOCUMENTS");}});
         fullMenu.put("5. View Schedule", new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {affectedLayout.show(cards, "SCHEDULE");}});
-        fullMenu.put("6. Withdraw Application", new ActionListener() {
+        fullMenu.put("6. Manage Applications", new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {affectedLayout.show(cards, "MANAGE");}});
         fullMenu.put("7. Logout", logout);

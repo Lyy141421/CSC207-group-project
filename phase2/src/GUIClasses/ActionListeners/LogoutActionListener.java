@@ -25,24 +25,15 @@ public class LogoutActionListener implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Thread newThread = new Thread() {
-            public void run() {
-                try {
-                    SwingUtilities.invokeAndWait(new Runnable() {
-                        @Override
-                        public void run() {
-                            DataLoaderAndStorer dataLoaderAndStorer = new DataLoaderAndStorer(jobApplicationSystem);
-                            dataLoaderAndStorer.storeAllData();
-                            parent.remove(new PanelGetter().getUserPanelFromMenuItemDirectlyOnMenuBar(e));
-                            dataLoaderAndStorer.loadAllData();
-                            masterLayout.show(parent, MainFrame.LOGIN);
-                        }
-                    });
-                } catch (InterruptedException | InvocationTargetException ex) {
-                    System.out.println("Something when wrong");
-                }
-            }
-        };
-        newThread.start();
+        new DataLoaderAndStorer(jobApplicationSystem).storeAllData();
+        parent.remove(this.getUserPanelFromMenuItemDirectlyOnMenuBar(e));
+        masterLayout.show(parent, MainFrame.LOGIN);
+    }
+
+    private JPanel getUserPanelFromMenuItemDirectlyOnMenuBar(ActionEvent e) {
+        JMenuItem menuItem = (JMenuItem) e.getSource();
+        JMenuBar sideBarMenu = (JMenuBar) menuItem.getParent();
+        JPanel sideBarMenuPanel = (JPanel) sideBarMenu.getParent();
+        return (JPanel) sideBarMenuPanel.getParent();
     }
 }

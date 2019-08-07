@@ -1,5 +1,6 @@
 package GUIClasses;
 
+import FileLoadingAndStoring.DataLoaderAndStorer;
 import GUIClasses.StartInterface.LoginMain;
 import Main.JobApplicationSystem;
 
@@ -21,6 +22,7 @@ public class MainFrame extends JFrame {
     public MainFrame(JobApplicationSystem jobAppSystem) {
         super("GET A JOB");
         this.jobAppSystem = jobAppSystem;
+        new DataLoaderAndStorer(jobAppSystem).loadAllData();
         initUI();
         addCards();
     }

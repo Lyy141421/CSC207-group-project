@@ -1,5 +1,6 @@
 package GUIClasses.StartInterface;
 
+import FileLoadingAndStoring.DataLoaderAndStorer;
 import GUIClasses.ActionListeners.LogoutActionListener;
 import GUIClasses.CommonUserGUI.GUIElementsCreator;
 import GUIClasses.CommonUserGUI.UserMain;
@@ -14,7 +15,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -71,13 +71,14 @@ public class LoginMain extends JPanel {
      * @param inputtedDate The date inputted by the user.
      */
     private void updateSystem(LocalDate inputtedDate) {
-        System.out.println("Update system is called");
         this.jobAppSystem.setPreviousLoginDate(inputtedDate);
         this.jobAppSystem.setToday(inputtedDate);
         jobAppSystem.applicant30Day();
         Runnable updateJP = new Runnable() {
             public void run() {
                 jobAppSystem.updateAllJobPostings();
+                new DataLoaderAndStorer(jobAppSystem).storeAllData();
+                new DataLoaderAndStorer(jobAppSystem).loadAllData();
             }
         };
         SwingUtilities.invokeLater(updateJP);
@@ -305,21 +306,6 @@ public class LoginMain extends JPanel {
         UserMain userMain = new UserMainFactory(user, jobAppSystem, logout).createPanel();
         this.parent.add(userMain, MainFrame.USER_PANEL);
         this.masterLayout.show(parent, MainFrame.USER_PANEL);
-//        Thread newThread = new Thread() {
-//            public void run() {
-//                try {
-//                    SwingUtilities.invokeAndWait(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            userMain.refresh();
-//                        }
-//                    });
-//                } catch (InvocationTargetException | InterruptedException ex) {
-//                    ex.printStackTrace();
-//                }
-//            }
-//        };
-//        newThread.start();
         this.newUserRef.setNewUsername(null);
     }
 

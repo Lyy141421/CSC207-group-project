@@ -51,21 +51,21 @@ class ApplicantTextDocSubmission extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 new SubmitDocumentsActionListener(masterPanel, jobApp.getApplicant(), jobApp, fileTypeToContents).actionPerformed(e);
-                Thread newThread = new Thread() {
-                    public void run() {
-                        try {
-                            SwingUtilities.invokeAndWait(new Runnable() {
-                                @Override
-                                public void run() {
+//                Thread newThread = new Thread() {
+//                    public void run() {
+//                        try {
+//                            SwingUtilities.invokeAndWait(new Runnable() {
+//                                @Override
+//                                public void run() {
                                     ((UserMain) masterPanel).refresh();
-                                }
-                            });
-                        } catch (InterruptedException | InvocationTargetException ex) {
-                            ex.printStackTrace();
-                        }
-                    }
-                };
-                newThread.start();
+//                                }
+//                            });
+//                        } catch (InterruptedException | InvocationTargetException ex) {
+//                            ex.printStackTrace();
+//                        }
+//                    }
+//                };
+////                newThread.start();
             }
         });
         returnButton.addActionListener(new ActionListener() {

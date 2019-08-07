@@ -9,12 +9,14 @@ import java.awt.event.ActionListener;
 
 public class ProfileActionListener implements ActionListener {
 
-    public ProfileActionListener() {
+    private JPanel cards;
+
+    public ProfileActionListener(JPanel cards) {
+        this.cards = cards;
     }
 
 
     public void actionPerformed(ActionEvent e) {
-        JPanel cards = new PanelGetter().getCardLayoutFromMenuItemDirectlyOnMenuBar(e);
         CardLayout cl = (CardLayout) cards.getLayout();
         cl.show(cards, UserMain.PROFILE);
     }

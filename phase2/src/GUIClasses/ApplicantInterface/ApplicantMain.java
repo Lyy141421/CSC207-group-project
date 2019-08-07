@@ -20,7 +20,7 @@ import java.util.Arrays;
 /**
  * Panel which displays all of the required functionality for an Applicant user
  */
-class ApplicantMain extends JPanel {
+public class ApplicantMain extends JPanel {
     private Applicant applicant;
     private ApplicantPanel masterPanel;
     private ApplicantBackend applicantBackend;
@@ -66,9 +66,8 @@ class ApplicantMain extends JPanel {
         cards.add(new ApplicantViewApps(applicantBackend, masterPanel), "MANAGE");
     }
 
-    void refresh() {
-        cards.removeAll();
-        this.setApplicantCards();
+    public void refresh() {
+        masterPanel.refresh();
     }
 
     private JPanel createApplicantDocumentViewer() {

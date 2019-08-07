@@ -27,8 +27,6 @@ public class JobApplicationSystem {
     // === Main method ===
     public static void main(String[] args) {
         JobApplicationSystem jobAppSystem = new JobApplicationSystem();
-        DataLoaderAndStorer dataLoaderAndStorer = new DataLoaderAndStorer(jobAppSystem);
-        dataLoaderAndStorer.loadAllData();
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
