@@ -44,7 +44,7 @@ public class LogoutActionListener implements ActionListener {
         masterLayout.show(parent, MainFrame.LOGIN);
     }
 
-    JPanel getUserPanelFromMenuItemDirectlyOnMenuBar(ActionEvent e) {
+    private JPanel getUserPanelFromMenuItemDirectlyOnMenuBar(ActionEvent e) {
         JMenuItem menuItem = (JMenuItem) e.getSource();
         JMenuBar sideBarMenu = (JMenuBar) menuItem.getParent();
         JPanel sideBarMenuPanel = (JPanel) sideBarMenu.getParent();
