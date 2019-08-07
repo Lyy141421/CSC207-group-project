@@ -51,8 +51,7 @@ class InterviewConfigDialog extends JDialog {
         this.setSize(500, 350);
         this.setResizable(false);
         this.setLocationRelativeTo(parent);
-        this.setAlwaysOnTop(true);
-        this.setModal(true);
+        this.setModalityType(ModalityType.APPLICATION_MODAL);
         this.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
     }
 
@@ -115,8 +114,9 @@ class InterviewConfigDialog extends JDialog {
             public void actionPerformed(ActionEvent e) {
                 hrBackend.setInterviewConfiguration(branchJobPosting, getIsOneOnOne(), getDescriptions());
                 returnButton.setVisible(true);
+                setModalityType(ModalityType.MODELESS);
                 JOptionPane.showMessageDialog(container, "Interview Configuration Has Been Set");
-                container.dispose();
+                dispose();
             }
         });
         submitPanel.add(submitButton);

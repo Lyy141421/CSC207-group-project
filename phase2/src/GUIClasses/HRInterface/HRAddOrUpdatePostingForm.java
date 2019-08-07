@@ -421,7 +421,7 @@ class HRAddOrUpdatePostingForm extends HRPanel {
                     } else {
                         updateJobPosting(mandatoryFields);
                     }
-                    Thread newThread = new Thread() {
+                    /*Thread newThread = new Thread() {
                         public void run() {
                             try {
                                 SwingUtilities.invokeAndWait(new Runnable() {
@@ -435,7 +435,7 @@ class HRAddOrUpdatePostingForm extends HRPanel {
                             }
                         }
                     };
-                    newThread.start();
+                    newThread.start();*/
                 } else {
                     JOptionPane.showMessageDialog(containerPane, "One or more fields have illegal input.");
                 }

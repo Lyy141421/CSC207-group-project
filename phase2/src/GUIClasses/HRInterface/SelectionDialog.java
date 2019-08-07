@@ -41,8 +41,7 @@ abstract class SelectionDialog extends JDialog{
         this.setSize(500, 350);
         this.setResizable(false);
         this.setLocationRelativeTo(parent);
-        this.setAlwaysOnTop(true);
-        this.setModal(true);
+        this.setModalityType(ModalityType.APPLICATION_MODAL);
         this.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
     }
 

@@ -45,8 +45,7 @@ class GradingFilterDialog extends JDialog {
         this.setSize(500, 350);
         this.setResizable(false);
         this.setLocationRelativeTo(parent);
-        this.setAlwaysOnTop(true);
-        this.setModal(true);
+        this.setModalityType(ModalityType.APPLICATION_MODAL);
         this.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
     }
 
@@ -85,9 +84,16 @@ class GradingFilterDialog extends JDialog {
                 String textInput = ((JTextArea) keywordInput.getViewport().getView()).getText();
                 String[] keywords = textInput.split(";");
                 ArrayList<JobApplication> sortedApplications = hrBackend.getJobApplicationInNonDecreasingOrder(applications.get(0).getJobPosting(), keywords);
-                new InterviewSelectionDialog(parent, hrBackend, sortedApplications,
+                setModalityType(ModalityType.MODELESS);
+                setVisible(false);
+                JDialog interviewDialog = new InterviewSelectionDialog(parent, hrBackend, sortedApplications,
                         returnButton, ((SpinnerNumberModel)numberToSelect.getModel()).getNumber().intValue());
-
+                interviewDialog.addWindowListener(new WindowAdapter() {
+                    @Override
+                    public void windowClosed(WindowEvent e) {
+                        dispose();
+                    }
+                });
             }
         });
         confirmButtonPanel.add(confirmButton);

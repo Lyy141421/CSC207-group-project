@@ -26,13 +26,9 @@ class InterviewSelectionDialog extends SelectionDialog {
             public void actionPerformed(ActionEvent e) {
                 BranchJobPosting branchJobPosting = applications.get(0).getJobPosting();
                 hrBackend.rejectApplicationForFirstRound(branchJobPosting, getApplicantsDeselected());
+                setModalityType(ModalityType.MODELESS);
+                setVisible(false);
                 new InterviewConfigDialog(parent, hrBackend, branchJobPosting, returnButton);
-//                interviewConfig.addWindowListener(new WindowAdapter() {
-//                    @Override
-//                    public void windowClosed(WindowEvent e) {
-//                        dispose();
-//                    }
-//                });
                 dispose();
             }
         });

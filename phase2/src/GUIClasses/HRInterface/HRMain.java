@@ -74,6 +74,7 @@ public class HRMain extends UserMain {
 
     public void refresh() {
         cards.removeAll();
+        this.setJPLists();
         this.setCards();
         this.revalidate();
         this.repaint();
