@@ -1,5 +1,6 @@
 package GUIClasses.StartInterface;
 
+import FileLoadingAndStoring.DataLoaderAndStorer;
 import GUIClasses.ActionListeners.LogoutActionListener;
 import GUIClasses.CommonUserGUI.GUIElementsCreator;
 import GUIClasses.CommonUserGUI.UserMain;
@@ -14,7 +15,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -53,6 +53,7 @@ public class LoginMain extends JPanel {
 
     // === Constructor ===
     public LoginMain(NewUserPanel newUserRef, Container parent, CardLayout masterLayout, JobApplicationSystem jobAppSystem) {
+        new DataLoaderAndStorer(jobAppSystem).loadAllData();
         this.backend = new LoginBackend(jobAppSystem);
         this.jobAppSystem = jobAppSystem;
         this.logout = new LogoutActionListener(parent, masterLayout, jobAppSystem);
@@ -305,21 +306,6 @@ public class LoginMain extends JPanel {
         UserMain userMain = new UserMainFactory(user, jobAppSystem, logout).createPanel();
         this.parent.add(userMain, MainFrame.USER_PANEL);
         this.masterLayout.show(parent, MainFrame.USER_PANEL);
-//        Thread newThread = new Thread() {
-//            public void run() {
-//                try {
-//                    SwingUtilities.invokeAndWait(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            userMain.refresh();
-//                        }
-//                    });
-//                } catch (InvocationTargetException | InterruptedException ex) {
-//                    ex.printStackTrace();
-//                }
-//            }
-//        };
-//        newThread.start();
         this.newUserRef.setNewUsername(null);
     }
 

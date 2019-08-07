@@ -30,7 +30,7 @@ public class HRMain extends UserMain {
     private JPanel cards = new JPanel(new CardLayout());
 
     public HRMain(HRCoordinator hrCoordinator, JobApplicationSystem jobAppSystem, LogoutActionListener logoutActionListener) {
-        assert SwingUtilities.isEventDispatchThread();
+        super(jobAppSystem);
         this.hrBackend = new HRBackend(jobAppSystem, hrCoordinator);
         this.setLayout(new GridBagLayout());
         this.setCards();
@@ -61,6 +61,7 @@ public class HRMain extends UserMain {
     }
 
     public void refresh() {
+        super.refresh();
         cards.removeAll();
         this.setCards();
         this.revalidate();

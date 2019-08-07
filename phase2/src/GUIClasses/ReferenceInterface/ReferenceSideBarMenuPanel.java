@@ -36,8 +36,8 @@ class ReferenceSideBarMenuPanel extends JPanel {
      */
     private TreeMap<String, Object> createFullMenu() {
         TreeMap<String, Object> fullMenu = new TreeMap<>();
-        fullMenu.put("1. Home", new ReturnHomeActionListener());
-        fullMenu.put("2. Profile", new ProfileActionListener());
+        fullMenu.put("1. Home", new ReturnHomeActionListener(cards));
+        fullMenu.put("2. Profile", new ProfileActionListener(cards));
         fullMenu.put("3. Submit Reference Letter", new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

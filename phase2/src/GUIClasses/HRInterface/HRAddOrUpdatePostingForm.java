@@ -421,21 +421,6 @@ class HRAddOrUpdatePostingForm extends HRPanel {
                     } else {
                         updateJobPosting(mandatoryFields);
                     }
-                    Thread newThread = new Thread() {
-                        public void run() {
-                            try {
-                                SwingUtilities.invokeAndWait(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        ((UserMain) containerPane.getParent().getParent()).refresh();
-                                    }
-                                });
-                            } catch (InterruptedException | InvocationTargetException ex) {
-                                ex.printStackTrace();
-                            }
-                        }
-                    };
-                    newThread.start();
                 } else {
                     JOptionPane.showMessageDialog(containerPane, "One or more fields have illegal input.");
                 }
@@ -464,6 +449,7 @@ class HRAddOrUpdatePostingForm extends HRPanel {
             }
             JOptionPane.showMessageDialog(containerPane, "Job posting has been added.");
             this.resetForm();
+            ((UserMain) containerPane.getParent().getParent()).refresh();
         }
     }
 

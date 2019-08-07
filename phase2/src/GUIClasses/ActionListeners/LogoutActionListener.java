@@ -31,11 +31,7 @@ public class LogoutActionListener implements ActionListener {
                     SwingUtilities.invokeAndWait(new Runnable() {
                         @Override
                         public void run() {
-                            DataLoaderAndStorer dataLoaderAndStorer = new DataLoaderAndStorer(jobApplicationSystem);
-                            dataLoaderAndStorer.storeAllData();
-                            parent.remove(new PanelGetter().getUserPanelFromMenuItemDirectlyOnMenuBar(e));
-                            dataLoaderAndStorer.loadAllData();
-                            masterLayout.show(parent, MainFrame.LOGIN);
+                            new DataLoaderAndStorer(jobApplicationSystem).storeAllData();
                         }
                     });
                 } catch (InterruptedException | InvocationTargetException ex) {
@@ -44,5 +40,14 @@ public class LogoutActionListener implements ActionListener {
             }
         };
         newThread.start();
+        parent.remove(this.getUserPanelFromMenuItemDirectlyOnMenuBar(e));
+        masterLayout.show(parent, MainFrame.LOGIN);
+    }
+
+    JPanel getUserPanelFromMenuItemDirectlyOnMenuBar(ActionEvent e) {
+        JMenuItem menuItem = (JMenuItem) e.getSource();
+        JMenuBar sideBarMenu = (JMenuBar) menuItem.getParent();
+        JPanel sideBarMenuPanel = (JPanel) sideBarMenu.getParent();
+        return (JPanel) sideBarMenuPanel.getParent();
     }
 }

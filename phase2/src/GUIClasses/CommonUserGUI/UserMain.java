@@ -1,5 +1,9 @@
 package GUIClasses.CommonUserGUI;
 
+import ApplicantStuff.JobApplication;
+import FileLoadingAndStoring.DataLoaderAndStorer;
+import Main.JobApplicationSystem;
+
 import javax.swing.*;
 
 abstract public class UserMain extends JPanel {
@@ -12,6 +16,12 @@ abstract public class UserMain extends JPanel {
     public static final String HOME = "HOME";
     public static final String PROFILE = "PROFILE";
 
+    private JobApplicationSystem jobAppSystem;
+
+    public UserMain(JobApplicationSystem jobAppSystem) {
+        this.jobAppSystem = jobAppSystem;
+    }
+
     /**
      * Set the cards.
      */
@@ -20,6 +30,10 @@ abstract public class UserMain extends JPanel {
     /**
      * Refresh the page.
      */
-    abstract public void refresh();
+    public void refresh() {
+        DataLoaderAndStorer dataLoaderAndStorer = new DataLoaderAndStorer(jobAppSystem);
+        dataLoaderAndStorer.storeAllData();
+        dataLoaderAndStorer.loadAllData();
+    }
 
 }

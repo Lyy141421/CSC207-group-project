@@ -38,6 +38,7 @@ public class ReferenceMain extends UserMain {
 
     // === Constructor ===
     public ReferenceMain(Reference reference, JobApplicationSystem jobAppSystem, LogoutActionListener logoutActionListener) {
+        super(jobAppSystem);
         this.referenceBackEnd = new ReferenceBackEnd(reference, jobAppSystem);
         this.setLayout(new GridBagLayout());
         this.setCards();
@@ -69,6 +70,7 @@ public class ReferenceMain extends UserMain {
      * Update the cards after a reference letter submission.
      */
     public void refresh() {
+        super.refresh();
         cards.removeAll();
         this.setCards();
     }
