@@ -12,6 +12,7 @@ import CompanyStuff.JobPostings.BranchJobPosting;
 import CompanyStuff.JobPostings.BranchJobPostingManager;
 import FileLoadingAndStoring.DataLoaderAndStorer;
 import GUIClasses.ActionListeners.LogoutActionListener;
+import GUIClasses.ApplicantInterface.ApplicantMain;
 import GUIClasses.CommonUserGUI.UserMain;
 import GUIClasses.CommonUserGUI.UserProfilePanel;
 import Main.JobApplicationSystem;
@@ -19,6 +20,7 @@ import Main.JobApplicationSystem;
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -75,13 +77,8 @@ public class HRMain extends UserMain {
     public void refresh() {
         super.refresh();
         cards.removeAll();
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                setJPLists();
-            }
-        });
-        this.setCards();
+        this.setJPLists();
+        setCards();
         this.revalidate();
         this.repaint();
     }
