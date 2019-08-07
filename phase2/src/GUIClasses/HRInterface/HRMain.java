@@ -75,7 +75,12 @@ public class HRMain extends UserMain {
     public void refresh() {
         super.refresh();
         cards.removeAll();
-        this.setJPLists();
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                setJPLists();
+            }
+        });
         this.setCards();
         this.revalidate();
         this.repaint();
