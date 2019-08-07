@@ -47,7 +47,8 @@ class HRAddOrUpdatePostingForm extends HRPanel {
     private String documentInputInstructions;
     private JTextArea extraTagsEntry;
     private String tagsInputInstructions;
-    private ArrayList<ArrayList<String>> fullOptionalSelectionInput = new ArrayList<>();
+    private ArrayList<ArrayList<String>> selectionInputs = new ArrayList<>();
+    private ArrayList<ArrayList<String>> typedInputs = new ArrayList<>();
     private CompanyJobPosting selectedJP;
     private boolean toAdd;
 
@@ -62,11 +63,18 @@ class HRAddOrUpdatePostingForm extends HRPanel {
             selectedJP = jobPostingToUpdate;
         }
         this.toAdd = toAdd;
+        this.resetTypedInputsEntries();
         this.addFieldsAndSubmitButton();
         this.addText();
         this.setCompanyPostingListListener();
         this.setJobTitleDocumentListener();
         this.resetForm();
+    }
+
+    private void resetTypedInputsEntries() {
+        this.typedInputs.clear();
+        this.typedInputs.add(new ArrayList<>());
+        this.typedInputs.add(new ArrayList<>());
     }
 
     private void addText() {
@@ -355,11 +363,11 @@ class HRAddOrUpdatePostingForm extends HRPanel {
         JScrollPane labelPane = new JScrollPane(recommendedPanel);
         labelPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         labelPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
-        this.fullOptionalSelectionInput.add(checkedInput);
+        this.selectionInputs.add(checkedInput);
         return labelPane;
     }
 
-    private void setAllSelectedAndInputtedItems(int index, JTextArea textInput, String instructions) {
+    private ArrayList<String> getAllSelectedAndInputtedItems(int index, JTextArea textInput, String instructions) {
         String text = textInput.getText();
         if (!text.equals(instructions)) {
             if (text.charAt(text.length() - 1) == ';') {
@@ -371,21 +379,24 @@ class HRAddOrUpdatePostingForm extends HRPanel {
         String[] inputtedItems = text.split(";");
         for (String item : inputtedItems) {
             if (!item.isEmpty()) {
-                fullOptionalSelectionInput.get(index).add(item);
+                this.typedInputs.get(index).add(item);
             }
         }
-        this.removeListDuplicates(fullOptionalSelectionInput.get(index));
+        ArrayList<String> combinedInputs = new ArrayList<>();
+        combinedInputs.addAll(this.selectionInputs.get(index));
+        combinedInputs.addAll(this.typedInputs.get(index));
+        return this.getListNoDuplicate(combinedInputs);
     }
 
-    private void removeListDuplicates(ArrayList<String> list) {
-        ArrayList<String> listClone = (ArrayList<String>) list.clone();
-        list.clear();
-        for (String item : listClone) {
+    private ArrayList<String> getListNoDuplicate (ArrayList<String> list) {
+        ArrayList<String> newList = new ArrayList<>();
+        for (String item : list) {
             String itemFormatted = hrBackend.formatCase(item);
-            if (!list.contains(itemFormatted)) {
-                list.add(itemFormatted);
+            if (!newList.contains(itemFormatted)) {
+                newList.add(itemFormatted);
             }
         }
+        return newList;
     }
 
     private void addCheckBoxItemListener(JCheckBox checkBox, ArrayList<String> checkedInput) {
@@ -425,6 +436,7 @@ class HRAddOrUpdatePostingForm extends HRPanel {
                 } else {
                     JOptionPane.showMessageDialog(containerPane, "One or more fields have illegal input.");
                 }
+                resetTypedInputsEntries();
             }
         });
         return submit;
@@ -466,13 +478,13 @@ class HRAddOrUpdatePostingForm extends HRPanel {
         if (this.companyJPMap.containsKey(jobTitleText)) {
             return Optional.empty();
         }
-        this.setAllSelectedAndInputtedItems(0, extraDocumentsEntry, documentInputInstructions);
-        this.setAllSelectedAndInputtedItems(1, extraTagsEntry, tagsInputInstructions);
+        ArrayList<String> documents = this.getAllSelectedAndInputtedItems(0, extraDocumentsEntry, documentInputInstructions);
+        ArrayList<String> tags = this.getAllSelectedAndInputtedItems(1, extraTagsEntry, tagsInputInstructions);
         return Optional.of(new String[]{jobTitleText,  // title
                 ((JTextField) entryBoxes.get(1)).getText(),  // field
                 ((JTextArea) entryBoxes.get(2)).getText(),   // description
-                (this.convertListToString(this.fullOptionalSelectionInput.get(0))),   // documents
-                (this.convertListToString(this.fullOptionalSelectionInput.get(1))),   // tags
+                this.convertListToString(documents),   // documents
+                this.convertListToString(tags),   // tags
         });
     }
 
@@ -505,11 +517,12 @@ class HRAddOrUpdatePostingForm extends HRPanel {
                 }
                 i++;
             }
-            //TODO: regex to match something other than ; or " ".
-            if (defaultEntries[4].equals("")) {
+
+            if (!defaultEntries[4].matches(".*[a-zA-Z0-9]+.*")) {
                 valid = false;
             }
         }
+        System.out.println(valid);
 
         if (!this.hrBackend.getToday().isBefore(((LocalDate) mandatoryFields[1]))) {
             valid = false;

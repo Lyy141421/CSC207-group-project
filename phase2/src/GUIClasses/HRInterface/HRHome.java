@@ -39,7 +39,6 @@ class HRHome extends JLayeredPane {
     private ArrayList<Object[]> createTitleToJobPostingsArray() {
         this.main = (HRMain) this.cards.getParent();
         ArrayList<Object[]> titleToJobPostings = new ArrayList<>();
-        //TODO: main is null.
         titleToJobPostings.add(new Object[]{"Job Postings To Review", new ArrayList<>(main.getUnreviewedJP().values())});
         titleToJobPostings.add(new Object[]{"Job Postings That Need Group Interviews Scheduled", new ArrayList<>(main.getScheduleJP().values())});
         titleToJobPostings.add(new Object[]{"Job Postings That Need Final Hiring Decision", new ArrayList<>(main.getHiringJP().values())});

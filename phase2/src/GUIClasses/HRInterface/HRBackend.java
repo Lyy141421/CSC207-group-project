@@ -283,8 +283,13 @@ class HRBackend {
                 }
             }
         }
-        JobApplicationGrader jobAppGrader = new JobApplicationGrader(jobPosting, keyWordsArrayList);
-        return jobAppGrader.getSortedJobApps();
+        if (keyWordsArrayList.isEmpty()) {
+            return jobPosting.getJobApplications();
+        } else {
+            JobApplicationGrader jobAppGrader = new JobApplicationGrader(jobPosting, keyWordsArrayList);
+            return jobAppGrader.getSortedJobApps();
+        }
+
     }
 
     /**
