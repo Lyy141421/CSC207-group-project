@@ -43,14 +43,4 @@ class ReferenceBackEnd {
         return this.reference.getJobPostingNameList();
     }
 
-    /**
-     * Check whether today's date is after the application close date for this job posting.
-     *
-     * @param jobApplication The job application selected.
-     * @return true iff today's date is after the application close date of the job posting that this job application is for.
-     */
-    boolean isTodayAfterApplicationCloseDate(JobApplication jobApplication) {
-        return jobAppSystem.getToday().isAfter(jobApplication.getJobPosting().getCloseDate());
-    }
-
 }

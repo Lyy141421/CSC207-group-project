@@ -5,6 +5,7 @@ import ApplicantStuff.JobApplication;
 import CompanyStuff.Interview;
 import CompanyStuff.JobPostings.BranchJobPosting;
 import CompanyStuff.JobPostings.CompanyJobPosting;
+import FileLoadingAndStoring.DataLoaderAndStorer;
 import Main.JobApplicationSystem;
 import Main.User;
 
@@ -22,10 +23,6 @@ class ApplicantBackend {
     private JobApplicationSystem jobAppSystem;
 
     // === Constructor ===
-    ApplicantBackend(User user) {
-        this.applicant = (Applicant) user;
-    }
-
     ApplicantBackend(User user, JobApplicationSystem jobAppSystem) {
         this.applicant = (Applicant) user;
         this.jobAppSystem = jobAppSystem;
@@ -76,6 +73,7 @@ class ApplicantBackend {
 
     void addReferences(JobApplication jobApp, ArrayList<String> emails) {
         jobAppSystem.getUserManager().addReferences(jobApp, emails);
+        new DataLoaderAndStorer(jobAppSystem).storeAllData();
     }
 
     File getApplicantFolder() {
@@ -109,14 +107,20 @@ class ApplicantBackend {
     }
 
     JobApplication createJobApplication(BranchJobPosting jobPosting) {
-        return new JobApplication(this.applicant, jobPosting, this.jobAppSystem.getToday());
+        JobApplication jobApp = new JobApplication(this.applicant, jobPosting, this.jobAppSystem.getToday());
+        new DataLoaderAndStorer(jobAppSystem).storeAllData();
+        return jobApp;
     }
 
     /**
      * Withdraw an application
      */
     boolean withdrawApp(JobApplication application) {
-        return applicant.withdrawJobApplication(jobAppSystem.getToday(), application.getJobPosting());
+        boolean canWithdraw = applicant.withdrawJobApplication(jobAppSystem.getToday(), application.getJobPosting());
+        if (canWithdraw) {
+            new DataLoaderAndStorer(jobAppSystem).storeAllData();
+        }
+        return canWithdraw;
     }
 
     /**

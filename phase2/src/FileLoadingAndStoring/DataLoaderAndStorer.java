@@ -53,6 +53,7 @@ public class DataLoaderAndStorer {
         } catch (IOException ex) {
             ex.printStackTrace();
         }
+        System.out.println("Load all data is called");
     }
 
     /**
@@ -84,6 +85,7 @@ public class DataLoaderAndStorer {
             case MISCELLANEOUS_FILE_PATH:
                 this.loadPreviousLoginDateAndStaticVariables();
         }
+        System.out.println("Store all data is called");
     }
 
     /**

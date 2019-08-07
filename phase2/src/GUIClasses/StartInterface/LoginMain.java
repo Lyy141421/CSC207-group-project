@@ -53,7 +53,6 @@ public class LoginMain extends JPanel {
 
     // === Constructor ===
     public LoginMain(NewUserPanel newUserRef, Container parent, CardLayout masterLayout, JobApplicationSystem jobAppSystem) {
-        new DataLoaderAndStorer(jobAppSystem).loadAllData();
         this.backend = new LoginBackend(jobAppSystem);
         this.jobAppSystem = jobAppSystem;
         this.logout = new LogoutActionListener(parent, masterLayout, jobAppSystem);
@@ -72,13 +71,14 @@ public class LoginMain extends JPanel {
      * @param inputtedDate The date inputted by the user.
      */
     private void updateSystem(LocalDate inputtedDate) {
-        System.out.println("Update system is called");
         this.jobAppSystem.setPreviousLoginDate(inputtedDate);
         this.jobAppSystem.setToday(inputtedDate);
         jobAppSystem.applicant30Day();
         Runnable updateJP = new Runnable() {
             public void run() {
                 jobAppSystem.updateAllJobPostings();
+                new DataLoaderAndStorer(jobAppSystem).storeAllData();
+                new DataLoaderAndStorer(jobAppSystem).loadAllData();
             }
         };
         SwingUtilities.invokeLater(updateJP);

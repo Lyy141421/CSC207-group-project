@@ -25,21 +25,7 @@ public class LogoutActionListener implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Thread newThread = new Thread() {
-            public void run() {
-                try {
-                    SwingUtilities.invokeAndWait(new Runnable() {
-                        @Override
-                        public void run() {
-                            new DataLoaderAndStorer(jobApplicationSystem).storeAllData();
-                        }
-                    });
-                } catch (InterruptedException | InvocationTargetException ex) {
-                    System.out.println("Something when wrong");
-                }
-            }
-        };
-        newThread.start();
+        new DataLoaderAndStorer(jobApplicationSystem).storeAllData();
         parent.remove(this.getUserPanelFromMenuItemDirectlyOnMenuBar(e));
         masterLayout.show(parent, MainFrame.LOGIN);
     }

@@ -2,6 +2,7 @@ package GUIClasses.StartInterface;
 
 import CompanyStuff.Branch;
 import CompanyStuff.Company;
+import FileLoadingAndStoring.DataLoaderAndStorer;
 import Main.JobApplicationSystem;
 import Main.User;
 
@@ -108,6 +109,7 @@ class LoginBackend {
             String email = inputs.get("email");
             jobAppSystem.getUserManager().createApplicant(
                     username, password, name, email, postalCode, jobAppSystem.getToday());
+            new DataLoaderAndStorer(jobAppSystem).storeAllData();
             return NewUserPanel.SUCCESS;
         }
     }
@@ -138,6 +140,7 @@ class LoginBackend {
         String email = inputs.get("email");
         jobAppSystem.getUserManager().createHRCoordinator(
                 username, password, name, email, branch, jobAppSystem.getToday());
+        new DataLoaderAndStorer(jobAppSystem).storeAllData();
         return NewUserPanel.SUCCESS;
     }
 
@@ -165,6 +168,7 @@ class LoginBackend {
                 String email = inputs.get("email");
                 jobAppSystem.getUserManager().createInterviewer(
                         username, password, name, email, branch, field, jobAppSystem.getToday());
+                new DataLoaderAndStorer(jobAppSystem).storeAllData();
                 return NewUserPanel.SUCCESS;
             }
         }
