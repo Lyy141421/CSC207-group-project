@@ -34,15 +34,12 @@ class LoginBackend {
     User findUserByUsername(String username) {
         User user = jobAppSystem.getUserManager().findUserByUsername(username);
         if (user instanceof HRCoordinator) {
-//            HRCoordinator hr = (HRCoordinator) user;
-//            this.jobAppSystem.getUserManager().getHR(hr).setBranch(this.jobAppSystem.getBranch(hr.getBranch()));
             Branch branch = this.jobAppSystem.getBranch(((HRCoordinator) user).getBranch());
             if (branch != null) {
                 ((HRCoordinator) user).setBranch(branch);
             }
         } else if (user instanceof Interviewer) {
             Interviewer interviewer = (Interviewer) user;
-//            this.jobAppSystem.getUserManager().getInterviewer(interviewer).setBranch(this.jobAppSystem.getBranch(interviewer.getBranch()));
             Branch branch = this.jobAppSystem.getBranch(interviewer.getBranch());
             if (branch != null) {
                 interviewer.setBranch(branch);
@@ -63,14 +60,6 @@ class LoginBackend {
                     }
                 }
             }
-        } else if (user instanceof Reference) {
-            System.out.println("Before set");
-            Reference reference = (Reference) user;
-            for (JobApplication jobApp : reference.getJobAppsForReference()) {
-                System.out.println(jobApp);
-            }
-            System.out.println("After set");
-
         }
         return user;
     }
