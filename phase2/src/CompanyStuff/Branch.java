@@ -92,6 +92,23 @@ public class Branch implements Serializable {
 
     // === Other methods ===
 
+    String formatCase(String s) {
+        String[] words = s.split(" ");
+        for (int i = 0; i < words.length; i++) {
+            String firstChar = words[i].substring(0, 1);
+            String rest = "";
+            if (words[i].length() > 1) {
+                rest = words[i].substring(1);
+            }
+            words[i] = firstChar.toUpperCase() + rest.toLowerCase();
+        }
+        String res = "";
+        for (String word : words) {
+            res += " " + word;
+        }
+        return res.substring(1);
+    }
+
     /**
      * Adds the HR Coordinator to the company.
      *
@@ -125,11 +142,11 @@ public class Branch implements Serializable {
         String field = interviewer.getField();
         for (String fieldName : this.fieldToInterviewers.keySet()) {
             if (field.equalsIgnoreCase(fieldName)) {
-                this.fieldToInterviewers.get(fieldName).add(interviewer);
+                this.fieldToInterviewers.get(formatCase(fieldName)).add(interviewer);
             }
         }
-        this.fieldToInterviewers.put(field, new ArrayList<>());
-        this.fieldToInterviewers.get(field).add(interviewer);
+        this.fieldToInterviewers.put(formatCase(field), new ArrayList<>());
+        this.fieldToInterviewers.get(formatCase(field)).add(interviewer);
     }
 
     @Override

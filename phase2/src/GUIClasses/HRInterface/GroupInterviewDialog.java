@@ -37,7 +37,6 @@ class GroupInterviewDialog extends JDialog {
         this.parentPanel = postingPanel;
 
         this.nameToInterviewerMap = this.getNameToInterviewerMap(hrBackend.getInterviewersInField(branchJobPosting));
-
         this.setLayout(new BorderLayout());
 
         this.setHeader();
@@ -90,7 +89,6 @@ class GroupInterviewDialog extends JDialog {
                 interviewerCheckBox.setSelected(false);
             }
         });
-
         coordinatorPanel.add(this.coordinatorSelection);
 
         return coordinatorPanel;
@@ -110,7 +108,10 @@ class GroupInterviewDialog extends JDialog {
             c.gridx = (c.gridx+1)%3;
             interviewerPanel.add(checkBox, c);
         }
-
+        Interviewer interviewer = nameToInterviewerMap.get((String)this.coordinatorSelection.getSelectedItem());
+        JCheckBox checkBox = interviewerToCheckBoxMap.get(interviewer);
+        checkBox.setSelected(false);
+        checkBox.setEnabled(false);
         return interviewerPanel;
     }
 

@@ -149,7 +149,7 @@ class HRViewPosting extends HRPanel {
 
     private void setJobPostingList (JSplitPane splitDisplay) {
         this.jobPostingList.setListData(currJPs.keySet().toArray(new String[currJPs.size()]));
-        this.jobPostingList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+        this.jobPostingList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         this.jobPostingList.setLayoutOrientation(JList.VERTICAL);
         splitDisplay.setLeftComponent(new JScrollPane(this.jobPostingList));
     }
