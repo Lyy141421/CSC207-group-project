@@ -102,8 +102,8 @@ class InterviewerCompleteInterviewFull extends InterviewerViewAndWriteNotes {
                     //boolean isAdvanced = isAdvancedButtonSelected(jobAppsToButtonGroup.get(jobApp));
                     boolean isAdvanced = jobAppsToAdvanceButton.get(jobApp).isSelected();
                     jobAppToResults.put(jobApp, isAdvanced);
-                    JOptionPane.showMessageDialog(resultsPanel, "You have successfully completed this interview.");
                 }
+                JOptionPane.showMessageDialog(resultsPanel, "You have successfully completed this interview.");
                 interviewerBackEnd.setInterviewResults(interviewSelected, jobAppToResults);
                 refresh();
             }

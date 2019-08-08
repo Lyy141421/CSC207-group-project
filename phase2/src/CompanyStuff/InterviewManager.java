@@ -112,7 +112,7 @@ public class InterviewManager extends Observable implements Serializable {
     public boolean currentRoundIsOver() {
         for (JobApplication jobApp : this.getApplicationsInConsideration()) {
             Interview lastInterview = jobApp.getLastInterview();
-            if (lastInterview != null && !lastInterview.isIncomplete()) {
+            if (lastInterview != null && lastInterview.getRoundNumber() == this.currentRound && !lastInterview.isIncomplete()) {
                 return true;
             }
         }
@@ -222,7 +222,7 @@ public class InterviewManager extends Observable implements Serializable {
             this.notifyAllObservers(new NotificationFactory().createNotification(
                     NotificationFactory.NO_APPS_IN_CONSIDERATION, this.getBranchJobPosting()));
             this.getBranchJobPosting().closeJobPostingNoApplicationsInConsideration();
-        } else if (this.isInterviewProcessOver()) {
+        } else if (this.isInterviewProcessOver() && this.isNumApplicationsUnderOrAtThreshold()) {
             // The check for current round ensures that applicants get at least 1 interview
             this.hireAllApplicants();
         }
