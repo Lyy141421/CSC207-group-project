@@ -6,6 +6,7 @@ import ApplicantStuff.JobApplicationDocument;
 import ApplicantStuff.Reference;
 import DocumentManagers.ApplicantDocumentManager;
 import DocumentManagers.ReferenceLetterDocumentManager;
+import GUIClasses.ApplicantInterface.ApplicantFileSubmissionFromLocal;
 import GUIClasses.CommonUserGUI.UserMain;
 import Main.User;
 
@@ -14,7 +15,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 

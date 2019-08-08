@@ -19,12 +19,14 @@ class ApplicantFileSubmissionFromAccount extends JPanel {
     private JPanel masterPanel;
     private ApplicantBackend applicantBackend;
     private JobApplication jobApp;
+    private BranchJobPosting jobPosting;
     private DocumentSelector documentSelector;
+    private JButton returnButton;
 
     ApplicantFileSubmissionFromAccount(JPanel masterPanel, ApplicantBackend applicantBackend, BranchJobPosting jobPosting) {
         this.masterPanel = masterPanel;
         this.applicantBackend = applicantBackend;
-        this.jobApp = applicantBackend.createJobApplication(jobPosting);
+        this.jobPosting = jobPosting;
         this.setLayout(null);
         this.add(this.createTitle());
         this.setFullDocumentSelectorPanel();
@@ -60,8 +62,12 @@ class ApplicantFileSubmissionFromAccount extends JPanel {
                 if (documentSelector.getFilesToSubmit().isEmpty()) {
                     JOptionPane.showMessageDialog(thisPanel, "You must select a file to submit");
                 } else {
+                    if (jobApp == null) {
+                        jobApp = applicantBackend.createJobApplication(jobPosting);
+                    }
                     new SubmitDocumentsActionListener(masterPanel, applicantBackend.getApplicant(), jobApp,
                             documentSelector.getFilesToSubmit()).actionPerformed(e);
+                    returnButton.setEnabled(true);
                     ((UserMain) masterPanel).refresh();
                 }
             }
@@ -72,7 +78,7 @@ class ApplicantFileSubmissionFromAccount extends JPanel {
 
     private JPanel createReturnButtonPanel(JPanel masterPanel) {
         JPanel returnPanel = new JPanel();
-        JButton returnButton = new JButton("Back");
+        returnButton = new JButton("Back");
         returnButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -90,6 +96,9 @@ class ApplicantFileSubmissionFromAccount extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JFrame frame = (JFrame) SwingUtilities.windowForComponent(masterPanel);
+                if (jobApp == null) {
+                    jobApp = applicantBackend.createJobApplication(jobPosting);
+                }
                 new AddReferencesDialog(frame, applicantBackend, jobApp);
             }
         });
