@@ -82,40 +82,9 @@ class HRSideBarMenuPanel extends JPanel {
         fullMenu.put("8. Logout", new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                printAllData();
                 logoutActionListener.actionPerformed(e);
             }
         });
         return fullMenu;
-    }
-
-    private void printAllData() {
-        System.out.println("From job application system");
-        for (Company company : this.hrBackend.getJobAppSystem().getCompanies()) {
-            for (Branch branch : company.getBranches()) {
-                BranchJobPostingManager branchJobPostingManager = branch.getJobPostingManager();
-                for (BranchJobPosting branchJobPosting : branchJobPostingManager.getBranchJobPostings()) {
-                    InterviewManager interviewManager = branchJobPosting.getInterviewManager();
-                    System.out.println("Interview manager ID: " + interviewManager);
-                    if (interviewManager != null) {
-                        for (JobApplication jobApp : interviewManager.getApplicationsInConsideration()) {
-                            System.out.println(jobApp);
-                        }
-                    }
-                }
-            }
-        }
-        System.out.println("From hr");
-        Branch branch = this.hrBackend.getHR().getBranch();
-        BranchJobPostingManager branchJobPostingManager = branch.getJobPostingManager();
-        for (BranchJobPosting branchJobPosting : branchJobPostingManager.getBranchJobPostings()) {
-            InterviewManager interviewManager = branchJobPosting.getInterviewManager();
-            System.out.println("Interview manager ID: " + interviewManager);
-            if (interviewManager != null) {
-                for (JobApplication jobApp : interviewManager.getApplicationsInConsideration()) {
-                    System.out.println(jobApp);
-                }
-            }
-        }
     }
 }

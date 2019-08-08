@@ -81,8 +81,6 @@ public class NewUserPanel extends JPanel {
         submitButton.setBounds(352, 15, 150, 30);
         submitButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                System.out.println("From submit button action listener");
-                System.out.println(Thread.activeCount());
                 String status = createUser(selector);
                 postCreation(status, success);
             }

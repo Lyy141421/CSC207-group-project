@@ -172,7 +172,6 @@ public class HRMain extends UserMain {
 //        reference.addJobApplication(jobApp2);
 //        BranchJobPostingManager branchJobPostingManager = branch.getJobPostingManager();
 //        branchJobPostingManager.updateJobPostingsClosedForApplications(refdate.plusDays(6));
-//        System.out.println("AAAAAAAAAAAAAAAA:"+branch.getJobPostingManager().getBranchJobPostings().get(0).getInterviewManager().getHrTask());
 //        LogoutActionListener logoutActionListener = new LogoutActionListener(new Container(), new CardLayout(), jobApplicationSystem);
 //        frame.add(new HRMain(hrc, jobApplicationSystem, logoutActionListener));
 //        frame.setSize(854, 480);

@@ -55,7 +55,6 @@ public class DataLoaderAndStorer {
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-        System.out.println("Load all data is called");
     }
 
     /**
@@ -214,7 +213,6 @@ public class DataLoaderAndStorer {
      *
      */
     public void storeAllData() {
-        System.out.println("Store all data is called");
 //        this.storeCompanies();
         this.storeUsers();
 //        this.storeJobApplicationSystem();
