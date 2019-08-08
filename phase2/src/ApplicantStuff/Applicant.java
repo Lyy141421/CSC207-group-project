@@ -132,7 +132,7 @@ public class Applicant extends User {
 
     @Override
     public String[] getDisplayedProfileCategories() {
-        return new String[]{"User Type", "Username", "Legal Name", "Email", "Nearest City", "Account Created"};
+        return new String[]{"User Type", "Username", "Legal Name", "Email", "City/Town", "Account Created"};
     }
 
     @Override

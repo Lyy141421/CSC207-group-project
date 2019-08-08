@@ -387,7 +387,7 @@ class HRAddOrUpdatePostingForm extends HRPanel {
     private ArrayList<String> getListNoDuplicate(ArrayList<String> list) {
         ArrayList<String> newList = new ArrayList<>();
         for (String item : list) {
-            String itemFormatted = hrBackend.formatCase(item);
+            String itemFormatted = hrBackend.getHR().getBranch().formatCase(item);
             if (!newList.contains(itemFormatted)) {
                 newList.add(itemFormatted);
             }
