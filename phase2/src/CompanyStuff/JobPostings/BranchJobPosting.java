@@ -238,6 +238,8 @@ public class BranchJobPosting extends CompanyJobPosting implements Serializable 
         s += "Title: " + this.getTitle() + "\n\n";
         s += "Field: " + this.getField() + "\n\n";
         s += "Description: " + this.getDescription() + "\n\n";
+        s += "Number of positions: " + this.getNumPositions() + "\n\n";
+        s += "Filled: " + (this.isFilled()?"Yes":"No") + "\n\n";
         s += "Required Documents: " + this.getStringForList(this.getRequiredDocuments()) + "\n\n";
         s += "Tags: " + this.getStringForList(this.getTags()) + "\n\n";
         s += "Close date: " + this.getCloseDate().toString() + "\n\n";

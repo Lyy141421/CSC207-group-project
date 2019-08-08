@@ -105,6 +105,7 @@ class HRViewPosting extends HRPanel {
                 }
                 setRejectListPanel();
                 rejectedPanel.revalidate();
+                rejectedPanel.repaint();
             }
         });
     }
@@ -161,8 +162,7 @@ class HRViewPosting extends HRPanel {
     }
 
     private void setRejectListPanel() {
-        rejectedPanel = new JPanel(new GridBagLayout());
-        GridBagConstraints c = new GridBagConstraints();
+        rejectedPanel = new JPanel(new BorderLayout());
         ArrayList<Applicant> rejectList = this.hrBackend.getRejectedApplicantsForJobPosting(selectedJP);
         Object[][] data = new Object[rejectList.size()][];
 
@@ -170,13 +170,13 @@ class HRViewPosting extends HRPanel {
             data[i] = rejectList.get(i).getCategoryValuesForRejectList();
         }
         JPanel panelTitle = new GUIElementsCreator().createLabelPanel("Rejection List", 20, true);
-        c.gridx = 0;
-        c.gridy = 0;
-        c.insets = new Insets(10, 0, 0, 0);
-        rejectedPanel.add(panelTitle, c);
+        rejectedPanel.add(panelTitle, BorderLayout.NORTH);
         JPanel rejectListPanel = new GUIElementsCreator().createTablePanel(Applicant.REJECT_LIST_CATEGORIES, data);
-        c.gridy++;
-        rejectedPanel.add(rejectListPanel, c);
+        rejectedPanel.add(rejectListPanel, BorderLayout.CENTER);
+        rejectedPanel.repaint();
+        rejectedPanel.revalidate();
+        this.infoPane.removeTabAt(1);
+        this.infoPane.addTab(REJECT_LIST, rejectedPanel);
     }
 
     private void setInfoPane(JSplitPane splitDisplay) {

@@ -372,7 +372,12 @@ public class InterviewManager extends Observable implements Serializable {
      * @return true iff the next interview round is a group interview.
      */
     private boolean isCurrentRoundGroupInterviewUnscheduled() {
-        Interview lastInterview = this.applicationsInConsideration.get(0).getLastInterview();
+        Interview lastInterview;
+        if (this.applicationsInConsideration.isEmpty()) {
+            lastInterview = this.applicationsRejected.get(applicationsRejected.size() - 1).getLastInterview();
+        } else {
+            lastInterview = this.applicationsInConsideration.get(0).getLastInterview();
+        }
         return this.currentRound > -1 && this.interviewConfiguration.get(this.currentRound)[0].equals(Interview.GROUP) &&
                 (lastInterview == null || lastInterview.getRoundNumber() < this.currentRound);
     }
