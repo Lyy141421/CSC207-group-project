@@ -37,7 +37,6 @@ class GroupInterviewDialog extends JDialog {
         this.parentPanel = postingPanel;
 
         this.nameToInterviewerMap = this.getNameToInterviewerMap(hrBackend.getInterviewersInField(branchJobPosting));
-
         this.setLayout(new BorderLayout());
 
         this.setHeader();

@@ -289,11 +289,6 @@ class HRBackend {
      * @return the list of interviewers who are eligible to interview for this job posting.
      */
     ArrayList<Interviewer> getInterviewersInField(BranchJobPosting jobPosting) {
-        if (this.hr.getBranch().getFieldToInterviewers().keySet().contains(jobPosting.getField())) {
-            for (Interviewer interviewer : this.hr.getBranch().getFieldToInterviewers().get(jobPosting.getField())) {
-                System.out.println(interviewer);
-            }
-        }
         return this.hr.getBranch().getFieldToInterviewers().get(jobPosting.getField());
     }
 
