@@ -189,6 +189,9 @@ public class DataLoaderAndStorer {
      * Loads the previous login date saved in "PreviousLoginDate.txt' in memory.
      */
     private void loadPreviousLoginDateAndStaticVariables() {
+        if (this.jobApplicationSystem.getPreviousLoginDate() == null) {
+            return;
+        }
         try (BufferedReader fileReader = new BufferedReader(new FileReader(MISCELLANEOUS_FILE_PATH))) {
             String dateString = fileReader.readLine().trim();
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");

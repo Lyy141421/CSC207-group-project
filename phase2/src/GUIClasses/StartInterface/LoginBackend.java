@@ -32,36 +32,54 @@ class LoginBackend {
     }
 
     User findUserByUsername(String username) {
-        User user = jobAppSystem.getUserManager().findUserByUsername(username);
-        if (user instanceof HRCoordinator) {
-            Branch branch = this.jobAppSystem.getBranch(((HRCoordinator) user).getBranch());
-            if (branch != null) {
-                ((HRCoordinator) user).setBranch(branch);
+        this.resetLinks();
+        return jobAppSystem.getUserManager().findUserByUsername(username);
+    }
+
+    private void resetLinks() {
+        for (User user : jobAppSystem.getUserManager().getAllUsers()) {
+            if (user instanceof HRCoordinator) {
+                this.resetHR(user);
+            } else if (user instanceof Interviewer) {
+                this.resetInterviewer(user);
+            } else if (user instanceof Applicant) {
+                this.resetApplicant(user);
             }
-        } else if (user instanceof Interviewer) {
-            Interviewer interviewer = (Interviewer) user;
-            Branch branch = this.jobAppSystem.getBranch(interviewer.getBranch());
-            if (branch != null) {
-                interviewer.setBranch(branch);
-                interviewer.setInterviews(branch.getInterviewer(interviewer).getInterviews());
-            }
-        } else if (user instanceof Applicant) {
-            Applicant applicant = (Applicant) user;
-            for (Company company : jobAppSystem.getCompanies()) {
-                for (Branch branch : company.getBranches()) {
-                    BranchJobPostingManager branchJobPostingManager = branch.getJobPostingManager();
-                    for (BranchJobPosting jobPosting : branchJobPostingManager.getBranchJobPostings()) {
-                        for (JobApplication jobApplication : jobPosting.getJobApplications()) {
-                            System.out.println(jobApplication);
-                            if (jobApplication.getApplicant().equals(applicant)) {
-                                applicant.getJobApplicationManager().resetJobApplication(jobApplication);
-                            }
+        }
+    }
+
+    private void resetApplicant(User user) {
+        Applicant applicant = (Applicant) user;
+        for (Company company : jobAppSystem.getCompanies()) {
+            for (Branch branch : company.getBranches()) {
+                BranchJobPostingManager branchJobPostingManager = branch.getJobPostingManager();
+                for (BranchJobPosting jobPosting : branchJobPostingManager.getBranchJobPostings()) {
+                    for (JobApplication jobApplication : jobPosting.getJobApplications()) {
+                        System.out.println(jobApplication);
+                        if (jobApplication.getApplicant().equals(applicant)) {
+                            applicant.getJobApplicationManager().resetJobApplication(jobApplication);
+
                         }
                     }
                 }
             }
         }
-        return user;
+    }
+
+    private void resetInterviewer(User user) {
+        Interviewer interviewer = (Interviewer) user;
+        Branch branch = this.jobAppSystem.getBranch(interviewer.getBranch());
+        if (branch != null) {
+            interviewer.setBranch(branch);
+            interviewer.setInterviews(branch.getInterviewer(interviewer).getInterviews());
+        }
+    }
+
+    private void resetHR(User user) {
+        Branch branch = this.jobAppSystem.getBranch(((HRCoordinator) user).getBranch());
+        if (branch != null) {
+            ((HRCoordinator) user).setBranch(branch);
+        }
     }
 
     // === Private methods ===
