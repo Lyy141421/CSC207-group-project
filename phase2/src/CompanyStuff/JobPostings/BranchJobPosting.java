@@ -201,7 +201,7 @@ public class BranchJobPosting extends CompanyJobPosting implements Serializable 
     }
 
     /**
-     * Close the job posting with no
+     * Close the job posting with no applications in consideration.
      */
     public void closeJobPostingNoApplicationsInConsideration() {
         this.setFilled();

@@ -141,23 +141,6 @@ class HRBackend {
         return rejectedApplicants;
     }
 
-    String formatCase(String s) {
-        String[] words = s.split(" ");
-        for (int i = 0; i < words.length; i++) {
-            String firstChar = words[i].substring(0, 1);
-            String rest = "";
-            if (words[i].length() > 1) {
-                rest = words[i].substring(1);
-            }
-            words[i] = firstChar.toUpperCase() + rest.toLowerCase();
-        }
-        String res = "";
-        for (String word : words) {
-            res += " " + word;
-        }
-        return res.substring(1);
-    }
-
     /**
      * Add a job posting to the branch.
      * @param mandatoryFields  The fields that must be entered regardless of method of adding JP.
@@ -165,7 +148,7 @@ class HRBackend {
      */
     void addJobPosting(Object[] mandatoryFields, String[] defaultFields) {
         String title = defaultFields[0];
-        String field = this.formatCase(defaultFields[1]);
+        String field = this.hr.getBranch().formatCase(defaultFields[1]);
         String description = defaultFields[2];
         ArrayList<String> requirements = new ArrayList<>(Arrays.asList(defaultFields[3].split(";")));
         ArrayList<String> tags = new ArrayList<>(Arrays.asList(defaultFields[4].split(";")));
@@ -279,7 +262,7 @@ class HRBackend {
      *
      * @param jobApps   The job applications NOT getting interviews.
      */
-    void rejectApplicationForFirstRound(BranchJobPosting branchJobPosting, ArrayList<JobApplication> jobApps) {
+    void rejectApplicationsForFirstRound(BranchJobPosting branchJobPosting, ArrayList<JobApplication> jobApps) {
         branchJobPosting.getInterviewManager().rejectApplicationsForFirstRound(jobApps);
     }
 

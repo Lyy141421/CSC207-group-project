@@ -88,7 +88,14 @@ public class Branch implements Serializable {
 
     // === Other methods ===
 
-    String formatCase(String s) {
+    /**
+     * Format a string so that the first letter of each word is capitalized. Used for storing field names
+     * into the fieldToInterviewers hashmap.
+     *
+     * @param s The string to be formatted.
+     * @return The formatted string.
+     */
+    public String formatCase(String s) {
         String[] words = s.split(" ");
         for (int i = 0; i < words.length; i++) {
             String firstChar = words[i].substring(0, 1);
