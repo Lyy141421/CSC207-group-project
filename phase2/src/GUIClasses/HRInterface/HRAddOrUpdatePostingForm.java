@@ -516,7 +516,6 @@ class HRAddOrUpdatePostingForm extends HRPanel {
                 valid = false;
             }
         }
-        System.out.println(valid);
 
         if (!this.hrBackend.getToday().isBefore(((LocalDate) mandatoryFields[1]))) {
             valid = false;
