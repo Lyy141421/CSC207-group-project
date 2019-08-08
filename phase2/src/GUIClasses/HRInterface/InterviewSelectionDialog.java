@@ -13,8 +13,6 @@ import java.util.ArrayList;
 
 class InterviewSelectionDialog extends SelectionDialog {
 
-    private JDialog thisDialog = this;
-
     InterviewSelectionDialog(JFrame parent, HRBackend HRInterface, ArrayList<JobApplication> applications, JButton returnButton, int toSelect) {
         super(parent, HRInterface, applications, returnButton, toSelect);
     }
@@ -32,6 +30,17 @@ class InterviewSelectionDialog extends SelectionDialog {
                 dispose();
             }
         });
+    }
+
+    @Override
+    void addCheckBoxListener(JCheckBox checkBox) {
+        //Do nothing
+    }
+
+    @Override
+    void addHeader(JPanel promptPanel) {
+        JLabel topSelectedLabel = new JLabel("Top "+this.toSelect+" applicant by keyword search are selected.");
+        promptPanel.add(topSelectedLabel, BorderLayout.CENTER);
     }
 
     private ArrayList<JobApplication> getApplicantsDeselected() {
