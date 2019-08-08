@@ -14,7 +14,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -97,15 +96,15 @@ class HRViewPosting extends HRPanel {
             public void valueChanged(ListSelectionEvent e) {
                 if (jobPostingList.isSelectionEmpty()) {
                     overview.setText("Select a job posting to view information.");
-                    setRejectListPanel();
                     scheduleButton.setVisible(false);
                 } else {
                     String selectedTitle = jobPostingList.getSelectedValue();
                     selectedJP = currJPs.get(selectedTitle);
                     overview.setText(getStatus() + selectedJP.toString());
-                    setRejectListPanel();
                     scheduleButton.setVisible(main.getScheduleJP().containsKey(selectedTitle));
                 }
+                setRejectListPanel();
+                rejectedPanel.revalidate();
             }
         });
     }

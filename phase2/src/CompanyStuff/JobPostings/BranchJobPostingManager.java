@@ -123,7 +123,7 @@ public class BranchJobPostingManager implements Serializable {
     public ArrayList<BranchJobPosting> getJobPostingsToReview(LocalDate getToday) {
         ArrayList<BranchJobPosting> jobPostings = new ArrayList<>();
         for (BranchJobPosting jobPosting : this.getClosedJobPostingsNotFilled(getToday)) {
-            if (jobPosting.getInterviewManager() == null || jobPosting.getInterviewManager().getHrTask() == InterviewManager.SELECT_APPS_FOR_FIRST_ROUND) {
+            if (jobPosting.getInterviewManager() != null && jobPosting.getInterviewManager().getHrTask() == InterviewManager.SELECT_APPS_FOR_FIRST_ROUND) {
                 jobPostings.add(jobPosting);
             }
         }
