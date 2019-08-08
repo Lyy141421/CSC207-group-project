@@ -86,10 +86,6 @@ public class Branch implements Serializable {
         jobPostingManager = new BranchJobPostingManager(this);
     }
 
-    public void setFieldToInterviewers(HashMap<String, ArrayList<Interviewer>> fieldToInterviewers) {
-        this.fieldToInterviewers = fieldToInterviewers;
-    }
-
     // === Other methods ===
 
     String formatCase(String s) {
@@ -140,13 +136,19 @@ public class Branch implements Serializable {
      */
     public void addInterviewer(Interviewer interviewer) {
         String field = interviewer.getField();
+        boolean hasField = false;
         for (String fieldName : this.fieldToInterviewers.keySet()) {
             if (field.equalsIgnoreCase(fieldName)) {
                 this.fieldToInterviewers.get(formatCase(fieldName)).add(interviewer);
+                hasField = true;
+                break;
             }
         }
-        this.fieldToInterviewers.put(formatCase(field), new ArrayList<>());
-        this.fieldToInterviewers.get(formatCase(field)).add(interviewer);
+        if (!hasField) {
+            this.fieldToInterviewers.put(formatCase(field), new ArrayList<>());
+            this.fieldToInterviewers.get(formatCase(field)).add(interviewer);
+        }
+
     }
 
     @Override
