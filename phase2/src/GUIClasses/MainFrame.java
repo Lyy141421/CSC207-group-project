@@ -34,7 +34,13 @@ public class MainFrame extends JFrame {
         this.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                new DataLoaderAndStorer(jobAppSystem).storeAllData();
+                try {
+                    Thread.sleep(2000);
+                    new DataLoaderAndStorer(jobAppSystem).storeAllData();
+                    Thread.sleep(2000);
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                }
             }
         });
     }

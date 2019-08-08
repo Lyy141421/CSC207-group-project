@@ -1,6 +1,7 @@
 package Main;
 
 import NotificationSystem.Notification;
+import NotificationSystem.NotificationFactory;
 import NotificationSystem.NotificationManager;
 import NotificationSystem.Observer;
 
@@ -40,6 +41,7 @@ public abstract class User implements Serializable, Observer {
     }
 
     public User(String email, LocalDate dateCreated) {
+        this.addNotification(new NotificationFactory().createNotification("Welcome", null));
         this.username = email;
         this.password = DEFAULT_PASSWORD;
         this.email = email;
@@ -47,6 +49,7 @@ public abstract class User implements Serializable, Observer {
     }
 
     public User(String username, String password, String legalName, String email, LocalDate dateCreated) {
+        this.addNotification(new NotificationFactory().createNotification("Welcome", null));
         this.username = username;
         this.password = password;
         this.legalName = legalName;
