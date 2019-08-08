@@ -144,7 +144,7 @@ public class Branch implements Serializable {
     public int hashCode() {
         int sum = 0;
         for (int i = 0; i < name.length(); i++)
-            sum += name.charAt(i);
+            sum += name.toLowerCase().charAt(i);
         return sum;
     }
 
