@@ -34,7 +34,6 @@ public class ApplicantPanel extends UserMain {
 
     @Override
     public void refresh() {
-        super.refresh();
         this.removeAll();
         this.setCards();
         ((CardLayout)this.getLayout()).show(this, "Main");

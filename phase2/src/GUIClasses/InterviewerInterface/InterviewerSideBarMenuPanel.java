@@ -43,41 +43,25 @@ class InterviewerSideBarMenuPanel extends JPanel {
         fullMenu.put("3. Schedule Interviews", new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                createNewThread(InterviewerMain.SCHEDULE).start();
+                ((UserMain) cards.getParent()).refresh();
+                ((CardLayout) cards.getLayout()).show(cards, InterviewerMain.SCHEDULE);
             }
         });
         fullMenu.put("4. View Interviewees", new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                createNewThread(InterviewerMain.INCOMPLETE).start();
+                ((UserMain) cards.getParent()).refresh();
+                ((CardLayout) cards.getLayout()).show(cards, InterviewerMain.INCOMPLETE);
             }
         });
         fullMenu.put("5. Complete Interviews", new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                createNewThread(InterviewerMain.COMPLETE).start();
+                ((UserMain) cards.getParent()).refresh();
+                ((CardLayout) cards.getLayout()).show(cards, InterviewerMain.COMPLETE);
             }
         });
-        fullMenu.put("7. Logout", logoutActionListener);
+        fullMenu.put("6. Logout", logoutActionListener);
         return fullMenu;
-    }
-
-    private Thread createNewThread(String key) {
-        Thread newThread = new Thread() {
-            public void run() {
-                try {
-                    SwingUtilities.invokeAndWait(new Runnable() {
-                        @Override
-                        public void run() {
-                            ((UserMain) cards.getParent()).refresh();
-                            ((CardLayout) cards.getLayout()).show(cards, key);
-                        }
-                    });
-                } catch (InterruptedException | InvocationTargetException ex) {
-                    ex.printStackTrace();
-                }
-            }
-        };
-        return newThread;
     }
 }

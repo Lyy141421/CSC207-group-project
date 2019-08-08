@@ -197,11 +197,23 @@ public class UserManager implements Serializable {
      * Delete all reference accounts that have no applications they need to submit reference letters for.
      */
     public void deleteAllEmptyReferenceAccounts() {
+        System.out.println("Before delete from user manager");
+        for (User user : (ArrayList<User>) this.allUsers.clone()) {
+            if (user instanceof Reference) {
+                System.out.println(user.getUsername());
+            }
+        }
         for (User user : (ArrayList<User>) this.allUsers.clone()) {
             if (user instanceof Reference) {
                 if (((Reference) user).getJobAppsForReference().isEmpty()) {
                     this.allUsers.remove(user);
                 }
+            }
+        }
+        System.out.println("After delete from user manager");
+        for (User user : (ArrayList<User>) this.allUsers.clone()) {
+            if (user instanceof Reference) {
+                System.out.println(user.getUsername());
             }
         }
     }

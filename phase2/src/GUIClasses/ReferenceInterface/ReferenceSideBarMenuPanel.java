@@ -1,10 +1,13 @@
 package GUIClasses.ReferenceInterface;
 
+import ApplicantStuff.JobApplication;
 import GUIClasses.ActionListeners.LogoutActionListener;
 import GUIClasses.ActionListeners.ProfileActionListener;
 import GUIClasses.ActionListeners.ReturnHomeActionListener;
 import GUIClasses.CommonUserGUI.UserMain;
 import GUIClasses.CommonUserGUI.SideBarMenuCreator;
+import Main.JobApplicationSystem;
+import jdk.nashorn.internal.ir.annotations.Reference;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,7 +21,6 @@ class ReferenceSideBarMenuPanel extends JPanel {
     // === Instance variable ===
     private JPanel cards;   // The cards that are being switched
     private LogoutActionListener logoutActionListener;  // The action listener for logging out
-
 
     // === Constructor ===
     ReferenceSideBarMenuPanel(JPanel cards, LogoutActionListener logoutActionListener) {
@@ -41,36 +43,19 @@ class ReferenceSideBarMenuPanel extends JPanel {
         fullMenu.put("3. Submit Reference Letter", new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                createNewThread(ReferenceMain.SUBMIT_REFERENCE_LETTER).start();
+                ((UserMain) cards.getParent()).refresh();
+                ((CardLayout) cards.getLayout()).show(cards, ReferenceMain.SUBMIT_REFERENCE_LETTER);
             }
         });
         fullMenu.put("4. View Referee Job Postings", new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                createNewThread(ReferenceMain.VIEW_REFEREE_JOB_POSTINGS).start();
+                ((UserMain) cards.getParent()).refresh();
+                ((CardLayout) cards.getLayout()).show(cards, ReferenceMain.VIEW_REFEREE_JOB_POSTINGS);
             }
         });
         fullMenu.put("5. Logout", logoutActionListener);
         return fullMenu;
-    }
-
-    private Thread createNewThread(String key) {
-        Thread newThread = new Thread() {
-            public void run() {
-                try {
-                    SwingUtilities.invokeAndWait(new Runnable() {
-                        @Override
-                        public void run() {
-                            ((UserMain) cards.getParent()).refresh();
-                            ((CardLayout) cards.getLayout()).show(cards, key);
-                        }
-                    });
-                } catch (InterruptedException | InvocationTargetException ex) {
-                    ex.printStackTrace();
-                }
-            }
-        };
-        return newThread;
     }
 
 }

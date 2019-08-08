@@ -31,10 +31,10 @@ public class LogoutActionListener implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         System.out.println("From logout action listener");
         this.printAllData();
-//        new DataLoaderAndStorer(jobApplicationSystem).storeAllData();
+        new DataLoaderAndStorer(jobApplicationSystem).storeAllData();
 //        System.out.println("From logout action listener after storing");
 //        this.printAllData();
-        new DataLoaderAndStorer(jobApplicationSystem).refreshAllData();
+//        new DataLoaderAndStorer(jobApplicationSystem).refreshAllData();
         parent.remove(this.getUserPanelFromMenuItemDirectlyOnMenuBar(e));
         masterLayout.show(parent, MainFrame.LOGIN);
 //        new DataLoaderAndStorer(jobApplicationSystem).loadAllData();

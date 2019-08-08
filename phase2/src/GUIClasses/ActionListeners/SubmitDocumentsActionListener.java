@@ -58,37 +58,9 @@ public class SubmitDocumentsActionListener implements ActionListener {
         JOptionPane.showMessageDialog(parent, "You have successfully submitted " + value + " files.");
         ((CardLayout) cardPanel.getLayout()).first(cardPanel);
         if (cardPanel.getParent() instanceof UserMain) {
-            Thread newThread = new Thread() {
-                public void run() {
-                    try {
-                        SwingUtilities.invokeAndWait(new Runnable() {
-                            @Override
-                            public void run() {
-                                ((UserMain) cardPanel.getParent()).refresh();
-                            }
-                        });
-                    } catch (InterruptedException | InvocationTargetException ex) {
-                        System.out.println("Something went wrong");
-                    }
-                }
-            };
-            newThread.start();
+            ((UserMain) cardPanel.getParent()).refresh();
         } else {
-            Thread newThread = new Thread() {
-                public void run() {
-                    try {
-                        SwingUtilities.invokeAndWait(new Runnable() {
-                            @Override
-                            public void run() {
-                                ((UserMain) cardPanel).refresh();
-                            }
-                        });
-                    } catch (InterruptedException | InvocationTargetException ex) {
-                        ex.printStackTrace();
-                    }
-                }
-            };
-            newThread.start();
+            ((UserMain) cardPanel).refresh();
         }
     }
 

@@ -3,6 +3,7 @@ package GUIClasses.StartInterface;
 import ApplicantStuff.Applicant;
 import ApplicantStuff.JobApplication;
 import ApplicantStuff.JobApplicationManager;
+import ApplicantStuff.Reference;
 import CompanyStuff.*;
 import CompanyStuff.JobPostings.BranchJobPosting;
 import CompanyStuff.JobPostings.BranchJobPostingManager;
@@ -49,7 +50,6 @@ class LoginBackend {
             }
         } else if (user instanceof Applicant) {
             Applicant applicant = (Applicant) user;
-            System.out.println("The source job applications");
             for (Company company : jobAppSystem.getCompanies()) {
                 for (Branch branch : company.getBranches()) {
                     BranchJobPostingManager branchJobPostingManager = branch.getJobPostingManager();
@@ -63,36 +63,15 @@ class LoginBackend {
                     }
                 }
             }
-            System.out.println("After set");
-            JobApplicationManager jobApplicationManager = applicant.getJobApplicationManager();
-            for (JobApplication jobApp : jobApplicationManager.getJobApplications()) {
+        } else if (user instanceof Reference) {
+            System.out.println("Before set");
+            Reference reference = (Reference) user;
+            for (JobApplication jobApp : reference.getJobAppsForReference()) {
                 System.out.println(jobApp);
             }
-//            if (jobApplicationManager != null) {
-//                System.out.println("The destination job application manager");
-//                System.out.println("Before set");
-//                for (JobApplication jobApp : this.jobAppSystem.getUserManager().getApplicant(applicant).getJobApplicationManager().getJobApplications()) {
-//                    System.out.println(jobApp);
-//                }
-//                this.jobAppSystem.getUserManager().getApplicant(applicant).setJobApplicationManager(jobApplicationManager);
-//                System.out.println("After set");
-//                for (JobApplication jobApp : this.jobAppSystem.getUserManager().getApplicant(applicant).getJobApplicationManager().getJobApplications()) {
-//                    System.out.println(jobApp);
-//                }
-//            }
+            System.out.println("After set");
+
         }
-
-
-//        System.out.println("From login backend");
-//        System.out.println("Branch ID from HR : " + ((HRCoordinator) user).getBranch());
-//        System.out.println(((HRCoordinator) user).getBranch().getFieldToInterviewers());
-//        System.out.println("From job application system: ");
-//        for (Company company : jobAppSystem.getCompanies()) {
-//            for (Branch branch : company.getBranches()) {
-//                System.out.println(branch);
-//                System.out.println(branch.getFieldToInterviewers().toString());
-//            }
-//        }
         return user;
     }
 

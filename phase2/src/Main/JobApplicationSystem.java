@@ -6,9 +6,7 @@ import ApplicantStuff.Applicant;
 import CompanyStuff.JobPostings.CompanyJobPosting;
 import FileLoadingAndStoring.DataLoaderAndStorer;
 import GUIClasses.MainFrame;
-import NotificationSystem.Notification;
 
-import javax.swing.*;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -29,12 +27,13 @@ public class JobApplicationSystem implements Serializable {
     public static void main(String[] args) {
         JobApplicationSystem jobAppSystem = new JobApplicationSystem();
         new DataLoaderAndStorer(jobAppSystem).loadAllData();
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                new MainFrame(jobAppSystem);
-            }
-        });
+        new MainFrame(jobAppSystem);
+//        SwingUtilities.invokeLater(new Runnable() {
+//            @Override
+//            public void run() {
+//                new MainFrame(jobAppSystem);
+//            }
+//        });
     }
 
     // === Public methods ===
@@ -62,7 +61,7 @@ public class JobApplicationSystem implements Serializable {
 
     public void setToday(LocalDate newDate) {
         this.today = newDate;
-        Notification.setDate(newDate);
+//        Notification.setDate(newDate);
     }
 
     public void setPreviousLoginDate(LocalDate date) {

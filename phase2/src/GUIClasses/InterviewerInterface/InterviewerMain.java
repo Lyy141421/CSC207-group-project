@@ -63,7 +63,6 @@ public class InterviewerMain extends UserMain {
     }
 
     public void refresh() {
-        super.refresh();
         cards.removeAll();
         this.setCards();
     }

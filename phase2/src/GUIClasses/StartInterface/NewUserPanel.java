@@ -83,7 +83,6 @@ public class NewUserPanel extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 System.out.println("From submit button action listener");
                 System.out.println(Thread.activeCount());
-                System.out.println(Thread.getAllStackTraces());
                 String status = createUser(selector);
                 postCreation(status, success);
             }

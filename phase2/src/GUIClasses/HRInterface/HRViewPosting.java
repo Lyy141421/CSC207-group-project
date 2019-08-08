@@ -121,26 +121,11 @@ class HRViewPosting extends HRPanel {
                 groupDialog.addWindowListener(new WindowAdapter() {
                     @Override
                     public void windowClosed(WindowEvent e) {
-                        Thread newThread = new Thread() {
-                            public void run() {
-                                try {
-                                    SwingUtilities.invokeAndWait(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            reload();
-                                        }
-                                    });
-                                } catch (InterruptedException | InvocationTargetException ex) {
-                                    ex.printStackTrace();
-                                }
-                            }
-                        };
-                        newThread.start();
+                        reload();
                     }
                 });
             }
         });
-
         return scheduleButton;
     }
 

@@ -21,25 +21,11 @@ public class ReturnHomeActionListener implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         CardLayout cl = (CardLayout) cards.getLayout();
-        Thread newThread = new Thread() {
-            public void run() {
-                try {
-                    SwingUtilities.invokeAndWait(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (cards.getParent() instanceof UserMain) {
-                                ((UserMain) cards.getParent()).refresh();
-                            } else {
-                                ((ApplicantMain) cards.getParent()).refresh();
-                            }
-                        }
-                    });
-                } catch (InterruptedException | InvocationTargetException ex) {
-                    ex.printStackTrace();
-                }
-            }
-        };
-        newThread.start();
+        if (cards.getParent() instanceof UserMain) {
+            ((UserMain) cards.getParent()).refresh();
+        } else {
+            ((ApplicantMain) cards.getParent()).refresh();
+        }
         cl.show(cards, UserMain.HOME);
     }
 }

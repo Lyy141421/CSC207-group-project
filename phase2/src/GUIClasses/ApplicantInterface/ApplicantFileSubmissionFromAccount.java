@@ -62,21 +62,7 @@ class ApplicantFileSubmissionFromAccount extends JPanel {
                 } else {
                     new SubmitDocumentsActionListener(masterPanel, applicantBackend.getApplicant(), jobApp,
                             documentSelector.getFilesToSubmit()).actionPerformed(e);
-                    Thread newThread = new Thread() {
-                        public void run() {
-                            try {
-                                SwingUtilities.invokeAndWait(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        ((UserMain) masterPanel).refresh();
-                                    }
-                                });
-                            } catch (InterruptedException | InvocationTargetException ex) {
-                                ex.printStackTrace();
-                            }
-                        }
-                    };
-                    newThread.start();
+                    ((UserMain) masterPanel).refresh();
                 }
             }
         });
