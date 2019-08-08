@@ -207,8 +207,8 @@ public class DataLoaderAndStorer {
     }
 
     public void refreshAllData() {
-        this.storeAllData();
-        this.loadAllData();
+//        this.storeAllData();
+//        this.loadAllData();
     }
 
     /**
