@@ -22,11 +22,11 @@ public class NotificationFactory {
             case AUTO_HIRING_EXACT:
                 return new Notification("Auto-Hiring Applicants All Positions Filled",
                         "All applicants in consideration for " + ((BranchJobPosting) object).getTitle() + " have been auto-hired and" +
-                                "all positions have been filled");
+                                " all positions have been filled");
             case AUTO_HIRING_LESS:
                 return new Notification("Auto-Hiring Applicants Some Positions Filled",
                         "All applicants in consideration for " + ((BranchJobPosting) object).getTitle() + " have been auto-hired" +
-                                "but not all requested positions have been filled");
+                                " but not all requested positions have been filled");
             case NO_APPS_IN_CONSIDERATION:
                 BranchJobPosting jobPosting = (BranchJobPosting) object;
                 return new Notification("Warning: No Applications in Consideration",
