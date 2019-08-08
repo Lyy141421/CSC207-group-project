@@ -206,11 +206,6 @@ public class DataLoaderAndStorer {
         }
     }
 
-    public void refreshAllData() {
-//        this.storeAllData();
-//        this.loadAllData();
-    }
-
     /**
      * Saves all the data to the appropriate files.
      *
