@@ -66,6 +66,7 @@ public class Applicant extends User {
         this.jobApplicationManager = jobApplicationManager;
     }
 
+
     // === Other methods ===
 
     /**
