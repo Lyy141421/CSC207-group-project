@@ -1,29 +1,15 @@
 package GUIClasses.HRInterface;
 
-import ApplicantStuff.Applicant;
-import ApplicantStuff.JobApplication;
-import ApplicantStuff.JobApplicationDocument;
-import ApplicantStuff.Reference;
-import CompanyStuff.Branch;
-import CompanyStuff.Company;
 import CompanyStuff.HRCoordinator;
-import CompanyStuff.Interviewer;
 import CompanyStuff.JobPostings.BranchJobPosting;
-import CompanyStuff.JobPostings.BranchJobPostingManager;
-import FileLoadingAndStoring.DataLoaderAndStorer;
 import GUIClasses.ActionListeners.LogoutActionListener;
-import GUIClasses.ApplicantInterface.ApplicantMain;
 import GUIClasses.CommonUserGUI.UserMain;
 import GUIClasses.CommonUserGUI.UserProfilePanel;
 import Main.JobApplicationSystem;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.File;
-import java.lang.reflect.InvocationTargetException;
-import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 
 public class HRMain extends UserMain {
@@ -97,6 +83,7 @@ public class HRMain extends UserMain {
 
     /**
      * Gets a hash map of titles to branch job postings from a list of job postings.
+     *
      * @param JPList a list of job postings.
      * @return the hash map of titles to branch job postings.
      */
@@ -111,6 +98,7 @@ public class HRMain extends UserMain {
 
     /**
      * Gets a string representation of the title of this branch job posting.
+     *
      * @param branchJobPosting a branch job posting.
      * @return the title to be displayed of this branch job posting.
      */
@@ -227,9 +215,9 @@ public class HRMain extends UserMain {
 //        frame.setVisible(true);
 //        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        // Run this!
-        // This instantiates 2 applicants who apply to a single job posting
-        // Also instantiates an hr and interviewer in that company
+    // Run this!
+    // This instantiates 2 applicants who apply to a single job posting
+    // Also instantiates an hr and interviewer in that company
 //        JobApplicationSystem jobApplicationSystem = new JobApplicationSystem();
 //        new DataLoaderAndStorer(jobApplicationSystem).loadAllData();
 //        jobApplicationSystem.setToday(LocalDate.of(2019, 7, 19));

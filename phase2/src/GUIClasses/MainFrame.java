@@ -27,17 +27,17 @@ public class MainFrame extends JFrame {
         this.jobAppSystem = jobAppSystem;
         initUI();
         addCards();
-//        this.addWindowListener();
+        this.addWindowListener();
     }
 
-//    private void addWindowListener() {
-//        this.addWindowListener(new WindowAdapter() {
-//            @Override
-//            public void windowClosed(WindowEvent e) {
-//                new DataLoaderAndStorer(jobAppSystem).storeAllData();
-//            }
-//        });
-//    }
+    private void addWindowListener() {
+        this.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                new DataLoaderAndStorer(jobAppSystem).storeAllData();
+            }
+        });
+    }
 
     /**
      * Sets up the parameters used in the main JFrame

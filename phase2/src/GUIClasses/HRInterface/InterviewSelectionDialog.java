@@ -37,7 +37,7 @@ class InterviewSelectionDialog extends SelectionDialog {
 
     @Override
     void addHeader(JPanel promptPanel) {
-        JLabel topSelectedLabel = new JLabel("Top "+this.toSelect+" applicant by keyword search are selected.");
+        JLabel topSelectedLabel = new JLabel("Top " + this.toSelect + " applicant by keyword search are selected.");
         promptPanel.add(topSelectedLabel, BorderLayout.CENTER);
     }
 

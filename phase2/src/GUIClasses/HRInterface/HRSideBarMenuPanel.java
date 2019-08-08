@@ -1,7 +1,9 @@
 package GUIClasses.HRInterface;
 
 import ApplicantStuff.JobApplication;
-import CompanyStuff.*;
+import CompanyStuff.Branch;
+import CompanyStuff.Company;
+import CompanyStuff.InterviewManager;
 import CompanyStuff.JobPostings.BranchJobPosting;
 import CompanyStuff.JobPostings.BranchJobPostingManager;
 import GUIClasses.ActionListeners.LogoutActionListener;
@@ -9,14 +11,11 @@ import GUIClasses.ActionListeners.ProfileActionListener;
 import GUIClasses.ActionListeners.ReturnHomeActionListener;
 import GUIClasses.CommonUserGUI.SideBarMenuCreator;
 import GUIClasses.CommonUserGUI.UserMain;
-import Main.JobApplicationSystem;
-import Main.User;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.lang.reflect.InvocationTargetException;
 import java.util.TreeMap;
 
 class HRSideBarMenuPanel extends JPanel {

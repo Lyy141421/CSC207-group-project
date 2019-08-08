@@ -25,8 +25,7 @@ class HiringSelectionDialog extends SelectionDialog {
                 int applicantsSelected = getApplicantsSelected().size();
                 if (applicantsSelected > applications.get(0).getJobPosting().getNumPositions()) {
                     JOptionPane.showMessageDialog(contentPane, "Selection exceeded number of positions available.");
-                }
-                else {
+                } else {
                     hrBackend.selectApplicantsForHire(applications.get(0).getJobPosting(), getApplicantsSelected());
                     setModalityType(ModalityType.MODELESS);
                     setVisible(false);
@@ -40,14 +39,14 @@ class HiringSelectionDialog extends SelectionDialog {
         checkBox.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
-                if (e.getStateChange()==ItemEvent.SELECTED) {
+                if (e.getStateChange() == ItemEvent.SELECTED) {
                     numOfPositions--;
-                    if (numOfPositions<0) {
+                    if (numOfPositions < 0) {
                         ((JCheckBox) e.getSource()).setSelected(false);
                         numOfPositions++;
-                        assert numOfPositions>=0;
+                        assert numOfPositions >= 0;
                     }
-                } else if (e.getStateChange()==ItemEvent.DESELECTED) {
+                } else if (e.getStateChange() == ItemEvent.DESELECTED) {
                     numOfPositions++;
                 }
             }
@@ -58,7 +57,7 @@ class HiringSelectionDialog extends SelectionDialog {
     void addHeader(JPanel promptPanel) {
         this.numOfPositions = applications.get(0).getJobPosting().getNumPositions();
         JPanel positionsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        JLabel positionLabel = new JLabel("Number of positions: "+this.numOfPositions);
+        JLabel positionLabel = new JLabel("Number of positions: " + this.numOfPositions);
         positionsPanel.add(positionLabel);
         promptPanel.add(positionsPanel, BorderLayout.CENTER);
     }

@@ -10,14 +10,12 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 class GradingFilterDialog extends JDialog {
 
     private static final int MAX_TO_SELECT = 1000;
-
-    private JFrame parent;
     HRBackend hrBackend;
+    private JFrame parent;
     private ArrayList<JobApplication> applications;
 
     private JButton returnButton;
@@ -26,7 +24,7 @@ class GradingFilterDialog extends JDialog {
     private JSpinner numberToSelect;
 
     GradingFilterDialog(JFrame parent, HRBackend hrBackend, ArrayList<JobApplication> applications, JButton returnButton) {
-        super(parent,"Sort by keywords");
+        super(parent, "Sort by keywords");
 
         this.parent = parent;
         this.hrBackend = hrBackend;
@@ -65,7 +63,7 @@ class GradingFilterDialog extends JDialog {
         this.add(keywordPanel, BorderLayout.CENTER);
     }
 
-    void setSelectNumber() {
+    private void setSelectNumber() {
         JPanel numberPanel = new JPanel(new FlowLayout());
         JLabel numberPrompt = new JLabel("Select top");
         this.numberToSelect = new JSpinner(new SpinnerNumberModel(1, 1, MAX_TO_SELECT, 1));
@@ -74,7 +72,7 @@ class GradingFilterDialog extends JDialog {
         this.add(numberPanel, BorderLayout.EAST);
     }
 
-    void setButtons() {
+    private void setButtons() {
         JPanel confirmButtonPanel = new JPanel();
         JButton confirmButton = new JButton("Confirm");
         confirmButton.addActionListener(new ActionListener() {
@@ -87,7 +85,7 @@ class GradingFilterDialog extends JDialog {
                 setModalityType(ModalityType.MODELESS);
                 setVisible(false);
                 JDialog interviewDialog = new InterviewSelectionDialog(parent, hrBackend, sortedApplications,
-                        returnButton, ((SpinnerNumberModel)numberToSelect.getModel()).getNumber().intValue());
+                        returnButton, ((SpinnerNumberModel) numberToSelect.getModel()).getNumber().intValue());
                 interviewDialog.addWindowListener(new WindowAdapter() {
                     @Override
                     public void windowClosed(WindowEvent e) {

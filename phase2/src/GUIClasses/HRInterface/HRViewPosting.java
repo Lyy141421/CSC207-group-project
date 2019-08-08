@@ -21,22 +21,12 @@ class HRViewPosting extends HRPanel {
 
     private static final String OVERVIEW = "Overview";
     private static final String REJECT_LIST = "Rejected list";
-    public static int HIGH_PRIORITY = 0;
-    public static int ALL = 1;
-    public static int UPDATABLE = 2;
-
-    /*private HashMap<String, BranchJobPosting> unreviewedJP;
-    private HashMap<String, BranchJobPosting> scheduleJP;
-    private HashMap<String, BranchJobPosting> hiringJP;
-    private HashMap<String, BranchJobPosting> archivedJP;
-    private HashMap<String, BranchJobPosting> importantJP = new HashMap<>();
-    private HashMap<String, BranchJobPosting> updatableJPs;
-    private HashMap<String, BranchJobPosting> allJP;*/
-
-    private HashMap<String, BranchJobPosting> currJPs;
-
-    private HRViewPosting containerPane = this;
+    static int HIGH_PRIORITY = 0;
+    static int ALL = 1;
+    static int UPDATABLE = 2;
     HRMain main;
+    private HashMap<String, BranchJobPosting> currJPs;
+    private HRViewPosting containerPane = this;
     private JPanel parent;
     private int jpType;
     private JTabbedPane infoPane;
@@ -54,7 +44,6 @@ class HRViewPosting extends HRPanel {
         this.parent = parent;
         this.main = (HRMain) parent.getParent();
         this.jpType = jpType;
-        // this.setJPLists();
         if (jpType == HIGH_PRIORITY) {
             this.currJPs = main.getImportantJP();
         } else if (jpType == ALL) {
@@ -83,7 +72,7 @@ class HRViewPosting extends HRPanel {
         this.setListSelectionListener();
     }
 
-    void reload() {
+    private void reload() {
         this.jobPostingList.removeAll();
         this.jobPostingList.setListData(currJPs.keySet().toArray(new String[currJPs.size()]));
         revalidate();
@@ -110,7 +99,7 @@ class HRViewPosting extends HRPanel {
         });
     }
 
-    private JButton createScheduleButton () {
+    private void createScheduleButton() {
         this.scheduleButton = new JButton("Schedule group interview");
         this.scheduleButton.setVisible(false);
         this.scheduleButton.addActionListener(new ActionListener() {
@@ -126,7 +115,6 @@ class HRViewPosting extends HRPanel {
                 });
             }
         });
-        return scheduleButton;
     }
 
     private void createUpdateButton() {
@@ -147,7 +135,7 @@ class HRViewPosting extends HRPanel {
         });
     }
 
-    private void setJobPostingList (JSplitPane splitDisplay) {
+    private void setJobPostingList(JSplitPane splitDisplay) {
         this.jobPostingList.setListData(currJPs.keySet().toArray(new String[currJPs.size()]));
         this.jobPostingList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         this.jobPostingList.setLayoutOrientation(JList.VERTICAL);
@@ -187,7 +175,7 @@ class HRViewPosting extends HRPanel {
     }
 
 
-    private JButton createViewAppButton () {
+    private JButton createViewAppButton() {
         JButton viewAppsButton = new JButton("View applications");
         viewAppsButton.addActionListener(new ActionListener() {
             @Override
@@ -219,8 +207,6 @@ class HRViewPosting extends HRPanel {
         }
         parent.add(appPanel, HRPanel.APPLICATION, 7);
         ((CardLayout) parent.getLayout()).show(parent, HRPanel.APPLICATION);
-        //TODO: new Group interview doesn't show up until switch panel.
-        // if (hrBackend.needsGroupInterview(selectedJP)
         reload();
     }
 
@@ -233,26 +219,6 @@ class HRViewPosting extends HRPanel {
             return HRPanel.UPDATE_POSTING;
         }
     }
-
-    /*private void setJPLists() {
-        this.unreviewedJP = this.getTitleToJPMap(hrBackend.getJPToReview());
-        this.scheduleJP = this.getTitleToJPMap(hrBackend.getJPToSchedule());
-        this.hiringJP = this.getTitleToJPMap(hrBackend.getJPToHire());
-        this.archivedJP = this.getTitleToJPMap(hrBackend.getAllFilledJP());
-        this.updatableJPs = this.getTitleToJPMap(hrBackend.getJPThatCanBeUpdated());
-        this.allJP = this.getTitleToJPMap(hrBackend.getAllJP());
-
-        this.importantJP.putAll(this.unreviewedJP);
-        this.importantJP.putAll(this.scheduleJP);
-        this.importantJP.putAll(this.hiringJP);
-    }*/
-
-    /*void removeFromJPLists(String title) {
-        this.unreviewedJP.remove(title);
-        this.scheduleJP.remove(title);
-        this.hiringJP.remove(title);
-        this.importantJP.remove(title);
-    }*/
 
     private String getStatus() {
         String status;
