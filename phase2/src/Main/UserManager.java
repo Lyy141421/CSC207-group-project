@@ -100,6 +100,24 @@ public class UserManager implements Serializable {
         return null;
     }
 
+    public HRCoordinator getHR(HRCoordinator hrCoordinator) {
+        for (HRCoordinator hr : this.getAllHRCoordinators()) {
+            if (hrCoordinator.equals(hr)) {
+                return hr;
+            }
+        }
+        return null;
+    }
+
+    public Interviewer getInterviewer(Interviewer interviewer) {
+        for (Interviewer in : this.getAllInterviewers()) {
+            if (interviewer.equals(in)) {
+                return in;
+            }
+        }
+        return null;
+    }
+
     /**
      * Add referees for this job application.
      *

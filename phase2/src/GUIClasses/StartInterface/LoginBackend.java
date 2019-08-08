@@ -1,6 +1,7 @@
 package GUIClasses.StartInterface;
 
 import ApplicantStuff.Applicant;
+import ApplicantStuff.JobApplicationManager;
 import CompanyStuff.*;
 import CompanyStuff.JobPostings.BranchJobPosting;
 import Main.JobApplicationSystem;
@@ -30,15 +31,26 @@ class LoginBackend {
     User findUserByUsername(String username) {
         User user = jobAppSystem.getUserManager().findUserByUsername(username);
         if (user instanceof HRCoordinator) {
-            ((HRCoordinator) user).setBranch(this.jobAppSystem.getBranch(((HRCoordinator) user).getBranch()));
+//            HRCoordinator hr = (HRCoordinator) user;
+//            this.jobAppSystem.getUserManager().getHR(hr).setBranch(this.jobAppSystem.getBranch(hr.getBranch()));
+            Branch branch = this.jobAppSystem.getBranch(((HRCoordinator) user).getBranch());
+            if (branch != null) {
+                ((HRCoordinator) user).setBranch(branch);
+            }
         } else if (user instanceof Interviewer) {
             Interviewer interviewer = (Interviewer) user;
+//            this.jobAppSystem.getUserManager().getInterviewer(interviewer).setBranch(this.jobAppSystem.getBranch(interviewer.getBranch()));
             Branch branch = this.jobAppSystem.getBranch(interviewer.getBranch());
-            interviewer.setBranch(branch);
-            interviewer.setInterviews(branch.getInterviewer(interviewer).getInterviews());
+            if (branch != null) {
+                interviewer.setBranch(branch);
+                interviewer.setInterviews(branch.getInterviewer(interviewer).getInterviews());
+            }
         } else if (user instanceof Applicant) {
             Applicant applicant = (Applicant) user;
-            this.jobAppSystem.getUserManager().getApplicant(applicant).setJobApplicationManager(applicant.getJobApplicationManager());
+            JobApplicationManager jobApplicationManager = applicant.getJobApplicationManager();
+            if (jobApplicationManager != null) {
+                this.jobAppSystem.getUserManager().getApplicant(applicant).setJobApplicationManager(jobApplicationManager);
+            }
         }
 
 
