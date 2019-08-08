@@ -79,8 +79,9 @@ public class JobApplicationManager implements Serializable {
                     break;
                 }
                 LocalDate interviewDate = interview.getTime().getDate();
-                if (interviewDate.isEqual(today) || (interviewDate.isAfter(today) &&
-                        today.plusDays(UPCOMING_DAYS + 1).isAfter(interviewDate))) {
+                if (!application.isArchived() && !application.isHired() &&
+                        (interviewDate.isEqual(today) || (interviewDate.isAfter(today) &&
+                                today.plusDays(UPCOMING_DAYS + 1).isAfter(interviewDate)))) {
                     upcomingInterviews.add(interview);
                 }
             }
@@ -169,8 +170,7 @@ public class JobApplicationManager implements Serializable {
      * @param posting The job posting in question.
      * @return the job application associated with this job posting.
      */
-    // TODO set as private after testing
-    public JobApplication findJobApplication(BranchJobPosting posting) {
+    private JobApplication findJobApplication(BranchJobPosting posting) {
         for (JobApplication app : this.jobApplications) {
             if (app.getJobPosting().equals(posting)) {
                 return app;

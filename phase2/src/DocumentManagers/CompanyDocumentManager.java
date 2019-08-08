@@ -44,8 +44,8 @@ public class CompanyDocumentManager extends DocumentManager {
      * @param branchJobPosting The branch job posting for which a folder is to be created.
      * @return the folder that was created.
      */
-    // TODO make private after testing
-    public File createBranchJobPostingFolder(BranchJobPosting branchJobPosting) {
+
+    private File createBranchJobPostingFolder(BranchJobPosting branchJobPosting) {
         Branch branch = branchJobPosting.getBranch();
         File branchFolder = new File(this.getFolder().getPath() + "/" + branch.getName());
         File jobPostingFolder = new File(branchFolder.getPath() + "/" + branchJobPosting.getId() + "_" +
@@ -65,8 +65,8 @@ public class CompanyDocumentManager extends DocumentManager {
      * @param branchJobPosting The job posting in question.
      * @return the folder for this job posting.
      */
-    // TODO make private after testing
-    public File getFolderForJobPosting(BranchJobPosting branchJobPosting) {
+
+    private File getFolderForJobPosting(BranchJobPosting branchJobPosting) {
         Branch branch = branchJobPosting.getBranch();
         File branchFolder = new File(this.getFolder().getPath() + "/" + branch.getName());
         return new File(branchFolder.getPath() + "/" + branchJobPosting.getId() + "_" +
@@ -80,8 +80,8 @@ public class CompanyDocumentManager extends DocumentManager {
      * @param jobApp           The job application for which the folder is to be created.
      * @return the folder created.
      */
-    // TODO make private after testing
-    public File createApplicationFolder(File jobPostingFolder, JobApplication jobApp) {
+
+    private File createApplicationFolder(File jobPostingFolder, JobApplication jobApp) {
         Applicant applicant = jobApp.getApplicant();
         File applicationFolder = new File(jobPostingFolder.getPath() + "/" + applicant.getUsername());
         applicationFolder.mkdirs();
