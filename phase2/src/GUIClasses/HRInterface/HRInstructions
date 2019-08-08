@@ -1,0 +1,24 @@
+HRAddOrUpdatePostingForm:
+    The only field that can be left blank is document.
+    Application close date must be at least one day past today. (It will only show up in HR as under review the day after close date)
+    If you choose to enter tags through the textbox, it will only be valid if there is at least 1 alphanumeric character.
+
+HRViewApp:
+    This is a special page. We would've disabled the menu bar if we had more time. Please DO NOT clickck anything on the menu bar.
+    You should at least see 1 button on the screen. If it's return, it sends you back to where you came into this panel from.
+    Otherwise you're supposed to be locked into this panel (Again. Don't use the menu bar). The button sends you to some
+    tasks you need to finish before you can leave this panel.
+
+Dialogs:
+    The closing operation (x) should be disabled on all important dialogs. Please do NOT try to close them.
+
+HR's tasks:
+    HR mainly handles: creating job posting, reviewing applications immediately after a job posting closes, set all
+    interview rounds formats, scheduling group interview when needed, and making hiring decisions. Create job posting
+    is in it's own panel; scheduling group interview can be accessed in view job posting when the JP needing group
+    interview is selected; the rest should all be accessed by selecting the specific job posting and clicking view
+    applications.
+
+    Immediately after interview rounds formats are set, if the first round is a group interview, it will not show up in
+    high priority job postings until you have returned to home panel (by clicking return on view app, then clicking home
+    from view jp)
