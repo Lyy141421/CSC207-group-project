@@ -67,18 +67,18 @@ class ApplicantSideBarMenuPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 printAllData(jobApplicationSystem);
-                resetJobApplicationManager();
+//                resetJobApplicationManager();
                 printAllData(jobApplicationSystem);
                 logout.actionPerformed(e);
             }
         });
         return fullMenu;
     }
-
-    private void resetJobApplicationManager() {
-        Applicant applicantFromJobAppSystem = (Applicant) jobApplicationSystem.getUserManager().findUserByUsername(applicantBackend.getApplicant().getUsername());
-        applicantFromJobAppSystem.setJobApplicationManager(applicantBackend.getApplicant().getJobApplicationManager());
-    }
+//
+//    private void resetJobApplicationManager() {
+//        Applicant applicantFromJobAppSystem = (Applicant) jobApplicationSystem.getUserManager().findUserByUsername(applicantBackend.getApplicant().getUsername());
+//        applicantFromJobAppSystem.setJobApplicationManager(applicantBackend.getApplicant().getJobApplicationManager());
+//    }
 
     public void printAllData(JobApplicationSystem jobApplicationSystem) {
         System.out.println("From job application system");

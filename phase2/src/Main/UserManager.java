@@ -91,6 +91,15 @@ public class UserManager implements Serializable {
         return null;
     }
 
+    public Applicant getApplicant(Applicant applicant) {
+        for (Applicant app : this.getAllApplicants()) {
+            if (applicant.equals(app)) {
+                return app;
+            }
+        }
+        return null;
+    }
+
     /**
      * Add referees for this job application.
      *

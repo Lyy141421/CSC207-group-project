@@ -36,7 +36,12 @@ class LoginBackend {
             Branch branch = this.jobAppSystem.getBranch(interviewer.getBranch());
             interviewer.setBranch(branch);
             interviewer.setInterviews(branch.getInterviewer(interviewer).getInterviews());
+        } else if (user instanceof Applicant) {
+            Applicant applicant = (Applicant) user;
+            this.jobAppSystem.getUserManager().getApplicant(applicant).setJobApplicationManager(applicant.getJobApplicationManager());
         }
+
+
 //        System.out.println("From login backend");
 //        System.out.println("Branch ID from HR : " + ((HRCoordinator) user).getBranch());
 //        System.out.println(((HRCoordinator) user).getBranch().getFieldToInterviewers());
