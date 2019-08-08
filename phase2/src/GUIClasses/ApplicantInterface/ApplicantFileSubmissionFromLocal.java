@@ -9,7 +9,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-class ApplicantFileSubmissionFromLocal extends JPanel {
+public class ApplicantFileSubmissionFromLocal extends JPanel {
 
     ApplicantFileSubmissionFromLocal(JPanel masterPanel, ApplicantBackend applicantBackend, BranchJobPosting jobPosting) {
         JobApplication jobApp = applicantBackend.createJobApplication(jobPosting);
@@ -35,6 +35,7 @@ class ApplicantFileSubmissionFromLocal extends JPanel {
     private JPanel createReturnButtonPanel(JPanel masterPanel) {
         JPanel returnPanel = new JPanel();
         JButton returnButton = new JButton("Back");
+        returnButton.setEnabled(false);
         returnButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

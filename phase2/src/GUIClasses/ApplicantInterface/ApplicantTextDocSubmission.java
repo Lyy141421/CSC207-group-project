@@ -1,6 +1,7 @@
 package GUIClasses.ApplicantInterface;
 
 import ApplicantStuff.JobApplication;
+import CompanyStuff.JobPostings.BranchJobPosting;
 import GUIClasses.ActionListeners.SubmitDocumentsActionListener;
 import GUIClasses.CommonUserGUI.UserMain;
 
@@ -13,8 +14,9 @@ import java.util.HashMap;
 
 class ApplicantTextDocSubmission extends JPanel {
 
-    ApplicantTextDocSubmission(JPanel masterPanel, ApplicantBackend backend, JobApplication jobApp) {
+    ApplicantTextDocSubmission(JPanel masterPanel, ApplicantBackend backend, BranchJobPosting j) {
         this.setLayout(null);
+        JobApplication jobApp = backend.createJobApplication(j);
 
         JLabel titleText = new JLabel("Document Submission", SwingConstants.CENTER);
         titleText.setFont(new Font("Serif", Font.PLAIN, 22));
@@ -39,6 +41,7 @@ class ApplicantTextDocSubmission extends JPanel {
 
         JButton returnButton = new JButton("Back");
         returnButton.setBounds(20, 20, 80, 30);
+        returnButton.setEnabled(false);
 
         JButton addReferencesButton = new JButton("Add References");
         addReferencesButton.setBounds(300, 400, 150, 30);
@@ -51,21 +54,8 @@ class ApplicantTextDocSubmission extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 new SubmitDocumentsActionListener(masterPanel, jobApp.getApplicant(), jobApp, fileTypeToContents).actionPerformed(e);
-//                Thread newThread = new Thread() {
-//                    public void run() {
-//                        try {
-//                            SwingUtilities.invokeAndWait(new Runnable() {
-//                                @Override
-//                                public void run() {
-                                    ((UserMain) masterPanel).refresh();
-//                                }
-//                            });
-//                        } catch (InterruptedException | InvocationTargetException ex) {
-//                            ex.printStackTrace();
-//                        }
-//                    }
-//                };
-////                newThread.start();
+                returnButton.setEnabled(true);
+                ((UserMain) masterPanel).refresh();
             }
         });
         returnButton.addActionListener(new ActionListener() {
