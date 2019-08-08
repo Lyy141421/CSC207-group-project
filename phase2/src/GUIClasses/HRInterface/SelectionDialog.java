@@ -7,7 +7,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-abstract class SelectionDialog extends JDialog{
+abstract class SelectionDialog extends JDialog {
 
     HRBackend hrBackend;
     JFrame parent;
@@ -59,15 +59,15 @@ abstract class SelectionDialog extends JDialog{
         GridBagConstraints c = new GridBagConstraints();
         c.gridx = -1;
         c.gridy = 0;
-        for (int i=0; i<applications.size(); i++) {
+        for (int i = 0; i < applications.size(); i++) {
             JCheckBox checkBox = new JCheckBox(applications.get(i).getApplicant().getLegalName());
             this.addCheckBoxListener(checkBox);
             checkBoxToAppMap.put(checkBox, applications.get(i));
-            if (i<toSelect) {
+            if (i < toSelect) {
                 checkBox.setSelected(true);
             }
-            c.gridy += (c.gridx+1)/3;
-            c.gridx = (c.gridx+1)%3;
+            c.gridy += (c.gridx + 1) / 3;
+            c.gridx = (c.gridx + 1) % 3;
             applicantPanel.add(checkBox, c);
         }
         this.add(applicantPanel, BorderLayout.CENTER);

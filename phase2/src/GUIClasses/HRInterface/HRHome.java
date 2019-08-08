@@ -3,7 +3,6 @@ package GUIClasses.HRInterface;
 import CompanyStuff.JobPostings.BranchJobPosting;
 import GUIClasses.CommonUserGUI.GUIElementsCreator;
 import GUIClasses.CommonUserGUI.NotificationsGUI;
-import GUIClasses.CommonUserGUI.UserMain;
 
 import javax.swing.*;
 import java.awt.*;
@@ -51,9 +50,8 @@ class HRHome extends JLayeredPane {
      * @return the welcome panel created.
      */
     private JPanel createWelcomePanel() {
-        JPanel welcomeMessage = new GUIElementsCreator().createLabelPanel("Welcome " +
+        return new GUIElementsCreator().createLabelPanel("Welcome " +
                 this.hrBackend.getHR().getLegalName(), 20, true);
-        return welcomeMessage;
     }
 
     /**

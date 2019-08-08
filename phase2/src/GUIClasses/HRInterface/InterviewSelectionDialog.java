@@ -7,8 +7,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 
 class InterviewSelectionDialog extends SelectionDialog {
@@ -39,7 +37,7 @@ class InterviewSelectionDialog extends SelectionDialog {
 
     @Override
     void addHeader(JPanel promptPanel) {
-        JLabel topSelectedLabel = new JLabel("Top "+this.toSelect+" applicant by keyword search are selected.");
+        JLabel topSelectedLabel = new JLabel("Top " + this.toSelect + " applicant by keyword search are selected.");
         promptPanel.add(topSelectedLabel, BorderLayout.CENTER);
     }
 

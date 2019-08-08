@@ -11,9 +11,11 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -23,7 +25,7 @@ class HRViewApp extends HRPanel {
     private static final String FILE = "View Files";
     private static final String INTERVIEW_NOTES = "Interview Notes";
 
-    HashMap<String, JobApplication> currApps;
+    private HashMap<String, JobApplication> currApps;
 
     private JPanel parent;
     private JList<String> applicationList = new JList<>();
@@ -61,8 +63,7 @@ class HRViewApp extends HRPanel {
         this.setMode(mode);
     }
 
-    void reload () {
-        //TODO: check if applications are from list still in consideration.
+    private void reload() {
         this.currApps = this.getAppsInConsideration();
         this.applicationList.removeAll();
         this.applicationList.setListData(this.currApps.keySet().toArray(new String[this.currApps.size()]));
@@ -71,7 +72,7 @@ class HRViewApp extends HRPanel {
     }
 
     private HashMap<String, JobApplication> getAppsInConsideration() {
-        BranchJobPosting branchJP = ((JobApplication)this.currApps.values().toArray()[0]).getJobPosting();
+        BranchJobPosting branchJP = ((JobApplication) this.currApps.values().toArray()[0]).getJobPosting();
         ArrayList<JobApplication> applications = branchJP.getInterviewManager().getApplicationsInConsideration();
         return getTitleToAppMap(applications);
     }
@@ -89,7 +90,7 @@ class HRViewApp extends HRPanel {
         this.add(buttons, BorderLayout.SOUTH);
     }
 
-    private void setApplicationList (JSplitPane splitDisplay) {
+    private void setApplicationList(JSplitPane splitDisplay) {
         this.applicationList.setListData(this.currApps.keySet().toArray(new String[this.currApps.size()]));
         this.applicationList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         this.applicationList.setLayoutOrientation(JList.VERTICAL);
@@ -116,9 +117,9 @@ class HRViewApp extends HRPanel {
         });
     }
 
-    private void setInfoPane (JSplitPane splitDisplay) {
+    private void setInfoPane(JSplitPane splitDisplay) {
         this.infoPane = new JTabbedPane();
-        this.infoPane.addTab(OVERVIEW, makeOverviewTab("Select an application to view overview."));
+        this.infoPane.addTab(OVERVIEW, makeOverviewTab());
         this.documentViewer = new JPanel();
         this.documentViewer.setLayout(new GridBagLayout());
         this.infoPane.addTab(FILE, this.documentViewer);
@@ -130,13 +131,11 @@ class HRViewApp extends HRPanel {
 
     private JPanel createDocumentViewer(JobApplication selectedApp) {
         File folderForApp = this.hrBackend.getFolderForJobApplication(selectedApp);
-        DocumentViewer documentViewer = new DocumentViewer(folderForApp);
-
-        return documentViewer;
+        return new DocumentViewer(folderForApp);
     }
 
-    private JScrollPane makeOverviewTab (String text) {
-        this.overview = new JTextArea(text);
+    private JScrollPane makeOverviewTab() {
+        this.overview = new JTextArea("Select an application to view overview.");
         this.overview.setEditable(false);
         this.overview.setBorder(new EtchedBorder(EtchedBorder.LOWERED));
         return new JScrollPane(this.overview);
@@ -177,7 +176,7 @@ class HRViewApp extends HRPanel {
                 this.returnButton.setVisible(true);
                 break;
             case 1:
-                this.selectButton.setVisible(true);;
+                this.selectButton.setVisible(true);
                 break;
             case 2:
                 this.hireButton.setVisible(true);

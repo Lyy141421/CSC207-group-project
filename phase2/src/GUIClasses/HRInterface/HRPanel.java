@@ -1,8 +1,6 @@
 package GUIClasses.HRInterface;
 
 import ApplicantStuff.JobApplication;
-import CompanyStuff.JobPostings.*;
-
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -35,7 +33,7 @@ abstract class HRPanel extends JPanel {
         return titleToAppMap;
     }
 
-    String toAppTitles(JobApplication jobApplication) {
+    private String toAppTitles(JobApplication jobApplication) {
         return jobApplication.getId() + "-" + jobApplication.getApplicant().getLegalName();
     }
 }

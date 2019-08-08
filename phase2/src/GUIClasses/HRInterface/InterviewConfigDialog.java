@@ -126,7 +126,7 @@ class InterviewConfigDialog extends JDialog {
 
     private ArrayList<Boolean> getIsOneOnOne() {
         ArrayList<Boolean> isOneOnOne = new ArrayList<>();
-        for (JRadioButton oneOnOne: this.oneOnOneButtonList) {
+        for (JRadioButton oneOnOne : this.oneOnOneButtonList) {
             isOneOnOne.add(oneOnOne.isSelected());
         }
 
@@ -135,7 +135,7 @@ class InterviewConfigDialog extends JDialog {
 
     private ArrayList<String> getDescriptions() {
         ArrayList<String> descriptions = new ArrayList<>();
-        for (JTextField description: this.descriptionInputList) {
+        for (JTextField description : this.descriptionInputList) {
             descriptions.add(description.getText());
         }
 
