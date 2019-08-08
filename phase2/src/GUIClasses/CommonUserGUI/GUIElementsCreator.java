@@ -87,7 +87,9 @@ public class GUIElementsCreator {
     public JScrollPane createTextAreaWithScrollBar(String text, boolean isEditable) {
         JTextArea textArea = new JTextArea();
         textArea.setText(text);
-        textArea.setForeground(Color.GRAY);
+        if (isEditable) {
+            textArea.setForeground(Color.GRAY);
+        }
         textArea.setEditable(isEditable);
         textArea.addFocusListener(new FocusListener() {
             @Override
