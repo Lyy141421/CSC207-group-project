@@ -57,6 +57,7 @@ public class UserManager implements Serializable {
         HRCoordinator newHRC = new HRCoordinator(username, password, legalName, email, branch, jobApplicationSystem.getToday());
         branch.addHRCoordinator(newHRC);
         this.allUsers.add(newHRC);
+        branch.addJobPostingManager();
         return newHRC;
     }
 

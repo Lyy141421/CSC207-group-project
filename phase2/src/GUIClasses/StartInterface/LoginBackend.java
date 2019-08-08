@@ -174,7 +174,6 @@ class LoginBackend {
         String email = inputs.get("email");
         jobAppSystem.getUserManager().createHRCoordinator(
                 username, password, name, email, branch, jobAppSystem);
-        branch.addJobPostingManager();
         jobAppSystem.getBranch(branch).setJobPostingManager(branch.getJobPostingManager());
         return NewUserPanel.SUCCESS;
     }
