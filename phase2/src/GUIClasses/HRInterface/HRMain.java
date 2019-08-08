@@ -78,7 +78,7 @@ public class HRMain extends UserMain {
         super.refresh();
         cards.removeAll();
         this.setJPLists();
-        setCards();
+        this.setCards();
         this.revalidate();
         this.repaint();
     }
@@ -101,7 +101,7 @@ public class HRMain extends UserMain {
      * @param JPList a list of job postings.
      * @return the hash map of titles to branch job postings.
      */
-    HashMap<String, BranchJobPosting> getTitleToJPMap(ArrayList<BranchJobPosting> JPList) {
+    private HashMap<String, BranchJobPosting> getTitleToJPMap(ArrayList<BranchJobPosting> JPList) {
         HashMap<String, BranchJobPosting> titleToJPMap = new HashMap<>();
         for (BranchJobPosting JP : JPList) {
             titleToJPMap.put(this.toJPTitle(JP), JP);
@@ -115,7 +115,7 @@ public class HRMain extends UserMain {
      * @param branchJobPosting a branch job posting.
      * @return the title to be displayed of this branch job posting.
      */
-    String toJPTitle(BranchJobPosting branchJobPosting) {
+    private String toJPTitle(BranchJobPosting branchJobPosting) {
         return branchJobPosting.getId() + "-" + branchJobPosting.getTitle();
     }
 
@@ -165,11 +165,11 @@ public class HRMain extends UserMain {
 //        Reference reference = jobApplicationSystem.getUserManager().createReference("ref@gmail.com", refdate.plusDays(-1));
 //        Company company = jobApplicationSystem.createCompany("Segufix");
 //        Branch branch = company.createBranch("Segufix Canada", "E6H1P9");
-//        Applicant applicant = jobApplicationSystem.getUserManager().createApplicant("Fran", "1", "Hannah J", "Fran@mail.com", "E6H1P9", refdate.plusDays(-1));
-//        Applicant applicant1 = jobApplicationSystem.getUserManager().createApplicant("Will", "1", "Will W", "Will@mail.com", "E6H1P9", refdate.plusDays(-1));
-//        Applicant applicant2 = jobApplicationSystem.getUserManager().createApplicant("Jon", "1", "Jon J", "Jon@mail.com", "E6H1P9", refdate.plusDays(-1));
-//        Interviewer interviewer = jobApplicationSystem.getUserManager().createInterviewer("Stacy", "1", "Stacy O", "Stacy@mail.com", branch, "Sales", refdate.plusDays(-1));
-//        HRCoordinator hrc = jobApplicationSystem.getUserManager().createHRCoordinator("Phil", "1", "Phillip Soetebeer", "email@gmail.com", branch, refdate.plusDays(-1));
+//        Applicant applicant = jobApplicationSystem.getUserManager().createApplicant("Fran", "1", "Hannah J", "Fran@mail.com", "E6H1P9", jobApplicationSystem);
+//        Applicant applicant1 = jobApplicationSystem.getUserManager().createApplicant("Will", "1", "Will W", "Will@mail.com", "E6H1P9", jobApplicationSystem);
+//        Applicant applicant2 = jobApplicationSystem.getUserManager().createApplicant("Jon", "1", "Jon J", "Jon@mail.com", "E6H1P9", jobApplicationSystem);
+//        Interviewer interviewer = jobApplicationSystem.getUserManager().createInterviewer("Stacy", "1", "Stacy O", "Stacy@mail.com", "Sales", branch, jobApplicationSystem);
+//        HRCoordinator hrc = jobApplicationSystem.getUserManager().createHRCoordinator("Phil", "1", "Phillip Soetebeer", "email@gmail.com", branch, jobApplicationSystem);
 //        BranchJobPosting jobPosting = hrc.addJobPosting("Posting 1", "Sales", "A Poor Choice",
 //                new ArrayList<>(Arrays.asList("CV", "Cover Letter", "Reference Letter")), new ArrayList<>(Arrays.asList("Tags", "Tag2")), 2, refdate, refdate.plusDays(5));
 //        JobApplication jobApp = new JobApplication(applicant, jobPosting, refdate);
@@ -194,7 +194,7 @@ public class HRMain extends UserMain {
 //    }
 
 
-    public static void main(String[] args) {
+//    public static void main(String[] args) {
 //        JFrame frame = new JFrame("HR Main");
 //        JobApplicationSystem jobApplicationSystem = new JobApplicationSystem();
 //        //new DataLoaderAndStorer(jobApplicationSystem).loadAllData();
@@ -236,7 +236,7 @@ public class HRMain extends UserMain {
 //        jobApplicationSystem.setToday(LocalDate.of(2019, 7, 19));
 //        Company company = jobApplicationSystem.createCompany("Company");
 //        Branch branch = company.createBranch("Branch", "Toronto");
-//        Applicant applicant = jobApplicationSystem.getUserManager().createApplicant("username", "password", "Legal Name", "email@gmail.com", "L4B4P8", LocalDate.now());
+//        Applicant applicant = jobApplicationSystem.getUserManager().createApplicant("username", "password", "Legal Name", "email@gmail.com", "L4B4P8", jobApplicationSystem);
 //        HRCoordinator hrc = new HRCoordinator("HR", "password", "HRC", "email@gmail.com", branch, LocalDate.of(2019, 7, 19));
 //        BranchJobPosting jobPosting = hrc.addJobPosting("title", "field", "descriptionhujedkfnvsgrhjegskamkagjrwuiladkvmkajgirwouskvmzkjgiskdzvn,mkngs\niznvjgsirklzngjslitw4gsijlkznjsirtwtrsigjlzknvmJDEI0   IPUOwrahektdznmv\nlpox-98uy7gufhvnb tmwkeafoisCXU*yygchbvn    4mk2RWFsvzx\nwgudkngrhadkjn\nwhaegkjsc\ngwaeihfkncMZ<ghaecsknm,z\n",
 //                new ArrayList<>(Arrays.asList("CV", "Cover Letter", "Reference Letter")), new ArrayList<>(), 1, LocalDate.of(2019, 7, 19), LocalDate.of(2019, 7, 19));
@@ -244,7 +244,7 @@ public class HRMain extends UserMain {
 //        JobApplicationDocument doc = new JobApplicationDocument(new File("./sample.txt"), applicant.getUsername());
 //        JobApplicationDocument doc2 = new JobApplicationDocument(new File("./sample.txt"), applicant.getUsername());
 //        jobApp.addFiles(new ArrayList<>(Arrays.asList(doc, doc2)));
-//        Applicant applicant2 = jobApplicationSystem.getUserManager().createApplicant("username2", "password", "Legal Name2", "email@gmail.com", "L4B4P8", LocalDate.of(2019, 7, 19));
+//        Applicant applicant2 = jobApplicationSystem.getUserManager().createApplicant("username2", "password", "Legal Name2", "email@gmail.com", "L4B4P8", jobApplicationSystem);
 //        BranchJobPosting jobPosting2 = hrc.addJobPosting("title2", "field", "description",
 //                new ArrayList<>(Arrays.asList("CV", "Cover Letter", "Reference Letter")), new ArrayList<>(), 1, LocalDate.of(2019, 7, 20), LocalDate.of(2019, 7, 20));
 //        JobApplication jobApp2 = new JobApplication(applicant2, jobPosting2, LocalDate.of(2019, 7, 19));
@@ -259,5 +259,5 @@ public class HRMain extends UserMain {
 //        frame.setSize(854, 480);
 //        frame.setVisible(true);
 //        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    }
+//    }
 }
