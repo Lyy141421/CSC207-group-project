@@ -7,7 +7,6 @@ import GUIClasses.ActionListeners.ReturnHomeActionListener;
 import GUIClasses.CommonUserGUI.UserMain;
 import GUIClasses.CommonUserGUI.SideBarMenuCreator;
 import Main.JobApplicationSystem;
-import jdk.nashorn.internal.ir.annotations.Reference;
 
 import javax.swing.*;
 import java.awt.*;
