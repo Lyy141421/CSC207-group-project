@@ -8,6 +8,7 @@ import GUIClasses.StartInterface.NewUserPanel;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
@@ -26,7 +27,17 @@ public class MainFrame extends JFrame {
         this.jobAppSystem = jobAppSystem;
         initUI();
         addCards();
+//        this.addWindowListener();
     }
+
+//    private void addWindowListener() {
+//        this.addWindowListener(new WindowAdapter() {
+//            @Override
+//            public void windowClosed(WindowEvent e) {
+//                new DataLoaderAndStorer(jobAppSystem).storeAllData();
+//            }
+//        });
+//    }
 
     /**
      * Sets up the parameters used in the main JFrame

@@ -48,7 +48,7 @@ public class NotificationsGUI {
             int yPos = 30;
             for (Notification n : notifications) {
                 addNotification(n, yPos);
-                yPos += 35;
+                yPos += 55;
             }
         }
 
@@ -78,7 +78,8 @@ public class NotificationsGUI {
      */
     private void addNotification(Notification n, int yPos) {
         JLabel notificationText = new JLabel("<html>" + n.getMessage() + "</html>", SwingConstants.LEFT);
-        notificationText.setBounds(10, yPos, 180, 30);
+        notificationText.setFont(new Font("Serif", Font.PLAIN, 10));
+        notificationText.setBounds(10, yPos, 180, 50);
         notificationsPanel.add(notificationText);
 
         JButton notificationButton = new JButton("✓");
