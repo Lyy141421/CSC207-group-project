@@ -91,7 +91,7 @@ class HRViewApp extends HRPanel {
 
     private void setApplicationList (JSplitPane splitDisplay) {
         this.applicationList.setListData(this.currApps.keySet().toArray(new String[this.currApps.size()]));
-        this.applicationList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+        this.applicationList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         this.applicationList.setLayoutOrientation(JList.VERTICAL);
 
         splitDisplay.setLeftComponent(new JScrollPane(this.applicationList));
@@ -135,7 +135,7 @@ class HRViewApp extends HRPanel {
         return documentViewer;
     }
 
-    private JComponent makeOverviewTab (String text) {
+    private JScrollPane makeOverviewTab (String text) {
         this.overview = new JTextArea(text);
         this.overview.setEditable(false);
         this.overview.setBorder(new EtchedBorder(EtchedBorder.LOWERED));
