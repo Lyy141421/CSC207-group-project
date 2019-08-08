@@ -254,7 +254,6 @@ public class InterviewManager extends Observable implements Serializable {
                 Interviewer interviewer = this.branchJobPosting.getBranch().findInterviewerByField(field);
                 Interview interview = new Interview(jobApp, interviewer, this);
                 this.addInterviewForInterviewers(interview);
-                System.out.println("From interview manager within HR: " + interview);
             }
         }
     }

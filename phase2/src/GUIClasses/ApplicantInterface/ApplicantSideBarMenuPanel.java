@@ -66,9 +66,7 @@ class ApplicantSideBarMenuPanel extends JPanel {
         fullMenu.put("7. Logout", new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                printAllData(jobApplicationSystem);
 //                resetJobApplicationManager();
-                printAllData(jobApplicationSystem);
                 logout.actionPerformed(e);
             }
         });
@@ -79,30 +77,4 @@ class ApplicantSideBarMenuPanel extends JPanel {
 //        Applicant applicantFromJobAppSystem = (Applicant) jobApplicationSystem.getUserManager().findUserByUsername(applicantBackend.getApplicant().getUsername());
 //        applicantFromJobAppSystem.setJobApplicationManager(applicantBackend.getApplicant().getJobApplicationManager());
 //    }
-
-    public void printAllData(JobApplicationSystem jobApplicationSystem) {
-        System.out.println("From job application system");
-        Applicant applicantFromJobAppSystem = (Applicant) jobApplicationSystem.getUserManager().findUserByUsername(applicantBackend.getApplicant().getUsername());
-        System.out.println(applicantFromJobAppSystem.getJobApplicationManager());
-        for (JobApplication jobApp : applicantFromJobAppSystem.getJobApplicationManager().getJobApplications()) {
-            System.out.println(jobApp);
-        }
-
-        System.out.println("From applicant");
-        System.out.println(applicantBackend.getApplicant().getJobApplicationManager());
-        for (JobApplication jobApp : applicantBackend.getApplicant().getJobApplicationManager().getJobApplications()) {
-            System.out.println(jobApp);
-        }
-        System.out.println("From branch job posting");
-        for (Company company : this.jobApplicationSystem.getCompanies()) {
-            for (Branch branch : company.getBranches()) {
-                BranchJobPostingManager branchJobPostingManager = branch.getJobPostingManager();
-                for (BranchJobPosting branchJobPosting : branchJobPostingManager.getBranchJobPostings()) {
-                    for (JobApplication jobApp : branchJobPosting.getJobApplications()) {
-                        System.out.println(jobApp);
-                    }
-                }
-            }
-        }
-    }
 }

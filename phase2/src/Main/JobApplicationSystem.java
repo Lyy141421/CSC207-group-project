@@ -55,10 +55,6 @@ public class JobApplicationSystem implements Serializable {
     }
 
     // === Setters ===
-    public void setCompanies(ArrayList<Company> companies) {
-        this.companies = companies;
-    }
-
     public void setToday(LocalDate newDate) {
         this.today = newDate;
 //        Notification.setDate(newDate);

@@ -55,7 +55,6 @@ class LoginBackend {
                 BranchJobPostingManager branchJobPostingManager = branch.getJobPostingManager();
                 for (BranchJobPosting jobPosting : branchJobPostingManager.getBranchJobPostings()) {
                     for (JobApplication jobApplication : jobPosting.getJobApplications()) {
-                        System.out.println(jobApplication);
                         if (jobApplication.getApplicant().equals(applicant)) {
                             applicant.getJobApplicationManager().resetJobApplication(jobApplication);
 

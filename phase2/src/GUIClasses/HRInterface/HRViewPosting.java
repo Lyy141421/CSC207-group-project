@@ -152,7 +152,6 @@ class HRViewPosting extends HRPanel {
     private void setRejectListPanel() {
         rejectedPanel = new JPanel(new BorderLayout());
         ArrayList<Applicant> rejectList = this.hrBackend.getRejectedApplicantsForJobPosting(selectedJP);
-        System.out.println(rejectList);
         Object[][] data = new Object[rejectList.size()][];
 
         for (int i = 0; i < rejectList.size(); i++) {
