@@ -77,12 +77,12 @@ public class NotificationsGUI {
      * Builds the text and clear button for an individual notification
      */
     private void addNotification(Notification n, int yPos) {
-        JLabel notificationText = new JLabel(n.getMessage(), SwingConstants.LEFT);
+        JLabel notificationText = new JLabel("<html>" + n.getMessage() + "</html>", SwingConstants.LEFT);
         notificationText.setBounds(0, yPos, 200, 30);
         notificationsPanel.add(notificationText);
 
         JButton notificationButton = new JButton("✓");
-        notificationButton.setBounds(150, yPos + 2, 20, 25);
+        notificationButton.setBounds(200, yPos + 5, 25, 25);
         notificationButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 user.getNotificationManager().remove(n);
