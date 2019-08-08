@@ -20,6 +20,7 @@ class GroupInterviewDialog extends JDialog {
 
     JFrame parent;
     HRBackend hrBackend;
+    JDialog container = this;
     BranchJobPosting branchJobPosting;
     HRViewPosting parentPanel;
 
@@ -36,6 +37,7 @@ class GroupInterviewDialog extends JDialog {
         this.branchJobPosting = branchJobPosting;
         this.parentPanel = postingPanel;
 
+        System.out.println("Interviewers: "+hrBackend.getInterviewersInField(branchJobPosting));
         this.nameToInterviewerMap = this.getNameToInterviewerMap(hrBackend.getInterviewersInField(branchJobPosting));
         this.setLayout(new BorderLayout());
 
@@ -51,20 +53,21 @@ class GroupInterviewDialog extends JDialog {
         this.setSize(500, 350);
         this.setResizable(false);
         this.setLocationRelativeTo(parent);
-        this.setAlwaysOnTop(true);
-        this.setModal(true);
+        this.setModalityType(ModalityType.APPLICATION_MODAL);
         this.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
     }
 
     private void setHeader() {
+        JPanel headerPanel = new JPanel(new BorderLayout());
         JLabel prompt = new JLabel("Please select interviewers for group interview");
-        this.add(prompt, BorderLayout.PAGE_START);
+        headerPanel.add(prompt, BorderLayout.PAGE_START);
         JPanel spinnerPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         JLabel daysLabel = new JLabel("Minimum days to notify interviewers: ");
         this.daysSpinner = new JSpinner(new SpinnerNumberModel(1, 1, MAX_DAYS, 1));
         spinnerPanel.add(daysLabel);
         spinnerPanel.add(this.daysSpinner);
-        this.add(spinnerPanel, BorderLayout.NORTH);
+        headerPanel.add(spinnerPanel, BorderLayout.CENTER);
+        this.add(headerPanel, BorderLayout.PAGE_START);
     }
 
     private void setSplitPane() {
@@ -145,6 +148,8 @@ class GroupInterviewDialog extends JDialog {
                         nameToInterviewerMap.get((String)coordinatorSelection.getSelectedItem()),
                         getSelectedInterviewers(), (int)daysSpinner.getValue());
                 parentPanel.main.removeFromJPLists(branchJobPosting);
+                setModalityType(ModalityType.MODELESS);
+                JOptionPane.showMessageDialog(container, "Group interview is set.");
                 dispose();
             }
         });
@@ -156,6 +161,7 @@ class GroupInterviewDialog extends JDialog {
         cancelButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                setModalityType(ModalityType.MODELESS);
                 dispose();
             }
         });

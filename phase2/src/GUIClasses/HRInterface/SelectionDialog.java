@@ -12,9 +12,10 @@ abstract class SelectionDialog extends JDialog{
     HRBackend hrBackend;
     JFrame parent;
     ArrayList<JobApplication> applications;
+    int toSelect;
+    Container contentPane = this;
 
     HashMap<JCheckBox, JobApplication> checkBoxToAppMap = new HashMap<>();
-    GridBagConstraints c = new GridBagConstraints();
 
     JButton confirmButton;
     JButton returnButton;
@@ -25,6 +26,7 @@ abstract class SelectionDialog extends JDialog{
         this.hrBackend = hrBackend;
         this.applications = applications;
         this.returnButton = returnButton;
+        this.toSelect = toSelect;
 
         this.setLayout(new BorderLayout());
 
@@ -32,9 +34,7 @@ abstract class SelectionDialog extends JDialog{
         this.addApplicants(applications, toSelect);
         this.addButtons();
 
-
         this.setDialogProperties();
-        this.setVisible(true);
     }
 
     private void setDialogProperties() {
@@ -43,12 +43,14 @@ abstract class SelectionDialog extends JDialog{
         this.setLocationRelativeTo(parent);
         this.setModalityType(ModalityType.APPLICATION_MODAL);
         this.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+        this.setVisible(true);
     }
 
     private void addPrompt() {
-        JPanel promptPanel = new JPanel();
+        JPanel promptPanel = new JPanel(new BorderLayout());
         JLabel prompt = new JLabel("Please select from the following applicants:");
-        promptPanel.add(prompt);
+        promptPanel.add(prompt, BorderLayout.PAGE_START);
+        this.addHeader(promptPanel);
         this.add(promptPanel, BorderLayout.PAGE_START);
     }
 
@@ -59,6 +61,7 @@ abstract class SelectionDialog extends JDialog{
         c.gridy = 0;
         for (int i=0; i<applications.size(); i++) {
             JCheckBox checkBox = new JCheckBox(applications.get(i).getApplicant().getLegalName());
+            this.addCheckBoxListener(checkBox);
             checkBoxToAppMap.put(checkBox, applications.get(i));
             if (i<toSelect) {
                 checkBox.setSelected(true);
@@ -71,7 +74,7 @@ abstract class SelectionDialog extends JDialog{
     }
 
     private void addButtons() {
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         this.confirmButton = new JButton("Confirm");
         this.addConfirmListener();
         buttonPanel.add(confirmButton);
@@ -88,4 +91,8 @@ abstract class SelectionDialog extends JDialog{
     }
 
     abstract void addConfirmListener();
+
+    abstract void addCheckBoxListener(JCheckBox checkBox);
+
+    abstract void addHeader(JPanel promptPanel);
 }
