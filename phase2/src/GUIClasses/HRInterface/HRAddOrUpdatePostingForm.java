@@ -2,7 +2,6 @@ package GUIClasses.HRInterface;
 
 import CompanyStuff.JobPostings.BranchJobPosting;
 import CompanyStuff.JobPostings.CompanyJobPosting;
-import FileLoadingAndStoring.DataLoaderAndStorer;
 import GUIClasses.CommonUserGUI.GUIElementsCreator;
 import GUIClasses.CommonUserGUI.UserMain;
 import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
@@ -18,11 +17,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 class HRAddOrUpdatePostingForm extends HRPanel {
 
@@ -342,14 +340,12 @@ class HRAddOrUpdatePostingForm extends HRPanel {
         dateModel.setDate(todayComponents[0], todayComponents[1] - 1, todayComponents[2]);
         dateModel.setSelected(true);
         JDatePanelImpl datePanel = new JDatePanelImpl(dateModel);
-        JDatePickerImpl closeDateInput = new JDatePickerImpl(datePanel);
-        return closeDateInput;
+        return new JDatePickerImpl(datePanel);
     }
 
     private JSpinner createNumField() {
         SpinnerNumberModel numModel = new SpinnerNumberModel(1, 1, MAX_NUM_POSITIONS, 1);
-        JSpinner numInput = new JSpinner(numModel);
-        return numInput;
+        return new JSpinner(numModel);
     }
 
     private JScrollPane createSelectionBox(String[] recommended) {
@@ -388,10 +384,10 @@ class HRAddOrUpdatePostingForm extends HRPanel {
         return this.getListNoDuplicate(combinedInputs);
     }
 
-    private ArrayList<String> getListNoDuplicate (ArrayList<String> list) {
+    private ArrayList<String> getListNoDuplicate(ArrayList<String> list) {
         ArrayList<String> newList = new ArrayList<>();
         for (String item : list) {
-            String itemFormatted = hrBackend.formatCase(item);
+            String itemFormatted = hrBackend.getHR().getBranch().formatCase(item);
             if (!newList.contains(itemFormatted)) {
                 newList.add(itemFormatted);
             }
@@ -452,7 +448,7 @@ class HRAddOrUpdatePostingForm extends HRPanel {
         boolean create = true;
         if (!hrBackend.hasInterviewerOfField(field)) {
             create = JOptionPane.showConfirmDialog(containerPane, "There are no interviewers for the field you entered. Would you like to create the job posting anyways?",
-                    "Warning", JOptionPane.YES_NO_OPTION)==JOptionPane.YES_OPTION;
+                    "Warning", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
         }
         if (create) {
             if (!defaultFields.isPresent()) {
@@ -460,7 +456,6 @@ class HRAddOrUpdatePostingForm extends HRPanel {
             } else {
                 hrBackend.addJobPosting(mandatoryFields, defaultFields.get());
             }
-            new DataLoaderAndStorer(hrBackend.getJobAppSystem()).refreshAllData();
             JOptionPane.showMessageDialog(containerPane, "Job posting has been added.");
             this.resetForm();
             ((UserMain) containerPane.getParent().getParent()).refresh();
@@ -469,7 +464,6 @@ class HRAddOrUpdatePostingForm extends HRPanel {
 
     private void updateJobPosting(Object[] mandatoryFields) {
         hrBackend.updateJobPosting((BranchJobPosting) selectedJP, mandatoryFields);
-        new DataLoaderAndStorer(hrBackend.getJobAppSystem()).refreshAllData();
         JOptionPane.showMessageDialog(containerPane, "Job posting has been updated.");
     }
 

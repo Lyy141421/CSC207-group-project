@@ -130,7 +130,7 @@ public class JobApplication implements Serializable {
     /**
      * Add referencesToLetters for this job application.
      *
-     * @param referencesToAdd The referencesToLetters chosen by the applicant.
+     * @param referencesToAdd The references chosen by the applicant.
      */
     public void addReferences(ArrayList<Reference> referencesToAdd) {
         for (Reference reference : referencesToAdd) {
@@ -138,6 +138,12 @@ public class JobApplication implements Serializable {
         }
     }
 
+    /**
+     * Adds reference letters for this job application
+     *
+     * @param reference The reference who wrote letters
+     * @param letters   The letters written
+     */
     public void addReferenceLetters(Reference reference, ArrayList<JobApplicationDocument> letters) {
         this.referencesToLetters.get(reference).addAll(letters);
     }

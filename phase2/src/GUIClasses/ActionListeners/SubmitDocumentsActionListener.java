@@ -6,6 +6,7 @@ import ApplicantStuff.JobApplicationDocument;
 import ApplicantStuff.Reference;
 import DocumentManagers.ApplicantDocumentManager;
 import DocumentManagers.ReferenceLetterDocumentManager;
+import GUIClasses.ApplicantInterface.ApplicantFileSubmissionFromLocal;
 import GUIClasses.CommonUserGUI.UserMain;
 import Main.User;
 
@@ -14,7 +15,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -58,37 +58,9 @@ public class SubmitDocumentsActionListener implements ActionListener {
         JOptionPane.showMessageDialog(parent, "You have successfully submitted " + value + " files.");
         ((CardLayout) cardPanel.getLayout()).first(cardPanel);
         if (cardPanel.getParent() instanceof UserMain) {
-            Thread newThread = new Thread() {
-                public void run() {
-                    try {
-                        SwingUtilities.invokeAndWait(new Runnable() {
-                            @Override
-                            public void run() {
-                                ((UserMain) cardPanel.getParent()).refresh();
-                            }
-                        });
-                    } catch (InterruptedException | InvocationTargetException ex) {
-                        System.out.println("Something went wrong");
-                    }
-                }
-            };
-            newThread.start();
+            ((UserMain) cardPanel.getParent()).refresh();
         } else {
-            Thread newThread = new Thread() {
-                public void run() {
-                    try {
-                        SwingUtilities.invokeAndWait(new Runnable() {
-                            @Override
-                            public void run() {
-                                ((UserMain) cardPanel).refresh();
-                            }
-                        });
-                    } catch (InterruptedException | InvocationTargetException ex) {
-                        ex.printStackTrace();
-                    }
-                }
-            };
-            newThread.start();
+            ((UserMain) cardPanel).refresh();
         }
     }
 

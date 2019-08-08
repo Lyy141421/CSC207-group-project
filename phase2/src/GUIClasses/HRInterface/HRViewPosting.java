@@ -14,7 +14,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -22,22 +21,12 @@ class HRViewPosting extends HRPanel {
 
     private static final String OVERVIEW = "Overview";
     private static final String REJECT_LIST = "Rejected list";
-    public static int HIGH_PRIORITY = 0;
-    public static int ALL = 1;
-    public static int UPDATABLE = 2;
-
-    /*private HashMap<String, BranchJobPosting> unreviewedJP;
-    private HashMap<String, BranchJobPosting> scheduleJP;
-    private HashMap<String, BranchJobPosting> hiringJP;
-    private HashMap<String, BranchJobPosting> archivedJP;
-    private HashMap<String, BranchJobPosting> importantJP = new HashMap<>();
-    private HashMap<String, BranchJobPosting> updatableJPs;
-    private HashMap<String, BranchJobPosting> allJP;*/
-
-    private HashMap<String, BranchJobPosting> currJPs;
-
-    private HRViewPosting containerPane = this;
+    static int HIGH_PRIORITY = 0;
+    static int ALL = 1;
+    static int UPDATABLE = 2;
     HRMain main;
+    private HashMap<String, BranchJobPosting> currJPs;
+    private HRViewPosting containerPane = this;
     private JPanel parent;
     private int jpType;
     private JTabbedPane infoPane;
@@ -55,7 +44,6 @@ class HRViewPosting extends HRPanel {
         this.parent = parent;
         this.main = (HRMain) parent.getParent();
         this.jpType = jpType;
-        // this.setJPLists();
         if (jpType == HIGH_PRIORITY) {
             this.currJPs = main.getImportantJP();
         } else if (jpType == ALL) {
@@ -84,7 +72,7 @@ class HRViewPosting extends HRPanel {
         this.setListSelectionListener();
     }
 
-    void reload() {
+    private void reload() {
         this.jobPostingList.removeAll();
         this.jobPostingList.setListData(currJPs.keySet().toArray(new String[currJPs.size()]));
         revalidate();
@@ -97,20 +85,21 @@ class HRViewPosting extends HRPanel {
             public void valueChanged(ListSelectionEvent e) {
                 if (jobPostingList.isSelectionEmpty()) {
                     overview.setText("Select a job posting to view information.");
-                    setRejectListPanel();
                     scheduleButton.setVisible(false);
                 } else {
                     String selectedTitle = jobPostingList.getSelectedValue();
                     selectedJP = currJPs.get(selectedTitle);
                     overview.setText(getStatus() + selectedJP.toString());
-                    setRejectListPanel();
                     scheduleButton.setVisible(main.getScheduleJP().containsKey(selectedTitle));
                 }
+                setRejectListPanel();
+                rejectedPanel.revalidate();
+                rejectedPanel.repaint();
             }
         });
     }
 
-    private JButton createScheduleButton () {
+    private void createScheduleButton() {
         this.scheduleButton = new JButton("Schedule group interview");
         this.scheduleButton.setVisible(false);
         this.scheduleButton.addActionListener(new ActionListener() {
@@ -121,27 +110,11 @@ class HRViewPosting extends HRPanel {
                 groupDialog.addWindowListener(new WindowAdapter() {
                     @Override
                     public void windowClosed(WindowEvent e) {
-                        Thread newThread = new Thread() {
-                            public void run() {
-                                try {
-                                    SwingUtilities.invokeAndWait(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            reload();
-                                        }
-                                    });
-                                } catch (InterruptedException | InvocationTargetException ex) {
-                                    ex.printStackTrace();
-                                }
-                            }
-                        };
-                        newThread.start();
+                        reload();
                     }
                 });
             }
         });
-
-        return scheduleButton;
     }
 
     private void createUpdateButton() {
@@ -162,9 +135,9 @@ class HRViewPosting extends HRPanel {
         });
     }
 
-    private void setJobPostingList (JSplitPane splitDisplay) {
+    private void setJobPostingList(JSplitPane splitDisplay) {
         this.jobPostingList.setListData(currJPs.keySet().toArray(new String[currJPs.size()]));
-        this.jobPostingList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+        this.jobPostingList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         this.jobPostingList.setLayoutOrientation(JList.VERTICAL);
         splitDisplay.setLeftComponent(new JScrollPane(this.jobPostingList));
     }
@@ -177,22 +150,22 @@ class HRViewPosting extends HRPanel {
     }
 
     private void setRejectListPanel() {
-        rejectedPanel = new JPanel(new GridBagLayout());
-        GridBagConstraints c = new GridBagConstraints();
+        rejectedPanel = new JPanel(new BorderLayout());
         ArrayList<Applicant> rejectList = this.hrBackend.getRejectedApplicantsForJobPosting(selectedJP);
+        System.out.println(rejectList);
         Object[][] data = new Object[rejectList.size()][];
 
         for (int i = 0; i < rejectList.size(); i++) {
             data[i] = rejectList.get(i).getCategoryValuesForRejectList();
         }
         JPanel panelTitle = new GUIElementsCreator().createLabelPanel("Rejection List", 20, true);
-        c.gridx = 0;
-        c.gridy = 0;
-        c.insets = new Insets(10, 0, 0, 0);
-        rejectedPanel.add(panelTitle, c);
+        rejectedPanel.add(panelTitle, BorderLayout.NORTH);
         JPanel rejectListPanel = new GUIElementsCreator().createTablePanel(Applicant.REJECT_LIST_CATEGORIES, data);
-        c.gridy++;
-        rejectedPanel.add(rejectListPanel, c);
+        rejectedPanel.add(rejectListPanel, BorderLayout.CENTER);
+        rejectedPanel.repaint();
+        rejectedPanel.revalidate();
+        this.infoPane.removeTabAt(1);
+        this.infoPane.addTab(REJECT_LIST, rejectedPanel);
     }
 
     private void setInfoPane(JSplitPane splitDisplay) {
@@ -203,7 +176,7 @@ class HRViewPosting extends HRPanel {
     }
 
 
-    private JButton createViewAppButton () {
+    private JButton createViewAppButton() {
         JButton viewAppsButton = new JButton("View applications");
         viewAppsButton.addActionListener(new ActionListener() {
             @Override
@@ -235,8 +208,6 @@ class HRViewPosting extends HRPanel {
         }
         parent.add(appPanel, HRPanel.APPLICATION, 7);
         ((CardLayout) parent.getLayout()).show(parent, HRPanel.APPLICATION);
-        //TODO: new Group interview doesn't show up until switch panel.
-        // if (hrBackend.needsGroupInterview(selectedJP)
         reload();
     }
 
@@ -249,26 +220,6 @@ class HRViewPosting extends HRPanel {
             return HRPanel.UPDATE_POSTING;
         }
     }
-
-    /*private void setJPLists() {
-        this.unreviewedJP = this.getTitleToJPMap(hrBackend.getJPToReview());
-        this.scheduleJP = this.getTitleToJPMap(hrBackend.getJPToSchedule());
-        this.hiringJP = this.getTitleToJPMap(hrBackend.getJPToHire());
-        this.archivedJP = this.getTitleToJPMap(hrBackend.getAllFilledJP());
-        this.updatableJPs = this.getTitleToJPMap(hrBackend.getJPThatCanBeUpdated());
-        this.allJP = this.getTitleToJPMap(hrBackend.getAllJP());
-
-        this.importantJP.putAll(this.unreviewedJP);
-        this.importantJP.putAll(this.scheduleJP);
-        this.importantJP.putAll(this.hiringJP);
-    }*/
-
-    /*void removeFromJPLists(String title) {
-        this.unreviewedJP.remove(title);
-        this.scheduleJP.remove(title);
-        this.hiringJP.remove(title);
-        this.importantJP.remove(title);
-    }*/
 
     private String getStatus() {
         String status;

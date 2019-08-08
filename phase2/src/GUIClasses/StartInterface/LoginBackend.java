@@ -1,8 +1,12 @@
 package GUIClasses.StartInterface;
 
-import CompanyStuff.Branch;
-import CompanyStuff.Company;
-import FileLoadingAndStoring.DataLoaderAndStorer;
+import ApplicantStuff.Applicant;
+import ApplicantStuff.JobApplication;
+import ApplicantStuff.JobApplicationManager;
+import ApplicantStuff.Reference;
+import CompanyStuff.*;
+import CompanyStuff.JobPostings.BranchJobPosting;
+import CompanyStuff.JobPostings.BranchJobPostingManager;
 import Main.JobApplicationSystem;
 import Main.User;
 
@@ -27,9 +31,55 @@ class LoginBackend {
         this.jobAppSystem = jobAppSystem;
     }
 
-
     User findUserByUsername(String username) {
+        this.resetLinks();
         return jobAppSystem.getUserManager().findUserByUsername(username);
+    }
+
+    private void resetLinks() {
+        for (User user : jobAppSystem.getUserManager().getAllUsers()) {
+            if (user instanceof HRCoordinator) {
+                this.resetHR(user);
+            } else if (user instanceof Interviewer) {
+                this.resetInterviewer(user);
+            } else if (user instanceof Applicant) {
+                this.resetApplicant(user);
+            }
+        }
+    }
+
+    private void resetApplicant(User user) {
+        Applicant applicant = (Applicant) user;
+        for (Company company : jobAppSystem.getCompanies()) {
+            for (Branch branch : company.getBranches()) {
+                BranchJobPostingManager branchJobPostingManager = branch.getJobPostingManager();
+                for (BranchJobPosting jobPosting : branchJobPostingManager.getBranchJobPostings()) {
+                    for (JobApplication jobApplication : jobPosting.getJobApplications()) {
+                        System.out.println(jobApplication);
+                        if (jobApplication.getApplicant().equals(applicant)) {
+                            applicant.getJobApplicationManager().resetJobApplication(jobApplication);
+
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private void resetInterviewer(User user) {
+        Interviewer interviewer = (Interviewer) user;
+        Branch branch = this.jobAppSystem.getBranch(interviewer.getBranch());
+        if (branch != null) {
+            interviewer.setBranch(branch);
+            interviewer.setInterviews(branch.getInterviewer(interviewer).getInterviews());
+        }
+    }
+
+    private void resetHR(User user) {
+        Branch branch = this.jobAppSystem.getBranch(((HRCoordinator) user).getBranch());
+        if (branch != null) {
+            ((HRCoordinator) user).setBranch(branch);
+        }
     }
 
     // === Private methods ===
@@ -107,9 +157,8 @@ class LoginBackend {
             String password = inputs.get("password");
             String name = inputs.get("name");
             String email = inputs.get("email");
-            jobAppSystem.getUserManager().createApplicant(
-                    username, password, name, email, postalCode, jobAppSystem.getToday());
-            new DataLoaderAndStorer(jobAppSystem).refreshAllData();
+            jobAppSystem.getUserManager().createApplicant(username, password, name, email, postalCode, jobAppSystem);
+            ((Applicant) jobAppSystem.getUserManager().findUserByUsername(username)).resetJobApplicationManager(jobAppSystem);
             return NewUserPanel.SUCCESS;
         }
     }
@@ -139,8 +188,8 @@ class LoginBackend {
         String name = inputs.get("name");
         String email = inputs.get("email");
         jobAppSystem.getUserManager().createHRCoordinator(
-                username, password, name, email, branch, jobAppSystem.getToday());
-        new DataLoaderAndStorer(jobAppSystem).refreshAllData();
+                username, password, name, email, branch, jobAppSystem);
+        jobAppSystem.getBranch(branch).setJobPostingManager(branch.getJobPostingManager());
         return NewUserPanel.SUCCESS;
     }
 
@@ -166,9 +215,7 @@ class LoginBackend {
                 String password = inputs.get("password");
                 String name = inputs.get("name");
                 String email = inputs.get("email");
-                jobAppSystem.getUserManager().createInterviewer(
-                        username, password, name, email, branch, field, jobAppSystem.getToday());
-                new DataLoaderAndStorer(jobAppSystem).refreshAllData();
+                jobAppSystem.getUserManager().createInterviewer(username, password, name, email, field, branch, jobAppSystem);
                 return NewUserPanel.SUCCESS;
             }
         }

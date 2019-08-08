@@ -2,16 +2,16 @@ package GUIClasses.HRInterface;
 
 import ApplicantStuff.Applicant;
 import ApplicantStuff.JobApplication;
-import CompanyStuff.*;
+import CompanyStuff.HRCoordinator;
+import CompanyStuff.Interview;
+import CompanyStuff.Interviewer;
+import CompanyStuff.JobApplicationGrader;
 import CompanyStuff.JobPostings.BranchJobPosting;
 import CompanyStuff.JobPostings.BranchJobPostingManager;
 import CompanyStuff.JobPostings.CompanyJobPosting;
-import FileLoadingAndStoring.DataLoaderAndStorer;
 import Main.JobApplicationSystem;
 
-import javax.swing.*;
 import java.io.File;
-import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,7 +27,25 @@ class HRBackend {
     HRBackend(JobApplicationSystem jobAppSystem, HRCoordinator hr) {
         this.jobAppSystem = jobAppSystem;
         this.hr = hr;
+//        this.resetJobPostingManager();
+//        this.resetInterviewManagers();
+//        this.resetInterviewers();
     }
+
+//    private void resetInterviewManagers() {
+//        for (BranchJobPosting jobPosting : this.hr.getBranch().getJobPostingManager().getBranchJobPostings()) {
+//            jobPosting.setInterviewManager(this.jobAppSystem.getBranch(hr.getBranch()).getJobPostingManager().
+//                    getBranchJobPosting(jobPosting.getId()).getInterviewManager());
+//        }
+//    }
+//
+//    private void resetJobPostingManager() {
+//        this.hr.getBranch().setJobPostingManager(this.jobAppSystem.getBranch(hr.getBranch()).getJobPostingManager());
+//    }
+//
+//    private void resetInterviewers() {
+//        this.hr.getBranch().setFieldToInterviewers(this.jobAppSystem.getBranch(hr.getBranch()).getFieldToInterviewers());
+//    }
 
     // === Getters ===
     HRCoordinator getHR() {
@@ -51,6 +69,7 @@ class HRBackend {
 
     /**
      * Gets an array list of branch job postings that are under review for first round of interviews.
+     *
      * @return the array list of branch job postings.
      */
     ArrayList<BranchJobPosting> getJPToReview() {
@@ -61,6 +80,7 @@ class HRBackend {
 
     /**
      * Gets an array list of branch job postings that are ready to schedule for next round of interviews.
+     *
      * @return the array list of branch job postings.
      */
     ArrayList<BranchJobPosting> getJPToSchedule() {
@@ -70,6 +90,7 @@ class HRBackend {
 
     /**
      * Gets an array list of branch job postings that are in hiring stage.
+     *
      * @return the array list of branch job postings.
      */
     ArrayList<BranchJobPosting> getJPToHire() {
@@ -125,73 +146,26 @@ class HRBackend {
         return rejectedApplicants;
     }
 
-    String formatCase(String s) {
-        String[] words = s.split(" ");
-        for (int i = 0; i < words.length; i++) {
-            String firstChar = words[i].substring(0, 1);
-            String rest = "";
-            if (words[i].length() > 1) {
-                rest = words[i].substring(1);
-            }
-            words[i] = firstChar.toUpperCase() + rest.toLowerCase();
-        }
-        String res = "";
-        for (String word : words) {
-            res += " " + word;
-        }
-        return res.substring(1);
-    }
-
     /**
      * Add a job posting to the branch.
-     * @param mandatoryFields  The fields that must be entered regardless of method of adding JP.
-     * @param defaultFields The fields that are set by default in company posting mode.
+     *
+     * @param mandatoryFields The fields that must be entered regardless of method of adding JP.
+     * @param defaultFields   The fields that are set by default in company posting mode.
      */
     void addJobPosting(Object[] mandatoryFields, String[] defaultFields) {
         String title = defaultFields[0];
-        String field = this.formatCase(defaultFields[1]);
+        String field = this.hr.getBranch().formatCase(defaultFields[1]);
         String description = defaultFields[2];
         ArrayList<String> requirements = new ArrayList<>(Arrays.asList(defaultFields[3].split(";")));
         ArrayList<String> tags = new ArrayList<>(Arrays.asList(defaultFields[4].split(";")));
         int numPositions = (Integer) mandatoryFields[0];
         LocalDate applicationCloseDate = (LocalDate) mandatoryFields[1];
         this.hr.addJobPosting(title, field, description, requirements, tags, numPositions, jobAppSystem.getToday(), applicationCloseDate);
-        Thread newThread = new Thread() {
-            public void run() {
-                try {
-                    SwingUtilities.invokeAndWait(new Runnable() {
-                        @Override
-                        public void run() {
-                            new DataLoaderAndStorer(jobAppSystem).refreshAllData();
-                        }
-                    });
-                } catch (InterruptedException | InvocationTargetException ex) {
-                    ex.printStackTrace();
-                }
-            }
-        };
-        newThread.start();
-        this.testing();
-    }
-
-    private void testing() {
-        System.out.println("Testing is called");
-        JobApplicationSystem jobApplicationSystem = new JobApplicationSystem();
-        new DataLoaderAndStorer(jobApplicationSystem).loadAllData();
-        for (Company company : jobApplicationSystem.getCompanies()) {
-            System.out.println(company.getName());
-            for (Branch branch : company.getBranches()) {
-                System.out.println(branch.getName());
-                BranchJobPostingManager branchJobPostingManager = branch.getJobPostingManager();
-                for (BranchJobPosting branchJobPosting : branchJobPostingManager.getBranchJobPostings()) {
-                    System.out.println(branchJobPosting);
-                }
-            }
-        }
     }
 
     /**
      * Checks whether this branch has an interviewer in this field.
+     *
      * @param field The field in question.
      * @return true iff this branch has an interviewer in this field.
      */
@@ -201,30 +175,31 @@ class HRBackend {
 
     /**
      * Implement an existing company job posting.
-     * @param cjp   The company job posting to be implemented.
-     * @param jobPostingFields  The job posting fields inputted by hr.
+     *
+     * @param cjp              The company job posting to be implemented.
+     * @param jobPostingFields The job posting fields inputted by hr.
      */
     void implementJobPosting(CompanyJobPosting cjp, Object[] jobPostingFields) {
         int numPositions = (int) jobPostingFields[0];
         LocalDate applicationCloseDate = (LocalDate) jobPostingFields[1];
         this.hr.implementJobPosting(cjp, numPositions, jobAppSystem.getToday(), applicationCloseDate);
-        new DataLoaderAndStorer(jobAppSystem).refreshAllData();
     }
 
     /**
      * Update the job posting.
-     * @param jobPosting    The job posting to be updated.
-     * @param jobPostingFields  The fields that were updated.
+     *
+     * @param jobPosting       The job posting to be updated.
+     * @param jobPostingFields The fields that were updated.
      */
     void updateJobPosting(BranchJobPosting jobPosting, Object[] jobPostingFields) {
         int numPositions = (int) jobPostingFields[0];
         LocalDate applicationCloseDate = (LocalDate) jobPostingFields[1];
         this.hr.updateJobPosting(jobPosting, numPositions, applicationCloseDate);
-        new DataLoaderAndStorer(jobAppSystem).refreshAllData();
     }
 
     /**
      * Get all job applications submitted by this applicant with this username.
+     *
      * @param applicantUsername The applicant username inputted.
      * @return a list of job applications submitted by this applicant with this username.
      */
@@ -239,6 +214,7 @@ class HRBackend {
 
     /**
      * Get all the applicants who have applied to this company.
+     *
      * @return a list of all applicants who have applied to this company.
      */
     private ArrayList<Applicant> getAllApplicantsWhoHaveAppliedToCompany() {
@@ -247,6 +223,7 @@ class HRBackend {
 
     /**
      * Get a hash map of applicant names to the applicant object.
+     *
      * @return a hash map of names to applicants
      */
     HashMap<String, Applicant> getApplicantHashMap() {
@@ -260,6 +237,7 @@ class HRBackend {
 
     /**
      * Get the job applications that a single applicant has submitted to this company.
+     *
      * @param applicant The applicant who is being reviewed.
      * @return the job applications that a single applicant has submitted to this company.
      */
@@ -295,16 +273,16 @@ class HRBackend {
     /**
      * Reject the list of applications for first round.
      *
-     * @param jobApps   The job applications NOT getting interviews.
+     * @param jobApps The job applications NOT getting interviews.
      */
-    void rejectApplicationForFirstRound(BranchJobPosting branchJobPosting, ArrayList<JobApplication> jobApps) {
+    void rejectApplicationsForFirstRound(BranchJobPosting branchJobPosting, ArrayList<JobApplication> jobApps) {
         branchJobPosting.getInterviewManager().rejectApplicationsForFirstRound(jobApps);
-        new DataLoaderAndStorer(jobAppSystem).refreshAllData();
     }
 
     /**
      * Get the interviewers who are eligible to interview for this job posting.
-     * @param jobPosting    The job posting in question.
+     *
+     * @param jobPosting The job posting in question.
      * @return the list of interviewers who are eligible to interview for this job posting.
      */
     ArrayList<Interviewer> getInterviewersInField(BranchJobPosting jobPosting) {
@@ -313,10 +291,11 @@ class HRBackend {
 
     /**
      * Set the interview configuration for this job posting.
-     * @param jobPosting    The job posting that is being set.
-     * @param isInterviewRoundOneOnOne  A list of whether or not each round configured is one-on-one
-     * @param descriptions  The descriptions for each round
-     * Precondition: isInterviewRoundOneOnOne.size() == descriptions.size()
+     *
+     * @param jobPosting               The job posting that is being set.
+     * @param isInterviewRoundOneOnOne A list of whether or not each round configured is one-on-one
+     * @param descriptions             The descriptions for each round
+     *                                 Precondition: isInterviewRoundOneOnOne.size() == descriptions.size()
      */
     void setInterviewConfiguration(BranchJobPosting jobPosting, ArrayList<Boolean> isInterviewRoundOneOnOne,
                                    ArrayList<String> descriptions) {
@@ -331,7 +310,6 @@ class HRBackend {
             i++;
         }
         jobPosting.getInterviewManager().setInterviewConfiguration(interviewConfiguration);
-        new DataLoaderAndStorer(jobAppSystem).refreshAllData();
     }
 
     /**
@@ -347,15 +325,14 @@ class HRBackend {
     /**
      * Set up interviews for this job posting.
      *
-     * @param jobPosting The job posting in question.
+     * @param jobPosting           The job posting in question.
      * @param interviewCoordinator The interview coordinator selected
-     * @param otherInterviewers The other interviewers selected
+     * @param otherInterviewers    The other interviewers selected
      */
     void setUpGroupInterviews(BranchJobPosting jobPosting, Interviewer interviewCoordinator,
                               ArrayList<Interviewer> otherInterviewers, int minNumDaysNotice) {
         jobPosting.getInterviewManager().setUpGroupInterview(interviewCoordinator, otherInterviewers,
                 jobAppSystem.getToday(), minNumDaysNotice);
-        new DataLoaderAndStorer(jobAppSystem).refreshAllData();
     }
 
     /**
@@ -366,12 +343,12 @@ class HRBackend {
      */
     void selectApplicantsForHire(BranchJobPosting branchJobPosting, ArrayList<JobApplication> jobAppsToHire) {
         branchJobPosting.getInterviewManager().hireApplicants(jobAppsToHire);
-        new DataLoaderAndStorer(jobAppSystem).refreshAllData();
     }
 
     /**
      * Get all interviewer notes for this job application.
-     * @param jobApp    The job application being viewed.
+     *
+     * @param jobApp The job application being viewed.
      * @return a hash map of the interviewer notes for each round and for each interviewer
      */
     HashMap<String, HashMap<Interviewer, String>> getAllInterviewNotesForApplication(JobApplication jobApp) {
@@ -380,6 +357,7 @@ class HRBackend {
 
     /**
      * Get a list of company job postings that can be implemented.
+     *
      * @return a list of company job postings that can be implemented.
      */
     ArrayList<CompanyJobPosting> getCompanyJobPostingsThatCanBeExtended() {
@@ -388,6 +366,7 @@ class HRBackend {
 
     /**
      * Get a list of job postings that can be updated.
+     *
      * @return a list of job postings that can be updated.
      */
     ArrayList<BranchJobPosting> getJPThatCanBeUpdated() {

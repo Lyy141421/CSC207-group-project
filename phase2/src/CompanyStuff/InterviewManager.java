@@ -112,7 +112,7 @@ public class InterviewManager extends Observable implements Serializable {
     public boolean currentRoundIsOver() {
         for (JobApplication jobApp : this.getApplicationsInConsideration()) {
             Interview lastInterview = jobApp.getLastInterview();
-            if (lastInterview != null && !lastInterview.isIncomplete()) {
+            if (lastInterview != null && lastInterview.getRoundNumber() == this.currentRound && !lastInterview.isIncomplete()) {
                 return true;
             }
         }
@@ -222,7 +222,7 @@ public class InterviewManager extends Observable implements Serializable {
             this.notifyAllObservers(new NotificationFactory().createNotification(
                     NotificationFactory.NO_APPS_IN_CONSIDERATION, this.getBranchJobPosting()));
             this.getBranchJobPosting().closeJobPostingNoApplicationsInConsideration();
-        } else if (this.isInterviewProcessOver()) {
+        } else if (this.isInterviewProcessOver() && this.isNumApplicationsUnderOrAtThreshold()) {
             // The check for current round ensures that applicants get at least 1 interview
             this.hireAllApplicants();
         }
@@ -252,7 +252,9 @@ public class InterviewManager extends Observable implements Serializable {
         else {
             for (JobApplication jobApp : this.applicationsInConsideration) {
                 Interviewer interviewer = this.branchJobPosting.getBranch().findInterviewerByField(field);
-                new Interview(jobApp, interviewer, this);
+                Interview interview = new Interview(jobApp, interviewer, this);
+                this.addInterviewForInterviewers(interview);
+                System.out.println("From interview manager within HR: " + interview);
             }
         }
     }
@@ -370,7 +372,12 @@ public class InterviewManager extends Observable implements Serializable {
      * @return true iff the next interview round is a group interview.
      */
     private boolean isCurrentRoundGroupInterviewUnscheduled() {
-        Interview lastInterview = this.applicationsInConsideration.get(0).getLastInterview();
+        Interview lastInterview;
+        if (this.applicationsInConsideration.isEmpty()) {
+            lastInterview = this.applicationsRejected.get(applicationsRejected.size() - 1).getLastInterview();
+        } else {
+            lastInterview = this.applicationsInConsideration.get(0).getLastInterview();
+        }
         return this.currentRound > -1 && this.interviewConfiguration.get(this.currentRound)[0].equals(Interview.GROUP) &&
                 (lastInterview == null || lastInterview.getRoundNumber() < this.currentRound);
     }
@@ -415,7 +422,8 @@ public class InterviewManager extends Observable implements Serializable {
      * @param jobAppsToHire The job applications of those to be hired.
      */
     public void hireApplicants(ArrayList<JobApplication> jobAppsToHire) {
-        for (JobApplication jobApp : this.applicationsInConsideration) {
+        ArrayList<JobApplication> applications = (ArrayList<JobApplication>)this.applicationsInConsideration.clone();
+        for (JobApplication jobApp : applications) {
             if (jobAppsToHire.contains(jobApp)) {
                 jobApp.getStatus().setHired();
             } else {

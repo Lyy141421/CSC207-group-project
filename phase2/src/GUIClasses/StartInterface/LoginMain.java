@@ -74,14 +74,13 @@ public class LoginMain extends JPanel {
         this.jobAppSystem.setPreviousLoginDate(inputtedDate);
         this.jobAppSystem.setToday(inputtedDate);
         jobAppSystem.applicant30Day();
-        Runnable updateJP = new Runnable() {
-            public void run() {
+//        Runnable updateJP = new Runnable() {
+//            public void run() {
                 jobAppSystem.updateAllJobPostings();
-                new DataLoaderAndStorer(jobAppSystem).refreshAllData();
-                new DataLoaderAndStorer(jobAppSystem).loadAllData();
-            }
-        };
-        SwingUtilities.invokeLater(updateJP);
+//                new DataLoaderAndStorer(jobAppSystem).loadAllData();
+//            }
+//        };
+//        SwingUtilities.invokeLater(updateJP);
         jobAppSystem.getUserManager().deleteAllEmptyReferenceAccounts();
     }
 
@@ -253,12 +252,7 @@ public class LoginMain extends JPanel {
                 LocalDate today = ((Date) ((JDatePickerImpl) datePicker).getModel().getValue()).
                         toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
                 if (backend.isValidDate(today)) {
-                    Thread newThread = new Thread() {
-                        public void run() {
-                            updateSystem(today);
-                        }
-                    };
-                    newThread.start();
+                    updateSystem(today);
                     popup.dispose();
                     dateInputted = true;
                     login();

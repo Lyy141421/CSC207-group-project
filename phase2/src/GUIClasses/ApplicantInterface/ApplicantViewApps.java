@@ -82,28 +82,14 @@ class ApplicantViewApps extends JPanel {
             titleText1.setBounds(100, 50, 300, 30);
 
             JLabel statusText1 = new JLabel("Application Status: " + app.getStatus());
-            statusText1.setBounds(100, 90, 300, 30);
+            statusText1.setBounds(100, 90, 600, 30);
 
             JButton withdrawButton1 = new JButton("Withdraw");
             withdrawButton1.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     if (backend.withdrawApp(app)) {
                         JOptionPane.showMessageDialog(thisPanel, "Application Successfully Withdrawn");
-                        Thread newThread = new Thread() {
-                            public void run() {
-                                try {
-                                    SwingUtilities.invokeAndWait(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            ((UserMain) masterPanel).refresh();
-                                        }
-                                    });
-                                } catch (InterruptedException | InvocationTargetException ex) {
-                                    ex.printStackTrace();
-                                }
-                            }
-                        };
-                        newThread.start();
+                        ((UserMain) masterPanel).refresh();
                     } else {
                         JOptionPane.showMessageDialog(thisPanel, "Application Cannot Be Withdrawn");
                     }

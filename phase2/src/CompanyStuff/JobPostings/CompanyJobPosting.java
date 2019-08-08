@@ -223,7 +223,7 @@ public class CompanyJobPosting extends Observable implements Serializable {
      *
      * @return a string representation of this job posting.
      */
-    @Override
+    @Override // TODO uncomment after testing
     public String toString() {
         String s = "Job ID: " + this.id + "\n\n";
         s += "Title: " + this.title + "\n\n";

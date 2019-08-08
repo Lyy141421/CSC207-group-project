@@ -2,6 +2,7 @@ package CompanyStuff;
 
 import CompanyStuff.JobPostings.BranchJobPosting;
 import CompanyStuff.JobPostings.BranchJobPostingManager;
+import Main.JobApplicationSystem;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -10,7 +11,7 @@ import java.util.HashMap;
 public class Branch implements Serializable {
 
     // === Class variables ===
-    static final long serialVersionUID = 1L;
+    static final long serialVersionUID = 2L;
 
     // === Instance variables ===
     // The name of this branch
@@ -24,7 +25,7 @@ public class Branch implements Serializable {
     // The interviewers in this branch
     private HashMap<String, ArrayList<Interviewer>> fieldToInterviewers;
     // The branch job posting manager for this branch
-    private BranchJobPostingManager jobPostingManager;
+    private volatile BranchJobPostingManager jobPostingManager;
 
     // === Public methods ===
     // === Constructor ===
@@ -34,7 +35,6 @@ public class Branch implements Serializable {
         this.company = company;
         this.hrCoordinators = new ArrayList<>();
         this.fieldToInterviewers = new HashMap<>();
-        this.jobPostingManager = new BranchJobPostingManager(this);
     }
 
     // === Getters ==
@@ -66,13 +66,50 @@ public class Branch implements Serializable {
         return this.jobPostingManager;
     }
 
-    // === Other methods ===
-    public BranchJobPosting getBranchJobPosting(int id) {
-        for (BranchJobPosting posting : this.jobPostingManager.getBranchJobPostings()) {
-            if (posting.getId() == id)
-                return posting;
+    public Interviewer getInterviewer(Interviewer interviewer) {
+        for (String field : this.fieldToInterviewers.keySet()) {
+            for (Interviewer interviewer1 : this.fieldToInterviewers.get(field)) {
+                if (interviewer1.equals(interviewer)) {
+                    return interviewer1;
+                }
+            }
         }
         return null;
+    }
+
+    // === Setter ===
+    public void setJobPostingManager(BranchJobPostingManager jobPostingManager) {
+        this.jobPostingManager = jobPostingManager;
+    }
+
+    public void addJobPostingManager() {
+        jobPostingManager = new BranchJobPostingManager(this);
+    }
+
+    // === Other methods ===
+
+    /**
+     * Format a string so that the first letter of each word is capitalized. Used for storing field names
+     * into the fieldToInterviewers hashmap.
+     *
+     * @param s The string to be formatted.
+     * @return The formatted string.
+     */
+    public String formatCase(String s) {
+        String[] words = s.split(" ");
+        for (int i = 0; i < words.length; i++) {
+            String firstChar = words[i].substring(0, 1);
+            String rest = "";
+            if (words[i].length() > 1) {
+                rest = words[i].substring(1);
+            }
+            words[i] = firstChar.toUpperCase() + rest.toLowerCase();
+        }
+        String res = "";
+        for (String word : words) {
+            res += " " + word;
+        }
+        return res.substring(1);
     }
 
     /**
@@ -80,7 +117,7 @@ public class Branch implements Serializable {
      *
      * @param hrCoordinator The HR Coordinator to be added.
      */
-    void addHRCoordinator(HRCoordinator hrCoordinator) {
+    public void addHRCoordinator(HRCoordinator hrCoordinator) {
         this.hrCoordinators.add(hrCoordinator);
     }
 
@@ -104,12 +141,21 @@ public class Branch implements Serializable {
      *
      * @param interviewer The interviewer to be added.
      */
-    void addInterviewer(Interviewer interviewer) {
+    public void addInterviewer(Interviewer interviewer) {
         String field = interviewer.getField();
-        if (!this.fieldToInterviewers.containsKey(field)) {
-            this.fieldToInterviewers.put(field, new ArrayList<>());
+        boolean hasField = false;
+        for (String fieldName : this.fieldToInterviewers.keySet()) {
+            if (field.equalsIgnoreCase(fieldName)) {
+                this.fieldToInterviewers.get(formatCase(fieldName)).add(interviewer);
+                hasField = true;
+                break;
+            }
         }
-        this.fieldToInterviewers.get(field).add(interviewer);
+        if (!hasField) {
+            this.fieldToInterviewers.put(formatCase(field), new ArrayList<>());
+            this.fieldToInterviewers.get(formatCase(field)).add(interviewer);
+        }
+
     }
 
     @Override
@@ -124,7 +170,7 @@ public class Branch implements Serializable {
     public int hashCode() {
         int sum = 0;
         for (int i = 0; i < name.length(); i++)
-            sum += name.charAt(i);
+            sum += name.toLowerCase().charAt(i);
         return sum;
     }
 

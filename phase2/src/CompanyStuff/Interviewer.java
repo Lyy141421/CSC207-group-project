@@ -1,5 +1,6 @@
 package CompanyStuff;
 
+import Main.JobApplicationSystem;
 import Miscellaneous.InterviewTime;
 import Main.User;
 import ApplicantStuff.JobApplication;
@@ -28,16 +29,12 @@ public class Interviewer extends User {
     // === Public methods ===
     // === Constructors ===
 
-    public Interviewer() {
-    }
-
-    public Interviewer(String username, String password, String legalName, String email, Branch branch, String field,
-                       LocalDate dateCreated) {
+    public Interviewer(String username, String password, String legalName, String email, Branch branch, String field, LocalDate dateCreated) {
         super(username, password, legalName, email, dateCreated);
         this.branch = branch;
         this.field = field;
-        branch.addInterviewer(this);
     }
+
 
     // === Getters ===
     public Branch getBranch() {
@@ -52,10 +49,7 @@ public class Interviewer extends User {
         return this.interviews;
     }
 
-    // === Setters ===
-    public void setField(String field) {
-        this.field = field;
-    }
+    // === Setter ===
 
     public void setBranch(Branch branch) {
         this.branch = branch;
@@ -143,51 +137,6 @@ public class Interviewer extends User {
         timeSlots.removeAll(this.getTimeSlotsAvailableOnDate(date));
         return timeSlots;
     }
-
-//    *
-//     * Get a map of this interviewer's schedule.
-//     * @return  a map of this interviewer's schedule.
-//
-//    public HashMap<LocalDate, ArrayList<String>> getScheduleMapFromDateOnwards(LocalDate date) {
-//        HashMap<LocalDate, ArrayList<String>> scheduleMap = new HashMap<>();
-//        int indexOfFirstInterviewOnOrAfterDate = this.interviews.indexOf(this.findFirstInterviewOnOrAfterDate(date, this.interviews));
-//        for (Interview interview : this.interviews.subList(indexOfFirstInterviewOnOrAfterDate, this.interviews.size())) {
-//            if (!scheduleMap.containsKey(interview.getTime().getDate())) {
-//                scheduleMap.put(interview.getTime().getDate(), new ArrayList<>());
-//            }
-//            scheduleMap.get(interview.getTime().getDate()).add(interview.getTime().getTimeSlot());
-//        }
-//        return scheduleMap;
-//    }
-//
-//    *
-//     * Find the first interview for this interview that is on or after the specified date using a binary search algorithm.
-//     * @param date          The earliest date such that a new interview can be scheduled.
-//     * @param interviews    The interviews that are being searched over.
-//     * @return  the first interview on or after the date specified or null otherwise.
-//
-//    private Interview findFirstInterviewOnOrAfterDate(LocalDate date, List<Interview> interviews) {
-//        if (interviews.size() > 1) {
-//            int midIndex = this.interviews.size() / 2;
-//            Interview interview = this.interviews.get(midIndex);
-//            if (interview.getTime().getDate().isBefore(date)) {
-//                // search in second half of list
-//                return this.findFirstInterviewOnOrAfterDate(date, this.interviews.subList(midIndex, this.interviews.size()));
-//            } else {
-//                // search in first half of interview list
-//                return this.findFirstInterviewOnOrAfterDate(date, this.interviews.subList(0, midIndex));
-//            }
-//        } else if (interviews.size() == 1){
-//            if (interviews.get(0).getTime().getDate().isBefore(date)) {
-//                return null;
-//            } else {
-//                return interviews.get(0);
-//            }
-//        } else {
-//            // No interviews set-up
-//            return null;
-//        }
-//    }
 
     /**
      * Get a list of time slots for which this interviewer is available on this date.
@@ -303,51 +252,6 @@ public class Interviewer extends User {
         }
         return incompleteInterviews;
     }
-
-//    /**
-//     * Get a list of incomplete interviews for which this interviewer is a coordinator.
-//     *
-//     * @param today Today's date.
-//     * @return a list fo incomplete interviews for which this interviewer is a coordinator.
-//     */
-//    public ArrayList<Interview> getIncompleteInterviewsAlreadyOccurredAsCoordinator(LocalDate today) {
-//        ArrayList<Interview> interviews = new ArrayList<>();
-//        for (Interview interview : this.getIncompleteInterviewsAlreadyOccurred(today)) {
-//            if (interview.getInterviewCoordinator().equals(this)) {
-//                interviews.add(interview);
-//            }
-//        }
-//        return interviews;
-//    }
-//
-//    /**
-//     * Get a list of incomplete interviews for which this interviewer is not a coordinator.
-//     *
-//     * @param today Today's date.
-//     * @return a list fo incomplete interviews for which this interviewer is not a coordinator.
-//     */
-//    public ArrayList<Interview> getIncompleteInterviewsAlreadyOccurredNotAsCoordinator(LocalDate today) {
-//        ArrayList<Interview> interviews = new ArrayList<>();
-//        for (Interview interview : this.getIncompleteInterviewsAlreadyOccurred(today)) {
-//            if (!interview.getInterviewCoordinator().equals(this)) {
-//                interviews.add(interview);
-//            }
-//        }
-//        return interviews;
-//    }
-
-//    /**
-//     * Get a list of job applications of this interviewer's interviewees.
-//     *
-//     * @return a list of job applications of the applicants that are being interviewed by this interviewer.
-//     */
-//    public ArrayList<JobApplication> getListOfIntervieweeJobApplications() {
-//        ArrayList<JobApplication> jobApplications = new ArrayList<>();
-//        for (Interview interview : this.interviews) {
-//            jobApplications.addAll(interview.getJobApplications());
-//        }
-//        return jobApplications;
-//    }
 
     @Override
     public String[] getDisplayedProfileCategories() {

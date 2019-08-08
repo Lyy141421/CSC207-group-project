@@ -5,6 +5,7 @@ import CompanyStuff.JobPostings.CompanyJobPosting;
 import DocumentManagers.ApplicantDocumentManager;
 import DocumentManagers.DocumentManager;
 import DocumentManagers.DocumentManagerFactory;
+import Main.JobApplicationSystem;
 import Main.User;
 
 import java.time.LocalDate;
@@ -35,7 +36,6 @@ public class Applicant extends User {
     public Applicant(String username, String password, String legalName, String email, String cma, LocalDate dateCreated) {
         super(username, password, legalName, email, dateCreated);
         this.cma = cma;
-        this.jobApplicationManager = new JobApplicationManager();
         this.documentManager = new DocumentManagerFactory().createDocumentManager(this);
     }
 
@@ -51,6 +51,21 @@ public class Applicant extends User {
     public ApplicantDocumentManager getDocumentManager() {
         return (ApplicantDocumentManager) this.documentManager;
     }
+
+    // === Setter ===
+    public void setNewJobApplicationManager() {
+        this.jobApplicationManager = new JobApplicationManager();
+    }
+
+    public void resetJobApplicationManager(JobApplicationSystem jobApplicationSystem) {
+        Applicant applicant = (Applicant) jobApplicationSystem.getUserManager().findUserByUsername(this.getUsername());
+        this.jobApplicationManager = applicant.getJobApplicationManager();
+    }
+
+    public void setJobApplicationManager(JobApplicationManager jobApplicationManager) {
+        this.jobApplicationManager = jobApplicationManager;
+    }
+
 
     // === Other methods ===
 
@@ -117,7 +132,7 @@ public class Applicant extends User {
 
     @Override
     public String[] getDisplayedProfileCategories() {
-        return new String[]{"User Type", "Username", "Legal Name", "Email", "Nearest City", "Account Created"};
+        return new String[]{"User Type", "Username", "Legal Name", "Email", "City/Town", "Account Created"};
     }
 
     @Override

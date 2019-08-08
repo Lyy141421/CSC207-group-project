@@ -8,6 +8,9 @@ import GUIClasses.StartInterface.NewUserPanel;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 
 public class MainFrame extends JFrame {
 
@@ -24,6 +27,22 @@ public class MainFrame extends JFrame {
         this.jobAppSystem = jobAppSystem;
         initUI();
         addCards();
+        this.addWindowListener();
+    }
+
+    private void addWindowListener() {
+        this.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                try {
+                    Thread.sleep(2000);
+                    new DataLoaderAndStorer(jobAppSystem).storeAllData();
+                    Thread.sleep(2000);
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
     }
 
     /**
@@ -42,7 +61,7 @@ public class MainFrame extends JFrame {
      * Constructs each of the JPanels used within the JFrame
      */
     // Call methods that create each interface and add to main frame.
-    private void addCards () {
+    public void addCards() {
         // We need to be careful with when these cards get constructed, in case it's missing arguments to run methods
         newUserRef = new NewUserPanel(this.getContentPane(), this.layoutManager, this.jobAppSystem);
         this.add(newUserRef, MainFrame.NEW_USER);

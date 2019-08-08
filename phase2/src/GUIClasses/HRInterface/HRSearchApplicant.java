@@ -3,7 +3,6 @@ package GUIClasses.HRInterface;
 import ApplicantStuff.Applicant;
 import ApplicantStuff.JobApplication;
 import GUIClasses.CommonUserGUI.GUIElementsCreator;
-import org.junit.jupiter.api.condition.JRE;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -63,7 +62,7 @@ class HRSearchApplicant extends HRPanel {
         searchPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
     }
 
-    private JButton createSearchButton () {
+    private JButton createSearchButton() {
         JButton searchButton = new JButton("Search");
         searchButton.addActionListener(new ActionListener() {
             @Override

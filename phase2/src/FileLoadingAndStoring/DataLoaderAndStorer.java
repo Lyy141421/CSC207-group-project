@@ -1,12 +1,8 @@
 package FileLoadingAndStoring;
 
 import ApplicantStuff.JobApplication;
-import CompanyStuff.Branch;
 import CompanyStuff.Company;
-import CompanyStuff.HRCoordinator;
 import CompanyStuff.Interview;
-import CompanyStuff.JobPostings.BranchJobPosting;
-import CompanyStuff.JobPostings.BranchJobPostingManager;
 import CompanyStuff.JobPostings.CompanyJobPosting;
 import Main.JobApplicationSystem;
 import Main.User;
@@ -26,8 +22,9 @@ public class DataLoaderAndStorer {
 
     // File names of storage files
     private static final String FILES_FOLDER_PATH = "./files";
-    private static final String USER_FILE_PATH = FILES_FOLDER_PATH + "/users.ser";
-    private static final String COMPANY_FILE_PATH = FILES_FOLDER_PATH + "/companies.ser";
+    private static final String DATA_FILE_PATH = FILES_FOLDER_PATH + "/data.ser";
+    //    private static final String USER_FILE_PATH = FILES_FOLDER_PATH + "/users.ser";
+//    private static final String COMPANY_FILE_PATH = FILES_FOLDER_PATH + "/companies.ser";
     private static final String MISCELLANEOUS_FILE_PATH = FILES_FOLDER_PATH + "/date_and_static_variables.txt";
     private static final String FSA_TO_CMA_PATH = FILES_FOLDER_PATH + "/CMA_per_FSA_Centroid.json";
 
@@ -45,7 +42,8 @@ public class DataLoaderAndStorer {
     public void loadAllData() {
         try {
             this.createFilesFolder();
-            String[] filePaths = new String[]{USER_FILE_PATH, COMPANY_FILE_PATH, MISCELLANEOUS_FILE_PATH};
+//            String[] filePaths = new String[]{USER_FILE_PATH, COMPANY_FILE_PATH, MISCELLANEOUS_FILE_PATH};
+            String[] filePaths = new String[]{DATA_FILE_PATH, MISCELLANEOUS_FILE_PATH};
             for (String filePath : filePaths) {
                 File file = new File(filePath);
                 if (file.exists()) {
@@ -73,6 +71,21 @@ public class DataLoaderAndStorer {
         }
     }
 
+//    private void loadJobApplicationSystem() {
+//        try {
+//            InputStream file = new FileInputStream(DATA_FILE_PATH);
+//            InputStream buffer = new BufferedInputStream(file);
+//            ObjectInput input = new ObjectInputStream(buffer);
+//
+//            jobApplicationSystem = (JobApplicationSystem) input.readObject();
+//            input.close();
+//        } catch (EOFException eof) {    // empty file
+//        } catch (IOException | ClassNotFoundException ex) {
+//            ex.printStackTrace();
+//        }
+//    }
+
+
     /**
      * Load the respective data based on the file path.
      *
@@ -80,16 +93,32 @@ public class DataLoaderAndStorer {
      */
     private void loadRespectiveData(String filePath) {
         switch (filePath) {
-            case USER_FILE_PATH:
+            case DATA_FILE_PATH:
                 this.loadUsers();
                 break;
-            case COMPANY_FILE_PATH:
-                this.loadCompanies();
-                break;
+//            case COMPANY_FILE_PATH:
+//                this.loadCompanies();
+//                break;
             case MISCELLANEOUS_FILE_PATH:
                 this.loadPreviousLoginDateAndStaticVariables();
         }
     }
+
+
+//    /**
+//     * Load the respective data based on the file path.
+//     *
+//     * @param filePath The file path where the data is stored.
+//     */
+//    private void loadRespectiveData(String filePath) {
+//        switch (filePath) {
+//            case DATA_FILE_PATH:
+//                this.loadJobApplicationSystem();
+//                break;
+//            case MISCELLANEOUS_FILE_PATH:
+//                this.loadPreviousLoginDateAndStaticVariables();
+//        }
+//    }
 
     /**
      * Load the FSA hash map (for location purposes).
@@ -126,7 +155,7 @@ public class DataLoaderAndStorer {
      */
     private void loadUsers() {
         try {
-            InputStream file = new FileInputStream(USER_FILE_PATH);
+            InputStream file = new FileInputStream(DATA_FILE_PATH);
             InputStream buffer = new BufferedInputStream(file);
             ObjectInput input = new ObjectInputStream(buffer);
 
@@ -138,28 +167,31 @@ public class DataLoaderAndStorer {
         }
     }
 
-    /**
-     * Reads all companies from the file.
-     *
-     */
-    private void loadCompanies() {
-        try {
-            InputStream file = new FileInputStream(COMPANY_FILE_PATH);
-            InputStream buffer = new BufferedInputStream(file);
-            ObjectInput input = new ObjectInputStream(buffer);
-
-            this.jobApplicationSystem.setCompanies((ArrayList<Company>) input.readObject());
-            input.close();
-        } catch (EOFException eof) {    // empty file
-        } catch (IOException | ClassNotFoundException ex) {
-            ex.printStackTrace();
-        }
-    }
+//    /**
+//     * Reads all companies from the file.
+//     *
+//     */
+//    private void loadCompanies() {
+//        try {
+//            InputStream file = new FileInputStream(COMPANY_FILE_PATH);
+//            InputStream buffer = new BufferedInputStream(file);
+//            ObjectInput input = new ObjectInputStream(buffer);
+//
+//            this.jobApplicationSystem.setCompanies((ArrayList<Company>) input.readObject());
+//            input.close();
+//        } catch (EOFException eof) {    // empty file
+//        } catch (IOException | ClassNotFoundException ex) {
+//            ex.printStackTrace();
+//        }
+//    }
 
     /**
      * Loads the previous login date saved in "PreviousLoginDate.txt' in memory.
      */
     private void loadPreviousLoginDateAndStaticVariables() {
+        if (this.jobApplicationSystem.getPreviousLoginDate() == null) {
+            return;
+        }
         try (BufferedReader fileReader = new BufferedReader(new FileReader(MISCELLANEOUS_FILE_PATH))) {
             String dateString = fileReader.readLine().trim();
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -177,21 +209,30 @@ public class DataLoaderAndStorer {
         }
     }
 
-    public void refreshAllData() {
-        this.storeAllData();
-        this.loadAllData();
-    }
-
     /**
      * Saves all the data to the appropriate files.
      *
      */
-    void storeAllData() {
+    public void storeAllData() {
         System.out.println("Store all data is called");
+//        this.storeCompanies();
         this.storeUsers();
-        this.storeCompanies();
+//        this.storeJobApplicationSystem();
         this.storePreviousLoginDateAndStaticVariables();
     }
+
+//    private void storeJobApplicationSystem() {
+//        try {
+//            OutputStream file = new FileOutputStream(DATA_FILE_PATH);
+//            OutputStream buffer = new BufferedOutputStream(file);
+//            ObjectOutput output = new ObjectOutputStream(buffer);
+//
+//            output.writeObject(this.jobApplicationSystem);
+//            output.close();
+//        } catch (IOException ex) {
+//            ex.printStackTrace();
+//        }
+//    }
 
     /**
      * Saves all users to the appropriate file.
@@ -199,7 +240,7 @@ public class DataLoaderAndStorer {
      */
     private void storeUsers() {
         try {
-            OutputStream file = new FileOutputStream(USER_FILE_PATH);
+            OutputStream file = new FileOutputStream(DATA_FILE_PATH);
             OutputStream buffer = new BufferedOutputStream(file);
             ObjectOutput output = new ObjectOutputStream(buffer);
 
@@ -210,22 +251,22 @@ public class DataLoaderAndStorer {
         }
     }
 
-    /**
-     * Saves all companies to the appropriate file.
-     *
-     */
-    private void storeCompanies() {
-        try {
-            OutputStream file = new FileOutputStream(COMPANY_FILE_PATH);
-            OutputStream buffer = new BufferedOutputStream(file);
-            ObjectOutput output = new ObjectOutputStream(buffer);
-
-            output.writeObject(this.jobApplicationSystem.getCompanies());
-            output.close();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-    }
+//    /**
+//     * Saves all companies to the appropriate file.
+//     *
+//     */
+//    private void storeCompanies() {
+//        try {
+//            OutputStream file = new FileOutputStream(COMPANY_FILE_PATH);
+//            OutputStream buffer = new BufferedOutputStream(file);
+//            ObjectOutput output = new ObjectOutputStream(buffer);
+//
+//            output.writeObject(this.jobApplicationSystem.getCompanies());
+//            output.close();
+//        } catch (IOException ex) {
+//            ex.printStackTrace();
+//        }
+//    }
 
     /**
      * Stores the previous login date in 'PreviousLoginDate.txt'.
@@ -247,16 +288,4 @@ public class DataLoaderAndStorer {
         }
     }
 
-    public static void main(String[] args) {
-        JobApplicationSystem jobApplicationSystem = new JobApplicationSystem();
-        new DataLoaderAndStorer(jobApplicationSystem).loadAllData();
-        for (Company company : jobApplicationSystem.getCompanies()) {
-            for (Branch branch : company.getBranches()) {
-                BranchJobPostingManager branchJobPostingManager = branch.getJobPostingManager();
-                for (BranchJobPosting branchJobPosting : branchJobPostingManager.getBranchJobPostings()) {
-                    System.out.println(branchJobPosting);
-                }
-            }
-        }
-    }
 }

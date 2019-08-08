@@ -3,17 +3,17 @@ package Main;
 import ApplicantStuff.Applicant;
 import ApplicantStuff.JobApplication;
 import ApplicantStuff.Reference;
+import CompanyStuff.Branch;
 import CompanyStuff.HRCoordinator;
 import CompanyStuff.Interviewer;
-import CompanyStuff.Branch;
 import FileLoadingAndStoring.DataLoaderAndStorer;
 
-import java.io.IOException;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class UserManager {
+public class UserManager implements Serializable {
     // Class that stores, creates and updates children of the User class
 
     // === Instance Variables ===
@@ -35,25 +35,29 @@ public class UserManager {
      * All of the following methods create new instances of the various child classes of User
      */
     public Applicant createApplicant(String username, String password, String legalName, String email, String postalCode,
-                                     LocalDate dateCreated) {
+                                     JobApplicationSystem jobApplicationSystem) {
         HashMap<String, String> fsaHashMap = DataLoaderAndStorer.loadFSAHashMap();
         String cma = fsaHashMap.get(postalCode.substring(0, 3).toUpperCase());
-        Applicant newApplicant = new Applicant(username, password, legalName, email, cma, dateCreated);
+        Applicant newApplicant = new Applicant(username, password, legalName, email, cma, jobApplicationSystem.getToday());
+        newApplicant.setNewJobApplicationManager();
         this.allUsers.add(newApplicant);
         return newApplicant;
     }
 
-    public Interviewer createInterviewer(String username, String password, String legalName, String email, Branch branch,
-                                         String field, LocalDate dateCreated) {
-        Interviewer newInterviewer = new Interviewer(username, password, legalName, email, branch, field, dateCreated);
+    public Interviewer createInterviewer(String username, String password, String legalName, String email, String field,
+                                         Branch branch, JobApplicationSystem jobApplicationSystem) {
+        Interviewer newInterviewer = new Interviewer(username, password, legalName, email, branch, field, jobApplicationSystem.getToday());
+        branch.addInterviewer(newInterviewer);
         this.allUsers.add(newInterviewer);
         return newInterviewer;
     }
 
     public HRCoordinator createHRCoordinator(String username, String password, String legalName,
-                                             String email, Branch branch, LocalDate dateCreated) {
-        HRCoordinator newHRC = new HRCoordinator(username, password, legalName, email, branch, dateCreated);
+                                             String email, Branch branch, JobApplicationSystem jobApplicationSystem) {
+        HRCoordinator newHRC = new HRCoordinator(username, password, legalName, email, branch, jobApplicationSystem.getToday());
+        branch.addHRCoordinator(newHRC);
         this.allUsers.add(newHRC);
+        branch.addJobPostingManager();
         return newHRC;
     }
 
@@ -83,6 +87,33 @@ public class UserManager {
         for (User user : this.allUsers) {
             if (user.getUsername().equals(username)) {
                 return user;
+            }
+        }
+        return null;
+    }
+
+    public Applicant getApplicant(Applicant applicant) {
+        for (Applicant app : this.getAllApplicants()) {
+            if (applicant.equals(app)) {
+                return app;
+            }
+        }
+        return null;
+    }
+
+    public HRCoordinator getHR(HRCoordinator hrCoordinator) {
+        for (HRCoordinator hr : this.getAllHRCoordinators()) {
+            if (hrCoordinator.equals(hr)) {
+                return hr;
+            }
+        }
+        return null;
+    }
+
+    public Interviewer getInterviewer(Interviewer interviewer) {
+        for (Interviewer in : this.getAllInterviewers()) {
+            if (interviewer.equals(in)) {
+                return in;
             }
         }
         return null;
@@ -166,11 +197,23 @@ public class UserManager {
      * Delete all reference accounts that have no applications they need to submit reference letters for.
      */
     public void deleteAllEmptyReferenceAccounts() {
+        System.out.println("Before delete from user manager");
+        for (User user : (ArrayList<User>) this.allUsers.clone()) {
+            if (user instanceof Reference) {
+                System.out.println(user.getUsername());
+            }
+        }
         for (User user : (ArrayList<User>) this.allUsers.clone()) {
             if (user instanceof Reference) {
                 if (((Reference) user).getJobAppsForReference().isEmpty()) {
                     this.allUsers.remove(user);
                 }
+            }
+        }
+        System.out.println("After delete from user manager");
+        for (User user : (ArrayList<User>) this.allUsers.clone()) {
+            if (user instanceof Reference) {
+                System.out.println(user.getUsername());
             }
         }
     }

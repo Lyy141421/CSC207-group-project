@@ -5,12 +5,14 @@ import ApplicantStuff.JobApplication;
 import ApplicantStuff.Reference;
 import CompanyStuff.Branch;
 import CompanyStuff.InterviewManager;
+import Main.JobApplicationSystem;
 import NotificationSystem.NotificationFactory;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-public class BranchJobPosting extends CompanyJobPosting {
+public class BranchJobPosting extends CompanyJobPosting implements Serializable {
 
     // === Class variables ===
     static final long serialVersionUID = 1L;
@@ -81,6 +83,9 @@ public class BranchJobPosting extends CompanyJobPosting {
     }
 
     // === Setters ===
+    public void setInterviewManager(InterviewManager interviewManager) {
+        this.interviewManager = interviewManager;
+    }
 
     public void setFilled() {
         this.filled = true;
@@ -196,7 +201,7 @@ public class BranchJobPosting extends CompanyJobPosting {
     }
 
     /**
-     * Close the job posting with no
+     * Close the job posting with no applications in consideration.
      */
     public void closeJobPostingNoApplicationsInConsideration() {
         this.setFilled();
@@ -233,6 +238,8 @@ public class BranchJobPosting extends CompanyJobPosting {
         s += "Title: " + this.getTitle() + "\n\n";
         s += "Field: " + this.getField() + "\n\n";
         s += "Description: " + this.getDescription() + "\n\n";
+        s += "Number of positions: " + this.getNumPositions() + "\n\n";
+        s += "Filled: " + (this.isFilled()?"Yes":"No") + "\n\n";
         s += "Required Documents: " + this.getStringForList(this.getRequiredDocuments()) + "\n\n";
         s += "Tags: " + this.getStringForList(this.getTags()) + "\n\n";
         s += "Close date: " + this.getCloseDate().toString() + "\n\n";

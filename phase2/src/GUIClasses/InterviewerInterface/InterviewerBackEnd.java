@@ -128,7 +128,6 @@ class InterviewerBackEnd {
      */
     void setInterviewResults(Interview interview, HashMap<JobApplication, Boolean> jobAppToResult) {
         interview.setResults(jobAppToResult);
-        new DataLoaderAndStorer(jobAppSystem).refreshAllData();
     }
 
     /**
@@ -143,7 +142,6 @@ class InterviewerBackEnd {
         } else {
             interview.setOtherInterviewNotes(interviewer, notes);
         }
-        new DataLoaderAndStorer(jobAppSystem).refreshAllData();
     }
 
     /**
@@ -183,7 +181,6 @@ class InterviewerBackEnd {
     boolean scheduleInterview(Interview interview, LocalDate date, String timeSlot) {
         InterviewTime interviewTime = new InterviewTime(date, timeSlot);
         boolean canSchedule = this.interviewer.scheduleInterview(interview, interviewTime);
-        new DataLoaderAndStorer(jobAppSystem).refreshAllData();
         return canSchedule;
     }
 }

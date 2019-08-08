@@ -187,8 +187,7 @@ class ApplicantViewSearchResults extends JPanel {
         applyViaText.setBounds(25, 270, 230, 25);
         applyViaText.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                JobApplication jobApp = backEnd.createJobApplication(j);
-                JPanel docPanel = new ApplicantTextDocSubmission(masterPanel, backEnd, jobApp);
+                JPanel docPanel = new ApplicantTextDocSubmission(masterPanel, backEnd, j);
                 masterPanel.add(docPanel, "FORMS");
                 ((CardLayout)masterPanel.getLayout()).show(masterPanel, "FORMS");
             }

@@ -21,6 +21,9 @@ abstract class AbstractDocumentUser extends JPanel implements ActionListener {
 
     // === Constructor ===
     AbstractDocumentUser(File folder) {
+        if (folder == null) {
+            return;
+        }
         this.fileNames = folder.list();
         if (folder.listFiles().length == 0) {
             this.files = new File[0];

@@ -30,8 +30,8 @@ abstract public class UserMain extends JPanel {
      * Refresh the page.
      */
     public void refresh() {
-        DataLoaderAndStorer dataLoaderAndStorer = new DataLoaderAndStorer(jobAppSystem);
-        dataLoaderAndStorer.refreshAllData();
+//        DataLoaderAndStorer dataLoaderAndStorer = new DataLoaderAndStorer(jobAppSystem);
+//        dataLoaderAndStorer.refreshAllData();
     }
 
 }

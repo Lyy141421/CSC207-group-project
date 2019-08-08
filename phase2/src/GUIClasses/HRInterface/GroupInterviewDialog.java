@@ -16,18 +16,19 @@ import java.util.HashMap;
 
 class GroupInterviewDialog extends JDialog {
 
-    static int MAX_DAYS = 20;
+    private static int MAX_DAYS = 20;
 
-    JFrame parent;
-    HRBackend hrBackend;
-    BranchJobPosting branchJobPosting;
-    HRViewPosting parentPanel;
+    private JFrame parent;
+    private HRBackend hrBackend;
+    private JDialog container = this;
+    private BranchJobPosting branchJobPosting;
+    private HRViewPosting parentPanel;
 
-    HashMap<String, Interviewer> nameToInterviewerMap;
+    private HashMap<String, Interviewer> nameToInterviewerMap;
 
-    JSpinner daysSpinner;
-    JComboBox<String> coordinatorSelection;
-    HashMap<Interviewer, JCheckBox> interviewerToCheckBoxMap = new HashMap<>();
+    private JSpinner daysSpinner;
+    private JComboBox<String> coordinatorSelection;
+    private HashMap<Interviewer, JCheckBox> interviewerToCheckBoxMap = new HashMap<>();
 
     GroupInterviewDialog(JFrame parent, HRBackend hrBackend, BranchJobPosting branchJobPosting, HRViewPosting postingPanel) {
         super(parent, "Please select interviewers for group interview");
@@ -36,8 +37,8 @@ class GroupInterviewDialog extends JDialog {
         this.branchJobPosting = branchJobPosting;
         this.parentPanel = postingPanel;
 
+        System.out.println("Interviewers: " + hrBackend.getInterviewersInField(branchJobPosting));
         this.nameToInterviewerMap = this.getNameToInterviewerMap(hrBackend.getInterviewersInField(branchJobPosting));
-
         this.setLayout(new BorderLayout());
 
         this.setHeader();
@@ -52,20 +53,21 @@ class GroupInterviewDialog extends JDialog {
         this.setSize(500, 350);
         this.setResizable(false);
         this.setLocationRelativeTo(parent);
-        this.setAlwaysOnTop(true);
-        this.setModal(true);
+        this.setModalityType(ModalityType.APPLICATION_MODAL);
         this.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
     }
 
     private void setHeader() {
+        JPanel headerPanel = new JPanel(new BorderLayout());
         JLabel prompt = new JLabel("Please select interviewers for group interview");
-        this.add(prompt, BorderLayout.PAGE_START);
+        headerPanel.add(prompt, BorderLayout.PAGE_START);
         JPanel spinnerPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         JLabel daysLabel = new JLabel("Minimum days to notify interviewers: ");
         this.daysSpinner = new JSpinner(new SpinnerNumberModel(1, 1, MAX_DAYS, 1));
         spinnerPanel.add(daysLabel);
         spinnerPanel.add(this.daysSpinner);
-        this.add(spinnerPanel, BorderLayout.NORTH);
+        headerPanel.add(spinnerPanel, BorderLayout.CENTER);
+        this.add(headerPanel, BorderLayout.PAGE_START);
     }
 
     private void setSplitPane() {
@@ -90,7 +92,6 @@ class GroupInterviewDialog extends JDialog {
                 interviewerCheckBox.setSelected(false);
             }
         });
-
         coordinatorPanel.add(this.coordinatorSelection);
 
         return coordinatorPanel;
@@ -103,20 +104,23 @@ class GroupInterviewDialog extends JDialog {
         c.insets = new Insets(2, 4, 2, 4);
         c.gridx = -1;
         c.gridy = 0;
-        for (String name: this.nameToInterviewerMap.keySet()) {
+        for (String name : this.nameToInterviewerMap.keySet()) {
             JCheckBox checkBox = new JCheckBox(name);
             this.interviewerToCheckBoxMap.put(this.nameToInterviewerMap.get(name), checkBox);
-            c.gridy += (c.gridx+1)/3;
-            c.gridx = (c.gridx+1)%3;
+            c.gridy += (c.gridx + 1) / 3;
+            c.gridx = (c.gridx + 1) % 3;
             interviewerPanel.add(checkBox, c);
         }
-
+        Interviewer interviewer = nameToInterviewerMap.get(this.coordinatorSelection.getSelectedItem());
+        JCheckBox checkBox = interviewerToCheckBoxMap.get(interviewer);
+        checkBox.setSelected(false);
+        checkBox.setEnabled(false);
         return interviewerPanel;
     }
 
     private HashMap<String, Interviewer> getNameToInterviewerMap(ArrayList<Interviewer> interviewers) {
         HashMap<String, Interviewer> nameToInterviewerMap = new HashMap<>();
-        for (Interviewer interviewer: interviewers) {
+        for (Interviewer interviewer : interviewers) {
             nameToInterviewerMap.put(toInterviewerName(interviewer), interviewer);
         }
 
@@ -141,9 +145,11 @@ class GroupInterviewDialog extends JDialog {
             @Override
             public void actionPerformed(ActionEvent e) {
                 hrBackend.setUpGroupInterviews(branchJobPosting,
-                        nameToInterviewerMap.get((String)coordinatorSelection.getSelectedItem()),
-                        getSelectedInterviewers(), (int)daysSpinner.getValue());
+                        nameToInterviewerMap.get(coordinatorSelection.getSelectedItem()),
+                        getSelectedInterviewers(), (int) daysSpinner.getValue());
                 parentPanel.main.removeFromJPLists(branchJobPosting);
+                setModalityType(ModalityType.MODELESS);
+                JOptionPane.showMessageDialog(container, "Group interview is set.");
                 dispose();
             }
         });
@@ -155,6 +161,7 @@ class GroupInterviewDialog extends JDialog {
         cancelButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                setModalityType(ModalityType.MODELESS);
                 dispose();
             }
         });
@@ -162,10 +169,9 @@ class GroupInterviewDialog extends JDialog {
     }
 
 
-
     private ArrayList<Interviewer> getSelectedInterviewers() {
         ArrayList<Interviewer> selectedInterviewer = new ArrayList<>();
-        for (Interviewer interviewer: this.interviewerToCheckBoxMap.keySet()) {
+        for (Interviewer interviewer : this.interviewerToCheckBoxMap.keySet()) {
             if (this.interviewerToCheckBoxMap.get(interviewer).isSelected()) {
                 selectedInterviewer.add(interviewer);
             }
