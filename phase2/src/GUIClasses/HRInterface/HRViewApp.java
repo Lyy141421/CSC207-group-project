@@ -52,13 +52,17 @@ class HRViewApp extends HRPanel {
         this.previousPanel = previousPanel;
         this.setLayout(new BorderLayout());
 
+        JLabel warning = new JLabel("*Please do NOT use the side bar menu!");
+        warning.setForeground(Color.RED);
+        this.add(warning, BorderLayout.NORTH);
+
         JSplitPane splitDisplay = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
         splitDisplay.setDividerLocation(250);
 
         this.setApplicationList(splitDisplay);
         this.setInfoPane(splitDisplay);
         this.setListSelectionListener();
-        this.add(splitDisplay);
+        this.add(splitDisplay, BorderLayout.CENTER);
         this.setButtons();
         this.setMode(mode);
     }

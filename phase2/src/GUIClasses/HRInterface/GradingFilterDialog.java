@@ -66,7 +66,7 @@ class GradingFilterDialog extends JDialog {
     private void setSelectNumber() {
         JPanel numberPanel = new JPanel(new FlowLayout());
         JLabel numberPrompt = new JLabel("Select top");
-        this.numberToSelect = new JSpinner(new SpinnerNumberModel(1, 1, MAX_TO_SELECT, 1));
+        this.numberToSelect = new JSpinner(new SpinnerNumberModel(1, 0, MAX_TO_SELECT, 1));
         numberPanel.add(numberPrompt);
         numberPanel.add(this.numberToSelect);
         this.add(numberPanel, BorderLayout.EAST);
