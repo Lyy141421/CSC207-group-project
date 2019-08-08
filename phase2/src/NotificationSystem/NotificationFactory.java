@@ -12,6 +12,7 @@ public class NotificationFactory {
     public static final String NO_INTERVIEWERS_IN_FIELD = "No interviewers in field";
     public static final String HIRED = "Hired";
     public static final String ADVANCE_ROUND = "Advance round";
+    public static final String WELCOME = "Welcome";
 
     public NotificationFactory() {
     }
@@ -43,7 +44,9 @@ public class NotificationFactory {
             case ADVANCE_ROUND:
                 return new Notification("Advance to Next Round",
                         "You have advanced to the next round in " + ((BranchJobPosting) object).getTitle());
-            default:
+            case WELCOME:
+                return new Notification("Welcome", "Welcome to The GetAJob(tm) Program");
+                default:
                 return null;
         }
     }
