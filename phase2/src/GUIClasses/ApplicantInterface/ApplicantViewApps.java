@@ -82,7 +82,7 @@ class ApplicantViewApps extends JPanel {
             titleText1.setBounds(100, 50, 300, 30);
 
             JLabel statusText1 = new JLabel("Application Status: " + app.getStatus());
-            statusText1.setBounds(100, 90, 300, 30);
+            statusText1.setBounds(100, 90, 600, 30);
 
             JButton withdrawButton1 = new JButton("Withdraw");
             withdrawButton1.addActionListener(new ActionListener() {
