@@ -20,7 +20,8 @@ class InterviewerCompleteInterviewFull extends InterviewerViewAndWriteNotes {
     private static String REJECT = "Reject";    // Label reject for radio button
     private JPanel resultsPanel = new JPanel(new BorderLayout());   // The panel for setting interview results.
     // The map of job applications to the button group of radio buttons associated with the pass/fail decision
-    private HashMap<JobApplication, ButtonGroup> jobAppsToButtonGroup = new HashMap<>();
+    //private HashMap<JobApplication, ButtonGroup> jobAppsToButtonGroup = new HashMap<>();
+    private HashMap<JobApplication, JRadioButton> jobAppsToAdvanceButton = new HashMap<>();
 
     // === Constructor ===
     InterviewerCompleteInterviewFull(InterviewerBackEnd interviewerBackEnd) {
@@ -77,7 +78,8 @@ class InterviewerCompleteInterviewFull extends InterviewerViewAndWriteNotes {
             selectResultsPanel.add(rejectRadioButton, c);
             buttonGroup.add(advanceRadioButton);
             buttonGroup.add(rejectRadioButton);
-            jobAppsToButtonGroup.put(jobApp, buttonGroup);
+            //jobAppsToButtonGroup.put(jobApp, buttonGroup);
+            jobAppsToAdvanceButton.put(jobApp, advanceRadioButton);
             c.gridx = 0;
             c.gridy++;
         }
@@ -96,8 +98,9 @@ class InterviewerCompleteInterviewFull extends InterviewerViewAndWriteNotes {
             @Override
             public void actionPerformed(ActionEvent e) {
                 HashMap<JobApplication, Boolean> jobAppToResults = new HashMap<>();
-                for (JobApplication jobApp : jobAppsToButtonGroup.keySet()) {
-                    boolean isAdvanced = isAdvancedButtonSelected(jobAppsToButtonGroup.get(jobApp));
+                for (JobApplication jobApp : jobAppsToAdvanceButton.keySet()) {
+                    //boolean isAdvanced = isAdvancedButtonSelected(jobAppsToButtonGroup.get(jobApp));
+                    boolean isAdvanced = jobAppsToAdvanceButton.get(jobApp).isSelected();
                     jobAppToResults.put(jobApp, isAdvanced);
                     JOptionPane.showMessageDialog(resultsPanel, "You have successfully completed this interview.");
                 }

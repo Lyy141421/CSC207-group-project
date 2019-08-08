@@ -56,6 +56,16 @@ public class JobApplicationManager implements Serializable {
         this.jobApplications.remove(app);
     }
 
+    public void resetJobApplication(JobApplication newJobApplication) {
+        for (JobApplication jobApp : (ArrayList<JobApplication>) this.getJobApplications().clone()) {
+            if (jobApp.getJobPosting().equals(newJobApplication.getJobPosting())) {
+                this.jobApplications.remove(jobApp);
+                break;
+            }
+        }
+        this.jobApplications.add(newJobApplication);
+    }
+
     /**
      * Get the list of interviews considered "upcoming" for this applicant.
      *

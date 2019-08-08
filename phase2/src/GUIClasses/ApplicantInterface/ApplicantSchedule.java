@@ -16,12 +16,10 @@ import java.util.ArrayList;
 class ApplicantSchedule extends JPanel {
 
     ApplicantSchedule(ApplicantBackend applicantBackend) {
-        this.setLayout(null);
+        this.setLayout(new BorderLayout());
 
-        JLabel titleText = new JLabel("Schedule for " + applicantBackend.getApplicant().getLegalName(), SwingConstants.CENTER);
-        titleText.setBounds(170, 35, 300, 40);
-        titleText.setFont(new Font("Serif", Font.PLAIN, 27));
-        this.add(titleText);
+        JPanel titleText = new GUIElementsCreator().createLabelPanel("Schedule for " + applicantBackend.getApplicant().getLegalName(), 20, true);
+        this.add(titleText, BorderLayout.NORTH);
 
         ArrayList<Interview> interviews = applicantBackend.getUpcomingInterviews();
         this.buildTable(interviews);
@@ -35,8 +33,7 @@ class ApplicantSchedule extends JPanel {
         String[] columnNames = {"Position", "Company", "Time", "Current Round"};
 
         JPanel table = new GUIElementsCreator().createTablePanel(columnNames, data);
-        table.setBounds(170, 150, 300, data.length * 25);
-        this.add(table);
+        this.add(table, BorderLayout.CENTER);
     }
 
     /**
@@ -47,7 +44,7 @@ class ApplicantSchedule extends JPanel {
         ArrayList<Object[]> data = new ArrayList<>();
         for(Interview I: interviews) {
             InterviewManager manager = I.getInterviewManager();
-            Object[] add = {manager.getBranchJobPosting().getTitle(), manager.getBranchJobPosting().getCompany(),
+            Object[] add = {manager.getBranchJobPosting().getTitle(), manager.getBranchJobPosting().getCompany().getName(),
                     I.getTime(), I.getRoundNumber()};
             data.add(add);
         }
