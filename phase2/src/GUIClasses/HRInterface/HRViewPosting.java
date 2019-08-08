@@ -194,12 +194,12 @@ class HRViewPosting extends HRPanel {
 
     private void setApplicationPanel() {
         ArrayList<JobApplication> appsUnderSelectedJP = this.hrBackend.getApplicationsInConsiderationForJobPosting(selectedJP);
-        int mode = 0;
+        int mode = HRViewApp.VIEW_ONLY;
         if (main.getUnreviewedJP().containsValue(selectedJP)) {
-            mode = 1;
+            mode = HRViewApp.REVIEW;
             main.removeFromJPLists(selectedJP);
         } else if (main.getHiringJP().containsValue(selectedJP)) {
-            mode = 2;
+            mode = HRViewApp.HIRING;
             main.removeFromJPLists(selectedJP);
         }
         HRViewApp appPanel = new HRViewApp(parent, hrBackend, getTitleToAppMap(appsUnderSelectedJP), this.getPreviousPanelKey(), mode);

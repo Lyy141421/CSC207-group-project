@@ -21,10 +21,12 @@ import java.util.HashMap;
 
 class HRViewApp extends HRPanel {
 
+    static final int VIEW_ONLY = 0;
+    static final int REVIEW = 1;
+    static final int HIRING = 2;
     private static final String OVERVIEW = "Overview";
     private static final String FILE = "View Files";
     private static final String INTERVIEW_NOTES = "Interview Notes";
-
     private HashMap<String, JobApplication> currApps;
 
     private JPanel parent;
@@ -41,9 +43,6 @@ class HRViewApp extends HRPanel {
     private String previousPanel;
 
 
-    //mode: 0 view only
-    //      1 review
-    //      2 hiring
     HRViewApp(JPanel parent, HRBackend hrBackend, HashMap<String, JobApplication> currApps, String previousPanel, int mode) {
         super(hrBackend);
         assert SwingUtilities.isEventDispatchThread();
@@ -176,13 +175,13 @@ class HRViewApp extends HRPanel {
 
     private void setMode(int mode) {
         switch (mode) {
-            case 0:
+            case VIEW_ONLY:
                 this.returnButton.setVisible(true);
                 break;
-            case 1:
+            case REVIEW:
                 this.selectButton.setVisible(true);
                 break;
-            case 2:
+            case HIRING:
                 this.hireButton.setVisible(true);
                 break;
         }

@@ -80,7 +80,7 @@ class HRSearchApplicant extends HRPanel {
     }
 
     private void showApplicationPanel(ArrayList<JobApplication> apps) {
-        HRViewApp appPanel = new HRViewApp(parent, hrBackend, getTitleToAppMap(apps), HRPanel.SEARCH_APPLICANT, 0);
+        HRViewApp appPanel = new HRViewApp(parent, hrBackend, getTitleToAppMap(apps), HRPanel.SEARCH_APPLICANT, HRViewApp.VIEW_ONLY);
         if (parent.getComponents().length > 6) {
             parent.remove(6);
         }
