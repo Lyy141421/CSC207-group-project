@@ -15,9 +15,12 @@ class InterviewerViewAndWriteNotes extends InterviewerViewOnly {
      * Panel for viewing and writing notes for an interview.
      */
 
+    // === Static variables ===
+    private static String NOTE_HINT = "Please enter interview notes";
+
     // === Instance variables ===
     private JPanel notesPanel = new JPanel();   // The panel for writing notes.
-    private JTextArea notes;    // The text area where the notes are written.
+    private JScrollPane notes;    // The text area where the notes are written.
 
     // === Constructor ===
     InterviewerViewAndWriteNotes(InterviewerBackEnd interviewerBackEnd) {
@@ -57,7 +60,7 @@ class InterviewerViewAndWriteNotes extends InterviewerViewOnly {
             notesPanel.add(message, BorderLayout.CENTER);
         } else {
             notesPanel.setLayout(new BoxLayout(notesPanel, BoxLayout.Y_AXIS));
-            this.notes = new JTextArea("Please enter interview notes");
+            this.notes = new GUIElementsCreator().createTextAreaWithScrollBar("Please enter interview notes", true);
             notesPanel.add(new JScrollPane(notes));
             notesPanel.add(Box.createRigidArea(new Dimension(0, 20)));
             notesPanel.add(this.createSaveNotesButtonPanel());
@@ -76,8 +79,13 @@ class InterviewerViewAndWriteNotes extends InterviewerViewOnly {
         saveButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String note = notes.getText();
-                interviewerBackEnd.storeInterviewNotes(interviewSelected, note);
+                JTextArea noteArea = (JTextArea) notes.getViewport().getView();
+                String note = noteArea.getText();
+                if (note==NOTE_HINT) {
+                    interviewerBackEnd.storeInterviewNotes(interviewSelected, "");
+                } else {
+                    interviewerBackEnd.storeInterviewNotes(interviewSelected, note);
+                }
                 JOptionPane.showMessageDialog(notesPanel, "You have successfully written notes for this interview");
                 refresh();
             }
